@@ -1,8 +1,6 @@
-import { formatMonthLabel } from "./format";
-import { monthBelongsToQuarter, numericScalar } from "./plans/normalize";
-
-export * from "./plans/types";
-export { derivePlanId, normalizePlanPreset } from "./plans/normalize";
+// header staging — combined into builders.ts via cat
+import { formatMonthLabel } from "../format";
+import { monthBelongsToQuarter, numericScalar } from "./normalize";
 import type {
   PlanMonthlyReference,
   PlanMonthlyReferenceBasis,
@@ -14,7 +12,7 @@ import type {
   PlanTimingSemanticsItem,
   ResolvedPlanPacingField,
   ResolvedPlanPacingProvenance,
-} from "./plans/types";
+} from "./types";
 
 export function getPlanQuarterTarget(
   plan: PlanPreset | null,
