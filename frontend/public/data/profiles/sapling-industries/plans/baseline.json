@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "id": "baseline",
-  "name": "baseline",
+  "name": "Baseline",
   "version": "1.0",
   "created_date": "",
   "default_comparison_view_id": "sales_led_operating",
@@ -30,19 +30,14 @@
           "2027-01-01": 8000000
         },
         "quarterly_rollup": {
-          "Q1": 22000000,
-          "Q2": 26000000,
-          "Q3": 28000000,
-          "Q4": 24000000
+          "Q1FY26": 22000000,
+          "Q2FY26": 26000000,
+          "Q3FY26": 28000000,
+          "Q4FY26": 24000000
         },
         "annual_rollup": 100000000
       },
-      "seat_targets": {
-        "canonical_grain": "monthly",
-        "monthly": {},
-        "quarterly_rollup": {},
-        "annual_rollup": 0
-      }
+      "seat_targets": null
     }
   },
   "views": {
@@ -57,7 +52,7 @@
       "component_ids": [
         "sales_led"
       ],
-      "seat_target_owner_component_id": "sales_led",
+      "seat_target_owner_component_id": null,
       "derived": true
     }
   }

@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "id": "baseline",
-  "name": "baseline",
+  "name": "Baseline",
   "version": "1.0",
   "created_date": "",
   "default_comparison_view_id": "sales_led_operating",
