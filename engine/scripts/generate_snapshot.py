@@ -262,6 +262,122 @@ def _extract_source_creation(monthly_source_detail, month_idx: int, month_key: s
 
 
 # ---------------------------------------------------------------------------
+# TargetSetter helpers
+# ---------------------------------------------------------------------------
+
+def _profile_config_dir(profile_id: str) -> Path:
+    """Return the config directory for the given profile.
+
+    REPO_ROOT is the engine/ directory (parent.parent of this script).
+    Profile configs live at engine/config/profiles/<profile_id>/.
+    """
+    return REPO_ROOT / "config" / "profiles" / profile_id
+
+
+def _load_scenarios_yaml(profile_id: str) -> list[dict]:
+    """Load scenarios.yaml for the active profile; return [] if missing."""
+    import yaml  # noqa: PLC0415
+
+    path = _profile_config_dir(profile_id) / "scenarios.yaml"
+    if not path.exists():
+        return []
+    return (yaml.safe_load(path.read_text()) or {}).get("scenarios", []) or []
+
+
+def _load_raw_assumptions(profile_id: str) -> dict:
+    """Load the raw assumptions.yaml for the profile; return {} if missing.
+
+    The engine's result.assumptions_snapshot only surfaces a subset of the
+    assumptions.yaml fields (stage_conversion, funnel, capacity, etc.).
+    TargetSetter-specific keys like target_setter_defaults are engine-unknown
+    and must be read directly from the raw file.
+    """
+    import yaml  # noqa: PLC0415
+
+    path = _profile_config_dir(profile_id) / "assumptions.yaml"
+    if not path.exists():
+        return {}
+    return yaml.safe_load(path.read_text()) or {}
+
+
+# The engine already emits mql_to_s0/s0_to_s1/s1_to_s2 naming in funnel_rates.
+# This map is an identity for those keys; included for documentation and to
+# handle any legacy snapshots that might still carry the old sql-style names.
+_FUNNEL_RATE_RENAME = {
+    "mql_to_sql": "mql_to_s0",
+    "sql_to_opp": "s0_to_s1",
+    "opp_to_s2": "s1_to_s2",
+    # new-style keys pass through unchanged (identity)
+    "mql_to_s0": "mql_to_s0",
+    "s0_to_s1": "s0_to_s1",
+    "s1_to_s2": "s1_to_s2",
+}
+
+# Required funnel rate keys for observed_scenario emission.  Either old-style
+# (mql_to_sql / sql_to_opp / opp_to_s2) or new-style (mql_to_s0 / s0_to_s1 /
+# s1_to_s2) names are accepted.
+_REQUIRED_FUNNEL_KEYS_OLD = ("mql_to_sql", "sql_to_opp", "opp_to_s2")
+_REQUIRED_FUNNEL_KEYS_NEW = ("mql_to_s0", "s0_to_s1", "s1_to_s2")
+
+
+def _build_observed_scenario(assumptions: dict, snapshot: dict) -> "dict | None":
+    """Build the fully-baked observed Scenario from assumptions + current snapshot rates.
+
+    Returns None when target_setter_defaults is absent (graceful no-op) OR when
+    any of the three required funnel rate keys are missing (fail-closed: avoid
+    emitting a valid-looking observed_scenario with broken math).
+    """
+    defaults = (assumptions or {}).get("target_setter_defaults")
+    if not defaults:
+        return None
+
+    fr = (
+        snapshot.get("model_output", {})
+        .get("funnel_health", {})
+        .get("funnel_rates", {})
+        or {}
+    )
+
+    # Accept either old-style or new-style key names; new-style is preferred.
+    if all(k in fr for k in _REQUIRED_FUNNEL_KEYS_NEW):
+        mql_to_s0 = fr["mql_to_s0"]
+        s0_to_s1 = fr["s0_to_s1"]
+        s1_to_s2 = fr["s1_to_s2"]
+    elif all(k in fr for k in _REQUIRED_FUNNEL_KEYS_OLD):
+        mql_to_s0 = fr["mql_to_sql"]
+        s0_to_s1 = fr["sql_to_opp"]
+        s1_to_s2 = fr["opp_to_s2"]
+    else:
+        missing_new = [k for k in _REQUIRED_FUNNEL_KEYS_NEW if k not in fr]
+        logger.warning(
+            "target_setter_defaults configured but funnel_rates missing required keys %s "
+            "— skipping observed_scenario emission. Snapshot will lack observed pill.",
+            missing_new,
+        )
+        return None
+
+    as_of = snapshot.get("as_of", "")
+    return {
+        "id": "observed",
+        "label": "Observed",
+        "description": {
+            "primary": "Current snapshot rates + per-org defaults",
+            "secondary": f"as of {as_of}",
+        },
+        "win_rate_starting": float(defaults["win_rate_starting"]),
+        "win_rate_created": float(defaults["win_rate_created"]),
+        "push_rate": float(defaults["push_rate"]),
+        "loss_rate": float(defaults["loss_rate"]),
+        "ae_self_gen_pct": float(defaults["ae_self_gen_pct"]),
+        "mql_to_s0": float(mql_to_s0),
+        "s0_to_s1": float(s0_to_s1),
+        "s1_to_s2": float(s1_to_s2),
+        "segment_share": dict(defaults["segment_share"]),
+        "acv": {k: int(v) for k, v in defaults["acv"].items()},
+    }
+
+
+# ---------------------------------------------------------------------------
 # Main build function
 # ---------------------------------------------------------------------------
 
@@ -958,6 +1074,24 @@ def build_snapshot(
             "funnel_rates": _serialize_mapping(funnel_rate_descriptions),
         },
     }
+
+    # -----------------------------------------------------------------------
+    # Optional target_setter block
+    # Emitted only when the profile has scenarios.yaml and/or
+    # target_setter_defaults in assumptions.yaml.
+    # -----------------------------------------------------------------------
+    active_profile_id = getattr(tieout, "profile_id", profile_id) or "default"
+    ts_scenarios = _load_scenarios_yaml(active_profile_id)
+    # Use raw YAML assumptions because result.assumptions_snapshot only surfaces
+    # engine-known fields; target_setter_defaults is engine-unknown.
+    raw_assumptions = _load_raw_assumptions(active_profile_id)
+    ts_observed = _build_observed_scenario(raw_assumptions, snapshot)
+    if ts_scenarios or ts_observed:
+        snapshot["target_setter"] = {}
+        if ts_observed:
+            snapshot["target_setter"]["observed_scenario"] = ts_observed
+        if ts_scenarios:
+            snapshot["target_setter"]["scenarios"] = ts_scenarios
 
     return snapshot
 

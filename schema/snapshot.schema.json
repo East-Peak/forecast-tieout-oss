@@ -468,6 +468,19 @@
       "type": "object",
       "description": "Top-level data lineage and generation metadata.",
       "additionalProperties": true
+    },
+
+    "target_setter": {
+      "type": "object",
+      "description": "TargetSetter scenarios — observed baseline plus named what-if scenarios.",
+      "additionalProperties": false,
+      "properties": {
+        "observed_scenario": { "$ref": "#/$defs/TargetSetterScenario" },
+        "scenarios": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/TargetSetterScenario" }
+        }
+      }
     }
   },
 
@@ -510,6 +523,45 @@
         "td_bookings": { "type": "number" },
         "bu_sales_led_arr": { "type": "number" },
         "actual_bookings": { "type": "number" }
+      }
+    },
+    "TargetSetterScenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "label",
+        "win_rate_starting", "win_rate_created",
+        "push_rate", "loss_rate", "ae_self_gen_pct",
+        "mql_to_s0", "s0_to_s1", "s1_to_s2",
+        "segment_share", "acv"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "description": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" }
+          }
+        },
+        "win_rate_starting": { "type": "number", "minimum": 0, "maximum": 1 },
+        "win_rate_created":  { "type": "number", "minimum": 0, "maximum": 1 },
+        "push_rate":         { "type": "number", "minimum": 0, "maximum": 1 },
+        "loss_rate":         { "type": "number", "minimum": 0, "maximum": 1 },
+        "ae_self_gen_pct":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "mql_to_s0":         { "type": "number", "minimum": 0, "maximum": 1 },
+        "s0_to_s1":          { "type": "number", "minimum": 0, "maximum": 1 },
+        "s1_to_s2":          { "type": "number", "minimum": 0, "maximum": 1 },
+        "segment_share": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "acv": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }
+        }
       }
     }
   }

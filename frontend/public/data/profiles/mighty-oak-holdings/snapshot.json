@@ -7,8 +7,8 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-05-03T01:45:36.736650Z",
-  "git_sha": "4634cbffb81e6da2da415b457f454ba5abcb2c8f",
+  "generated_at": "2026-05-03T19:03:34.881315Z",
+  "git_sha": "fe87dd16c6fc4cdb7eb588a8041eb3161910cd57",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
@@ -2327,7 +2327,7 @@
         "name": "Vivienne Ashworth",
         "role": "vp_sales",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2337,7 +2337,7 @@
         "name": "Cyrus Bellamy",
         "role": "manager",
         "segment": "strategic_enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2347,7 +2347,7 @@
         "name": "Adaeze Onuoha",
         "role": "manager",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2357,7 +2357,7 @@
         "name": "Sterling Park",
         "role": "manager",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2367,7 +2367,7 @@
         "name": "Reginald Tannenbaum",
         "role": "AE",
         "segment": "strategic_enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-SE",
         "tier": "active"
@@ -2377,7 +2377,7 @@
         "name": "Ananya Krishnamurthy",
         "role": "AE",
         "segment": "strategic_enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-SE",
         "tier": "active"
@@ -2387,7 +2387,7 @@
         "name": "Bartholomew Greco",
         "role": "AE",
         "segment": "strategic_enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-SE",
         "tier": "active"
@@ -2397,7 +2397,7 @@
         "name": "Mireille Bouvier",
         "role": "AE",
         "segment": "strategic_enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-SE",
         "tier": "active"
@@ -2407,7 +2407,7 @@
         "name": "Octavia Nguyen",
         "role": "AE",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-E",
         "tier": "active"
@@ -2417,7 +2417,7 @@
         "name": "Theron Whitmore",
         "role": "AE",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-E",
         "tier": "active"
@@ -2427,7 +2427,7 @@
         "name": "Kaela Ondieki",
         "role": "AE",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-E",
         "tier": "active"
@@ -2437,7 +2437,7 @@
         "name": "Lucien Dubois",
         "role": "AE",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-E",
         "tier": "active"
@@ -2447,7 +2447,7 @@
         "name": "Solene Matsuoka",
         "role": "AE",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-E",
         "tier": "active"
@@ -2457,7 +2457,7 @@
         "name": "Cassius Pell",
         "role": "AE",
         "segment": "enterprise",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-E",
         "tier": "active"
@@ -2467,7 +2467,7 @@
         "name": "Indira Vasquez",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-M",
         "tier": "active"
@@ -2477,7 +2477,7 @@
         "name": "Phineas Okafor",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-M",
         "tier": "active"
@@ -2487,7 +2487,7 @@
         "name": "Beatrix Holloway",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-M",
         "tier": "active"
@@ -2497,7 +2497,7 @@
         "name": "Yusuf Bashir",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-M",
         "tier": "active"
@@ -2507,7 +2507,7 @@
         "name": "Esperanza Vega",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-M",
         "tier": "active"
@@ -2517,7 +2517,7 @@
         "name": "Geoffrey Baxter",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-M",
         "tier": "active"
@@ -2527,7 +2527,7 @@
         "name": "Anastasia Volkov",
         "role": "sdr",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2537,7 +2537,7 @@
         "name": "Tomohiro Yamamoto",
         "role": "sdr",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2547,7 +2547,7 @@
         "name": "Margot Henley",
         "role": "sdr",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2557,7 +2557,7 @@
         "name": "Reza Farahani",
         "role": "sdr",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2567,7 +2567,7 @@
         "name": "Constantin Marek",
         "role": "se",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2577,7 +2577,7 @@
         "name": "Naima Aboud",
         "role": "se",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2587,7 +2587,7 @@
         "name": "Erasmus Vogel",
         "role": "se",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -2600,7 +2600,7 @@
           "name": "Vivienne Ashworth",
           "role": "vp_sales",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2610,7 +2610,7 @@
           "name": "Cyrus Bellamy",
           "role": "manager",
           "segment": "strategic_enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2620,7 +2620,7 @@
           "name": "Adaeze Onuoha",
           "role": "manager",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2630,7 +2630,7 @@
           "name": "Sterling Park",
           "role": "manager",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2640,7 +2640,7 @@
           "name": "Reginald Tannenbaum",
           "role": "AE",
           "segment": "strategic_enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-SE",
           "tier": "active"
@@ -2650,7 +2650,7 @@
           "name": "Ananya Krishnamurthy",
           "role": "AE",
           "segment": "strategic_enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-SE",
           "tier": "active"
@@ -2660,7 +2660,7 @@
           "name": "Bartholomew Greco",
           "role": "AE",
           "segment": "strategic_enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-SE",
           "tier": "active"
@@ -2670,7 +2670,7 @@
           "name": "Mireille Bouvier",
           "role": "AE",
           "segment": "strategic_enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-SE",
           "tier": "active"
@@ -2680,7 +2680,7 @@
           "name": "Octavia Nguyen",
           "role": "AE",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-E",
           "tier": "active"
@@ -2690,7 +2690,7 @@
           "name": "Theron Whitmore",
           "role": "AE",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-E",
           "tier": "active"
@@ -2700,7 +2700,7 @@
           "name": "Kaela Ondieki",
           "role": "AE",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-E",
           "tier": "active"
@@ -2710,7 +2710,7 @@
           "name": "Lucien Dubois",
           "role": "AE",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-E",
           "tier": "active"
@@ -2720,7 +2720,7 @@
           "name": "Solene Matsuoka",
           "role": "AE",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-E",
           "tier": "active"
@@ -2730,7 +2730,7 @@
           "name": "Cassius Pell",
           "role": "AE",
           "segment": "enterprise",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-E",
           "tier": "active"
@@ -2740,7 +2740,7 @@
           "name": "Indira Vasquez",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-M",
           "tier": "active"
@@ -2750,7 +2750,7 @@
           "name": "Phineas Okafor",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-M",
           "tier": "active"
@@ -2760,7 +2760,7 @@
           "name": "Beatrix Holloway",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-M",
           "tier": "active"
@@ -2770,7 +2770,7 @@
           "name": "Yusuf Bashir",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-M",
           "tier": "active"
@@ -2780,7 +2780,7 @@
           "name": "Esperanza Vega",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-M",
           "tier": "active"
@@ -2790,7 +2790,7 @@
           "name": "Geoffrey Baxter",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-M",
           "tier": "active"
@@ -2800,7 +2800,7 @@
           "name": "Anastasia Volkov",
           "role": "sdr",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2810,7 +2810,7 @@
           "name": "Tomohiro Yamamoto",
           "role": "sdr",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2820,7 +2820,7 @@
           "name": "Margot Henley",
           "role": "sdr",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2830,7 +2830,7 @@
           "name": "Reza Farahani",
           "role": "sdr",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2840,7 +2840,7 @@
           "name": "Constantin Marek",
           "role": "se",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2850,7 +2850,7 @@
           "name": "Naima Aboud",
           "role": "se",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -2860,7 +2860,7 @@
           "name": "Erasmus Vogel",
           "role": "se",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -3653,7 +3653,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -3872,16 +3872,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 807106475.2400861,
-            "sales_led_base_arr": 762106475.2400861,
+            "opening_arr": 807106475.2400862,
+            "sales_led_base_arr": 762106475.2400862,
             "plg_base_arr": 45000000.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 762106475.2400861,
+            "sales_led_usage_eligible_arr": 762106475.2400862,
             "plg_usage_eligible_arr": 40500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 11431597.12860129,
+            "usage_expansion_arr": 11431597.128601292,
             "plg_expansion_arr": 5062500.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 31884097.12860129
@@ -4114,16 +4114,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 853604158.7695495,
-            "sales_led_base_arr": 803541658.7695495,
+            "opening_arr": 853604158.7695496,
+            "sales_led_base_arr": 803541658.7695496,
             "plg_base_arr": 50062500.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 803541658.7695495,
+            "sales_led_usage_eligible_arr": 803541658.7695496,
             "plg_usage_eligible_arr": 45000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 12053124.881543241,
+            "usage_expansion_arr": 12053124.881543243,
             "plg_expansion_arr": 5625000.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 33068124.88154324
@@ -4623,7 +4623,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -4842,16 +4842,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 807106475.2400861,
-            "sales_led_base_arr": 762106475.2400861,
+            "opening_arr": 807106475.2400862,
+            "sales_led_base_arr": 762106475.2400862,
             "plg_base_arr": 45000000.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 762106475.2400861,
+            "sales_led_usage_eligible_arr": 762106475.2400862,
             "plg_usage_eligible_arr": 40500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 11431597.12860129,
+            "usage_expansion_arr": 11431597.128601292,
             "plg_expansion_arr": 5062500.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 31884097.12860129
@@ -5084,16 +5084,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 853604158.7695495,
-            "sales_led_base_arr": 803541658.7695495,
+            "opening_arr": 853604158.7695496,
+            "sales_led_base_arr": 803541658.7695496,
             "plg_base_arr": 50062500.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 803541658.7695495,
+            "sales_led_usage_eligible_arr": 803541658.7695496,
             "plg_usage_eligible_arr": 45000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 12053124.881543241,
+            "usage_expansion_arr": 12053124.881543243,
             "plg_expansion_arr": 5625000.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 33068124.88154324
@@ -6578,7 +6578,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -6797,16 +6797,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 807106475.2400861,
-            "sales_led_base_arr": 762106475.2400861,
+            "opening_arr": 807106475.2400862,
+            "sales_led_base_arr": 762106475.2400862,
             "plg_base_arr": 45000000.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 762106475.2400861,
+            "sales_led_usage_eligible_arr": 762106475.2400862,
             "plg_usage_eligible_arr": 40500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 11431597.12860129,
+            "usage_expansion_arr": 11431597.128601292,
             "plg_expansion_arr": 5062500.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 31884097.12860129
@@ -7039,16 +7039,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 853604158.7695495,
-            "sales_led_base_arr": 803541658.7695495,
+            "opening_arr": 853604158.7695496,
+            "sales_led_base_arr": 803541658.7695496,
             "plg_base_arr": 50062500.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 803541658.7695495,
+            "sales_led_usage_eligible_arr": 803541658.7695496,
             "plg_usage_eligible_arr": 45000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 12053124.881543241,
+            "usage_expansion_arr": 12053124.881543243,
             "plg_expansion_arr": 5625000.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 33068124.88154324
@@ -7548,7 +7548,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -7767,16 +7767,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 807106475.2400861,
-            "sales_led_base_arr": 762106475.2400861,
+            "opening_arr": 807106475.2400862,
+            "sales_led_base_arr": 762106475.2400862,
             "plg_base_arr": 45000000.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 762106475.2400861,
+            "sales_led_usage_eligible_arr": 762106475.2400862,
             "plg_usage_eligible_arr": 40500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 11431597.12860129,
+            "usage_expansion_arr": 11431597.128601292,
             "plg_expansion_arr": 5062500.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 31884097.12860129
@@ -8009,16 +8009,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 853604158.7695495,
-            "sales_led_base_arr": 803541658.7695495,
+            "opening_arr": 853604158.7695496,
+            "sales_led_base_arr": 803541658.7695496,
             "plg_base_arr": 50062500.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 803541658.7695495,
+            "sales_led_usage_eligible_arr": 803541658.7695496,
             "plg_usage_eligible_arr": 45000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 12053124.881543241,
+            "usage_expansion_arr": 12053124.881543243,
             "plg_expansion_arr": 5625000.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 33068124.88154324
@@ -8520,7 +8520,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -8739,16 +8739,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 807106475.2400861,
-            "sales_led_base_arr": 762106475.2400861,
+            "opening_arr": 807106475.2400862,
+            "sales_led_base_arr": 762106475.2400862,
             "plg_base_arr": 45000000.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 762106475.2400861,
+            "sales_led_usage_eligible_arr": 762106475.2400862,
             "plg_usage_eligible_arr": 40500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 11431597.12860129,
+            "usage_expansion_arr": 11431597.128601292,
             "plg_expansion_arr": 5062500.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 31884097.12860129
@@ -8981,16 +8981,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 853604158.7695495,
-            "sales_led_base_arr": 803541658.7695495,
+            "opening_arr": 853604158.7695496,
+            "sales_led_base_arr": 803541658.7695496,
             "plg_base_arr": 50062500.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 803541658.7695495,
+            "sales_led_usage_eligible_arr": 803541658.7695496,
             "plg_usage_eligible_arr": 45000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 12053124.881543241,
+            "usage_expansion_arr": 12053124.881543243,
             "plg_expansion_arr": 5625000.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 33068124.88154324
@@ -9490,7 +9490,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -9709,16 +9709,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 807106475.2400861,
-            "sales_led_base_arr": 762106475.2400861,
+            "opening_arr": 807106475.2400862,
+            "sales_led_base_arr": 762106475.2400862,
             "plg_base_arr": 45000000.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 762106475.2400861,
+            "sales_led_usage_eligible_arr": 762106475.2400862,
             "plg_usage_eligible_arr": 40500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 11431597.12860129,
+            "usage_expansion_arr": 11431597.128601292,
             "plg_expansion_arr": 5062500.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 31884097.12860129
@@ -9951,16 +9951,16 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 853604158.7695495,
-            "sales_led_base_arr": 803541658.7695495,
+            "opening_arr": 853604158.7695496,
+            "sales_led_base_arr": 803541658.7695496,
             "plg_base_arr": 50062500.0,
             "renewable_sales_led_arr": 171000000.0,
-            "sales_led_usage_eligible_arr": 803541658.7695495,
+            "sales_led_usage_eligible_arr": 803541658.7695496,
             "plg_usage_eligible_arr": 45000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 15390000.0,
-            "usage_expansion_arr": 12053124.881543241,
+            "usage_expansion_arr": 12053124.881543243,
             "plg_expansion_arr": 5625000.0,
             "consumption_true_forward_arr": 0.0,
             "total_expansion_arr": 33068124.88154324

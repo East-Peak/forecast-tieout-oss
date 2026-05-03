@@ -3,6 +3,10 @@
     {
       "id": "baseline",
       "path": "./baseline.json"
+    },
+    {
+      "id": "acme-fy26-targetsetter",
+      "path": "./acme-fy26-targetsetter.json"
     }
   ]
 }

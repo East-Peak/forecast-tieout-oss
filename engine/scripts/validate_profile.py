@@ -325,6 +325,163 @@ def _check_stages_cross_reference(
             )
 
 
+# ---------------------------------------------------------------------------
+# TargetSetter validation helpers
+# ---------------------------------------------------------------------------
+
+SCENARIO_REQUIRED = {
+    "id", "label", "win_rate_starting", "win_rate_created",
+    "push_rate", "loss_rate", "ae_self_gen_pct",
+    "mql_to_s0", "s0_to_s1", "s1_to_s2",
+    "segment_share", "acv",
+}
+SCENARIO_OPTIONAL = {"description"}
+DEFAULTS_REQUIRED = {
+    "ae_self_gen_pct", "win_rate_starting", "win_rate_created",
+    "push_rate", "loss_rate", "segment_share", "acv",
+}
+RATE_FIELDS = {
+    "win_rate_starting", "win_rate_created", "push_rate", "loss_rate",
+    "ae_self_gen_pct", "mql_to_s0", "s0_to_s1", "s1_to_s2",
+}
+SCENARIOS_YAML_TOP_LEVEL = {"scenarios", "version"}  # `version` reserved for future schema evolution
+DESCRIPTION_ALLOWED = {"primary", "secondary"}
+
+
+def _ts_validate_unknown_fields(prefix: str, item: dict, allowed: set) -> list:
+    extra = set(item.keys()) - allowed
+    if extra:
+        return [f"{prefix}: unknown fields {sorted(extra)}"]
+    return []
+
+
+def _ts_validate_rates(prefix: str, item: dict) -> list:
+    errors = []
+    for k in RATE_FIELDS & set(item or {}):
+        v = item[k]
+        if not isinstance(v, (int, float)) or not (0.0 <= v <= 1.0):
+            errors.append(f"{prefix}: {k} must be in 0..1, got {v}")
+    return errors
+
+
+def _ts_validate_segment_acv(prefix: str, segment_share: Any, acv: Any) -> list:
+    errors = []
+    if not isinstance(segment_share, dict):
+        errors.append(
+            f"{prefix}: segment_share must be a mapping, got {type(segment_share).__name__}"
+        )
+        return errors
+    if not isinstance(acv, dict):
+        errors.append(f"{prefix}: acv must be a mapping, got {type(acv).__name__}")
+        return errors
+    s_keys, a_keys = set(segment_share), set(acv)
+    if s_keys != a_keys:
+        errors.append(
+            f"{prefix}: segment_share keys {sorted(s_keys)} != acv keys {sorted(a_keys)}"
+        )
+    for k, v in segment_share.items():
+        if not isinstance(v, (int, float)) or not (0.0 <= v <= 1.0):
+            errors.append(f"{prefix}: segment_share['{k}'] must be 0..1, got {v}")
+    for k, v in acv.items():
+        if not isinstance(v, (int, float)) or v <= 0:
+            errors.append(f"{prefix}: acv['{k}'] must be positive, got {v}")
+    return errors
+
+
+def _ts_validate_description(prefix: str, desc: Any) -> list:
+    if desc is None:
+        return []
+    if not isinstance(desc, dict):
+        return [f"{prefix}.description: must be a mapping, got {type(desc).__name__}"]
+    errors = _ts_validate_unknown_fields(f"{prefix}.description", desc, DESCRIPTION_ALLOWED)
+    for k in DESCRIPTION_ALLOWED & set(desc):
+        if not isinstance(desc[k], str):
+            errors.append(f"{prefix}.description.{k}: must be a string")
+    return errors
+
+
+def _check_target_setter(profile_dir: Path, result: ValidationResult) -> None:
+    """Validate optional scenarios.yaml and target_setter_defaults in assumptions.yaml."""
+    scen_path = profile_dir / "scenarios.yaml"
+    if scen_path.exists():
+        text = scen_path.read_text()
+        try:
+            raw = yaml.safe_load(text)
+        except yaml.YAMLError as exc:
+            result.add_error(f"scenarios.yaml is not valid YAML: {exc}")
+            raw = None
+
+        if raw is None:
+            pass  # empty file = no scenarios, OK
+        elif not isinstance(raw, dict):
+            result.add_error(
+                f"scenarios.yaml: root must be a mapping, got {type(raw).__name__}"
+            )
+        else:
+            for err in _ts_validate_unknown_fields("scenarios.yaml", raw, SCENARIOS_YAML_TOP_LEVEL):
+                result.add_error(err)
+            scenarios_list = raw.get("scenarios") or []
+            if not isinstance(scenarios_list, list):
+                result.add_error(
+                    f"scenarios.yaml: scenarios must be a list, "
+                    f"got {type(scenarios_list).__name__}"
+                )
+            else:
+                for i, scen in enumerate(scenarios_list):
+                    ctx = f"scenarios.yaml[{i}]"
+                    if not isinstance(scen, dict):
+                        result.add_error(f"{ctx}: scenario must be a mapping")
+                        continue
+                    missing = SCENARIO_REQUIRED - set(scen.keys())
+                    if missing:
+                        result.add_error(f"{ctx} missing fields: {sorted(missing)}")
+                        continue
+                    for err in _ts_validate_unknown_fields(
+                        ctx, scen, SCENARIO_REQUIRED | SCENARIO_OPTIONAL
+                    ):
+                        result.add_error(err)
+                    for err in _ts_validate_rates(ctx, scen):
+                        result.add_error(err)
+                    for err in _ts_validate_segment_acv(
+                        ctx, scen.get("segment_share"), scen.get("acv")
+                    ):
+                        result.add_error(err)
+                    for err in _ts_validate_description(ctx, scen.get("description")):
+                        result.add_error(err)
+
+    # Check target_setter_defaults in assumptions.yaml (already loaded by caller, but
+    # we re-load here to keep this function self-contained and testable in isolation).
+    assumptions_path = profile_dir / "assumptions.yaml"
+    if assumptions_path.exists():
+        text = assumptions_path.read_text()
+        try:
+            raw = yaml.safe_load(text)
+        except yaml.YAMLError:
+            return  # YAML parse errors are caught by _check_required_files
+        if not isinstance(raw, dict):
+            return  # shape error caught elsewhere
+        defaults = raw.get("target_setter_defaults")
+        if defaults is not None:
+            ctx = "target_setter_defaults"
+            if not isinstance(defaults, dict):
+                result.add_error(
+                    f"{ctx}: must be a mapping, got {type(defaults).__name__}"
+                )
+            else:
+                missing = DEFAULTS_REQUIRED - set(defaults.keys())
+                if missing:
+                    result.add_error(f"{ctx} missing fields: {sorted(missing)}")
+                else:
+                    for err in _ts_validate_unknown_fields(ctx, defaults, DEFAULTS_REQUIRED):
+                        result.add_error(err)
+                    for err in _ts_validate_rates(ctx, defaults):
+                        result.add_error(err)
+                    for err in _ts_validate_segment_acv(
+                        ctx, defaults.get("segment_share"), defaults.get("acv")
+                    ):
+                        result.add_error(err)
+
+
 def _check_roster(data: dict, result: ValidationResult) -> None:
     """Validate roster.yaml: no duplicate team member IDs."""
     team_members = data.get("team_members")
@@ -401,6 +558,9 @@ def validate_profile(profile_dir: Path) -> ValidationResult:
     # Step 6: Validate roster.yaml for duplicate IDs
     if "roster.yaml" in loaded:
         _check_roster(loaded["roster.yaml"], result)
+
+    # Step 7: Validate optional TargetSetter config (scenarios.yaml + target_setter_defaults)
+    _check_target_setter(profile_dir, result)
 
     return result
 

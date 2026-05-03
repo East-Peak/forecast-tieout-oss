@@ -6,3 +6,30 @@ stage_rates:
   Negotiation: 0.75
 lookback_days: 365
 monte_carlo_iterations: 10000
+
+# Funnel waterfall rates (used by TargetSetter inverse-waterfall solver).
+waterfall_rates:
+  mql_to_s0: 0.32
+  s0_to_s1: 0.45
+  s1_to_s2: 0.60
+  s2_to_won: 0.442
+
+# Per-org TargetSetter defaults (engine-only — feeds runtime-baked observed_scenario).
+target_setter_defaults:
+  win_rate_starting: 0.44      # close rate on starting pipe (approximates s2_to_won;
+                                 # starting pipe is a mix of stages but Business Case +
+                                 # Negotiation dominate by value)
+  win_rate_created: 0.442      # = s2_to_won; created_pipe is counted at S2 entry,
+                                 # so the relevant rate is S2->won
+  push_rate: 0.20              # ~20% of starting pipe slips to next quarter
+  loss_rate: 0.36              # residual (win 0.44 + push 0.20 + loss 0.36 = 1.00)
+  ae_self_gen_pct: 0.70        # derived from building_blocks: AE-sourced = 70% of
+                                 # all pipeline creation by ARR value
+  segment_share:
+    enterprise: 0.58           # value-weighted from pipeline deal inventory
+    mid_market: 0.35
+    commercial: 0.07
+  acv:
+    enterprise: 400000         # avg deal size for Enterprise AEs (pipeline deals)
+    mid_market: 145000         # avg deal size for Mid-Market AEs
+    commercial: 38000          # avg deal size for Commercial AEs

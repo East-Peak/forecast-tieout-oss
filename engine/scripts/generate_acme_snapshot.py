@@ -26,6 +26,22 @@ from pathlib import Path
 import yaml
 
 # ---------------------------------------------------------------------------
+# TargetSetter helpers (imported from canonical generator — single source of truth)
+# ---------------------------------------------------------------------------
+# These three helpers are defined in generate_snapshot.py and handle:
+#   _load_scenarios_yaml  — read scenarios.yaml for the profile
+#   _load_raw_assumptions — read full assumptions.yaml (incl. target_setter_defaults)
+#   _build_observed_scenario — bake observed Scenario from funnel_rates + defaults
+# Import here so we don't duplicate logic.  The import succeeds even though
+# generate_snapshot.py pulls in gtm_model, because Python only executes module-level
+# code that doesn't raise on this OSS path (gtm_model is present in the repo).
+from engine.scripts.generate_snapshot import (  # noqa: E402
+    _build_observed_scenario,
+    _load_raw_assumptions,
+    _load_scenarios_yaml,
+)
+
+# ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -969,6 +985,22 @@ def build_snapshot() -> dict:
             "config_source": "engine/config/profiles/acme-saas/",
         },
     }
+
+    # -----------------------------------------------------------------------
+    # Optional target_setter block — mirrors generate_snapshot.py logic.
+    # Emitted when the profile has scenarios.yaml and/or target_setter_defaults
+    # in assumptions.yaml.  Uses the bundled snapshot's funnel_rates so the
+    # observed_scenario values are always consistent with the page data.
+    # -----------------------------------------------------------------------
+    ts_scenarios = _load_scenarios_yaml("acme-saas")
+    raw_assumptions = _load_raw_assumptions("acme-saas")
+    ts_observed = _build_observed_scenario(raw_assumptions, snapshot)
+    if ts_scenarios or ts_observed:
+        snapshot["target_setter"] = {}
+        if ts_observed:
+            snapshot["target_setter"]["observed_scenario"] = ts_observed
+        if ts_scenarios:
+            snapshot["target_setter"]["scenarios"] = ts_scenarios
 
     return snapshot
 

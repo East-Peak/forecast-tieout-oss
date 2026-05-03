@@ -9,9 +9,9 @@ revenue plan and bottoms-up pipeline data. A Python engine reads deal,
 team, and stage-history data (CSV today; bring your own backend for
 Salesforce, Snowflake, or anything else), runs the tieout calculations,
 and writes a versioned `snapshot.json`. A React dashboard reads the
-snapshot and renders eight views: bookings bridge, pipeline inventory,
+snapshot and renders nine views: bookings bridge, pipeline inventory,
 funnel health, capacity, scenario planning, audit readiness, export,
-methodology.
+methodology, target setter.
 
 Built for B2B SaaS running quarterly direct-sales motions. Three demo
 profiles ship in `engine/config/profiles/` exercising different scales
@@ -39,6 +39,7 @@ npm run dev
 | **Audit Readiness** | Missing close dates, stale stages, no-amount deals |
 | **Export Pack** | XLSX workbook with all tieout tables and formulas |
 | **Methodology** | Calculation logic for every metric |
+| **Target Setter** | Inverse-waterfall solver: given a quarterly bookings target, computes required MQL volume by working back through win rates, segment splits, ACVs, and funnel conversion rates. Reachable at `/targets`. |
 
 ## Connect Your Data
 

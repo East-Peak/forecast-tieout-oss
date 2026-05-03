@@ -25,3 +25,13 @@ quarterly_targets:
   Q2: 9000000
   Q3: 12000000
   Q4: 12000000
+
+# Additional plan cases available for selection in the UI.
+plan_cases:
+  acme-fy26-targetsetter:
+    top_down_plan:
+      preset_id: acme-fy26-targetsetter
+      label: "Acme FY26 — TargetSetter Demo"
+      version: "1.0"
+      status: working_draft
+      basis: targetsetter_demo

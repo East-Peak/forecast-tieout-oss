@@ -7,8 +7,8 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-05-03T13:30:36.000904Z",
-  "git_sha": "0b1f4ce80d3c1b2e5d08408331b5443aef343f8a",
+  "generated_at": "2026-05-03T19:03:06.185869Z",
+  "git_sha": "fe87dd16c6fc4cdb7eb588a8041eb3161910cd57",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
@@ -7438,5 +7438,61 @@
     "generator": "generate_acme_snapshot.py",
     "data_source": "engine/data/acme-saas/",
     "config_source": "engine/config/profiles/acme-saas/"
+  },
+  "target_setter": {
+    "observed_scenario": {
+      "id": "observed",
+      "label": "Observed",
+      "description": {
+        "primary": "Current snapshot rates + per-org defaults",
+        "secondary": "as of 2026-04-06"
+      },
+      "win_rate_starting": 0.44,
+      "win_rate_created": 0.442,
+      "push_rate": 0.2,
+      "loss_rate": 0.36,
+      "ae_self_gen_pct": 0.7,
+      "mql_to_s0": 0.32,
+      "s0_to_s1": 0.45,
+      "s1_to_s2": 0.6,
+      "segment_share": {
+        "enterprise": 0.58,
+        "mid_market": 0.35,
+        "commercial": 0.07
+      },
+      "acv": {
+        "enterprise": 400000,
+        "mid_market": 145000,
+        "commercial": 38000
+      }
+    },
+    "scenarios": [
+      {
+        "id": "marketing-led",
+        "label": "Marketing-Led Growth",
+        "description": {
+          "primary": "Higher-intent MQLs converting at improved rates through the funnel",
+          "secondary": "Models the impact of marketing delivering ICP-qualified, intent-signaled leads that reach POC faster, push less, and close at a higher rate. AE self-gen share declines slightly as marketing covers a larger fraction of new pipeline.\n"
+        },
+        "win_rate_starting": 0.44,
+        "win_rate_created": 0.5,
+        "push_rate": 0.18,
+        "loss_rate": 0.32,
+        "ae_self_gen_pct": 0.65,
+        "mql_to_s0": 0.45,
+        "s0_to_s1": 0.55,
+        "s1_to_s2": 0.7,
+        "segment_share": {
+          "enterprise": 0.6,
+          "mid_market": 0.33,
+          "commercial": 0.07
+        },
+        "acv": {
+          "enterprise": 400000,
+          "mid_market": 145000,
+          "commercial": 38000
+        }
+      }
+    ]
   }
 }

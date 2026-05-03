@@ -1,0 +1,25 @@
+scenarios:
+  - id: marketing-led
+    label: Marketing-Led Growth
+    description:
+      primary: Higher-intent MQLs converting at improved rates through the funnel
+      secondary: >
+        Models the impact of marketing delivering ICP-qualified, intent-signaled leads
+        that reach POC faster, push less, and close at a higher rate. AE self-gen share
+        declines slightly as marketing covers a larger fraction of new pipeline.
+    win_rate_starting: 0.44      # unchanged — starting pipe is already in-flight
+    win_rate_created: 0.50       # s2_to_won for marketing-led; better-qualified opps close higher
+    push_rate: 0.18              # slightly lower: better-qualified deals push less often
+    loss_rate: 0.32              # residual (0.50 + 0.18 + 0.32 = 1.00)
+    ae_self_gen_pct: 0.65        # marketing covers 35% of pipeline (up from 30%)
+    mql_to_s0: 0.45              # +41% vs observed (0.32): intent-qualified, high-propensity leads
+    s0_to_s1: 0.55               # +22% vs observed (0.45): better ICP fit drives faster qualification
+    s1_to_s2: 0.70               # +17% vs observed (0.60): engaged prospects reach POC more reliably
+    segment_share:
+      enterprise: 0.60           # slight enterprise tilt: marketing-sourced deals skew toward
+      mid_market: 0.33           # larger ICP targets (ABM + intent programs)
+      commercial: 0.07
+    acv:
+      enterprise: 400000
+      mid_market: 145000
+      commercial: 38000

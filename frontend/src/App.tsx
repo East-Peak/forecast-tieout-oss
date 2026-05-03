@@ -17,6 +17,7 @@ const PipelineInventory = lazy(() => import("./pages/PipelineInventory"));
 const ExportPack = lazy(() => import("./pages/ExportPack"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const AuditReadiness = lazy(() => import("./pages/AuditReadiness"));
+const TargetSetter = lazy(() => import("./pages/TargetSetter"));
 
 function RouteLoading() {
   return (
@@ -111,6 +112,7 @@ function ProtectedApp() {
           <Route path="/audit" element={renderRoute(<AuditReadiness />)} />
           <Route path="/export" element={renderRoute(<ExportPack />)} />
           <Route path="/methodology" element={renderRoute(<Methodology />)} />
+          <Route path="/targets" element={renderRoute(<TargetSetter />)} />
         </Route>
       </Routes>
     </PlanningSessionProvider>

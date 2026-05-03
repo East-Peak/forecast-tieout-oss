@@ -7,8 +7,8 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-05-03T01:45:36.319504Z",
-  "git_sha": "4634cbffb81e6da2da415b457f454ba5abcb2c8f",
+  "generated_at": "2026-05-03T19:03:35.192447Z",
+  "git_sha": "fe87dd16c6fc4cdb7eb588a8041eb3161910cd57",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
@@ -919,7 +919,7 @@
         "name": "Olivia Park",
         "role": "vp_sales",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -929,7 +929,7 @@
         "name": "Devon Patel",
         "role": "manager",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -939,7 +939,7 @@
         "name": "Jordan Reyes",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -949,7 +949,7 @@
         "name": "Casey Thompson",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -959,7 +959,7 @@
         "name": "Riley Chen",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -969,7 +969,7 @@
         "name": "Avery Brooks",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -979,7 +979,7 @@
         "name": "Quinn Foster",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -989,7 +989,7 @@
         "name": "Sage Morgan",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -999,7 +999,7 @@
         "name": "Taylor Ng",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -1009,7 +1009,7 @@
         "name": "Morgan Lee",
         "role": "AE",
         "segment": "commercial",
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": "MGR-1",
         "tier": "active"
@@ -1019,7 +1019,7 @@
         "name": "Cameron West",
         "role": "sdr",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -1029,7 +1029,7 @@
         "name": "Rowan Khan",
         "role": "se",
         "segment": null,
-        "start_date": "2024-11-02",
+        "start_date": "2024-11-03",
         "is_active": true,
         "manager_id": null,
         "tier": "active"
@@ -1042,7 +1042,7 @@
           "name": "Olivia Park",
           "role": "vp_sales",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -1052,7 +1052,7 @@
           "name": "Devon Patel",
           "role": "manager",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -1062,7 +1062,7 @@
           "name": "Jordan Reyes",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1072,7 +1072,7 @@
           "name": "Casey Thompson",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1082,7 +1082,7 @@
           "name": "Riley Chen",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1092,7 +1092,7 @@
           "name": "Avery Brooks",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1102,7 +1102,7 @@
           "name": "Quinn Foster",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1112,7 +1112,7 @@
           "name": "Sage Morgan",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1122,7 +1122,7 @@
           "name": "Taylor Ng",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1132,7 +1132,7 @@
           "name": "Morgan Lee",
           "role": "AE",
           "segment": "commercial",
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": "MGR-1",
           "tier": "active"
@@ -1142,7 +1142,7 @@
           "name": "Cameron West",
           "role": "sdr",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -1152,7 +1152,7 @@
           "name": "Rowan Khan",
           "role": "se",
           "segment": null,
-          "start_date": "2024-11-02",
+          "start_date": "2024-11-03",
           "is_active": true,
           "manager_id": null,
           "tier": "active"
@@ -1945,7 +1945,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -2207,7 +2207,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 12363832.31707317,
+          "bu_sales_led_arr": 12363832.317073172,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -2220,10 +2220,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 12363832.31707317,
+            "sales_led_arr": 12363832.317073172,
             "plg_arr": 0,
             "expansion_arr": 512879.2438458689,
-            "total_arr": 12876711.560919039,
+            "total_arr": 12876711.56091904,
             "ramped_aes": 12,
             "total_aes": 12
           },
@@ -2236,9 +2236,9 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -12363832.31707317,
+            "bookings": -12363832.317073172,
             "bookings_pct": 0,
-            "total": -12876711.560919039,
+            "total": -12876711.56091904,
             "total_pct": 0,
             "status": "aligned"
           },
@@ -2435,9 +2435,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 12363832.31707317,
-            "reforecast_bookings": 12363832.31707317,
-            "reforecast_gap": 12363832.31707317,
+            "remaining_bu_bookings": 12363832.317073172,
+            "reforecast_bookings": 12363832.317073172,
+            "reforecast_gap": 12363832.317073172,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -2915,7 +2915,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -3177,7 +3177,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 12363832.31707317,
+          "bu_sales_led_arr": 12363832.317073172,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -3190,10 +3190,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 12363832.31707317,
+            "sales_led_arr": 12363832.317073172,
             "plg_arr": 0,
             "expansion_arr": 512879.2438458689,
-            "total_arr": 12876711.560919039,
+            "total_arr": 12876711.56091904,
             "ramped_aes": 12,
             "total_aes": 12
           },
@@ -3206,9 +3206,9 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -12363832.31707317,
+            "bookings": -12363832.317073172,
             "bookings_pct": 0,
-            "total": -12876711.560919039,
+            "total": -12876711.56091904,
             "total_pct": 0,
             "status": "aligned"
           },
@@ -3405,9 +3405,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 12363832.31707317,
-            "reforecast_bookings": 12363832.31707317,
-            "reforecast_gap": 12363832.31707317,
+            "remaining_bu_bookings": 12363832.317073172,
+            "reforecast_bookings": 12363832.317073172,
+            "reforecast_gap": 12363832.317073172,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -4870,7 +4870,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -5132,7 +5132,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 12363832.31707317,
+          "bu_sales_led_arr": 12363832.317073172,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -5145,10 +5145,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 12363832.31707317,
+            "sales_led_arr": 12363832.317073172,
             "plg_arr": 0,
             "expansion_arr": 512879.2438458689,
-            "total_arr": 12876711.560919039,
+            "total_arr": 12876711.56091904,
             "ramped_aes": 12,
             "total_aes": 12
           },
@@ -5161,9 +5161,9 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -12363832.31707317,
+            "bookings": -12363832.317073172,
             "bookings_pct": 0,
-            "total": -12876711.560919039,
+            "total": -12876711.56091904,
             "total_pct": 0,
             "status": "aligned"
           },
@@ -5360,9 +5360,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 12363832.31707317,
-            "reforecast_bookings": 12363832.31707317,
-            "reforecast_gap": 12363832.31707317,
+            "remaining_bu_bookings": 12363832.317073172,
+            "reforecast_bookings": 12363832.317073172,
+            "reforecast_gap": 12363832.317073172,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -5840,7 +5840,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -6102,7 +6102,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 12363832.31707317,
+          "bu_sales_led_arr": 12363832.317073172,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -6115,10 +6115,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 12363832.31707317,
+            "sales_led_arr": 12363832.317073172,
             "plg_arr": 0,
             "expansion_arr": 512879.2438458689,
-            "total_arr": 12876711.560919039,
+            "total_arr": 12876711.56091904,
             "ramped_aes": 12,
             "total_aes": 12
           },
@@ -6131,9 +6131,9 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -12363832.31707317,
+            "bookings": -12363832.317073172,
             "bookings_pct": 0,
-            "total": -12876711.560919039,
+            "total": -12876711.56091904,
             "total_pct": 0,
             "status": "aligned"
           },
@@ -6330,9 +6330,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 12363832.31707317,
-            "reforecast_bookings": 12363832.31707317,
-            "reforecast_gap": 12363832.31707317,
+            "remaining_bu_bookings": 12363832.317073172,
+            "reforecast_bookings": 12363832.317073172,
+            "reforecast_gap": 12363832.317073172,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -6812,7 +6812,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -7074,7 +7074,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 12363832.31707317,
+          "bu_sales_led_arr": 12363832.317073172,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -7087,10 +7087,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 12363832.31707317,
+            "sales_led_arr": 12363832.317073172,
             "plg_arr": 0,
             "expansion_arr": 512879.2438458689,
-            "total_arr": 12876711.560919039,
+            "total_arr": 12876711.56091904,
             "ramped_aes": 12,
             "total_aes": 12
           },
@@ -7103,9 +7103,9 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -12363832.31707317,
+            "bookings": -12363832.317073172,
             "bookings_pct": 0,
-            "total": -12876711.560919039,
+            "total": -12876711.56091904,
             "total_pct": 0,
             "status": "aligned"
           },
@@ -7302,9 +7302,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 12363832.31707317,
-            "reforecast_bookings": 12363832.31707317,
-            "reforecast_gap": 12363832.31707317,
+            "remaining_bu_bookings": 12363832.317073172,
+            "reforecast_bookings": 12363832.317073172,
+            "reforecast_gap": 12363832.317073172,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -7782,7 +7782,7 @@
           },
           "reforecast": {
             "quarter_state": "in_progress",
-            "elapsed_fraction": 0.021739130434782608,
+            "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
@@ -8044,7 +8044,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 12363832.31707317,
+          "bu_sales_led_arr": 12363832.317073172,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -8057,10 +8057,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 12363832.31707317,
+            "sales_led_arr": 12363832.317073172,
             "plg_arr": 0,
             "expansion_arr": 512879.2438458689,
-            "total_arr": 12876711.560919039,
+            "total_arr": 12876711.56091904,
             "ramped_aes": 12,
             "total_aes": 12
           },
@@ -8073,9 +8073,9 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -12363832.31707317,
+            "bookings": -12363832.317073172,
             "bookings_pct": 0,
-            "total": -12876711.560919039,
+            "total": -12876711.56091904,
             "total_pct": 0,
             "status": "aligned"
           },
@@ -8272,9 +8272,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 12363832.31707317,
-            "reforecast_bookings": 12363832.31707317,
-            "reforecast_gap": 12363832.31707317,
+            "remaining_bu_bookings": 12363832.317073172,
+            "reforecast_bookings": 12363832.317073172,
+            "reforecast_gap": 12363832.317073172,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },

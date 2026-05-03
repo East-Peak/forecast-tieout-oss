@@ -1,0 +1,2 @@
+# False positive: metric field name in OutputsTable.tsx is not a secret
+frontend/src/components/targetSetter/OutputsTable.tsx:generic-api-key:16

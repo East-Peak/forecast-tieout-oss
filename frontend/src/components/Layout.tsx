@@ -8,6 +8,7 @@ const TABS = [
   { to: "/capacity", label: "Capacity & Headcount" },
   { to: "/funnel", label: "Funnel Health" },
   { to: "/inventory", label: "Pipeline Inventory" },
+  { to: "/targets", label: "Target Setter" },
   { to: "/audit", label: "Audit" },
   { to: "/export", label: "Export Pack" },
   { to: "/methodology", label: "Methodology" },

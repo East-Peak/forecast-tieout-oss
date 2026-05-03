@@ -32,6 +32,66 @@ export function quarterForMonth(snapshot: Snapshot, month: string): string | nul
   return null;
 }
 
+/**
+ * Return ALL quarters from the snapshot in first-occurrence (fiscal-calendar)
+ * order. Unlike `getOverridableQuarters`, this includes locked quarters too.
+ */
+export function allQuartersFromSnapshot(snapshot: Snapshot): string[] {
+  const qbm = snapshot.scenario_building_blocks?.quarter_by_month ?? [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const q of qbm) {
+    if (q && !seen.has(q)) {
+      seen.add(q);
+      out.push(q);
+    }
+  }
+  return out;
+}
+
+/**
+ * Return the ISO month strings (e.g. "2026-02-01") that belong to `quarter`.
+ * Returns [] if the quarter is not in the snapshot.
+ */
+export function monthsForQuarter(snapshot: Snapshot, quarter: string): string[] {
+  const months = snapshot.scenario_building_blocks?.months ?? [];
+  const qbm = snapshot.scenario_building_blocks?.quarter_by_month ?? [];
+  const out: string[] = [];
+  for (let i = 0; i < months.length; i++) {
+    if (qbm[i] === quarter) out.push(months[i]);
+  }
+  return out;
+}
+
+/**
+ * Return the last ISO month string for `quarter`, or null if unknown.
+ */
+export function lastMonthOfQuarter(snapshot: Snapshot, quarter: string): string | null {
+  const ms = monthsForQuarter(snapshot, quarter);
+  return ms.length ? ms[ms.length - 1] : null;
+}
+
+/**
+ * Count calendar days from `asOf` (inclusive) to the last day of `quarter`.
+ * Returns 0 if the quarter is unknown or `asOf` is past the quarter end.
+ *
+ * "Last day" is computed as the final day of the last month in the quarter
+ * (e.g. last month "2026-04-01" → last day is 2026-04-30).
+ */
+export function daysUntilQuarterEnd(
+  snapshot: Snapshot,
+  asOf: string,
+  quarter: string,
+): number {
+  const last = lastMonthOfQuarter(snapshot, quarter);
+  if (!last) return 0;
+  // Last day of `last` month = first day of next month minus 1 day.
+  const d = new Date(last);
+  const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0));
+  const ms = lastDay.getTime() - new Date(asOf).getTime();
+  return Math.max(0, Math.round(ms / (1000 * 60 * 60 * 24)));
+}
+
 export interface ScenarioQuarterOverride {
   addAes: number;
   aeMonthTargets: [number, number, number];

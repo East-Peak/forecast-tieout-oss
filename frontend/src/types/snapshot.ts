@@ -6,6 +6,28 @@
  */
 
 // ---------------------------------------------------------------------------
+// TargetSetter — scenario shape as emitted by the engine.
+// Used in snapshot.target_setter.observed_scenario and .scenarios[].
+// All rate fields are REQUIRED; the engine and schema guarantee their presence.
+// ---------------------------------------------------------------------------
+
+export interface SnapshotScenario {
+  id: string;
+  label: string;
+  description?: { primary: string; secondary: string };
+  win_rate_starting: number;
+  win_rate_created: number;
+  push_rate: number;
+  loss_rate: number;
+  ae_self_gen_pct: number;
+  mql_to_s0: number;
+  s0_to_s1: number;
+  s1_to_s2: number;
+  segment_share: Record<string, number>;
+  acv: Record<string, number>;
+}
+
+// ---------------------------------------------------------------------------
 // Root
 // ---------------------------------------------------------------------------
 
@@ -42,6 +64,17 @@ export interface Snapshot {
   bookings_summary_provenance?: Record<string, unknown>;
   top_down_plan: Record<string, unknown>;
   provenance?: Record<string, unknown>;
+
+  /**
+   * TargetSetter block — optional, present only when the engine is configured
+   * with a target_setter section (profiles that declare bookings targets).
+   * observed_scenario mirrors the engine's calibrated rates for the active
+   * period; scenarios is the full palette the UI offers for what-if selection.
+   */
+  target_setter?: {
+    observed_scenario?: SnapshotScenario;
+    scenarios?: SnapshotScenario[];
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -165,13 +198,44 @@ export interface CapacityHeadcountData {
   plan_quarters: QuarterData[];
 }
 
+/**
+ * Provenance record for a single computed rate.
+ * Copied verbatim from source types/snapshot.ts (optional fields preserved).
+ */
+export interface RateProvenance {
+  value: number;
+  source: string;
+  n: number | null;
+  methodology: string;
+  lookback_days?: number;
+  calibrated_at?: string;
+  date_range?: { start: string; end: string };
+}
+
+export type WaterfallRateDescription = RateProvenance;
+
+/** Four waterfall rates emitted by the engine's calibration step. */
+export interface WaterfallRates {
+  win_rate_starting: number;
+  win_rate_created: number;
+  push_rate: number;
+  loss_rate: number;
+}
+
 export interface FunnelHealthData {
   trajectory_quarters: QuarterData[];
   plan_quarters: QuarterData[];
   funnel_rates: Record<string, number>;
+  /**
+   * Intentionally loose: real snapshots have heterogeneous shapes per profile.
+   * Normalization via coerceRateProvenance() happens in pageHelpers.ts.
+   */
   funnel_rate_descriptions: Record<string, unknown>;
   mql_actuals: unknown[];
   rolling_s2_to_won: Record<string, unknown>;
+  /** Optional: present on engine v2+ snapshots. */
+  waterfall_rates?: WaterfallRates;
+  waterfall_rate_descriptions?: Record<keyof WaterfallRates, WaterfallRateDescription>;
 }
 
 export interface PipelineInventoryData {
