@@ -184,13 +184,15 @@ export default function Layout() {
         {/* Spacer pushes the operator action buttons to the right */}
         <div className="flex-1" />
 
-        {/* Target Setter — distinctive button (target/bullseye, emerald) */}
+        {/* Target Setter — distinctive button (target/bullseye, emerald).
+            Active state gets a darker fill + a contrasting ring so the user
+            can see at a glance which operator action is currently selected. */}
         <NavLink
           to={withCurrentSearch(TARGET_SETTER_TAB.to)}
           className={({ isActive }) =>
             `px-4 py-1.5 text-sm whitespace-nowrap rounded-md transition-colors flex items-center gap-1.5 font-medium ${
               isActive
-                ? "bg-emerald-600 text-white shadow-sm"
+                ? "bg-emerald-700 text-white shadow-md ring-2 ring-emerald-300 ring-offset-2 ring-offset-surface"
                 : "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm"
             }`
           }
@@ -207,7 +209,7 @@ export default function Layout() {
           className={({ isActive }) =>
             `px-4 py-1.5 text-sm whitespace-nowrap rounded-md transition-colors flex items-center gap-1.5 font-medium ${
               isActive
-                ? "bg-blue-600 text-white shadow-sm"
+                ? "bg-blue-700 text-white shadow-md ring-2 ring-blue-300 ring-offset-2 ring-offset-surface"
                 : "bg-blue-500 text-white hover:bg-blue-600 shadow-sm"
             }`
           }
