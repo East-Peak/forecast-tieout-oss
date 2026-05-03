@@ -44,7 +44,7 @@ def _distribute_quarterly_to_monthly(quarters, field: str, months: list) -> list
 
 
 def _resolve_monthly_sales_led_targets(result: TieoutResult, scenario) -> tuple[list[float | None], bool]:
-    months = list(getattr(scenario, "monthly_months", []) or [])
+    months = list(scenario.monthly_months)
     if not _supports_monthly_sales_led_targets(result):
         return [None] * len(months), False
     return _distribute_quarterly_to_monthly(scenario.quarters, "td_bookings", months), True
@@ -52,21 +52,20 @@ def _resolve_monthly_sales_led_targets(result: TieoutResult, scenario) -> tuple[
 
 def build_bookings_bridge_view_model(result: TieoutResult) -> dict:
     scenario = result.primary_scenario
-    months = list(getattr(scenario, "monthly_months", []) or [])
-    month_labels = [m.strftime("%b %Y") if hasattr(m, "strftime") else str(m) for m in months]
+    months = list(scenario.monthly_months)
+    month_labels = [m.strftime("%b %Y") for m in months]
     count = len(months)
 
-    existing_wins = (list(getattr(scenario, "monthly_existing_inventory_wins", []) or []) + [0.0] * count)[:count]
-    future_wins = (list(getattr(scenario, "monthly_future_generation_wins", []) or []) + [0.0] * count)[:count]
+    raw_total = scenario.monthly_total_expected_wins
+    existing_wins = (list(scenario.monthly_existing_inventory_wins) + [0.0] * count)[:count]
+    future_wins = (list(scenario.monthly_future_generation_wins) + [0.0] * count)[:count]
     total_wins_uncapped = [
-        (list(getattr(scenario, "monthly_total_expected_wins", []) or []) + [0.0] * count)[idx]
-        if idx < len(list(getattr(scenario, "monthly_total_expected_wins", []) or []))
-        else existing_wins[idx] + future_wins[idx]
+        raw_total[idx] if idx < len(raw_total) else existing_wins[idx] + future_wins[idx]
         for idx in range(count)
     ]
-    capped_wins = (list(getattr(scenario, "monthly_bookings_capped", []) or []) + [0.0] * count)[:count]
+    capped_wins = (list(scenario.monthly_bookings_capped) + [0.0] * count)[:count]
     monthly_targets, monthly_targets_supported = _resolve_monthly_sales_led_targets(result, scenario)
-    monthly_capacity = list(getattr(scenario, "monthly_capacity", []) or [])
+    monthly_capacity = list(scenario.monthly_capacity)
 
     monthly_rows = []
     cum_existing = []
@@ -115,7 +114,7 @@ def build_bookings_bridge_view_model(result: TieoutResult) -> dict:
         q_existing = 0.0
         q_future = 0.0
         for idx, month in enumerate(months):
-            if hasattr(month, "month") and (
+            if (
                 quarter.period_start <= month <= quarter.period_end
                 or (
                     quarter.period_start.year == month.year
@@ -135,7 +134,7 @@ def build_bookings_bridge_view_model(result: TieoutResult) -> dict:
                 "gap_pct": q_gap / (quarter.td_bookings or 1),
                 "from_existing": q_existing,
                 "from_future": q_future,
-                "data_basis": getattr(quarter, "confidence_tier", ""),
+                "data_basis": quarter.confidence_tier,
             }
         )
 
@@ -154,10 +153,7 @@ def build_bookings_bridge_view_model(result: TieoutResult) -> dict:
             "cum_existing": cum_existing,
             "cum_total_uncapped": cum_total_uncapped,
             "cum_target": cum_target,
-            "capacity": ([
-                mc.ae_capacity if hasattr(mc, "ae_capacity") else 0.0
-                for mc in monthly_capacity
-            ] + [0.0] * count)[:count],
+            "capacity": ([mc.ae_capacity for mc in monthly_capacity] + [0.0] * count)[:count],
         },
         "totals": {
             "existing": total_existing,
@@ -195,10 +191,10 @@ def build_funnel_pacing_view_model(quarter, as_of: date | None = None) -> dict:
 
     rows = []
     for stage_name, weekly_target, actual_weekly_avg in [
-        ("MQLs", quarter.td_mqls_weekly, quarter.actual_mqls if hasattr(quarter, "actual_mqls") else 0),
-        ("S0 (Opps Created)", quarter.td_s0_weekly, quarter.actual_s0 if hasattr(quarter, "actual_s0") else 0),
-        ("S1 (Meetings Held)", quarter.td_s1_weekly, quarter.actual_s1 if hasattr(quarter, "actual_s1") else 0),
-        ("S2 (Qualified Pipeline)", quarter.td_s2_weekly, quarter.actual_s2 if hasattr(quarter, "actual_s2") else 0),
+        ("MQLs", quarter.td_mqls_weekly, quarter.actual_mqls),
+        ("S0 (Opps Created)", quarter.td_s0_weekly, quarter.actual_s0),
+        ("S1 (Meetings Held)", quarter.td_s1_weekly, quarter.actual_s1),
+        ("S2 (Qualified Pipeline)", quarter.td_s2_weekly, quarter.actual_s2),
     ]:
         weekly_actual = actual_weekly_avg or 0
         qtd_target = int(weekly_target * elapsed_weeks) if weekly_target else 0
@@ -249,7 +245,7 @@ def build_se_capacity_view_model(result: TieoutResult) -> dict:
                 count += 1
         return count
 
-    prov = getattr(scenario, "monthly_rollforward_provenance", None) or {}
+    prov = scenario.monthly_rollforward_provenance or {}
     count_by_stage = prov.get("inventory_count_by_stage", {})
     inv_by_stage = prov.get("inventory_by_stage", {})
     s2_plus_stages = ["S2", "S3", "S4", "S5"]
@@ -276,7 +272,7 @@ def build_se_capacity_view_model(result: TieoutResult) -> dict:
             plan_se_target = headcount_targets[quarter_labels[quarter_idx]].get("sales_engineers")
 
     monthly_rows = []
-    for monthly_capacity in getattr(scenario, "monthly_capacity", []) or []:
+    for monthly_capacity in scenario.monthly_capacity:
         se_count = roster_se_count_at(monthly_capacity.month)
         ae_count = monthly_capacity.ae_total or 0
         monthly_rows.append(
@@ -307,8 +303,8 @@ def build_scenario_overlay_view_model(result: TieoutResult, flexed_scenario=None
     effective = flexed_scenario if flexed_scenario is not None else baseline
     has_scenario = flexed_scenario is not None
 
-    months = list(baseline.monthly_months or [])
-    month_labels = [m.strftime("%b %Y") if hasattr(m, "strftime") else str(m) for m in months]
+    months = list(baseline.monthly_months)
+    month_labels = [m.strftime("%b %Y") for m in months]
     count = len(months)
     monthly_targets, monthly_targets_supported = _resolve_monthly_sales_led_targets(result, baseline)
 

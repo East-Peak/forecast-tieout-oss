@@ -6,8 +6,6 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Optional
 
-from gtm_model.tieout.runtime.env import detect_snow_cli_command, get_active_snowflake_session
-
 logger = logging.getLogger(__name__)
 
 
@@ -18,24 +16,18 @@ class TieoutConnectorGateway:
     owner: Any
 
     def get_sf_connector(self):
-        """Legacy seam — returns None.
+        """Legacy seam — no Salesforce connector ships with the OSS.
 
-        No Salesforce connector ships with the OSS. To wire one, follow
-        the ConnectorInterface pattern in
-        `engine/connectors/csv_connector.py` and register a backend via
-        `engine/profile_backend/factory.py`. See ARCHITECTURE.md.
+        Wire your own via ConnectorInterface + ProfileBackend. See ARCHITECTURE.md.
         """
-        self.owner._sf_checked = True
         self.owner.sf = None
         return None
 
     def get_cdw_connector(self):
-        """Legacy seam — returns None.
+        """Legacy seam — no warehouse connector ships with the OSS.
 
-        No warehouse connector ships with the OSS. Wire your warehouse
-        via ConnectorInterface + ProfileBackend. See ARCHITECTURE.md.
+        Wire your own via ConnectorInterface + ProfileBackend. See ARCHITECTURE.md.
         """
-        self.owner._cdw_checked = True
         self.owner.cdw = None
         return None
 

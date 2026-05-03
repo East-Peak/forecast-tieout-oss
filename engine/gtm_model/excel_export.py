@@ -144,16 +144,6 @@ _TRANSITION_LABELS = {
 }
 
 
-def _primary_scenario(result: TieoutResult) -> ScenarioResult:
-    """Return the default user-facing scenario for exports."""
-    return getattr(result, "primary_scenario", None) or getattr(result, "trajectory", None) or result.base
-
-
-def _archived_plan(result: TieoutResult) -> ScenarioResult:
-    """Return the archived plan scenario for compatibility exports."""
-    return getattr(result, "archived_plan", None) or result.base
-
-
 def _display_label(value: object, *, title_case: bool = True) -> str:
     """Render compact display labels without mangling filenames."""
     raw_text = str(value or "").strip()
@@ -541,7 +531,7 @@ def _comparison_contract() -> dict:
 
 def _build_review_metadata(result: TieoutResult) -> dict:
     """Build metadata attached to review-pack exports."""
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     modes = sorted({
         str(row.get("mode", "unknown"))
         for row in (getattr(scenario, "monthly_source_detail", []) or [])
@@ -566,8 +556,8 @@ def _build_executive_summary(wb: "Workbook", result: TieoutResult):
     ws.title = "Executive Summary"
     ws.sheet_properties.tabColor = ACCENT_BLUE
 
-    base = _archived_plan(result)
-    scenario = _primary_scenario(result)
+    base = result.archived_plan
+    scenario = result.primary_scenario
     health = result.health_status or {}
     plan = result.top_down_plan or {}
     comparison_contract = _comparison_contract()
@@ -941,7 +931,7 @@ def _build_funnel_tieout(wb: "Workbook", result: TieoutResult):
     ws = wb.create_sheet("Funnel Tie-Out")
     ws.sheet_properties.tabColor = "E3B341"  # warm amber
 
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
 
     ws["A1"] = "FY26 Funnel Tie-Out — Weekly Funnel Pace and Source Conversions"
     ws["A1"].style = "title_style"
@@ -1109,7 +1099,7 @@ def _build_operating_reforecast(wb: "Workbook", result: TieoutResult):
     ws = wb.create_sheet("Operating Reforecast")
     ws.sheet_properties.tabColor = GREEN
 
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     as_of = date.today()
 
     ws["A1"] = "FY26 Operating Reforecast — Actuals vs Plan Pace vs Trajectory"
@@ -1160,7 +1150,7 @@ def _build_pipeline_cohorts(wb: "Workbook", result: TieoutResult):
     ws = wb.create_sheet("Pipeline Cohorts")
     ws.sheet_properties.tabColor = "A371F7"  # purple
 
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
 
     ws["A1"] = "FY26 Pipeline Cohorts — Monthly Pipeline Created and Trajectory ARR"
     ws["A1"].style = "title_style"
@@ -1259,7 +1249,7 @@ def _build_source_detail(wb: "Workbook", result: TieoutResult):
     ws = wb.create_sheet("Source Detail")
     ws.sheet_properties.tabColor = ACCENT_BLUE
 
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
 
     ws["A1"] = "FY26 Source Detail — Stream-Level Driver Drilldown"
     ws["A1"].style = "title_style"
@@ -1335,7 +1325,7 @@ def _build_expansion_detail(wb: "Workbook", result: TieoutResult):
     ws = wb.create_sheet("Expansion Detail")
     ws.sheet_properties.tabColor = YELLOW
 
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
 
     ws["A1"] = "FY26 Expansion Detail — Standalone Existing-Customer Workstream"
     ws["A1"].style = "title_style"
@@ -1395,7 +1385,7 @@ def _build_monthly_capacity(wb: "Workbook", result: TieoutResult):
     ws = wb.create_sheet("Monthly Capacity")
     ws.sheet_properties.tabColor = GREEN
 
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     se_view_model = build_se_capacity_view_model(result)
 
     ws["A1"] = "FY26 Monthly Capacity Timeline"
@@ -1467,7 +1457,7 @@ def _build_scenario_comparison(wb: "Workbook", result: TieoutResult):
     """Build scenario comparison sheet if multiple scenarios exist."""
     if not result.scenarios:
         return
-    archived = _archived_plan(result)
+    archived = result.archived_plan
     comparison_contract = _comparison_contract()
 
     ws = wb.create_sheet("Scenarios")
@@ -1837,7 +1827,7 @@ def _build_reviewer_notes(wb: "Workbook", result: TieoutResult):
 
     plan = result.top_down_plan or {}
     metadata = _build_review_metadata(result)
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     comparison_contract = metadata.get("comparison_contract") or _comparison_contract()
 
     ws["A1"] = "Reviewer Notes — Caveats, Context, and Run Metadata"
@@ -2000,7 +1990,7 @@ def _build_assumptions(wb: "Workbook", result: TieoutResult):
     ])
 
     # ── Conversion Rate Methodology  ──────────────────────
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     adr007_items = [
         ("Methodology", "Weighted blend of mature monthly cohorts "),
     ]
@@ -2104,7 +2094,7 @@ def export_tieout_json(
     scenario_overrides: dict = None,
 ) -> Union[Path, io.BytesIO]:
     """Export the tie-out result as a JSON snapshot with run metadata."""
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     bookings_bridge_vm = build_bookings_bridge_view_model(result)
     se_capacity_vm = build_se_capacity_view_model(result)
     scenario_vm = build_scenario_overlay_view_model(result, flexed_scenario=flexed_scenario)
@@ -2159,7 +2149,7 @@ def export_tieout_json(
             "top_down_plan": result.top_down_plan,
             "assumptions_snapshot": result.assumptions_snapshot,
             "trajectory": scenario.to_dict(),
-            "archived_plan": _archived_plan(result).to_dict(),
+            "archived_plan": result.archived_plan.to_dict(),
             "base": result.base.to_dict(),
             "scenarios": {name: s.to_dict() for name, s in result.scenarios.items()},
         },

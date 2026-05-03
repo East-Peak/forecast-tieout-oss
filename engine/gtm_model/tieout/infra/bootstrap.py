@@ -41,10 +41,8 @@ def bootstrap_tieout_owner(
 
     # Connector state stays lazy so __init__ remains cheap in tests.
     owner.cdw = None
-    owner._cdw_checked = False
     owner._cdw_queries_failed = False
     owner.sf = None
-    owner._sf_checked = False
     owner._beginning_arr_cache = None
     # Bookings cache is keyed by as_of.iso so different --as-of values
     # don't return stale results.

@@ -79,10 +79,7 @@ def build_capacity_realism_benchmark_from_rollforward(tieout: Any, trajectory_ro
     s2_to_won = tieout._get_rolling_s2_to_won_rate()
     avg_deal_size = float(tieout.assumptions.get("funnel", {}).get("avg_acv", 300_000) or 300_000.0)
 
-    try:
-        roster = tieout._try_roster() or []
-    except Exception:
-        roster = []
+    roster = tieout._try_roster() or []
 
     active_segments = [
         str(rep.get("segment") or "enterprise")
