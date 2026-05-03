@@ -1,14 +1,4 @@
-"""
-Rep capacity model for the GTM model.
-
-Calculates effective capacity based on quotas, ramp schedules,
-and expected attainment rates.
-
-Supports three role types:
-- SDR: Meeting/SQL generation capacity
-- AE: Quota-based bookings capacity
-- SE: POC/technical validation bandwidth
-"""
+"""Rep capacity: quota, ramp, and attainment for SDR / AE / SE roles."""
 
 from dataclasses import dataclass, field
 from datetime import date, datetime
@@ -387,10 +377,6 @@ def create_hiring_plan(
     return hires
 
 
-# =============================================================================
-# SDR Capacity Model
-# =============================================================================
-
 # SDR-specific ramp curve (faster ramp than AE)
 SDR_RAMP = RampCurve(
     month_1=0.00,
@@ -486,10 +472,6 @@ class SDRCapacity:
         }
 
 
-# =============================================================================
-# SE Capacity Model
-# =============================================================================
-
 # SE-specific ramp curve (longer ramp due to product learning)
 SE_RAMP = RampCurve(
     month_1=0.00,
@@ -583,10 +565,6 @@ class SECapacity:
             "fully_loaded_cost": self.fully_loaded_cost,
         }
 
-
-# =============================================================================
-# Extended Team Capacity (SDR + AE + SE)
-# =============================================================================
 
 @dataclass
 class ExtendedTeamCapacity:
@@ -828,11 +806,6 @@ def required_ses_for_pocs(
     """
     pocs_per_se_per_quarter = monthly_poc_capacity * 3
     return math.ceil(poc_target / pocs_per_se_per_quarter)
-
-
-# =============================================================================
-# Monthly Capacity Calculations (NEW for v3)
-# =============================================================================
 
 
 @dataclass

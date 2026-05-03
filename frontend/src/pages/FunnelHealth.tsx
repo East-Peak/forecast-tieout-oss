@@ -39,10 +39,6 @@ import {
   resolvePlanPacingField,
 } from "../lib/plans";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
 function getNestedNumber(
   obj: Record<string, unknown> | null | undefined,
   directKey: string,
@@ -122,10 +118,6 @@ function deltaPctStr(plan: number | null, actual: number | null): string {
   return `${sign}${pctVal.toFixed(0)}%`;
 }
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
 export default function FunnelHealth() {
   const { snapshot, selectedPlan: plan, snapshotMeta } = usePlanningSessionContext();
   const data: FunnelHealthData = snapshot.model_output.funnel_health;
@@ -135,7 +127,6 @@ export default function FunnelHealth() {
   const tq = data.trajectory_quarters.find((q) => q.quarter === selectedQtr);
   const tqR = tq as Record<string, unknown> | undefined;
 
-  // --- Extract nested objects for selected quarter ---
   const bottomsUp = tqR?.bottoms_up as Record<string, unknown> | undefined;
   const actuals = tqR?.actuals as Record<string, unknown> | undefined;
   const funnelTieout = tqR?.funnel_tieout as Record<string, Record<string, unknown>> | undefined;
@@ -169,7 +160,6 @@ export default function FunnelHealth() {
     snapshotAsOf: snapshot.as_of,
   });
 
-  // --- Top-level metrics ---
   const planBookings = selectedPlanBookings;
   const buSalesLed = (tqR?.bu_sales_led_arr as number) ?? (bottomsUp?.sales_led_arr as number) ?? null;
   const actualBookings = (actuals?.bookings as number) ?? (reforecast?.actual_bookings as number) ?? null;
@@ -211,7 +201,6 @@ export default function FunnelHealth() {
     },
   ];
 
-  // --- Weekly Funnel Pace Table ---
   const paceRows: {
     stage: string;
     plan: number | null;
@@ -273,7 +262,6 @@ export default function FunnelHealth() {
     actual: buSalesLed,
   });
 
-  // --- Observed Funnel Rate rows ---
   const seenFunnelRateKeys = new Set<string>();
   const funnelRateRows = Object.entries(data.funnel_rates).flatMap(
     ([key, value]) => {
@@ -300,7 +288,6 @@ export default function FunnelHealth() {
     }
   );
 
-  // --- Rolling S2 Win Rate ---
   const rollingS2 = data.rolling_s2_to_won;
   const hasRolling =
     rollingS2 && typeof rollingS2 === "object" && "rate" in rollingS2;
@@ -317,14 +304,11 @@ export default function FunnelHealth() {
     ? ((rollingS2 as Record<string, unknown>).method as string) ?? ""
     : "";
 
-  // --- Source Stream Breakdown ---
   const streams = sourceBreakdown?.streams as Record<string, Record<string, unknown>> | undefined;
   const streamEntries = streams ? Object.values(streams).filter((s) => typeof s === "object") : [];
 
-  // --- Expansion Breakdown ---
   const hasExpansion = expansionBreakdown && typeof expansionBreakdown === "object";
 
-  // --- Quarterly summary across all quarters ---
   const quarterRows = data.trajectory_quarters.map((tq) => {
     const pq = data.plan_quarters.find((p) => p.quarter === tq.quarter);
     const a = (tq as Record<string, unknown>).actuals as
@@ -356,7 +340,6 @@ export default function FunnelHealth() {
     };
   });
 
-  // --- Funnel Waterfall: Plan vs Trajectory per quarter ---
   const waterfallByQuarter = data.trajectory_quarters.map((tq) => {
     const pq = data.plan_quarters.find((p) => p.quarter === tq.quarter);
     const tqR = tq as Record<string, unknown>;
@@ -400,7 +383,6 @@ export default function FunnelHealth() {
     };
   });
 
-  // --- ARR Mix: Plan vs Trajectory ---
   const arrMixByQuarter = data.trajectory_quarters.map((tq) => {
     const tqR = tq as Record<string, unknown>;
 
@@ -421,7 +403,6 @@ export default function FunnelHealth() {
   });
   const hasArrMixBreakdown = false;
 
-  // --- Conversion rate alerts ---
   const alerts: { message: string; color: "red" | "emerald" }[] = [];
   for (const row of quarterRows) {
     if (row.mql_plan !== null && row.mql_actual !== null && row.mql_actual > 0) {

@@ -1,42 +1,4 @@
-"""
-Pipeline forecasting and prediction module.
-
-Provides three key forecasting capabilities:
-1. Pipeline Forecast - Expected bookings from current pipeline with confidence intervals
-2. Channel Requirements - Pipeline requirements by source channel (SDR/Marketing/AE)
-3. Rolling Forecast - Trajectory-based projection from historical run rate
-
-Usage:
-    from gtm_model.forecast import (
-        calculate_pipeline_forecast,
-        calculate_channel_requirements,
-        calculate_rolling_forecast,
-    )
-
-    # Forecast bookings from pipeline
-    forecast = calculate_pipeline_forecast(
-        pipeline_by_stage={"S2": 5_000_000, "S3": 3_000_000, ...},
-        pipeline_aging=aging_data,
-        target=12_000_000,
-        close_start=date(2026, 11, 1),
-        close_end=date(2027, 1, 31),
-    )
-
-    # Get channel requirements
-    channels = calculate_channel_requirements(
-        target_bookings=12_000_000,
-        target_period="Q2FY26",
-        source_mix={"sdr_sourced": 0.40, "marketing_sourced": 0.16, ...},
-        pipeline_by_source=actual_data,
-    )
-
-    # Rolling forecast from trajectory
-    rolling = calculate_rolling_forecast(
-        monthly_bookings={"2026-11": 1_000_000, ...},
-        target=12_000_000,
-        target_end=date(2027, 1, 31),
-    )
-"""
+"""Pipeline forecasting: weighted bookings projection, channel requirements, and rolling-trajectory forecast."""
 
 from dataclasses import dataclass, field
 from datetime import date
@@ -49,17 +11,11 @@ from .rate_defaults import get_default_forecast_stage_conversion
 from .tieout.runtime.env import load_yaml_resource
 
 
-# =============================================================================
-# CONSTANTS
-# =============================================================================
-
-# Default stage conversion rates (stage to won) — sequential multiplicative
-# methodology: product of per-stage advance rates (s2→s3 * s3→s4 * ... * s5→won).
-# This intentionally differs from monte_carlo.py's all-inclusive win rates.
+# Sequential multiplicative methodology: product of per-stage advance rates
+# (s2→s3 * s3→s4 * ... * s5→won). Intentionally differs from monte_carlo.py's
+# all-inclusive win rates.
 DEFAULT_STAGE_CONVERSION = get_default_forecast_stage_conversion()
 
-# Age-based probability multipliers
-# Deals that linger too long have lower close rates
 AGE_MULTIPLIERS = {
     (0, 30): 1.00,     # 0-30 days: full probability
     (31, 60): 0.85,    # 31-60 days: 85%
@@ -76,10 +32,6 @@ class ChannelStatus(Enum):
     AT_RISK = "at_risk"
     BEHIND = "behind"
 
-
-# =============================================================================
-# DATA STRUCTURES
-# =============================================================================
 
 @dataclass
 class PipelineForecast:
@@ -427,10 +379,6 @@ class RollingForecast:
         }
 
 
-# =============================================================================
-# CORE FUNCTIONS
-# =============================================================================
-
 def get_age_multiplier(days_in_stage: int) -> float:
     """
     Get age-based probability multiplier for a deal.
@@ -772,10 +720,6 @@ def calculate_rolling_forecast(
         monthly_projection=monthly_projection,
     )
 
-
-# =============================================================================
-# HELPER FUNCTIONS
-# =============================================================================
 
 def load_forecast_config(config_path: Optional[str] = None) -> dict:
     """
