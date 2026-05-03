@@ -6,14 +6,6 @@ from gtm_model.tieout.runtime.env import load_yaml_resource
 from gtm_model.tieout.types import TieoutResult
 
 
-def _primary_scenario(result: TieoutResult):
-    return getattr(result, "primary_scenario", None) or getattr(result, "trajectory", None) or result.base
-
-
-def _archived_plan(result: TieoutResult):
-    return getattr(result, "archived_plan", None) or result.base
-
-
 def _plan_is_board_reference(plan_meta: dict | None) -> bool:
     plan_meta = plan_meta or {}
     plan_id = str(plan_meta.get("plan_id") or "")
@@ -59,7 +51,7 @@ def _resolve_monthly_sales_led_targets(result: TieoutResult, scenario) -> tuple[
 
 
 def build_bookings_bridge_view_model(result: TieoutResult) -> dict:
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     months = list(getattr(scenario, "monthly_months", []) or [])
     month_labels = [m.strftime("%b %Y") if hasattr(m, "strftime") else str(m) for m in months]
     count = len(months)
@@ -234,7 +226,7 @@ def build_funnel_pacing_view_model(quarter, as_of: date | None = None) -> dict:
 
 
 def build_se_capacity_view_model(result: TieoutResult) -> dict:
-    scenario = _primary_scenario(result)
+    scenario = result.primary_scenario
     roster_data = load_yaml_resource("roster.yaml")
     roster_se_active = (roster_data.get("se_active", []) or []) if roster_data else []
     roster_se_incoming = (roster_data.get("se_incoming", []) or []) if roster_data else []
@@ -311,7 +303,7 @@ def build_se_capacity_view_model(result: TieoutResult) -> dict:
 
 
 def build_scenario_overlay_view_model(result: TieoutResult, flexed_scenario=None) -> dict:
-    baseline = _primary_scenario(result)
+    baseline = result.primary_scenario
     effective = flexed_scenario if flexed_scenario is not None else baseline
     has_scenario = flexed_scenario is not None
 

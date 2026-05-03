@@ -9,20 +9,12 @@ from typing import Any
 from gtm_model.tieout.types import ScenarioResult, TieoutResult
 
 
-def _primary_scenario(result: TieoutResult) -> ScenarioResult:
-    return getattr(result, "primary_scenario", None) or getattr(result, "trajectory", None) or result.base
-
-
-def _archived_plan(result: TieoutResult) -> ScenarioResult:
-    return getattr(result, "archived_plan", None) or result.base
-
-
 def _trajectory_rollforward(result: TieoutResult) -> dict:
-    """Return the active trajectory rollforward provenance payload."""
-    primary = _primary_scenario(result)
     return (
-        getattr(getattr(result, "trajectory", None), "monthly_rollforward_provenance", {}) or {}
-    ) or (primary.monthly_rollforward_provenance or {})
+        result.trajectory.monthly_rollforward_provenance
+        or result.primary_scenario.monthly_rollforward_provenance
+        or {}
+    )
 
 
 def _format_money(value: float) -> str:
@@ -257,11 +249,9 @@ def build_capacity_realism_benchmark(tieout: Any, result: TieoutResult) -> dict:
 
 def build_runtime_source_contract(tieout: Any, result: TieoutResult) -> list[dict]:
     """Return the active runtime signal contract with source precedence."""
-    primary = _primary_scenario(result)
+    primary = result.primary_scenario
     rollforward = primary.monthly_rollforward_provenance or {}
-    trajectory_rollforward = (
-        getattr(getattr(result, "trajectory", None), "monthly_rollforward_provenance", {}) or {}
-    )
+    trajectory_rollforward = result.trajectory.monthly_rollforward_provenance or {}
     beginning = result.beginning_arr_provenance or {}
     finance = result.bookings_summary_provenance or {}
     arr_movements = getattr(result, "arr_movements", {}) or {}
@@ -396,13 +386,11 @@ def build_rate_contract(tieout: Any) -> list[dict]:
 
 def build_semantic_scorecard(tieout: Any, result: TieoutResult) -> dict:
     """Build a compact semantic review payload for plan vs trajectory."""
-    primary = _primary_scenario(result)
-    archived = _archived_plan(result)
+    primary = result.primary_scenario
+    archived = result.archived_plan
     archived_by_quarter = _quarter_map(archived)
     finance_totals = (result.bookings_summary or {}).get("totals", {}) or {}
-    trajectory_rollforward = (
-        getattr(getattr(result, "trajectory", None), "monthly_rollforward_provenance", {}) or {}
-    )
+    trajectory_rollforward = result.trajectory.monthly_rollforward_provenance or {}
 
     quarters = []
     stream_rows = []
