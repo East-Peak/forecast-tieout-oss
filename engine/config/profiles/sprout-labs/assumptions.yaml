@@ -7,26 +7,44 @@ stage_rates:
 lookback_days: 365
 monte_carlo_iterations: 10000
 funnel:
-  mql_to_s0: 0.16
+  mql_to_s0: 0.054
   s0_to_s1: 0.58
   s1_to_s2: 0.34
   s2_to_won: 0.31
   avg_acv: 134000
-  source_mix: {marketing_sourced: 0.52, sdr_sourced: 0.28, ae_sourced: 0.20}
-segment_share: {mid_market: 0.72, commercial: 0.28}
-avg_acv: {mid_market: 165000, commercial: 55000}
-productivity_per_ae_per_month: {mid_market: 115000, commercial: 50000}
+  source_mix:
+    marketing_sourced: 0.52
+    sdr_sourced: 0.28
+    ae_sourced: 0.2
+segment_share:
+  mid_market: 0.72
+  commercial: 0.28
+avg_acv:
+  mid_market: 165000
+  commercial: 55000
+productivity_per_ae_per_month:
+  mid_market: 57500
+  commercial: 25000
 segment_productivity:
   mid_market:
     annual_quota: 1500000
-    attainment_rate: 0.90
-    productivity_per_ae_per_month: 115000
-    ramp_curve: {month_1: 0.00, month_2: 0.25, month_3: 0.55, month_4: 0.80, month_5_plus: 1.00}
+    attainment_rate: 0.9
+    productivity_per_ae_per_month: 57500
+    ramp_curve:
+      month_1: 0.0
+      month_2: 0.25
+      month_3: 0.55
+      month_4: 0.8
+      month_5_plus: 1.0
   commercial:
     annual_quota: 900000
     attainment_rate: 0.72
-    productivity_per_ae_per_month: 50000
-    ramp_curve: {month_1: 0.00, month_2: 0.40, month_3: 0.75, month_4_plus: 1.00}
+    productivity_per_ae_per_month: 25000
+    ramp_curve:
+      month_1: 0.0
+      month_2: 0.4
+      month_3: 0.75
+      month_4_plus: 1.0
 capacity:
   attainment_rate: 0.82
 waterfall_rates:
@@ -39,6 +57,10 @@ target_setter_defaults:
   win_rate_created: 0.31
   push_rate: 0.24
   loss_rate: 0.45
-  ae_self_gen_pct: 0.20
-  segment_share: {mid_market: 0.72, commercial: 0.28}
-  acv: {mid_market: 165000, commercial: 55000}
+  ae_self_gen_pct: 0.2
+  segment_share:
+    mid_market: 0.72
+    commercial: 0.28
+  acv:
+    mid_market: 165000
+    commercial: 55000

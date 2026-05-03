@@ -7,8 +7,8 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-05-03T21:49:15.369645Z",
-  "git_sha": "ea4b7d564e3e8610efc0e64f9a13ab18c918a0f1",
+  "generated_at": "2026-05-03T23:54:52.003922Z",
+  "git_sha": "cd48cebab92f9cc1edfe9fa3ac19a3b4cec2e5d9",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
@@ -1688,7 +1688,7 @@
     },
     "overall_win_rate": 0.5352112676056338,
     "funnel_rates": {
-      "mql_to_s0": 0.27,
+      "mql_to_s0": 0.1,
       "s0_to_s1": 0.55,
       "s1_to_s2": 0.47,
       "plg_signup_to_pql": 0.05,
@@ -2824,29 +2824,29 @@
         0.0,
         0.0,
         0.0,
-        12547716.08100845,
-        13911598.26372676,
-        15392384.63353521,
-        16249682.005529575,
-        16171745.880802816,
-        16951107.12807042,
-        17145947.439887322,
-        16561426.504436618,
-        16951107.12807042
+        3604490.3585915496,
+        3996282.78887324,
+        4421657.42746479,
+        4667926.955070423,
+        4645538.816197183,
+        4869420.204929578,
+        4925390.552112676,
+        4757479.510563381,
+        4869420.204929578
       ],
       "total_expected": [
         3437000.0,
         2897000.0,
         697000.0,
-        15218816.08100845,
-        20127428.26372676,
-        18572034.63353521,
-        17355962.005529575,
-        18504515.880802818,
-        17471667.12807042,
-        17145947.439887322,
-        16561426.504436618,
-        16951107.12807042
+        6275590.358591549,
+        10212112.78887324,
+        7601307.42746479,
+        5774206.955070423,
+        6978308.816197183,
+        5389980.204929578,
+        4925390.552112676,
+        4757479.510563381,
+        4869420.204929578
       ],
       "capped": [
         3437000.0,
@@ -2864,17 +2864,17 @@
       ],
       "overflow": [
         0.0,
-        2983301.1437145555,
-        11704419.525953054,
-        23359902.27362817,
-        39923997.2040216,
-        54932698.50422348,
-        68725327.17641972,
-        83666509.72388922,
-        97574843.51862632,
-        111157457.62518032,
-        124155550.7962836,
-        137543324.59102067
+        0.0,
+        1722072.1646948382,
+        4434329.189953056,
+        11083108.645492963,
+        15121082.739624422,
+        17331956.361361515,
+        20746931.844225366,
+        22573578.715821613,
+        23935635.934600957,
+        25129782.111831006,
+        26435868.983427253
       ],
       "plan_existing_wins": [
         0.0,
@@ -2891,32 +2891,32 @@
         0.0
       ],
       "plan_future_wins": [
-        2493955.9912563376,
-        6546634.477047887,
-        9819951.71557183,
-        12547716.08100845,
-        13911598.26372676,
-        15392384.63353521,
-        16249682.005529575,
-        16171745.880802816,
-        16951107.12807042,
-        17145947.439887322,
-        16561426.504436618,
-        16951107.12807042
+        716420.4439436621,
+        1880603.665352113,
+        2820905.4980281694,
+        3604490.3585915496,
+        3996282.78887324,
+        4421657.42746479,
+        4667926.955070423,
+        4645538.816197183,
+        4869420.204929578,
+        4925390.552112676,
+        4757479.510563381,
+        4869420.204929578
       ],
       "plan_total": [
-        2493955.9912563376,
-        6546634.477047887,
-        12284451.71557183,
-        15218816.08100845,
-        20127428.26372676,
-        18572034.63353521,
-        17355962.005529575,
-        18504515.880802818,
-        17471667.12807042,
-        17145947.439887322,
-        16561426.504436618,
-        16951107.12807042
+        716420.4439436621,
+        1880603.665352113,
+        5285405.498028169,
+        6275590.358591549,
+        10212112.78887324,
+        7601307.42746479,
+        5774206.955070423,
+        6978308.816197183,
+        5389980.204929578,
+        4925390.552112676,
+        4757479.510563381,
+        4869420.204929578
       ],
       "trajectory_quarters": [
         {
@@ -2924,7 +2924,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 0,
-          "bu_sales_led_arr": 21325042.183876052,
+          "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -2937,10 +2937,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 21325042.183876052,
+            "sales_led_arr": 7882429.607323945,
             "plg_arr": 0,
             "expansion_arr": 1675000.0,
-            "total_arr": 23000042.183876052,
+            "total_arr": 9557429.607323945,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -2953,16 +2953,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -21325042.183876052,
+            "bookings": -7882429.607323945,
             "bookings_pct": 0,
-            "total": -23000042.183876052,
+            "total": -9557429.607323945,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -3012,35 +3012,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3073,11 +3073,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3110,11 +3110,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -3152,9 +3152,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 21325042.183876052,
-            "reforecast_bookings": 21325042.183876052,
-            "reforecast_gap": 21325042.183876052,
+            "remaining_bu_bookings": 7882429.607323945,
+            "reforecast_bookings": 7882429.607323945,
+            "reforecast_gap": 7882429.607323945,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -3166,7 +3166,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53918278.97827042,
+          "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -3179,10 +3179,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53918278.97827042,
+            "sales_led_arr": 24089010.57492958,
             "plg_arr": 0,
-            "expansion_arr": 2016250.6327581408,
-            "total_arr": 55934529.61102856,
+            "expansion_arr": 1814611.4441098592,
+            "total_arr": 25903622.01903944,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -3195,16 +3195,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53918278.97827042,
+            "bookings": -24089010.57492958,
             "bookings_pct": 0,
-            "total": -55934529.61102856,
+            "total": -25903622.01903944,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -3254,35 +3254,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3315,11 +3315,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3352,11 +3352,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -3365,19 +3365,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q2FY26",
-            "opening_arr": 63000042.18387605,
-            "sales_led_base_arr": 60750042.18387605,
+            "opening_arr": 49557429.607323945,
+            "sales_led_base_arr": 47307429.607323945,
             "plg_base_arr": 2250000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 60750042.18387605,
+            "sales_led_usage_eligible_arr": 47307429.607323945,
             "plg_usage_eligible_arr": 2000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 911250.6327581408,
+            "usage_expansion_arr": 709611.4441098592,
             "plg_expansion_arr": 250000.00000000006,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2016250.6327581408
+            "total_expansion_arr": 1814611.4441098592
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -3394,9 +3394,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53918278.97827042,
-            "reforecast_bookings": 53918278.97827042,
-            "reforecast_gap": 53918278.97827042,
+            "remaining_bu_bookings": 24089010.57492958,
+            "reforecast_bookings": 24089010.57492958,
+            "reforecast_gap": 24089010.57492958,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -3408,7 +3408,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53332145.014402814,
+          "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -3421,10 +3421,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53332145.014402814,
+            "sales_led_arr": 18142495.976197183,
             "plg_arr": 0,
-            "expansion_arr": 2882768.576923569,
-            "total_arr": 56214913.591326386,
+            "expansion_arr": 2230665.774395451,
+            "total_arr": 20373161.750592634,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -3437,16 +3437,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53332145.014402814,
+            "bookings": -18142495.976197183,
             "bookings_pct": 0,
-            "total": -56214913.591326386,
+            "total": -20373161.750592634,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -3496,35 +3496,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3557,11 +3557,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3594,11 +3594,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -3607,19 +3607,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 118934571.79490462,
-            "sales_led_base_arr": 116434571.79490462,
+            "opening_arr": 75461051.62636338,
+            "sales_led_base_arr": 72961051.62636338,
             "plg_base_arr": 2500000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 116434571.79490462,
+            "sales_led_usage_eligible_arr": 72961051.62636338,
             "plg_usage_eligible_arr": 2250000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 1746518.5769235692,
+            "usage_expansion_arr": 1094415.7743954507,
             "plg_expansion_arr": 281250.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2882768.576923569
+            "total_expansion_arr": 2230665.774395451
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -3636,9 +3636,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53332145.014402814,
-            "reforecast_bookings": 53332145.014402814,
-            "reforecast_gap": 53332145.014402814,
+            "remaining_bu_bookings": 18142495.976197183,
+            "reforecast_bookings": 18142495.976197183,
+            "reforecast_gap": 18142495.976197183,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -3650,7 +3650,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 50658481.07239436,
+          "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -3663,10 +3663,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 50658481.07239436,
+            "sales_led_arr": 14552290.267605636,
             "plg_arr": 0,
-            "expansion_arr": 3753023.530793465,
-            "total_arr": 54411504.60318783,
+            "expansion_arr": 2563294.45065434,
+            "total_arr": 17115584.718259975,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -3679,16 +3679,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -50658481.07239436,
+            "bookings": -14552290.267605636,
             "bookings_pct": 0,
-            "total": -54411504.60318783,
+            "total": -17115584.718259975,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -3738,35 +3738,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3799,11 +3799,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -3836,11 +3836,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -3849,19 +3849,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 175149485.386231,
-            "sales_led_base_arr": 172368235.386231,
+            "opening_arr": 95834213.37695602,
+            "sales_led_base_arr": 93052963.37695602,
             "plg_base_arr": 2781250.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 172368235.386231,
+            "sales_led_usage_eligible_arr": 93052963.37695602,
             "plg_usage_eligible_arr": 2500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 2585523.530793465,
+            "usage_expansion_arr": 1395794.4506543402,
             "plg_expansion_arr": 312500.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 3753023.530793465
+            "total_expansion_arr": 2563294.45065434
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -3878,9 +3878,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 50658481.07239436,
-            "reforecast_bookings": 50658481.07239436,
-            "reforecast_gap": 50658481.07239436,
+            "remaining_bu_bookings": 14552290.267605636,
+            "reforecast_bookings": 14552290.267605636,
+            "reforecast_gap": 14552290.267605636,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -3894,7 +3894,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 0,
-          "bu_sales_led_arr": 21325042.183876052,
+          "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -3907,10 +3907,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 21325042.183876052,
+            "sales_led_arr": 7882429.607323945,
             "plg_arr": 0,
             "expansion_arr": 1675000.0,
-            "total_arr": 23000042.183876052,
+            "total_arr": 9557429.607323945,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -3923,16 +3923,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -21325042.183876052,
+            "bookings": -7882429.607323945,
             "bookings_pct": 0,
-            "total": -23000042.183876052,
+            "total": -9557429.607323945,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -3982,35 +3982,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4043,11 +4043,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4080,11 +4080,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -4122,9 +4122,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 21325042.183876052,
-            "reforecast_bookings": 21325042.183876052,
-            "reforecast_gap": 21325042.183876052,
+            "remaining_bu_bookings": 7882429.607323945,
+            "reforecast_bookings": 7882429.607323945,
+            "reforecast_gap": 7882429.607323945,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -4136,7 +4136,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53918278.97827042,
+          "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -4149,10 +4149,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53918278.97827042,
+            "sales_led_arr": 24089010.57492958,
             "plg_arr": 0,
-            "expansion_arr": 2016250.6327581408,
-            "total_arr": 55934529.61102856,
+            "expansion_arr": 1814611.4441098592,
+            "total_arr": 25903622.01903944,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -4165,16 +4165,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53918278.97827042,
+            "bookings": -24089010.57492958,
             "bookings_pct": 0,
-            "total": -55934529.61102856,
+            "total": -25903622.01903944,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -4224,35 +4224,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4285,11 +4285,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4322,11 +4322,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -4335,19 +4335,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q2FY26",
-            "opening_arr": 63000042.18387605,
-            "sales_led_base_arr": 60750042.18387605,
+            "opening_arr": 49557429.607323945,
+            "sales_led_base_arr": 47307429.607323945,
             "plg_base_arr": 2250000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 60750042.18387605,
+            "sales_led_usage_eligible_arr": 47307429.607323945,
             "plg_usage_eligible_arr": 2000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 911250.6327581408,
+            "usage_expansion_arr": 709611.4441098592,
             "plg_expansion_arr": 250000.00000000006,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2016250.6327581408
+            "total_expansion_arr": 1814611.4441098592
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -4364,9 +4364,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53918278.97827042,
-            "reforecast_bookings": 53918278.97827042,
-            "reforecast_gap": 53918278.97827042,
+            "remaining_bu_bookings": 24089010.57492958,
+            "reforecast_bookings": 24089010.57492958,
+            "reforecast_gap": 24089010.57492958,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -4378,7 +4378,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53332145.014402814,
+          "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -4391,10 +4391,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53332145.014402814,
+            "sales_led_arr": 18142495.976197183,
             "plg_arr": 0,
-            "expansion_arr": 2882768.576923569,
-            "total_arr": 56214913.591326386,
+            "expansion_arr": 2230665.774395451,
+            "total_arr": 20373161.750592634,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -4407,16 +4407,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53332145.014402814,
+            "bookings": -18142495.976197183,
             "bookings_pct": 0,
-            "total": -56214913.591326386,
+            "total": -20373161.750592634,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -4466,35 +4466,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4527,11 +4527,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4564,11 +4564,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -4577,19 +4577,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 118934571.79490462,
-            "sales_led_base_arr": 116434571.79490462,
+            "opening_arr": 75461051.62636338,
+            "sales_led_base_arr": 72961051.62636338,
             "plg_base_arr": 2500000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 116434571.79490462,
+            "sales_led_usage_eligible_arr": 72961051.62636338,
             "plg_usage_eligible_arr": 2250000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 1746518.5769235692,
+            "usage_expansion_arr": 1094415.7743954507,
             "plg_expansion_arr": 281250.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2882768.576923569
+            "total_expansion_arr": 2230665.774395451
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -4606,9 +4606,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53332145.014402814,
-            "reforecast_bookings": 53332145.014402814,
-            "reforecast_gap": 53332145.014402814,
+            "remaining_bu_bookings": 18142495.976197183,
+            "reforecast_bookings": 18142495.976197183,
+            "reforecast_gap": 18142495.976197183,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -4620,7 +4620,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 50658481.07239436,
+          "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -4633,10 +4633,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 50658481.07239436,
+            "sales_led_arr": 14552290.267605636,
             "plg_arr": 0,
-            "expansion_arr": 3753023.530793465,
-            "total_arr": 54411504.60318783,
+            "expansion_arr": 2563294.45065434,
+            "total_arr": 17115584.718259975,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -4649,16 +4649,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -50658481.07239436,
+            "bookings": -14552290.267605636,
             "bookings_pct": 0,
-            "total": -54411504.60318783,
+            "total": -17115584.718259975,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -4708,35 +4708,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4769,11 +4769,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -4806,11 +4806,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -4819,19 +4819,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 175149485.386231,
-            "sales_led_base_arr": 172368235.386231,
+            "opening_arr": 95834213.37695602,
+            "sales_led_base_arr": 93052963.37695602,
             "plg_base_arr": 2781250.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 172368235.386231,
+            "sales_led_usage_eligible_arr": 93052963.37695602,
             "plg_usage_eligible_arr": 2500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 2585523.530793465,
+            "usage_expansion_arr": 1395794.4506543402,
             "plg_expansion_arr": 312500.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 3753023.530793465
+            "total_expansion_arr": 2563294.45065434
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -4848,9 +4848,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 50658481.07239436,
-            "reforecast_bookings": 50658481.07239436,
-            "reforecast_gap": 50658481.07239436,
+            "remaining_bu_bookings": 14552290.267605636,
+            "reforecast_bookings": 14552290.267605636,
+            "reforecast_gap": 14552290.267605636,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -4988,10 +4988,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-03-01",
@@ -5002,10 +5002,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-04-01",
@@ -5016,10 +5016,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1320.0,
-          "s0_count": 356.4,
-          "s1_count": 196.02,
-          "s2_count": 92.1294,
-          "pipeline_created": 35654077.800000004
+          "s0_count": 132.0,
+          "s1_count": 72.60000000000002,
+          "s2_count": 34.122,
+          "pipeline_created": 9895380.0
         },
         {
           "month": "2026-02-01",
@@ -5033,7 +5033,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-03-01",
@@ -5047,7 +5047,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-04-01",
@@ -5061,7 +5061,7 @@
           "s0_count": 5.0,
           "s1_count": 2.75,
           "s2_count": 1.2925,
-          "pipeline_created": 500197.5
+          "pipeline_created": 374825.0
         },
         {
           "month": "2026-02-01",
@@ -5075,7 +5075,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-03-01",
@@ -5089,7 +5089,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-04-01",
@@ -5103,7 +5103,7 @@
           "s0_count": 0.0,
           "s1_count": 1.3750000000000004,
           "s2_count": 0.6462500000000002,
-          "pipeline_created": 250098.7500000001
+          "pipeline_created": 187412.50000000006
         },
         {
           "month": "2026-05-01",
@@ -5114,10 +5114,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-06-01",
@@ -5128,10 +5128,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-07-01",
@@ -5142,10 +5142,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1320.0,
-          "s0_count": 356.4,
-          "s1_count": 196.02,
-          "s2_count": 92.1294,
-          "pipeline_created": 35654077.800000004
+          "s0_count": 132.0,
+          "s1_count": 72.60000000000002,
+          "s2_count": 34.122,
+          "pipeline_created": 9895380.0
         },
         {
           "month": "2026-05-01",
@@ -5159,7 +5159,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-06-01",
@@ -5173,7 +5173,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-07-01",
@@ -5187,7 +5187,7 @@
           "s0_count": 5.0,
           "s1_count": 2.75,
           "s2_count": 1.2925,
-          "pipeline_created": 500197.5
+          "pipeline_created": 374825.0
         },
         {
           "month": "2026-05-01",
@@ -5201,7 +5201,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-06-01",
@@ -5215,7 +5215,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-07-01",
@@ -5229,7 +5229,7 @@
           "s0_count": 0.0,
           "s1_count": 1.3750000000000004,
           "s2_count": 0.6462500000000002,
-          "pipeline_created": 250098.7500000001
+          "pipeline_created": 187412.50000000006
         },
         {
           "month": "2026-08-01",
@@ -5240,10 +5240,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-09-01",
@@ -5254,10 +5254,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-10-01",
@@ -5268,10 +5268,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1320.0,
-          "s0_count": 356.4,
-          "s1_count": 196.02,
-          "s2_count": 92.1294,
-          "pipeline_created": 35654077.800000004
+          "s0_count": 132.0,
+          "s1_count": 72.60000000000002,
+          "s2_count": 34.122,
+          "pipeline_created": 9895380.0
         },
         {
           "month": "2026-08-01",
@@ -5285,7 +5285,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-09-01",
@@ -5299,7 +5299,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-10-01",
@@ -5313,7 +5313,7 @@
           "s0_count": 5.0,
           "s1_count": 2.75,
           "s2_count": 1.2925,
-          "pipeline_created": 500197.5
+          "pipeline_created": 374825.0
         },
         {
           "month": "2026-08-01",
@@ -5327,7 +5327,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-09-01",
@@ -5341,7 +5341,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-10-01",
@@ -5355,7 +5355,7 @@
           "s0_count": 0.0,
           "s1_count": 1.3750000000000004,
           "s2_count": 0.6462500000000002,
-          "pipeline_created": 250098.7500000001
+          "pipeline_created": 187412.50000000006
         },
         {
           "month": "2026-11-01",
@@ -5366,10 +5366,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2026-12-01",
@@ -5380,10 +5380,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1056.0,
-          "s0_count": 285.12,
-          "s1_count": 156.816,
-          "s2_count": 73.70352,
-          "pipeline_created": 28523262.24
+          "s0_count": 105.60000000000001,
+          "s1_count": 58.08000000000001,
+          "s2_count": 27.297600000000003,
+          "pipeline_created": 7916304.000000001
         },
         {
           "month": "2027-01-01",
@@ -5394,10 +5394,10 @@
           "source": "Marketing / SDR",
           "input_label": "MQLs",
           "input_count": 1320.0,
-          "s0_count": 356.4,
-          "s1_count": 196.02,
-          "s2_count": 92.1294,
-          "pipeline_created": 35654077.800000004
+          "s0_count": 132.0,
+          "s1_count": 72.60000000000002,
+          "s2_count": 34.122,
+          "pipeline_created": 9895380.0
         },
         {
           "month": "2026-11-01",
@@ -5411,7 +5411,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2026-12-01",
@@ -5425,7 +5425,7 @@
           "s0_count": 4.0,
           "s1_count": 2.2,
           "s2_count": 1.034,
-          "pipeline_created": 400158.0
+          "pipeline_created": 299860.0
         },
         {
           "month": "2027-01-01",
@@ -5439,7 +5439,7 @@
           "s0_count": 5.0,
           "s1_count": 2.75,
           "s2_count": 1.2925,
-          "pipeline_created": 500197.5
+          "pipeline_created": 374825.0
         },
         {
           "month": "2026-11-01",
@@ -5453,7 +5453,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2026-12-01",
@@ -5467,7 +5467,7 @@
           "s0_count": 0.0,
           "s1_count": 1.1000000000000003,
           "s2_count": 0.5170000000000001,
-          "pipeline_created": 200079.00000000006
+          "pipeline_created": 149930.00000000003
         },
         {
           "month": "2027-01-01",
@@ -5481,7 +5481,7 @@
           "s0_count": 0.0,
           "s1_count": 1.3750000000000004,
           "s2_count": 0.6462500000000002,
-          "pipeline_created": 250098.7500000001
+          "pipeline_created": 187412.50000000006
         }
       ],
       "capacity_warnings": []
@@ -5833,7 +5833,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 0,
-          "bu_sales_led_arr": 21325042.183876052,
+          "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -5846,10 +5846,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 21325042.183876052,
+            "sales_led_arr": 7882429.607323945,
             "plg_arr": 0,
             "expansion_arr": 1675000.0,
-            "total_arr": 23000042.183876052,
+            "total_arr": 9557429.607323945,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -5862,16 +5862,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -21325042.183876052,
+            "bookings": -7882429.607323945,
             "bookings_pct": 0,
-            "total": -23000042.183876052,
+            "total": -9557429.607323945,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -5921,35 +5921,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -5982,11 +5982,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6019,11 +6019,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -6061,9 +6061,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 21325042.183876052,
-            "reforecast_bookings": 21325042.183876052,
-            "reforecast_gap": 21325042.183876052,
+            "remaining_bu_bookings": 7882429.607323945,
+            "reforecast_bookings": 7882429.607323945,
+            "reforecast_gap": 7882429.607323945,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -6075,7 +6075,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53918278.97827042,
+          "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -6088,10 +6088,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53918278.97827042,
+            "sales_led_arr": 24089010.57492958,
             "plg_arr": 0,
-            "expansion_arr": 2016250.6327581408,
-            "total_arr": 55934529.61102856,
+            "expansion_arr": 1814611.4441098592,
+            "total_arr": 25903622.01903944,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -6104,16 +6104,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53918278.97827042,
+            "bookings": -24089010.57492958,
             "bookings_pct": 0,
-            "total": -55934529.61102856,
+            "total": -25903622.01903944,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -6163,35 +6163,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6224,11 +6224,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6261,11 +6261,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -6274,19 +6274,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q2FY26",
-            "opening_arr": 63000042.18387605,
-            "sales_led_base_arr": 60750042.18387605,
+            "opening_arr": 49557429.607323945,
+            "sales_led_base_arr": 47307429.607323945,
             "plg_base_arr": 2250000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 60750042.18387605,
+            "sales_led_usage_eligible_arr": 47307429.607323945,
             "plg_usage_eligible_arr": 2000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 911250.6327581408,
+            "usage_expansion_arr": 709611.4441098592,
             "plg_expansion_arr": 250000.00000000006,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2016250.6327581408
+            "total_expansion_arr": 1814611.4441098592
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -6303,9 +6303,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53918278.97827042,
-            "reforecast_bookings": 53918278.97827042,
-            "reforecast_gap": 53918278.97827042,
+            "remaining_bu_bookings": 24089010.57492958,
+            "reforecast_bookings": 24089010.57492958,
+            "reforecast_gap": 24089010.57492958,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -6317,7 +6317,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53332145.014402814,
+          "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -6330,10 +6330,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53332145.014402814,
+            "sales_led_arr": 18142495.976197183,
             "plg_arr": 0,
-            "expansion_arr": 2882768.576923569,
-            "total_arr": 56214913.591326386,
+            "expansion_arr": 2230665.774395451,
+            "total_arr": 20373161.750592634,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -6346,16 +6346,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53332145.014402814,
+            "bookings": -18142495.976197183,
             "bookings_pct": 0,
-            "total": -56214913.591326386,
+            "total": -20373161.750592634,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -6405,35 +6405,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6466,11 +6466,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6503,11 +6503,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -6516,19 +6516,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 118934571.79490462,
-            "sales_led_base_arr": 116434571.79490462,
+            "opening_arr": 75461051.62636338,
+            "sales_led_base_arr": 72961051.62636338,
             "plg_base_arr": 2500000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 116434571.79490462,
+            "sales_led_usage_eligible_arr": 72961051.62636338,
             "plg_usage_eligible_arr": 2250000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 1746518.5769235692,
+            "usage_expansion_arr": 1094415.7743954507,
             "plg_expansion_arr": 281250.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2882768.576923569
+            "total_expansion_arr": 2230665.774395451
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -6545,9 +6545,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53332145.014402814,
-            "reforecast_bookings": 53332145.014402814,
-            "reforecast_gap": 53332145.014402814,
+            "remaining_bu_bookings": 18142495.976197183,
+            "reforecast_bookings": 18142495.976197183,
+            "reforecast_gap": 18142495.976197183,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -6559,7 +6559,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 50658481.07239436,
+          "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -6572,10 +6572,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 50658481.07239436,
+            "sales_led_arr": 14552290.267605636,
             "plg_arr": 0,
-            "expansion_arr": 3753023.530793465,
-            "total_arr": 54411504.60318783,
+            "expansion_arr": 2563294.45065434,
+            "total_arr": 17115584.718259975,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -6588,16 +6588,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -50658481.07239436,
+            "bookings": -14552290.267605636,
             "bookings_pct": 0,
-            "total": -54411504.60318783,
+            "total": -17115584.718259975,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -6647,35 +6647,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6708,11 +6708,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6745,11 +6745,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -6758,19 +6758,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 175149485.386231,
-            "sales_led_base_arr": 172368235.386231,
+            "opening_arr": 95834213.37695602,
+            "sales_led_base_arr": 93052963.37695602,
             "plg_base_arr": 2781250.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 172368235.386231,
+            "sales_led_usage_eligible_arr": 93052963.37695602,
             "plg_usage_eligible_arr": 2500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 2585523.530793465,
+            "usage_expansion_arr": 1395794.4506543402,
             "plg_expansion_arr": 312500.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 3753023.530793465
+            "total_expansion_arr": 2563294.45065434
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -6787,9 +6787,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 50658481.07239436,
-            "reforecast_bookings": 50658481.07239436,
-            "reforecast_gap": 50658481.07239436,
+            "remaining_bu_bookings": 14552290.267605636,
+            "reforecast_bookings": 14552290.267605636,
+            "reforecast_gap": 14552290.267605636,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -6803,7 +6803,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 0,
-          "bu_sales_led_arr": 21325042.183876052,
+          "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -6816,10 +6816,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 21325042.183876052,
+            "sales_led_arr": 7882429.607323945,
             "plg_arr": 0,
             "expansion_arr": 1675000.0,
-            "total_arr": 23000042.183876052,
+            "total_arr": 9557429.607323945,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -6832,16 +6832,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -21325042.183876052,
+            "bookings": -7882429.607323945,
             "bookings_pct": 0,
-            "total": -23000042.183876052,
+            "total": -9557429.607323945,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -6891,35 +6891,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6952,11 +6952,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -6989,11 +6989,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -7031,9 +7031,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 21325042.183876052,
-            "reforecast_bookings": 21325042.183876052,
-            "reforecast_gap": 21325042.183876052,
+            "remaining_bu_bookings": 7882429.607323945,
+            "reforecast_bookings": 7882429.607323945,
+            "reforecast_gap": 7882429.607323945,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -7045,7 +7045,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53918278.97827042,
+          "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -7058,10 +7058,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53918278.97827042,
+            "sales_led_arr": 24089010.57492958,
             "plg_arr": 0,
-            "expansion_arr": 2016250.6327581408,
-            "total_arr": 55934529.61102856,
+            "expansion_arr": 1814611.4441098592,
+            "total_arr": 25903622.01903944,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -7074,16 +7074,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53918278.97827042,
+            "bookings": -24089010.57492958,
             "bookings_pct": 0,
-            "total": -55934529.61102856,
+            "total": -25903622.01903944,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -7133,35 +7133,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7194,11 +7194,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7231,11 +7231,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -7244,19 +7244,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q2FY26",
-            "opening_arr": 63000042.18387605,
-            "sales_led_base_arr": 60750042.18387605,
+            "opening_arr": 49557429.607323945,
+            "sales_led_base_arr": 47307429.607323945,
             "plg_base_arr": 2250000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 60750042.18387605,
+            "sales_led_usage_eligible_arr": 47307429.607323945,
             "plg_usage_eligible_arr": 2000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 911250.6327581408,
+            "usage_expansion_arr": 709611.4441098592,
             "plg_expansion_arr": 250000.00000000006,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2016250.6327581408
+            "total_expansion_arr": 1814611.4441098592
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -7273,9 +7273,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53918278.97827042,
-            "reforecast_bookings": 53918278.97827042,
-            "reforecast_gap": 53918278.97827042,
+            "remaining_bu_bookings": 24089010.57492958,
+            "reforecast_bookings": 24089010.57492958,
+            "reforecast_gap": 24089010.57492958,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -7287,7 +7287,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53332145.014402814,
+          "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -7300,10 +7300,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53332145.014402814,
+            "sales_led_arr": 18142495.976197183,
             "plg_arr": 0,
-            "expansion_arr": 2882768.576923569,
-            "total_arr": 56214913.591326386,
+            "expansion_arr": 2230665.774395451,
+            "total_arr": 20373161.750592634,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -7316,16 +7316,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53332145.014402814,
+            "bookings": -18142495.976197183,
             "bookings_pct": 0,
-            "total": -56214913.591326386,
+            "total": -20373161.750592634,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -7375,35 +7375,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7436,11 +7436,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7473,11 +7473,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -7486,19 +7486,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 118934571.79490462,
-            "sales_led_base_arr": 116434571.79490462,
+            "opening_arr": 75461051.62636338,
+            "sales_led_base_arr": 72961051.62636338,
             "plg_base_arr": 2500000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 116434571.79490462,
+            "sales_led_usage_eligible_arr": 72961051.62636338,
             "plg_usage_eligible_arr": 2250000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 1746518.5769235692,
+            "usage_expansion_arr": 1094415.7743954507,
             "plg_expansion_arr": 281250.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2882768.576923569
+            "total_expansion_arr": 2230665.774395451
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -7515,9 +7515,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53332145.014402814,
-            "reforecast_bookings": 53332145.014402814,
-            "reforecast_gap": 53332145.014402814,
+            "remaining_bu_bookings": 18142495.976197183,
+            "reforecast_bookings": 18142495.976197183,
+            "reforecast_gap": 18142495.976197183,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -7529,7 +7529,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 50658481.07239436,
+          "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -7542,10 +7542,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 50658481.07239436,
+            "sales_led_arr": 14552290.267605636,
             "plg_arr": 0,
-            "expansion_arr": 3753023.530793465,
-            "total_arr": 54411504.60318783,
+            "expansion_arr": 2563294.45065434,
+            "total_arr": 17115584.718259975,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -7558,16 +7558,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -50658481.07239436,
+            "bookings": -14552290.267605636,
             "bookings_pct": 0,
-            "total": -54411504.60318783,
+            "total": -17115584.718259975,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -7617,35 +7617,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7678,11 +7678,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7715,11 +7715,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -7728,19 +7728,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 175149485.386231,
-            "sales_led_base_arr": 172368235.386231,
+            "opening_arr": 95834213.37695602,
+            "sales_led_base_arr": 93052963.37695602,
             "plg_base_arr": 2781250.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 172368235.386231,
+            "sales_led_usage_eligible_arr": 93052963.37695602,
             "plg_usage_eligible_arr": 2500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 2585523.530793465,
+            "usage_expansion_arr": 1395794.4506543402,
             "plg_expansion_arr": 312500.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 3753023.530793465
+            "total_expansion_arr": 2563294.45065434
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -7757,9 +7757,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 50658481.07239436,
-            "reforecast_bookings": 50658481.07239436,
-            "reforecast_gap": 50658481.07239436,
+            "remaining_bu_bookings": 14552290.267605636,
+            "reforecast_bookings": 14552290.267605636,
+            "reforecast_gap": 14552290.267605636,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -7775,7 +7775,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 0,
-          "bu_sales_led_arr": 21325042.183876052,
+          "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -7788,10 +7788,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 21325042.183876052,
+            "sales_led_arr": 7882429.607323945,
             "plg_arr": 0,
             "expansion_arr": 1675000.0,
-            "total_arr": 23000042.183876052,
+            "total_arr": 9557429.607323945,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -7804,16 +7804,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -21325042.183876052,
+            "bookings": -7882429.607323945,
             "bookings_pct": 0,
-            "total": -23000042.183876052,
+            "total": -9557429.607323945,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -7863,35 +7863,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7924,11 +7924,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -7961,11 +7961,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -8003,9 +8003,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 21325042.183876052,
-            "reforecast_bookings": 21325042.183876052,
-            "reforecast_gap": 21325042.183876052,
+            "remaining_bu_bookings": 7882429.607323945,
+            "reforecast_bookings": 7882429.607323945,
+            "reforecast_gap": 7882429.607323945,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -8017,7 +8017,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53918278.97827042,
+          "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -8030,10 +8030,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53918278.97827042,
+            "sales_led_arr": 24089010.57492958,
             "plg_arr": 0,
-            "expansion_arr": 2016250.6327581408,
-            "total_arr": 55934529.61102856,
+            "expansion_arr": 1814611.4441098592,
+            "total_arr": 25903622.01903944,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -8046,16 +8046,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53918278.97827042,
+            "bookings": -24089010.57492958,
             "bookings_pct": 0,
-            "total": -55934529.61102856,
+            "total": -25903622.01903944,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -8105,35 +8105,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8166,11 +8166,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8203,11 +8203,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -8216,19 +8216,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q2FY26",
-            "opening_arr": 63000042.18387605,
-            "sales_led_base_arr": 60750042.18387605,
+            "opening_arr": 49557429.607323945,
+            "sales_led_base_arr": 47307429.607323945,
             "plg_base_arr": 2250000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 60750042.18387605,
+            "sales_led_usage_eligible_arr": 47307429.607323945,
             "plg_usage_eligible_arr": 2000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 911250.6327581408,
+            "usage_expansion_arr": 709611.4441098592,
             "plg_expansion_arr": 250000.00000000006,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2016250.6327581408
+            "total_expansion_arr": 1814611.4441098592
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -8245,9 +8245,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53918278.97827042,
-            "reforecast_bookings": 53918278.97827042,
-            "reforecast_gap": 53918278.97827042,
+            "remaining_bu_bookings": 24089010.57492958,
+            "reforecast_bookings": 24089010.57492958,
+            "reforecast_gap": 24089010.57492958,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -8259,7 +8259,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53332145.014402814,
+          "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -8272,10 +8272,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53332145.014402814,
+            "sales_led_arr": 18142495.976197183,
             "plg_arr": 0,
-            "expansion_arr": 2882768.576923569,
-            "total_arr": 56214913.591326386,
+            "expansion_arr": 2230665.774395451,
+            "total_arr": 20373161.750592634,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -8288,16 +8288,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53332145.014402814,
+            "bookings": -18142495.976197183,
             "bookings_pct": 0,
-            "total": -56214913.591326386,
+            "total": -20373161.750592634,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -8347,35 +8347,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8408,11 +8408,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8445,11 +8445,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -8458,19 +8458,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 118934571.79490462,
-            "sales_led_base_arr": 116434571.79490462,
+            "opening_arr": 75461051.62636338,
+            "sales_led_base_arr": 72961051.62636338,
             "plg_base_arr": 2500000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 116434571.79490462,
+            "sales_led_usage_eligible_arr": 72961051.62636338,
             "plg_usage_eligible_arr": 2250000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 1746518.5769235692,
+            "usage_expansion_arr": 1094415.7743954507,
             "plg_expansion_arr": 281250.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2882768.576923569
+            "total_expansion_arr": 2230665.774395451
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -8487,9 +8487,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53332145.014402814,
-            "reforecast_bookings": 53332145.014402814,
-            "reforecast_gap": 53332145.014402814,
+            "remaining_bu_bookings": 18142495.976197183,
+            "reforecast_bookings": 18142495.976197183,
+            "reforecast_gap": 18142495.976197183,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -8501,7 +8501,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 50658481.07239436,
+          "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -8514,10 +8514,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 50658481.07239436,
+            "sales_led_arr": 14552290.267605636,
             "plg_arr": 0,
-            "expansion_arr": 3753023.530793465,
-            "total_arr": 54411504.60318783,
+            "expansion_arr": 2563294.45065434,
+            "total_arr": 17115584.718259975,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -8530,16 +8530,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -50658481.07239436,
+            "bookings": -14552290.267605636,
             "bookings_pct": 0,
-            "total": -54411504.60318783,
+            "total": -17115584.718259975,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -8589,35 +8589,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8650,11 +8650,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8687,11 +8687,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -8700,19 +8700,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 175149485.386231,
-            "sales_led_base_arr": 172368235.386231,
+            "opening_arr": 95834213.37695602,
+            "sales_led_base_arr": 93052963.37695602,
             "plg_base_arr": 2781250.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 172368235.386231,
+            "sales_led_usage_eligible_arr": 93052963.37695602,
             "plg_usage_eligible_arr": 2500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 2585523.530793465,
+            "usage_expansion_arr": 1395794.4506543402,
             "plg_expansion_arr": 312500.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 3753023.530793465
+            "total_expansion_arr": 2563294.45065434
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -8729,9 +8729,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 50658481.07239436,
-            "reforecast_bookings": 50658481.07239436,
-            "reforecast_gap": 50658481.07239436,
+            "remaining_bu_bookings": 14552290.267605636,
+            "reforecast_bookings": 14552290.267605636,
+            "reforecast_gap": 14552290.267605636,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -8745,7 +8745,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 0,
-          "bu_sales_led_arr": 21325042.183876052,
+          "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -8758,10 +8758,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 21325042.183876052,
+            "sales_led_arr": 7882429.607323945,
             "plg_arr": 0,
             "expansion_arr": 1675000.0,
-            "total_arr": 23000042.183876052,
+            "total_arr": 9557429.607323945,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -8774,16 +8774,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -21325042.183876052,
+            "bookings": -7882429.607323945,
             "bookings_pct": 0,
-            "total": -23000042.183876052,
+            "total": -9557429.607323945,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -8833,35 +8833,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8894,11 +8894,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -8931,11 +8931,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -8973,9 +8973,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 21325042.183876052,
-            "reforecast_bookings": 21325042.183876052,
-            "reforecast_gap": 21325042.183876052,
+            "remaining_bu_bookings": 7882429.607323945,
+            "reforecast_bookings": 7882429.607323945,
+            "reforecast_gap": 7882429.607323945,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -8987,7 +8987,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53918278.97827042,
+          "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -9000,10 +9000,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53918278.97827042,
+            "sales_led_arr": 24089010.57492958,
             "plg_arr": 0,
-            "expansion_arr": 2016250.6327581408,
-            "total_arr": 55934529.61102856,
+            "expansion_arr": 1814611.4441098592,
+            "total_arr": 25903622.01903944,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -9016,16 +9016,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53918278.97827042,
+            "bookings": -24089010.57492958,
             "bookings_pct": 0,
-            "total": -55934529.61102856,
+            "total": -25903622.01903944,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -9075,35 +9075,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -9136,11 +9136,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -9173,11 +9173,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -9186,19 +9186,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q2FY26",
-            "opening_arr": 63000042.18387605,
-            "sales_led_base_arr": 60750042.18387605,
+            "opening_arr": 49557429.607323945,
+            "sales_led_base_arr": 47307429.607323945,
             "plg_base_arr": 2250000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 60750042.18387605,
+            "sales_led_usage_eligible_arr": 47307429.607323945,
             "plg_usage_eligible_arr": 2000000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 911250.6327581408,
+            "usage_expansion_arr": 709611.4441098592,
             "plg_expansion_arr": 250000.00000000006,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2016250.6327581408
+            "total_expansion_arr": 1814611.4441098592
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -9215,9 +9215,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53918278.97827042,
-            "reforecast_bookings": 53918278.97827042,
-            "reforecast_gap": 53918278.97827042,
+            "remaining_bu_bookings": 24089010.57492958,
+            "reforecast_bookings": 24089010.57492958,
+            "reforecast_gap": 24089010.57492958,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -9229,7 +9229,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 53332145.014402814,
+          "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -9242,10 +9242,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 53332145.014402814,
+            "sales_led_arr": 18142495.976197183,
             "plg_arr": 0,
-            "expansion_arr": 2882768.576923569,
-            "total_arr": 56214913.591326386,
+            "expansion_arr": 2230665.774395451,
+            "total_arr": 20373161.750592634,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -9258,16 +9258,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -53332145.014402814,
+            "bookings": -18142495.976197183,
             "bookings_pct": 0,
-            "total": -56214913.591326386,
+            "total": -20373161.750592634,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -9317,35 +9317,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -9378,11 +9378,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -9415,11 +9415,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -9428,19 +9428,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 118934571.79490462,
-            "sales_led_base_arr": 116434571.79490462,
+            "opening_arr": 75461051.62636338,
+            "sales_led_base_arr": 72961051.62636338,
             "plg_base_arr": 2500000.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 116434571.79490462,
+            "sales_led_usage_eligible_arr": 72961051.62636338,
             "plg_usage_eligible_arr": 2250000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 1746518.5769235692,
+            "usage_expansion_arr": 1094415.7743954507,
             "plg_expansion_arr": 281250.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 2882768.576923569
+            "total_expansion_arr": 2230665.774395451
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -9457,9 +9457,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 53332145.014402814,
-            "reforecast_bookings": 53332145.014402814,
-            "reforecast_gap": 53332145.014402814,
+            "remaining_bu_bookings": 18142495.976197183,
+            "reforecast_bookings": 18142495.976197183,
+            "reforecast_gap": 18142495.976197183,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -9471,7 +9471,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 0,
-          "bu_sales_led_arr": 50658481.07239436,
+          "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 0,
@@ -9484,10 +9484,10 @@
             "total_gtm": 0
           },
           "bottoms_up": {
-            "sales_led_arr": 50658481.07239436,
+            "sales_led_arr": 14552290.267605636,
             "plg_arr": 0,
-            "expansion_arr": 3753023.530793465,
-            "total_arr": 54411504.60318783,
+            "expansion_arr": 2563294.45065434,
+            "total_arr": 17115584.718259975,
             "ramped_aes": 45,
             "total_aes": 45
           },
@@ -9500,16 +9500,16 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -50658481.07239436,
+            "bookings": -14552290.267605636,
             "bookings_pct": 0,
-            "total": -54411504.60318783,
+            "total": -17115584.718259975,
             "total_pct": 0,
             "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
               "blended": {
-                "rate": 0.27,
+                "rate": 0.1,
                 "n": 0,
                 "source": "plan"
               }
@@ -9559,35 +9559,35 @@
                 "display_name": "Marketing / SDR",
                 "input_label": "MQLs",
                 "weekly_input": 264.0,
-                "weekly_s0_count": 71.28,
-                "weekly_s1_count": 39.204,
-                "weekly_s2_count": 18.42588,
+                "weekly_s0_count": 26.400000000000002,
+                "weekly_s1_count": 14.520000000000003,
+                "weekly_s2_count": 6.824400000000001,
                 "monthly_input": [
                   1056,
                   1056,
                   1320
                 ],
                 "monthly_s0_count": [
-                  285.12,
-                  285.12,
-                  356.4
+                  105.60000000000001,
+                  105.60000000000001,
+                  132.0
                 ],
                 "monthly_s1_count": [
-                  156.816,
-                  156.816,
-                  196.02
+                  58.08000000000001,
+                  58.08000000000001,
+                  72.60000000000002
                 ],
                 "monthly_s2_count": [
-                  73.70352,
-                  73.70352,
-                  92.1294
+                  27.297600000000003,
+                  27.297600000000003,
+                  34.122
                 ],
                 "monthly_creation": [
-                  28523262.24,
-                  28523262.24,
-                  35654077.800000004
+                  7916304.000000001,
+                  7916304.000000001,
+                  9895380.0
                 ],
-                "quarter_pipeline_created": 92700602.28,
+                "quarter_pipeline_created": 25727988.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -9620,11 +9620,11 @@
                   1.2925
                 ],
                 "monthly_creation": [
-                  400158.0,
-                  400158.0,
-                  500197.5
+                  299860.0,
+                  299860.0,
+                  374825.0
                 ],
-                "quarter_pipeline_created": 1300513.5,
+                "quarter_pipeline_created": 974545.0,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               },
@@ -9657,11 +9657,11 @@
                   0.6462500000000002
                 ],
                 "monthly_creation": [
-                  200079.00000000006,
-                  200079.00000000006,
-                  250098.7500000001
+                  149930.00000000003,
+                  149930.00000000003,
+                  187412.50000000006
                 ],
-                "quarter_pipeline_created": 650256.7500000002,
+                "quarter_pipeline_created": 487272.5000000001,
                 "actual_opp_count": 0,
                 "actual_pipeline": 0.0
               }
@@ -9670,19 +9670,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 175149485.386231,
-            "sales_led_base_arr": 172368235.386231,
+            "opening_arr": 95834213.37695602,
+            "sales_led_base_arr": 93052963.37695602,
             "plg_base_arr": 2781250.0,
             "renewable_sales_led_arr": 9500000.0,
-            "sales_led_usage_eligible_arr": 172368235.386231,
+            "sales_led_usage_eligible_arr": 93052963.37695602,
             "plg_usage_eligible_arr": 2500000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 855000.0,
-            "usage_expansion_arr": 2585523.530793465,
+            "usage_expansion_arr": 1395794.4506543402,
             "plg_expansion_arr": 312500.0,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 3753023.530793465
+            "total_expansion_arr": 2563294.45065434
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -9699,9 +9699,9 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 0.0,
-            "remaining_bu_bookings": 50658481.07239436,
-            "reforecast_bookings": 50658481.07239436,
-            "reforecast_gap": 50658481.07239436,
+            "remaining_bu_bookings": 14552290.267605636,
+            "reforecast_bookings": 14552290.267605636,
+            "reforecast_gap": 14552290.267605636,
             "reforecast_gap_pct": 0.0,
             "has_actuals": false
           },
@@ -9710,7 +9710,7 @@
         }
       ],
       "funnel_rates": {
-        "mql_to_s0": 0.27,
+        "mql_to_s0": 0.1,
         "s0_to_s1": 0.55,
         "s1_to_s2": 0.47,
         "plg_signup_to_pql": 0.05,
@@ -9718,7 +9718,7 @@
       },
       "funnel_rate_descriptions": {
         "mql_to_s0": {
-          "value": 0.27,
+          "value": 0.1,
           "source": "registry"
         },
         "s0_to_s1": {
@@ -9808,29 +9808,29 @@
         0.0,
         0.0,
         0.0,
-        12547716.08100845,
-        13911598.26372676,
-        15392384.63353521,
-        16249682.005529575,
-        16171745.880802816,
-        16951107.12807042,
-        17145947.439887322,
-        16561426.504436618,
-        16951107.12807042
+        3604490.3585915496,
+        3996282.78887324,
+        4421657.42746479,
+        4667926.955070423,
+        4645538.816197183,
+        4869420.204929578,
+        4925390.552112676,
+        4757479.510563381,
+        4869420.204929578
       ],
       "pipeline_creation": [
         10051000.0,
         5820000.0,
         2696000.0,
-        29123499.24,
-        29123499.24,
-        36404374.050000004,
-        29123499.24,
-        29123499.24,
-        36404374.050000004,
-        29123499.24,
-        29123499.24,
-        36404374.050000004
+        8366094.000000001,
+        8366094.000000001,
+        10457617.5,
+        8366094.000000001,
+        8366094.000000001,
+        10457617.5,
+        8366094.000000001,
+        8366094.000000001,
+        10457617.5
       ],
       "provenance": {
         "inventory_source": "ProfileBackend",
@@ -10048,43 +10048,43 @@
       10051000.0,
       5820000.0,
       2696000.0,
-      400158.0,
-      400158.0,
-      500197.5,
-      400158.0,
-      400158.0,
-      500197.5,
-      400158.0,
-      400158.0,
-      500197.5
+      299860.0,
+      299860.0,
+      374825.0,
+      299860.0,
+      299860.0,
+      374825.0,
+      299860.0,
+      299860.0,
+      374825.0
     ],
     "monthly_mql_creation": [
       0.0,
       0.0,
       0.0,
-      28523262.24,
-      28523262.24,
-      35654077.800000004,
-      28523262.24,
-      28523262.24,
-      35654077.800000004,
-      28523262.24,
-      28523262.24,
-      35654077.800000004
+      7916304.000000001,
+      7916304.000000001,
+      9895380.0,
+      7916304.000000001,
+      7916304.000000001,
+      9895380.0,
+      7916304.000000001,
+      7916304.000000001,
+      9895380.0
     ],
     "monthly_future_wins": [
       0.0,
       0.0,
       0.0,
-      12547716.08100845,
-      13911598.26372676,
-      15392384.63353521,
-      16249682.005529575,
-      16171745.880802816,
-      16951107.12807042,
-      17145947.439887322,
-      16561426.504436618,
-      16951107.12807042
+      3604490.3585915496,
+      3996282.78887324,
+      4421657.42746479,
+      4667926.955070423,
+      4645538.816197183,
+      4869420.204929578,
+      4925390.552112676,
+      4757479.510563381,
+      4869420.204929578
     ],
     "monthly_ae_count": [
       45.0,
@@ -10146,15 +10146,15 @@
       3437000.0,
       2897000.0,
       697000.0,
-      15218816.08100845,
-      20127428.26372676,
-      18572034.63353521,
-      17355962.005529575,
-      18504515.880802818,
-      17471667.12807042,
-      17145947.439887322,
-      16561426.504436618,
-      16951107.12807042
+      6275590.358591549,
+      10212112.78887324,
+      7601307.42746479,
+      5774206.955070423,
+      6978308.816197183,
+      5389980.204929578,
+      4925390.552112676,
+      4757479.510563381,
+      4869420.204929578
     ],
     "monthly_capped": [
       3437000.0,
@@ -10197,7 +10197,7 @@
       "S5": 0.8
     },
     "funnel_rates": {
-      "mql_to_s0": 0.27,
+      "mql_to_s0": 0.1,
       "s0_to_s1": 0.55,
       "s1_to_s2": 0.47,
       "plg_signup_to_pql": 0.05,
@@ -10298,43 +10298,43 @@
       10051000.0,
       5820000.0,
       2696000.0,
-      400158.0,
-      400158.0,
-      500197.5,
-      400158.0,
-      400158.0,
-      500197.5,
-      400158.0,
-      400158.0,
-      500197.5
+      299860.0,
+      299860.0,
+      374825.0,
+      299860.0,
+      299860.0,
+      374825.0,
+      299860.0,
+      299860.0,
+      374825.0
     ],
     "monthly_mql_creation": [
       0.0,
       0.0,
       0.0,
-      28523262.24,
-      28523262.24,
-      35654077.800000004,
-      28523262.24,
-      28523262.24,
-      35654077.800000004,
-      28523262.24,
-      28523262.24,
-      35654077.800000004
+      7916304.000000001,
+      7916304.000000001,
+      9895380.0,
+      7916304.000000001,
+      7916304.000000001,
+      9895380.0,
+      7916304.000000001,
+      7916304.000000001,
+      9895380.0
     ],
     "monthly_future_wins": [
       0.0,
       0.0,
       0.0,
-      12547716.08100845,
-      13911598.26372676,
-      15392384.63353521,
-      16249682.005529575,
-      16171745.880802816,
-      16951107.12807042,
-      17145947.439887322,
-      16561426.504436618,
-      16951107.12807042
+      3604490.3585915496,
+      3996282.78887324,
+      4421657.42746479,
+      4667926.955070423,
+      4645538.816197183,
+      4869420.204929578,
+      4925390.552112676,
+      4757479.510563381,
+      4869420.204929578
     ],
     "monthly_ae_count": [
       45.0,
@@ -10396,15 +10396,15 @@
       3437000.0,
       2897000.0,
       697000.0,
-      15218816.08100845,
-      20127428.26372676,
-      18572034.63353521,
-      17355962.005529575,
-      18504515.880802818,
-      17471667.12807042,
-      17145947.439887322,
-      16561426.504436618,
-      16951107.12807042
+      6275590.358591549,
+      10212112.78887324,
+      7601307.42746479,
+      5774206.955070423,
+      6978308.816197183,
+      5389980.204929578,
+      4925390.552112676,
+      4757479.510563381,
+      4869420.204929578
     ],
     "monthly_capped": [
       3437000.0,
@@ -10447,7 +10447,7 @@
       "S5": 0.8
     },
     "funnel_rates": {
-      "mql_to_s0": 0.27,
+      "mql_to_s0": 0.1,
       "s0_to_s1": 0.55,
       "s1_to_s2": 0.47,
       "plg_signup_to_pql": 0.05,
@@ -10457,11 +10457,11 @@
   "assumptions": {
     "stage_conversion": {},
     "funnel": {
-      "mql_to_s0": 0.27,
+      "mql_to_s0": 0.1,
       "s0_to_s1": 0.55,
       "s1_to_s2": 0.47,
       "s2_to_won": 0.33,
-      "avg_acv": 387000,
+      "avg_acv": 290000,
       "source_mix": {
         "marketing_sourced": 0.5,
         "sdr_sourced": 0.26,
@@ -10603,7 +10603,7 @@
     },
     "funnel_rates": {
       "mql_to_s0": {
-        "value": 0.27,
+        "value": 0.1,
         "source": "registry"
       },
       "s0_to_s1": {
@@ -10638,7 +10638,7 @@
       "push_rate": 0.23,
       "loss_rate": 0.44,
       "ae_self_gen_pct": 0.24,
-      "mql_to_s0": 0.27,
+      "mql_to_s0": 0.1,
       "s0_to_s1": 0.55,
       "s1_to_s2": 0.47,
       "segment_share": {

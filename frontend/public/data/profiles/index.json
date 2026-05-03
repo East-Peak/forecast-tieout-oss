@@ -1,16 +1,20 @@
 {
   "profiles": [
     {
-      "id": "sprout-labs",
-      "path": "./sprout-labs.json"
+      "id": "acme-saas",
+      "path": "./acme-saas.json"
+    },
+    {
+      "id": "mighty-oak-holdings",
+      "path": "./mighty-oak-holdings.json"
     },
     {
       "id": "sapling-industries",
       "path": "./sapling-industries.json"
     },
     {
-      "id": "mighty-oak-holdings",
-      "path": "./mighty-oak-holdings.json"
+      "id": "sprout-labs",
+      "path": "./sprout-labs.json"
     }
   ]
 }

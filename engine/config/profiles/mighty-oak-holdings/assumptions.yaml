@@ -1,67 +1,83 @@
-# Mighty Oak Holdings — assumptions for the $640M ARR enterprise GTM machine.
-# Renewal fortress narrative: 95% gross retention, 110% NRR.
-# New-logo headwind from LedgerFox price competition.
-
 stage_rates:
   Discovery: 0.05
   Qualification: 0.11
   Technical Evaluation: 0.21
   Business Case: 0.39
   Negotiation: 0.64
-
 lookback_days: 365
 monte_carlo_iterations: 10000
-
 funnel:
-  mql_to_s0: 0.22
+  mql_to_s0: 0.006
   s0_to_s1: 0.44
   s1_to_s2: 0.38
   s2_to_won: 0.21
-  avg_acv: 1075000
-  source_mix: {marketing_sourced: 0.45, sdr_sourced: 0.22, ae_sourced: 0.33}
-
-segment_share: {strategic_enterprise: 0.26, enterprise: 0.46, mid_market: 0.28}
-
-avg_acv: {strategic_enterprise: 2400000, enterprise: 820000, mid_market: 260000}
-
+  avg_acv: 500000
+  source_mix:
+    marketing_sourced: 0.45
+    sdr_sourced: 0.22
+    ae_sourced: 0.33
+segment_share:
+  strategic_enterprise: 0.26
+  enterprise: 0.46
+  mid_market: 0.28
+avg_acv:
+  strategic_enterprise: 2400000
+  enterprise: 820000
+  mid_market: 260000
 productivity_per_ae_per_month:
-  strategic_enterprise: 360000
-  enterprise: 205000
-  mid_market: 130000
-
+  strategic_enterprise: 28800
+  enterprise: 16400
+  mid_market: 10400
 segment_productivity:
   strategic_enterprise:
     annual_quota: 5000000
     attainment_rate: 0.86
-    productivity_per_ae_per_month: 360000
-    ramp_curve: {month_1: 0.00, month_2: 0.10, month_3: 0.20, month_4: 0.35, month_5: 0.55, month_6_plus: 1.00}
+    productivity_per_ae_per_month: 28800
+    ramp_curve:
+      month_1: 0.0
+      month_2: 0.1
+      month_3: 0.2
+      month_4: 0.35
+      month_5: 0.55
+      month_6_plus: 1.0
   enterprise:
     annual_quota: 3000000
     attainment_rate: 0.82
-    productivity_per_ae_per_month: 205000
-    ramp_curve: {month_1: 0.00, month_2: 0.10, month_3: 0.25, month_4: 0.45, month_5: 0.70, month_6_plus: 1.00}
+    productivity_per_ae_per_month: 16400
+    ramp_curve:
+      month_1: 0.0
+      month_2: 0.1
+      month_3: 0.25
+      month_4: 0.45
+      month_5: 0.7
+      month_6_plus: 1.0
   mid_market:
     annual_quota: 1800000
     attainment_rate: 0.87
-    productivity_per_ae_per_month: 130000
-    ramp_curve: {month_1: 0.00, month_2: 0.30, month_3: 0.60, month_4_plus: 1.00}
-
+    productivity_per_ae_per_month: 10400
+    ramp_curve:
+      month_1: 0.0
+      month_2: 0.3
+      month_3: 0.6
+      month_4_plus: 1.0
 capacity:
   attainment_rate: 0.88
-
 waterfall_rates:
   mql_to_s0: 0.22
   s0_to_s1: 0.44
   s1_to_s2: 0.38
   s2_to_won: 0.21
-
-# TargetSetter defaults — baseline scenario parameters before any scenario overlay.
-# segment_share and acv keys must match across both fields.
 target_setter_defaults:
   win_rate_starting: 0.24
   win_rate_created: 0.21
   push_rate: 0.31
   loss_rate: 0.48
   ae_self_gen_pct: 0.33
-  segment_share: {strategic_enterprise: 0.26, enterprise: 0.46, mid_market: 0.28}
-  acv: {strategic_enterprise: 2400000, enterprise: 820000, mid_market: 260000}
+  segment_share:
+    strategic_enterprise: 0.26
+    enterprise: 0.46
+    mid_market: 0.28
+  acv:
+    strategic_enterprise: 2400000
+    enterprise: 820000
+    mid_market: 260000
