@@ -2,9 +2,9 @@ org_name: "Mighty Oak Holdings"
 org_id: "mighty-oak-holdings"
 timezone: "US/Eastern"
 
-# April-start fiscal year (Apr 1 - Mar 31). Tests a third calendar shape
-# distinct from both Acme (Feb-start) and Sprout (calendar year).
-fiscal_year_start_month: 4
+# Feb-start fiscal year (Feb 1 - Jan 31). Aligned with Acme for demo parity.
+# FY26: Feb 2026 - Jan 2027. Q1=Feb/Mar/Apr, Q2=May/Jun/Jul, Q3=Aug/Sep/Oct, Q4=Nov/Dec/Jan.
+fiscal_year_start_month: 2
 
 revenue_metric: "bookings"
 
@@ -14,7 +14,7 @@ data_access:
   params:
     path: engine/data/mighty-oak-holdings
 
-# Story: mature enterprise, $800M ARR run, renewal compression risk.
-# Heavy renewal book ($400M+ annually) — even small churn % moves the
-# needle. New business is steady but the renewal motion dominates.
-description: "Mighty Oak Holdings — $800M ARR run, April-start fiscal, renewal compression"
+# Story: mature enterprise approaching $1B ARR, renewal fortress (95% GRR, 110% NRR).
+# New-logo shortfall driven by LedgerFox price competition. ABM signal building.
+# $640M beginning ARR → $160M new ARR → $800M EOY (25% YoY).
+description: "Mighty Oak Holdings — $640M beginning ARR, Feb-start fiscal, ABM recovery plan"

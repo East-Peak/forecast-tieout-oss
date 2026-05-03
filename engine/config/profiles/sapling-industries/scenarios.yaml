@@ -1,0 +1,16 @@
+scenarios:
+  - id: legal-unclogged
+    label: Legal Queue Clears
+    description:
+      primary: Enterprise legal review improves enough that good deals stop aging out in S4.
+      secondary: Mid-market stays steady and commercial self-serve keeps overdelivering, but the big swing is fewer enterprise pushes.
+    win_rate_starting: 0.37
+    win_rate_created: 0.36
+    push_rate: 0.18
+    loss_rate: 0.46
+    ae_self_gen_pct: 0.22
+    mql_to_s0: 0.28
+    s0_to_s1: 0.58
+    s1_to_s2: 0.54
+    segment_share: {enterprise: 0.31, mid_market: 0.45, commercial: 0.24}
+    acv: {enterprise: 800000, mid_market: 245000, commercial: 60000}

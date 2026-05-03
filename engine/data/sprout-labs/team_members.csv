@@ -1,13 +1,12 @@
 id,name,role,segment,start_date,is_active,manager_id
-VP-S,Olivia Park,vp_sales,,2024-03-01,true,
-MGR-1,Devon Patel,manager,Mid-Market,2024-06-01,true,
-AE-M01,Jordan Reyes,AE,Mid-Market,2024-08-01,true,MGR-1
-AE-M02,Casey Thompson,AE,Mid-Market,2024-11-01,true,MGR-1
-AE-M03,Riley Chen,AE,Mid-Market,2025-02-15,true,MGR-1
-AE-M04,Avery Brooks,AE,Mid-Market,2025-05-01,true,MGR-1
-AE-C01,Quinn Foster,AE,Commercial,2025-01-15,true,MGR-1
-AE-C02,Sage Morgan,AE,Commercial,2025-04-01,true,MGR-1
-AE-M05,Taylor Ng,AE,Mid-Market,2026-09-15,true,MGR-1
-AE-C03,Morgan Lee,AE,Commercial,2026-10-01,true,MGR-1
-SDR-01,Cameron West,sdr,,2024-09-01,true,
-SE-01,Rowan Khan,se,,2024-10-15,true,
+AE-M01,Maya Singh,ae,mid_market,2025-03-10,true,
+AE-M02,Jordan Reyes,ae,mid_market,2025-06-02,true,
+AE-M03,Tessa Nguyen,ae,mid_market,2025-09-15,true,
+AE-C01,Owen Hart,ae,commercial,2025-08-04,true,
+AE-M04,Priya Desai,ae,mid_market,2026-03-03,true,
+AE-C02,Leo Alvarez,ae,commercial,2026-04-14,true,
+FOUND-01,Nadia Bloom,founder,,2024-01-01,true,
+FOUND-02,Evan Mercer,founder,,2024-01-01,true,
+SDR-01,Jamie Weston,sdr,,2026-01-15,true,
+SDR-02,Dani Ortega,sdr,,2026-01-15,true,
+SE-01,Rowan Khan,se,,2025-11-01,true,

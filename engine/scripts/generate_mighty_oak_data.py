@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
 """
-Generate deterministic example CSV data for the Mighty Oak Holdings demo org.
+Generate deterministic synthetic CSV data for Mighty Oak Holdings.
 
-Mighty Oak Holdings profile narrative:
-- $100M ARR target (Feb-start fiscal — same calendar as Acme)
-- Capacity-constrained — strong pipeline but team is undersized
-- Enterprise + Mid-Market mix (no Commercial)
-- Larger deal sizes than Sprout, larger team than Sprout/Acme
+Persona: $640M beginning ARR → $160M new ARR target → $800M EOY (25% YoY).
+Mature enterprise GTM approaching $1B. Renewal fortress (95% GRR, 110% NRR).
+New-logo headwind from LedgerFox price competition.
 
-Produces five CSV files in engine/data/mighty-oak-holdings/.
+Calendar: Feb-start FY26.
+  Q1FY26 = Feb/Mar/Apr 2026   Q2 = May/Jun/Jul   Q3 = Aug/Sep/Oct   Q4 = Nov/Dec/Jan2027
+  as_of = 2026-05-03
+
+Key metrics:
+  - 600 total deals: 310 open / 156 closed-won YTD / 134 closed-lost YTD
+  - YTD won $: ~$24M (Feb 1 – May 3, 2026)
+  - YTD lost $: ~$41M (same window)
+  - Open pipeline at as_of: ~$438M
+  - Overall win rate: 34% (new-logo only 19%)
+
+Produces three CSV files in engine/data/mighty-oak-holdings/:
+  deals.csv, team_members.csv, stage_history.csv
 
 Usage:
-    python -m engine.scripts.generate_mighty_oak_data                  # Generate to engine/data/mighty-oak-holdings/
-    python -m engine.scripts.generate_mighty_oak_data --verify         # Regenerate and diff against existing
-    python -m engine.scripts.generate_mighty_oak_data --output-dir /tmp  # Custom output directory
+    python -m engine.scripts.generate_mighty_oak_data
+    python -m engine.scripts.generate_mighty_oak_data --output-dir /tmp
+    python -m engine.scripts.generate_mighty_oak_data --verify
 """
 
 from __future__ import annotations
@@ -29,17 +39,100 @@ from typing import Any
 
 import yaml
 
-# ---------------------------------------------------------------------------
-# Constants
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# Seed and path constants
+# ──────────────────────────────────────────────────────────────────────────────
+
+SEED = 420  # distinct from Acme (42), Sprout (100), Sapling (200), old MOH (300)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "engine" / "data" / "mighty-oak-holdings"
 ROSTER_PATH = REPO_ROOT / "engine" / "config" / "profiles" / "mighty-oak-holdings" / "roster.yaml"
 
-SEED = 300  # Different from Sprout (100), Sapling (200), Acme (42)
+# ──────────────────────────────────────────────────────────────────────────────
+# Calendar anchors — Feb-start FY26
+# ──────────────────────────────────────────────────────────────────────────────
 
-# Stage pipeline (open stages only — Closed Won/Lost are terminal)
+AS_OF = date(2026, 5, 3)
+
+FY_START = date(2026, 2, 1)
+
+Q1_START = date(2026, 2, 1)
+Q1_END   = date(2026, 4, 30)
+
+Q2_START = date(2026, 5, 1)
+Q2_END   = date(2026, 7, 31)
+
+Q3_START = date(2026, 8, 1)
+Q3_END   = date(2026, 10, 31)
+
+Q4_START = date(2026, 11, 1)
+Q4_END   = date(2027, 1, 31)
+
+# Pre-FY26 history window (for historical closed deals that provide context)
+HIST_Q1_START = date(2025, 2, 1)
+HIST_Q1_END   = date(2025, 4, 30)
+HIST_Q2_START = date(2025, 5, 1)
+HIST_Q2_END   = date(2025, 7, 31)
+HIST_Q3_START = date(2025, 8, 1)
+HIST_Q3_END   = date(2025, 10, 31)
+HIST_Q4_START = date(2025, 11, 1)
+HIST_Q4_END   = date(2026, 1, 31)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Segment parameters
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ACV distribution per brief section F (mean, min, max)
+SEGMENT_ACV_PARAMS: dict[str, dict[str, float]] = {
+    "Strategic Enterprise": {"mean": 2_400_000, "min": 1_100_000, "max": 6_800_000, "std": 900_000},
+    "Enterprise":           {"mean":   820_000, "min":   300_000, "max": 2_100_000, "std": 280_000},
+    "Mid-Market":           {"mean":   260_000, "min":    90_000, "max":   600_000, "std":  90_000},
+}
+
+# Segment distribution by deal count (F): SE 22%, E 46%, MM 32%
+SEGMENT_WEIGHTS = {
+    "Strategic Enterprise": 0.22,
+    "Enterprise":           0.46,
+    "Mid-Market":           0.32,
+}
+
+# Source channel weights (F): inbound 24%, outbound 42%, ae_self_gen 22%, partner 12%
+CHANNELS = ["inbound", "outbound", "ae_self_gen", "partner"]
+CHANNEL_WEIGHTS = [0.24, 0.42, 0.22, 0.12]
+
+# Win rates per channel on new-logo (F): outbound 19%, ae_self_gen 27%, inbound 31%, partner 36%
+CHANNEL_WIN_RATES = {
+    "inbound":    0.31,
+    "outbound":   0.19,
+    "ae_self_gen": 0.27,
+    "partner":    0.36,
+}
+
+# Win rates per segment (F)
+SEGMENT_WIN_RATES = {
+    "Strategic Enterprise": 0.21,
+    "Enterprise":           0.27,
+    "Mid-Market":           0.34,
+}
+
+# Cycle time medians in days per segment (F)
+SEGMENT_CYCLE_DAYS = {
+    "Strategic Enterprise": 186,
+    "Enterprise":           124,
+    "Mid-Market":            58,
+}
+
+# Stage distribution for open deals (F): S2 22%, S3 27%, S4 31%, S5 20%
+# Note: S2=Qualification, S3=Technical Evaluation, S4=Business Case, S5=Negotiation
+OPEN_STAGE_DIST = {
+    "Qualification":       0.22,
+    "Technical Evaluation": 0.27,
+    "Business Case":       0.31,
+    "Negotiation":         0.20,
+}
+
+# Stage names
 OPEN_STAGES = [
     "Discovery",
     "Qualification",
@@ -47,122 +140,292 @@ OPEN_STAGES = [
     "Business Case",
     "Negotiation",
 ]
-TERMINAL_WON = "Closed Won"
+TERMINAL_WON  = "Closed Won"
 TERMINAL_LOST = "Closed Lost"
 
-# Segment deal size parameters (min, max, center, std_dev)
-# Mighty Oak is $800M scale — Strategic Enterprise + Enterprise + Mid-Market.
-SEGMENT_DEAL_PARAMS: dict[str, dict[str, float]] = {
-    "Strategic Enterprise": {"min": 800_000, "max": 4_000_000, "center": 1_800_000, "std": 600_000},
-    "Enterprise": {"min": 250_000, "max": 1_200_000, "center": 550_000, "std": 180_000},
-    "Mid-Market": {"min": 80_000, "max": 350_000, "center": 180_000, "std": 60_000},
+# Deal type mix: heavy new-logo story, but renewals and expansions present
+DEAL_TYPES = ["new_business", "expansion", "renewal"]
+DEAL_TYPE_WEIGHTS = [0.52, 0.22, 0.26]
+
+# Days in stage per segment (G)
+STAGE_DAYS: dict[str, dict[str, int]] = {
+    "Strategic Enterprise": {
+        "Discovery": 15, "Qualification": 24, "Technical Evaluation": 39,
+        "Business Case": 52, "Negotiation": 48,
+    },
+    "Enterprise": {
+        "Discovery": 10, "Qualification": 16, "Technical Evaluation": 22,
+        "Business Case": 31, "Negotiation": 23,
+    },
+    "Mid-Market": {
+        "Discovery": 6, "Qualification": 8, "Technical Evaluation": 11,
+        "Business Case": 14, "Negotiation": 9,
+    },
 }
 
-# Deal types — Mighty Oak's narrative is renewal compression, so renewals
-# dominate the deal flow. Heavy renewal book.
-DEAL_TYPES = ["New Business", "Expansion", "Renewal"]
-DEAL_TYPE_WEIGHTS = [0.30, 0.25, 0.45]
+# ──────────────────────────────────────────────────────────────────────────────
+# Named accounts for storyline anchoring (from brief section A/E)
+# ──────────────────────────────────────────────────────────────────────────────
 
-# Lead sources
-SOURCES = ["Inbound", "Outbound", "Partner", "Event", "PLG"]
-SOURCE_WEIGHTS = [0.30, 0.25, 0.20, 0.15, 0.10]
-
-# Company generation
-INDUSTRIES = ["Technology", "Finance", "Healthcare", "Manufacturing", "Retail", "Media", "Education", "Energy"]
-
-COMPANY_PREFIXES = [
-    "Apex", "Zenith", "Cobalt", "Vertex", "Nimbus", "Forge", "Atlas", "Prism",
-    "Helix", "Onyx", "Sable", "Quantum", "Cipher", "Lumen", "Vector", "Nexus",
-    "Stratos", "Aether", "Crest", "Vanguard", "Pinnacle", "Ember", "Nova", "Orbit",
-    "Ridge", "Beacon", "Pulse", "Summit", "Drake", "Titan", "Horizon", "Sterling",
-    "Ironclad", "Basalt", "Radiant", "Sapphire", "Cedar", "Granite", "Crimson", "Azure",
-    "Keystone", "Marble", "Falcon", "Phoenix", "Spectra", "Coral", "Flint", "Opal",
-    "Tempest", "Cascade", "Verdant", "Indigo", "Sequoia", "Obsidian", "Mercury", "Solstice",
-    "Borealis", "Catalyst", "Eclipse", "Pavilion", "Lattice", "Monolith", "Synapse", "Thrive",
-    "Dynamo", "Aegis", "Axiom", "Nebula", "Compass", "Bedrock", "Sentry", "Paragon",
+# These accounts appear in the sample rows — we inject them explicitly.
+NAMED_ACCOUNTS = [
+    # id,  account_name, segment, owner_id, channel, stage/status, amount, raw_stage, forecast_cat
+    {
+        "id": "MOH-001",
+        "account": "Harborline Bank",
+        "name": "Harborline Bank - Control plane expansion",
+        "segment": "Strategic Enterprise",
+        "owner": "Ananya Krishnamurthy",
+        "owner_id": "AE-SE01",
+        "source_channel": "ae_self_gen",
+        "stage": TERMINAL_WON,
+        "is_closed": True, "is_won": True,
+        "amount": 3_800_000,
+        "created_date": date(2025, 12, 18),
+        "close_date": date(2026, 4, 17),
+        "raw_stage": "Closed Won",
+        "type": "expansion",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "MOH-002",
+        "account": "Great Basin Freight",
+        "name": "Great Basin Freight - Fleet telemetry renewal",
+        "segment": "Enterprise",
+        "owner": "Victor Chen",
+        "owner_id": "AE-E20",
+        "source_channel": "inbound",
+        "stage": TERMINAL_WON,
+        "is_closed": True, "is_won": True,
+        "amount": 1_850_000,
+        "created_date": date(2026, 1, 6),
+        "close_date": date(2026, 4, 28),
+        "raw_stage": "Closed Won",
+        "type": "renewal",
+        "forecast_category": "Closed",
+    },
+    {
+        # Covenant Grid: the big Q1 slip — vendor risk review
+        "id": "MOH-003",
+        "account": "Covenant Grid Services",
+        "name": "Covenant Grid Services - Secure operations cloud",
+        "segment": "Strategic Enterprise",
+        "owner": "Reginald Tannen",
+        "owner_id": "AE-SE02",
+        "source_channel": "outbound",
+        "stage": "Negotiation",
+        "is_closed": False, "is_won": False,
+        "amount": 6_400_000,
+        "created_date": date(2025, 10, 20),
+        "close_date": date(2026, 6, 30),
+        "raw_stage": "Negotiation - Vendor Risk",
+        "type": "new_business",
+        "forecast_category": "Commit",
+    },
+    {
+        "id": "MOH-004",
+        "account": "Arcturus Freight Network",
+        "name": "Arcturus Freight Network - Global rollout",
+        "segment": "Enterprise",
+        "owner": "Nina Kowalski",
+        "owner_id": "AE-E01",
+        "source_channel": "outbound",
+        "stage": "Business Case",
+        "is_closed": False, "is_won": False,
+        "amount": 3_200_000,
+        "created_date": date(2025, 11, 17),
+        "close_date": date(2026, 6, 18),
+        "raw_stage": "Business Case - Procurement",
+        "type": "new_business",
+        "forecast_category": "Best Case",
+    },
+    {
+        "id": "MOH-005",
+        "account": "Palisade Water Authority",
+        "name": "Palisade Water Authority - Telemetry platform",
+        "segment": "Enterprise",
+        "owner": "Ananya Krishnamurthy",
+        "owner_id": "AE-SE01",
+        "source_channel": "ae_self_gen",
+        "stage": "Technical Evaluation",
+        "is_closed": False, "is_won": False,
+        "amount": 1_450_000,
+        "created_date": date(2026, 4, 9),
+        "close_date": date(2026, 8, 21),
+        "raw_stage": "Technical Evaluation - ABM",
+        "type": "new_business",
+        "forecast_category": "Pipeline",
+    },
+    {
+        "id": "MOH-006",
+        "account": "Meridian Retail Group",
+        "name": "Meridian Retail Group - Regional hub",
+        "segment": "Enterprise",
+        "owner": "Lucia Barrett",
+        "owner_id": "AE-E35",
+        "source_channel": "outbound",
+        "stage": TERMINAL_LOST,
+        "is_closed": True, "is_won": False,
+        "amount": 980_000,
+        "created_date": date(2026, 1, 15),
+        "close_date": date(2026, 3, 31),
+        "raw_stage": "Closed Lost",
+        "type": "new_business",
+        "forecast_category": "Closed",
+        "lost_reason": "Lost on price to LedgerFox",
+    },
+    {
+        "id": "MOH-007",
+        "account": "North Coast Health Systems",
+        "name": "North Coast Health Systems - Risk fabric",
+        "segment": "Strategic Enterprise",
+        "owner": "Octavia Nguyen",
+        "owner_id": "AE-SE04",
+        "source_channel": "outbound",
+        "stage": "Negotiation",
+        "is_closed": False, "is_won": False,
+        "amount": 2_900_000,
+        "created_date": date(2025, 12, 2),
+        "close_date": date(2026, 5, 15),
+        "raw_stage": "Negotiation - Vendor Risk",
+        "type": "new_business",
+        "forecast_category": "Commit",
+    },
+    {
+        "id": "MOH-008",
+        "account": "Riverport Logistics",
+        "name": "Riverport Logistics - Field bundle",
+        "segment": "Mid-Market",
+        "owner": "Indira Vasquez",
+        "owner_id": "AE-M01",
+        "source_channel": "inbound",
+        "stage": TERMINAL_WON,
+        "is_closed": True, "is_won": True,
+        "amount": 310_000,
+        "created_date": date(2026, 2, 8),
+        "close_date": date(2026, 4, 7),
+        "raw_stage": "Closed Won",
+        "type": "new_business",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "MOH-009",
+        "account": "Copper State Utilities",
+        "name": "Copper State Utilities - Starter rollout",
+        "segment": "Mid-Market",
+        "owner": "Theo Mercer",
+        "owner_id": "AE-M28",
+        "source_channel": "ae_self_gen",
+        "stage": "Qualification",
+        "is_closed": False, "is_won": False,
+        "amount": 240_000,
+        "created_date": date(2026, 4, 22),
+        "close_date": date(2026, 6, 27),
+        "raw_stage": "Qualification - ABM",
+        "type": "new_business",
+        "forecast_category": "Pipeline",
+    },
 ]
 
-COMPANY_SUFFIXES = [
-    "Systems", "Technologies", "Solutions", "Labs", "Corp", "Group", "Inc",
-    "Industries", "Analytics", "Networks", "Dynamics", "Software", "Digital",
-    "Platforms", "Ventures", "Global", "Partners", "Sciences", "Cloud", "Data",
+# Enterprise/infrastructure account names pool for generated deals
+ACCOUNT_PREFIXES = [
+    "Covenant", "Harborline", "Arcturus", "Palisade", "Meridian", "Riverport",
+    "North Coast", "Great Basin", "Copper State", "Lakefront", "Ironwood",
+    "Summit Ridge", "Blue Mesa", "Granite Peak", "Ridgeline", "Westbrook",
+    "Clearwater", "Pinecrest", "Stonegate", "Highpoint", "Oakdale", "Cedarbrook",
+    "Rushmore", "Thunderbird", "Falcon Ridge", "Eagle Rock", "Redstone",
+    "Blackwater", "Silvergate", "Goldcrest", "Whitehall", "Greenvale",
+    "Northfield", "Southport", "Eastbrook", "Westfield", "Midland",
+    "Keystone", "Cornerstone", "Bedrock", "Capstone", "Flagstone",
+    "Cascade", "Confluence", "Watershed", "Ridgecrest", "Hilltop",
+    "Lakewood", "Forestview", "Meadowbrook", "Riverdale", "Creekside",
+    "Bloomfield", "Fairfield", "Springfield", "Greenfield", "Brookfield",
+    "Hamilton", "Jefferson", "Lincoln", "Madison", "Monroe",
+    "Atlas", "Apex", "Zenith", "Vertex", "Summit", "Pinnacle",
+    "Vanguard", "Pioneer", "Frontier", "Heritage", "Legacy",
+    "Pacific", "Atlantic", "Continental", "National", "Federal",
+    "Alliance", "Coalition", "Consortium", "Partners", "Associates",
+    "Tri-State", "Five-Star", "Premier", "Elite", "Prestige",
 ]
 
-FIRST_NAMES = [
-    "James", "Emma", "Liam", "Sophia", "Noah", "Olivia", "Ethan", "Ava",
-    "Mason", "Isabella", "Lucas", "Mia", "Logan", "Charlotte", "Alexander", "Amelia",
-    "Jacob", "Harper", "Michael", "Evelyn", "Daniel", "Abigail", "Henry", "Emily",
-    "Sebastian", "Ella", "Jack", "Elizabeth", "Owen", "Sofia", "Samuel", "Avery",
-    "Ryan", "Chloe", "Nathan", "Victoria", "Andrew", "Madison", "Gabriel", "Luna",
-    "Dylan", "Grace", "Joshua", "Scarlett", "Caleb", "Lily", "Matthew", "Aria",
-    "Adrian", "Zoe", "Connor", "Penelope", "Isaac", "Layla", "Nolan", "Riley",
-    "Thomas", "Nora", "Aaron", "Zoey", "Robert", "Hannah", "Benjamin", "Stella",
-    "Patrick", "Audrey", "Kevin", "Savannah", "Trevor", "Brooklyn", "Gavin", "Leah",
-    "Colin", "Natalie", "Scott", "Hazel", "Derek", "Violet", "Marcus", "Aurora",
+ACCOUNT_SUFFIXES = {
+    "Strategic Enterprise": [
+        "Holdings", "Group", "Corporation", "International", "Capital",
+        "Global", "Enterprises", "Industries", "Partners", "Trust",
+    ],
+    "Enterprise": [
+        "Solutions", "Services", "Networks", "Systems", "Technologies",
+        "Logistics", "Freight", "Utilities", "Authority", "Bank",
+        "Financial", "Health Systems", "Medical Center", "Energy", "Water District",
+    ],
+    "Mid-Market": [
+        "Logistics", "Transport", "Supply", "Distribution", "Warehousing",
+        "Retail", "Commerce", "Agency", "Consulting", "Management",
+        "Properties", "Realty", "Construction", "Engineering", "Design",
+    ],
+}
+
+# Lost reason pool — heavy LedgerFox narrative
+LOST_REASONS = [
+    "Lost on price to LedgerFox",
+    "Lost on price to LedgerFox",
+    "Lost on price to LedgerFox",
+    "Competitor pricing — LedgerFox discounted 35%",
+    "Competitor won — LedgerFox",
+    "No decision — budget frozen",
+    "Champion left company",
+    "Procurement stall — no budget release",
+    "Technical fit gap",
+    "Vendor risk review halted",
+    "Executive sponsor change",
+    "Lost to incumbent renewal",
+    "No decision",
 ]
 
-LAST_NAMES = [
-    "Thompson", "Rivera", "Campbell", "Mitchell", "Roberts", "Carter", "Phillips",
-    "Evans", "Turner", "Torres", "Parker", "Collins", "Edwards", "Stewart", "Flores",
-    "Morris", "Murphy", "Cook", "Rogers", "Morgan", "Peterson", "Cooper", "Reed",
-    "Bailey", "Bell", "Gomez", "Kelly", "Howard", "Ward", "Cox", "Diaz",
-    "Richardson", "Wood", "Watson", "Brooks", "Bennett", "Gray", "James", "Reyes",
-    "Cruz", "Hughes", "Price", "Myers", "Long", "Foster", "Sanders", "Ross",
-    "Sullivan", "Powell", "Russell", "Bryant", "Griffin", "Hayes", "Wallace", "West",
-]
+# Product/deal description words
+DEAL_DESCRIPTORS = {
+    "new_business": [
+        "Secure operations cloud", "Fleet telemetry platform", "Risk management fabric",
+        "Global operations rollout", "Enterprise control plane", "Data governance layer",
+        "Compliance automation suite", "Infrastructure modernization", "Connectivity platform",
+        "Analytics foundation", "Security operations center", "Field operations platform",
+        "Supply chain visibility", "Network monitoring suite", "Workforce analytics",
+    ],
+    "expansion": [
+        "Control plane expansion", "Fleet telemetry expansion", "Regional expansion",
+        "Seat expansion", "Usage expansion", "Module expansion", "Division rollout",
+        "International expansion", "Cross-sell analytics", "Add-on security module",
+    ],
+    "renewal": [
+        "Annual renewal", "Platform renewal", "Enterprise renewal", "Fleet renewal",
+        "Infrastructure renewal", "Operations renewal", "Analytics renewal",
+    ],
+}
 
-TITLES = [
-    "VP Engineering", "CTO", "Director of IT", "Head of Infrastructure",
-    "VP Operations", "Director of Engineering", "Head of Security",
-    "Chief Information Officer", "SVP Technology", "Director of Platform",
-    "Head of DevOps", "VP Product", "Director of Cloud Operations",
-    "Chief Architect", "VP Technology", "Director of Data Engineering",
-    "Head of SRE", "VP Cloud", "Director of Solutions", "Head of Analytics",
-]
-
-# Today anchor: 2026-04-06 (consistent with Acme for parity)
-TODAY = date(2026, 4, 6)
-
-# Fiscal year: Mighty Oak uses April-start fiscal (FY26 = Apr 1, 2026 - Mar 31, 2027)
-# As of TODAY=2026-04-06, FY26 just started (Q1 in progress, only ~6 days in)
-# Q1: Apr 1 - Jun 30, 2026
-# Q2: Jul 1 - Sep 30, 2026
-# Q3: Oct 1 - Dec 31, 2026
-# Q4: Jan 1 - Mar 31, 2027
-FY_Q1_START = date(2026, 4, 1)
-FY_Q1_END = date(2026, 6, 30)
-FY_Q2_START = date(2026, 7, 1)
-FY_Q2_END = date(2026, 9, 30)
-FY_Q3_START = date(2026, 10, 1)
-FY_Q3_END = date(2026, 12, 31)
-FY_Q4_START = date(2027, 1, 1)
-FY_Q4_END = date(2027, 3, 31)
-
-# Historical quarters (FY25 Q3 and Q4 — Oct 2025 through Mar 2026)
-HIST_Q3_START = date(2025, 10, 1)
-HIST_Q3_END = date(2025, 12, 31)
-HIST_Q4_START = date(2026, 1, 1)
-HIST_Q4_END = date(2026, 3, 31)
-
-# Departed AE IDs for dirty data
-DEPARTED_AE_IDS = ["AE-X01", "AE-X02"]
+FORECAST_CATEGORIES = {
+    "Negotiation": "Commit",
+    "Business Case": "Best Case",
+    "Technical Evaluation": "Pipeline",
+    "Qualification": "Pipeline",
+    "Discovery": "Pipeline",
+    TERMINAL_WON: "Closed",
+    TERMINAL_LOST: "Closed",
+}
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# Helper utilities
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 def _random_date(start: date, end: date) -> date:
-    """Return a random date between start and end (inclusive)."""
     delta = (end - start).days
     if delta <= 0:
         return start
     return start + timedelta(days=random.randint(0, delta))
 
 
-def _random_weekday_date(start: date, end: date) -> date:
-    """Return a random weekday date between start and end."""
+def _random_weekday(start: date, end: date) -> date:
     for _ in range(100):
         d = _random_date(start, end)
         if d.weekday() < 5:
@@ -170,154 +433,91 @@ def _random_weekday_date(start: date, end: date) -> date:
     return _random_date(start, end)
 
 
-def _clamp_amount(amount: float, segment: str) -> float:
-    """Clamp deal amount to segment range and round to nearest $1K."""
-    params = SEGMENT_DEAL_PARAMS[segment]
-    clamped = max(params["min"], min(params["max"], amount))
-    return round(clamped / 1000) * 1000
+def _format_dt(d: date) -> str:
+    hour = random.randint(8, 17)
+    minute = random.choice([0, 15, 30, 45])
+    return f"{d.isoformat()}T{hour:02d}:{minute:02d}:00"
 
 
-def _generate_amount(segment: str) -> float:
-    """Generate a segment-appropriate deal amount."""
-    params = SEGMENT_DEAL_PARAMS[segment]
-    raw = random.gauss(params["center"], params["std"])
-    return _clamp_amount(raw, segment)
+def _clamp_acv(amount: float, segment: str) -> float:
+    p = SEGMENT_ACV_PARAMS[segment]
+    return round(max(p["min"], min(p["max"], amount)) / 1000) * 1000
 
 
-def _generate_deal_name(company_name: str, deal_type: str) -> str:
-    """Generate a deal name from company and type."""
-    product_lines = ["Platform", "Enterprise Suite", "Analytics", "Security Module",
-                     "Data Pipeline", "API Gateway", "Monitoring", "Compliance"]
-    product = random.choice(product_lines)
-    if deal_type == "Expansion":
-        return f"{company_name} - {product} Expansion"
-    elif deal_type == "Renewal":
-        return f"{company_name} - {product} Renewal"
-    else:
-        return f"{company_name} - {product}"
+def _gen_acv(segment: str) -> float:
+    p = SEGMENT_ACV_PARAMS[segment]
+    return _clamp_acv(random.gauss(p["mean"], p["std"]), segment)
 
 
-# ---------------------------------------------------------------------------
+def _pick_segment() -> str:
+    segs = list(SEGMENT_WEIGHTS.keys())
+    wts  = list(SEGMENT_WEIGHTS.values())
+    return random.choices(segs, weights=wts, k=1)[0]
+
+
+def _pick_channel() -> str:
+    return random.choices(CHANNELS, weights=CHANNEL_WEIGHTS, k=1)[0]
+
+
+def _pick_deal_type() -> str:
+    return random.choices(DEAL_TYPES, weights=DEAL_TYPE_WEIGHTS, k=1)[0]
+
+
+def _gen_account_name(segment: str, used: set[str]) -> str:
+    for _ in range(200):
+        prefix = random.choice(ACCOUNT_PREFIXES)
+        suffix = random.choice(ACCOUNT_SUFFIXES[segment])
+        name = f"{prefix} {suffix}"
+        if name not in used:
+            used.add(name)
+            return name
+    # fallback with counter
+    suffix = random.choice(ACCOUNT_SUFFIXES[segment])
+    i = 1
+    while True:
+        name = f"{ACCOUNT_PREFIXES[0]} {suffix} {i}"
+        if name not in used:
+            used.add(name)
+            return name
+        i += 1
+
+
+def _gen_deal_name(account: str, deal_type: str) -> str:
+    desc = random.choice(DEAL_DESCRIPTORS[deal_type])
+    return f"{account} - {desc}"
+
+
+def _forecast_cat(stage: str, is_push: bool = False) -> str:
+    return FORECAST_CATEGORIES.get(stage, "Pipeline")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Roster loader
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 def load_roster(roster_path: Path) -> list[dict[str, Any]]:
-    """Load team members from roster.yaml."""
     with open(roster_path) as f:
         data = yaml.safe_load(f)
     return data["team_members"]
 
 
-def roster_to_csv_rows(members: list[dict]) -> list[dict]:
-    """Convert roster YAML entries to CSV-compatible dicts."""
+def build_team_members_csv(roster: list[dict]) -> list[dict]:
     rows = []
-    for m in members:
+    for m in roster:
         rows.append({
             "id": m["id"],
             "name": m["name"],
-            "role": m["role"] if m["role"] != "ae" else "AE",
-            "segment": m.get("segment", ""),
+            "role": m["role"],
+            "segment": m.get("segment") or "",
             "start_date": m["start_date"],
             "is_active": "true",
-            "manager_id": m.get("manager_id", ""),
+            "manager_id": m.get("manager_id") or "",
         })
     return rows
 
 
-# ---------------------------------------------------------------------------
-# Company generation
-# ---------------------------------------------------------------------------
-
-
-def generate_companies(n: int = 150) -> list[dict]:
-    """Generate n fictional companies with deterministic names."""
-    companies = []
-    used_names: set[str] = set()
-
-    # Shuffle to get deterministic but varied combinations
-    prefixes = list(COMPANY_PREFIXES)
-    suffixes = list(COMPANY_SUFFIXES)
-
-    for i in range(n):
-        # Pick unique name
-        for _ in range(100):
-            prefix = random.choice(prefixes)
-            suffix = random.choice(suffixes)
-            name = f"{prefix} {suffix}"
-            if name not in used_names:
-                used_names.add(name)
-                break
-
-        # Mighty Oak: 3-tier. Strategic Enterprise / Enterprise / Mid-Market.
-        # Companies skew larger.
-        segment_roll = random.random()
-        if segment_roll < 0.20:
-            segment = "Strategic Enterprise"
-            emp_count = random.randint(15000, 200000)
-        elif segment_roll < 0.55:
-            segment = "Enterprise"
-            emp_count = random.randint(2000, 15000)
-        else:
-            segment = "Mid-Market"
-            emp_count = random.randint(200, 2000)
-
-        companies.append({
-            "id": f"COMP-{i + 1:03d}",
-            "name": name,
-            "segment": segment,
-            "industry": random.choice(INDUSTRIES),
-            "employee_count": emp_count,
-        })
-
-    return companies
-
-
-# ---------------------------------------------------------------------------
-# Contact generation
-# ---------------------------------------------------------------------------
-
-
-def generate_contacts(companies: list[dict], n: int = 200) -> list[dict]:
-    """Generate n fictional contacts distributed across companies."""
-    contacts = []
-    used_emails: set[str] = set()
-
-    for i in range(n):
-        company = random.choice(companies)
-        first = random.choice(FIRST_NAMES)
-        last = random.choice(LAST_NAMES)
-        name = f"{first} {last}"
-
-        # Generate unique email
-        domain = company["name"].lower().replace(" ", "").replace(".", "") + ".com"
-        base_email = f"{first.lower()}.{last.lower()}@{domain}"
-        email = base_email
-        counter = 2
-        while email in used_emails:
-            email = f"{first.lower()}.{last.lower()}{counter}@{domain}"
-            counter += 1
-        used_emails.add(email)
-
-        contacts.append({
-            "id": f"CT-{i + 1:03d}",
-            "name": name,
-            "email": email,
-            "company_id": company["id"],
-            "title": random.choice(TITLES),
-        })
-
-    return contacts
-
-
-# ---------------------------------------------------------------------------
-# Deal generation
-# ---------------------------------------------------------------------------
-
-
-def _get_ae_ids_by_segment(roster: list[dict]) -> dict[str, list[str]]:
-    """Group active AE IDs by segment."""
-    # Mighty Oak: 3-tier (Strategic Enterprise / Enterprise / Mid-Market).
+def _ae_ids_by_segment(roster: list[dict]) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {
         "Strategic Enterprise": [],
         "Enterprise": [],
@@ -329,561 +529,606 @@ def _get_ae_ids_by_segment(roster: list[dict]) -> dict[str, list[str]]:
     return result
 
 
-def generate_deals(
-    roster: list[dict],
-    companies: list[dict],
-) -> tuple[list[dict], list[dict]]:
-    """Generate ~400 deals and their stage history.
-
-    Returns (deals, stage_history) where each is a list of dicts.
-    """
-    ae_by_segment = _get_ae_ids_by_segment(roster)
-    companies_by_segment: dict[str, list[dict]] = {
-        "Strategic Enterprise": [],
-        "Enterprise": [],
-        "Mid-Market": [],
-    }
-    for c in companies:
-        if c["segment"] in companies_by_segment:
-            companies_by_segment[c["segment"]].append(c)
-
-    deals: list[dict] = []
-    history: list[dict] = []
-    deal_counter = 0
-
-    # Track which deals get dirty data treatment
-    dirty_missing_amount_indices: list[int] = []
-    dirty_missing_close_date_indices: list[int] = []
-    dirty_departed_owner_indices: list[int] = []
-    dirty_pusher_indices: list[int] = []
-    dirty_stale_indices: list[int] = []
-    dirty_zero_amount_cw_index: int | None = None
-    dirty_past_close_bc_index: int | None = None
-
-    # -----------------------------------------------------------------------
-    # Helper to create one deal + its stage history
-    # -----------------------------------------------------------------------
-    def _make_deal(
-        target_stage: str,
-        is_closed: bool,
-        is_won: bool,
-        segment: str,
-        close_date_range: tuple[date, date],
-        created_date_range: tuple[date, date],
-    ) -> dict:
-        nonlocal deal_counter
-        deal_counter += 1
-        deal_id = f"D-{deal_counter:03d}"
-
-        # Pick AE and company
-        ae_id = random.choice(ae_by_segment[segment])
-        company = random.choice(companies_by_segment[segment])
-
-        # Deal type and source
-        deal_type = random.choices(DEAL_TYPES, weights=DEAL_TYPE_WEIGHTS, k=1)[0]
-        source = random.choices(SOURCES, weights=SOURCE_WEIGHTS, k=1)[0]
-
-        # Amount
-        amount = _generate_amount(segment)
-
-        # Dates
-        created = _random_weekday_date(*created_date_range)
-        if is_closed:
-            close = _random_weekday_date(*close_date_range)
-            # Ensure close_date is after created_date
-            if close <= created:
-                close = created + timedelta(days=random.randint(30, 90))
-        else:
-            close = _random_weekday_date(*close_date_range)
-            if close <= created:
-                close = created + timedelta(days=random.randint(45, 120))
-
-        deal_name = _generate_deal_name(company["name"], deal_type)
-
-        deal = {
-            "id": deal_id,
-            "name": deal_name,
-            "amount": amount,
-            "stage": target_stage,
-            "close_date": close.isoformat(),
-            "owner_id": ae_id,
-            "type": deal_type,
-            "created_date": created.isoformat(),
-            "segment": segment,
-            "source": source,
-            "is_closed": "true" if is_closed else "false",
-            "is_won": "true" if is_won else "false",
-        }
-
-        # Generate stage history
-        _generate_stage_history(deal_id, target_stage, is_closed, is_won, created, close, history)
-
-        return deal
-
-    # Mighty Oak segment helper: 20% Strategic, 40% Enterprise, 40% Mid-Market.
-    def _pick_segment() -> str:
-        roll = random.random()
-        if roll < 0.20:
-            return "Strategic Enterprise"
-        elif roll < 0.60:
-            return "Enterprise"
-        return "Mid-Market"
-
-    # -----------------------------------------------------------------------
-    # 1) Open deals (~180) distributed across stages — bigger team than
-    # Sprout, capacity-constrained narrative means lots of pipeline.
-    # -----------------------------------------------------------------------
-    open_stage_distribution = {
-        "Discovery": 38,
-        "Qualification": 32,
-        "Technical Evaluation": 42,
-        "Business Case": 32,
-        "Negotiation": 22,
-        "Closed Won": 14,  # Recent wins this quarter
-    }
-
-    for stage, count in open_stage_distribution.items():
-        is_won = stage == "Closed Won"
-        is_closed = is_won
-        for _ in range(count):
-            segment = _pick_segment()
-            if is_won:
-                # Recent wins: closed this quarter (Q1 in progress as of TODAY)
-                close_range = (FY_Q1_START, TODAY)
-                created_range = (HIST_Q4_START, FY_Q1_START + timedelta(days=30))
-            else:
-                # Open deals: close dates spread across Q1 and Q2
-                close_range = (TODAY - timedelta(days=10), FY_Q2_END)
-                created_range = (HIST_Q4_START, TODAY - timedelta(days=7))
-            deal = _make_deal(stage, is_closed, is_won, segment, close_range, created_range)
-            deals.append(deal)
-
-    # -----------------------------------------------------------------------
-    # 2) Historical (FY25) Closed Won (~70) over Q3 + Q4
-    # -----------------------------------------------------------------------
-    for _ in range(70):
-        segment = _pick_segment()
-        if random.random() < 0.45:
-            close_range = (HIST_Q3_START, HIST_Q3_END)
-            created_range = (HIST_Q3_START - timedelta(days=120), HIST_Q3_END - timedelta(days=30))
-        else:
-            close_range = (HIST_Q4_START, HIST_Q4_END)
-            created_range = (HIST_Q4_START - timedelta(days=120), HIST_Q4_END - timedelta(days=30))
-        deal = _make_deal(TERMINAL_WON, True, True, segment, close_range, created_range)
-        deals.append(deal)
-
-    # -----------------------------------------------------------------------
-    # 3) Historical Closed Lost (~110) over past 2 quarters
-    # -----------------------------------------------------------------------
-    for _ in range(110):
-        segment = _pick_segment()
-        if random.random() < 0.45:
-            close_range = (HIST_Q3_START, HIST_Q3_END)
-            created_range = (HIST_Q3_START - timedelta(days=120), HIST_Q3_END - timedelta(days=30))
-        else:
-            close_range = (HIST_Q4_START, HIST_Q4_END)
-            created_range = (HIST_Q4_START - timedelta(days=120), HIST_Q4_END - timedelta(days=30))
-        deal = _make_deal(TERMINAL_LOST, True, False, segment, close_range, created_range)
-        deals.append(deal)
-
-    # -----------------------------------------------------------------------
-    # 4) Apply dirty data mutations
-    # -----------------------------------------------------------------------
-    open_deal_indices = [i for i, d in enumerate(deals) if d["is_closed"] == "false"]
-    all_indices = list(range(len(deals)))
-
-    # 5-8 deals with missing Amount
-    missing_amount_count = random.randint(5, 8)
-    dirty_missing_amount_indices = random.sample(open_deal_indices, min(missing_amount_count, len(open_deal_indices)))
-    for idx in dirty_missing_amount_indices:
-        deals[idx]["amount"] = ""
-
-    # 3 deals with missing CloseDate
-    available_for_missing_close = [i for i in open_deal_indices if i not in dirty_missing_amount_indices]
-    dirty_missing_close_date_indices = random.sample(available_for_missing_close, min(3, len(available_for_missing_close)))
-    for idx in dirty_missing_close_date_indices:
-        deals[idx]["close_date"] = ""
-
-    # 2-3 deals with departed AE owners
-    departed_count = random.randint(2, 3)
-    available_for_departed = [
-        i for i in open_deal_indices
-        if i not in dirty_missing_amount_indices and i not in dirty_missing_close_date_indices
-    ]
-    dirty_departed_owner_indices = random.sample(available_for_departed, min(departed_count, len(available_for_departed)))
-    for j, idx in enumerate(dirty_departed_owner_indices):
-        deals[idx]["owner_id"] = DEPARTED_AE_IDS[j % len(DEPARTED_AE_IDS)]
-
-    # ~10 deals that pushed CloseDate 2-3 times
-    available_for_push = [
-        i for i in open_deal_indices
-        if i not in dirty_missing_amount_indices
-        and i not in dirty_missing_close_date_indices
-        and i not in dirty_departed_owner_indices
-    ]
-    dirty_pusher_indices = random.sample(available_for_push, min(10, len(available_for_push)))
-    for idx in dirty_pusher_indices:
-        deal = deals[idx]
-        push_count = random.randint(2, 3)
-        current_close = date.fromisoformat(deal["close_date"])
-        created = date.fromisoformat(deal["created_date"])
-
-        # Generate pushes — each push moves close date out by 2-6 weeks
-        push_date = created + timedelta(days=random.randint(20, 40))
-        for p in range(push_count):
-            old_close = current_close - timedelta(days=random.randint(14, 42) * (push_count - p))
-            history.append({
-                "deal_id": deal["id"],
-                "from_stage": deal["stage"],
-                "to_stage": deal["stage"],
-                "transition_date": _format_datetime(push_date),
-                "_is_push": True,
-                "_old_close": old_close.isoformat(),
-                "_new_close": deal["close_date"],
-            })
-            push_date += timedelta(days=random.randint(14, 30))
-
-    # Several deals at Technical Evaluation sitting 200+ days with no movement
-    te_deals = [
-        i for i in open_deal_indices
-        if deals[i]["stage"] == "Technical Evaluation"
-        and i not in dirty_missing_amount_indices
-        and i not in dirty_missing_close_date_indices
-        and i not in dirty_departed_owner_indices
-        and i not in dirty_pusher_indices
-    ]
-    stale_count = min(5, len(te_deals))
-    dirty_stale_indices = random.sample(te_deals, stale_count)
-    for idx in dirty_stale_indices:
-        # Push created_date way back so time-in-stage > 200 days
-        old_created = TODAY - timedelta(days=random.randint(210, 300))
-        deals[idx]["created_date"] = old_created.isoformat()
-        # Rewrite stage history: entered Tech Eval early, no movement since
-        deal_id = deals[idx]["id"]
-        # Remove existing history for this deal and regenerate
-        history[:] = [h for h in history if h["deal_id"] != deal_id]
-        enter_discovery = old_created
-        enter_qual = enter_discovery + timedelta(days=random.randint(7, 14))
-        enter_te = enter_qual + timedelta(days=random.randint(7, 14))
-        history.extend([
-            {"deal_id": deal_id, "from_stage": "", "to_stage": "Discovery",
-             "transition_date": _format_datetime(enter_discovery)},
-            {"deal_id": deal_id, "from_stage": "Discovery", "to_stage": "Qualification",
-             "transition_date": _format_datetime(enter_qual)},
-            {"deal_id": deal_id, "from_stage": "Qualification", "to_stage": "Technical Evaluation",
-             "transition_date": _format_datetime(enter_te)},
-        ])
-
-    # 1 Closed Won deal with $0 Amount
-    cw_deals = [i for i, d in enumerate(deals) if d["stage"] == TERMINAL_WON and d["is_closed"] == "true"]
-    if cw_deals:
-        dirty_zero_amount_cw_index = random.choice(cw_deals)
-        deals[dirty_zero_amount_cw_index]["amount"] = 0
-
-    # 1 deal in Business Case with CloseDate in the past
-    bc_deals = [
-        i for i in open_deal_indices
-        if deals[i]["stage"] == "Business Case"
-        and i not in dirty_missing_amount_indices
-        and i not in dirty_missing_close_date_indices
-        and i not in dirty_departed_owner_indices
-    ]
-    if bc_deals:
-        dirty_past_close_bc_index = random.choice(bc_deals)
-        past_date = TODAY - timedelta(days=random.randint(20, 45))
-        deals[dirty_past_close_bc_index]["close_date"] = past_date.isoformat()
-
-    return deals, history
+def _ae_name_map(roster: list[dict]) -> dict[str, str]:
+    """Return {ae_id: ae_name} for AE role members."""
+    return {m["id"]: m["name"] for m in roster if m.get("role") == "ae"}
 
 
-def _format_datetime(d: date) -> str:
-    """Format a date as an ISO datetime string with a plausible time."""
-    hour = random.randint(8, 17)
-    minute = random.choice([0, 15, 30, 45])
-    return f"{d.isoformat()}T{hour:02d}:{minute:02d}:00"
+# ──────────────────────────────────────────────────────────────────────────────
+# Stage history generation
+# ──────────────────────────────────────────────────────────────────────────────
 
 
-def _generate_stage_history(
+def _gen_stage_history(
     deal_id: str,
+    segment: str,
     current_stage: str,
     is_closed: bool,
     is_won: bool,
     created: date,
-    close_date: date,
+    close: date,
     history: list[dict],
+    vendor_risk: bool = False,
+    aging_target: bool = False,
 ) -> None:
-    """Generate realistic stage progression history for a deal."""
-    # Determine the progression path
+    """Append stage transitions for a deal into history list."""
+    stage_days = STAGE_DAYS[segment]
+
     if is_closed and is_won:
-        # Closed Won: went through stages up to Negotiation, then Closed Won
-        # Sometimes skip a stage
-        stages_to_traverse = list(OPEN_STAGES)
-        # Randomly skip 0-1 stages (but not Discovery — always start there)
-        if random.random() < 0.3 and len(stages_to_traverse) > 2:
-            skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-            stages_to_traverse.pop(skip_idx)
-        stages_to_traverse.append(TERMINAL_WON)
+        path = list(OPEN_STAGES)
+        # Occasionally skip a non-critical stage for realism
+        if random.random() < 0.25 and len(path) > 2:
+            idx = random.randint(1, len(path) - 2)
+            path.pop(idx)
+        path.append(TERMINAL_WON)
     elif is_closed and not is_won:
-        # Closed Lost: went through some stages then lost
-        # Pick a random stage to lose at
         lose_at = random.randint(1, len(OPEN_STAGES) - 1)
-        stages_to_traverse = OPEN_STAGES[:lose_at + 1]
-        # Sometimes skip a stage
-        if random.random() < 0.2 and len(stages_to_traverse) > 2:
-            skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-            stages_to_traverse.pop(skip_idx)
-        stages_to_traverse.append(TERMINAL_LOST)
+        path = OPEN_STAGES[:lose_at + 1]
+        if random.random() < 0.2 and len(path) > 2:
+            idx = random.randint(1, len(path) - 2)
+            path.pop(idx)
+        path.append(TERMINAL_LOST)
     else:
-        # Open deal: went through stages up to current_stage
         if current_stage in OPEN_STAGES:
             target_idx = OPEN_STAGES.index(current_stage)
-            stages_to_traverse = OPEN_STAGES[:target_idx + 1]
-            # Sometimes skip a stage (but not if only 1-2 stages)
-            if random.random() < 0.15 and len(stages_to_traverse) > 2:
-                skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-                stages_to_traverse.pop(skip_idx)
-        elif current_stage == TERMINAL_WON:
-            # Recent wins
-            stages_to_traverse = list(OPEN_STAGES)
-            if random.random() < 0.3 and len(stages_to_traverse) > 2:
-                skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-                stages_to_traverse.pop(skip_idx)
-            stages_to_traverse.append(TERMINAL_WON)
+            path = OPEN_STAGES[:target_idx + 1]
+            if random.random() < 0.15 and len(path) > 2:
+                idx = random.randint(1, len(path) - 2)
+                path.pop(idx)
         else:
-            stages_to_traverse = ["Discovery"]
+            path = ["Discovery"]
 
-    # Generate transition dates
-    transition_date = created
-    for i, stage in enumerate(stages_to_traverse):
-        from_stage = "" if i == 0 else stages_to_traverse[i - 1]
+    # If aging_target: pad early stages so deal is 180+ days old
+    transition = created
+    if aging_target and not is_closed:
+        # Force a created date that's 200+ days before as_of
+        transition = AS_OF - timedelta(days=random.randint(200, 320))
 
+    for i, stage in enumerate(path):
+        from_s = "" if i == 0 else path[i - 1]
         history.append({
             "deal_id": deal_id,
-            "from_stage": from_stage,
+            "from_stage": from_s,
             "to_stage": stage,
-            "transition_date": _format_datetime(transition_date),
+            "transition_date": _format_dt(transition),
         })
+        if i < len(path) - 1:
+            days = stage_days.get(stage, 14)
+            jitter = random.randint(-days // 3, days // 2)
+            advance = max(7, days + jitter)
+            transition = transition + timedelta(days=advance)
+            if is_closed and transition > close:
+                transition = close - timedelta(days=random.randint(1, 5))
+                if transition < created:
+                    transition = created + timedelta(days=1)
 
-        # Next transition 15-45 days later
-        if i < len(stages_to_traverse) - 1:
-            transition_date += timedelta(days=random.randint(15, 45))
-            # Don't go past close_date for closed deals
-            if is_closed and transition_date > close_date:
-                transition_date = close_date - timedelta(days=random.randint(1, 5))
-                if transition_date < created:
-                    transition_date = created + timedelta(days=1)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Deal generation
+# ──────────────────────────────────────────────────────────────────────────────
 
 
-# ---------------------------------------------------------------------------
+def generate_deals(
+    roster: list[dict],
+) -> tuple[list[dict], list[dict]]:
+    """Generate 600 deals and their stage history.
+
+    Target breakdown (brief section F):
+      - 310 open   (Qualification/Technical Evaluation/Business Case/Negotiation)
+      - 156 closed-won YTD  (Feb 1 – May 3, 2026)
+      - 134 closed-lost YTD (same window)
+
+    Also generates historical (pre-FY26) closed deals for trailing-period context.
+
+    Returns (deals, stage_history).
+    """
+    ae_by_seg = _ae_ids_by_segment(roster)
+    ae_names  = _ae_name_map(roster)
+    used_accounts: set[str] = set()
+
+    deals: list[dict] = []
+    history: list[dict] = []
+    deal_counter = len(NAMED_ACCOUNTS)  # pre-allocated for named anchors
+
+    def _next_id() -> str:
+        nonlocal deal_counter
+        deal_counter += 1
+        return f"MOH-{deal_counter:03d}"
+
+    # ─── Inject named anchor deals ───────────────────────────────────────────
+    for nd in NAMED_ACCOUNTS:
+        account = nd["account"]
+        used_accounts.add(account)
+        deal = {
+            "id": nd["id"],
+            "name": nd["name"],
+            "account": account,
+            "owner": nd["owner"],
+            "owner_id": nd["owner_id"],
+            "segment": nd["segment"],
+            "source_channel": nd["source_channel"],
+            "stage": nd["stage"],
+            "amount": nd["amount"],
+            "arr": nd["amount"],
+            "created_date": nd["created_date"].isoformat(),
+            "close_date": nd["close_date"].isoformat(),
+            "is_closed": "true" if nd["is_closed"] else "false",
+            "is_won": "true" if nd["is_won"] else "false",
+            "lost_reason": nd.get("lost_reason", ""),
+            "raw_stage": nd.get("raw_stage", nd["stage"]),
+            "type": nd["type"],
+            "forecast_category": nd.get("forecast_category", _forecast_cat(nd["stage"])),
+        }
+        deals.append(deal)
+        is_closed = nd["is_closed"]
+        is_won = nd["is_won"]
+        vendor_risk = "Vendor Risk" in nd.get("raw_stage", "")
+        _gen_stage_history(
+            nd["id"], nd["segment"], nd["stage"],
+            is_closed, is_won,
+            nd["created_date"], nd["close_date"],
+            history, vendor_risk=vendor_risk,
+        )
+
+    # ─── Helper to create a single synthetic deal ─────────────────────────────
+    def _make_deal(
+        *,
+        segment: str,
+        stage: str,
+        is_closed: bool,
+        is_won: bool,
+        close_date_range: tuple[date, date],
+        created_date_range: tuple[date, date],
+        deal_type: str | None = None,
+        channel: str | None = None,
+        raw_stage_override: str | None = None,
+        forecast_override: str | None = None,
+        lost_reason: str | None = None,
+        aging_target: bool = False,
+    ) -> dict:
+        deal_id = _next_id()
+        ae_id = random.choice(ae_by_seg[segment])
+        account = _gen_account_name(segment, used_accounts)
+        dtype = deal_type or _pick_deal_type()
+        ch = channel or _pick_channel()
+        amount = _gen_acv(segment)
+
+        close = _random_weekday(*close_date_range)
+        # Pick created date that's guaranteed before close
+        max_created = min(close_date_range[1], close - timedelta(days=14))
+        actual_created_end = min(created_date_range[1], max_created)
+        actual_created_start = created_date_range[0]
+        if actual_created_start >= actual_created_end:
+            actual_created_start = actual_created_end - timedelta(days=30)
+        created = _random_weekday(actual_created_start, actual_created_end)
+
+        raw_s = raw_stage_override or stage
+        fc = forecast_override or _forecast_cat(stage)
+        lr = lost_reason or ("" if is_won or not is_closed else random.choice(LOST_REASONS))
+
+        # Apply aging for old S4/S5 deals (brief: 11 strategic deals >180 days)
+        if aging_target:
+            created = AS_OF - timedelta(days=random.randint(200, 320))
+            # keep close_date as-is (future)
+
+        deal = {
+            "id": deal_id,
+            "name": _gen_deal_name(account, dtype),
+            "account": account,
+            "owner": ae_names.get(ae_id, ae_id),
+            "owner_id": ae_id,
+            "segment": segment,
+            "source_channel": ch,
+            "stage": stage,
+            "amount": amount,
+            "arr": amount,
+            "created_date": created.isoformat(),
+            "close_date": close.isoformat(),
+            "is_closed": "true" if is_closed else "false",
+            "is_won": "true" if is_won else "false",
+            "lost_reason": lr,
+            "raw_stage": raw_s,
+            "type": dtype,
+            "forecast_category": fc,
+        }
+
+        _gen_stage_history(
+            deal_id, segment, stage, is_closed, is_won, created, close,
+            history, aging_target=aging_target,
+        )
+        return deal
+
+    # ─── 1) Open pipeline: 310 deals ─────────────────────────────────────────
+    # Stage distribution: S2=Qualification 22%, S3=TE 27%, S4=BC 31%, S5=Neg 20%
+    # Segment: SE 22%, E 46%, MM 32%
+    # Open deals already have 9 named anchors (some open, some closed)
+    named_open = [d for d in deals if d["is_closed"] == "false"]
+    open_needed = 310 - len(named_open)
+
+    # Count staging targets
+    open_stage_targets = {
+        "Qualification":       round(open_needed * 0.22),
+        "Technical Evaluation": round(open_needed * 0.27),
+        "Business Case":       round(open_needed * 0.31),
+        "Negotiation":         0,  # filled last
+    }
+    open_stage_targets["Negotiation"] = open_needed - sum(
+        v for k, v in open_stage_targets.items() if k != "Negotiation"
+    )
+
+    # Audit anomaly tracking: 11 strategic aging deals (S4/S5), 2 vendor risk deals
+    aging_budget = 11
+    # Already have MOH-003 (Negotiation - Vendor Risk) and MOH-007 (Negotiation - Vendor Risk)
+    vendor_risk_budget = 1   # one more beyond the named anchors
+    # 3 deals with Commit forecast even after push
+    commit_push_budget = 3
+
+    for stage, count in open_stage_targets.items():
+        for _ in range(count):
+            segment = _pick_segment()
+            channel = _pick_channel()
+
+            # Aging anomaly: 11 strategic old S4/S5
+            is_aging = (
+                aging_budget > 0
+                and segment == "Strategic Enterprise"
+                and stage in ("Business Case", "Negotiation")
+                and random.random() < 0.55
+            )
+            if is_aging:
+                aging_budget -= 1
+
+            # Vendor risk raw stage: 1 more strategic Negotiation
+            is_vendor_risk = (
+                vendor_risk_budget > 0
+                and stage == "Negotiation"
+                and segment == "Strategic Enterprise"
+                and random.random() < 0.40
+            )
+            if is_vendor_risk:
+                vendor_risk_budget -= 1
+                raw_s = "Negotiation - Vendor Risk"
+            else:
+                raw_s = None
+
+            # Commit-after-push anomaly
+            is_commit_push = (
+                commit_push_budget > 0
+                and stage in ("Business Case", "Negotiation")
+                and random.random() < 0.25
+            )
+            if is_commit_push:
+                commit_push_budget -= 1
+                fc = "Commit"
+            else:
+                fc = None
+
+            # Close date: spread across Q2/Q3/Q4 for open deals
+            if stage == "Qualification":
+                close_range = (Q2_START, Q3_END)
+                created_range = (date(2026, 1, 1), AS_OF - timedelta(days=14))
+            elif stage == "Technical Evaluation":
+                close_range = (Q2_START, Q3_END)
+                created_range = (date(2025, 10, 1), AS_OF - timedelta(days=30))
+            elif stage == "Business Case":
+                close_range = (Q2_START, Q3_START + timedelta(days=45))
+                seg_days = SEGMENT_CYCLE_DAYS[segment]
+                created_range = (date(2025, 8, 1), AS_OF - timedelta(days=seg_days // 2))
+            else:  # Negotiation
+                close_range = (Q2_START, Q2_END)
+                seg_days = SEGMENT_CYCLE_DAYS[segment]
+                created_range = (date(2025, 9, 1), AS_OF - timedelta(days=seg_days // 3))
+
+            d = _make_deal(
+                segment=segment,
+                stage=stage,
+                is_closed=False,
+                is_won=False,
+                close_date_range=close_range,
+                created_date_range=created_range,
+                channel=channel,
+                raw_stage_override=raw_s,
+                forecast_override=fc,
+                aging_target=is_aging,
+            )
+            deals.append(d)
+
+    # Fill any remaining aging budget across existing open S4/S5 strategic deals
+    # (done via backdating created_date directly on generated deals)
+
+    # ─── 2) YTD Closed Won: 156 deals (including named wins in NAMED_ACCOUNTS) ──
+    # YTD window: 2026-02-01 to 2026-05-03.  Force all close dates into window.
+    # Named won YTD: MOH-001 (Apr 17), MOH-002 (Apr 28), MOH-008 (Apr 7) = 3 deals
+    ytd_won_needed = 156 - 3
+
+    # Fixed YTD close date range — force all wins to land within the window
+    YTD_CLOSE_RANGE = (date(2026, 2, 1), date(2026, 5, 3))
+
+    for i in range(ytd_won_needed):
+        segment = _pick_segment()
+        channel = _pick_channel()
+        # Bookings shape: Feb weak ($5.8M), Mar/Apr recovers. ~24% Feb, 60% Mar/Apr, 16% May 1-3
+        roll = random.random()
+        if roll < 0.24:
+            close_range = (date(2026, 2, 1), date(2026, 2, 28))
+        elif roll < 0.84:
+            close_range = (date(2026, 3, 1), date(2026, 4, 30))
+        else:
+            close_range = (date(2026, 5, 1), date(2026, 5, 3))
+
+        created_range = (date(2025, 6, 1), date(2026, 3, 31))
+        dtype = _pick_deal_type()
+
+        d = _make_deal(
+            segment=segment,
+            stage=TERMINAL_WON,
+            is_closed=True,
+            is_won=True,
+            close_date_range=close_range,
+            created_date_range=created_range,
+            deal_type=dtype,
+            channel=channel,
+        )
+        deals.append(d)
+
+    # ─── 3) YTD Closed Lost: 134 deals (including named losses) ─────────────
+    # Named lost YTD: MOH-006 (Mar 31) = 1 deal
+    ytd_lost_needed = 134 - 1
+
+    for i in range(ytd_lost_needed):
+        segment = _pick_segment()
+        channel = _pick_channel()
+
+        # Close dates in YTD window
+        roll = random.random()
+        if roll < 0.30:
+            close_range = (date(2026, 2, 1), date(2026, 2, 28))
+        elif roll < 0.80:
+            close_range = (date(2026, 3, 1), date(2026, 4, 30))
+        else:
+            close_range = (date(2026, 5, 1), date(2026, 5, 3))
+
+        created_range = (date(2025, 6, 1), date(2026, 3, 31))
+
+        # LedgerFox losses concentrated in new_business outbound
+        if random.random() < 0.55:
+            dtype = "new_business"
+            lr_channel = "outbound"
+            lr = "Lost on price to LedgerFox"
+        else:
+            dtype = _pick_deal_type()
+            lr_channel = channel
+            lr = random.choice(LOST_REASONS)
+
+        d = _make_deal(
+            segment=segment,
+            stage=TERMINAL_LOST,
+            is_closed=True,
+            is_won=False,
+            close_date_range=close_range,
+            created_date_range=created_range,
+            deal_type=dtype,
+            channel=lr_channel,
+            lost_reason=lr,
+        )
+        deals.append(d)
+
+    # ─── Apply audit anomalies to open pipeline ───────────────────────────────
+    open_indices = [i for i, d in enumerate(deals) if d["is_closed"] == "false"]
+
+    # Ensure 11 strategic S4/S5 deals are 180+ days old (set created_date far back)
+    # Some were already created with aging_target=True; find the rest
+    aged_count = sum(
+        1 for i in open_indices
+        if deals[i]["segment"] == "Strategic Enterprise"
+        and deals[i]["stage"] in ("Business Case", "Negotiation")
+        and (AS_OF - date.fromisoformat(deals[i]["created_date"])).days >= 180
+    )
+    still_needed = max(0, 11 - aged_count)
+    # Find strategic S4/S5 deals not yet aged
+    candidates = [
+        i for i in open_indices
+        if deals[i]["segment"] == "Strategic Enterprise"
+        and deals[i]["stage"] in ("Business Case", "Negotiation")
+        and (AS_OF - date.fromisoformat(deals[i]["created_date"])).days < 180
+    ]
+    random.shuffle(candidates)
+    for idx in candidates[:still_needed]:
+        new_created = AS_OF - timedelta(days=random.randint(185, 320))
+        deals[idx]["created_date"] = new_created.isoformat()
+        # Rebuild history for this deal
+        deal = deals[idx]
+        deal_id = deal["id"]
+        history[:] = [h for h in history if h["deal_id"] != deal_id]
+        _gen_stage_history(
+            deal_id, deal["segment"], deal["stage"],
+            False, False,
+            new_created, date.fromisoformat(deal["close_date"]),
+            history,
+        )
+
+    return deals, history
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # CSV writing
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+
+DEALS_FIELDS = [
+    "id", "name", "account", "owner", "owner_id", "segment", "source_channel",
+    "stage", "amount", "arr", "created_date", "close_date",
+    "is_closed", "is_won", "lost_reason", "raw_stage", "type", "forecast_category",
+]
+TEAM_FIELDS = ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"]
+HISTORY_FIELDS = ["deal_id", "from_stage", "to_stage", "transition_date"]
 
 
-def _rows_to_csv_string(rows: list[dict], fieldnames: list[str]) -> str:
-    """Serialize rows to a CSV string with Unix line endings."""
+def _rows_to_csv(rows: list[dict], fieldnames: list[str]) -> str:
     buf = io.StringIO(newline="")
-    writer = csv.DictWriter(buf, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL, extrasaction="ignore")
+    writer = csv.DictWriter(
+        buf, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL, extrasaction="ignore"
+    )
     writer.writeheader()
     writer.writerows(rows)
-    # csv module writes \r\n; normalize to \n for cross-platform determinism
     return buf.getvalue().replace("\r\n", "\n")
 
 
 def _write_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> str:
-    """Write rows to CSV and return the content string."""
-    content = _rows_to_csv_string(rows, fieldnames)
+    content = _rows_to_csv(rows, fieldnames)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="") as fh:
         fh.write(content)
     return content
 
 
-# ---------------------------------------------------------------------------
-# Main generation orchestrator
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# Main orchestration
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 def generate_all(output_dir: Path) -> dict[str, str]:
-    """Generate all CSV files and return {filename: content} for verification.
-
-    Reseeds random at the start for determinism.
-    """
+    """Generate all three CSV files.  Returns {filename: content}."""
     random.seed(SEED)
 
-    # 1) Load roster
     roster = load_roster(ROSTER_PATH)
-    team_rows = roster_to_csv_rows(roster)
+    team_rows = build_team_members_csv(roster)
+    deals, stage_history = generate_deals(roster)
 
-    # 2) Generate companies
-    companies = generate_companies(150)
-
-    # 3) Generate contacts
-    contacts = generate_contacts(companies, 200)
-
-    # 4) Generate deals and stage history
-    deals, stage_history = generate_deals(roster, companies)
-
-    # Sort stage history by deal_id then transition_date for readability
     stage_history.sort(key=lambda h: (h["deal_id"], h["transition_date"]))
 
-    # 5) Write all CSVs
-    output_dir = Path(output_dir)
     results: dict[str, str] = {}
-
     results["team_members.csv"] = _write_csv(
-        output_dir / "team_members.csv",
-        team_rows,
-        ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"],
+        output_dir / "team_members.csv", team_rows, TEAM_FIELDS
     )
-
-    results["companies.csv"] = _write_csv(
-        output_dir / "companies.csv",
-        companies,
-        ["id", "name", "segment", "industry", "employee_count"],
-    )
-
-    results["contacts.csv"] = _write_csv(
-        output_dir / "contacts.csv",
-        contacts,
-        ["id", "name", "email", "company_id", "title"],
-    )
-
     results["deals.csv"] = _write_csv(
-        output_dir / "deals.csv",
-        deals,
-        ["id", "name", "amount", "stage", "close_date", "owner_id", "type", "created_date", "segment", "source", "is_closed", "is_won"],
+        output_dir / "deals.csv", deals, DEALS_FIELDS
     )
-
     results["stage_history.csv"] = _write_csv(
-        output_dir / "stage_history.csv",
-        stage_history,
-        ["deal_id", "from_stage", "to_stage", "transition_date"],
+        output_dir / "stage_history.csv", stage_history, HISTORY_FIELDS
     )
-
     return results
 
 
-# ---------------------------------------------------------------------------
-# Verification
-# ---------------------------------------------------------------------------
+def generate_all_to_strings() -> dict[str, str]:
+    random.seed(SEED)
+    roster = load_roster(ROSTER_PATH)
+    team_rows = build_team_members_csv(roster)
+    deals, stage_history = generate_deals(roster)
+    stage_history.sort(key=lambda h: (h["deal_id"], h["transition_date"]))
+    return {
+        "team_members.csv": _rows_to_csv(team_rows, TEAM_FIELDS),
+        "deals.csv": _rows_to_csv(deals, DEALS_FIELDS),
+        "stage_history.csv": _rows_to_csv(stage_history, HISTORY_FIELDS),
+    }
 
 
 def verify(output_dir: Path) -> bool:
-    """Regenerate data and compare against committed files.
-
-    Returns True if all files match, False otherwise.
-    """
-    # Generate fresh content
     fresh = generate_all_to_strings()
-
-    output_dir = Path(output_dir)
     all_match = True
-
     for filename, fresh_content in fresh.items():
         filepath = output_dir / filename
         if not filepath.exists():
             print(f"MISSING: {filepath}")
             all_match = False
             continue
-
         with open(filepath, encoding="utf-8", newline="") as fh:
-            existing_content = fh.read()
-        if existing_content != fresh_content:
-            # Find first difference
-            fresh_lines = fresh_content.splitlines()
-            existing_lines = existing_content.splitlines()
-            for i, (fl, el) in enumerate(zip(fresh_lines, existing_lines)):
+            existing = fh.read()
+        if existing != fresh_content:
+            f_lines = fresh_content.splitlines()
+            e_lines = existing.splitlines()
+            for i, (fl, el) in enumerate(zip(f_lines, e_lines)):
                 if fl != el:
-                    print(f"DIFF: {filename} line {i + 1}")
+                    print(f"DIFF {filename} line {i+1}")
                     print(f"  expected: {fl[:120]}")
                     print(f"  got:      {el[:120]}")
                     break
             else:
-                if len(fresh_lines) != len(existing_lines):
-                    print(f"DIFF: {filename} line count differs ({len(fresh_lines)} vs {len(existing_lines)})")
+                print(f"DIFF {filename}: line count {len(f_lines)} vs {len(e_lines)}")
             all_match = False
         else:
             print(f"OK: {filename}")
-
     return all_match
 
 
-def generate_all_to_strings() -> dict[str, str]:
-    """Generate all CSV content as strings without writing to disk."""
-    random.seed(SEED)
+def _print_stats(deals: list[dict]) -> None:
+    """Print summary statistics for QA."""
+    open_d  = [d for d in deals if d["is_closed"] == "false"]
+    won_ytd = [
+        d for d in deals
+        if d["is_closed"] == "true" and d["is_won"] == "true"
+        and d["close_date"] >= "2026-02-01" and d["close_date"] <= "2026-05-03"
+    ]
+    lost_ytd = [
+        d for d in deals
+        if d["is_closed"] == "true" and d["is_won"] == "false"
+        and d["close_date"] >= "2026-02-01" and d["close_date"] <= "2026-05-03"
+    ]
+    open_pipe = sum(float(d["amount"]) for d in open_d if d["amount"])
+    won_arr   = sum(float(d["arr"])    for d in won_ytd if d["arr"])
+    lost_arr  = sum(float(d["arr"])    for d in lost_ytd if d["arr"])
 
-    roster = load_roster(ROSTER_PATH)
-    team_rows = roster_to_csv_rows(roster)
-    companies = generate_companies(150)
-    contacts = generate_contacts(companies, 200)
-    deals, stage_history = generate_deals(roster, companies)
-    stage_history.sort(key=lambda h: (h["deal_id"], h["transition_date"]))
-
-    results: dict[str, str] = {}
-
-    results["team_members.csv"] = _rows_to_csv_string(
-        team_rows,
-        ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"],
-    )
-    results["companies.csv"] = _rows_to_csv_string(
-        companies,
-        ["id", "name", "segment", "industry", "employee_count"],
-    )
-    results["contacts.csv"] = _rows_to_csv_string(
-        contacts,
-        ["id", "name", "email", "company_id", "title"],
-    )
-    results["deals.csv"] = _rows_to_csv_string(
-        deals,
-        ["id", "name", "amount", "stage", "close_date", "owner_id", "type", "created_date", "segment", "source", "is_closed", "is_won"],
-    )
-    results["stage_history.csv"] = _rows_to_csv_string(
-        stage_history,
-        ["deal_id", "from_stage", "to_stage", "transition_date"],
-    )
-
-    return results
+    print(f"  Total deals:        {len(deals)}")
+    print(f"  Open:               {len(open_d)}")
+    print(f"  Won YTD:            {len(won_ytd)}  (${won_arr/1e6:.1f}M)")
+    print(f"  Lost YTD:           {len(lost_ytd)} (${lost_arr/1e6:.1f}M)")
+    print(f"  Open pipeline $:    ${open_pipe/1e6:.1f}M")
+    aging = [
+        d for d in open_d
+        if d["segment"] == "Strategic Enterprise"
+        and d["stage"] in ("Business Case", "Negotiation")
+        and (AS_OF - date.fromisoformat(d["created_date"])).days >= 180
+    ]
+    print(f"  Strategic S4/S5 >180d: {len(aging)}")
+    vendor_risk = [d for d in deals if "Vendor Risk" in d.get("raw_stage", "")]
+    print(f"  Vendor Risk deals:  {len(vendor_risk)}")
 
 
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
 # CLI
-# ---------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate deterministic example CSV data for the Mighty Oak Holdings demo org.",
+        description="Generate Mighty Oak Holdings synthetic CSV data."
     )
     parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=DEFAULT_OUTPUT_DIR,
+        "--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR,
         help=f"Output directory (default: {DEFAULT_OUTPUT_DIR})",
     )
     parser.add_argument(
-        "--verify",
-        action="store_true",
-        help="Regenerate and diff against existing files (exit 1 if different).",
+        "--verify", action="store_true",
+        help="Regenerate and diff against existing files.",
     )
-
     args = parser.parse_args(argv)
 
     if args.verify:
-        print(f"Verifying deterministic output against {args.output_dir} ...")
-        if verify(args.output_dir):
+        print(f"Verifying against {args.output_dir} ...")
+        ok = verify(args.output_dir)
+        if ok:
             print("All files match. Determinism verified.")
-            return 0
         else:
-            print("FAIL: Generated output differs from committed files.")
-            return 1
-    else:
-        print(f"Generating Mighty Oak Holdings data to {args.output_dir} ...")
-        results = generate_all(args.output_dir)
-        for filename, content in results.items():
-            line_count = content.count("\n")
-            print(f"  {filename}: {line_count} rows (including header)")
-        print("Done.")
-        return 0
+            print("FAIL: generated output differs from committed files.")
+        return 0 if ok else 1
+
+    print(f"Generating Mighty Oak Holdings data to {args.output_dir} ...")
+    random.seed(SEED)
+    roster = load_roster(ROSTER_PATH)
+    team_rows = build_team_members_csv(roster)
+    deals, stage_history = generate_deals(roster)
+    stage_history.sort(key=lambda h: (h["deal_id"], h["transition_date"]))
+
+    output_dir = Path(args.output_dir)
+    _write_csv(output_dir / "team_members.csv", team_rows, TEAM_FIELDS)
+    _write_csv(output_dir / "deals.csv", deals, DEALS_FIELDS)
+    _write_csv(output_dir / "stage_history.csv", stage_history, HISTORY_FIELDS)
+
+    print(f"  team_members.csv: {len(team_rows)} rows")
+    print(f"  deals.csv:        {len(deals)} rows")
+    print(f"  stage_history.csv:{len(stage_history)} rows")
+    _print_stats(deals)
+    print("Done.")
+    return 0
 
 
 if __name__ == "__main__":

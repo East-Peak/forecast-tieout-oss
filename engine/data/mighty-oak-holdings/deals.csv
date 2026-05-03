@@ -1,361 +1,601 @@
-id,name,amount,stage,close_date,owner_id,type,created_date,segment,source,is_closed,is_won
-D-001,Orbit Technologies - Platform Renewal,1675000,Discovery,2026-07-20,AE-SE04,Renewal,2026-01-16,Strategic Enterprise,Partner,false,false
-D-002,Mercury Global - API Gateway Renewal,1337000,Discovery,2026-09-04,AE-SE02,Renewal,2026-03-09,Strategic Enterprise,Event,false,false
-D-003,Opal Systems - Platform Expansion,2404000,Discovery,2026-04-16,AE-SE02,Expansion,2026-02-19,Strategic Enterprise,Outbound,false,false
-D-004,Ironclad Networks - Monitoring,178000,Discovery,2026-09-24,AE-M04,New Business,2026-03-24,Mid-Market,Outbound,false,false
-D-005,Atlas Cloud - Monitoring Renewal,2107000,Discovery,2026-04-02,AE-SE04,Renewal,2026-03-27,Strategic Enterprise,Outbound,false,false
-D-006,Sentry Group - Security Module Expansion,155000,Discovery,2026-08-12,AE-M04,Expansion,2026-03-05,Mid-Market,Event,false,false
-D-007,Crimson Global - API Gateway Expansion,947000,Discovery,2026-07-17,AE-E04,Expansion,2026-01-23,Enterprise,Outbound,false,false
-D-008,Cedar Networks - API Gateway Renewal,301000,Discovery,2026-04-10,AE-X02,Renewal,2026-03-25,Enterprise,Outbound,false,false
-D-009,Sable Dynamics - Enterprise Suite Expansion,591000,Discovery,2026-06-09,AE-E03,Expansion,2026-03-13,Enterprise,Event,false,false
-D-010,Forge Inc - Monitoring Expansion,117000,Discovery,2026-06-25,AE-M03,Expansion,2026-01-29,Mid-Market,PLG,false,false
-D-011,Verdant Industries - Enterprise Suite Expansion,80000,Discovery,2026-07-23,AE-M02,Expansion,2026-01-07,Mid-Market,Outbound,false,false
-D-012,Vanguard Industries - Platform Renewal,209000,Discovery,2026-06-10,AE-M06,Renewal,2026-03-17,Mid-Market,Partner,false,false
-D-013,Helix Networks - API Gateway,614000,Discovery,2026-03-31,AE-E04,New Business,2026-03-25,Enterprise,Outbound,false,false
-D-014,Apex Sciences - Platform Renewal,1497000,Discovery,2026-06-22,AE-SE03,Renewal,2026-01-12,Strategic Enterprise,Outbound,false,false
-D-015,Horizon Technologies - Enterprise Suite Renewal,2467000,Discovery,2026-04-03,AE-SE01,Renewal,2026-01-09,Strategic Enterprise,Inbound,false,false
-D-016,Horizon Labs - API Gateway Renewal,1582000,Discovery,2026-09-11,AE-SE01,Renewal,2026-02-12,Strategic Enterprise,Event,false,false
-D-017,Spectra Inc - Platform Expansion,80000,Discovery,2026-05-22,AE-M03,Expansion,2026-02-25,Mid-Market,PLG,false,false
-D-018,Axiom Partners - Enterprise Suite,148000,Discovery,2026-03-27,AE-M04,New Business,2026-01-20,Mid-Market,PLG,false,false
-D-019,Nexus Analytics - Compliance Renewal,230000,Discovery,2026-08-27,AE-M03,Renewal,2026-01-01,Mid-Market,PLG,false,false
-D-020,Marble Inc - Analytics,112000,Discovery,2026-05-20,AE-M02,New Business,2026-01-19,Mid-Market,Inbound,false,false
-D-021,Phoenix Networks - Analytics Expansion,800000,Discovery,2026-08-11,AE-SE03,Expansion,2026-03-02,Strategic Enterprise,PLG,false,false
-D-022,Eclipse Labs - API Gateway Renewal,221000,Discovery,2026-04-02,AE-M03,Renewal,2026-01-15,Mid-Market,Inbound,false,false
-D-023,Prism Technologies - Compliance Renewal,123000,Discovery,,AE-M04,Renewal,2026-02-09,Mid-Market,Inbound,false,false
-D-024,Mercury Inc - Monitoring,162000,Discovery,2026-05-11,AE-M06,New Business,2026-03-13,Mid-Market,Inbound,false,false
-D-025,Vector Data - Security Module,551000,Discovery,2026-09-29,AE-E04,New Business,2026-03-25,Enterprise,Inbound,false,false
-D-026,Forge Inc - API Gateway Expansion,89000,Discovery,2026-07-14,AE-M05,Expansion,2026-01-07,Mid-Market,Event,false,false
-D-027,Ridge Corp - Data Pipeline Renewal,614000,Discovery,2026-04-16,AE-E05,Renewal,2026-02-18,Enterprise,Event,false,false
-D-028,Cobalt Platforms - Security Module Expansion,362000,Discovery,2026-09-09,AE-E04,Expansion,2026-01-08,Enterprise,Inbound,false,false
-D-029,Marble Global - Compliance Renewal,609000,Discovery,2026-07-31,AE-E05,Renewal,2026-01-28,Enterprise,Outbound,false,false
-D-030,Beacon Solutions - API Gateway Renewal,271000,Discovery,2026-07-08,AE-E01,Renewal,2026-03-24,Enterprise,Partner,false,false
-D-031,Drake Systems - API Gateway Expansion,2163000,Discovery,2026-06-03,AE-SE03,Expansion,2026-03-11,Strategic Enterprise,Partner,false,false
-D-032,Ridge Inc - Analytics,80000,Discovery,2026-08-20,AE-M04,New Business,2026-02-19,Mid-Market,PLG,false,false
-D-033,Vertex Labs - Security Module Renewal,363000,Discovery,2026-09-02,AE-E05,Renewal,2026-01-01,Enterprise,Inbound,false,false
-D-034,Vector Data - Analytics Renewal,721000,Discovery,2026-08-24,AE-E04,Renewal,2026-02-11,Enterprise,Inbound,false,false
-D-035,Aegis Corp - Monitoring Renewal,692000,Discovery,2026-05-19,AE-E01,Renewal,2026-03-11,Enterprise,Outbound,false,false
-D-036,Mercury Global - Security Module Expansion,2081000,Discovery,2026-06-03,AE-SE03,Expansion,2026-01-26,Strategic Enterprise,Inbound,false,false
-D-037,Crest Partners - Analytics Renewal,,Discovery,2026-08-04,AE-E01,Renewal,2026-01-23,Enterprise,Inbound,false,false
-D-038,Sentry Inc - Monitoring Renewal,188000,Discovery,2026-09-23,AE-M03,Renewal,2026-03-23,Mid-Market,Inbound,false,false
-D-039,Marble Analytics - API Gateway Expansion,185000,Qualification,2026-06-17,AE-M03,Expansion,2026-01-07,Mid-Market,Partner,false,false
-D-040,Marble Analytics - Enterprise Suite Renewal,149000,Qualification,2026-04-03,AE-M06,Renewal,2026-01-29,Mid-Market,Partner,false,false
-D-041,Obsidian Ventures - Security Module Renewal,658000,Qualification,2026-05-19,AE-E02,Renewal,2026-02-06,Enterprise,Outbound,false,false
-D-042,Borealis Technologies - API Gateway,147000,Qualification,2026-07-28,AE-M05,New Business,2026-02-09,Mid-Market,Inbound,false,false
-D-043,Horizon Cloud - Compliance Renewal,699000,Qualification,2026-08-25,AE-E02,Renewal,2026-03-18,Enterprise,Event,false,false
-D-044,Nexus Industries - Platform,185000,Qualification,2026-05-22,AE-M01,New Business,2026-01-07,Mid-Market,Event,false,false
-D-045,Coral Digital - API Gateway,163000,Qualification,2026-07-15,AE-M03,New Business,2026-01-07,Mid-Market,PLG,false,false
-D-046,Crest Partners - API Gateway Expansion,1039000,Qualification,2026-07-08,AE-E02,Expansion,2026-01-13,Enterprise,Outbound,false,false
-D-047,Onyx Inc - Monitoring Expansion,836000,Qualification,2026-04-03,AE-E05,Expansion,2026-01-01,Enterprise,Partner,false,false
-D-048,Sterling Labs - API Gateway,161000,Qualification,2026-08-28,AE-M04,New Business,2026-02-23,Mid-Market,Event,false,false
-D-049,Summit Corp - Data Pipeline Expansion,,Qualification,2026-08-21,AE-SE02,Expansion,2026-03-27,Strategic Enterprise,PLG,false,false
-D-050,Bedrock Dynamics - Compliance Renewal,,Qualification,2026-08-27,AE-E03,Renewal,2026-01-20,Enterprise,Event,false,false
-D-051,Coral Digital - Data Pipeline Renewal,197000,Qualification,2026-04-17,AE-M02,Renewal,2026-03-25,Mid-Market,Partner,false,false
-D-052,Nimbus Technologies - API Gateway,613000,Qualification,2026-06-24,AE-E03,New Business,2026-01-23,Enterprise,PLG,false,false
-D-053,Aegis Networks - API Gateway Renewal,800000,Qualification,2026-07-23,AE-SE02,Renewal,2026-02-06,Strategic Enterprise,Outbound,false,false
-D-054,Vanguard Industries - Analytics,285000,Qualification,2026-05-06,AE-M04,New Business,2026-02-02,Mid-Market,Partner,false,false
-D-055,Vertex Labs - Compliance Renewal,688000,Qualification,2026-08-04,AE-E01,Renewal,2026-03-18,Enterprise,Partner,false,false
-D-056,Nexus Industries - Monitoring Renewal,184000,Qualification,2026-08-06,AE-M01,Renewal,2026-01-27,Mid-Market,PLG,false,false
-D-057,Pinnacle Digital - Enterprise Suite,795000,Qualification,2026-05-14,AE-E05,New Business,2026-01-28,Enterprise,Partner,false,false
-D-058,Pinnacle Analytics - Enterprise Suite Renewal,123000,Qualification,2026-09-10,AE-M04,Renewal,2026-01-01,Mid-Market,Event,false,false
-D-059,Nexus Technologies - Enterprise Suite Renewal,369000,Qualification,2026-09-28,AE-E02,Renewal,2026-01-06,Enterprise,Outbound,false,false
-D-060,Forge Cloud - Platform Renewal,2811000,Qualification,2026-05-05,AE-SE03,Renewal,2026-03-24,Strategic Enterprise,Partner,false,false
-D-061,Nexus Analytics - Data Pipeline Expansion,219000,Qualification,2026-09-03,AE-M06,Expansion,2026-02-26,Mid-Market,Outbound,false,false
-D-062,Summit Solutions - Compliance,800000,Qualification,2026-05-26,AE-SE02,New Business,2026-01-21,Strategic Enterprise,Inbound,false,false
-D-063,Vanguard Corp - Analytics,82000,Qualification,2026-08-18,AE-M06,New Business,2026-01-30,Mid-Market,Event,false,false
-D-064,Lattice Group - Monitoring Expansion,2810000,Qualification,2026-07-22,AE-SE01,Expansion,2026-02-03,Strategic Enterprise,Partner,false,false
-D-065,Axiom Partners - Platform Expansion,232000,Qualification,2026-05-06,AE-M06,Expansion,2026-01-16,Mid-Market,Inbound,false,false
-D-066,Compass Data - Analytics,727000,Qualification,2026-05-27,AE-E04,New Business,2026-01-08,Enterprise,Inbound,false,false
-D-067,Orbit Technologies - Security Module,800000,Qualification,2026-05-27,AE-SE03,New Business,2026-03-19,Strategic Enterprise,Inbound,false,false
-D-068,Axiom Group - Monitoring Renewal,241000,Qualification,2026-09-16,AE-M04,Renewal,2026-01-30,Mid-Market,Inbound,false,false
-D-069,Cobalt Sciences - Enterprise Suite Renewal,696000,Qualification,2026-05-19,AE-E03,Renewal,2026-02-24,Enterprise,Inbound,false,false
-D-070,Quantum Data - API Gateway Renewal,401000,Qualification,2026-08-18,AE-E01,Renewal,2026-01-30,Enterprise,Outbound,false,false
-D-071,Tempest Labs - Analytics,2118000,Technical Evaluation,2026-06-04,AE-SE02,New Business,2026-02-06,Strategic Enterprise,Event,false,false
-D-072,Indigo Partners - Platform Renewal,509000,Technical Evaluation,2026-08-12,AE-X01,Renewal,2026-03-30,Enterprise,Outbound,false,false
-D-073,Phoenix Partners - Analytics,120000,Technical Evaluation,2026-06-19,AE-M02,New Business,2026-03-24,Mid-Market,Inbound,false,false
-D-074,Titan Analytics - Monitoring Expansion,214000,Technical Evaluation,2026-05-18,AE-M04,Expansion,2026-01-06,Mid-Market,Partner,false,false
-D-075,Nebula Platforms - Analytics Renewal,190000,Technical Evaluation,2026-07-27,AE-M06,Renewal,2026-02-25,Mid-Market,Partner,false,false
-D-076,Solstice Analytics - Analytics Renewal,1207000,Technical Evaluation,2026-08-05,AE-SE01,Renewal,2026-03-25,Strategic Enterprise,Outbound,false,false
-D-077,Phoenix Networks - Compliance Renewal,3689000,Technical Evaluation,2026-07-15,AE-SE01,Renewal,2025-08-19,Strategic Enterprise,Inbound,false,false
-D-078,Monolith Partners - API Gateway Renewal,1038000,Technical Evaluation,2026-08-07,AE-SE03,Renewal,2026-01-09,Strategic Enterprise,Partner,false,false
-D-079,Synapse Labs - Security Module,154000,Technical Evaluation,2026-07-02,AE-M02,New Business,2026-03-13,Mid-Market,PLG,false,false
-D-080,Phoenix Networks - API Gateway,2015000,Technical Evaluation,2026-04-06,AE-SE04,New Business,2025-09-05,Strategic Enterprise,Inbound,false,false
-D-081,Ironclad Networks - Data Pipeline,209000,Technical Evaluation,2026-06-09,AE-M04,New Business,2026-02-05,Mid-Market,Outbound,false,false
-D-082,Lattice Analytics - Platform Expansion,166000,Technical Evaluation,2026-08-14,AE-M06,Expansion,2026-01-20,Mid-Market,Outbound,false,false
-D-083,Quantum Systems - API Gateway Expansion,799000,Technical Evaluation,2026-04-23,AE-E03,Expansion,2025-07-11,Enterprise,Inbound,false,false
-D-084,Sapphire Software - Data Pipeline Renewal,524000,Technical Evaluation,2026-07-02,AE-E04,Renewal,2025-08-02,Enterprise,Inbound,false,false
-D-085,Onyx Dynamics - API Gateway Expansion,490000,Technical Evaluation,2026-06-15,AE-E05,Expansion,2026-03-24,Enterprise,Partner,false,false
-D-086,Pinnacle Digital - API Gateway,455000,Technical Evaluation,2026-07-31,AE-E06,New Business,2026-01-08,Enterprise,Partner,false,false
-D-087,Paragon Software - Security Module,135000,Technical Evaluation,2026-09-28,AE-M02,New Business,2026-02-04,Mid-Market,Inbound,false,false
-D-088,Ironclad Ventures - Analytics,198000,Technical Evaluation,2026-04-23,AE-M03,New Business,2026-01-14,Mid-Market,Inbound,false,false
-D-089,Quantum Global - Monitoring Expansion,815000,Technical Evaluation,2026-08-27,AE-E02,Expansion,2026-01-08,Enterprise,Inbound,false,false
-D-090,Forge Industries - Monitoring Renewal,2271000,Technical Evaluation,2026-04-23,AE-SE02,Renewal,2026-03-11,Strategic Enterprise,Partner,false,false
-D-091,Cobalt Platforms - Data Pipeline Renewal,829000,Technical Evaluation,2026-04-07,AE-E02,Renewal,2025-07-15,Enterprise,Inbound,false,false
-D-092,Ridge Corp - Security Module Expansion,282000,Technical Evaluation,2026-06-22,AE-E06,Expansion,2026-03-17,Enterprise,Partner,false,false
-D-093,Pavilion Cloud - Security Module Renewal,219000,Technical Evaluation,2026-08-26,AE-M03,Renewal,2026-01-15,Mid-Market,Outbound,false,false
-D-094,Coral Software - Compliance Renewal,164000,Technical Evaluation,2026-09-28,AE-M02,Renewal,2026-01-23,Mid-Market,Outbound,false,false
-D-095,Forge Cloud - Monitoring,2603000,Technical Evaluation,2026-09-07,AE-SE01,New Business,2026-03-30,Strategic Enterprise,Inbound,false,false
-D-096,Ironclad Systems - Compliance,232000,Technical Evaluation,2026-04-15,AE-M01,New Business,2026-01-26,Mid-Market,Partner,false,false
-D-097,Summit Corp - Analytics Expansion,877000,Technical Evaluation,2026-07-15,AE-SE03,Expansion,2026-01-20,Strategic Enterprise,Event,false,false
-D-098,Obsidian Ventures - Data Pipeline Expansion,685000,Technical Evaluation,,AE-E01,Expansion,2026-02-02,Enterprise,Event,false,false
-D-099,Summit Solutions - Analytics Renewal,1270000,Technical Evaluation,2026-05-08,AE-SE02,Renewal,2026-01-16,Strategic Enterprise,Inbound,false,false
-D-100,Vanguard Industries - Analytics Renewal,128000,Technical Evaluation,2026-09-29,AE-M06,Renewal,2026-03-25,Mid-Market,Partner,false,false
-D-101,Borealis Technologies - Compliance Renewal,,Technical Evaluation,2026-06-15,AE-M04,Renewal,2026-01-29,Mid-Market,Event,false,false
-D-102,Ironclad Networks - API Gateway Expansion,279000,Technical Evaluation,2026-05-18,AE-M06,Expansion,2026-02-20,Mid-Market,Partner,false,false
-D-103,Forge Cloud - Enterprise Suite Expansion,800000,Technical Evaluation,2026-07-23,AE-X01,Expansion,2026-02-23,Strategic Enterprise,Partner,false,false
-D-104,Lattice Analytics - API Gateway Expansion,193000,Technical Evaluation,,AE-M02,Expansion,2026-02-24,Mid-Market,Inbound,false,false
-D-105,Eclipse Labs - Enterprise Suite Renewal,210000,Technical Evaluation,2026-05-14,AE-M01,Renewal,2026-02-23,Mid-Market,PLG,false,false
-D-106,Pinnacle Partners - Analytics Expansion,236000,Technical Evaluation,2026-06-01,AE-M06,Expansion,2026-01-05,Mid-Market,Event,false,false
-D-107,Nimbus Technologies - Enterprise Suite Renewal,612000,Technical Evaluation,2026-05-26,AE-E04,Renewal,2026-03-16,Enterprise,PLG,false,false
-D-108,Sapphire Software - Analytics,509000,Technical Evaluation,2026-07-01,AE-E05,New Business,2026-03-11,Enterprise,Inbound,false,false
-D-109,Mercury Global - Compliance,1928000,Technical Evaluation,2026-08-26,AE-SE03,New Business,2026-01-07,Strategic Enterprise,Event,false,false
-D-110,Bedrock Data - Data Pipeline Expansion,227000,Technical Evaluation,2026-09-01,AE-M05,Expansion,2026-02-17,Mid-Market,Event,false,false
-D-111,Borealis Technologies - API Gateway,141000,Technical Evaluation,2026-09-16,AE-M06,New Business,2026-03-09,Mid-Market,PLG,false,false
-D-112,Prism Technologies - API Gateway Expansion,169000,Technical Evaluation,2026-08-28,AE-M05,Expansion,2026-01-14,Mid-Market,Inbound,false,false
-D-113,Nimbus Technologies - API Gateway,686000,Business Case,2026-04-14,AE-E03,New Business,2026-01-06,Enterprise,Outbound,false,false
-D-114,Atlas Networks - Data Pipeline Renewal,188000,Business Case,2026-09-08,AE-M01,Renewal,2026-01-29,Mid-Market,Inbound,false,false
-D-115,Ridge Corp - Security Module Expansion,512000,Business Case,2026-09-08,AE-E03,Expansion,2026-01-09,Enterprise,Outbound,false,false
-D-116,Beacon Solutions - Compliance,355000,Business Case,2026-05-05,AE-E03,New Business,2026-03-17,Enterprise,Event,false,false
-D-117,Bedrock Systems - API Gateway Renewal,185000,Business Case,2026-05-26,AE-M04,Renewal,2026-03-03,Mid-Market,PLG,false,false
-D-118,Lumen Solutions - Enterprise Suite Renewal,1999000,Business Case,2026-03-27,AE-SE02,Renewal,2026-02-02,Strategic Enterprise,PLG,false,false
-D-119,Cobalt Sciences - Enterprise Suite Expansion,409000,Business Case,2026-05-26,AE-E06,Expansion,2026-03-02,Enterprise,Inbound,false,false
-D-120,Lattice Analytics - Security Module Expansion,144000,Business Case,2026-07-14,AE-M06,Expansion,2026-02-24,Mid-Market,Partner,false,false
-D-121,Axiom Labs - Analytics Renewal,140000,Business Case,2026-09-21,AE-M03,Renewal,2026-01-20,Mid-Market,Outbound,false,false
-D-122,Lumen Solutions - Data Pipeline,2362000,Business Case,2026-08-05,AE-SE02,New Business,2026-01-01,Strategic Enterprise,Outbound,false,false
-D-123,Sapphire Software - Compliance Renewal,722000,Business Case,2026-04-29,AE-E03,Renewal,2026-02-27,Enterprise,Inbound,false,false
-D-124,Orbit Digital - Data Pipeline,637000,Business Case,2026-09-28,AE-E02,New Business,2026-02-06,Enterprise,Outbound,false,false
-D-125,Thrive Industries - Platform Renewal,380000,Business Case,2026-05-15,AE-E01,Renewal,2026-02-04,Enterprise,Inbound,false,false
-D-126,Axiom Group - API Gateway Renewal,193000,Business Case,2026-03-30,AE-M03,Renewal,2026-02-27,Mid-Market,PLG,false,false
-D-127,Nexus Technologies - Monitoring Renewal,369000,Business Case,2026-05-29,AE-E05,Renewal,2026-03-17,Enterprise,Inbound,false,false
-D-128,Coral Software - Security Module,257000,Business Case,2026-05-20,AE-M03,New Business,2026-02-11,Mid-Market,Event,false,false
-D-129,Summit Corp - Enterprise Suite,2369000,Business Case,2026-07-22,AE-SE02,New Business,2026-03-12,Strategic Enterprise,PLG,false,false
-D-130,Beacon Solutions - Platform Renewal,498000,Business Case,2026-04-22,AE-E06,Renewal,2026-01-30,Enterprise,PLG,false,false
-D-131,Flint Sciences - Platform,555000,Business Case,2026-03-17,AE-E04,New Business,2026-01-22,Enterprise,PLG,false,false
-D-132,Cipher Analytics - Security Module Renewal,,Business Case,2026-05-06,AE-E01,Renewal,2026-01-06,Enterprise,PLG,false,false
-D-133,Bedrock Group - Platform Renewal,165000,Business Case,2026-03-30,AE-M03,Renewal,2026-03-27,Mid-Market,Inbound,false,false
-D-134,Sterling Labs - API Gateway Renewal,116000,Business Case,2026-04-27,AE-M04,Renewal,2026-03-04,Mid-Market,Inbound,false,false
-D-135,Monolith Partners - Platform,1525000,Business Case,2026-06-23,AE-SE01,New Business,2026-01-26,Strategic Enterprise,Outbound,false,false
-D-136,Ironclad Data - API Gateway Renewal,592000,Business Case,2026-06-22,AE-E05,Renewal,2026-02-17,Enterprise,Partner,false,false
-D-137,Summit Corp - Monitoring Expansion,3050000,Business Case,2026-06-01,AE-SE01,Expansion,2026-03-05,Strategic Enterprise,Inbound,false,false
-D-138,Catalyst Networks - Analytics Renewal,166000,Business Case,2026-07-07,AE-M03,Renewal,2026-03-30,Mid-Market,Inbound,false,false
-D-139,Verdant Networks - Data Pipeline Renewal,1680000,Business Case,2026-05-22,AE-SE03,Renewal,2026-02-18,Strategic Enterprise,Outbound,false,false
-D-140,Sable Dynamics - Monitoring Expansion,407000,Business Case,2026-08-12,AE-E01,Expansion,2026-01-30,Enterprise,Inbound,false,false
-D-141,Cascade Solutions - Monitoring,347000,Business Case,2026-08-31,AE-E05,New Business,2026-02-17,Enterprise,Outbound,false,false
-D-142,Lattice Analytics - Platform,80000,Business Case,2026-04-20,AE-M01,New Business,2026-02-19,Mid-Market,Partner,false,false
-D-143,Pinnacle Digital - Monitoring Renewal,542000,Business Case,2026-05-15,AE-E02,Renewal,2026-02-17,Enterprise,Inbound,false,false
-D-144,Nebula Solutions - API Gateway,2625000,Business Case,2026-06-30,AE-SE01,New Business,2026-01-13,Strategic Enterprise,Inbound,false,false
-D-145,Prism Technologies - Monitoring Expansion,121000,Negotiation,2026-09-29,AE-M04,Expansion,2026-03-26,Mid-Market,Outbound,false,false
-D-146,Falcon Labs - Data Pipeline,217000,Negotiation,2026-08-11,AE-M04,New Business,2026-03-20,Mid-Market,Inbound,false,false
-D-147,Spectra Networks - API Gateway Renewal,281000,Negotiation,2026-05-21,AE-M01,Renewal,2026-02-04,Mid-Market,Inbound,false,false
-D-148,Ridge Inc - Monitoring Renewal,221000,Negotiation,2026-05-22,AE-M06,Renewal,2026-01-16,Mid-Market,Partner,false,false
-D-149,Compass Digital - API Gateway Renewal,610000,Negotiation,2026-07-30,AE-E06,Renewal,2026-01-09,Enterprise,PLG,false,false
-D-150,Paragon Software - API Gateway Renewal,238000,Negotiation,2026-09-18,AE-M06,Renewal,2026-02-03,Mid-Market,Inbound,false,false
-D-151,Pinnacle Partners - Platform Expansion,190000,Negotiation,2026-07-28,AE-M03,Expansion,2026-03-13,Mid-Market,Outbound,false,false
-D-152,Forge Cloud - API Gateway Renewal,1371000,Negotiation,2026-04-07,AE-SE04,Renewal,2026-01-09,Strategic Enterprise,Outbound,false,false
-D-153,Nexus Industries - Data Pipeline Expansion,148000,Negotiation,2026-09-21,AE-M05,Expansion,2026-02-18,Mid-Market,Outbound,false,false
-D-154,Atlas Networks - Data Pipeline Renewal,291000,Negotiation,2026-05-19,AE-M01,Renewal,2026-01-29,Mid-Market,PLG,false,false
-D-155,Prism Technologies - Compliance Expansion,232000,Negotiation,2026-09-03,AE-M06,Expansion,2026-01-15,Mid-Market,PLG,false,false
-D-156,Aegis Analytics - Monitoring Expansion,178000,Negotiation,2026-08-19,AE-M03,Expansion,2026-02-13,Mid-Market,Outbound,false,false
-D-157,Nimbus Technologies - Platform,531000,Negotiation,2026-06-30,AE-E06,New Business,2026-03-30,Enterprise,Partner,false,false
-D-158,Ridge Corp - Analytics Renewal,920000,Negotiation,2026-08-26,AE-E03,Renewal,2026-02-27,Enterprise,PLG,false,false
-D-159,Pavilion Cloud - Security Module Renewal,,Negotiation,2026-09-21,AE-M04,Renewal,2026-02-03,Mid-Market,Partner,false,false
-D-160,Falcon Ventures - Compliance Renewal,106000,Negotiation,2026-05-04,AE-M03,Renewal,2026-03-09,Mid-Market,Inbound,false,false
-D-161,Obsidian Ventures - Platform Expansion,456000,Negotiation,2026-06-11,AE-E05,Expansion,2026-02-04,Enterprise,Partner,false,false
-D-162,Indigo Sciences - Platform Renewal,144000,Negotiation,2026-07-01,AE-M02,Renewal,2026-03-16,Mid-Market,PLG,false,false
-D-163,Ironclad Data - Enterprise Suite Expansion,466000,Negotiation,2026-04-10,AE-E05,Expansion,2026-03-24,Enterprise,Partner,false,false
-D-164,Obsidian Corp - Compliance Expansion,717000,Negotiation,2026-08-10,AE-E04,Expansion,2026-03-19,Enterprise,Inbound,false,false
-D-165,Coral Software - Data Pipeline Expansion,131000,Negotiation,2026-09-11,AE-M02,Expansion,2026-01-27,Mid-Market,Outbound,false,false
-D-166,Sequoia Cloud - Security Module Expansion,86000,Negotiation,2026-04-15,AE-M03,Expansion,2026-03-30,Mid-Market,Event,false,false
-D-167,Prism Technologies - Security Module,192000,Closed Won,2026-04-06,AE-M03,New Business,2026-02-20,Mid-Market,Event,true,true
-D-168,Bedrock Systems - Compliance Expansion,262000,Closed Won,2026-05-31,AE-M01,Expansion,2026-04-07,Mid-Market,Inbound,true,true
-D-169,Zenith Networks - Analytics Renewal,111000,Closed Won,2026-04-02,AE-M06,Renewal,2026-02-16,Mid-Market,Event,true,true
-D-170,Flint Sciences - Compliance,727000,Closed Won,2026-06-19,AE-E04,New Business,2026-04-03,Enterprise,Partner,true,true
-D-171,Phoenix Partners - Enterprise Suite Expansion,168000,Closed Won,2026-04-01,AE-M03,Expansion,2026-02-20,Mid-Market,Outbound,true,true
-D-172,Cascade Solutions - Security Module Renewal,250000,Closed Won,2026-06-23,AE-E02,Renewal,2026-04-27,Enterprise,PLG,true,true
-D-173,Lattice Group - Analytics Renewal,1745000,Closed Won,2026-04-03,AE-SE02,Renewal,2026-02-02,Strategic Enterprise,PLG,true,true
-D-174,Nimbus Technologies - Security Module Renewal,611000,Closed Won,2026-04-01,AE-E01,Renewal,2026-03-06,Enterprise,Outbound,true,true
-D-175,Nexus Analytics - Enterprise Suite Renewal,107000,Closed Won,2026-04-06,AE-M01,Renewal,2026-02-23,Mid-Market,Outbound,true,true
-D-176,Forge Software - Analytics Renewal,165000,Closed Won,2026-04-01,AE-M02,Renewal,2026-01-02,Mid-Market,Partner,true,true
-D-177,Vertex Labs - Monitoring Renewal,355000,Closed Won,2026-04-06,AE-E04,Renewal,2026-04-03,Enterprise,Partner,true,true
-D-178,Ember Networks - Platform Expansion,190000,Closed Won,2026-04-02,AE-M06,Expansion,2026-03-03,Mid-Market,Inbound,true,true
-D-179,Keystone Cloud - API Gateway Renewal,270000,Closed Won,2026-04-01,AE-M05,Renewal,2026-02-23,Mid-Market,Outbound,true,true
-D-180,Cedar Networks - Data Pipeline,681000,Closed Won,2026-04-06,AE-E01,New Business,2026-02-17,Enterprise,Inbound,true,true
-D-181,Forge Cloud - Security Module Expansion,3074000,Closed Won,2026-01-08,AE-SE01,Expansion,2025-09-30,Strategic Enterprise,Event,true,true
-D-182,Cedar Networks - API Gateway,250000,Closed Won,2026-03-13,AE-E03,New Business,2025-12-04,Enterprise,Inbound,true,true
-D-183,Crest Cloud - Monitoring Renewal,727000,Closed Won,2026-01-12,AE-E06,Renewal,2025-12-30,Enterprise,Outbound,true,true
-D-184,Quantum Systems - Enterprise Suite,631000,Closed Won,2026-01-30,AE-E02,New Business,2025-11-05,Enterprise,Event,true,true
-D-185,Mercury Global - Analytics,2496000,Closed Won,2025-11-24,AE-SE03,New Business,2025-06-19,Strategic Enterprise,Partner,true,true
-D-186,Onyx Dynamics - Monitoring,337000,Closed Won,2025-12-30,AE-E02,New Business,2025-11-04,Enterprise,PLG,true,true
-D-187,Onyx Technologies - Analytics Expansion,1468000,Closed Won,2026-02-25,AE-SE02,Expansion,2025-10-13,Strategic Enterprise,Partner,true,true
-D-188,Sterling Cloud - Enterprise Suite,184000,Closed Won,2026-01-09,AE-M06,New Business,2025-10-27,Mid-Market,PLG,true,true
-D-189,Vertex Labs - Security Module Expansion,427000,Closed Won,2026-02-10,AE-E05,Expansion,2025-10-10,Enterprise,Event,true,true
-D-190,Compass Data - Security Module,634000,Closed Won,2026-04-06,AE-E06,New Business,2026-02-23,Enterprise,PLG,true,true
-D-191,Forge Inc - Analytics Renewal,188000,Closed Won,2026-03-29,AE-M02,Renewal,2026-02-25,Mid-Market,Event,true,true
-D-192,Verdant Industries - Platform Renewal,289000,Closed Won,2026-04-07,AE-M01,Renewal,2026-02-17,Mid-Market,Outbound,true,true
-D-193,Catalyst Networks - Platform Renewal,214000,Closed Won,2025-11-06,AE-M01,Renewal,2025-08-15,Mid-Market,Partner,true,true
-D-194,Monolith Inc - Compliance Renewal,148000,Closed Won,2025-11-25,AE-M02,Renewal,2025-10-24,Mid-Market,Outbound,true,true
-D-195,Cobalt Platforms - Security Module Renewal,871000,Closed Won,2025-10-16,AE-E05,Renewal,2025-06-19,Enterprise,Inbound,true,true
-D-196,Ironclad Systems - API Gateway,255000,Closed Won,2025-12-02,AE-M01,New Business,2025-10-14,Mid-Market,Partner,true,true
-D-197,Quantum Global - Monitoring,532000,Closed Won,2026-01-30,AE-E06,New Business,2025-11-13,Enterprise,Outbound,true,true
-D-198,Mercury Inc - Data Pipeline Renewal,184000,Closed Won,2026-03-18,AE-M03,Renewal,2026-02-16,Mid-Market,Outbound,true,true
-D-199,Forge Inc - Monitoring,154000,Closed Won,2026-02-18,AE-M04,New Business,2025-09-22,Mid-Market,Inbound,true,true
-D-200,Verdant Industries - API Gateway Renewal,215000,Closed Won,2026-02-11,AE-M06,Renewal,2025-11-24,Mid-Market,Outbound,true,true
-D-201,Ironclad Ventures - Monitoring Renewal,251000,Closed Won,2026-02-19,AE-M02,Renewal,2026-01-21,Mid-Market,Event,true,true
-D-202,Lattice Group - Analytics Renewal,2339000,Closed Won,2026-02-18,AE-SE01,Renewal,2025-09-08,Strategic Enterprise,Inbound,true,true
-D-203,Summit Corp - Monitoring,2544000,Closed Won,2025-11-26,AE-SE03,New Business,2025-06-11,Strategic Enterprise,Outbound,true,true
-D-204,Beacon Solutions - Monitoring Renewal,391000,Closed Won,2026-01-07,AE-E06,Renewal,2025-11-12,Enterprise,PLG,true,true
-D-205,Bedrock Dynamics - API Gateway Renewal,332000,Closed Won,2026-01-20,AE-E05,Renewal,2025-12-17,Enterprise,Inbound,true,true
-D-206,Atlas Labs - Analytics,158000,Closed Won,2026-02-23,AE-M03,New Business,2026-02-17,Mid-Market,Event,true,true
-D-207,Vector Data - Platform Renewal,596000,Closed Won,2026-03-25,AE-E01,Renewal,2025-11-25,Enterprise,Outbound,true,true
-D-208,Lumen Systems - Security Module,1718000,Closed Won,2025-11-27,AE-SE02,New Business,2025-10-02,Strategic Enterprise,Event,true,true
-D-209,Flint Sciences - Data Pipeline Expansion,391000,Closed Won,2025-12-03,AE-E02,Expansion,2025-11-26,Enterprise,Outbound,true,true
-D-210,Cobalt Platforms - Security Module,454000,Closed Won,2025-10-08,AE-E04,New Business,2025-09-15,Enterprise,Outbound,true,true
-D-211,Cascade Solutions - API Gateway Renewal,538000,Closed Won,2025-12-15,AE-E01,Renewal,2025-11-11,Enterprise,PLG,true,true
-D-212,Nebula Solutions - Data Pipeline Renewal,800000,Closed Won,2025-12-01,AE-SE03,Renewal,2025-08-20,Strategic Enterprise,Partner,true,true
-D-213,Sable Platforms - Enterprise Suite Expansion,634000,Closed Won,2026-03-23,AE-E06,Expansion,2026-01-05,Enterprise,Inbound,true,true
-D-214,Atlas Cloud - Monitoring Renewal,2202000,Closed Won,2026-01-30,AE-SE04,Renewal,2025-09-19,Strategic Enterprise,Outbound,true,true
-D-215,Vector Data - Data Pipeline Renewal,319000,Closed Won,2026-03-04,AE-E05,Renewal,2025-09-11,Enterprise,Inbound,true,true
-D-216,Obsidian Corp - Security Module Renewal,634000,Closed Won,2026-02-23,AE-E06,Renewal,2026-01-07,Enterprise,Partner,true,true
-D-217,Sapphire Digital - Security Module Renewal,671000,Closed Won,2026-02-17,AE-E03,Renewal,2025-11-20,Enterprise,Inbound,true,true
-D-218,Verdant Networks - Data Pipeline Renewal,1035000,Closed Won,2025-12-09,AE-SE01,Renewal,2025-09-01,Strategic Enterprise,Partner,true,true
-D-219,Cobalt Platforms - API Gateway,449000,Closed Won,2026-02-09,AE-E02,New Business,2025-10-20,Enterprise,Partner,true,true
-D-220,Basalt Platforms - Compliance Expansion,357000,Closed Won,2025-10-13,AE-E05,Expansion,2025-08-19,Enterprise,Event,true,true
-D-221,Monolith Partners - Data Pipeline Renewal,1634000,Closed Won,2026-03-23,AE-SE01,Renewal,2025-09-26,Strategic Enterprise,Outbound,true,true
-D-222,Opal Systems - Platform Renewal,2568000,Closed Won,2025-11-07,AE-SE01,Renewal,2025-09-10,Strategic Enterprise,PLG,true,true
-D-223,Verdant Industries - Compliance Expansion,178000,Closed Won,2026-01-30,AE-M04,Expansion,2026-01-19,Mid-Market,Event,true,true
-D-224,Nimbus Systems - Platform Expansion,182000,Closed Won,2026-01-23,AE-M02,Expansion,2025-12-10,Mid-Market,PLG,true,true
-D-225,Verdant Networks - Enterprise Suite Expansion,1337000,Closed Won,2025-10-31,AE-SE03,Expansion,2025-08-18,Strategic Enterprise,Inbound,true,true
-D-226,Cipher Analytics - Security Module Renewal,618000,Closed Won,2026-03-12,AE-E01,Renewal,2025-09-11,Enterprise,Event,true,true
-D-227,Keystone Cloud - Monitoring Renewal,209000,Closed Won,2026-01-01,AE-M04,Renewal,2025-11-05,Mid-Market,Event,true,true
-D-228,Paragon Analytics - Data Pipeline Expansion,182000,Closed Won,2026-02-09,AE-M03,Expansion,2025-11-13,Mid-Market,Inbound,true,true
-D-229,Quantum Global - Security Module Expansion,517000,Closed Won,2025-12-15,AE-E05,Expansion,2025-09-23,Enterprise,Outbound,true,true
-D-230,Atlas Partners - Enterprise Suite Renewal,473000,Closed Won,2026-01-15,AE-E04,Renewal,2026-01-05,Enterprise,Outbound,true,true
-D-231,Phoenix Partners - Analytics Renewal,80000,Closed Won,2026-02-24,AE-M01,Renewal,2025-11-03,Mid-Market,PLG,true,true
-D-232,Ironclad Ventures - Data Pipeline,152000,Closed Won,2025-12-23,AE-M02,New Business,2025-07-31,Mid-Market,Event,true,true
-D-233,Sentry Inc - Compliance,119000,Closed Won,2026-03-10,AE-M05,New Business,2026-01-09,Mid-Market,Inbound,true,true
-D-234,Nimbus Systems - Enterprise Suite,80000,Closed Won,2025-12-26,AE-M01,New Business,2025-08-25,Mid-Market,Inbound,true,true
-D-235,Sapphire Digital - Monitoring Renewal,920000,Closed Won,2026-02-04,AE-E03,Renewal,2025-11-11,Enterprise,Partner,true,true
-D-236,Nimbus Systems - Security Module Renewal,192000,Closed Won,2025-11-21,AE-M06,Renewal,2025-08-14,Mid-Market,PLG,true,true
-D-237,Prism Labs - Data Pipeline Renewal,0,Closed Won,2026-03-05,AE-E01,Renewal,2026-02-23,Enterprise,Inbound,true,true
-D-238,Marble Inc - API Gateway Renewal,224000,Closed Won,2025-10-22,AE-M04,Renewal,2025-08-13,Mid-Market,Inbound,true,true
-D-239,Nebula Solutions - Platform Expansion,2077000,Closed Won,2026-02-01,AE-SE02,Expansion,2025-11-06,Strategic Enterprise,Outbound,true,true
-D-240,Flint Sciences - API Gateway Renewal,518000,Closed Won,2025-12-04,AE-E06,Renewal,2025-10-28,Enterprise,Event,true,true
-D-241,Titan Analytics - Platform Renewal,147000,Closed Won,2026-03-24,AE-M04,Renewal,2025-09-15,Mid-Market,Inbound,true,true
-D-242,Aegis Corp - Enterprise Suite Renewal,426000,Closed Won,2025-11-26,AE-E06,Renewal,2025-06-16,Enterprise,Partner,true,true
-D-243,Aegis Solutions - Compliance Renewal,177000,Closed Won,2026-01-15,AE-M05,Renewal,2025-12-26,Mid-Market,Partner,true,true
-D-244,Sable Platforms - API Gateway Renewal,749000,Closed Won,2026-03-17,AE-E02,Renewal,2025-12-22,Enterprise,Outbound,true,true
-D-245,Sable Partners - API Gateway Renewal,543000,Closed Won,2025-10-13,AE-E05,Renewal,2025-09-12,Enterprise,Partner,true,true
-D-246,Coral Software - Enterprise Suite Expansion,142000,Closed Won,2026-02-04,AE-M04,Expansion,2025-12-24,Mid-Market,Inbound,true,true
-D-247,Sapphire Global - Compliance Renewal,230000,Closed Won,2026-01-19,AE-M02,Renewal,2025-11-13,Mid-Market,Inbound,true,true
-D-248,Axiom Partners - Compliance,80000,Closed Won,2026-03-03,AE-M01,New Business,2026-02-04,Mid-Market,Outbound,true,true
-D-249,Keystone Cloud - Analytics Renewal,161000,Closed Won,2026-01-22,AE-M03,Renewal,2025-11-24,Mid-Market,Partner,true,true
-D-250,Sentry Group - Data Pipeline Expansion,180000,Closed Won,2026-02-02,AE-M03,Expansion,2026-01-02,Mid-Market,Inbound,true,true
-D-251,Cipher Analytics - API Gateway Renewal,768000,Closed Lost,2025-12-29,AE-E01,Renewal,2025-09-17,Enterprise,Outbound,true,false
-D-252,Compass Data - Monitoring Expansion,769000,Closed Lost,2026-02-20,AE-E04,Expansion,2025-09-26,Enterprise,Partner,true,false
-D-253,Forge Industries - Monitoring Renewal,2117000,Closed Lost,2025-12-29,AE-SE03,Renewal,2025-06-26,Strategic Enterprise,Outbound,true,false
-D-254,Helix Networks - Compliance Expansion,592000,Closed Lost,2025-12-03,AE-E04,Expansion,2025-07-22,Enterprise,Partner,true,false
-D-255,Axiom Solutions - Monitoring,767000,Closed Lost,2026-01-30,AE-E04,New Business,2025-11-07,Enterprise,PLG,true,false
-D-256,Mercury Global - Platform Renewal,1494000,Closed Lost,2026-01-28,AE-SE02,Renewal,2025-12-25,Strategic Enterprise,Inbound,true,false
-D-257,Indigo Partners - Enterprise Suite Expansion,408000,Closed Lost,2025-12-04,AE-E04,Expansion,2025-06-17,Enterprise,Partner,true,false
-D-258,Beacon Sciences - Monitoring,250000,Closed Lost,2026-01-28,AE-E05,New Business,2025-12-10,Enterprise,Inbound,true,false
-D-259,Thrive Industries - Data Pipeline Renewal,895000,Closed Lost,2026-03-27,AE-E05,Renewal,2025-10-30,Enterprise,Partner,true,false
-D-260,Lattice Analytics - Enterprise Suite Expansion,145000,Closed Lost,2026-02-12,AE-M04,Expansion,2025-11-27,Mid-Market,Event,true,false
-D-261,Nexus Systems - API Gateway Renewal,170000,Closed Lost,2026-01-23,AE-M01,Renewal,2025-10-31,Mid-Market,PLG,true,false
-D-262,Nexus Technologies - Monitoring Renewal,845000,Closed Lost,2026-03-04,AE-E05,Renewal,2026-02-19,Enterprise,Event,true,false
-D-263,Indigo Partners - Enterprise Suite Renewal,675000,Closed Lost,2026-02-16,AE-E04,Renewal,2025-09-03,Enterprise,Inbound,true,false
-D-264,Thrive Industries - Data Pipeline Expansion,457000,Closed Lost,2026-02-12,AE-E05,Expansion,2025-09-17,Enterprise,Outbound,true,false
-D-265,Cipher Ventures - Compliance Renewal,165000,Closed Lost,2026-01-08,AE-M06,Renewal,2025-11-13,Mid-Market,Inbound,true,false
-D-266,Obsidian Ventures - API Gateway Renewal,1045000,Closed Lost,2026-02-06,AE-E03,Renewal,2026-01-28,Enterprise,Outbound,true,false
-D-267,Granite Sciences - API Gateway Expansion,178000,Closed Lost,2026-01-07,AE-M01,Expansion,2025-12-08,Mid-Market,Outbound,true,false
-D-268,Prism Labs - Analytics Renewal,250000,Closed Lost,2026-02-05,AE-E05,Renewal,2026-01-20,Enterprise,PLG,true,false
-D-269,Sterling Cloud - Monitoring Renewal,140000,Closed Lost,2026-02-16,AE-M03,Renewal,2025-12-24,Mid-Market,Partner,true,false
-D-270,Spectra Group - Data Pipeline,226000,Closed Lost,2026-01-22,AE-M03,New Business,2025-10-22,Mid-Market,Inbound,true,false
-D-271,Horizon Cloud - Analytics Expansion,653000,Closed Lost,2026-04-30,AE-E03,Expansion,2026-02-12,Enterprise,Inbound,true,false
-D-272,Vector Data - Monitoring Renewal,274000,Closed Lost,2026-02-20,AE-E05,Renewal,2025-09-03,Enterprise,PLG,true,false
-D-273,Catalyst Networks - Security Module Renewal,219000,Closed Lost,2026-03-24,AE-M06,Renewal,2026-02-10,Mid-Market,Outbound,true,false
-D-274,Forge Cloud - Monitoring Renewal,2886000,Closed Lost,2025-12-24,AE-SE03,Renewal,2025-11-11,Strategic Enterprise,Partner,true,false
-D-275,Compass Data - Security Module Renewal,698000,Closed Lost,2025-12-03,AE-E06,Renewal,2025-07-29,Enterprise,Outbound,true,false
-D-276,Crest Cloud - Analytics Expansion,843000,Closed Lost,2026-03-10,AE-E06,Expansion,2026-01-20,Enterprise,Event,true,false
-D-277,Pavilion Cloud - API Gateway Renewal,226000,Closed Lost,2025-12-08,AE-M02,Renewal,2025-10-06,Mid-Market,Inbound,true,false
-D-278,Paragon Analytics - Analytics Renewal,255000,Closed Lost,2025-11-12,AE-M02,Renewal,2025-11-07,Mid-Market,Event,true,false
-D-279,Lumen Systems - Monitoring Renewal,1420000,Closed Lost,2025-10-06,AE-SE02,Renewal,2025-07-28,Strategic Enterprise,Partner,true,false
-D-280,Prism Technologies - API Gateway Renewal,151000,Closed Lost,2025-10-31,AE-M02,Renewal,2025-08-04,Mid-Market,Inbound,true,false
-D-281,Sable Partners - Analytics Renewal,577000,Closed Lost,2026-04-20,AE-E06,Renewal,2026-02-26,Enterprise,Outbound,true,false
-D-282,Compass Digital - Compliance,250000,Closed Lost,2025-11-04,AE-E02,New Business,2025-06-05,Enterprise,PLG,true,false
-D-283,Bedrock Dynamics - Platform Renewal,361000,Closed Lost,2025-12-26,AE-E04,Renewal,2025-06-03,Enterprise,Outbound,true,false
-D-284,Monolith Partners - API Gateway Renewal,1311000,Closed Lost,2026-01-07,AE-SE04,Renewal,2025-12-26,Strategic Enterprise,Outbound,true,false
-D-285,Forge Cloud - Security Module Renewal,2440000,Closed Lost,2025-11-07,AE-SE03,Renewal,2025-08-15,Strategic Enterprise,Inbound,true,false
-D-286,Compass Digital - Data Pipeline,727000,Closed Lost,2026-01-08,AE-E04,New Business,2025-12-05,Enterprise,Inbound,true,false
-D-287,Lumen Industries - Data Pipeline,200000,Closed Lost,2026-01-14,AE-M04,New Business,2025-11-10,Mid-Market,PLG,true,false
-D-288,Phoenix Networks - Data Pipeline Renewal,2403000,Closed Lost,2026-01-20,AE-SE03,Renewal,2025-11-19,Strategic Enterprise,PLG,true,false
-D-289,Summit Solutions - Security Module,2257000,Closed Lost,2025-12-01,AE-SE03,New Business,2025-09-03,Strategic Enterprise,Inbound,true,false
-D-290,Coral Systems - API Gateway Renewal,1895000,Closed Lost,2026-02-09,AE-SE03,Renewal,2025-11-26,Strategic Enterprise,Event,true,false
-D-291,Sterling Dynamics - Monitoring Expansion,558000,Closed Lost,2026-02-25,AE-E04,Expansion,2026-01-08,Enterprise,Inbound,true,false
-D-292,Titan Analytics - Compliance Renewal,268000,Closed Lost,2025-10-06,AE-M06,Renewal,2025-07-08,Mid-Market,Event,true,false
-D-293,Atlas Cloud - Platform Expansion,962000,Closed Lost,2025-11-13,AE-SE01,Expansion,2025-07-18,Strategic Enterprise,PLG,true,false
-D-294,Titan Analytics - Enterprise Suite Expansion,134000,Closed Lost,2026-03-18,AE-M04,Expansion,2025-10-28,Mid-Market,Outbound,true,false
-D-295,Ridge Inc - Monitoring,128000,Closed Lost,2026-02-26,AE-M06,New Business,2025-12-09,Mid-Market,Event,true,false
-D-296,Eclipse Labs - API Gateway Renewal,176000,Closed Lost,2026-03-31,AE-M02,Renewal,2026-01-19,Mid-Market,Partner,true,false
-D-297,Beacon Solutions - Security Module Expansion,551000,Closed Lost,2026-01-14,AE-E04,Expansion,2025-12-03,Enterprise,PLG,true,false
-D-298,Spectra Group - API Gateway Renewal,248000,Closed Lost,2026-01-19,AE-M06,Renewal,2025-12-17,Mid-Market,Outbound,true,false
-D-299,Spectra Group - Platform Expansion,115000,Closed Lost,2025-11-05,AE-M03,Expansion,2025-07-11,Mid-Market,Inbound,true,false
-D-300,Onyx Dynamics - Enterprise Suite,611000,Closed Lost,2026-02-09,AE-E03,New Business,2025-11-12,Enterprise,Partner,true,false
-D-301,Quantum Global - Data Pipeline,481000,Closed Lost,2025-11-18,AE-E02,New Business,2025-06-03,Enterprise,Event,true,false
-D-302,Quantum Data - Compliance Renewal,381000,Closed Lost,2025-12-01,AE-E03,Renewal,2025-11-06,Enterprise,Partner,true,false
-D-303,Marble Inc - API Gateway Expansion,195000,Closed Lost,2025-11-05,AE-M03,Expansion,2025-09-05,Mid-Market,Outbound,true,false
-D-304,Ironclad Networks - Enterprise Suite,205000,Closed Lost,2026-02-03,AE-M01,New Business,2025-12-04,Mid-Market,Inbound,true,false
-D-305,Sterling Dynamics - Compliance Renewal,472000,Closed Lost,2026-05-11,AE-E01,Renewal,2026-02-25,Enterprise,Inbound,true,false
-D-306,Sable Partners - Data Pipeline Renewal,525000,Closed Lost,2025-11-24,AE-E02,Renewal,2025-09-02,Enterprise,Outbound,true,false
-D-307,Thrive Industries - Security Module,618000,Closed Lost,2026-03-10,AE-E05,New Business,2025-10-20,Enterprise,Outbound,true,false
-D-308,Spectra Inc - Data Pipeline Expansion,252000,Closed Lost,2025-11-10,AE-M02,Expansion,2025-09-09,Mid-Market,Outbound,true,false
-D-309,Mercury Inc - API Gateway Renewal,287000,Closed Lost,2025-11-20,AE-M02,Renewal,2025-11-06,Mid-Market,PLG,true,false
-D-310,Lattice Group - Platform Renewal,1197000,Closed Lost,2026-05-01,AE-SE01,Renewal,2026-02-27,Strategic Enterprise,Event,true,false
-D-311,Cedar Networks - Data Pipeline Renewal,491000,Closed Lost,2025-10-14,AE-E05,Renewal,2025-09-08,Enterprise,Inbound,true,false
-D-312,Prism Inc - Analytics Expansion,84000,Closed Lost,2026-03-10,AE-M02,Expansion,2026-02-20,Mid-Market,Event,true,false
-D-313,Spectra Group - Enterprise Suite Renewal,222000,Closed Lost,2026-02-19,AE-M04,Renewal,2025-10-09,Mid-Market,PLG,true,false
-D-314,Borealis Technologies - API Gateway Renewal,153000,Closed Lost,2026-04-09,AE-M06,Renewal,2026-01-28,Mid-Market,Inbound,true,false
-D-315,Cipher Analytics - Security Module Renewal,815000,Closed Lost,2025-12-30,AE-E02,Renewal,2025-09-25,Enterprise,Inbound,true,false
-D-316,Cipher Ventures - Data Pipeline Expansion,197000,Closed Lost,2026-01-16,AE-M04,Expansion,2025-12-05,Mid-Market,Partner,true,false
-D-317,Bedrock Group - Compliance Expansion,80000,Closed Lost,2025-10-01,AE-M06,Expansion,2025-06-13,Mid-Market,Inbound,true,false
-D-318,Nexus Industries - Analytics,186000,Closed Lost,2025-12-18,AE-M01,New Business,2025-08-11,Mid-Market,Partner,true,false
-D-319,Cobalt Sciences - Security Module Expansion,491000,Closed Lost,2026-03-06,AE-E05,Expansion,2025-11-14,Enterprise,Partner,true,false
-D-320,Crimson Global - Monitoring Renewal,291000,Closed Lost,2026-01-01,AE-E04,Renewal,2025-10-01,Enterprise,Outbound,true,false
-D-321,Opal Systems - Data Pipeline Renewal,1529000,Closed Lost,2026-04-15,AE-SE03,Renewal,2026-02-25,Strategic Enterprise,Outbound,true,false
-D-322,Lattice Group - Platform Expansion,1291000,Closed Lost,2026-01-06,AE-SE02,Expansion,2025-09-04,Strategic Enterprise,Inbound,true,false
-D-323,Onyx Inc - Enterprise Suite Expansion,252000,Closed Lost,2025-11-20,AE-E01,Expansion,2025-09-08,Enterprise,Event,true,false
-D-324,Crimson Global - Security Module Expansion,551000,Closed Lost,2026-02-27,AE-E06,Expansion,2025-12-12,Enterprise,Event,true,false
-D-325,Ridge Inc - Analytics Expansion,229000,Closed Lost,2025-11-03,AE-M05,Expansion,2025-09-30,Mid-Market,Outbound,true,false
-D-326,Quantum Global - Compliance,720000,Closed Lost,2026-03-16,AE-E05,New Business,2025-10-08,Enterprise,Inbound,true,false
-D-327,Forge Cloud - Security Module Expansion,2449000,Closed Lost,2026-01-02,AE-SE02,Expansion,2025-12-09,Strategic Enterprise,Partner,true,false
-D-328,Flint Systems - Monitoring Renewal,449000,Closed Lost,2026-03-20,AE-E04,Renewal,2026-01-16,Enterprise,Inbound,true,false
-D-329,Ember Networks - Platform Renewal,286000,Closed Lost,2025-10-02,AE-M02,Renewal,2025-06-18,Mid-Market,Event,true,false
-D-330,Axiom Solutions - Platform Renewal,578000,Closed Lost,2026-03-24,AE-E05,Renewal,2025-09-23,Enterprise,Event,true,false
-D-331,Spectra Inc - Platform Renewal,138000,Closed Lost,2025-12-30,AE-M05,Renewal,2025-06-17,Mid-Market,Inbound,true,false
-D-332,Indigo Partners - API Gateway Renewal,804000,Closed Lost,2026-03-09,AE-E04,Renewal,2025-10-09,Enterprise,Inbound,true,false
-D-333,Compass Data - API Gateway Expansion,431000,Closed Lost,2026-04-28,AE-E06,Expansion,2026-01-28,Enterprise,Outbound,true,false
-D-334,Spectra Networks - Platform,139000,Closed Lost,2025-12-10,AE-M02,New Business,2025-11-07,Mid-Market,PLG,true,false
-D-335,Horizon Corp - API Gateway,849000,Closed Lost,2026-02-27,AE-SE01,New Business,2025-12-26,Strategic Enterprise,Outbound,true,false
-D-336,Mercury Global - API Gateway Expansion,2041000,Closed Lost,2026-03-20,AE-SE01,Expansion,2026-01-08,Strategic Enterprise,Partner,true,false
-D-337,Ridge Corp - Compliance Renewal,433000,Closed Lost,2026-02-20,AE-E02,Renewal,2025-12-31,Enterprise,Inbound,true,false
-D-338,Falcon Labs - Enterprise Suite Renewal,242000,Closed Lost,2025-12-10,AE-M04,Renewal,2025-06-18,Mid-Market,Outbound,true,false
-D-339,Indigo Partners - Enterprise Suite Expansion,796000,Closed Lost,2026-02-08,AE-E03,Expansion,2025-11-11,Enterprise,Event,true,false
-D-340,Atlas Labs - Data Pipeline,109000,Closed Lost,2026-02-19,AE-M02,New Business,2025-09-03,Mid-Market,Event,true,false
-D-341,Axiom Partners - Compliance Renewal,166000,Closed Lost,2026-03-04,AE-M03,Renewal,2025-11-24,Mid-Market,Outbound,true,false
-D-342,Forge Industries - Platform Renewal,1961000,Closed Lost,2026-02-03,AE-SE01,Renewal,2025-12-17,Strategic Enterprise,Event,true,false
-D-343,Forge Cloud - Security Module Expansion,955000,Closed Lost,2025-11-13,AE-SE01,Expansion,2025-10-22,Strategic Enterprise,Outbound,true,false
-D-344,Flint Systems - Data Pipeline Expansion,719000,Closed Lost,2026-01-29,AE-E05,Expansion,2025-11-27,Enterprise,Outbound,true,false
-D-345,Sentry Inc - Monitoring Expansion,167000,Closed Lost,2025-12-05,AE-M05,Expansion,2025-10-22,Mid-Market,Inbound,true,false
-D-346,Orbit Digital - Security Module Renewal,396000,Closed Lost,2025-11-20,AE-E03,Renewal,2025-07-01,Enterprise,Outbound,true,false
-D-347,Paragon Analytics - Security Module Renewal,185000,Closed Lost,2026-02-04,AE-M02,Renewal,2025-11-19,Mid-Market,PLG,true,false
-D-348,Ridge Corp - Platform Renewal,376000,Closed Lost,2026-02-05,AE-E04,Renewal,2025-10-06,Enterprise,Partner,true,false
-D-349,Granite Sciences - Enterprise Suite Renewal,106000,Closed Lost,2026-01-14,AE-M03,Renewal,2025-12-04,Mid-Market,PLG,true,false
-D-350,Crest Partners - Data Pipeline Renewal,784000,Closed Lost,2026-02-10,AE-E05,Renewal,2025-10-03,Enterprise,PLG,true,false
-D-351,Atlas Cloud - Enterprise Suite Expansion,2940000,Closed Lost,2025-12-31,AE-SE02,Expansion,2025-09-19,Strategic Enterprise,Partner,true,false
-D-352,Horizon Corp - API Gateway,1144000,Closed Lost,2026-03-05,AE-SE01,New Business,2026-02-27,Strategic Enterprise,Event,true,false
-D-353,Catalyst Networks - Analytics Renewal,232000,Closed Lost,2026-01-21,AE-M03,Renewal,2026-01-05,Mid-Market,Event,true,false
-D-354,Atlas Analytics - Monitoring,109000,Closed Lost,2025-11-18,AE-M02,New Business,2025-09-05,Mid-Market,Inbound,true,false
-D-355,Indigo Sciences - Monitoring Renewal,177000,Closed Lost,2026-01-22,AE-M02,Renewal,2025-12-01,Mid-Market,Outbound,true,false
-D-356,Mercury Global - Monitoring Expansion,2553000,Closed Lost,2025-12-02,AE-SE01,Expansion,2025-09-03,Strategic Enterprise,Inbound,true,false
-D-357,Sterling Dynamics - Platform Renewal,309000,Closed Lost,2026-01-19,AE-E01,Renewal,2025-11-28,Enterprise,Outbound,true,false
-D-358,Cobalt Platforms - Enterprise Suite,447000,Closed Lost,2026-03-27,AE-E01,New Business,2025-09-15,Enterprise,Event,true,false
-D-359,Flint Sciences - Platform,388000,Closed Lost,2025-11-11,AE-E02,New Business,2025-07-25,Enterprise,PLG,true,false
-D-360,Ridge Inc - Analytics Renewal,115000,Closed Lost,2026-03-19,AE-M04,Renewal,2026-02-10,Mid-Market,Partner,true,false
+id,name,account,owner,owner_id,segment,source_channel,stage,amount,arr,created_date,close_date,is_closed,is_won,lost_reason,raw_stage,type,forecast_category
+MOH-001,Harborline Bank - Control plane expansion,Harborline Bank,Ananya Krishnamurthy,AE-SE01,Strategic Enterprise,ae_self_gen,Closed Won,3800000,3800000,2025-12-18,2026-04-17,true,true,,Closed Won,expansion,Closed
+MOH-002,Great Basin Freight - Fleet telemetry renewal,Great Basin Freight,Victor Chen,AE-E20,Enterprise,inbound,Closed Won,1850000,1850000,2026-01-06,2026-04-28,true,true,,Closed Won,renewal,Closed
+MOH-003,Covenant Grid Services - Secure operations cloud,Covenant Grid Services,Reginald Tannen,AE-SE02,Strategic Enterprise,outbound,Negotiation,6400000,6400000,2025-10-20,2026-06-30,false,false,,Negotiation - Vendor Risk,new_business,Commit
+MOH-004,Arcturus Freight Network - Global rollout,Arcturus Freight Network,Nina Kowalski,AE-E01,Enterprise,outbound,Business Case,3200000,3200000,2025-11-17,2026-06-18,false,false,,Business Case - Procurement,new_business,Best Case
+MOH-005,Palisade Water Authority - Telemetry platform,Palisade Water Authority,Ananya Krishnamurthy,AE-SE01,Enterprise,ae_self_gen,Technical Evaluation,1450000,1450000,2026-04-09,2026-08-21,false,false,,Technical Evaluation - ABM,new_business,Pipeline
+MOH-006,Meridian Retail Group - Regional hub,Meridian Retail Group,Lucia Barrett,AE-E35,Enterprise,outbound,Closed Lost,980000,980000,2026-01-15,2026-03-31,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-007,North Coast Health Systems - Risk fabric,North Coast Health Systems,Octavia Nguyen,AE-SE04,Strategic Enterprise,outbound,Negotiation,2900000,2900000,2025-12-02,2026-05-15,false,false,,Negotiation - Vendor Risk,new_business,Commit
+MOH-008,Riverport Logistics - Field bundle,Riverport Logistics,Indira Vasquez,AE-M01,Mid-Market,inbound,Closed Won,310000,310000,2026-02-08,2026-04-07,true,true,,Closed Won,new_business,Closed
+MOH-009,Copper State Utilities - Starter rollout,Copper State Utilities,Theo Mercer,AE-M28,Mid-Market,ae_self_gen,Qualification,240000,240000,2026-04-22,2026-06-27,false,false,,Qualification - ABM,new_business,Pipeline
+MOH-010,Westbrook Bank - Enterprise control plane,Westbrook Bank,Sean Holloway,AE-E32,Enterprise,inbound,Qualification,464000,464000,2026-02-02,2026-05-29,false,false,,Qualification,new_business,Pipeline
+MOH-011,Granite Peak Corporation - Enterprise control plane,Granite Peak Corporation,Octavia Nguyen,AE-SE04,Strategic Enterprise,outbound,Qualification,2507000,2507000,2026-04-02,2026-06-04,false,false,,Qualification,new_business,Pipeline
+MOH-012,Pinecrest Industries - Infrastructure renewal,Pinecrest Industries,Victor Laurent,AE-SE19,Strategic Enterprise,ae_self_gen,Qualification,3092000,3092000,2026-04-17,2026-06-05,false,false,,Qualification,renewal,Pipeline
+MOH-013,Ridgecrest Supply - Connectivity platform,Ridgecrest Supply,Zoe Larkin,AE-M17,Mid-Market,inbound,Qualification,354000,354000,2026-01-14,2026-10-28,false,false,,Qualification,new_business,Pipeline
+MOH-014,Covenant Systems - Connectivity platform,Covenant Systems,Peter Novak,AE-E34,Enterprise,outbound,Qualification,1007000,1007000,2026-03-19,2026-07-31,false,false,,Qualification,new_business,Pipeline
+MOH-015,Confluence Systems - Cross-sell analytics,Confluence Systems,Oscar Kim,AE-E11,Enterprise,partner,Qualification,493000,493000,2026-02-24,2026-07-27,false,false,,Qualification,expansion,Pipeline
+MOH-016,Great Basin Solutions - Infrastructure renewal,Great Basin Solutions,Dev Kapoor,AE-E26,Enterprise,outbound,Qualification,408000,408000,2026-02-03,2026-05-04,false,false,,Qualification,renewal,Pipeline
+MOH-017,Pinnacle Services - Cross-sell analytics,Pinnacle Services,Simone Duarte,AE-E23,Enterprise,outbound,Qualification,760000,760000,2026-01-12,2026-06-29,false,false,,Qualification,expansion,Pipeline
+MOH-018,Bedrock Energy - Annual renewal,Bedrock Energy,Talia Mercer,AE-E14,Enterprise,outbound,Qualification,900000,900000,2026-01-07,2026-07-15,false,false,,Qualification,renewal,Pipeline
+MOH-019,Thunderbird Supply - Annual renewal,Thunderbird Supply,Omar Haddad,AE-M08,Mid-Market,outbound,Qualification,215000,215000,2026-03-20,2026-07-09,false,false,,Qualification,renewal,Pipeline
+MOH-020,Northfield Enterprises - Division rollout,Northfield Enterprises,Damian Lowe,AE-SE11,Strategic Enterprise,outbound,Qualification,2537000,2537000,2026-04-14,2026-08-14,false,false,,Qualification,expansion,Pipeline
+MOH-021,Meridian Health Systems - Enterprise renewal,Meridian Health Systems,Priya Raman,AE-E03,Enterprise,outbound,Qualification,533000,533000,2026-02-09,2026-05-29,false,false,,Qualification,renewal,Pipeline
+MOH-022,Silvergate Freight - Annual renewal,Silvergate Freight,Mira Lawson,AE-E21,Enterprise,inbound,Qualification,973000,973000,2026-01-01,2026-10-08,false,false,,Qualification,renewal,Pipeline
+MOH-023,Jefferson Freight - Fleet telemetry platform,Jefferson Freight,Elise Romano,AE-E16,Enterprise,outbound,Qualification,451000,451000,2026-04-09,2026-10-06,false,false,,Qualification,new_business,Pipeline
+MOH-024,Oakdale Design - Compliance automation suite,Oakdale Design,June Holloway,AE-M25,Mid-Market,partner,Qualification,193000,193000,2026-03-20,2026-09-02,false,false,,Qualification,new_business,Pipeline
+MOH-025,Highpoint Engineering - Fleet telemetry platform,Highpoint Engineering,Beatrix Holloway,AE-M03,Mid-Market,inbound,Qualification,221000,221000,2026-01-12,2026-07-21,false,false,,Qualification,new_business,Pipeline
+MOH-026,Thunderbird Solutions - Secure operations cloud,Thunderbird Solutions,Jonas Lee,AE-E04,Enterprise,partner,Qualification,764000,764000,2026-04-14,2026-08-07,false,false,,Qualification,new_business,Pipeline
+MOH-027,Flagstone Financial - Network monitoring suite,Flagstone Financial,Oscar Kim,AE-E11,Enterprise,outbound,Qualification,918000,918000,2026-04-08,2026-05-08,false,false,,Qualification,new_business,Pipeline
+MOH-028,Bloomfield Warehousing - Risk management fabric,Bloomfield Warehousing,Indira Vasquez,AE-M01,Mid-Market,outbound,Qualification,272000,272000,2026-04-17,2026-05-07,false,false,,Qualification,new_business,Pipeline
+MOH-029,Greenfield Consulting - Supply chain visibility,Greenfield Consulting,Rafael Costa,AE-M26,Mid-Market,partner,Qualification,185000,185000,2026-01-22,2026-06-18,false,false,,Qualification,new_business,Pipeline
+MOH-030,Midland Authority - Secure operations cloud,Midland Authority,Quentin Brooks,AE-E06,Enterprise,ae_self_gen,Qualification,604000,604000,2026-02-13,2026-06-17,false,false,,Qualification,new_business,Pipeline
+MOH-031,Eastbrook Partners - Connectivity platform,Eastbrook Partners,Gabriel Nwosu,AE-SE21,Strategic Enterprise,ae_self_gen,Qualification,1100000,1100000,2026-02-13,2026-09-23,false,false,,Qualification,new_business,Pipeline
+MOH-032,Meridian Financial - Fleet telemetry expansion,Meridian Financial,Amelia Foster,AE-E05,Enterprise,ae_self_gen,Qualification,841000,841000,2026-02-05,2026-10-16,false,false,,Qualification,expansion,Pipeline
+MOH-033,Riverdale Authority - Connectivity platform,Riverdale Authority,Renee Gallagher,AE-E19,Enterprise,inbound,Qualification,536000,536000,2026-04-10,2026-10-19,false,false,,Qualification,new_business,Pipeline
+MOH-034,Ironwood Logistics - Fleet telemetry platform,Ironwood Logistics,Derek Salazar,AE-E02,Enterprise,inbound,Qualification,955000,955000,2026-02-27,2026-05-21,false,false,,Qualification,new_business,Pipeline
+MOH-035,Brookfield Solutions - Security operations center,Brookfield Solutions,Oscar Kim,AE-E11,Enterprise,ae_self_gen,Qualification,1161000,1161000,2026-04-06,2026-10-19,false,false,,Qualification,new_business,Pipeline
+MOH-036,Springfield Supply - Infrastructure modernization,Springfield Supply,Theo Mercer,AE-M28,Mid-Market,outbound,Qualification,180000,180000,2026-02-09,2026-08-19,false,false,,Qualification,new_business,Pipeline
+MOH-037,Covenant Realty - Analytics renewal,Covenant Realty,Omar Haddad,AE-M08,Mid-Market,outbound,Qualification,250000,250000,2026-02-17,2026-06-16,false,false,,Qualification,renewal,Pipeline
+MOH-038,Stonegate Management - International expansion,Stonegate Management,Theo Mercer,AE-M28,Mid-Market,ae_self_gen,Qualification,307000,307000,2026-04-06,2026-08-25,false,false,,Qualification,expansion,Pipeline
+MOH-039,Redstone Industries - Analytics foundation,Redstone Industries,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Qualification,1100000,1100000,2026-04-01,2026-09-03,false,false,,Qualification,new_business,Pipeline
+MOH-040,Atlas Transport - Enterprise control plane,Atlas Transport,Freya Jensen,AE-M19,Mid-Market,partner,Qualification,327000,327000,2026-03-17,2026-10-15,false,false,,Qualification,new_business,Pipeline
+MOH-041,Ironwood Networks - Annual renewal,Ironwood Networks,Tyler Mbeki,AE-E30,Enterprise,outbound,Qualification,704000,704000,2026-04-16,2026-06-25,false,false,,Qualification,renewal,Pipeline
+MOH-042,Eagle Rock Logistics - Module expansion,Eagle Rock Logistics,Renee Gallagher,AE-E19,Enterprise,ae_self_gen,Qualification,1048000,1048000,2026-01-07,2026-09-15,false,false,,Qualification,expansion,Pipeline
+MOH-043,Ridgeline Freight - Fleet telemetry expansion,Ridgeline Freight,Morgan Tate,AE-E09,Enterprise,inbound,Qualification,300000,300000,2026-04-14,2026-05-18,false,false,,Qualification,expansion,Pipeline
+MOH-044,Greenvale Authority - Fleet renewal,Greenvale Authority,Morgan Tate,AE-E09,Enterprise,inbound,Qualification,825000,825000,2026-01-05,2026-09-25,false,false,,Qualification,renewal,Pipeline
+MOH-045,Frontier Consulting - Division rollout,Frontier Consulting,Indira Vasquez,AE-M01,Mid-Market,ae_self_gen,Qualification,122000,122000,2026-02-19,2026-09-14,false,false,,Qualification,expansion,Pipeline
+MOH-046,Pioneer Bank - Regional expansion,Pioneer Bank,Derek Salazar,AE-E02,Enterprise,outbound,Qualification,679000,679000,2026-04-15,2026-09-25,false,false,,Qualification,expansion,Pipeline
+MOH-047,Cornerstone Distribution - Annual renewal,Cornerstone Distribution,Indira Vasquez,AE-M01,Mid-Market,inbound,Qualification,325000,325000,2026-03-25,2026-10-12,false,false,,Qualification,renewal,Pipeline
+MOH-048,Consortium Networks - Annual renewal,Consortium Networks,Elise Romano,AE-E16,Enterprise,ae_self_gen,Qualification,794000,794000,2026-01-14,2026-06-08,false,false,,Qualification,renewal,Pipeline
+MOH-049,Watershed Bank - Workforce analytics,Watershed Bank,Julian Park,AE-E22,Enterprise,outbound,Qualification,622000,622000,2026-01-16,2026-09-14,false,false,,Qualification,new_business,Pipeline
+MOH-050,Bedrock Authority - Risk management fabric,Bedrock Authority,Dev Kapoor,AE-E26,Enterprise,ae_self_gen,Qualification,374000,374000,2026-01-02,2026-05-19,false,false,,Qualification,new_business,Pipeline
+MOH-051,Heritage Distribution - Division rollout,Heritage Distribution,Rafael Dunn,AE-M14,Mid-Market,partner,Qualification,183000,183000,2026-01-02,2026-10-02,false,false,,Qualification,expansion,Pipeline
+MOH-052,Blue Mesa Construction - Operations renewal,Blue Mesa Construction,Rafael Dunn,AE-M14,Mid-Market,ae_self_gen,Qualification,154000,154000,2026-01-13,2026-05-12,false,false,,Qualification,renewal,Pipeline
+MOH-053,Legacy Supply - Module expansion,Legacy Supply,Tori Nguyen,AE-M11,Mid-Market,outbound,Qualification,325000,325000,2026-01-13,2026-09-23,false,false,,Qualification,expansion,Pipeline
+MOH-054,Springfield Services - Enterprise renewal,Springfield Services,Leila Haddad,AE-E12,Enterprise,inbound,Qualification,752000,752000,2026-04-16,2026-08-31,false,false,,Qualification,renewal,Pipeline
+MOH-055,Harborline Transport - Platform renewal,Harborline Transport,Zoe Larkin,AE-M17,Mid-Market,inbound,Qualification,269000,269000,2026-01-05,2026-09-25,false,false,,Qualification,renewal,Pipeline
+MOH-056,Elite Technologies - Platform renewal,Elite Technologies,Julian Park,AE-E22,Enterprise,outbound,Qualification,915000,915000,2026-02-24,2026-08-18,false,false,,Qualification,renewal,Pipeline
+MOH-057,Greenfield Retail - Enterprise renewal,Greenfield Retail,Yusuf Bashir,AE-M04,Mid-Market,inbound,Qualification,460000,460000,2026-03-02,2026-06-04,false,false,,Qualification,renewal,Pipeline
+MOH-058,Clearwater Services - Fleet telemetry platform,Clearwater Services,Quentin Brooks,AE-E06,Enterprise,ae_self_gen,Qualification,728000,728000,2026-01-26,2026-08-18,false,false,,Qualification,new_business,Pipeline
+MOH-059,Creekside Financial - International expansion,Creekside Financial,Ethan Cross,AE-E08,Enterprise,ae_self_gen,Qualification,300000,300000,2026-04-17,2026-10-22,false,false,,Qualification,expansion,Pipeline
+MOH-060,Summit Ridge Consulting - Risk management fabric,Summit Ridge Consulting,Indira Vasquez,AE-M01,Mid-Market,outbound,Qualification,154000,154000,2026-01-19,2026-07-13,false,false,,Qualification,new_business,Pipeline
+MOH-061,Eastbrook Logistics - Platform renewal,Eastbrook Logistics,Oscar Kim,AE-E11,Enterprise,partner,Qualification,1085000,1085000,2026-04-10,2026-06-04,false,false,,Qualification,renewal,Pipeline
+MOH-062,Keystone Energy - Usage expansion,Keystone Energy,Sean Holloway,AE-E32,Enterprise,partner,Qualification,1390000,1390000,2026-02-17,2026-05-11,false,false,,Qualification,expansion,Pipeline
+MOH-063,Northfield Health Systems - Connectivity platform,Northfield Health Systems,Lucia Barrett,AE-E35,Enterprise,outbound,Qualification,1027000,1027000,2026-02-10,2026-09-30,false,false,,Qualification,new_business,Pipeline
+MOH-064,Frontier Water District - International expansion,Frontier Water District,Tyler Mbeki,AE-E30,Enterprise,outbound,Qualification,634000,634000,2026-02-05,2026-09-18,false,false,,Qualification,expansion,Pipeline
+MOH-065,Apex Consulting - Annual renewal,Apex Consulting,Roman Bell,AE-M22,Mid-Market,ae_self_gen,Qualification,158000,158000,2026-02-23,2026-09-18,false,false,,Qualification,renewal,Pipeline
+MOH-066,Silvergate Medical Center - Enterprise control plane,Silvergate Medical Center,Nicole Bauer,AE-E31,Enterprise,outbound,Qualification,375000,375000,2026-01-28,2026-07-20,false,false,,Qualification,new_business,Pipeline
+MOH-067,Creekside Management - Usage expansion,Creekside Management,Caleb Ortiz,AE-M18,Mid-Market,outbound,Qualification,230000,230000,2026-01-27,2026-08-13,false,false,,Qualification,expansion,Pipeline
+MOH-068,Consortium Partners - Analytics renewal,Consortium Partners,Solene Matsuoka,AE-SE08,Strategic Enterprise,inbound,Qualification,3284000,3284000,2026-01-27,2026-07-02,false,false,,Qualification,renewal,Pipeline
+MOH-069,Ironwood Water District - Analytics renewal,Ironwood Water District,Tyler Mbeki,AE-E30,Enterprise,outbound,Qualification,876000,876000,2026-02-11,2026-08-27,false,false,,Qualification,renewal,Pipeline
+MOH-070,Monroe Services - Security operations center,Monroe Services,Dev Kapoor,AE-E26,Enterprise,ae_self_gen,Qualification,1323000,1323000,2026-01-22,2026-05-22,false,false,,Qualification,new_business,Pipeline
+MOH-071,Lincoln International - Module expansion,Lincoln International,Reginald Tannen,AE-SE02,Strategic Enterprise,inbound,Qualification,3862000,3862000,2026-01-26,2026-09-14,false,false,,Qualification,expansion,Pipeline
+MOH-072,Bedrock Group - Platform renewal,Bedrock Group,Serena Calloway,AE-SE22,Strategic Enterprise,inbound,Qualification,1940000,1940000,2026-04-10,2026-05-06,false,false,,Qualification,renewal,Pipeline
+MOH-073,Alliance Capital - Network monitoring suite,Alliance Capital,Rohan Bedi,AE-SE13,Strategic Enterprise,outbound,Qualification,2518000,2518000,2026-02-25,2026-09-16,false,false,,Qualification,new_business,Pipeline
+MOH-074,Blackwater Networks - Compliance automation suite,Blackwater Networks,Elena Morales,AE-E27,Enterprise,inbound,Qualification,957000,957000,2026-01-13,2026-07-01,false,false,,Qualification,new_business,Pipeline
+MOH-075,Westbrook Freight - Enterprise renewal,Westbrook Freight,Julian Park,AE-E22,Enterprise,outbound,Qualification,941000,941000,2026-03-06,2026-10-06,false,false,,Qualification,renewal,Pipeline
+MOH-076,Partners Energy - Fleet renewal,Partners Energy,Nina Kowalski,AE-E01,Enterprise,outbound,Qualification,1443000,1443000,2026-02-05,2026-08-20,false,false,,Qualification,renewal,Pipeline
+MOH-077,Elite Consulting - Connectivity platform,Elite Consulting,Lena Ortiz,AE-M07,Mid-Market,outbound,Technical Evaluation,290000,290000,2025-11-19,2026-07-29,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-078,Hamilton Partners - Regional expansion,Hamilton Partners,Marisol Vega,AE-SE10,Strategic Enterprise,inbound,Technical Evaluation,1818000,1818000,2026-04-02,2026-06-08,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-079,Blue Mesa Logistics - Division rollout,Blue Mesa Logistics,Morgan Tate,AE-E09,Enterprise,partner,Technical Evaluation,1058000,1058000,2026-03-20,2026-09-30,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-080,Partners Utilities - Control plane expansion,Partners Utilities,Hannah Greer,AE-E29,Enterprise,ae_self_gen,Technical Evaluation,607000,607000,2025-12-10,2026-06-10,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-081,Vanguard Health Systems - Enterprise control plane,Vanguard Health Systems,Tara Sullivan,AE-E25,Enterprise,ae_self_gen,Technical Evaluation,627000,627000,2025-10-20,2026-10-09,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-082,Granite Peak Freight - Secure operations cloud,Granite Peak Freight,Nina Kowalski,AE-E01,Enterprise,ae_self_gen,Technical Evaluation,992000,992000,2025-12-03,2026-08-11,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-083,Heritage Commerce - Usage expansion,Heritage Commerce,Theo Mercer,AE-M28,Mid-Market,inbound,Technical Evaluation,193000,193000,2026-02-09,2026-09-14,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-084,Meridian Enterprises - Annual renewal,Meridian Enterprises,Lucien Dubois,AE-SE07,Strategic Enterprise,outbound,Technical Evaluation,1679000,1679000,2025-11-24,2026-05-29,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-085,Arcturus Agency - Network monitoring suite,Arcturus Agency,Mason Liu,AE-M20,Mid-Market,outbound,Technical Evaluation,180000,180000,2025-11-14,2026-09-09,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-086,Madison Authority - Workforce analytics,Madison Authority,Ethan Cross,AE-E08,Enterprise,outbound,Technical Evaluation,522000,522000,2026-01-01,2026-05-11,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-087,Pinnacle Logistics - Security operations center,Pinnacle Logistics,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Technical Evaluation,1014000,1014000,2026-04-01,2026-10-01,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-088,Whitehall Group - Global operations rollout,Whitehall Group,Priyam Shah,AE-SE23,Strategic Enterprise,ae_self_gen,Technical Evaluation,2836000,2836000,2026-03-17,2026-05-21,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-089,Pinecrest Systems - Analytics foundation,Pinecrest Systems,Nina Kowalski,AE-E01,Enterprise,inbound,Technical Evaluation,1044000,1044000,2026-02-03,2026-10-23,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-090,Blue Mesa Management - Risk management fabric,Blue Mesa Management,Connor Blake,AE-M16,Mid-Market,inbound,Technical Evaluation,99000,99000,2025-11-04,2026-09-24,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-091,Great Basin Authority - Module expansion,Great Basin Authority,Tara Sullivan,AE-E25,Enterprise,outbound,Technical Evaluation,458000,458000,2026-03-19,2026-06-30,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-092,Jefferson Medical Center - Network monitoring suite,Jefferson Medical Center,Leila Haddad,AE-E12,Enterprise,ae_self_gen,Technical Evaluation,838000,838000,2026-02-11,2026-07-16,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-093,Arcturus Services - Division rollout,Arcturus Services,Jonas Lee,AE-E04,Enterprise,partner,Technical Evaluation,626000,626000,2025-11-12,2026-09-23,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-094,Federal Agency - Cross-sell analytics,Federal Agency,Kelsey Draper,AE-M09,Mid-Market,ae_self_gen,Technical Evaluation,354000,354000,2026-02-03,2026-07-28,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-095,Hilltop Group - Fleet telemetry platform,Hilltop Group,Solene Matsuoka,AE-SE08,Strategic Enterprise,outbound,Technical Evaluation,2145000,2145000,2025-10-28,2026-07-15,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-096,Goldcrest Management - Fleet renewal,Goldcrest Management,Rafael Costa,AE-M26,Mid-Market,outbound,Technical Evaluation,329000,329000,2025-10-16,2026-07-31,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-097,Ironwood Bank - Regional expansion,Ironwood Bank,Amina Hassan,AE-E33,Enterprise,inbound,Technical Evaluation,679000,679000,2025-12-15,2026-06-09,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-098,Alliance Services - Security operations center,Alliance Services,Priya Raman,AE-E03,Enterprise,inbound,Technical Evaluation,1351000,1351000,2026-01-30,2026-05-22,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-099,Lincoln Logistics - Enterprise renewal,Lincoln Logistics,Priyanka Sen,AE-E39,Enterprise,ae_self_gen,Technical Evaluation,1010000,1010000,2026-01-15,2026-08-07,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-100,Pioneer Authority - Platform renewal,Pioneer Authority,Talia Mercer,AE-E14,Enterprise,inbound,Technical Evaluation,1144000,1144000,2025-11-07,2026-05-29,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-101,Forestview Realty - Global operations rollout,Forestview Realty,Beatrix Holloway,AE-M03,Mid-Market,ae_self_gen,Technical Evaluation,343000,343000,2026-03-27,2026-10-06,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-102,Riverport Realty - Control plane expansion,Riverport Realty,Roman Bell,AE-M22,Mid-Market,inbound,Technical Evaluation,228000,228000,2025-12-29,2026-10-22,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-103,Tri-State Technologies - International expansion,Tri-State Technologies,Nina Kowalski,AE-E01,Enterprise,inbound,Technical Evaluation,810000,810000,2026-02-11,2026-07-30,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-104,Bedrock Industries - Operations renewal,Bedrock Industries,Alicia Monroe,AE-SE24,Strategic Enterprise,outbound,Technical Evaluation,1672000,1672000,2025-12-30,2026-06-30,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-105,Atlas Utilities - Annual renewal,Atlas Utilities,Sasha Petrov,AE-E18,Enterprise,outbound,Technical Evaluation,866000,866000,2025-10-07,2026-07-17,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-106,Bloomfield Holdings - Compliance automation suite,Bloomfield Holdings,Serena Calloway,AE-SE22,Strategic Enterprise,inbound,Technical Evaluation,2728000,2728000,2025-10-16,2026-07-24,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-107,Blackwater Management - Analytics renewal,Blackwater Management,Caleb Ortiz,AE-M18,Mid-Market,inbound,Technical Evaluation,254000,254000,2025-10-09,2026-07-23,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-108,Hilltop International - Platform renewal,Hilltop International,Marisol Vega,AE-SE10,Strategic Enterprise,inbound,Technical Evaluation,1100000,1100000,2025-10-09,2026-06-09,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-109,Lakewood Bank - Annual renewal,Lakewood Bank,Renee Gallagher,AE-E19,Enterprise,outbound,Technical Evaluation,919000,919000,2026-01-23,2026-10-21,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-110,Alliance Bank - Module expansion,Alliance Bank,Farah Iqbal,AE-E07,Enterprise,outbound,Technical Evaluation,1047000,1047000,2025-11-17,2026-06-22,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-111,Flagstone International - Workforce analytics,Flagstone International,Serena Calloway,AE-SE22,Strategic Enterprise,inbound,Technical Evaluation,1712000,1712000,2026-02-19,2026-06-11,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-112,Northfield Technologies - Connectivity platform,Northfield Technologies,Marcus Flynn,AE-E28,Enterprise,inbound,Technical Evaluation,864000,864000,2026-02-12,2026-09-01,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-113,Apex Corporation - Infrastructure modernization,Apex Corporation,Gabriel Nwosu,AE-SE21,Strategic Enterprise,ae_self_gen,Technical Evaluation,1782000,1782000,2026-01-29,2026-08-03,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-114,Westfield Health Systems - Compliance automation suite,Westfield Health Systems,Camille Durand,AE-E10,Enterprise,ae_self_gen,Technical Evaluation,1521000,1521000,2025-10-08,2026-08-17,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-115,Redstone Holdings - Cross-sell analytics,Redstone Holdings,Basil Okafor,AE-SE25,Strategic Enterprise,inbound,Technical Evaluation,3299000,3299000,2025-11-26,2026-06-30,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-116,Brookfield Networks - Analytics renewal,Brookfield Networks,Simone Duarte,AE-E23,Enterprise,inbound,Technical Evaluation,552000,552000,2025-10-17,2026-06-17,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-117,Rushmore Water District - Analytics foundation,Rushmore Water District,Ethan Cross,AE-E08,Enterprise,inbound,Technical Evaluation,358000,358000,2025-10-14,2026-08-18,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-118,Coalition Design - Supply chain visibility,Coalition Design,Theo Mercer,AE-M28,Mid-Market,partner,Technical Evaluation,174000,174000,2025-10-23,2026-05-11,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-119,Five-Star Corporation - Analytics renewal,Five-Star Corporation,Reginald Tannen,AE-SE02,Strategic Enterprise,inbound,Technical Evaluation,2507000,2507000,2026-01-27,2026-05-13,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-120,Prestige Agency - Seat expansion,Prestige Agency,Omar Haddad,AE-M08,Mid-Market,partner,Technical Evaluation,125000,125000,2026-03-13,2026-05-18,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-121,Confluence Consulting - Operations renewal,Confluence Consulting,Caleb Ortiz,AE-M18,Mid-Market,outbound,Technical Evaluation,197000,197000,2026-02-19,2026-10-05,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-122,Zenith Management - Seat expansion,Zenith Management,Esperanza Vega,AE-M05,Mid-Market,outbound,Technical Evaluation,283000,283000,2025-11-25,2026-05-06,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-123,Lakewood Design - Platform renewal,Lakewood Design,Rafael Costa,AE-M26,Mid-Market,partner,Technical Evaluation,409000,409000,2026-01-13,2026-09-15,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-124,Redstone Networks - Usage expansion,Redstone Networks,Tara Sullivan,AE-E25,Enterprise,inbound,Technical Evaluation,1295000,1295000,2025-12-22,2026-06-23,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-125,Covenant Bank - Global operations rollout,Covenant Bank,Jonas Lee,AE-E04,Enterprise,partner,Technical Evaluation,690000,690000,2025-10-03,2026-08-07,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-126,Blackwater Retail - Fleet renewal,Blackwater Retail,Brielle Navarro,AE-M27,Mid-Market,outbound,Technical Evaluation,407000,407000,2025-11-27,2026-09-01,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-127,Creekside Corporation - Network monitoring suite,Creekside Corporation,Basil Okafor,AE-SE25,Strategic Enterprise,partner,Technical Evaluation,1100000,1100000,2025-12-25,2026-05-19,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-128,Riverdale Group - Fleet renewal,Riverdale Group,Mireille Bouvier,AE-SE03,Strategic Enterprise,outbound,Technical Evaluation,3034000,3034000,2025-11-14,2026-05-06,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-129,Ironwood Utilities - Infrastructure renewal,Ironwood Utilities,Isaac Moreno,AE-E36,Enterprise,ae_self_gen,Technical Evaluation,521000,521000,2025-11-18,2026-06-01,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-130,Oakdale Solutions - Add-on security module,Oakdale Solutions,Julian Park,AE-E22,Enterprise,outbound,Technical Evaluation,553000,553000,2026-02-04,2026-10-08,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-131,Zenith Warehousing - Security operations center,Zenith Warehousing,Pablo Serrano,AE-M12,Mid-Market,ae_self_gen,Technical Evaluation,219000,219000,2025-12-24,2026-10-29,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-132,Forestview Construction - Global operations rollout,Forestview Construction,Pablo Serrano,AE-M12,Mid-Market,outbound,Technical Evaluation,228000,228000,2025-12-12,2026-09-29,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-133,Copper State Authority - Control plane expansion,Copper State Authority,Marcus Flynn,AE-E28,Enterprise,outbound,Technical Evaluation,355000,355000,2025-12-03,2026-08-27,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-134,Goldcrest Capital - Workforce analytics,Goldcrest Capital,Imogen Price,AE-SE20,Strategic Enterprise,ae_self_gen,Technical Evaluation,2155000,2155000,2026-03-31,2026-10-30,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-135,Legacy Consulting - Secure operations cloud,Legacy Consulting,Kelsey Draper,AE-M09,Mid-Market,partner,Technical Evaluation,240000,240000,2026-02-24,2026-09-24,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-136,Meadowbrook Commerce - Annual renewal,Meadowbrook Commerce,Grace Wilcox,AE-M13,Mid-Market,ae_self_gen,Technical Evaluation,90000,90000,2026-04-02,2026-09-18,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-137,Harborline Supply - Analytics foundation,Harborline Supply,Phineas Okafor,AE-M02,Mid-Market,outbound,Technical Evaluation,316000,316000,2025-12-30,2026-09-14,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-138,Alliance Design - Control plane expansion,Alliance Design,Ella West,AE-M23,Mid-Market,outbound,Technical Evaluation,204000,204000,2026-01-16,2026-05-25,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-139,Capstone Partners - Global operations rollout,Capstone Partners,Marisol Vega,AE-SE10,Strategic Enterprise,ae_self_gen,Technical Evaluation,2997000,2997000,2026-01-21,2026-07-03,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-140,Fairfield Commerce - Secure operations cloud,Fairfield Commerce,Tori Nguyen,AE-M11,Mid-Market,outbound,Technical Evaluation,147000,147000,2025-12-12,2026-08-03,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-141,Blue Mesa Bank - Usage expansion,Blue Mesa Bank,Renee Gallagher,AE-E19,Enterprise,ae_self_gen,Technical Evaluation,667000,667000,2025-12-16,2026-05-19,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-142,Stonegate International - Risk management fabric,Stonegate International,Theron Whitmore,AE-SE05,Strategic Enterprise,partner,Technical Evaluation,2494000,2494000,2026-03-16,2026-06-15,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-143,North Coast Freight - Platform renewal,North Coast Freight,Dev Kapoor,AE-E26,Enterprise,ae_self_gen,Technical Evaluation,550000,550000,2025-12-11,2026-09-30,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-144,Consortium International - Secure operations cloud,Consortium International,Alicia Monroe,AE-SE24,Strategic Enterprise,ae_self_gen,Technical Evaluation,2721000,2721000,2026-02-13,2026-09-17,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-145,Ridgecrest Consulting - Division rollout,Ridgecrest Consulting,Rafael Costa,AE-M26,Mid-Market,inbound,Technical Evaluation,335000,335000,2026-01-26,2026-05-25,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-146,Hilltop Networks - Compliance automation suite,Hilltop Networks,Peter Novak,AE-E34,Enterprise,outbound,Technical Evaluation,373000,373000,2025-11-14,2026-07-27,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-147,Cedarbrook Global - Analytics renewal,Cedarbrook Global,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Technical Evaluation,1324000,1324000,2025-11-19,2026-10-13,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-148,Cedarbrook Networks - Analytics foundation,Cedarbrook Networks,Nicole Bauer,AE-E31,Enterprise,inbound,Technical Evaluation,1027000,1027000,2026-01-07,2026-08-07,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-149,Ridgecrest Agency - Risk management fabric,Ridgecrest Agency,Connor Blake,AE-M16,Mid-Market,inbound,Technical Evaluation,200000,200000,2025-11-05,2026-09-04,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-150,Goldcrest Global - Operations renewal,Goldcrest Global,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Technical Evaluation,4023000,4023000,2025-11-06,2026-07-15,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-151,Cornerstone Health Systems - Risk management fabric,Cornerstone Health Systems,Haruto Sakamoto,AE-E15,Enterprise,partner,Technical Evaluation,300000,300000,2025-11-27,2026-07-27,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-152,Oakdale Financial - Seat expansion,Oakdale Financial,Marcus Flynn,AE-E28,Enterprise,outbound,Technical Evaluation,1357000,1357000,2026-03-13,2026-08-26,false,false,,Technical Evaluation,expansion,Pipeline
+MOH-153,Eagle Rock Holdings - Platform renewal,Eagle Rock Holdings,Rohan Bedi,AE-SE13,Strategic Enterprise,ae_self_gen,Technical Evaluation,2190000,2190000,2025-12-31,2026-07-06,false,false,,Technical Evaluation,renewal,Pipeline
+MOH-154,Lincoln Systems - Analytics foundation,Lincoln Systems,Nina Kowalski,AE-E01,Enterprise,outbound,Technical Evaluation,1435000,1435000,2026-02-12,2026-08-14,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-155,Summit Ridge Partners - Workforce analytics,Summit Ridge Partners,Basil Okafor,AE-SE25,Strategic Enterprise,partner,Technical Evaluation,1798000,1798000,2025-12-11,2026-05-21,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-156,Bedrock Freight - Secure operations cloud,Bedrock Freight,Leila Haddad,AE-E12,Enterprise,inbound,Technical Evaluation,690000,690000,2026-01-09,2026-08-10,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-157,Whitehall Health Systems - Data governance layer,Whitehall Health Systems,Peter Novak,AE-E34,Enterprise,ae_self_gen,Technical Evaluation,992000,992000,2025-11-12,2026-06-02,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-158,Lakewood Commerce - Field operations platform,Lakewood Commerce,Indira Vasquez,AE-M01,Mid-Market,outbound,Technical Evaluation,135000,135000,2025-12-11,2026-05-28,false,false,,Technical Evaluation,new_business,Pipeline
+MOH-159,Greenvale Water District - Supply chain visibility,Greenvale Water District,Jada Collins,AE-E37,Enterprise,outbound,Business Case,847000,847000,2025-08-26,2026-05-08,false,false,,Business Case,new_business,Best Case
+MOH-160,Summit Ridge Industries - Fleet telemetry platform,Summit Ridge Industries,Reginald Tannen,AE-SE02,Strategic Enterprise,outbound,Business Case,2233000,2233000,2025-06-17,2026-09-07,false,false,,Business Case,new_business,Commit
+MOH-161,Jefferson Logistics - Infrastructure renewal,Jefferson Logistics,Wesley Hart,AE-E24,Enterprise,inbound,Business Case,1156000,1156000,2026-02-19,2026-07-02,false,false,,Business Case,renewal,Best Case
+MOH-162,Ironwood International - Risk management fabric,Ironwood International,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Business Case,2073000,2073000,2025-11-13,2026-05-19,false,false,,Business Case,new_business,Best Case
+MOH-163,National Utilities - Fleet telemetry expansion,National Utilities,Camille Durand,AE-E10,Enterprise,outbound,Business Case,744000,744000,2025-09-16,2026-06-24,false,false,,Business Case,expansion,Best Case
+MOH-164,Heritage Holdings - Connectivity platform,Heritage Holdings,Priyam Shah,AE-SE23,Strategic Enterprise,inbound,Business Case,3737000,3737000,2025-09-16,2026-05-18,false,false,,Business Case,new_business,Best Case
+MOH-165,Apex Systems - Security operations center,Apex Systems,Haruto Sakamoto,AE-E15,Enterprise,inbound,Business Case,775000,775000,2025-08-06,2026-07-07,false,false,,Business Case,new_business,Best Case
+MOH-166,Covenant Freight - International expansion,Covenant Freight,Tara Sullivan,AE-E25,Enterprise,inbound,Business Case,1403000,1403000,2025-09-25,2026-05-12,false,false,,Business Case,expansion,Best Case
+MOH-167,Eastbrook Retail - Platform renewal,Eastbrook Retail,Ella West,AE-M23,Mid-Market,inbound,Business Case,402000,402000,2025-11-28,2026-07-06,false,false,,Business Case,renewal,Best Case
+MOH-168,Summit Ridge Health Systems - Secure operations cloud,Summit Ridge Health Systems,Nicole Bauer,AE-E31,Enterprise,inbound,Business Case,845000,845000,2025-09-09,2026-07-03,false,false,,Business Case,new_business,Best Case
+MOH-169,Cornerstone Industries - Risk management fabric,Cornerstone Industries,Chloe Banerjee,AE-SE16,Strategic Enterprise,ae_self_gen,Business Case,1100000,1100000,2025-09-01,2026-06-29,false,false,,Business Case,new_business,Best Case
+MOH-170,Lakewood Services - Add-on security module,Lakewood Services,Haruto Sakamoto,AE-E15,Enterprise,partner,Business Case,468000,468000,2025-11-26,2026-05-11,false,false,,Business Case,expansion,Commit
+MOH-171,Whitehall Authority - Infrastructure renewal,Whitehall Authority,Leila Haddad,AE-E12,Enterprise,outbound,Business Case,546000,546000,2025-11-07,2026-06-29,false,false,,Business Case,renewal,Best Case
+MOH-172,Thunderbird Services - Usage expansion,Thunderbird Services,Talia Mercer,AE-E14,Enterprise,outbound,Business Case,346000,346000,2026-01-21,2026-07-14,false,false,,Business Case,expansion,Commit
+MOH-173,Brookfield Global - Enterprise control plane,Brookfield Global,Imogen Price,AE-SE20,Strategic Enterprise,outbound,Business Case,1180000,1180000,2025-10-06,2026-07-13,false,false,,Business Case,new_business,Best Case
+MOH-174,Riverdale Services - Add-on security module,Riverdale Services,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Business Case,751000,751000,2026-01-14,2026-08-19,false,false,,Business Case,expansion,Best Case
+MOH-175,Flagstone Industries - Fleet telemetry expansion,Flagstone Industries,Victor Laurent,AE-SE19,Strategic Enterprise,inbound,Business Case,3688000,3688000,2026-01-21,2026-07-15,false,false,,Business Case,expansion,Best Case
+MOH-176,Cedarbrook Solutions - Annual renewal,Cedarbrook Solutions,Camille Durand,AE-E10,Enterprise,ae_self_gen,Business Case,514000,514000,2025-08-13,2026-05-15,false,false,,Business Case,renewal,Best Case
+MOH-177,Rushmore Technologies - Field operations platform,Rushmore Technologies,Amina Hassan,AE-E33,Enterprise,outbound,Business Case,829000,829000,2025-10-30,2026-08-17,false,false,,Business Case,new_business,Best Case
+MOH-178,Stonegate Solutions - Enterprise renewal,Stonegate Solutions,Peter Novak,AE-E34,Enterprise,partner,Business Case,806000,806000,2025-12-23,2026-06-03,false,false,,Business Case,renewal,Best Case
+MOH-179,Monroe Construction - Risk management fabric,Monroe Construction,Esperanza Vega,AE-M05,Mid-Market,outbound,Business Case,451000,451000,2025-09-16,2026-08-03,false,false,,Business Case,new_business,Best Case
+MOH-180,Covenant Group - Secure operations cloud,Covenant Group,Gabriel Nwosu,AE-SE21,Strategic Enterprise,inbound,Business Case,1456000,1456000,2025-06-25,2026-07-29,false,false,,Business Case,new_business,Best Case
+MOH-181,Pioneer Solutions - Risk management fabric,Pioneer Solutions,Amina Hassan,AE-E33,Enterprise,partner,Business Case,1273000,1273000,2025-12-02,2026-08-25,false,false,,Business Case,new_business,Best Case
+MOH-182,Ironwood Authority - International expansion,Ironwood Authority,Renee Gallagher,AE-E19,Enterprise,inbound,Business Case,457000,457000,2025-11-12,2026-08-19,false,false,,Business Case,expansion,Best Case
+MOH-183,Lakefront Financial - Enterprise control plane,Lakefront Financial,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Business Case,762000,762000,2026-01-27,2026-06-11,false,false,,Business Case,new_business,Best Case
+MOH-184,Eastbrook Technologies - Fleet renewal,Eastbrook Technologies,Lucia Barrett,AE-E35,Enterprise,partner,Business Case,630000,630000,2025-09-19,2026-07-17,false,false,,Business Case,renewal,Best Case
+MOH-185,Coalition Consulting - Infrastructure modernization,Coalition Consulting,Vivek Rao,AE-M24,Mid-Market,outbound,Business Case,372000,372000,2026-02-11,2026-06-17,false,false,,Business Case,new_business,Best Case
+MOH-186,Madison Networks - Seat expansion,Madison Networks,Sean Holloway,AE-E32,Enterprise,ae_self_gen,Business Case,589000,589000,2025-11-10,2026-05-05,false,false,,Business Case,expansion,Best Case
+MOH-187,Partners Medical Center - Connectivity platform,Partners Medical Center,Quentin Brooks,AE-E06,Enterprise,outbound,Business Case,419000,419000,2025-08-04,2026-06-10,false,false,,Business Case,new_business,Best Case
+MOH-188,Harborline Systems - Division rollout,Harborline Systems,Leila Haddad,AE-E12,Enterprise,outbound,Business Case,480000,480000,2025-10-31,2026-08-28,false,false,,Business Case,expansion,Best Case
+MOH-189,Hamilton Corporation - Network monitoring suite,Hamilton Corporation,Solene Matsuoka,AE-SE08,Strategic Enterprise,ae_self_gen,Business Case,2841000,2841000,2025-10-23,2026-05-07,false,false,,Business Case,new_business,Best Case
+MOH-190,Elite Networks - Global operations rollout,Elite Networks,Tara Sullivan,AE-E25,Enterprise,outbound,Business Case,840000,840000,2025-11-04,2026-08-21,false,false,,Business Case,new_business,Best Case
+MOH-191,Summit Energy - Supply chain visibility,Summit Energy,Nolan Pierce,AE-E38,Enterprise,inbound,Business Case,420000,420000,2026-02-10,2026-07-06,false,false,,Business Case,new_business,Best Case
+MOH-192,Fairfield Global - Operations renewal,Fairfield Global,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Business Case,1100000,1100000,2025-11-04,2026-08-07,false,false,,Business Case,renewal,Best Case
+MOH-193,Ridgeline Holdings - Enterprise renewal,Ridgeline Holdings,Ananya Krishnamurthy,AE-SE01,Strategic Enterprise,inbound,Business Case,1590000,1590000,2025-12-09,2026-07-01,false,false,,Business Case,renewal,Best Case
+MOH-194,Meadowbrook International - Connectivity platform,Meadowbrook International,Cassius Pell,AE-SE09,Strategic Enterprise,outbound,Business Case,1902000,1902000,2025-08-31,2026-09-02,false,false,,Business Case,new_business,Best Case
+MOH-195,Jefferson Warehousing - Network monitoring suite,Jefferson Warehousing,Ella West,AE-M23,Mid-Market,partner,Business Case,413000,413000,2026-04-03,2026-05-06,false,false,,Business Case,new_business,Best Case
+MOH-196,Cascade Holdings - Platform renewal,Cascade Holdings,Solene Matsuoka,AE-SE08,Strategic Enterprise,outbound,Business Case,1785000,1785000,2025-06-30,2026-07-14,false,false,,Business Case,renewal,Best Case
+MOH-197,Thunderbird Health Systems - Platform renewal,Thunderbird Health Systems,Brennan Cole,AE-E13,Enterprise,inbound,Business Case,324000,324000,2026-02-17,2026-05-15,false,false,,Business Case,renewal,Best Case
+MOH-198,Clearwater Logistics - Infrastructure modernization,Clearwater Logistics,Pablo Serrano,AE-M12,Mid-Market,inbound,Business Case,345000,345000,2026-02-05,2026-05-22,false,false,,Business Case,new_business,Best Case
+MOH-199,Atlas Financial - Operations renewal,Atlas Financial,Nina Kowalski,AE-E01,Enterprise,outbound,Business Case,690000,690000,2025-08-21,2026-09-11,false,false,,Business Case,renewal,Best Case
+MOH-200,Forestview Health Systems - Risk management fabric,Forestview Health Systems,Derek Salazar,AE-E02,Enterprise,outbound,Business Case,742000,742000,2025-08-22,2026-09-09,false,false,,Business Case,new_business,Best Case
+MOH-201,Westfield Engineering - Analytics renewal,Westfield Engineering,Yusuf Bashir,AE-M04,Mid-Market,outbound,Business Case,454000,454000,2025-10-28,2026-09-01,false,false,,Business Case,renewal,Best Case
+MOH-202,Continental Distribution - Seat expansion,Continental Distribution,Rafael Costa,AE-M26,Mid-Market,inbound,Business Case,163000,163000,2025-11-04,2026-07-20,false,false,,Business Case,expansion,Best Case
+MOH-203,Ridgeline Agency - Cross-sell analytics,Ridgeline Agency,June Holloway,AE-M25,Mid-Market,ae_self_gen,Business Case,343000,343000,2026-01-12,2026-08-06,false,false,,Business Case,expansion,Best Case
+MOH-204,Vertex Bank - Enterprise control plane,Vertex Bank,Leila Haddad,AE-E12,Enterprise,inbound,Business Case,762000,762000,2026-01-14,2026-05-22,false,false,,Business Case,new_business,Best Case
+MOH-205,Prestige Consulting - Annual renewal,Prestige Consulting,Indira Vasquez,AE-M01,Mid-Market,inbound,Business Case,350000,350000,2026-02-26,2026-06-04,false,false,,Business Case,renewal,Best Case
+MOH-206,Whitehall Warehousing - Operations renewal,Whitehall Warehousing,Brielle Navarro,AE-M27,Mid-Market,outbound,Business Case,396000,396000,2025-10-28,2026-08-18,false,false,,Business Case,renewal,Best Case
+MOH-207,Lakefront Utilities - Enterprise control plane,Lakefront Utilities,Nolan Pierce,AE-E38,Enterprise,inbound,Business Case,648000,648000,2026-02-03,2026-06-29,false,false,,Business Case,new_business,Best Case
+MOH-208,Northfield Financial - Regional expansion,Northfield Financial,Priya Raman,AE-E03,Enterprise,partner,Business Case,741000,741000,2025-09-15,2026-05-18,false,false,,Business Case,expansion,Best Case
+MOH-209,Consortium Engineering - Data governance layer,Consortium Engineering,Theo Mercer,AE-M28,Mid-Market,ae_self_gen,Business Case,293000,293000,2025-12-08,2026-09-04,false,false,,Business Case,new_business,Best Case
+MOH-210,Meadowbrook Solutions - Platform renewal,Meadowbrook Solutions,Tara Sullivan,AE-E25,Enterprise,ae_self_gen,Business Case,601000,601000,2025-11-19,2026-07-01,false,false,,Business Case,renewal,Best Case
+MOH-211,Greenfield Medical Center - Analytics renewal,Greenfield Medical Center,Sasha Petrov,AE-E18,Enterprise,outbound,Business Case,597000,597000,2025-11-26,2026-06-04,false,false,,Business Case,renewal,Best Case
+MOH-212,Blue Mesa Transport - Cross-sell analytics,Blue Mesa Transport,Freya Jensen,AE-M19,Mid-Market,outbound,Business Case,219000,219000,2025-10-30,2026-07-03,false,false,,Business Case,expansion,Best Case
+MOH-213,Hamilton Utilities - Enterprise renewal,Hamilton Utilities,Peter Novak,AE-E34,Enterprise,partner,Business Case,300000,300000,2026-01-26,2026-09-09,false,false,,Business Case,renewal,Best Case
+MOH-214,Blue Mesa Water District - Fleet telemetry platform,Blue Mesa Water District,Oscar Kim,AE-E11,Enterprise,inbound,Business Case,1027000,1027000,2026-02-27,2026-09-07,false,false,,Business Case,new_business,Best Case
+MOH-215,Vanguard Group - Seat expansion,Vanguard Group,Serena Calloway,AE-SE22,Strategic Enterprise,inbound,Business Case,3161000,3161000,2025-09-23,2026-05-21,false,false,,Business Case,expansion,Best Case
+MOH-216,Falcon Ridge Logistics - Infrastructure modernization,Falcon Ridge Logistics,Rafael Costa,AE-M26,Mid-Market,outbound,Business Case,300000,300000,2025-10-13,2026-07-23,false,false,,Business Case,new_business,Best Case
+MOH-217,Confluence Global - Analytics foundation,Confluence Global,Vivica Hale,AE-SE14,Strategic Enterprise,partner,Business Case,3402000,3402000,2025-06-28,2026-05-27,false,false,,Business Case,new_business,Best Case
+MOH-218,Westfield Group - Enterprise renewal,Westfield Group,Marisol Vega,AE-SE10,Strategic Enterprise,ae_self_gen,Business Case,2068000,2068000,2025-09-09,2026-07-21,false,false,,Business Case,renewal,Best Case
+MOH-219,Granite Peak Enterprises - Platform renewal,Granite Peak Enterprises,Damian Lowe,AE-SE11,Strategic Enterprise,outbound,Business Case,2995000,2995000,2025-06-30,2026-09-11,false,false,,Business Case,renewal,Best Case
+MOH-220,Greenvale Financial - Analytics foundation,Greenvale Financial,Farah Iqbal,AE-E07,Enterprise,outbound,Business Case,933000,933000,2025-08-18,2026-09-07,false,false,,Business Case,new_business,Best Case
+MOH-221,Bedrock Health Systems - Division rollout,Bedrock Health Systems,Peter Novak,AE-E34,Enterprise,inbound,Business Case,1330000,1330000,2025-10-23,2026-08-11,false,false,,Business Case,expansion,Best Case
+MOH-222,Ridgeline Bank - Module expansion,Ridgeline Bank,Marcus Flynn,AE-E28,Enterprise,ae_self_gen,Business Case,1210000,1210000,2026-03-02,2026-08-12,false,false,,Business Case,expansion,Best Case
+MOH-223,Westbrook Engineering - Annual renewal,Westbrook Engineering,Connor Blake,AE-M16,Mid-Market,outbound,Business Case,395000,395000,2025-10-06,2026-06-24,false,false,,Business Case,renewal,Best Case
+MOH-224,Oakdale Medical Center - Security operations center,Oakdale Medical Center,Haruto Sakamoto,AE-E15,Enterprise,partner,Business Case,981000,981000,2026-01-16,2026-09-10,false,false,,Business Case,new_business,Best Case
+MOH-225,Summit Ridge Bank - Operations renewal,Summit Ridge Bank,Marcus Flynn,AE-E28,Enterprise,inbound,Business Case,903000,903000,2025-12-05,2026-09-09,false,false,,Business Case,renewal,Best Case
+MOH-226,Highpoint Realty - Fleet telemetry expansion,Highpoint Realty,Mason Liu,AE-M20,Mid-Market,partner,Business Case,280000,280000,2025-09-29,2026-06-23,false,false,,Business Case,expansion,Best Case
+MOH-227,Keystone Systems - Enterprise renewal,Keystone Systems,Talia Mercer,AE-E14,Enterprise,inbound,Business Case,1081000,1081000,2025-11-11,2026-06-24,false,false,,Business Case,renewal,Best Case
+MOH-228,Heritage Medical Center - Fleet telemetry expansion,Heritage Medical Center,Derek Salazar,AE-E02,Enterprise,inbound,Business Case,743000,743000,2026-01-19,2026-09-14,false,false,,Business Case,expansion,Best Case
+MOH-229,Riverdale Engineering - Connectivity platform,Riverdale Engineering,Kelsey Draper,AE-M09,Mid-Market,outbound,Business Case,344000,344000,2026-01-01,2026-07-30,false,false,,Business Case,new_business,Best Case
+MOH-230,Summit Ridge Freight - Cross-sell analytics,Summit Ridge Freight,Victor Chen,AE-E20,Enterprise,outbound,Business Case,300000,300000,2026-01-15,2026-07-24,false,false,,Business Case,expansion,Best Case
+MOH-231,Pacific Engineering - Usage expansion,Pacific Engineering,Freya Jensen,AE-M19,Mid-Market,outbound,Business Case,169000,169000,2026-02-06,2026-07-13,false,false,,Business Case,expansion,Best Case
+MOH-232,Ironwood Freight - Data governance layer,Ironwood Freight,Leila Haddad,AE-E12,Enterprise,inbound,Business Case,1101000,1101000,2025-08-25,2026-07-28,false,false,,Business Case,new_business,Best Case
+MOH-233,Pinnacle Distribution - Security operations center,Pinnacle Distribution,Kelsey Draper,AE-M09,Mid-Market,outbound,Business Case,168000,168000,2025-12-09,2026-09-09,false,false,,Business Case,new_business,Best Case
+MOH-234,Meadowbrook Bank - Fleet telemetry platform,Meadowbrook Bank,Tara Sullivan,AE-E25,Enterprise,inbound,Business Case,456000,456000,2025-12-05,2026-08-26,false,false,,Business Case,new_business,Best Case
+MOH-235,Covenant Engineering - Regional expansion,Covenant Engineering,Pablo Serrano,AE-M12,Mid-Market,inbound,Business Case,90000,90000,2025-08-29,2026-08-25,false,false,,Business Case,expansion,Best Case
+MOH-236,Watershed Logistics - Analytics renewal,Watershed Logistics,Camille Durand,AE-E10,Enterprise,inbound,Business Case,814000,814000,2025-12-15,2026-06-17,false,false,,Business Case,renewal,Best Case
+MOH-237,Five-Star Group - Fleet telemetry platform,Five-Star Group,Serena Calloway,AE-SE22,Strategic Enterprise,partner,Business Case,2882000,2882000,2026-01-01,2026-06-23,false,false,,Business Case,new_business,Best Case
+MOH-238,Premier Management - Platform renewal,Premier Management,Dana Cooper,AE-M21,Mid-Market,ae_self_gen,Business Case,408000,408000,2025-11-24,2026-05-28,false,false,,Business Case,renewal,Best Case
+MOH-239,Federal Health Systems - Annual renewal,Federal Health Systems,Quentin Brooks,AE-E06,Enterprise,outbound,Business Case,536000,536000,2026-02-05,2026-05-19,false,false,,Business Case,renewal,Best Case
+MOH-240,Fairfield Systems - Division rollout,Fairfield Systems,Amina Hassan,AE-E33,Enterprise,outbound,Business Case,691000,691000,2025-08-28,2026-08-21,false,false,,Business Case,expansion,Best Case
+MOH-241,Thunderbird Bank - Connectivity platform,Thunderbird Bank,Tyler Mbeki,AE-E30,Enterprise,inbound,Business Case,758000,758000,2026-02-24,2026-06-05,false,false,,Business Case,new_business,Best Case
+MOH-242,Thunderbird Trust - Risk management fabric,Thunderbird Trust,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Business Case,2523000,2523000,2025-12-04,2026-06-30,false,false,,Business Case,new_business,Best Case
+MOH-243,Ironwood Capital - Fleet telemetry platform,Ironwood Capital,Chloe Banerjee,AE-SE16,Strategic Enterprise,outbound,Business Case,2229000,2229000,2025-09-12,2026-06-17,false,false,,Business Case,new_business,Best Case
+MOH-244,Hamilton Systems - Analytics renewal,Hamilton Systems,Camille Durand,AE-E10,Enterprise,inbound,Business Case,463000,463000,2026-02-11,2026-06-22,false,false,,Business Case,renewal,Best Case
+MOH-245,Eastbrook Water District - Enterprise renewal,Eastbrook Water District,Simone Duarte,AE-E23,Enterprise,outbound,Business Case,732000,732000,2026-02-03,2026-05-15,false,false,,Business Case,renewal,Best Case
+MOH-246,Copper State Freight - Infrastructure renewal,Copper State Freight,Amelia Foster,AE-E05,Enterprise,outbound,Business Case,764000,764000,2025-08-21,2026-08-19,false,false,,Business Case,renewal,Best Case
+MOH-247,Stonegate Freight - Usage expansion,Stonegate Freight,Derek Salazar,AE-E02,Enterprise,ae_self_gen,Business Case,511000,511000,2025-08-21,2026-08-21,false,false,,Business Case,expansion,Best Case
+MOH-248,Watershed Corporation - Fleet renewal,Watershed Corporation,Rohan Bedi,AE-SE13,Strategic Enterprise,ae_self_gen,Business Case,2421000,2421000,2025-10-01,2026-07-03,false,false,,Business Case,renewal,Best Case
+MOH-249,Confluence Warehousing - Usage expansion,Confluence Warehousing,Rafael Dunn,AE-M14,Mid-Market,ae_self_gen,Business Case,406000,406000,2025-08-08,2026-07-24,false,false,,Business Case,expansion,Best Case
+MOH-250,Copper State Warehousing - Workforce analytics,Copper State Warehousing,Geoffrey Baxter,AE-M06,Mid-Market,inbound,Business Case,204000,204000,2025-08-06,2026-09-15,false,false,,Business Case,new_business,Best Case
+MOH-251,Westfield Medical Center - Compliance automation suite,Westfield Medical Center,Julian Park,AE-E22,Enterprise,outbound,Business Case,317000,317000,2025-11-21,2026-06-23,false,false,,Business Case,new_business,Best Case
+MOH-252,Eagle Rock Financial - Annual renewal,Eagle Rock Financial,Sean Holloway,AE-E32,Enterprise,partner,Business Case,870000,870000,2025-09-08,2026-07-07,false,false,,Business Case,renewal,Best Case
+MOH-253,Five-Star Trust - Global operations rollout,Five-Star Trust,Theron Whitmore,AE-SE05,Strategic Enterprise,partner,Business Case,2049000,2049000,2025-09-30,2026-08-17,false,false,,Business Case,new_business,Best Case
+MOH-254,Confluence Financial - Platform renewal,Confluence Financial,Victor Chen,AE-E20,Enterprise,ae_self_gen,Negotiation,1370000,1370000,2025-11-21,2026-06-22,false,false,,Negotiation,renewal,Commit
+MOH-255,Heritage Retail - Fleet telemetry platform,Heritage Retail,Vivek Rao,AE-M24,Mid-Market,outbound,Negotiation,343000,343000,2025-09-29,2026-06-16,false,false,,Negotiation,new_business,Commit
+MOH-256,Ironwood Realty - Compliance automation suite,Ironwood Realty,Theo Mercer,AE-M28,Mid-Market,outbound,Negotiation,600000,600000,2025-12-10,2026-07-02,false,false,,Negotiation,new_business,Commit
+MOH-257,Fairfield Services - Seat expansion,Fairfield Services,Amina Hassan,AE-E33,Enterprise,outbound,Negotiation,430000,430000,2025-11-20,2026-06-29,false,false,,Negotiation,expansion,Commit
+MOH-258,National Enterprises - Enterprise control plane,National Enterprises,Ananya Krishnamurthy,AE-SE01,Strategic Enterprise,outbound,Negotiation,2597000,2597000,2025-08-06,2026-07-29,false,false,,Negotiation - Vendor Risk,new_business,Commit
+MOH-259,Goldcrest International - Data governance layer,Goldcrest International,Priyam Shah,AE-SE23,Strategic Enterprise,inbound,Negotiation,2948000,2948000,2025-10-07,2026-06-24,false,false,,Negotiation,new_business,Commit
+MOH-260,Oakdale Utilities - Field operations platform,Oakdale Utilities,Hannah Greer,AE-E29,Enterprise,inbound,Negotiation,786000,786000,2025-09-25,2026-07-30,false,false,,Negotiation,new_business,Commit
+MOH-261,Bloomfield Construction - Field operations platform,Bloomfield Construction,Lena Ortiz,AE-M07,Mid-Market,outbound,Negotiation,189000,189000,2025-10-09,2026-07-17,false,false,,Negotiation,new_business,Commit
+MOH-262,Ridgeline Trust - Infrastructure modernization,Ridgeline Trust,Damian Lowe,AE-SE11,Strategic Enterprise,outbound,Negotiation,2436000,2436000,2025-07-24,2026-05-26,false,false,,Negotiation,new_business,Commit
+MOH-263,Flagstone Water District - Enterprise control plane,Flagstone Water District,Priya Raman,AE-E03,Enterprise,outbound,Negotiation,811000,811000,2026-02-26,2026-06-10,false,false,,Negotiation,new_business,Commit
+MOH-264,Confluence Services - Fleet renewal,Confluence Services,Mira Lawson,AE-E21,Enterprise,inbound,Negotiation,629000,629000,2026-01-22,2026-07-03,false,false,,Negotiation,renewal,Commit
+MOH-265,North Coast Design - Enterprise control plane,North Coast Design,Tori Nguyen,AE-M11,Mid-Market,outbound,Negotiation,244000,244000,2026-01-30,2026-06-04,false,false,,Negotiation,new_business,Commit
+MOH-266,Lincoln Holdings - Analytics foundation,Lincoln Holdings,Kaela Ondieki,AE-SE06,Strategic Enterprise,inbound,Negotiation,2052000,2052000,2026-02-03,2026-07-15,false,false,,Negotiation,new_business,Commit
+MOH-267,Confluence Retail - Supply chain visibility,Confluence Retail,Freya Jensen,AE-M19,Mid-Market,ae_self_gen,Negotiation,299000,299000,2025-11-05,2026-05-22,false,false,,Negotiation,new_business,Commit
+MOH-268,Great Basin Health Systems - Infrastructure modernization,Great Basin Health Systems,Julian Park,AE-E22,Enterprise,outbound,Negotiation,1209000,1209000,2026-03-02,2026-07-13,false,false,,Negotiation,new_business,Commit
+MOH-269,Associates Agency - Security operations center,Associates Agency,Indira Vasquez,AE-M01,Mid-Market,outbound,Negotiation,150000,150000,2026-02-27,2026-05-19,false,false,,Negotiation,new_business,Commit
+MOH-270,Apex Water District - Fleet renewal,Apex Water District,Sean Holloway,AE-E32,Enterprise,outbound,Negotiation,604000,604000,2026-01-08,2026-07-02,false,false,,Negotiation,renewal,Commit
+MOH-271,Vertex Water District - Compliance automation suite,Vertex Water District,Farah Iqbal,AE-E07,Enterprise,ae_self_gen,Negotiation,381000,381000,2025-10-09,2026-06-08,false,false,,Negotiation,new_business,Commit
+MOH-272,Arcturus Distribution - Workforce analytics,Arcturus Distribution,Indira Vasquez,AE-M01,Mid-Market,outbound,Negotiation,192000,192000,2026-01-07,2026-06-04,false,false,,Negotiation,new_business,Commit
+MOH-273,Granite Peak Bank - Global operations rollout,Granite Peak Bank,Nina Kowalski,AE-E01,Enterprise,inbound,Negotiation,807000,807000,2025-12-25,2026-05-28,false,false,,Negotiation,new_business,Commit
+MOH-274,Fairfield International - Data governance layer,Fairfield International,Theron Whitmore,AE-SE05,Strategic Enterprise,inbound,Negotiation,2190000,2190000,2025-11-04,2026-07-20,false,false,,Negotiation,new_business,Commit
+MOH-275,Continental Freight - Seat expansion,Continental Freight,Quentin Brooks,AE-E06,Enterprise,outbound,Negotiation,819000,819000,2025-09-15,2026-06-17,false,false,,Negotiation,expansion,Commit
+MOH-276,Five-Star Bank - Connectivity platform,Five-Star Bank,Haruto Sakamoto,AE-E15,Enterprise,ae_self_gen,Negotiation,1044000,1044000,2025-10-23,2026-07-21,false,false,,Negotiation,new_business,Commit
+MOH-277,Atlantic Commerce - Regional expansion,Atlantic Commerce,Phineas Okafor,AE-M02,Mid-Market,inbound,Negotiation,119000,119000,2026-03-09,2026-05-27,false,false,,Negotiation,expansion,Commit
+MOH-278,Frontier Group - Analytics foundation,Frontier Group,Elias Mercer,AE-SE17,Strategic Enterprise,outbound,Negotiation,1100000,1100000,2025-09-25,2026-05-05,false,false,,Negotiation,new_business,Commit
+MOH-279,Ridgecrest Financial - Infrastructure renewal,Ridgecrest Financial,Brennan Cole,AE-E13,Enterprise,ae_self_gen,Negotiation,581000,581000,2026-02-06,2026-06-16,false,false,,Negotiation,renewal,Commit
+MOH-280,Bloomfield Design - Operations renewal,Bloomfield Design,Roman Bell,AE-M22,Mid-Market,partner,Negotiation,321000,321000,2026-03-17,2026-07-15,false,false,,Negotiation,renewal,Commit
+MOH-281,Oakdale Freight - Annual renewal,Oakdale Freight,Dev Kapoor,AE-E26,Enterprise,outbound,Negotiation,1162000,1162000,2026-02-12,2026-06-19,false,false,,Negotiation,renewal,Commit
+MOH-282,Cedarbrook Trust - Add-on security module,Cedarbrook Trust,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Negotiation,1869000,1869000,2025-10-27,2026-06-01,false,false,,Negotiation,expansion,Commit
+MOH-283,Partners Solutions - Global operations rollout,Partners Solutions,Camille Durand,AE-E10,Enterprise,outbound,Negotiation,849000,849000,2025-10-21,2026-06-17,false,false,,Negotiation,new_business,Commit
+MOH-284,Harborline Water District - Analytics renewal,Harborline Water District,Elena Morales,AE-E27,Enterprise,outbound,Negotiation,1132000,1132000,2026-01-22,2026-07-06,false,false,,Negotiation,renewal,Commit
+MOH-285,Whitehall Consulting - Operations renewal,Whitehall Consulting,Rafael Costa,AE-M26,Mid-Market,inbound,Negotiation,361000,361000,2025-11-06,2026-06-12,false,false,,Negotiation,renewal,Commit
+MOH-286,Legacy Capital - Fleet telemetry expansion,Legacy Capital,Chloe Banerjee,AE-SE16,Strategic Enterprise,inbound,Negotiation,2597000,2597000,2025-09-12,2026-05-21,false,false,,Negotiation,expansion,Commit
+MOH-287,Bedrock Bank - Risk management fabric,Bedrock Bank,Marcus Flynn,AE-E28,Enterprise,inbound,Negotiation,1276000,1276000,2025-09-22,2026-07-20,false,false,,Negotiation,new_business,Commit
+MOH-288,Summit Ridge Energy - Supply chain visibility,Summit Ridge Energy,Priyanka Sen,AE-E39,Enterprise,ae_self_gen,Negotiation,641000,641000,2025-11-21,2026-06-04,false,false,,Negotiation,new_business,Commit
+MOH-289,Atlas Industries - Fleet renewal,Atlas Industries,Octavia Nguyen,AE-SE04,Strategic Enterprise,outbound,Negotiation,1538000,1538000,2026-01-28,2026-06-09,false,false,,Negotiation,renewal,Commit
+MOH-290,Fairfield Enterprises - Data governance layer,Fairfield Enterprises,Solene Matsuoka,AE-SE08,Strategic Enterprise,ae_self_gen,Negotiation,2788000,2788000,2026-02-23,2026-07-20,false,false,,Negotiation,new_business,Commit
+MOH-291,Southport Authority - Seat expansion,Southport Authority,Elise Romano,AE-E16,Enterprise,inbound,Negotiation,585000,585000,2025-09-24,2026-05-21,false,false,,Negotiation,expansion,Commit
+MOH-292,Lincoln Partners - Add-on security module,Lincoln Partners,Elias Mercer,AE-SE17,Strategic Enterprise,outbound,Negotiation,3362000,3362000,2025-10-09,2026-05-08,false,false,,Negotiation,expansion,Commit
+MOH-293,Confluence Freight - Fleet telemetry platform,Confluence Freight,Colin Avery,AE-E17,Enterprise,ae_self_gen,Negotiation,823000,823000,2025-10-01,2026-06-19,false,false,,Negotiation,new_business,Commit
+MOH-294,Keystone Distribution - Security operations center,Keystone Distribution,Rafael Dunn,AE-M14,Mid-Market,ae_self_gen,Negotiation,144000,144000,2026-02-13,2026-07-10,false,false,,Negotiation,new_business,Commit
+MOH-295,North Coast Construction - Network monitoring suite,North Coast Construction,Phineas Okafor,AE-M02,Mid-Market,partner,Negotiation,195000,195000,2025-10-29,2026-05-28,false,false,,Negotiation,new_business,Commit
+MOH-296,Brookfield Technologies - Analytics foundation,Brookfield Technologies,Victor Chen,AE-E20,Enterprise,outbound,Negotiation,1142000,1142000,2025-11-11,2026-07-06,false,false,,Negotiation,new_business,Commit
+MOH-297,Palisade Logistics - Seat expansion,Palisade Logistics,Renee Gallagher,AE-E19,Enterprise,outbound,Negotiation,640000,640000,2026-03-04,2026-05-12,false,false,,Negotiation,expansion,Commit
+MOH-298,Confluence Technologies - Regional expansion,Confluence Technologies,Julian Park,AE-E22,Enterprise,ae_self_gen,Negotiation,1052000,1052000,2025-12-05,2026-07-15,false,false,,Negotiation,expansion,Commit
+MOH-299,Ridgeline Water District - Infrastructure modernization,Ridgeline Water District,Sasha Petrov,AE-E18,Enterprise,partner,Negotiation,697000,697000,2025-11-03,2026-05-11,false,false,,Negotiation,new_business,Commit
+MOH-300,Hamilton Solutions - Regional expansion,Hamilton Solutions,Priyanka Sen,AE-E39,Enterprise,ae_self_gen,Negotiation,1086000,1086000,2026-02-09,2026-07-21,false,false,,Negotiation,expansion,Commit
+MOH-301,Stonegate Authority - Operations renewal,Stonegate Authority,Nolan Pierce,AE-E38,Enterprise,inbound,Negotiation,1071000,1071000,2025-10-08,2026-06-18,false,false,,Negotiation,renewal,Commit
+MOH-302,Fairfield Bank - International expansion,Fairfield Bank,Nina Kowalski,AE-E01,Enterprise,outbound,Negotiation,1022000,1022000,2026-01-12,2026-06-09,false,false,,Negotiation,expansion,Commit
+MOH-303,Westfield Networks - Data governance layer,Westfield Networks,Isaac Moreno,AE-E36,Enterprise,inbound,Negotiation,1436000,1436000,2026-02-17,2026-07-08,false,false,,Negotiation,new_business,Commit
+MOH-304,Bloomfield Services - Infrastructure renewal,Bloomfield Services,Isaac Moreno,AE-E36,Enterprise,ae_self_gen,Negotiation,1086000,1086000,2025-09-08,2026-06-02,false,false,,Negotiation,renewal,Commit
+MOH-305,Clearwater Utilities - Operations renewal,Clearwater Utilities,Isaac Moreno,AE-E36,Enterprise,partner,Negotiation,680000,680000,2026-03-03,2026-05-27,false,false,,Negotiation,renewal,Commit
+MOH-306,Federal Solutions - Risk management fabric,Federal Solutions,Isaac Moreno,AE-E36,Enterprise,ae_self_gen,Negotiation,794000,794000,2026-03-16,2026-06-03,false,false,,Negotiation,new_business,Commit
+MOH-307,Bloomfield Utilities - Enterprise control plane,Bloomfield Utilities,Hannah Greer,AE-E29,Enterprise,inbound,Negotiation,1092000,1092000,2025-11-24,2026-06-17,false,false,,Negotiation,new_business,Commit
+MOH-308,Pinnacle Utilities - Field operations platform,Pinnacle Utilities,Ethan Cross,AE-E08,Enterprise,partner,Negotiation,1400000,1400000,2025-10-23,2026-05-27,false,false,,Negotiation,new_business,Commit
+MOH-309,Copper State Bank - Analytics renewal,Copper State Bank,Colin Avery,AE-E17,Enterprise,ae_self_gen,Negotiation,340000,340000,2025-10-01,2026-07-23,false,false,,Negotiation,renewal,Commit
+MOH-310,Flagstone Energy - Control plane expansion,Flagstone Energy,Julian Park,AE-E22,Enterprise,outbound,Negotiation,799000,799000,2025-10-31,2026-06-15,false,false,,Negotiation,expansion,Commit
+MOH-311,Summit Corporation - Security operations center,Summit Corporation,Rohan Bedi,AE-SE13,Strategic Enterprise,outbound,Negotiation,2401000,2401000,2026-02-06,2026-07-13,false,false,,Negotiation,new_business,Commit
+MOH-312,Ironwood Medical Center - Global operations rollout,Ironwood Medical Center,Camille Durand,AE-E10,Enterprise,outbound,Negotiation,584000,584000,2025-09-30,2026-05-07,false,false,,Negotiation,new_business,Commit
+MOH-313,Greenvale Holdings - Annual renewal,Greenvale Holdings,Mireille Bouvier,AE-SE03,Strategic Enterprise,inbound,Negotiation,1127000,1127000,2025-10-16,2026-05-25,false,false,,Negotiation,renewal,Commit
+MOH-314,Coalition Solutions - Infrastructure renewal,Coalition Solutions,Camille Durand,AE-E10,Enterprise,outbound,Negotiation,716000,716000,2025-10-30,2026-07-03,false,false,,Negotiation,renewal,Commit
+MOH-315,Federal Properties - Connectivity platform,Federal Properties,Theo Mercer,AE-M28,Mid-Market,partner,Closed Won,278000,278000,2026-01-30,2026-04-30,true,true,,Closed Won,new_business,Closed
+MOH-316,Bedrock Commerce - Compliance automation suite,Bedrock Commerce,Theo Mercer,AE-M28,Mid-Market,outbound,Closed Won,303000,303000,2025-12-12,2026-02-27,true,true,,Closed Won,new_business,Closed
+MOH-317,Silvergate Technologies - Seat expansion,Silvergate Technologies,Julian Park,AE-E22,Enterprise,partner,Closed Won,907000,907000,2025-12-31,2026-02-19,true,true,,Closed Won,expansion,Closed
+MOH-318,Clearwater Capital - Supply chain visibility,Clearwater Capital,Cassius Pell,AE-SE09,Strategic Enterprise,inbound,Closed Won,3706000,3706000,2025-08-22,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-319,Blue Mesa Medical Center - Secure operations cloud,Blue Mesa Medical Center,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Closed Won,500000,500000,2025-11-13,2026-04-30,true,true,,Closed Won,new_business,Closed
+MOH-320,Eastbrook Capital - Fleet renewal,Eastbrook Capital,Mateo Esposito,AE-SE15,Strategic Enterprise,ae_self_gen,Closed Won,1100000,1100000,2025-07-03,2026-03-20,true,true,,Closed Won,renewal,Closed
+MOH-321,Madison Technologies - Global operations rollout,Madison Technologies,Elise Romano,AE-E16,Enterprise,ae_self_gen,Closed Won,540000,540000,2026-02-18,2026-04-06,true,true,,Closed Won,new_business,Closed
+MOH-322,Goldcrest Consulting - Field operations platform,Goldcrest Consulting,Freya Jensen,AE-M19,Mid-Market,outbound,Closed Won,361000,361000,2026-02-20,2026-04-09,true,true,,Closed Won,new_business,Closed
+MOH-323,Lakewood Global - Operations renewal,Lakewood Global,Lucien Dubois,AE-SE07,Strategic Enterprise,ae_self_gen,Closed Won,2910000,2910000,2026-01-23,2026-02-19,true,true,,Closed Won,renewal,Closed
+MOH-324,Bedrock Trust - Supply chain visibility,Bedrock Trust,Reginald Tannen,AE-SE02,Strategic Enterprise,inbound,Closed Won,3084000,3084000,2025-12-16,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-325,Redstone Health Systems - Workforce analytics,Redstone Health Systems,Victor Chen,AE-E20,Enterprise,ae_self_gen,Closed Won,730000,730000,2026-01-09,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-326,Hilltop Commerce - Operations renewal,Hilltop Commerce,Vivek Rao,AE-M24,Mid-Market,outbound,Closed Won,315000,315000,2025-10-13,2026-03-19,true,true,,Closed Won,renewal,Closed
+MOH-327,National Engineering - Platform renewal,National Engineering,Pablo Serrano,AE-M12,Mid-Market,outbound,Closed Won,210000,210000,2025-11-11,2026-02-24,true,true,,Closed Won,renewal,Closed
+MOH-328,Alliance Consulting - Fleet telemetry platform,Alliance Consulting,June Holloway,AE-M25,Mid-Market,ae_self_gen,Closed Won,410000,410000,2026-03-12,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-329,Redstone Supply - Enterprise control plane,Redstone Supply,Esperanza Vega,AE-M05,Mid-Market,ae_self_gen,Closed Won,357000,357000,2025-09-19,2026-03-10,true,true,,Closed Won,new_business,Closed
+MOH-330,Summit Ridge Systems - Platform renewal,Summit Ridge Systems,Tara Sullivan,AE-E25,Enterprise,inbound,Closed Won,865000,865000,2026-03-02,2026-03-23,true,true,,Closed Won,renewal,Closed
+MOH-331,Rushmore Retail - Risk management fabric,Rushmore Retail,Dana Cooper,AE-M21,Mid-Market,outbound,Closed Won,90000,90000,2025-11-11,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-332,Atlas Networks - Module expansion,Atlas Networks,Hannah Greer,AE-E29,Enterprise,partner,Closed Won,609000,609000,2025-06-12,2026-03-06,true,true,,Closed Won,expansion,Closed
+MOH-333,Midland Construction - Data governance layer,Midland Construction,Geoffrey Baxter,AE-M06,Mid-Market,inbound,Closed Won,199000,199000,2025-11-28,2026-03-25,true,true,,Closed Won,new_business,Closed
+MOH-334,Elite Authority - Add-on security module,Elite Authority,Victor Chen,AE-E20,Enterprise,outbound,Closed Won,877000,877000,2025-10-31,2026-02-19,true,true,,Closed Won,expansion,Closed
+MOH-335,Keystone Global - Global operations rollout,Keystone Global,Damian Lowe,AE-SE11,Strategic Enterprise,outbound,Closed Won,2836000,2836000,2025-08-18,2026-02-04,true,true,,Closed Won,new_business,Closed
+MOH-336,Partners Realty - Cross-sell analytics,Partners Realty,Beatrix Holloway,AE-M03,Mid-Market,outbound,Closed Won,296000,296000,2025-07-28,2026-04-09,true,true,,Closed Won,expansion,Closed
+MOH-337,Forestview Financial - Infrastructure renewal,Forestview Financial,Colin Avery,AE-E17,Enterprise,partner,Closed Won,775000,775000,2025-08-29,2026-04-30,true,true,,Closed Won,renewal,Closed
+MOH-338,Lakefront Authority - Risk management fabric,Lakefront Authority,Jonas Lee,AE-E04,Enterprise,outbound,Closed Won,1056000,1056000,2025-09-17,2026-03-20,true,true,,Closed Won,new_business,Closed
+MOH-339,Continental Medical Center - Operations renewal,Continental Medical Center,Sean Holloway,AE-E32,Enterprise,ae_self_gen,Closed Won,653000,653000,2025-11-12,2026-05-01,true,true,,Closed Won,renewal,Closed
+MOH-340,Five-Star Networks - Data governance layer,Five-Star Networks,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Closed Won,721000,721000,2025-12-01,2026-03-16,true,true,,Closed Won,new_business,Closed
+MOH-341,Springfield Industries - Operations renewal,Springfield Industries,Naomi Sato,AE-SE18,Strategic Enterprise,outbound,Closed Won,1975000,1975000,2026-01-13,2026-02-03,true,true,,Closed Won,renewal,Closed
+MOH-342,Confluence Trust - Secure operations cloud,Confluence Trust,Priyam Shah,AE-SE23,Strategic Enterprise,outbound,Closed Won,3302000,3302000,2025-08-26,2026-04-21,true,true,,Closed Won,new_business,Closed
+MOH-343,Palisade Properties - Workforce analytics,Palisade Properties,Rafael Dunn,AE-M14,Mid-Market,outbound,Closed Won,90000,90000,2025-12-24,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-344,Consortium Authority - Secure operations cloud,Consortium Authority,Talia Mercer,AE-E14,Enterprise,ae_self_gen,Closed Won,499000,499000,2025-08-07,2026-03-26,true,true,,Closed Won,new_business,Closed
+MOH-345,Arcturus Construction - Annual renewal,Arcturus Construction,June Holloway,AE-M25,Mid-Market,ae_self_gen,Closed Won,220000,220000,2025-09-25,2026-04-08,true,true,,Closed Won,renewal,Closed
+MOH-346,Springfield Agency - Infrastructure renewal,Springfield Agency,Indira Vasquez,AE-M01,Mid-Market,inbound,Closed Won,192000,192000,2026-02-13,2026-05-01,true,true,,Closed Won,renewal,Closed
+MOH-347,Confluence Agency - Connectivity platform,Confluence Agency,Esperanza Vega,AE-M05,Mid-Market,outbound,Closed Won,445000,445000,2025-08-07,2026-02-23,true,true,,Closed Won,new_business,Closed
+MOH-348,Madison Energy - Compliance automation suite,Madison Energy,Morgan Tate,AE-E09,Enterprise,outbound,Closed Won,476000,476000,2025-11-18,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-349,Cedarbrook Distribution - Connectivity platform,Cedarbrook Distribution,Indira Vasquez,AE-M01,Mid-Market,outbound,Closed Won,247000,247000,2025-11-17,2026-03-23,true,true,,Closed Won,new_business,Closed
+MOH-350,Westfield Realty - Fleet telemetry expansion,Westfield Realty,Kelsey Draper,AE-M09,Mid-Market,outbound,Closed Won,260000,260000,2025-07-01,2026-05-01,true,true,,Closed Won,expansion,Closed
+MOH-351,Great Basin Energy - Supply chain visibility,Great Basin Energy,Peter Novak,AE-E34,Enterprise,inbound,Closed Won,718000,718000,2025-08-07,2026-03-31,true,true,,Closed Won,new_business,Closed
+MOH-352,Lincoln Medical Center - Usage expansion,Lincoln Medical Center,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Closed Won,983000,983000,2025-12-03,2026-03-13,true,true,,Closed Won,expansion,Closed
+MOH-353,Stonegate Capital - International expansion,Stonegate Capital,Cassius Pell,AE-SE09,Strategic Enterprise,outbound,Closed Won,2617000,2617000,2025-07-23,2026-04-30,true,true,,Closed Won,expansion,Closed
+MOH-354,Confluence Bank - Platform renewal,Confluence Bank,Elise Romano,AE-E16,Enterprise,inbound,Closed Won,767000,767000,2025-07-11,2026-02-11,true,true,,Closed Won,renewal,Closed
+MOH-355,Alliance Health Systems - Control plane expansion,Alliance Health Systems,Quentin Brooks,AE-E06,Enterprise,outbound,Closed Won,470000,470000,2026-02-10,2026-03-10,true,true,,Closed Won,expansion,Closed
+MOH-356,Riverport Industries - Workforce analytics,Riverport Industries,Naomi Sato,AE-SE18,Strategic Enterprise,outbound,Closed Won,1222000,1222000,2026-01-12,2026-03-13,true,true,,Closed Won,new_business,Closed
+MOH-357,Meadowbrook Water District - Analytics renewal,Meadowbrook Water District,Quentin Brooks,AE-E06,Enterprise,inbound,Closed Won,575000,575000,2025-11-20,2026-04-27,true,true,,Closed Won,renewal,Closed
+MOH-358,Hamilton Construction - Division rollout,Hamilton Construction,Esperanza Vega,AE-M05,Mid-Market,outbound,Closed Won,319000,319000,2025-06-02,2026-04-08,true,true,,Closed Won,expansion,Closed
+MOH-359,Legacy Properties - Annual renewal,Legacy Properties,Ella West,AE-M23,Mid-Market,outbound,Closed Won,203000,203000,2025-11-14,2026-03-13,true,true,,Closed Won,renewal,Closed
+MOH-360,Greenfield Transport - Fleet telemetry platform,Greenfield Transport,Grace Wilcox,AE-M13,Mid-Market,ae_self_gen,Closed Won,300000,300000,2025-11-18,2026-04-13,true,true,,Closed Won,new_business,Closed
+MOH-361,Associates Technologies - Fleet telemetry expansion,Associates Technologies,Haruto Sakamoto,AE-E15,Enterprise,partner,Closed Won,886000,886000,2026-02-04,2026-02-24,true,true,,Closed Won,expansion,Closed
+MOH-362,Alliance Warehousing - Operations renewal,Alliance Warehousing,Zoe Larkin,AE-M17,Mid-Market,outbound,Closed Won,113000,113000,2025-09-08,2026-02-03,true,true,,Closed Won,renewal,Closed
+MOH-363,Monroe International - Fleet renewal,Monroe International,Gabriel Nwosu,AE-SE21,Strategic Enterprise,outbound,Closed Won,2800000,2800000,2025-07-23,2026-03-20,true,true,,Closed Won,renewal,Closed
+MOH-364,Monroe Freight - International expansion,Monroe Freight,Jada Collins,AE-E37,Enterprise,inbound,Closed Won,836000,836000,2025-08-11,2026-03-09,true,true,,Closed Won,expansion,Closed
+MOH-365,Pinecrest Medical Center - Fleet telemetry expansion,Pinecrest Medical Center,Hannah Greer,AE-E29,Enterprise,outbound,Closed Won,1019000,1019000,2025-10-15,2026-04-23,true,true,,Closed Won,expansion,Closed
+MOH-366,Clearwater Realty - Division rollout,Clearwater Realty,Caleb Ortiz,AE-M18,Mid-Market,outbound,Closed Won,173000,173000,2026-03-02,2026-04-08,true,true,,Closed Won,expansion,Closed
+MOH-367,Riverport Bank - Platform renewal,Riverport Bank,Isaac Moreno,AE-E36,Enterprise,inbound,Closed Won,615000,615000,2025-10-16,2026-05-01,true,true,,Closed Won,renewal,Closed
+MOH-368,Redstone Technologies - Secure operations cloud,Redstone Technologies,Priyanka Sen,AE-E39,Enterprise,ae_self_gen,Closed Won,1651000,1651000,2025-09-12,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-369,Keystone Networks - Global operations rollout,Keystone Networks,Sean Holloway,AE-E32,Enterprise,partner,Closed Won,610000,610000,2026-01-13,2026-03-20,true,true,,Closed Won,new_business,Closed
+MOH-370,Covenant Authority - Analytics foundation,Covenant Authority,Nicole Bauer,AE-E31,Enterprise,inbound,Closed Won,1287000,1287000,2025-12-11,2026-03-13,true,true,,Closed Won,new_business,Closed
+MOH-371,Jefferson Retail - Compliance automation suite,Jefferson Retail,Mason Liu,AE-M20,Mid-Market,inbound,Closed Won,277000,277000,2025-06-11,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-372,Redstone Construction - Cross-sell analytics,Redstone Construction,Mina Patel,AE-M15,Mid-Market,outbound,Closed Won,370000,370000,2025-06-19,2026-03-16,true,true,,Closed Won,expansion,Closed
+MOH-373,Rushmore Industries - Supply chain visibility,Rushmore Industries,Victor Laurent,AE-SE19,Strategic Enterprise,outbound,Closed Won,1915000,1915000,2025-12-12,2026-02-02,true,true,,Closed Won,new_business,Closed
+MOH-374,Frontier Distribution - Infrastructure modernization,Frontier Distribution,Brielle Navarro,AE-M27,Mid-Market,outbound,Closed Won,341000,341000,2025-09-30,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-375,Rushmore Freight - Analytics foundation,Rushmore Freight,Sean Holloway,AE-E32,Enterprise,outbound,Closed Won,849000,849000,2025-10-23,2026-03-30,true,true,,Closed Won,new_business,Closed
+MOH-376,Cornerstone Logistics - Risk management fabric,Cornerstone Logistics,Roman Bell,AE-M22,Mid-Market,ae_self_gen,Closed Won,346000,346000,2026-02-23,2026-03-23,true,true,,Closed Won,new_business,Closed
+MOH-377,Granite Peak Capital - Connectivity platform,Granite Peak Capital,Octavia Nguyen,AE-SE04,Strategic Enterprise,outbound,Closed Won,2945000,2945000,2026-03-04,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-378,National Logistics - Analytics foundation,National Logistics,Amina Hassan,AE-E33,Enterprise,outbound,Closed Won,963000,963000,2025-08-13,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-379,Brookfield Utilities - Analytics renewal,Brookfield Utilities,Sasha Petrov,AE-E18,Enterprise,outbound,Closed Won,955000,955000,2026-02-16,2026-03-13,true,true,,Closed Won,renewal,Closed
+MOH-380,Meadowbrook Health Systems - Usage expansion,Meadowbrook Health Systems,Dev Kapoor,AE-E26,Enterprise,outbound,Closed Won,1126000,1126000,2026-01-08,2026-05-01,true,true,,Closed Won,expansion,Closed
+MOH-381,Coalition Capital - Fleet telemetry platform,Coalition Capital,Mireille Bouvier,AE-SE03,Strategic Enterprise,inbound,Closed Won,1434000,1434000,2025-09-03,2026-02-04,true,true,,Closed Won,new_business,Closed
+MOH-382,Pioneer Properties - Secure operations cloud,Pioneer Properties,Tori Nguyen,AE-M11,Mid-Market,outbound,Closed Won,243000,243000,2025-11-28,2026-03-06,true,true,,Closed Won,new_business,Closed
+MOH-383,Highpoint Consulting - Division rollout,Highpoint Consulting,Beatrix Holloway,AE-M03,Mid-Market,inbound,Closed Won,253000,253000,2025-12-26,2026-04-20,true,true,,Closed Won,expansion,Closed
+MOH-384,Frontier Freight - Network monitoring suite,Frontier Freight,Brennan Cole,AE-E13,Enterprise,inbound,Closed Won,1080000,1080000,2025-09-12,2026-03-13,true,true,,Closed Won,new_business,Closed
+MOH-385,Pinecrest Transport - Compliance automation suite,Pinecrest Transport,Esperanza Vega,AE-M05,Mid-Market,outbound,Closed Won,286000,286000,2025-07-18,2026-03-09,true,true,,Closed Won,new_business,Closed
+MOH-386,Meadowbrook Logistics - Fleet renewal,Meadowbrook Logistics,Roman Bell,AE-M22,Mid-Market,outbound,Closed Won,150000,150000,2025-12-19,2026-03-23,true,true,,Closed Won,renewal,Closed
+MOH-387,Capstone Supply - Regional expansion,Capstone Supply,Yusuf Bashir,AE-M04,Mid-Market,outbound,Closed Won,182000,182000,2025-09-09,2026-04-02,true,true,,Closed Won,expansion,Closed
+MOH-388,Greenfield Agency - Infrastructure modernization,Greenfield Agency,Lena Ortiz,AE-M07,Mid-Market,inbound,Closed Won,176000,176000,2025-12-12,2026-03-18,true,true,,Closed Won,new_business,Closed
+MOH-389,Madison Agency - Analytics foundation,Madison Agency,Lena Ortiz,AE-M07,Mid-Market,outbound,Closed Won,160000,160000,2025-12-18,2026-02-20,true,true,,Closed Won,new_business,Closed
+MOH-390,Silvergate Solutions - Risk management fabric,Silvergate Solutions,Brennan Cole,AE-E13,Enterprise,ae_self_gen,Closed Won,851000,851000,2025-08-01,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-391,Ridgecrest Services - Enterprise renewal,Ridgecrest Services,Marcus Flynn,AE-E28,Enterprise,inbound,Closed Won,300000,300000,2026-01-06,2026-03-17,true,true,,Closed Won,renewal,Closed
+MOH-392,Cascade Water District - Global operations rollout,Cascade Water District,Hannah Greer,AE-E29,Enterprise,outbound,Closed Won,1361000,1361000,2025-12-12,2026-04-10,true,true,,Closed Won,new_business,Closed
+MOH-393,Heritage Design - Supply chain visibility,Heritage Design,Vivek Rao,AE-M24,Mid-Market,ae_self_gen,Closed Won,212000,212000,2025-07-01,2026-03-09,true,true,,Closed Won,new_business,Closed
+MOH-394,Thunderbird Commerce - Regional expansion,Thunderbird Commerce,Brielle Navarro,AE-M27,Mid-Market,outbound,Closed Won,190000,190000,2025-07-24,2026-04-21,true,true,,Closed Won,expansion,Closed
+MOH-395,Palisade Authority - Fleet renewal,Palisade Authority,Brennan Cole,AE-E13,Enterprise,inbound,Closed Won,1260000,1260000,2025-11-04,2026-02-12,true,true,,Closed Won,renewal,Closed
+MOH-396,Lakewood Solutions - Control plane expansion,Lakewood Solutions,Simone Duarte,AE-E23,Enterprise,partner,Closed Won,713000,713000,2025-07-08,2026-02-04,true,true,,Closed Won,expansion,Closed
+MOH-397,Zenith Financial - Analytics renewal,Zenith Financial,Nicole Bauer,AE-E31,Enterprise,partner,Closed Won,954000,954000,2026-03-20,2026-05-01,true,true,,Closed Won,renewal,Closed
+MOH-398,Harborline Engineering - Field operations platform,Harborline Engineering,Omar Haddad,AE-M08,Mid-Market,partner,Closed Won,241000,241000,2025-10-20,2026-04-15,true,true,,Closed Won,new_business,Closed
+MOH-399,Silvergate Design - Connectivity platform,Silvergate Design,Indira Vasquez,AE-M01,Mid-Market,outbound,Closed Won,463000,463000,2026-01-26,2026-04-24,true,true,,Closed Won,new_business,Closed
+MOH-400,Redstone International - Regional expansion,Redstone International,Serena Calloway,AE-SE22,Strategic Enterprise,outbound,Closed Won,2289000,2289000,2025-07-21,2026-05-01,true,true,,Closed Won,expansion,Closed
+MOH-401,Elite Water District - Fleet telemetry expansion,Elite Water District,Derek Salazar,AE-E02,Enterprise,outbound,Closed Won,525000,525000,2025-07-08,2026-03-10,true,true,,Closed Won,expansion,Closed
+MOH-402,Capstone Properties - Infrastructure renewal,Capstone Properties,Rafael Costa,AE-M26,Mid-Market,outbound,Closed Won,306000,306000,2025-09-01,2026-02-13,true,true,,Closed Won,renewal,Closed
+MOH-403,Partners Authority - Enterprise renewal,Partners Authority,Farah Iqbal,AE-E07,Enterprise,ae_self_gen,Closed Won,1135000,1135000,2025-11-28,2026-04-13,true,true,,Closed Won,renewal,Closed
+MOH-404,Tri-State Financial - Fleet telemetry platform,Tri-State Financial,Quentin Brooks,AE-E06,Enterprise,inbound,Closed Won,1037000,1037000,2025-12-31,2026-02-06,true,true,,Closed Won,new_business,Closed
+MOH-405,Atlas Capital - Infrastructure renewal,Atlas Capital,Priyam Shah,AE-SE23,Strategic Enterprise,outbound,Closed Won,1654000,1654000,2026-03-09,2026-05-01,true,true,,Closed Won,renewal,Closed
+MOH-406,Westfield Partners - Fleet renewal,Westfield Partners,Elias Mercer,AE-SE17,Strategic Enterprise,inbound,Closed Won,2462000,2462000,2025-12-29,2026-05-01,true,true,,Closed Won,renewal,Closed
+MOH-407,Highpoint Partners - Fleet telemetry platform,Highpoint Partners,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Closed Won,1749000,1749000,2025-10-24,2026-04-16,true,true,,Closed Won,new_business,Closed
+MOH-408,Zenith Realty - Secure operations cloud,Zenith Realty,Ella West,AE-M23,Mid-Market,ae_self_gen,Closed Won,206000,206000,2025-12-12,2026-04-09,true,true,,Closed Won,new_business,Closed
+MOH-409,Atlantic Energy - Connectivity platform,Atlantic Energy,Talia Mercer,AE-E14,Enterprise,outbound,Closed Won,718000,718000,2025-09-26,2026-04-22,true,true,,Closed Won,new_business,Closed
+MOH-410,Zenith Authority - Supply chain visibility,Zenith Authority,Mira Lawson,AE-E21,Enterprise,outbound,Closed Won,501000,501000,2025-12-26,2026-04-17,true,true,,Closed Won,new_business,Closed
+MOH-411,Frontier Energy - Platform renewal,Frontier Energy,Jonas Lee,AE-E04,Enterprise,ae_self_gen,Closed Won,843000,843000,2025-09-26,2026-04-17,true,true,,Closed Won,renewal,Closed
+MOH-412,Ridgeline Engineering - Global operations rollout,Ridgeline Engineering,Zoe Larkin,AE-M17,Mid-Market,outbound,Closed Won,345000,345000,2025-07-28,2026-04-16,true,true,,Closed Won,new_business,Closed
+MOH-413,Bedrock Properties - Division rollout,Bedrock Properties,June Holloway,AE-M25,Mid-Market,partner,Closed Won,289000,289000,2025-12-25,2026-02-10,true,true,,Closed Won,expansion,Closed
+MOH-414,Ridgecrest Engineering - Analytics renewal,Ridgecrest Engineering,Ella West,AE-M23,Mid-Market,inbound,Closed Won,325000,325000,2025-12-09,2026-04-14,true,true,,Closed Won,renewal,Closed
+MOH-415,Creekside Properties - International expansion,Creekside Properties,Mina Patel,AE-M15,Mid-Market,outbound,Closed Won,410000,410000,2025-07-10,2026-02-10,true,true,,Closed Won,expansion,Closed
+MOH-416,Hilltop Distribution - Enterprise renewal,Hilltop Distribution,Lena Ortiz,AE-M07,Mid-Market,outbound,Closed Won,222000,222000,2025-12-31,2026-04-06,true,true,,Closed Won,renewal,Closed
+MOH-417,Westfield Corporation - Data governance layer,Westfield Corporation,Gabriel Nwosu,AE-SE21,Strategic Enterprise,outbound,Closed Won,3453000,3453000,2025-09-15,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-418,Southport Solutions - Workforce analytics,Southport Solutions,Morgan Tate,AE-E09,Enterprise,outbound,Closed Won,734000,734000,2025-07-07,2026-03-27,true,true,,Closed Won,new_business,Closed
+MOH-419,Southport Services - Enterprise renewal,Southport Services,Nolan Pierce,AE-E38,Enterprise,outbound,Closed Won,952000,952000,2025-08-01,2026-04-15,true,true,,Closed Won,renewal,Closed
+MOH-420,Ridgeline Authority - Infrastructure renewal,Ridgeline Authority,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Closed Won,1399000,1399000,2025-12-08,2026-04-23,true,true,,Closed Won,renewal,Closed
+MOH-421,Madison Industries - Control plane expansion,Madison Industries,Solene Matsuoka,AE-SE08,Strategic Enterprise,outbound,Closed Won,3664000,3664000,2025-07-11,2026-03-27,true,true,,Closed Won,expansion,Closed
+MOH-422,Madison Global - Regional expansion,Madison Global,Solene Matsuoka,AE-SE08,Strategic Enterprise,outbound,Closed Won,1100000,1100000,2025-09-05,2026-04-29,true,true,,Closed Won,expansion,Closed
+MOH-423,Northfield Corporation - Network monitoring suite,Northfield Corporation,Helena Strauss,AE-SE12,Strategic Enterprise,outbound,Closed Won,3019000,3019000,2025-11-24,2026-02-16,true,true,,Closed Won,new_business,Closed
+MOH-424,Meridian Warehousing - Usage expansion,Meridian Warehousing,Pablo Serrano,AE-M12,Mid-Market,outbound,Closed Won,120000,120000,2025-08-22,2026-05-01,true,true,,Closed Won,expansion,Closed
+MOH-425,Covenant Properties - Infrastructure renewal,Covenant Properties,Kelsey Draper,AE-M09,Mid-Market,inbound,Closed Won,90000,90000,2025-10-30,2026-02-27,true,true,,Closed Won,renewal,Closed
+MOH-426,Covenant Networks - Global operations rollout,Covenant Networks,Farah Iqbal,AE-E07,Enterprise,ae_self_gen,Closed Won,544000,544000,2025-07-14,2026-04-14,true,true,,Closed Won,new_business,Closed
+MOH-427,Blackwater Corporation - Usage expansion,Blackwater Corporation,Victor Laurent,AE-SE19,Strategic Enterprise,ae_self_gen,Closed Won,2701000,2701000,2025-10-03,2026-04-16,true,true,,Closed Won,expansion,Closed
+MOH-428,Cornerstone Consulting - Enterprise renewal,Cornerstone Consulting,Lena Ortiz,AE-M07,Mid-Market,inbound,Closed Won,308000,308000,2025-12-15,2026-02-27,true,true,,Closed Won,renewal,Closed
+MOH-429,Clearwater Freight - Secure operations cloud,Clearwater Freight,Isaac Moreno,AE-E36,Enterprise,inbound,Closed Won,1221000,1221000,2026-03-06,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-430,Pacific Transport - Operations renewal,Pacific Transport,Rafael Dunn,AE-M14,Mid-Market,inbound,Closed Won,436000,436000,2025-07-28,2026-04-09,true,true,,Closed Won,renewal,Closed
+MOH-431,Midland Industries - Fleet renewal,Midland Industries,Gabriel Nwosu,AE-SE21,Strategic Enterprise,partner,Closed Won,1993000,1993000,2025-12-18,2026-04-15,true,true,,Closed Won,renewal,Closed
+MOH-432,Pinecrest Water District - Supply chain visibility,Pinecrest Water District,Elise Romano,AE-E16,Enterprise,ae_self_gen,Closed Won,794000,794000,2025-09-26,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-433,Greenvale Properties - Supply chain visibility,Greenvale Properties,Kelsey Draper,AE-M09,Mid-Market,partner,Closed Won,359000,359000,2025-11-21,2026-03-16,true,true,,Closed Won,new_business,Closed
+MOH-434,Forestview Logistics - Fleet telemetry platform,Forestview Logistics,Vivek Rao,AE-M24,Mid-Market,partner,Closed Won,353000,353000,2026-03-27,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-435,Pinecrest Corporation - Workforce analytics,Pinecrest Corporation,Helena Strauss,AE-SE12,Strategic Enterprise,inbound,Closed Won,2951000,2951000,2025-11-04,2026-04-21,true,true,,Closed Won,new_business,Closed
+MOH-436,Whitehall Management - Analytics renewal,Whitehall Management,Yusuf Bashir,AE-M04,Mid-Market,partner,Closed Won,364000,364000,2025-07-04,2026-02-27,true,true,,Closed Won,renewal,Closed
+MOH-437,Riverport Freight - Secure operations cloud,Riverport Freight,Ethan Cross,AE-E08,Enterprise,inbound,Closed Won,1102000,1102000,2026-01-29,2026-04-01,true,true,,Closed Won,new_business,Closed
+MOH-438,Blackwater Global - Seat expansion,Blackwater Global,Imogen Price,AE-SE20,Strategic Enterprise,partner,Closed Won,2048000,2048000,2026-01-30,2026-02-20,true,true,,Closed Won,expansion,Closed
+MOH-439,Summit Ridge Medical Center - Fleet telemetry platform,Summit Ridge Medical Center,Brennan Cole,AE-E13,Enterprise,partner,Closed Won,846000,846000,2025-08-08,2026-02-27,true,true,,Closed Won,new_business,Closed
+MOH-440,Westfield International - Supply chain visibility,Westfield International,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Closed Won,3419000,3419000,2025-08-19,2026-03-31,true,true,,Closed Won,new_business,Closed
+MOH-441,Midland Services - Supply chain visibility,Midland Services,Nicole Bauer,AE-E31,Enterprise,ae_self_gen,Closed Won,1068000,1068000,2025-12-15,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-442,Capstone Holdings - Global operations rollout,Capstone Holdings,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Closed Won,2500000,2500000,2026-01-30,2026-04-16,true,true,,Closed Won,new_business,Closed
+MOH-443,Summit Ridge Realty - Fleet renewal,Summit Ridge Realty,Ella West,AE-M23,Mid-Market,ae_self_gen,Closed Won,358000,358000,2025-10-15,2026-03-02,true,true,,Closed Won,renewal,Closed
+MOH-444,Elite Warehousing - Data governance layer,Elite Warehousing,Beatrix Holloway,AE-M03,Mid-Market,outbound,Closed Won,223000,223000,2025-12-11,2026-03-30,true,true,,Closed Won,new_business,Closed
+MOH-445,Apex Capital - Add-on security module,Apex Capital,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Closed Won,2233000,2233000,2025-10-13,2026-03-19,true,true,,Closed Won,expansion,Closed
+MOH-446,Eastbrook Utilities - Usage expansion,Eastbrook Utilities,Amelia Foster,AE-E05,Enterprise,outbound,Closed Won,551000,551000,2025-10-03,2026-03-03,true,true,,Closed Won,expansion,Closed
+MOH-447,Hilltop Freight - Analytics renewal,Hilltop Freight,Nicole Bauer,AE-E31,Enterprise,outbound,Closed Won,865000,865000,2025-06-13,2026-02-03,true,true,,Closed Won,renewal,Closed
+MOH-448,Hilltop Logistics - Fleet telemetry expansion,Hilltop Logistics,Isaac Moreno,AE-E36,Enterprise,ae_self_gen,Closed Won,1048000,1048000,2025-12-17,2026-03-04,true,true,,Closed Won,expansion,Closed
+MOH-449,Watershed Consulting - Connectivity platform,Watershed Consulting,Kelsey Draper,AE-M09,Mid-Market,outbound,Closed Won,398000,398000,2025-06-04,2026-05-01,true,true,,Closed Won,new_business,Closed
+MOH-450,Highpoint Warehousing - Risk management fabric,Highpoint Warehousing,Adrian Moss,AE-M10,Mid-Market,ae_self_gen,Closed Won,117000,117000,2025-10-03,2026-02-03,true,true,,Closed Won,new_business,Closed
+MOH-451,Oakdale Industries - Network monitoring suite,Oakdale Industries,Naomi Sato,AE-SE18,Strategic Enterprise,outbound,Closed Won,1877000,1877000,2025-12-01,2026-03-27,true,true,,Closed Won,new_business,Closed
+MOH-452,Alliance Global - Analytics renewal,Alliance Global,Helena Strauss,AE-SE12,Strategic Enterprise,inbound,Closed Won,1599000,1599000,2026-01-23,2026-03-25,true,true,,Closed Won,renewal,Closed
+MOH-453,Associates Warehousing - Analytics foundation,Associates Warehousing,Mason Liu,AE-M20,Mid-Market,outbound,Closed Won,139000,139000,2025-11-24,2026-04-01,true,true,,Closed Won,new_business,Closed
+MOH-454,National Freight - Risk management fabric,National Freight,Amelia Foster,AE-E05,Enterprise,outbound,Closed Won,1091000,1091000,2025-06-19,2026-02-13,true,true,,Closed Won,new_business,Closed
+MOH-455,Hamilton Logistics - Usage expansion,Hamilton Logistics,Talia Mercer,AE-E14,Enterprise,outbound,Closed Won,872000,872000,2025-06-25,2026-03-12,true,true,,Closed Won,expansion,Closed
+MOH-456,Eagle Rock Realty - Cross-sell analytics,Eagle Rock Realty,Theo Mercer,AE-M28,Mid-Market,ae_self_gen,Closed Won,312000,312000,2026-03-24,2026-04-17,true,true,,Closed Won,expansion,Closed
+MOH-457,Watershed Health Systems - Platform renewal,Watershed Health Systems,Farah Iqbal,AE-E07,Enterprise,inbound,Closed Won,628000,628000,2025-10-10,2026-02-16,true,true,,Closed Won,renewal,Closed
+MOH-458,Silvergate Agency - Data governance layer,Silvergate Agency,Omar Haddad,AE-M08,Mid-Market,inbound,Closed Won,234000,234000,2025-07-15,2026-04-09,true,true,,Closed Won,new_business,Closed
+MOH-459,Cascade Enterprises - Enterprise renewal,Cascade Enterprises,Marisol Vega,AE-SE10,Strategic Enterprise,partner,Closed Won,2938000,2938000,2025-07-14,2026-02-05,true,true,,Closed Won,renewal,Closed
+MOH-460,Highpoint Services - Operations renewal,Highpoint Services,Dev Kapoor,AE-E26,Enterprise,outbound,Closed Won,624000,624000,2026-01-26,2026-04-01,true,true,,Closed Won,renewal,Closed
+MOH-461,Pacific Bank - Infrastructure modernization,Pacific Bank,Amelia Foster,AE-E05,Enterprise,outbound,Closed Won,612000,612000,2025-10-21,2026-04-09,true,true,,Closed Won,new_business,Closed
+MOH-462,Watershed Management - Workforce analytics,Watershed Management,Caleb Ortiz,AE-M18,Mid-Market,outbound,Closed Won,212000,212000,2025-09-17,2026-02-25,true,true,,Closed Won,new_business,Closed
+MOH-463,Riverport Medical Center - International expansion,Riverport Medical Center,Renee Gallagher,AE-E19,Enterprise,outbound,Closed Won,756000,756000,2026-02-02,2026-04-07,true,true,,Closed Won,expansion,Closed
+MOH-464,Five-Star Industries - Compliance automation suite,Five-Star Industries,Elias Mercer,AE-SE17,Strategic Enterprise,inbound,Closed Won,1571000,1571000,2025-09-17,2026-02-16,true,true,,Closed Won,new_business,Closed
+MOH-465,Pioneer Logistics - Workforce analytics,Pioneer Logistics,Amina Hassan,AE-E33,Enterprise,outbound,Closed Won,490000,490000,2025-10-29,2026-03-09,true,true,,Closed Won,new_business,Closed
+MOH-466,Prestige Management - Operations renewal,Prestige Management,Lena Ortiz,AE-M07,Mid-Market,inbound,Closed Won,218000,218000,2025-12-12,2026-02-02,true,true,,Closed Won,renewal,Closed
+MOH-467,Midland Holdings - Data governance layer,Midland Holdings,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Closed Won,2171000,2171000,2025-10-06,2026-03-16,true,true,,Closed Won,new_business,Closed
+MOH-468,Lakewood Systems - Regional expansion,Lakewood Systems,Sean Holloway,AE-E32,Enterprise,outbound,Closed Lost,649000,649000,2025-08-14,2026-04-22,true,false,No decision — budget frozen,Closed Lost,expansion,Closed
+MOH-469,Lincoln Construction - Workforce analytics,Lincoln Construction,Vivek Rao,AE-M24,Mid-Market,outbound,Closed Lost,303000,303000,2026-01-06,2026-03-20,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-470,Northfield Global - Compliance automation suite,Northfield Global,Gabriel Nwosu,AE-SE21,Strategic Enterprise,outbound,Closed Lost,3103000,3103000,2025-09-23,2026-02-19,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-471,Thunderbird Systems - International expansion,Thunderbird Systems,Camille Durand,AE-E10,Enterprise,outbound,Closed Lost,756000,756000,2026-01-23,2026-03-04,true,false,Champion left company,Closed Lost,expansion,Closed
+MOH-472,Lincoln Global - Seat expansion,Lincoln Global,Kaela Ondieki,AE-SE06,Strategic Enterprise,ae_self_gen,Closed Lost,2890000,2890000,2025-12-30,2026-02-10,true,false,Executive sponsor change,Closed Lost,expansion,Closed
+MOH-473,National International - Workforce analytics,National International,Serena Calloway,AE-SE22,Strategic Enterprise,outbound,Closed Lost,2788000,2788000,2025-11-11,2026-05-01,true,false,No decision — budget frozen,Closed Lost,new_business,Closed
+MOH-474,Fairfield Energy - Analytics renewal,Fairfield Energy,Jonas Lee,AE-E04,Enterprise,inbound,Closed Lost,623000,623000,2026-03-19,2026-04-29,true,false,Lost on price to LedgerFox,Closed Lost,renewal,Closed
+MOH-475,Monroe Medical Center - Usage expansion,Monroe Medical Center,Hannah Greer,AE-E29,Enterprise,ae_self_gen,Closed Lost,833000,833000,2026-03-02,2026-04-06,true,false,Lost to incumbent renewal,Closed Lost,expansion,Closed
+MOH-476,Lakefront Technologies - Supply chain visibility,Lakefront Technologies,Priya Raman,AE-E03,Enterprise,outbound,Closed Lost,660000,660000,2025-08-08,2026-03-04,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-477,Alliance Utilities - Operations renewal,Alliance Utilities,Renee Gallagher,AE-E19,Enterprise,inbound,Closed Lost,688000,688000,2025-12-22,2026-02-03,true,false,Lost on price to LedgerFox,Closed Lost,renewal,Closed
+MOH-478,Ironwood Health Systems - Seat expansion,Ironwood Health Systems,Camille Durand,AE-E10,Enterprise,outbound,Closed Lost,427000,427000,2025-09-18,2026-03-17,true,false,Lost on price to LedgerFox,Closed Lost,expansion,Closed
+MOH-479,Eastbrook Distribution - Data governance layer,Eastbrook Distribution,Zoe Larkin,AE-M17,Mid-Market,outbound,Closed Lost,360000,360000,2025-11-26,2026-02-13,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-480,Blackwater Medical Center - Risk management fabric,Blackwater Medical Center,Julian Park,AE-E22,Enterprise,outbound,Closed Lost,951000,951000,2025-06-12,2026-04-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-481,Midland Health Systems - Infrastructure modernization,Midland Health Systems,Renee Gallagher,AE-E19,Enterprise,outbound,Closed Lost,404000,404000,2025-10-30,2026-04-14,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-482,Pacific Supply - Analytics renewal,Pacific Supply,Vivek Rao,AE-M24,Mid-Market,inbound,Closed Lost,227000,227000,2025-11-12,2026-04-16,true,false,No decision — budget frozen,Closed Lost,renewal,Closed
+MOH-483,Confluence Holdings - Compliance automation suite,Confluence Holdings,Kaela Ondieki,AE-SE06,Strategic Enterprise,outbound,Closed Lost,1362000,1362000,2025-09-17,2026-02-18,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-484,Goldcrest Services - Enterprise renewal,Goldcrest Services,Quentin Brooks,AE-E06,Enterprise,ae_self_gen,Closed Lost,300000,300000,2025-11-28,2026-04-16,true,false,No decision,Closed Lost,renewal,Closed
+MOH-485,Silvergate Global - Infrastructure modernization,Silvergate Global,Kaela Ondieki,AE-SE06,Strategic Enterprise,ae_self_gen,Closed Lost,2075000,2075000,2026-02-02,2026-04-06,true,false,No decision,Closed Lost,new_business,Closed
+MOH-486,Heritage Services - Data governance layer,Heritage Services,Simone Duarte,AE-E23,Enterprise,outbound,Closed Lost,353000,353000,2025-06-06,2026-03-20,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-487,Alliance Realty - Connectivity platform,Alliance Realty,Zoe Larkin,AE-M17,Mid-Market,ae_self_gen,Closed Lost,244000,244000,2025-09-16,2026-02-17,true,false,Executive sponsor change,Closed Lost,new_business,Closed
+MOH-488,Midland Bank - Secure operations cloud,Midland Bank,Farah Iqbal,AE-E07,Enterprise,outbound,Closed Lost,892000,892000,2025-07-10,2026-02-10,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-489,Keystone Solutions - Supply chain visibility,Keystone Solutions,Nolan Pierce,AE-E38,Enterprise,outbound,Closed Lost,1121000,1121000,2026-01-05,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-490,Prestige Freight - Enterprise control plane,Prestige Freight,Jonas Lee,AE-E04,Enterprise,outbound,Closed Lost,883000,883000,2025-09-09,2026-04-06,true,false,No decision,Closed Lost,new_business,Closed
+MOH-491,Northfield Design - Infrastructure modernization,Northfield Design,Zoe Larkin,AE-M17,Mid-Market,outbound,Closed Lost,244000,244000,2025-07-15,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-492,Summit Solutions - Annual renewal,Summit Solutions,Jada Collins,AE-E37,Enterprise,ae_self_gen,Closed Lost,368000,368000,2025-12-23,2026-02-26,true,false,Lost on price to LedgerFox,Closed Lost,renewal,Closed
+MOH-493,Tri-State Services - Enterprise control plane,Tri-State Services,Amina Hassan,AE-E33,Enterprise,outbound,Closed Lost,547000,547000,2025-06-12,2026-03-16,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-494,Springfield Management - Annual renewal,Springfield Management,Esperanza Vega,AE-M05,Mid-Market,partner,Closed Lost,219000,219000,2025-07-02,2026-02-18,true,false,Competitor won — LedgerFox,Closed Lost,renewal,Closed
+MOH-495,Watershed Water District - Workforce analytics,Watershed Water District,Haruto Sakamoto,AE-E15,Enterprise,outbound,Closed Lost,737000,737000,2025-09-05,2026-02-13,true,false,Executive sponsor change,Closed Lost,new_business,Closed
+MOH-496,Tri-State Global - Platform renewal,Tri-State Global,Chloe Banerjee,AE-SE16,Strategic Enterprise,partner,Closed Lost,2687000,2687000,2026-01-06,2026-02-10,true,false,Lost on price to LedgerFox,Closed Lost,renewal,Closed
+MOH-497,Great Basin Corporation - Global operations rollout,Great Basin Corporation,Imogen Price,AE-SE20,Strategic Enterprise,outbound,Closed Lost,1667000,1667000,2025-09-08,2026-05-01,true,false,No decision,Closed Lost,new_business,Closed
+MOH-498,Highpoint Utilities - Security operations center,Highpoint Utilities,Nolan Pierce,AE-E38,Enterprise,outbound,Closed Lost,865000,865000,2025-06-04,2026-02-25,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-499,Harborline Management - Enterprise control plane,Harborline Management,Omar Haddad,AE-M08,Mid-Market,outbound,Closed Lost,472000,472000,2025-07-04,2026-02-25,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-500,Confluence Utilities - Supply chain visibility,Confluence Utilities,Simone Duarte,AE-E23,Enterprise,outbound,Closed Lost,627000,627000,2026-03-03,2026-04-17,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-501,Westfield Industries - Data governance layer,Westfield Industries,Serena Calloway,AE-SE22,Strategic Enterprise,outbound,Closed Lost,2625000,2625000,2025-11-10,2026-03-05,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-502,Creekside Partners - Global operations rollout,Creekside Partners,Imogen Price,AE-SE20,Strategic Enterprise,ae_self_gen,Closed Lost,2825000,2825000,2025-12-08,2026-04-30,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-503,Prestige Utilities - Risk management fabric,Prestige Utilities,Quentin Brooks,AE-E06,Enterprise,outbound,Closed Lost,423000,423000,2026-01-20,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-504,Apex Technologies - Risk management fabric,Apex Technologies,Quentin Brooks,AE-E06,Enterprise,outbound,Closed Lost,1086000,1086000,2026-01-21,2026-03-05,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-505,Great Basin Water District - Security operations center,Great Basin Water District,Jonas Lee,AE-E04,Enterprise,outbound,Closed Lost,564000,564000,2025-12-24,2026-04-16,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-506,Madison Holdings - Infrastructure modernization,Madison Holdings,Vivica Hale,AE-SE14,Strategic Enterprise,ae_self_gen,Closed Lost,1188000,1188000,2025-07-23,2026-05-01,true,false,Vendor risk review halted,Closed Lost,new_business,Closed
+MOH-507,Vertex Management - Module expansion,Vertex Management,Freya Jensen,AE-M19,Mid-Market,ae_self_gen,Closed Lost,260000,260000,2026-01-12,2026-03-23,true,false,Champion left company,Closed Lost,expansion,Closed
+MOH-508,Lincoln Distribution - Compliance automation suite,Lincoln Distribution,Pablo Serrano,AE-M12,Mid-Market,outbound,Closed Lost,90000,90000,2025-12-12,2026-02-02,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-509,Atlantic Warehousing - Division rollout,Atlantic Warehousing,Tori Nguyen,AE-M11,Mid-Market,inbound,Closed Lost,257000,257000,2025-07-22,2026-02-04,true,false,Lost on price to LedgerFox,Closed Lost,expansion,Closed
+MOH-510,Clearwater Water District - Fleet telemetry platform,Clearwater Water District,Jada Collins,AE-E37,Enterprise,outbound,Closed Lost,1281000,1281000,2026-01-20,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-511,Granite Peak Holdings - Compliance automation suite,Granite Peak Holdings,Serena Calloway,AE-SE22,Strategic Enterprise,outbound,Closed Lost,3691000,3691000,2025-06-13,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-512,Ironwood Services - Regional expansion,Ironwood Services,Simone Duarte,AE-E23,Enterprise,inbound,Closed Lost,939000,939000,2026-01-13,2026-03-16,true,false,No decision,Closed Lost,expansion,Closed
+MOH-513,National Medical Center - Infrastructure modernization,National Medical Center,Priyanka Sen,AE-E39,Enterprise,ae_self_gen,Closed Lost,824000,824000,2025-08-22,2026-03-13,true,false,Executive sponsor change,Closed Lost,new_business,Closed
+MOH-514,Partners Logistics - Field operations platform,Partners Logistics,Morgan Tate,AE-E09,Enterprise,outbound,Closed Lost,965000,965000,2025-10-13,2026-02-16,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-515,Westbrook Enterprises - Fleet telemetry platform,Westbrook Enterprises,Serena Calloway,AE-SE22,Strategic Enterprise,outbound,Closed Lost,2771000,2771000,2025-11-14,2026-02-24,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-516,Frontier Trust - Security operations center,Frontier Trust,Mateo Esposito,AE-SE15,Strategic Enterprise,outbound,Closed Lost,2764000,2764000,2025-11-24,2026-03-03,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-517,Federal Freight - Global operations rollout,Federal Freight,Farah Iqbal,AE-E07,Enterprise,outbound,Closed Lost,1102000,1102000,2025-08-27,2026-03-18,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-518,Brookfield Supply - Global operations rollout,Brookfield Supply,Indira Vasquez,AE-M01,Mid-Market,outbound,Closed Lost,356000,356000,2025-12-11,2026-02-23,true,false,No decision — budget frozen,Closed Lost,new_business,Closed
+MOH-519,North Coast Authority - Infrastructure modernization,North Coast Authority,Amelia Foster,AE-E05,Enterprise,outbound,Closed Lost,921000,921000,2025-10-27,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-520,Tri-State Consulting - Fleet telemetry platform,Tri-State Consulting,Beatrix Holloway,AE-M03,Mid-Market,outbound,Closed Lost,332000,332000,2026-01-23,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-521,Great Basin Bank - Fleet telemetry expansion,Great Basin Bank,Camille Durand,AE-E10,Enterprise,outbound,Closed Lost,1290000,1290000,2026-01-30,2026-02-26,true,false,Competitor pricing — LedgerFox discounted 35%,Closed Lost,expansion,Closed
+MOH-522,Eagle Rock Freight - Module expansion,Eagle Rock Freight,Victor Chen,AE-E20,Enterprise,partner,Closed Lost,504000,504000,2026-01-23,2026-05-01,true,false,No decision,Closed Lost,expansion,Closed
+MOH-523,Pinnacle International - Network monitoring suite,Pinnacle International,Damian Lowe,AE-SE11,Strategic Enterprise,outbound,Closed Lost,1636000,1636000,2025-11-13,2026-03-04,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-524,Great Basin Management - Data governance layer,Great Basin Management,Beatrix Holloway,AE-M03,Mid-Market,outbound,Closed Lost,286000,286000,2025-10-10,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-525,Eagle Rock International - Connectivity platform,Eagle Rock International,Solene Matsuoka,AE-SE08,Strategic Enterprise,outbound,Closed Lost,1717000,1717000,2026-02-26,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-526,Springfield Partners - Fleet renewal,Springfield Partners,Rohan Bedi,AE-SE13,Strategic Enterprise,outbound,Closed Lost,1193000,1193000,2025-08-19,2026-04-30,true,false,Technical fit gap,Closed Lost,renewal,Closed
+MOH-527,Elite Solutions - Network monitoring suite,Elite Solutions,Lucia Barrett,AE-E35,Enterprise,partner,Closed Lost,707000,707000,2025-12-11,2026-05-01,true,false,Competitor pricing — LedgerFox discounted 35%,Closed Lost,new_business,Closed
+MOH-528,Keystone Capital - Enterprise control plane,Keystone Capital,Reginald Tannen,AE-SE02,Strategic Enterprise,outbound,Closed Lost,1514000,1514000,2026-02-11,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-529,Capstone Retail - Global operations rollout,Capstone Retail,Yusuf Bashir,AE-M04,Mid-Market,outbound,Closed Lost,249000,249000,2025-07-29,2026-02-18,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-530,Meadowbrook Systems - Data governance layer,Meadowbrook Systems,Farah Iqbal,AE-E07,Enterprise,outbound,Closed Lost,527000,527000,2025-09-16,2026-02-03,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-531,Whitehall Global - Risk management fabric,Whitehall Global,Theron Whitmore,AE-SE05,Strategic Enterprise,outbound,Closed Lost,2435000,2435000,2025-10-21,2026-04-24,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-532,Palisade Transport - Infrastructure modernization,Palisade Transport,Freya Jensen,AE-M19,Mid-Market,outbound,Closed Lost,346000,346000,2026-03-13,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-533,Southport Partners - Data governance layer,Southport Partners,Damian Lowe,AE-SE11,Strategic Enterprise,outbound,Closed Lost,2731000,2731000,2025-12-25,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-534,Hilltop Medical Center - Supply chain visibility,Hilltop Medical Center,Nicole Bauer,AE-E31,Enterprise,outbound,Closed Lost,956000,956000,2026-02-04,2026-04-28,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-535,Cornerstone Holdings - Fleet telemetry platform,Cornerstone Holdings,Priyam Shah,AE-SE23,Strategic Enterprise,outbound,Closed Lost,3906000,3906000,2025-10-24,2026-02-06,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-536,Partners Holdings - Supply chain visibility,Partners Holdings,Basil Okafor,AE-SE25,Strategic Enterprise,outbound,Closed Lost,2522000,2522000,2025-07-31,2026-02-18,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-537,Lakefront Distribution - Usage expansion,Lakefront Distribution,Ella West,AE-M23,Mid-Market,outbound,Closed Lost,318000,318000,2026-02-20,2026-04-13,true,false,Competitor pricing — LedgerFox discounted 35%,Closed Lost,expansion,Closed
+MOH-538,Continental Group - Operations renewal,Continental Group,Kaela Ondieki,AE-SE06,Strategic Enterprise,partner,Closed Lost,1272000,1272000,2025-09-17,2026-05-01,true,false,Champion left company,Closed Lost,renewal,Closed
+MOH-539,Whitehall Holdings - Global operations rollout,Whitehall Holdings,Alicia Monroe,AE-SE24,Strategic Enterprise,outbound,Closed Lost,1152000,1152000,2025-07-28,2026-02-26,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-540,Keystone Health Systems - Annual renewal,Keystone Health Systems,Amelia Foster,AE-E05,Enterprise,partner,Closed Lost,999000,999000,2025-11-19,2026-05-01,true,false,Lost to incumbent renewal,Closed Lost,renewal,Closed
+MOH-541,Copper State Technologies - Fleet renewal,Copper State Technologies,Jada Collins,AE-E37,Enterprise,outbound,Closed Lost,772000,772000,2025-08-26,2026-04-24,true,false,Lost on price to LedgerFox,Closed Lost,renewal,Closed
+MOH-542,Coalition Water District - Control plane expansion,Coalition Water District,Julian Park,AE-E22,Enterprise,outbound,Closed Lost,532000,532000,2025-10-21,2026-05-01,true,false,Procurement stall — no budget release,Closed Lost,expansion,Closed
+MOH-543,Confluence Partners - Analytics foundation,Confluence Partners,Octavia Nguyen,AE-SE04,Strategic Enterprise,outbound,Closed Lost,1975000,1975000,2025-10-06,2026-03-11,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-544,Riverdale Realty - Network monitoring suite,Riverdale Realty,Brielle Navarro,AE-M27,Mid-Market,outbound,Closed Lost,155000,155000,2025-06-26,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-545,Creekside Authority - Workforce analytics,Creekside Authority,Nolan Pierce,AE-E38,Enterprise,outbound,Closed Lost,1000000,1000000,2025-09-11,2026-04-14,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-546,Meadowbrook Networks - Usage expansion,Meadowbrook Networks,Mira Lawson,AE-E21,Enterprise,outbound,Closed Lost,649000,649000,2025-08-19,2026-02-03,true,false,Procurement stall — no budget release,Closed Lost,expansion,Closed
+MOH-547,Frontier Technologies - Annual renewal,Frontier Technologies,Sasha Petrov,AE-E18,Enterprise,inbound,Closed Lost,1231000,1231000,2025-09-15,2026-02-06,true,false,Vendor risk review halted,Closed Lost,renewal,Closed
+MOH-548,Atlas Health Systems - Connectivity platform,Atlas Health Systems,Nolan Pierce,AE-E38,Enterprise,outbound,Closed Lost,795000,795000,2025-09-01,2026-03-25,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-549,Clearwater Warehousing - Security operations center,Clearwater Warehousing,Yusuf Bashir,AE-M04,Mid-Market,outbound,Closed Lost,171000,171000,2025-06-06,2026-02-11,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-550,Premier Authority - Infrastructure modernization,Premier Authority,Mira Lawson,AE-E21,Enterprise,outbound,Closed Lost,1054000,1054000,2025-09-18,2026-02-06,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-551,Summit Authority - Global operations rollout,Summit Authority,Farah Iqbal,AE-E07,Enterprise,outbound,Closed Lost,759000,759000,2025-08-07,2026-03-30,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-552,Legacy Solutions - Enterprise control plane,Legacy Solutions,Colin Avery,AE-E17,Enterprise,outbound,Closed Lost,789000,789000,2025-08-21,2026-04-29,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-553,Lincoln Water District - Security operations center,Lincoln Water District,Morgan Tate,AE-E09,Enterprise,ae_self_gen,Closed Lost,916000,916000,2025-06-27,2026-02-18,true,false,Competitor pricing — LedgerFox discounted 35%,Closed Lost,new_business,Closed
+MOH-554,Federal Medical Center - Infrastructure renewal,Federal Medical Center,Dev Kapoor,AE-E26,Enterprise,outbound,Closed Lost,973000,973000,2025-07-23,2026-02-20,true,false,Champion left company,Closed Lost,renewal,Closed
+MOH-555,Blackwater Warehousing - Add-on security module,Blackwater Warehousing,Ella West,AE-M23,Mid-Market,outbound,Closed Lost,294000,294000,2025-10-14,2026-03-27,true,false,Lost on price to LedgerFox,Closed Lost,expansion,Closed
+MOH-556,Creekside Networks - Analytics foundation,Creekside Networks,Nina Kowalski,AE-E01,Enterprise,outbound,Closed Lost,728000,728000,2026-01-14,2026-04-28,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-557,Frontier Health Systems - Fleet renewal,Frontier Health Systems,Lucia Barrett,AE-E35,Enterprise,outbound,Closed Lost,1058000,1058000,2025-08-28,2026-04-14,true,false,Champion left company,Closed Lost,renewal,Closed
+MOH-558,Vertex Financial - Fleet renewal,Vertex Financial,Talia Mercer,AE-E14,Enterprise,partner,Closed Lost,1004000,1004000,2025-07-29,2026-03-04,true,false,No decision — budget frozen,Closed Lost,renewal,Closed
+MOH-559,Vanguard Management - Supply chain visibility,Vanguard Management,Tori Nguyen,AE-M11,Mid-Market,ae_self_gen,Closed Lost,90000,90000,2025-08-20,2026-02-18,true,false,Executive sponsor change,Closed Lost,new_business,Closed
+MOH-560,Summit Ridge Corporation - Data governance layer,Summit Ridge Corporation,Victor Laurent,AE-SE19,Strategic Enterprise,ae_self_gen,Closed Lost,1438000,1438000,2025-11-28,2026-03-12,true,false,Procurement stall — no budget release,Closed Lost,new_business,Closed
+MOH-561,Consortium Water District - Security operations center,Consortium Water District,Nina Kowalski,AE-E01,Enterprise,ae_self_gen,Closed Lost,537000,537000,2026-01-15,2026-05-01,true,false,Champion left company,Closed Lost,new_business,Closed
+MOH-562,Palisade Realty - Fleet telemetry expansion,Palisade Realty,Omar Haddad,AE-M08,Mid-Market,ae_self_gen,Closed Lost,163000,163000,2026-03-25,2026-05-01,true,false,Competitor won — LedgerFox,Closed Lost,expansion,Closed
+MOH-563,Atlas International - Fleet telemetry platform,Atlas International,Gabriel Nwosu,AE-SE21,Strategic Enterprise,outbound,Closed Lost,2554000,2554000,2025-06-02,2026-04-20,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-564,Falcon Ridge Engineering - Connectivity platform,Falcon Ridge Engineering,Rafael Dunn,AE-M14,Mid-Market,outbound,Closed Lost,271000,271000,2025-08-26,2026-04-09,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-565,Lakewood Logistics - Network monitoring suite,Lakewood Logistics,Ella West,AE-M23,Mid-Market,outbound,Closed Lost,307000,307000,2025-06-09,2026-02-05,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-566,Partners International - Data governance layer,Partners International,Basil Okafor,AE-SE25,Strategic Enterprise,outbound,Closed Lost,1498000,1498000,2026-01-27,2026-04-14,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-567,Confluence Engineering - International expansion,Confluence Engineering,Freya Jensen,AE-M19,Mid-Market,inbound,Closed Lost,281000,281000,2025-10-24,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,expansion,Closed
+MOH-568,Ridgecrest International - Connectivity platform,Ridgecrest International,Chloe Banerjee,AE-SE16,Strategic Enterprise,outbound,Closed Lost,3458000,3458000,2025-10-31,2026-02-13,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-569,Apex Engineering - Global operations rollout,Apex Engineering,Vivek Rao,AE-M24,Mid-Market,outbound,Closed Lost,444000,444000,2025-10-02,2026-03-16,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-570,Springfield Energy - Connectivity platform,Springfield Energy,Dev Kapoor,AE-E26,Enterprise,outbound,Closed Lost,300000,300000,2025-07-03,2026-03-12,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-571,Rushmore Health Systems - Security operations center,Rushmore Health Systems,Mira Lawson,AE-E21,Enterprise,outbound,Closed Lost,1017000,1017000,2025-12-05,2026-02-12,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-572,Cascade Construction - Enterprise control plane,Cascade Construction,Lena Ortiz,AE-M07,Mid-Market,outbound,Closed Lost,272000,272000,2026-01-01,2026-04-06,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-573,Atlantic Capital - Workforce analytics,Atlantic Capital,Mireille Bouvier,AE-SE03,Strategic Enterprise,outbound,Closed Lost,3109000,3109000,2025-11-12,2026-03-16,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-574,Ridgeline Energy - Global operations rollout,Ridgeline Energy,Renee Gallagher,AE-E19,Enterprise,inbound,Closed Lost,902000,902000,2025-06-12,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-575,Forestview Retail - Supply chain visibility,Forestview Retail,June Holloway,AE-M25,Mid-Market,ae_self_gen,Closed Lost,181000,181000,2025-12-02,2026-03-20,true,false,No decision — budget frozen,Closed Lost,new_business,Closed
+MOH-576,Eastbrook Global - Platform renewal,Eastbrook Global,Lucien Dubois,AE-SE07,Strategic Enterprise,outbound,Closed Lost,1878000,1878000,2025-07-29,2026-03-06,true,false,Lost on price to LedgerFox,Closed Lost,renewal,Closed
+MOH-577,Bloomfield Partners - Analytics foundation,Bloomfield Partners,Theron Whitmore,AE-SE05,Strategic Enterprise,outbound,Closed Lost,1993000,1993000,2025-09-01,2026-02-10,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-578,Westbrook Design - Infrastructure modernization,Westbrook Design,Geoffrey Baxter,AE-M06,Mid-Market,outbound,Closed Lost,163000,163000,2025-09-24,2026-04-21,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-579,Westbrook Group - Analytics foundation,Westbrook Group,Alicia Monroe,AE-SE24,Strategic Enterprise,outbound,Closed Lost,2819000,2819000,2025-12-09,2026-04-22,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-580,Westbrook Logistics - Annual renewal,Westbrook Logistics,Elena Morales,AE-E27,Enterprise,partner,Closed Lost,1100000,1100000,2025-06-02,2026-04-28,true,false,No decision,Closed Lost,renewal,Closed
+MOH-581,Rushmore International - Network monitoring suite,Rushmore International,Rohan Bedi,AE-SE13,Strategic Enterprise,outbound,Closed Lost,2102000,2102000,2025-07-29,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-582,Frontier Logistics - Workforce analytics,Frontier Logistics,Zoe Larkin,AE-M17,Mid-Market,outbound,Closed Lost,336000,336000,2026-01-23,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-583,Oakdale Health Systems - Network monitoring suite,Oakdale Health Systems,Amina Hassan,AE-E33,Enterprise,outbound,Closed Lost,1136000,1136000,2025-08-15,2026-02-12,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-584,Covenant Partners - Fleet telemetry platform,Covenant Partners,Kaela Ondieki,AE-SE06,Strategic Enterprise,ae_self_gen,Closed Lost,2680000,2680000,2025-07-14,2026-04-07,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-585,Watershed Agency - Enterprise renewal,Watershed Agency,Adrian Moss,AE-M10,Mid-Market,inbound,Closed Lost,245000,245000,2025-12-02,2026-05-01,true,false,Competitor won — LedgerFox,Closed Lost,renewal,Closed
+MOH-586,Ironwood Technologies - International expansion,Ironwood Technologies,Sasha Petrov,AE-E18,Enterprise,inbound,Closed Lost,300000,300000,2026-01-21,2026-04-30,true,false,Lost on price to LedgerFox,Closed Lost,expansion,Closed
+MOH-587,Riverdale Consulting - Risk management fabric,Riverdale Consulting,Zoe Larkin,AE-M17,Mid-Market,outbound,Closed Lost,173000,173000,2026-03-03,2026-05-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-588,Midland Freight - Fleet telemetry platform,Midland Freight,Nicole Bauer,AE-E31,Enterprise,outbound,Closed Lost,379000,379000,2025-08-11,2026-03-02,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-589,Greenvale Enterprises - Network monitoring suite,Greenvale Enterprises,Rohan Bedi,AE-SE13,Strategic Enterprise,outbound,Closed Lost,3218000,3218000,2026-01-09,2026-04-02,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-590,Zenith Construction - Analytics foundation,Zenith Construction,Tori Nguyen,AE-M11,Mid-Market,inbound,Closed Lost,220000,220000,2025-12-12,2026-02-05,true,false,Executive sponsor change,Closed Lost,new_business,Closed
+MOH-591,North Coast Agency - Enterprise control plane,North Coast Agency,Vivek Rao,AE-M24,Mid-Market,outbound,Closed Lost,261000,261000,2025-07-28,2026-02-23,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-592,Westbrook Consulting - Global operations rollout,Westbrook Consulting,Indira Vasquez,AE-M01,Mid-Market,outbound,Closed Lost,159000,159000,2026-02-26,2026-03-30,true,false,Competitor pricing — LedgerFox discounted 35%,Closed Lost,new_business,Closed
+MOH-593,Cedarbrook Medical Center - Analytics foundation,Cedarbrook Medical Center,Priyanka Sen,AE-E39,Enterprise,outbound,Closed Lost,957000,957000,2025-06-30,2026-02-11,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-594,Meridian Technologies - Risk management fabric,Meridian Technologies,Wesley Hart,AE-E24,Enterprise,outbound,Closed Lost,608000,608000,2025-10-10,2026-03-23,true,false,Lost to incumbent renewal,Closed Lost,new_business,Closed
+MOH-595,Springfield Networks - Infrastructure renewal,Springfield Networks,Derek Salazar,AE-E02,Enterprise,ae_self_gen,Closed Lost,916000,916000,2026-01-12,2026-02-04,true,false,Vendor risk review halted,Closed Lost,renewal,Closed
+MOH-596,Pacific Authority - Enterprise control plane,Pacific Authority,Lucia Barrett,AE-E35,Enterprise,outbound,Closed Lost,1444000,1444000,2025-09-08,2026-03-19,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-597,Harborline Freight - Analytics foundation,Harborline Freight,Victor Chen,AE-E20,Enterprise,outbound,Closed Lost,834000,834000,2025-07-02,2026-02-06,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-598,Five-Star Solutions - Workforce analytics,Five-Star Solutions,Jonas Lee,AE-E04,Enterprise,outbound,Closed Lost,635000,635000,2025-07-09,2026-04-01,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-599,Meadowbrook Energy - Supply chain visibility,Meadowbrook Energy,Sasha Petrov,AE-E18,Enterprise,outbound,Closed Lost,641000,641000,2025-09-30,2026-02-06,true,false,Lost on price to LedgerFox,Closed Lost,new_business,Closed
+MOH-600,Cascade Utilities - Enterprise control plane,Cascade Utilities,Wesley Hart,AE-E24,Enterprise,outbound,Closed Lost,569000,569000,2025-10-08,2026-02-11,true,false,Competitor pricing — LedgerFox discounted 35%,Closed Lost,new_business,Closed

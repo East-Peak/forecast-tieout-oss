@@ -1,28 +1,137 @@
 id,name,role,segment,start_date,is_active,manager_id
 VP-S,Vivienne Ashworth,vp_sales,,2020-06-01,true,
 MGR-SE,Cyrus Bellamy,manager,Strategic Enterprise,2021-09-01,true,
+MGR-SE2,Petra Holloway,manager,Strategic Enterprise,2022-04-15,true,
 MGR-E,Adaeze Onuoha,manager,Enterprise,2021-11-15,true,
+MGR-E2,Demian Cross,manager,Enterprise,2022-08-01,true,
+MGR-E3,Priscilla Lang,manager,Enterprise,2023-03-01,true,
 MGR-M,Sterling Park,manager,Mid-Market,2022-04-01,true,
-AE-SE01,Reginald Tannenbaum,AE,Strategic Enterprise,2022-01-15,true,MGR-SE
-AE-SE02,Ananya Krishnamurthy,AE,Strategic Enterprise,2022-06-01,true,MGR-SE
-AE-SE03,Bartholomew Greco,AE,Strategic Enterprise,2023-02-15,true,MGR-SE
-AE-SE04,Mireille Bouvier,AE,Strategic Enterprise,2023-09-01,true,MGR-SE
-AE-E01,Octavia Nguyen,AE,Enterprise,2022-08-15,true,MGR-E
-AE-E02,Theron Whitmore,AE,Enterprise,2023-01-15,true,MGR-E
-AE-E03,Kaela Ondieki,AE,Enterprise,2023-06-01,true,MGR-E
-AE-E04,Lucien Dubois,AE,Enterprise,2024-01-15,true,MGR-E
-AE-E05,Solene Matsuoka,AE,Enterprise,2024-08-01,true,MGR-E
-AE-E06,Cassius Pell,AE,Enterprise,2025-03-01,true,MGR-E
-AE-M01,Indira Vasquez,AE,Mid-Market,2022-11-01,true,MGR-M
-AE-M02,Phineas Okafor,AE,Mid-Market,2023-04-15,true,MGR-M
-AE-M03,Beatrix Holloway,AE,Mid-Market,2023-10-01,true,MGR-M
-AE-M04,Yusuf Bashir,AE,Mid-Market,2024-04-15,true,MGR-M
-AE-M05,Esperanza Vega,AE,Mid-Market,2024-10-01,true,MGR-M
-AE-M06,Geoffrey Baxter,AE,Mid-Market,2025-05-15,true,MGR-M
+MGR-M2,Yolanda Fuentes,manager,Mid-Market,2023-09-01,true,
+AE-SE01,Ananya Krishnamurthy,ae,Strategic Enterprise,2022-01-15,true,MGR-SE
+AE-SE02,Reginald Tannen,ae,Strategic Enterprise,2022-06-01,true,MGR-SE
+AE-SE03,Mireille Bouvier,ae,Strategic Enterprise,2022-11-14,true,MGR-SE
+AE-SE04,Octavia Nguyen,ae,Strategic Enterprise,2023-02-06,true,MGR-SE
+AE-SE05,Theron Whitmore,ae,Strategic Enterprise,2023-03-20,true,MGR-SE
+AE-SE06,Kaela Ondieki,ae,Strategic Enterprise,2023-05-01,true,MGR-SE
+AE-SE07,Lucien Dubois,ae,Strategic Enterprise,2023-06-12,true,MGR-SE2
+AE-SE08,Solene Matsuoka,ae,Strategic Enterprise,2023-08-07,true,MGR-SE2
+AE-SE09,Cassius Pell,ae,Strategic Enterprise,2023-09-18,true,MGR-SE2
+AE-SE10,Marisol Vega,ae,Strategic Enterprise,2023-11-06,true,MGR-SE2
+AE-SE11,Damian Lowe,ae,Strategic Enterprise,2024-01-08,true,MGR-SE
+AE-SE12,Helena Strauss,ae,Strategic Enterprise,2024-02-19,true,MGR-SE
+AE-SE13,Rohan Bedi,ae,Strategic Enterprise,2024-03-25,true,MGR-SE2
+AE-SE14,Vivica Hale,ae,Strategic Enterprise,2024-05-06,true,MGR-SE2
+AE-SE15,Mateo Esposito,ae,Strategic Enterprise,2024-06-17,true,MGR-SE
+AE-SE16,Chloe Banerjee,ae,Strategic Enterprise,2024-08-05,true,MGR-SE
+AE-SE17,Elias Mercer,ae,Strategic Enterprise,2024-09-09,true,MGR-SE2
+AE-SE18,Naomi Sato,ae,Strategic Enterprise,2024-10-21,true,MGR-SE2
+AE-SE19,Victor Laurent,ae,Strategic Enterprise,2024-12-02,true,MGR-SE
+AE-SE20,Imogen Price,ae,Strategic Enterprise,2025-01-13,true,MGR-SE
+AE-SE21,Gabriel Nwosu,ae,Strategic Enterprise,2025-03-03,true,MGR-SE2
+AE-SE22,Serena Calloway,ae,Strategic Enterprise,2025-05-12,true,MGR-SE2
+AE-SE23,Priyam Shah,ae,Strategic Enterprise,2026-02-10,true,MGR-SE
+AE-SE24,Alicia Monroe,ae,Strategic Enterprise,2026-03-17,true,MGR-SE2
+AE-SE25,Basil Okafor,ae,Strategic Enterprise,2026-04-21,true,MGR-SE
+AE-E01,Nina Kowalski,ae,Enterprise,2022-02-07,true,MGR-E
+AE-E02,Derek Salazar,ae,Enterprise,2022-03-21,true,MGR-E
+AE-E03,Priya Raman,ae,Enterprise,2022-05-02,true,MGR-E
+AE-E04,Jonas Lee,ae,Enterprise,2022-06-13,true,MGR-E
+AE-E05,Amelia Foster,ae,Enterprise,2022-08-01,true,MGR-E
+AE-E06,Quentin Brooks,ae,Enterprise,2022-09-12,true,MGR-E
+AE-E07,Farah Iqbal,ae,Enterprise,2022-10-24,true,MGR-E2
+AE-E08,Ethan Cross,ae,Enterprise,2022-12-05,true,MGR-E2
+AE-E09,Morgan Tate,ae,Enterprise,2023-01-16,true,MGR-E2
+AE-E10,Camille Durand,ae,Enterprise,2023-03-06,true,MGR-E2
+AE-E11,Oscar Kim,ae,Enterprise,2023-04-17,true,MGR-E2
+AE-E12,Leila Haddad,ae,Enterprise,2023-05-29,true,MGR-E2
+AE-E13,Brennan Cole,ae,Enterprise,2023-07-10,true,MGR-E3
+AE-E14,Talia Mercer,ae,Enterprise,2023-08-21,true,MGR-E3
+AE-E15,Haruto Sakamoto,ae,Enterprise,2023-10-02,true,MGR-E3
+AE-E16,Elise Romano,ae,Enterprise,2023-11-13,true,MGR-E3
+AE-E17,Colin Avery,ae,Enterprise,2024-01-08,true,MGR-E
+AE-E18,Sasha Petrov,ae,Enterprise,2024-02-19,true,MGR-E
+AE-E19,Renee Gallagher,ae,Enterprise,2024-04-01,true,MGR-E2
+AE-E20,Victor Chen,ae,Enterprise,2024-05-13,true,MGR-E2
+AE-E21,Mira Lawson,ae,Enterprise,2024-06-24,true,MGR-E2
+AE-E22,Julian Park,ae,Enterprise,2024-08-05,true,MGR-E3
+AE-E23,Simone Duarte,ae,Enterprise,2024-09-16,true,MGR-E3
+AE-E24,Wesley Hart,ae,Enterprise,2024-10-28,true,MGR-E3
+AE-E25,Tara Sullivan,ae,Enterprise,2024-12-09,true,MGR-E
+AE-E26,Dev Kapoor,ae,Enterprise,2025-01-20,true,MGR-E
+AE-E27,Elena Morales,ae,Enterprise,2025-03-03,true,MGR-E2
+AE-E28,Marcus Flynn,ae,Enterprise,2025-04-14,true,MGR-E2
+AE-E29,Hannah Greer,ae,Enterprise,2025-05-26,true,MGR-E3
+AE-E30,Tyler Mbeki,ae,Enterprise,2025-07-07,true,MGR-E3
+AE-E31,Nicole Bauer,ae,Enterprise,2025-08-18,true,MGR-E
+AE-E32,Sean Holloway,ae,Enterprise,2025-09-29,true,MGR-E2
+AE-E33,Amina Hassan,ae,Enterprise,2025-11-10,true,MGR-E2
+AE-E34,Peter Novak,ae,Enterprise,2025-12-22,true,MGR-E3
+AE-E35,Lucia Barrett,ae,Enterprise,2026-01-12,true,MGR-E3
+AE-E36,Isaac Moreno,ae,Enterprise,2026-01-26,true,MGR-E
+AE-E37,Jada Collins,ae,Enterprise,2026-02-03,true,MGR-E
+AE-E38,Nolan Pierce,ae,Enterprise,2026-03-10,true,MGR-E2
+AE-E39,Priyanka Sen,ae,Enterprise,2026-04-07,true,MGR-E3
+AE-M01,Indira Vasquez,ae,Mid-Market,2022-11-01,true,MGR-M
+AE-M02,Phineas Okafor,ae,Mid-Market,2023-04-15,true,MGR-M
+AE-M03,Beatrix Holloway,ae,Mid-Market,2023-10-01,true,MGR-M
+AE-M04,Yusuf Bashir,ae,Mid-Market,2024-04-15,true,MGR-M
+AE-M05,Esperanza Vega,ae,Mid-Market,2024-10-01,true,MGR-M2
+AE-M06,Geoffrey Baxter,ae,Mid-Market,2025-05-15,true,MGR-M2
+AE-M07,Lena Ortiz,ae,Mid-Market,2024-01-08,true,MGR-M
+AE-M08,Omar Haddad,ae,Mid-Market,2024-02-19,true,MGR-M
+AE-M09,Kelsey Draper,ae,Mid-Market,2024-06-03,true,MGR-M2
+AE-M10,Adrian Moss,ae,Mid-Market,2024-07-15,true,MGR-M2
+AE-M11,Tori Nguyen,ae,Mid-Market,2024-08-26,true,MGR-M
+AE-M12,Pablo Serrano,ae,Mid-Market,2024-10-07,true,MGR-M
+AE-M13,Grace Wilcox,ae,Mid-Market,2024-11-18,true,MGR-M2
+AE-M14,Rafael Dunn,ae,Mid-Market,2025-01-06,true,MGR-M2
+AE-M15,Mina Patel,ae,Mid-Market,2025-02-17,true,MGR-M
+AE-M16,Connor Blake,ae,Mid-Market,2025-03-31,true,MGR-M
+AE-M17,Zoe Larkin,ae,Mid-Market,2025-05-12,true,MGR-M2
+AE-M18,Caleb Ortiz,ae,Mid-Market,2025-06-23,true,MGR-M2
+AE-M19,Freya Jensen,ae,Mid-Market,2025-08-04,true,MGR-M
+AE-M20,Mason Liu,ae,Mid-Market,2025-09-15,true,MGR-M
+AE-M21,Dana Cooper,ae,Mid-Market,2025-10-27,true,MGR-M2
+AE-M22,Roman Bell,ae,Mid-Market,2025-12-08,true,MGR-M2
+AE-M23,Ella West,ae,Mid-Market,2026-01-19,true,MGR-M
+AE-M24,Vivek Rao,ae,Mid-Market,2026-01-26,true,MGR-M2
+AE-M25,June Holloway,ae,Mid-Market,2026-02-24,true,MGR-M
+AE-M26,Rafael Costa,ae,Mid-Market,2026-03-03,true,MGR-M2
+AE-M27,Brielle Navarro,ae,Mid-Market,2026-03-24,true,MGR-M
+AE-M28,Theo Mercer,ae,Mid-Market,2026-04-14,true,MGR-M2
+SE-01,Constantin Marek,se,,2022-11-15,true,
+SE-02,Naima Aboud,se,,2023-08-01,true,
+SE-03,Erasmus Vogel,se,,2024-05-15,true,
+SE-04,Henrik Lindqvist,se,,2024-07-01,true,
+SE-05,Yara Ozaki,se,,2024-09-16,true,
+SE-06,Rowan Chen,se,,2024-11-04,true,
+SE-07,Dev Patel,se,,2025-01-06,true,
+SE-08,Louise Martin,se,,2025-02-17,true,
+SE-09,Omar Saeed,se,,2025-04-14,true,
+SE-10,Claire Bolton,se,,2025-06-02,true,
+SE-11,Mina Okoye,se,,2025-07-21,true,
+SE-12,Gareth Webb,se,,2025-09-08,true,
+SE-13,Julia Stern,se,,2025-10-20,true,
+SE-14,Kian Rahimi,se,,2026-01-05,true,
 SDR-01,Anastasia Volkov,sdr,,2024-02-01,true,
 SDR-02,Tomohiro Yamamoto,sdr,,2024-06-15,true,
 SDR-03,Margot Henley,sdr,,2025-01-15,true,
 SDR-04,Reza Farahani,sdr,,2025-07-01,true,
-SE-01,Constantin Marek,se,,2022-11-15,true,
-SE-02,Naima Aboud,se,,2023-08-01,true,
-SE-03,Erasmus Vogel,se,,2024-05-15,true,
+SDR-05,Camille Tessier,sdr,,2024-09-01,true,
+SDR-06,Jordan Whitfield,sdr,,2024-11-01,true,
+SDR-07,Pita Faleolo,sdr,,2025-02-01,true,
+SDR-08,Darius Osei,sdr,,2025-03-15,true,
+SDR-09,Luisa Carvalho,sdr,,2025-05-01,true,
+SDR-10,Bram Van Der Berg,sdr,,2025-06-15,true,
+SDR-11,Yuki Tanaka,sdr,,2025-08-01,true,
+SDR-12,Saoirse Murphy,sdr,,2025-09-15,true,
+SDR-13,Keanu Makoa,sdr,,2025-10-01,true,
+SDR-14,Amara Diallo,sdr,,2025-11-15,true,
+SDR-15,Felix Gruber,sdr,,2025-12-01,true,
+SDR-16,Hana Nakamura,sdr,,2026-01-15,true,
+SDR-17,Tobias Engel,sdr,,2026-02-01,true,
+SDR-18,Chisom Obi,sdr,,2026-03-01,true,
+REN-01,Agnieszka Kowal,renewal_manager,Strategic Enterprise,2022-03-01,true,
+REN-02,Desmond Fairfax,renewal_manager,Enterprise,2023-01-10,true,
+REN-03,Nadia Ostrowski,renewal_manager,Mid-Market,2023-07-01,true,
+REN-04,Tariq Osei,renewal_manager,Enterprise,2024-03-01,true,

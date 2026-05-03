@@ -1,231 +1,1152 @@
-team_members:
-  # Mighty Oak Holdings roster — April-start fiscal, $800M ARR.
-  # Mature enterprise with full GTM org structure including a renewal team.
+# Mighty Oak Holdings roster — Feb-start fiscal, $640M ARR.
+# ~100 AEs across Strategic Enterprise / Enterprise / Mid-Market segments.
+# 14 SEs, 18 SDRs, regional managers, renewal team.
 
-  # --- Sales leadership ---
-  - id: "VP-S"
+team_members:
+
+  # ── Sales leadership ──────────────────────────────────────────────────────
+  - id: VP-S
     name: "Vivienne Ashworth"
-    role: "vp_sales"
+    role: vp_sales
     segment: null
     start_date: "2020-06-01"
     quota: 0
 
-  # --- Managers (3 segments) ---
-  - id: "MGR-SE"
+  # ── Segment managers ──────────────────────────────────────────────────────
+  - id: MGR-SE
     name: "Cyrus Bellamy"
-    role: "manager"
+    role: manager
     segment: "Strategic Enterprise"
     start_date: "2021-09-01"
     quota: 0
 
-  - id: "MGR-E"
+  - id: MGR-SE2
+    name: "Petra Holloway"
+    role: manager
+    segment: "Strategic Enterprise"
+    start_date: "2022-04-15"
+    quota: 0
+
+  - id: MGR-E
     name: "Adaeze Onuoha"
-    role: "manager"
+    role: manager
     segment: "Enterprise"
     start_date: "2021-11-15"
     quota: 0
 
-  - id: "MGR-M"
+  - id: MGR-E2
+    name: "Demian Cross"
+    role: manager
+    segment: "Enterprise"
+    start_date: "2022-08-01"
+    quota: 0
+
+  - id: MGR-E3
+    name: "Priscilla Lang"
+    role: manager
+    segment: "Enterprise"
+    start_date: "2023-03-01"
+    quota: 0
+
+  - id: MGR-M
     name: "Sterling Park"
-    role: "manager"
+    role: manager
     segment: "Mid-Market"
     start_date: "2022-04-01"
     quota: 0
 
-  # --- Strategic Enterprise AEs ($5M quota each) ---
-  - id: "AE-SE01"
-    name: "Reginald Tannenbaum"
-    role: "ae"
+  - id: MGR-M2
+    name: "Yolanda Fuentes"
+    role: manager
+    segment: "Mid-Market"
+    start_date: "2023-09-01"
+    quota: 0
+
+  # ── Strategic Enterprise AEs ($5M quota, $2.5M ramping) ──────────────────
+  - id: AE-SE01
+    name: "Ananya Krishnamurthy"
+    role: ae
     segment: "Strategic Enterprise"
-    manager_id: "MGR-SE"
+    manager_id: MGR-SE
     start_date: "2022-01-15"
     quota: 5000000
-    status: "tenured"
+    status: tenured
 
-  - id: "AE-SE02"
-    name: "Ananya Krishnamurthy"
-    role: "ae"
+  - id: AE-SE02
+    name: "Reginald Tannen"
+    role: ae
     segment: "Strategic Enterprise"
-    manager_id: "MGR-SE"
+    manager_id: MGR-SE
     start_date: "2022-06-01"
     quota: 5000000
-    status: "tenured"
+    status: tenured
 
-  - id: "AE-SE03"
-    name: "Bartholomew Greco"
-    role: "ae"
-    segment: "Strategic Enterprise"
-    manager_id: "MGR-SE"
-    start_date: "2023-02-15"
-    quota: 5000000
-    status: "tenured"
-
-  - id: "AE-SE04"
+  - id: AE-SE03
     name: "Mireille Bouvier"
-    role: "ae"
+    role: ae
     segment: "Strategic Enterprise"
-    manager_id: "MGR-SE"
-    start_date: "2023-09-01"
+    manager_id: MGR-SE
+    start_date: "2022-11-14"
     quota: 5000000
-    status: "tenured"
+    status: tenured
 
-  # --- Enterprise AEs ($3M quota each) ---
-  - id: "AE-E01"
+  - id: AE-SE04
     name: "Octavia Nguyen"
-    role: "ae"
-    segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2022-08-15"
-    quota: 3000000
-    status: "tenured"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2023-02-06"
+    quota: 5000000
+    status: tenured
 
-  - id: "AE-E02"
+  - id: AE-SE05
     name: "Theron Whitmore"
-    role: "ae"
-    segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2023-01-15"
-    quota: 3000000
-    status: "tenured"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2023-03-20"
+    quota: 5000000
+    status: tenured
 
-  - id: "AE-E03"
+  - id: AE-SE06
     name: "Kaela Ondieki"
-    role: "ae"
-    segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2023-06-01"
-    quota: 3000000
-    status: "tenured"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2023-05-01"
+    quota: 5000000
+    status: tenured
 
-  - id: "AE-E04"
+  - id: AE-SE07
     name: "Lucien Dubois"
-    role: "ae"
-    segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2024-01-15"
-    quota: 3000000
-    status: "tenured"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2023-06-12"
+    quota: 5000000
+    status: tenured
 
-  - id: "AE-E05"
+  - id: AE-SE08
     name: "Solene Matsuoka"
-    role: "ae"
-    segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2024-08-01"
-    quota: 3000000
-    status: "tenured"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2023-08-07"
+    quota: 5000000
+    status: tenured
 
-  - id: "AE-E06"
+  - id: AE-SE09
     name: "Cassius Pell"
-    role: "ae"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2023-09-18"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE10
+    name: "Marisol Vega"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2023-11-06"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE11
+    name: "Damian Lowe"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2024-01-08"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE12
+    name: "Helena Strauss"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2024-02-19"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE13
+    name: "Rohan Bedi"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2024-03-25"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE14
+    name: "Vivica Hale"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2024-05-06"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE15
+    name: "Mateo Esposito"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2024-06-17"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE16
+    name: "Chloe Banerjee"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2024-08-05"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE17
+    name: "Elias Mercer"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2024-09-09"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE18
+    name: "Naomi Sato"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2024-10-21"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE19
+    name: "Victor Laurent"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2024-12-02"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE20
+    name: "Imogen Price"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2025-01-13"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE21
+    name: "Gabriel Nwosu"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2025-03-03"
+    quota: 5000000
+    status: tenured
+
+  - id: AE-SE22
+    name: "Serena Calloway"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2025-05-12"
+    quota: 5000000
+    status: tenured
+
+  # Ramping SE AEs
+  - id: AE-SE23
+    name: "Priyam Shah"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2026-02-10"
+    quota: 2500000
+    status: ramping
+
+  - id: AE-SE24
+    name: "Alicia Monroe"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE2
+    start_date: "2026-03-17"
+    quota: 2500000
+    status: ramping
+
+  - id: AE-SE25
+    name: "Basil Okafor"
+    role: ae
+    segment: "Strategic Enterprise"
+    manager_id: MGR-SE
+    start_date: "2026-04-21"
+    quota: 2500000
+    status: ramping
+
+  # ── Enterprise AEs ($3M quota, $1.5M ramping) ────────────────────────────
+  - id: AE-E01
+    name: "Nina Kowalski"
+    role: ae
     segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2025-03-01"
+    manager_id: MGR-E
+    start_date: "2022-02-07"
     quota: 3000000
-    status: "tenured"
+    status: tenured
 
-  # --- Mid-Market AEs ($2M quota each) ---
-  - id: "AE-M01"
+  - id: AE-E02
+    name: "Derek Salazar"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2022-03-21"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E03
+    name: "Priya Raman"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2022-05-02"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E04
+    name: "Jonas Lee"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2022-06-13"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E05
+    name: "Amelia Foster"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2022-08-01"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E06
+    name: "Quentin Brooks"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2022-09-12"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E07
+    name: "Farah Iqbal"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2022-10-24"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E08
+    name: "Ethan Cross"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2022-12-05"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E09
+    name: "Morgan Tate"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2023-01-16"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E10
+    name: "Camille Durand"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2023-03-06"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E11
+    name: "Oscar Kim"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2023-04-17"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E12
+    name: "Leila Haddad"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2023-05-29"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E13
+    name: "Brennan Cole"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2023-07-10"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E14
+    name: "Talia Mercer"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2023-08-21"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E15
+    name: "Haruto Sakamoto"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2023-10-02"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E16
+    name: "Elise Romano"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2023-11-13"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E17
+    name: "Colin Avery"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2024-01-08"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E18
+    name: "Sasha Petrov"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2024-02-19"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E19
+    name: "Renee Gallagher"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2024-04-01"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E20
+    name: "Victor Chen"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2024-05-13"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E21
+    name: "Mira Lawson"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2024-06-24"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E22
+    name: "Julian Park"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2024-08-05"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E23
+    name: "Simone Duarte"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2024-09-16"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E24
+    name: "Wesley Hart"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2024-10-28"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E25
+    name: "Tara Sullivan"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2024-12-09"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E26
+    name: "Dev Kapoor"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2025-01-20"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E27
+    name: "Elena Morales"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2025-03-03"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E28
+    name: "Marcus Flynn"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2025-04-14"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E29
+    name: "Hannah Greer"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2025-05-26"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E30
+    name: "Tyler Mbeki"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2025-07-07"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E31
+    name: "Nicole Bauer"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2025-08-18"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E32
+    name: "Sean Holloway"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2025-09-29"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E33
+    name: "Amina Hassan"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2025-11-10"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E34
+    name: "Peter Novak"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2025-12-22"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E35
+    name: "Lucia Barrett"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2026-01-12"
+    quota: 3000000
+    status: tenured
+
+  - id: AE-E36
+    name: "Isaac Moreno"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2026-01-26"
+    quota: 3000000
+    status: tenured
+
+  # Ramping Enterprise AEs
+  - id: AE-E37
+    name: "Jada Collins"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E
+    start_date: "2026-02-03"
+    quota: 1500000
+    status: ramping
+
+  - id: AE-E38
+    name: "Nolan Pierce"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E2
+    start_date: "2026-03-10"
+    quota: 1500000
+    status: ramping
+
+  - id: AE-E39
+    name: "Priyanka Sen"
+    role: ae
+    segment: "Enterprise"
+    manager_id: MGR-E3
+    start_date: "2026-04-07"
+    quota: 1500000
+    status: ramping
+
+  # ── Mid-Market AEs ($1.8M quota, $900k ramping) ──────────────────────────
+  - id: AE-M01
     name: "Indira Vasquez"
-    role: "ae"
+    role: ae
     segment: "Mid-Market"
-    manager_id: "MGR-M"
+    manager_id: MGR-M
     start_date: "2022-11-01"
-    quota: 2000000
-    status: "tenured"
+    quota: 1800000
+    status: tenured
 
-  - id: "AE-M02"
+  - id: AE-M02
     name: "Phineas Okafor"
-    role: "ae"
+    role: ae
     segment: "Mid-Market"
-    manager_id: "MGR-M"
+    manager_id: MGR-M
     start_date: "2023-04-15"
-    quota: 2000000
-    status: "tenured"
+    quota: 1800000
+    status: tenured
 
-  - id: "AE-M03"
+  - id: AE-M03
     name: "Beatrix Holloway"
-    role: "ae"
+    role: ae
     segment: "Mid-Market"
-    manager_id: "MGR-M"
+    manager_id: MGR-M
     start_date: "2023-10-01"
-    quota: 2000000
-    status: "tenured"
+    quota: 1800000
+    status: tenured
 
-  - id: "AE-M04"
+  - id: AE-M04
     name: "Yusuf Bashir"
-    role: "ae"
+    role: ae
     segment: "Mid-Market"
-    manager_id: "MGR-M"
+    manager_id: MGR-M
     start_date: "2024-04-15"
-    quota: 2000000
-    status: "tenured"
+    quota: 1800000
+    status: tenured
 
-  - id: "AE-M05"
+  - id: AE-M05
     name: "Esperanza Vega"
-    role: "ae"
+    role: ae
     segment: "Mid-Market"
-    manager_id: "MGR-M"
+    manager_id: MGR-M2
     start_date: "2024-10-01"
-    quota: 2000000
-    status: "tenured"
+    quota: 1800000
+    status: tenured
 
-  - id: "AE-M06"
+  - id: AE-M06
     name: "Geoffrey Baxter"
-    role: "ae"
+    role: ae
     segment: "Mid-Market"
-    manager_id: "MGR-M"
+    manager_id: MGR-M2
     start_date: "2025-05-15"
-    quota: 2000000
-    status: "tenured"
+    quota: 1800000
+    status: tenured
 
-  # --- SDR team ---
-  - id: "SDR-01"
-    name: "Anastasia Volkov"
-    role: "sdr"
-    segment: null
-    start_date: "2024-02-01"
-    quota: 0
+  - id: AE-M07
+    name: "Lena Ortiz"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2024-01-08"
+    quota: 1800000
+    status: tenured
 
-  - id: "SDR-02"
-    name: "Tomohiro Yamamoto"
-    role: "sdr"
-    segment: null
-    start_date: "2024-06-15"
-    quota: 0
+  - id: AE-M08
+    name: "Omar Haddad"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2024-02-19"
+    quota: 1800000
+    status: tenured
 
-  - id: "SDR-03"
-    name: "Margot Henley"
-    role: "sdr"
-    segment: null
-    start_date: "2025-01-15"
-    quota: 0
+  - id: AE-M09
+    name: "Kelsey Draper"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2024-06-03"
+    quota: 1800000
+    status: tenured
 
-  - id: "SDR-04"
-    name: "Reza Farahani"
-    role: "sdr"
-    segment: null
-    start_date: "2025-07-01"
-    quota: 0
+  - id: AE-M10
+    name: "Adrian Moss"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2024-07-15"
+    quota: 1800000
+    status: tenured
 
-  # --- SE team ---
-  - id: "SE-01"
+  - id: AE-M11
+    name: "Tori Nguyen"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2024-08-26"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M12
+    name: "Pablo Serrano"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2024-10-07"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M13
+    name: "Grace Wilcox"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2024-11-18"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M14
+    name: "Rafael Dunn"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2025-01-06"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M15
+    name: "Mina Patel"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2025-02-17"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M16
+    name: "Connor Blake"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2025-03-31"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M17
+    name: "Zoe Larkin"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2025-05-12"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M18
+    name: "Caleb Ortiz"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2025-06-23"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M19
+    name: "Freya Jensen"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2025-08-04"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M20
+    name: "Mason Liu"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2025-09-15"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M21
+    name: "Dana Cooper"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2025-10-27"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M22
+    name: "Roman Bell"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2025-12-08"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M23
+    name: "Ella West"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2026-01-19"
+    quota: 1800000
+    status: tenured
+
+  - id: AE-M24
+    name: "Vivek Rao"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2026-01-26"
+    quota: 1800000
+    status: tenured
+
+  # Ramping Mid-Market AEs
+  - id: AE-M25
+    name: "June Holloway"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2026-02-24"
+    quota: 900000
+    status: ramping
+
+  - id: AE-M26
+    name: "Rafael Costa"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2026-03-03"
+    quota: 900000
+    status: ramping
+
+  - id: AE-M27
+    name: "Brielle Navarro"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M
+    start_date: "2026-03-24"
+    quota: 900000
+    status: ramping
+
+  - id: AE-M28
+    name: "Theo Mercer"
+    role: ae
+    segment: "Mid-Market"
+    manager_id: MGR-M2
+    start_date: "2026-04-14"
+    quota: 900000
+    status: ramping
+
+  # ── Sales Engineers ───────────────────────────────────────────────────────
+  - id: SE-01
     name: "Constantin Marek"
-    role: "se"
+    role: se
     segment: null
     start_date: "2022-11-15"
     quota: 0
 
-  - id: "SE-02"
+  - id: SE-02
     name: "Naima Aboud"
-    role: "se"
+    role: se
     segment: null
     start_date: "2023-08-01"
     quota: 0
 
-  - id: "SE-03"
+  - id: SE-03
     name: "Erasmus Vogel"
-    role: "se"
+    role: se
     segment: null
     start_date: "2024-05-15"
+    quota: 0
+
+  - id: SE-04
+    name: "Henrik Lindqvist"
+    role: se
+    segment: null
+    start_date: "2024-07-01"
+    quota: 0
+
+  - id: SE-05
+    name: "Yara Ozaki"
+    role: se
+    segment: null
+    start_date: "2024-09-16"
+    quota: 0
+
+  - id: SE-06
+    name: "Rowan Chen"
+    role: se
+    segment: null
+    start_date: "2024-11-04"
+    quota: 0
+
+  - id: SE-07
+    name: "Dev Patel"
+    role: se
+    segment: null
+    start_date: "2025-01-06"
+    quota: 0
+
+  - id: SE-08
+    name: "Louise Martin"
+    role: se
+    segment: null
+    start_date: "2025-02-17"
+    quota: 0
+
+  - id: SE-09
+    name: "Omar Saeed"
+    role: se
+    segment: null
+    start_date: "2025-04-14"
+    quota: 0
+
+  - id: SE-10
+    name: "Claire Bolton"
+    role: se
+    segment: null
+    start_date: "2025-06-02"
+    quota: 0
+
+  - id: SE-11
+    name: "Mina Okoye"
+    role: se
+    segment: null
+    start_date: "2025-07-21"
+    quota: 0
+
+  - id: SE-12
+    name: "Gareth Webb"
+    role: se
+    segment: null
+    start_date: "2025-09-08"
+    quota: 0
+
+  - id: SE-13
+    name: "Julia Stern"
+    role: se
+    segment: null
+    start_date: "2025-10-20"
+    quota: 0
+
+  - id: SE-14
+    name: "Kian Rahimi"
+    role: se
+    segment: null
+    start_date: "2026-01-05"
+    quota: 0
+
+  # ── SDR team ──────────────────────────────────────────────────────────────
+  - id: SDR-01
+    name: "Anastasia Volkov"
+    role: sdr
+    segment: null
+    start_date: "2024-02-01"
+    quota: 0
+
+  - id: SDR-02
+    name: "Tomohiro Yamamoto"
+    role: sdr
+    segment: null
+    start_date: "2024-06-15"
+    quota: 0
+
+  - id: SDR-03
+    name: "Margot Henley"
+    role: sdr
+    segment: null
+    start_date: "2025-01-15"
+    quota: 0
+
+  - id: SDR-04
+    name: "Reza Farahani"
+    role: sdr
+    segment: null
+    start_date: "2025-07-01"
+    quota: 0
+
+  - id: SDR-05
+    name: "Camille Tessier"
+    role: sdr
+    segment: null
+    start_date: "2024-09-01"
+    quota: 0
+
+  - id: SDR-06
+    name: "Jordan Whitfield"
+    role: sdr
+    segment: null
+    start_date: "2024-11-01"
+    quota: 0
+
+  - id: SDR-07
+    name: "Pita Faleolo"
+    role: sdr
+    segment: null
+    start_date: "2025-02-01"
+    quota: 0
+
+  - id: SDR-08
+    name: "Darius Osei"
+    role: sdr
+    segment: null
+    start_date: "2025-03-15"
+    quota: 0
+
+  - id: SDR-09
+    name: "Luisa Carvalho"
+    role: sdr
+    segment: null
+    start_date: "2025-05-01"
+    quota: 0
+
+  - id: SDR-10
+    name: "Bram Van Der Berg"
+    role: sdr
+    segment: null
+    start_date: "2025-06-15"
+    quota: 0
+
+  - id: SDR-11
+    name: "Yuki Tanaka"
+    role: sdr
+    segment: null
+    start_date: "2025-08-01"
+    quota: 0
+
+  - id: SDR-12
+    name: "Saoirse Murphy"
+    role: sdr
+    segment: null
+    start_date: "2025-09-15"
+    quota: 0
+
+  - id: SDR-13
+    name: "Keanu Makoa"
+    role: sdr
+    segment: null
+    start_date: "2025-10-01"
+    quota: 0
+
+  - id: SDR-14
+    name: "Amara Diallo"
+    role: sdr
+    segment: null
+    start_date: "2025-11-15"
+    quota: 0
+
+  - id: SDR-15
+    name: "Felix Gruber"
+    role: sdr
+    segment: null
+    start_date: "2025-12-01"
+    quota: 0
+
+  - id: SDR-16
+    name: "Hana Nakamura"
+    role: sdr
+    segment: null
+    start_date: "2026-01-15"
+    quota: 0
+
+  - id: SDR-17
+    name: "Tobias Engel"
+    role: sdr
+    segment: null
+    start_date: "2026-02-01"
+    quota: 0
+
+  - id: SDR-18
+    name: "Chisom Obi"
+    role: sdr
+    segment: null
+    start_date: "2026-03-01"
+    quota: 0
+
+  # ── Renewal team (supports NRR story) ─────────────────────────────────────
+  - id: REN-01
+    name: "Agnieszka Kowal"
+    role: renewal_manager
+    segment: "Strategic Enterprise"
+    start_date: "2022-03-01"
+    quota: 0
+
+  - id: REN-02
+    name: "Desmond Fairfax"
+    role: renewal_manager
+    segment: "Enterprise"
+    start_date: "2023-01-10"
+    quota: 0
+
+  - id: REN-03
+    name: "Nadia Ostrowski"
+    role: renewal_manager
+    segment: "Mid-Market"
+    start_date: "2023-07-01"
+    quota: 0
+
+  - id: REN-04
+    name: "Tariq Osei"
+    role: renewal_manager
+    segment: "Enterprise"
+    start_date: "2024-03-01"
     quota: 0

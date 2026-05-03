@@ -1,0 +1,22 @@
+scenarios:
+  - id: abm-intent-converts
+    label: ABM Intent Converts
+    description:
+      primary: High-intent ABM traffic improves created-pipe conversion without pretending the Q1 hole disappears.
+      secondary: Strategic late-stage push risk stays elevated, but better account selection and multi-threading lift enterprise and strategic close efficiency.
+    win_rate_starting: 0.26
+    win_rate_created: 0.24
+    push_rate: 0.27
+    loss_rate: 0.49
+    ae_self_gen_pct: 0.36
+    mql_to_s0: 0.24
+    s0_to_s1: 0.48
+    s1_to_s2: 0.42
+    segment_share:
+      strategic_enterprise: 0.30
+      enterprise: 0.44
+      mid_market: 0.26
+    acv:
+      strategic_enterprise: 2550000
+      enterprise: 850000
+      mid_market: 265000

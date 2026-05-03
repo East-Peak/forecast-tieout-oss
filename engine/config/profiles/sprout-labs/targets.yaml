@@ -1,20 +1,66 @@
-# Sprout Labs — calendar-year fiscal, $10M ARR target.
-# Story: scrappy startup, aggressive Q4-loaded plan to hit $10M run rate.
-# Q1 small (just hired), Q2-Q3 ramping, Q4 crunch.
-
-fiscal_year_start: 2026-01-01
-
-# Beginning-of-FY ARR base. Sprout is a graduating-from-seed company —
-# entered FY26 with ~$2M run rate; targeting $10M new business takes
-# them to ~$12M ending ARR.
+fiscal_year_start: "2026-02-01"
 beginning_arr: 2000000
-
-annual_target: 10000000
+annual_target: 8000000
 annual_targets:
-  new_business_arr: 10000000
+  new_business_arr: 8000000
 
+# Quarterly bookings targets — scalar form (validator sums these; Q1–Q4 labels
+# are intentionally simple so the engine's FY-qualified quarter keys fall back
+# to empty-dict defaults, which is safe and matches the acme-saas pattern).
 quarterly_targets:
-  Q1: 1500000
-  Q2: 2000000
-  Q3: 2500000
-  Q4: 4000000  # Q4 hiring crunch — need to land big
+  Q1: 1600000
+  Q2: 1700000
+  Q3: 2100000
+  Q4: 2600000
+
+# Rich quarterly plan detail — keyed by FY label for cross-reference
+quarterly_plans:
+  Q1FY26: {bookings_target: 1600000, pipeline_target: 3400000, total_net_new: 1600000, ending_arr: 3600000}
+  Q2FY26: {bookings_target: 1700000, pipeline_target: 3600000, total_net_new: 1700000, ending_arr: 5300000}
+  Q3FY26: {bookings_target: 2100000, pipeline_target: 4500000, total_net_new: 2100000, ending_arr: 7400000}
+  Q4FY26: {bookings_target: 2600000, pipeline_target: 5800000, total_net_new: 2600000, ending_arr: 10000000}
+
+# Monthly AE seat targets — 12 months starting Feb FY26
+monthly_ae_targets:
+  "2026-02-01": 4
+  "2026-03-01": 5
+  "2026-04-01": 6
+  "2026-05-01": 6
+  "2026-06-01": 6
+  "2026-07-01": 6
+  "2026-08-01": 6
+  "2026-09-01": 6
+  "2026-10-01": 6
+  "2026-11-01": 6
+  "2026-12-01": 6
+  "2027-01-01": 6
+
+headcount_targets:
+  Q1: {account_executives: 6, sales_engineers: 1, sdrs: 2, total_gtm: 9}
+  Q2: {account_executives: 6, sales_engineers: 1, sdrs: 2, total_gtm: 9}
+  Q3: {account_executives: 6, sales_engineers: 1, sdrs: 2, total_gtm: 9}
+  Q4: {account_executives: 6, sales_engineers: 1, sdrs: 2, total_gtm: 9}
+
+hiring_schedule:
+  - {name: "Priya Desai", segment: mid_market, start_date: "2026-03-03", quota: 800000, ramp_months: 5, status: approved}
+  - {name: "Leo Alvarez", segment: commercial, start_date: "2026-04-14", quota: 450000, ramp_months: 4, status: approved}
+
+top_down_plan:
+  preset_id: sprout-fy26-pmf
+  plan_id: sprout-fy26-pmf
+  label: "Sprout FY26 PMF Plan"
+  version: "1.0"
+  status: working_draft
+  basis: founder_calibrated_operating_plan
+  created_date: "2026-02-01"
+
+plan_cases:
+  sprout-fy26-pmf:
+    top_down_plan:
+      preset_id: sprout-fy26-pmf
+      plan_id: sprout-fy26-pmf
+      label: "Sprout FY26 PMF Plan"
+      version: "1.0"
+      status: working_draft
+      basis: founder_calibrated_operating_plan
+      created_date: "2026-02-01"

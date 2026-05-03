@@ -24,10 +24,9 @@ const PROFILE_META: Record<
   string,
   { scale: string; accent: string }
 > = {
-  "acme-saas": { scale: "$40M FY26 target", accent: "bg-blue-500" },
-  "mighty-oak-holdings": { scale: "$80M FY26 target · $720M base", accent: "bg-amber-600" },
-  "sapling-industries": { scale: "$100M FY26 target", accent: "bg-emerald-500" },
-  "sprout-labs": { scale: "$10M FY26 target", accent: "bg-teal-500" },
+  "sprout-labs": { scale: "$10M FY26 ARR target · early PMF", accent: "bg-teal-500" },
+  "sapling-industries": { scale: "$100M FY26 ARR target · scale-up", accent: "bg-emerald-500" },
+  "mighty-oak-holdings": { scale: "$800M FY26 ARR target · mature enterprise", accent: "bg-amber-600" },
 };
 
 function profileLabel(profile: { id: string; name: string }): string {

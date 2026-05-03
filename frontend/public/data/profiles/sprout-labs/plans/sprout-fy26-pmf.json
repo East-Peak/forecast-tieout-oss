@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "sprout-fy26-pmf",
+  "name": "Sprout FY26 PMF Plan",
+  "version": "1.0",
+  "created_date": "2026-02-01",
+  "default_comparison_view_id": "sales_led_operating",
+  "components": {
+    "sales_led": {
+      "label": "Sales-Led",
+      "category": "new_logo_sales_led",
+      "modeled_status": "scenario_modeled",
+      "approval_status": "working_draft",
+      "basis": "consultant_capacity_recut",
+      "as_of": "2026-02-01",
+      "arr_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {
+          "2026-02-01": 533333,
+          "2026-03-01": 533333,
+          "2026-04-01": 533334,
+          "2026-05-01": 566666,
+          "2026-06-01": 566666,
+          "2026-07-01": 566668,
+          "2026-08-01": 700000,
+          "2026-09-01": 700000,
+          "2026-10-01": 700000,
+          "2026-11-01": 866666,
+          "2026-12-01": 866666,
+          "2027-01-01": 866668
+        },
+        "quarterly_rollup": {
+          "Q1": 1600000,
+          "Q2": 1700000,
+          "Q3": 2100000,
+          "Q4": 2600000
+        },
+        "annual_rollup": 8000000
+      },
+      "seat_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {
+          "2026-02-01": 4,
+          "2026-03-01": 5,
+          "2026-04-01": 6,
+          "2026-05-01": 6,
+          "2026-06-01": 6,
+          "2026-07-01": 6,
+          "2026-08-01": 6,
+          "2026-09-01": 6,
+          "2026-10-01": 6,
+          "2026-11-01": 6,
+          "2026-12-01": 6,
+          "2027-01-01": 6
+        },
+        "quarterly_rollup": {
+          "Q1": 6,
+          "Q2": 6,
+          "Q3": 6,
+          "Q4": 6
+        },
+        "annual_rollup": 6
+      }
+    }
+  },
+  "views": {
+    "sales_led_operating": {
+      "label": "Sales-Led Plan",
+      "treatment_class": "operator_comparable",
+      "supported_grains": [
+        "monthly",
+        "quarterly",
+        "annual"
+      ],
+      "component_ids": [
+        "sales_led"
+      ],
+      "seat_target_owner_component_id": "sales_led",
+      "derived": true
+    }
+  }
+}

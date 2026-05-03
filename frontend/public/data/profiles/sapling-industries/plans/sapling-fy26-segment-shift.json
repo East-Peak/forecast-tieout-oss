@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "id": "sapling-fy26-segment-shift",
+  "name": "Sapling FY26 Segment Shift Plan",
+  "version": "1.0",
+  "created_date": "2026-02-01",
+  "default_comparison_view_id": "sales_led_operating",
+  "components": {
+    "sales_led": {
+      "label": "Sales-Led",
+      "category": "new_logo_sales_led",
+      "modeled_status": "scenario_modeled",
+      "approval_status": "working_draft",
+      "basis": "consultant_capacity_recut",
+      "as_of": "2026-02-01",
+      "arr_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {
+          "2026-02-01": 4000000,
+          "2026-03-01": 4000000,
+          "2026-04-01": 4000000,
+          "2026-05-01": 4666666,
+          "2026-06-01": 4666666,
+          "2026-07-01": 4666668,
+          "2026-08-01": 5333333,
+          "2026-09-01": 5333333,
+          "2026-10-01": 5333334,
+          "2026-11-01": 6000000,
+          "2026-12-01": 6000000,
+          "2027-01-01": 6000000
+        },
+        "quarterly_rollup": {
+          "Q1": 12000000,
+          "Q2": 14000000,
+          "Q3": 16000000,
+          "Q4": 18000000
+        },
+        "annual_rollup": 60000000
+      },
+      "seat_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {
+          "2026-02-01": 27,
+          "2026-03-01": 28,
+          "2026-04-01": 30,
+          "2026-05-01": 30,
+          "2026-06-01": 30,
+          "2026-07-01": 30,
+          "2026-08-01": 31,
+          "2026-09-01": 31,
+          "2026-10-01": 32,
+          "2026-11-01": 32,
+          "2026-12-01": 32,
+          "2027-01-01": 32
+        },
+        "quarterly_rollup": {
+          "Q1": 30,
+          "Q2": 30,
+          "Q3": 32,
+          "Q4": 32
+        },
+        "annual_rollup": 32
+      }
+    }
+  },
+  "views": {
+    "sales_led_operating": {
+      "label": "Sales-Led Plan",
+      "treatment_class": "operator_comparable",
+      "supported_grains": [
+        "monthly",
+        "quarterly",
+        "annual"
+      ],
+      "component_ids": [
+        "sales_led"
+      ],
+      "seat_target_owner_component_id": "sales_led",
+      "derived": true
+    }
+  }
+}

@@ -1,8 +1,8 @@
-team_members:
-  # Sapling Industries roster — Feb-start fiscal, $100M target.
-  # Capacity-constrained: pipeline is healthy but the team is undersized
-  # for the target. ~15 effective AEs covering Enterprise + Mid-Market.
+# Sapling Industries roster — FY26 segment-shift plan.
+# Three segments: enterprise (8 active + 1 ramping), mid_market (12 active + 1 ramping),
+# commercial (7 active + 1 ramping). Supporting: 5 SEs, 6 SDRs, leadership.
 
+team_members:
   # --- VP Sales ---
   - id: "VP-S"
     name: "Marcus Hale"
@@ -26,14 +26,21 @@ team_members:
     start_date: "2023-01-15"
     quota: 0
 
-  # --- Enterprise AEs ($3M quota each) ---
+  - id: "MGR-C"
+    name: "Simone Okafor"
+    role: "manager"
+    segment: "Commercial"
+    start_date: "2023-06-01"
+    quota: 0
+
+  # --- Enterprise AEs ($2.8M quota each, 8 active + 1 ramping) ---
   - id: "AE-E01"
     name: "Naomi Walsh"
     role: "ae"
     segment: "Enterprise"
     manager_id: "MGR-E"
     start_date: "2023-03-01"
-    quota: 3000000
+    quota: 2800000
     status: "tenured"
 
   - id: "AE-E02"
@@ -42,7 +49,7 @@ team_members:
     segment: "Enterprise"
     manager_id: "MGR-E"
     start_date: "2023-08-15"
-    quota: 3000000
+    quota: 2800000
     status: "tenured"
 
   - id: "AE-E03"
@@ -51,7 +58,7 @@ team_members:
     segment: "Enterprise"
     manager_id: "MGR-E"
     start_date: "2024-02-01"
-    quota: 3000000
+    quota: 2800000
     status: "tenured"
 
   - id: "AE-E04"
@@ -60,7 +67,7 @@ team_members:
     segment: "Enterprise"
     manager_id: "MGR-E"
     start_date: "2024-09-01"
-    quota: 3000000
+    quota: 2800000
     status: "tenured"
 
   - id: "AE-E05"
@@ -69,17 +76,53 @@ team_members:
     segment: "Enterprise"
     manager_id: "MGR-E"
     start_date: "2025-04-15"
-    quota: 3000000
+    quota: 2800000
     status: "tenured"
 
-  # --- Mid-Market AEs ($2M quota each) ---
+  - id: "AE-E06"
+    name: "Claire Dufour"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2025-06-02"
+    quota: 2800000
+    status: "tenured"
+
+  - id: "AE-E07"
+    name: "Malik Okoro"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2025-08-18"
+    quota: 2800000
+    status: "tenured"
+
+  - id: "AE-E08"
+    name: "Jenna Ellis"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2025-11-03"
+    quota: 2800000
+    status: "tenured"
+
+  - id: "AE-E09"
+    name: "Priyanka Sen"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2026-03-17"
+    quota: 1400000
+    status: "ramping"
+
+  # --- Mid-Market AEs ($1.8M quota each, 12 active + 1 ramping) ---
   - id: "AE-M01"
     name: "Lucas Brennan"
     role: "ae"
     segment: "Mid-Market"
     manager_id: "MGR-M"
     start_date: "2023-05-01"
-    quota: 2000000
+    quota: 1800000
     status: "tenured"
 
   - id: "AE-M02"
@@ -88,7 +131,7 @@ team_members:
     segment: "Mid-Market"
     manager_id: "MGR-M"
     start_date: "2023-11-01"
-    quota: 2000000
+    quota: 1800000
     status: "tenured"
 
   - id: "AE-M03"
@@ -97,7 +140,7 @@ team_members:
     segment: "Mid-Market"
     manager_id: "MGR-M"
     start_date: "2024-04-15"
-    quota: 2000000
+    quota: 1800000
     status: "tenured"
 
   - id: "AE-M04"
@@ -106,7 +149,7 @@ team_members:
     segment: "Mid-Market"
     manager_id: "MGR-M"
     start_date: "2024-10-01"
-    quota: 2000000
+    quota: 1800000
     status: "tenured"
 
   - id: "AE-M05"
@@ -115,7 +158,7 @@ team_members:
     segment: "Mid-Market"
     manager_id: "MGR-M"
     start_date: "2025-03-15"
-    quota: 2000000
+    quota: 1800000
     status: "tenured"
 
   - id: "AE-M06"
@@ -124,29 +167,146 @@ team_members:
     segment: "Mid-Market"
     manager_id: "MGR-M"
     start_date: "2025-08-01"
-    quota: 2000000
+    quota: 1800000
     status: "tenured"
-
-  # --- Q1 ramps (capacity-constrained narrative) ---
-  - id: "AE-E06"
-    name: "Soren Ahmadi"
-    role: "ae"
-    segment: "Enterprise"
-    manager_id: "MGR-E"
-    start_date: "2026-02-15"
-    quota: 1500000  # ramping
-    status: "ramping"
 
   - id: "AE-M07"
     name: "Idris Vance"
     role: "ae"
     segment: "Mid-Market"
     manager_id: "MGR-M"
-    start_date: "2026-03-01"
-    quota: 1000000  # ramping
+    start_date: "2025-09-15"
+    quota: 1800000
+    status: "tenured"
+
+  - id: "AE-M08"
+    name: "Chloe Mercer"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-10-06"
+    quota: 1800000
+    status: "tenured"
+
+  - id: "AE-M09"
+    name: "Benji Flores"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-10-20"
+    quota: 1800000
+    status: "tenured"
+
+  - id: "AE-M10"
+    name: "Hannah Cho"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-11-10"
+    quota: 1800000
+    status: "tenured"
+
+  - id: "AE-M11"
+    name: "Matteo Russo"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-12-01"
+    quota: 1800000
+    status: "tenured"
+
+  - id: "AE-M12"
+    name: "Kira Wallace"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2026-01-05"
+    quota: 1800000
+    status: "tenured"
+
+  - id: "AE-M13"
+    name: "Owen Delgado"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2026-04-07"
+    quota: 900000
     status: "ramping"
 
-  # --- SDRs ---
+  # --- Commercial AEs ($850k quota each, 7 active + 1 ramping) ---
+  - id: "AE-C01"
+    name: "June Holloway"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-05-06"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C02"
+    name: "Rafael Costa"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-07-08"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C03"
+    name: "Imani Tate"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-10-14"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C04"
+    name: "Brielle Navarro"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2025-01-06"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C05"
+    name: "Theo Mercer"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2025-03-03"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C06"
+    name: "Paige Ellison"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2025-06-02"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C07"
+    name: "Andrej Novak"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2025-08-04"
+    quota: 850000
+    status: "tenured"
+
+  - id: "AE-C08"
+    name: "Lila Hart"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2026-04-21"
+    quota: 425000
+    status: "ramping"
+
+  # --- SDRs (6 active) ---
   - id: "SDR-01"
     name: "Phoebe Aldridge"
     role: "sdr"
@@ -155,13 +315,41 @@ team_members:
     quota: 0
 
   - id: "SDR-02"
-    name: "Imani Tate"
+    name: "Marcus Kim"
+    role: "sdr"
+    segment: null
+    start_date: "2024-09-10"
+    quota: 0
+
+  - id: "SDR-03"
+    name: "Tara Singh"
     role: "sdr"
     segment: null
     start_date: "2025-01-15"
     quota: 0
 
-  # --- SEs ---
+  - id: "SDR-04"
+    name: "Jordan Lee"
+    role: "sdr"
+    segment: null
+    start_date: "2025-04-07"
+    quota: 0
+
+  - id: "SDR-05"
+    name: "Nkechi Obi"
+    role: "sdr"
+    segment: null
+    start_date: "2025-07-21"
+    quota: 0
+
+  - id: "SDR-06"
+    name: "Carlos Reyes"
+    role: "sdr"
+    segment: null
+    start_date: "2025-10-13"
+    quota: 0
+
+  # --- SEs (5 active) ---
   - id: "SE-01"
     name: "Henrik Lindqvist"
     role: "se"
@@ -174,4 +362,25 @@ team_members:
     role: "se"
     segment: null
     start_date: "2024-11-01"
+    quota: 0
+
+  - id: "SE-03"
+    name: "Rowan Chen"
+    role: "se"
+    segment: null
+    start_date: "2024-08-05"
+    quota: 0
+
+  - id: "SE-04"
+    name: "Dev Patel"
+    role: "se"
+    segment: null
+    start_date: "2025-02-03"
+    quota: 0
+
+  - id: "SE-05"
+    name: "Louise Martin"
+    role: "se"
+    segment: null
+    start_date: "2025-09-01"
     quota: 0

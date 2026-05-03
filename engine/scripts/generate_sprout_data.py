@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 """
-Generate deterministic example CSV data for the Sprout Labs demo org.
+Generate deterministic CSV data for the Sprout Labs demo org.
 
-Sprout Labs profile narrative:
-- $10M ARR target (calendar-year fiscal Jan-Dec)
-- Scrappy startup graduating from seed; Q4 hiring crunch
-- Mostly Mid-Market + Commercial; no Enterprise yet
-- Smaller deal sizes, smaller team than Acme
+Sprout Labs profile narrative (FY26, Feb-start):
+  - $2M beginning ARR, $8M new ARR target → $10M ending ARR
+  - Feb-start fiscal: Q1FY26=Feb-Apr, Q2=May-Jul, Q3=Aug-Oct, Q4=Nov-Jan
+  - 4 active AEs + 2 ramping AEs + founders Nadia Bloom & Evan Mercer
+  - 2 SDRs + 1 SE (Rowan Khan)
+  - as_of: 2026-05-03
+  - YTD won: ~$1.45M (Feb-Apr 2026), YTD lost: ~$1.26M
+  - Open pipeline at as_of: $3.85M
 
-Produces five CSV files in engine/data/sprout-labs/.
+Produces three CSV files in engine/data/sprout-labs/:
+  - deals.csv        25 deals (14 open / 6 closed-won YTD / 5 closed-lost YTD)
+  - team_members.csv roster with AEs, founders, SDRs, SE
+  - stage_history.csv stage transitions for all deals
 
 Usage:
-    python -m engine.scripts.generate_sprout_data                  # Generate to engine/data/sprout-labs/
-    python -m engine.scripts.generate_sprout_data --verify         # Regenerate and diff against existing
-    python -m engine.scripts.generate_sprout_data --output-dir /tmp  # Custom output directory
+    python -m engine.scripts.generate_sprout_data
+    python -m engine.scripts.generate_sprout_data --output-dir /tmp
 """
 
 from __future__ import annotations
@@ -25,668 +30,773 @@ import random
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Any
-
-import yaml
 
 # ---------------------------------------------------------------------------
-# Constants
+# Parameters — all tunable values live near the top
 # ---------------------------------------------------------------------------
+
+SEED = 2026  # Fixed seed for reproducibility
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "engine" / "data" / "sprout-labs"
-ROSTER_PATH = REPO_ROOT / "engine" / "config" / "profiles" / "sprout-labs" / "roster.yaml"
 
-SEED = 100  # Different from Acme's 42 — produces different deal mix
+# Calendar anchors
+AS_OF = date(2026, 5, 3)
+FY_START = date(2026, 2, 1)   # Feb-start FY26
 
-# Stage pipeline (open stages only — Closed Won/Lost are terminal)
-OPEN_STAGES = [
-    "Discovery",
-    "Qualification",
-    "Technical Evaluation",
-    "Business Case",
-    "Negotiation",
-]
-TERMINAL_WON = "Closed Won"
-TERMINAL_LOST = "Closed Lost"
+# YTD window: Feb 1 – May 3, 2026 (closed deals)
+YTD_START = date(2026, 2, 1)
+YTD_END = date(2026, 5, 3)
 
-# Segment deal size parameters (min, max, center, std_dev)
-# Sprout is sub-$10M — deal sizes are smaller than Acme. No Enterprise.
-SEGMENT_DEAL_PARAMS: dict[str, dict[str, float]] = {
-    "Mid-Market": {"min": 40_000, "max": 150_000, "center": 80_000, "std": 25_000},
-    "Commercial": {"min": 8_000, "max": 35_000, "center": 18_000, "std": 6_000},
+# Quarter boundaries (FY26)
+Q1_START, Q1_END = date(2026, 2, 1), date(2026, 4, 30)
+Q2_START, Q2_END = date(2026, 5, 1), date(2026, 7, 31)
+Q3_START, Q3_END = date(2026, 8, 1), date(2026, 10, 31)
+Q4_START, Q4_END = date(2026, 11, 1), date(2027, 1, 31)
+
+# Segment parameters
+SEGMENT_PARAMS = {
+    "mid_market": {
+        "acv_mean": 165_000,
+        "acv_min":   90_000,
+        "acv_max":  420_000,
+        "acv_std":   55_000,
+        "cycle_days_median": 71,
+    },
+    "commercial": {
+        "acv_mean":  55_000,
+        "acv_min":   12_000,
+        "acv_max":   95_000,
+        "acv_std":   18_000,
+        "cycle_days_median": 43,
+    },
 }
 
-# Deal types — Sprout has fewer renewals (younger company; less existing book)
-DEAL_TYPES = ["New Business", "Expansion", "Renewal"]
-DEAL_TYPE_WEIGHTS = [0.75, 0.20, 0.05]
+# Open stage distribution: 14 open deals
+# S1 29%, S2 29%, S3 21%, S4 14%, S5 7%
+# 14 * 0.29 ≈ 4, 14 * 0.29 ≈ 4, 14 * 0.21 ≈ 3, 14 * 0.14 ≈ 2, 14 * 0.07 ≈ 1 = 14
+OPEN_STAGE_COUNTS = {
+    "S1": 4,  # Discovery
+    "S2": 4,  # Qualification
+    "S3": 3,  # Technical Evaluation
+    "S4": 2,  # Business Case
+    "S5": 1,  # Negotiation
+}
+assert sum(OPEN_STAGE_COUNTS.values()) == 14
 
-# Lead sources
-SOURCES = ["Inbound", "Outbound", "Partner", "Event", "PLG"]
-SOURCE_WEIGHTS = [0.30, 0.25, 0.20, 0.15, 0.10]
+# Stage names — short codes map to full names
+STAGE_NAMES = {
+    "S1": "Discovery",
+    "S2": "Qualification",
+    "S3": "Technical Evaluation",
+    "S4": "Business Case",
+    "S5": "Negotiation",
+}
 
-# Company generation
-INDUSTRIES = ["Technology", "Finance", "Healthcare", "Manufacturing", "Retail", "Media", "Education", "Energy"]
+# Stage-history days-in-stage by segment
+DAYS_IN_STAGE = {
+    "mid_market": {
+        "Discovery": 11,
+        "Qualification": 17,
+        "Technical Evaluation": 26,
+        "Business Case": 18,
+        "Negotiation": 11,
+    },
+    "commercial": {
+        "Discovery": 7,
+        "Qualification": 10,
+        "Technical Evaluation": 14,
+        "Business Case": 9,
+        "Negotiation": 6,
+    },
+}
 
-COMPANY_PREFIXES = [
-    "Apex", "Zenith", "Cobalt", "Vertex", "Nimbus", "Forge", "Atlas", "Prism",
-    "Helix", "Onyx", "Sable", "Quantum", "Cipher", "Lumen", "Vector", "Nexus",
-    "Stratos", "Aether", "Crest", "Vanguard", "Pinnacle", "Ember", "Nova", "Orbit",
-    "Ridge", "Beacon", "Pulse", "Summit", "Drake", "Titan", "Horizon", "Sterling",
-    "Ironclad", "Basalt", "Radiant", "Sapphire", "Cedar", "Granite", "Crimson", "Azure",
-    "Keystone", "Marble", "Falcon", "Phoenix", "Spectra", "Coral", "Flint", "Opal",
-    "Tempest", "Cascade", "Verdant", "Indigo", "Sequoia", "Obsidian", "Mercury", "Solstice",
-    "Borealis", "Catalyst", "Eclipse", "Pavilion", "Lattice", "Monolith", "Synapse", "Thrive",
-    "Dynamo", "Aegis", "Axiom", "Nebula", "Compass", "Bedrock", "Sentry", "Paragon",
+# Slip probabilities
+SLIP_PROB = {
+    "mid_market": {"once": 0.28, "twice": 0.12, "thrice": 0.03},
+    "commercial": {"once": 0.19, "twice": 0.07, "thrice": 0.01},
+}
+
+# Source channel distribution (applied across all deals)
+SOURCE_CHANNELS = ["inbound", "outbound", "ae_self_gen"]
+SOURCE_WEIGHTS  = [0.52,      0.28,       0.20]
+
+# AE assignments (for open + closed deals)
+# Maya Singh: 29% of open pipe, 34% of YTD won ARR → high allocation
+# Bottom quartile (Owen Hart, Leo Alvarez): 17% of open pipe
+AE_NAMES = ["Maya Singh", "Jordan Reyes", "Tessa Nguyen", "Owen Hart", "Priya Desai", "Leo Alvarez"]
+AE_SEGMENTS = {
+    "Maya Singh":   "mid_market",
+    "Jordan Reyes": "mid_market",
+    "Tessa Nguyen": "mid_market",
+    "Owen Hart":    "commercial",
+    "Priya Desai":  "mid_market",
+    "Leo Alvarez":  "commercial",
+}
+AE_STATUS = {
+    "Maya Singh":   "tenured",
+    "Jordan Reyes": "tenured",
+    "Tessa Nguyen": "tenured",
+    "Owen Hart":    "tenured",
+    "Priya Desai":  "ramping",
+    "Leo Alvarez":  "ramping",
+}
+
+FOUNDER_NAMES = ["Nadia Bloom", "Evan Mercer"]
+SDR_NAMES     = ["Jamie Weston", "Dani Ortega"]
+SE_NAME       = "Rowan Khan"
+
+# Biotech/devtools/robotics Bay Area + Boston company names
+ACCOUNT_NAMES_POOL = [
+    # Bay Area flavor
+    "Northline Biofabrication",
+    "HarborForge Clinical",
+    "Alder Creek Robotics",
+    "SignalNest Robotics",
+    "Maple Thread Health",
+    "Blue Current Dental",
+    "Helio Harbor Health",
+    "Cypress Bridge Genomics",
+    "Ironwood Biotech",
+    "Redwood Circuit Labs",
+    "Bayshore Devtools",
+    "Crestline Automation",
+    "Saffron Gate Systems",
+    "Stillwater Biosystems",
+    "Marin Edge Analytics",
+    "Cinder Path Media",
+    "Pocket Harbor Games",
+    # Boston flavor
+    "Kendall Bioworks",
+    "Charles River Robotics",
+    "Beacon Hill Genomics",
+    "Newbury DevOps",
+    "Cambridge Biosensors",
+    "Somerville Automation",
+    "Lexington DevTools",
+    "Patriot Biosystems",
 ]
 
-COMPANY_SUFFIXES = [
-    "Systems", "Technologies", "Solutions", "Labs", "Corp", "Group", "Inc",
-    "Industries", "Analytics", "Networks", "Dynamics", "Software", "Digital",
-    "Platforms", "Ventures", "Global", "Partners", "Sciences", "Cloud", "Data",
+# Deal name suffixes by industry/stage
+DEAL_SUFFIXES = [
+    "Platform rollout",
+    "Compliance cloud",
+    "Advisor expansion",
+    "Analytics pilot",
+    "Ops suite",
+    "Telemetry pilot",
+    "ICP check",
+    "Founder discovery",
+    "Security module",
+    "Devtools integration",
+    "Genomics platform",
+    "Robotics OS",
+    "MLOps suite",
+    "Data fabric",
+    "Observability stack",
+    "CI/CD platform",
+    "Bioinformatics suite",
+    "Cell therapy tracking",
+    "Clinical ops cloud",
+    "Lab automation platform",
 ]
 
-FIRST_NAMES = [
-    "James", "Emma", "Liam", "Sophia", "Noah", "Olivia", "Ethan", "Ava",
-    "Mason", "Isabella", "Lucas", "Mia", "Logan", "Charlotte", "Alexander", "Amelia",
-    "Jacob", "Harper", "Michael", "Evelyn", "Daniel", "Abigail", "Henry", "Emily",
-    "Sebastian", "Ella", "Jack", "Elizabeth", "Owen", "Sofia", "Samuel", "Avery",
-    "Ryan", "Chloe", "Nathan", "Victoria", "Andrew", "Madison", "Gabriel", "Luna",
-    "Dylan", "Grace", "Joshua", "Scarlett", "Caleb", "Lily", "Matthew", "Aria",
-    "Adrian", "Zoe", "Connor", "Penelope", "Isaac", "Layla", "Nolan", "Riley",
-    "Thomas", "Nora", "Aaron", "Zoey", "Robert", "Hannah", "Benjamin", "Stella",
-    "Patrick", "Audrey", "Kevin", "Savannah", "Trevor", "Brooklyn", "Gavin", "Leah",
-    "Colin", "Natalie", "Scott", "Hazel", "Derek", "Violet", "Marcus", "Aurora",
-]
+# Forecast categories
+FORECAST_CAT = {
+    "S1": "Pipeline",
+    "S2": "Pipeline",
+    "S3": "Best Case",
+    "S4": "Commit",
+    "S5": "Commit",
+    "Won": "Closed",
+    "Lost": "Closed",
+}
 
-LAST_NAMES = [
-    "Thompson", "Rivera", "Campbell", "Mitchell", "Roberts", "Carter", "Phillips",
-    "Evans", "Turner", "Torres", "Parker", "Collins", "Edwards", "Stewart", "Flores",
-    "Morris", "Murphy", "Cook", "Rogers", "Morgan", "Peterson", "Cooper", "Reed",
-    "Bailey", "Bell", "Gomez", "Kelly", "Howard", "Ward", "Cox", "Diaz",
-    "Richardson", "Wood", "Watson", "Brooks", "Bennett", "Gray", "James", "Reyes",
-    "Cruz", "Hughes", "Price", "Myers", "Long", "Foster", "Sanders", "Ross",
-    "Sullivan", "Powell", "Russell", "Bryant", "Griffin", "Hayes", "Wallace", "West",
-]
-
-TITLES = [
-    "VP Engineering", "CTO", "Director of IT", "Head of Infrastructure",
-    "VP Operations", "Director of Engineering", "Head of Security",
-    "Chief Information Officer", "SVP Technology", "Director of Platform",
-    "Head of DevOps", "VP Product", "Director of Cloud Operations",
-    "Chief Architect", "VP Technology", "Director of Data Engineering",
-    "Head of SRE", "VP Cloud", "Director of Solutions", "Head of Analytics",
-]
-
-# Today anchor: 2026-04-06 (consistent with Acme for parity)
-TODAY = date(2026, 4, 6)
-
-# Fiscal year: Sprout uses CALENDAR YEAR (Jan 1 - Dec 31, 2026)
-# Q1: Jan 1 - Mar 31, 2026  (already complete as of TODAY=2026-04-06)
-# Q2: Apr 1 - Jun 30, 2026  (in progress)
-# Q3: Jul 1 - Sep 30, 2026
-# Q4: Oct 1 - Dec 31, 2026  (hiring crunch quarter)
-FY_Q1_START = date(2026, 1, 1)
-FY_Q1_END = date(2026, 3, 31)
-FY_Q2_START = date(2026, 4, 1)
-FY_Q2_END = date(2026, 6, 30)
-FY_Q3_START = date(2026, 7, 1)
-FY_Q3_END = date(2026, 9, 30)
-FY_Q4_START = date(2026, 10, 1)
-FY_Q4_END = date(2026, 12, 31)
-
-# Historical quarters (FY25 Q3 and Q4 — calendar year before)
-HIST_Q3_START = date(2025, 7, 1)
-HIST_Q3_END = date(2025, 9, 30)
-HIST_Q4_START = date(2025, 10, 1)
-HIST_Q4_END = date(2025, 12, 31)
-
-# Departed AE IDs for dirty data (Sprout has fewer turnover examples)
-DEPARTED_AE_IDS = ["AE-X01"]
+# Raw stage labels for founder-owned anomaly deals
+FOUNDER_RAW_STAGES = {
+    "S1": "Discovery - ICP Check",
+    "S2": "Qualification - ICP Check",
+}
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
-
-def _random_date(start: date, end: date) -> date:
-    """Return a random date between start and end (inclusive)."""
+def _rdate(start: date, end: date) -> date:
     delta = (end - start).days
     if delta <= 0:
         return start
     return start + timedelta(days=random.randint(0, delta))
 
 
-def _random_weekday_date(start: date, end: date) -> date:
-    """Return a random weekday date between start and end."""
-    for _ in range(100):
-        d = _random_date(start, end)
-        if d.weekday() < 5:
-            return d
-    return _random_date(start, end)
+def _weekday(d: date) -> date:
+    """Advance d to next weekday if it falls on a weekend."""
+    while d.weekday() >= 5:
+        d += timedelta(days=1)
+    return d
 
 
-def _clamp_amount(amount: float, segment: str) -> float:
-    """Clamp deal amount to segment range and round to nearest $1K."""
-    params = SEGMENT_DEAL_PARAMS[segment]
-    clamped = max(params["min"], min(params["max"], amount))
-    return round(clamped / 1000) * 1000
+def _fmt_dt(d: date) -> str:
+    h = random.randint(8, 17)
+    m = random.choice([0, 15, 30, 45])
+    return f"{d.isoformat()}T{h:02d}:{m:02d}:00"
 
 
-def _generate_amount(segment: str) -> float:
-    """Generate a segment-appropriate deal amount."""
-    params = SEGMENT_DEAL_PARAMS[segment]
-    raw = random.gauss(params["center"], params["std"])
-    return _clamp_amount(raw, segment)
+def _acv(segment: str) -> int:
+    p = SEGMENT_PARAMS[segment]
+    v = random.gauss(p["acv_mean"], p["acv_std"])
+    v = max(p["acv_min"], min(p["acv_max"], v))
+    return int(round(v / 1000) * 1000)
 
 
-def _generate_deal_name(company_name: str, deal_type: str) -> str:
-    """Generate a deal name from company and type."""
-    product_lines = ["Platform", "Enterprise Suite", "Analytics", "Security Module",
-                     "Data Pipeline", "API Gateway", "Monitoring", "Compliance"]
-    product = random.choice(product_lines)
-    if deal_type == "Expansion":
-        return f"{company_name} - {product} Expansion"
-    elif deal_type == "Renewal":
-        return f"{company_name} - {product} Renewal"
-    else:
-        return f"{company_name} - {product}"
+def _pick_source() -> str:
+    return random.choices(SOURCE_CHANNELS, weights=SOURCE_WEIGHTS, k=1)[0]
 
 
-# ---------------------------------------------------------------------------
-# Roster loader
-# ---------------------------------------------------------------------------
+def _slip_count(segment: str) -> int:
+    """How many times does this deal slip (stage re-date)? 0/1/2/3."""
+    sp = SLIP_PROB[segment]
+    r = random.random()
+    if r < sp["thrice"]:
+        return 3
+    if r < sp["twice"]:
+        return 2
+    if r < sp["once"]:
+        return 1
+    return 0
 
 
-def load_roster(roster_path: Path) -> list[dict[str, Any]]:
-    """Load team members from roster.yaml."""
-    with open(roster_path) as f:
-        data = yaml.safe_load(f)
-    return data["team_members"]
+def _stage_history_for_deal(
+    deal_id: str,
+    segment: str,
+    stages: list[str],   # ordered list of stages traversed
+    created: date,
+    *,
+    anomaly_s1_to_s2_stale: bool = False,
+) -> list[dict]:
+    """Generate stage transitions for one deal.
 
-
-def roster_to_csv_rows(members: list[dict]) -> list[dict]:
-    """Convert roster YAML entries to CSV-compatible dicts."""
+    anomaly_s1_to_s2_stale: if True, simulate 21+ days at S1→S2 without
+    amount/close-date cleanup (represented as a prolonged stay in S2).
+    """
     rows = []
-    for m in members:
+    current = created
+    for i, stage in enumerate(stages):
+        from_s = "" if i == 0 else stages[i - 1]
         rows.append({
-            "id": m["id"],
-            "name": m["name"],
-            "role": m["role"] if m["role"] != "ae" else "AE",
-            "segment": m.get("segment", ""),
-            "start_date": m["start_date"],
-            "is_active": "true",
-            "manager_id": m.get("manager_id", ""),
+            "deal_id": deal_id,
+            "from_stage": from_s,
+            "to_stage": stage,
+            "transition_date": _fmt_dt(current),
         })
+        if i < len(stages) - 1:
+            dwell = DAYS_IN_STAGE.get(segment, {}).get(stage, 14)
+            slips = _slip_count(segment)
+            dwell += slips * dwell  # each slip adds one full dwell period
+            # For the S1→S2 stale anomaly, force at least 21 days in Qualification
+            if anomaly_s1_to_s2_stale and stage == "Qualification":
+                dwell = max(dwell, 21)
+            current = _weekday(current + timedelta(days=dwell + random.randint(-3, 3)))
     return rows
 
 
 # ---------------------------------------------------------------------------
-# Company generation
+# Sample deal rows (anchors from brief Section E)
 # ---------------------------------------------------------------------------
 
+SAMPLE_DEALS = [
+    {
+        "id": "SPR-001",
+        "name": "Northline Biofabrication - Platform rollout",
+        "account": "Northline Biofabrication",
+        "owner": "Maya Singh",
+        "segment": "mid_market",
+        "source_channel": "inbound",
+        "stage": "Won",
+        "amount": 420000,
+        "arr": 420000,
+        "created_date": "2026-01-08",
+        "close_date": "2026-04-18",
+        "is_closed": True,
+        "is_won": True,
+        "lost_reason": "",
+        "raw_stage": "Closed Won",
+        "type": "new_business",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "SPR-002",
+        "name": "HarborForge Clinical - Compliance cloud",
+        "account": "HarborForge Clinical",
+        "owner": "Jordan Reyes",
+        "segment": "mid_market",
+        "source_channel": "inbound",
+        "stage": "Won",
+        "amount": 310000,
+        "arr": 310000,
+        "created_date": "2026-01-19",
+        "close_date": "2026-04-25",
+        "is_closed": True,
+        "is_won": True,
+        "lost_reason": "",
+        "raw_stage": "Closed Won",
+        "type": "new_business",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "SPR-003",
+        "name": "Alder Creek Robotics - Advisor expansion",
+        "account": "Alder Creek Robotics",
+        "owner": "Maya Singh",
+        "segment": "mid_market",
+        "source_channel": "ae_self_gen",
+        "stage": "Won",
+        "amount": 265000,
+        "arr": 265000,
+        "created_date": "2026-02-02",
+        "close_date": "2026-04-29",
+        "is_closed": True,
+        "is_won": True,
+        "lost_reason": "",
+        "raw_stage": "Closed Won",
+        "type": "new_business",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "SPR-004",
+        "name": "Cinder Path Media - Analytics pilot",
+        "account": "Cinder Path Media",
+        "owner": "Owen Hart",
+        "segment": "commercial",
+        "source_channel": "inbound",
+        "stage": "Lost",
+        "amount": 42000,
+        "arr": 42000,
+        "created_date": "2026-02-11",
+        "close_date": "2026-03-21",
+        "is_closed": True,
+        "is_won": False,
+        "lost_reason": "No ICP fit after discovery",
+        "raw_stage": "Closed Lost",
+        "type": "new_business",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "SPR-005",
+        "name": "Pocket Harbor Games - Ops suite",
+        "account": "Pocket Harbor Games",
+        "owner": "Tessa Nguyen",
+        "segment": "mid_market",
+        "source_channel": "inbound",
+        "stage": "Lost",
+        "amount": 185000,
+        "arr": 185000,
+        "created_date": "2026-01-27",
+        "close_date": "2026-03-28",
+        "is_closed": True,
+        "is_won": False,
+        "lost_reason": "Champion left before POC",
+        "raw_stage": "Closed Lost",
+        "type": "new_business",
+        "forecast_category": "Closed",
+    },
+    {
+        "id": "SPR-006",
+        "name": "SignalNest Robotics - Telemetry pilot",
+        "account": "SignalNest Robotics",
+        "owner": "Priya Desai",
+        "segment": "mid_market",
+        "source_channel": "outbound",
+        "stage": "S3",
+        "amount": 180000,
+        "arr": 180000,
+        "created_date": "2026-03-12",
+        "close_date": "2026-06-24",
+        "is_closed": False,
+        "is_won": False,
+        "lost_reason": "",
+        "raw_stage": "Technical Evaluation",
+        "type": "new_business",
+        "forecast_category": "Best Case",
+    },
+    {
+        "id": "SPR-007",
+        "name": "Maple Thread Health - ICP check",
+        "account": "Maple Thread Health",
+        "owner": "Nadia Bloom",
+        "segment": "mid_market",
+        "source_channel": "inbound",
+        "stage": "S2",
+        "amount": 0,
+        "arr": 0,
+        "created_date": "2026-03-18",
+        "close_date": "2026-05-30",
+        "is_closed": False,
+        "is_won": False,
+        "lost_reason": "",
+        "raw_stage": "Qualification - ICP Check",
+        "type": "new_business",
+        "forecast_category": "Pipeline",
+    },
+    {
+        "id": "SPR-008",
+        "name": "Blue Current Dental - Founder discovery",
+        "account": "Blue Current Dental",
+        "owner": "Evan Mercer",
+        "segment": "commercial",
+        "source_channel": "inbound",
+        "stage": "S1",
+        "amount": 0,
+        "arr": 0,
+        "created_date": "2026-04-07",
+        "close_date": "2026-06-15",
+        "is_closed": False,
+        "is_won": False,
+        "lost_reason": "",
+        "raw_stage": "Discovery - ICP Check",
+        "type": "new_business",
+        "forecast_category": "Pipeline",
+    },
+    {
+        "id": "SPR-009",
+        "name": "Helio Harbor Health - Security module",
+        "account": "Helio Harbor Health",
+        "owner": "Maya Singh",
+        "segment": "mid_market",
+        "source_channel": "ae_self_gen",
+        "stage": "S5",
+        "amount": 260000,
+        "arr": 260000,
+        "created_date": "2026-02-26",
+        "close_date": "2026-05-21",
+        "is_closed": False,
+        "is_won": False,
+        "lost_reason": "",
+        "raw_stage": "Negotiation",
+        "type": "new_business",
+        "forecast_category": "Commit",
+    },
+]
 
-def generate_companies(n: int = 150) -> list[dict]:
-    """Generate n fictional companies with deterministic names."""
-    companies = []
-    used_names: set[str] = set()
-
-    # Shuffle to get deterministic but varied combinations
-    prefixes = list(COMPANY_PREFIXES)
-    suffixes = list(COMPANY_SUFFIXES)
-
-    for i in range(n):
-        # Pick unique name
-        for _ in range(100):
-            prefix = random.choice(prefixes)
-            suffix = random.choice(suffixes)
-            name = f"{prefix} {suffix}"
-            if name not in used_names:
-                used_names.add(name)
-                break
-
-        # Sprout: no Enterprise. ~50% Mid-Market, ~50% Commercial.
-        segment_roll = random.random()
-        if segment_roll < 0.50:
-            segment = "Mid-Market"
-            emp_count = random.randint(200, 2000)
-        else:
-            segment = "Commercial"
-            emp_count = random.randint(20, 200)
-
-        companies.append({
-            "id": f"COMP-{i + 1:03d}",
-            "name": name,
-            "segment": segment,
-            "industry": random.choice(INDUSTRIES),
-            "employee_count": emp_count,
-        })
-
-    return companies
+# Verify sample deals: 3 closed-won YTD, 2 closed-lost YTD, 4 open
+# SPR-001,002,003 won (Apr 18/25/29) — YTD; SPR-004,005 lost — YTD
+# SPR-006,007,008,009 open
+# Remaining 16 deals generated programmatically below
 
 
 # ---------------------------------------------------------------------------
-# Contact generation
+# Programmatic deal generation
 # ---------------------------------------------------------------------------
 
+def _build_generated_deals(seed_state: random.Random) -> list[dict]:
+    """Generate 16 additional deals to complement the 9 sample anchors.
 
-def generate_contacts(companies: list[dict], n: int = 200) -> list[dict]:
-    """Generate n fictional contacts distributed across companies."""
-    contacts = []
-    used_emails: set[str] = set()
+    Target totals:
+      14 open (we have 4 from samples, need 10 more)
+      6 closed-won YTD (we have 3, need 3 more)
+      5 closed-lost YTD (we have 2, need 3 more)
 
-    for i in range(n):
-        company = random.choice(companies)
-        first = random.choice(FIRST_NAMES)
-        last = random.choice(LAST_NAMES)
-        name = f"{first} {last}"
+    Open pipeline ~$3.85M total (anchors contribute ~$440k open, so
+    generated open deals need ~$3.41M).
 
-        # Generate unique email
-        domain = company["name"].lower().replace(" ", "").replace(".", "") + ".com"
-        base_email = f"{first.lower()}.{last.lower()}@{domain}"
-        email = base_email
-        counter = 2
-        while email in used_emails:
-            email = f"{first.lower()}.{last.lower()}{counter}@{domain}"
-            counter += 1
-        used_emails.add(email)
-
-        contacts.append({
-            "id": f"CT-{i + 1:03d}",
-            "name": name,
-            "email": email,
-            "company_id": company["id"],
-            "title": random.choice(TITLES),
-        })
-
-    return contacts
-
-
-# ---------------------------------------------------------------------------
-# Deal generation
-# ---------------------------------------------------------------------------
-
-
-def _get_ae_ids_by_segment(roster: list[dict]) -> dict[str, list[str]]:
-    """Group active AE IDs by segment."""
-    # Sprout has no Enterprise AEs.
-    result: dict[str, list[str]] = {"Mid-Market": [], "Commercial": []}
-    for m in roster:
-        if m.get("role") == "ae" and m.get("segment") in result:
-            result[m["segment"]].append(m["id"])
-    return result
-
-
-def generate_deals(
-    roster: list[dict],
-    companies: list[dict],
-) -> tuple[list[dict], list[dict]]:
-    """Generate ~400 deals and their stage history.
-
-    Returns (deals, stage_history) where each is a list of dicts.
+    YTD won ~$1.45M (anchors: 420+310+265=$995k, need ~$455k more).
+    YTD lost ~$1.26M (anchors: 42+185=$227k, need ~$1.03M more).
     """
-    ae_by_segment = _get_ae_ids_by_segment(roster)
-    companies_by_segment: dict[str, list[dict]] = {"Mid-Market": [], "Commercial": []}
-    for c in companies:
-        if c["segment"] in companies_by_segment:
-            companies_by_segment[c["segment"]].append(c)
+    rng = seed_state
+    deals = []
 
-    deals: list[dict] = []
-    history: list[dict] = []
-    deal_counter = 0
+    def _make_id(n: int) -> str:
+        return f"SPR-{n:03d}"
 
-    # Track which deals get dirty data treatment
-    dirty_missing_amount_indices: list[int] = []
-    dirty_missing_close_date_indices: list[int] = []
-    dirty_departed_owner_indices: list[int] = []
-    dirty_pusher_indices: list[int] = []
-    dirty_stale_indices: list[int] = []
-    dirty_zero_amount_cw_index: int | None = None
-    dirty_past_close_bc_index: int | None = None
+    counter = 10  # start after SPR-009
 
-    # -----------------------------------------------------------------------
-    # Helper to create one deal + its stage history
-    # -----------------------------------------------------------------------
-    def _make_deal(
-        target_stage: str,
-        is_closed: bool,
-        is_won: bool,
-        segment: str,
-        close_date_range: tuple[date, date],
-        created_date_range: tuple[date, date],
-    ) -> dict:
-        nonlocal deal_counter
-        deal_counter += 1
-        deal_id = f"D-{deal_counter:03d}"
+    # ---- 3 more closed-won YTD deals ----
+    # Need ~$455k total from these 3 to reach $1.45M YTD won target
+    # (samples contribute $995k; 995+455=1450)
+    won_specs = [
+        # (owner, segment, source, amount, created, close_date, acct_suffix, deal_suffix)
+        ("Maya Singh",   "mid_market", "ae_self_gen", 190000, "2026-01-15", "2026-03-14",
+         "Cypress Bridge Genomics",    "Genomics platform"),
+        ("Tessa Nguyen", "mid_market", "outbound",    212000, "2026-01-22", "2026-03-19",
+         "Kendall Bioworks",           "MLOps suite"),
+        ("Owen Hart",    "commercial", "outbound",     53000, "2026-02-05", "2026-04-10",
+         "Bayshore Devtools",          "CI/CD platform"),
+    ]
+    for (owner, seg, src, amt, created, close, acct, suffix) in won_specs:
+        deals.append({
+            "id": _make_id(counter),
+            "name": f"{acct} - {suffix}",
+            "account": acct,
+            "owner": owner,
+            "segment": seg,
+            "source_channel": src,
+            "stage": "Won",
+            "amount": amt,
+            "arr": amt,
+            "created_date": created,
+            "close_date": close,
+            "is_closed": True,
+            "is_won": True,
+            "lost_reason": "",
+            "raw_stage": "Closed Won",
+            "type": "new_business",
+            "forecast_category": "Closed",
+        })
+        counter += 1
 
-        # Pick AE and company
-        ae_id = random.choice(ae_by_segment[segment])
-        company = random.choice(companies_by_segment[segment])
+    # ---- 3 more closed-lost YTD deals ----
+    # Need ~$1.033M total from these 3 to reach $1.26M YTD lost target
+    # (samples contribute $227k; 227+1033=1260)
+    lost_specs = [
+        # (owner, segment, source, amount, created, close_date, acct, suffix, lost_reason)
+        ("Jordan Reyes", "mid_market", "inbound",  395000, "2025-12-10", "2026-02-28",
+         "Stillwater Biosystems", "Lab automation platform",
+         "Went with incumbent vendor"),
+        ("Owen Hart",    "commercial", "inbound",   63000, "2026-01-15", "2026-03-05",
+         "Marin Edge Analytics",  "Devtools integration",
+         "No budget this quarter"),
+        ("Tessa Nguyen", "mid_market", "inbound",  575000, "2025-12-20", "2026-04-02",
+         "Charles River Robotics", "Robotics OS",
+         "Lost to competitor at POC"),
+    ]
+    for (owner, seg, src, amt, created, close, acct, suffix, reason) in lost_specs:
+        deals.append({
+            "id": _make_id(counter),
+            "name": f"{acct} - {suffix}",
+            "account": acct,
+            "owner": owner,
+            "segment": seg,
+            "source_channel": src,
+            "stage": "Lost",
+            "amount": amt,
+            "arr": amt,
+            "created_date": created,
+            "close_date": close,
+            "is_closed": True,
+            "is_won": False,
+            "lost_reason": reason,
+            "raw_stage": "Closed Lost",
+            "type": "new_business",
+            "forecast_category": "Closed",
+        })
+        counter += 1
 
-        # Deal type and source
-        deal_type = random.choices(DEAL_TYPES, weights=DEAL_TYPE_WEIGHTS, k=1)[0]
-        source = random.choices(SOURCES, weights=SOURCE_WEIGHTS, k=1)[0]
+    # ---- 10 more open deals ----
+    # Need stages: S1=4, S2=4, S3=3, S4=2, S5=1 (14 total)
+    # Already have from samples: S3=1(SPR-006), S2=1(SPR-007), S1=1(SPR-008), S5=1(SPR-009)
+    # Need: S1=3, S2=3, S3=2, S4=2, S5=0
+    # Open pipe target breakdown:
+    # Samples contribute: SPR-006 $180k, SPR-009 $260k = $440k
+    # Generated 10 deals need: $3.85M - $440k = $3.41M
+    # Distribution: S1×3=~$180k (two $0-founders + one commercial ~$45k)
+    #               S2×3=~$290k (two $0-founders + one mid ~$290k)
+    #               S3×2=~$960k (SDR-sourced mid-market, high conviction)
+    #               S4×2=~$1.98M (near-close, large mid-market)
+    # Total: ~$3.41M ✓
+    open_specs = [
+        # (owner, segment, source, stage_code, amount, created, close_date, acct, suffix, founder_owned)
+        # S1 deals — 2 founder-owned ($0) + 1 commercial
+        ("Nadia Bloom",  "mid_market", "inbound",  "S1", 0,      "2026-03-25", "2026-06-10",
+         "Ironwood Biotech",       "ICP check",         True),   # founder_owned
+        ("Evan Mercer",  "commercial", "inbound",  "S1", 0,      "2026-04-01", "2026-06-18",
+         "Beacon Hill Genomics",   "Founder discovery", True),   # founder_owned
+        ("Leo Alvarez",  "commercial", "outbound", "S1", 45000,  "2026-04-10", "2026-07-01",
+         "Lexington DevTools",     "Devtools integration", False),
+        # S2 deals — 2 founder-owned ($0) + 1 mid-market non-founder
+        ("Nadia Bloom",  "mid_market", "inbound",  "S2", 0,      "2026-03-05", "2026-06-20",
+         "Cambridge Biosensors",   "ICP check",         True),   # founder_owned
+        ("Jordan Reyes", "mid_market", "outbound", "S2", 290000, "2026-03-08", "2026-07-15",
+         "Crestline Automation",   "Robotics OS",       False),
+        ("Evan Mercer",  "commercial", "inbound",  "S2", 0,      "2026-03-20", "2026-06-30",
+         "Saffron Gate Systems",   "Analytics pilot",   True),   # 6th founder_owned
+        # S3 deals — outbound SDR-sourced, high-conviction
+        ("Maya Singh",   "mid_market", "outbound", "S3", 455000, "2026-02-15", "2026-07-10",
+         "Redwood Circuit Labs",   "Observability stack", False),
+        ("Tessa Nguyen", "mid_market", "ae_self_gen","S3",505000,"2026-03-01", "2026-07-22",
+         "Somerville Automation",  "Lab automation platform", False),
+        # S4 deals — large mid-market nearing close
+        ("Maya Singh",   "mid_market", "outbound", "S4", 985000, "2026-01-20", "2026-06-05",
+         "Newbury DevOps",         "MLOps suite",       False),
+        ("Jordan Reyes", "mid_market", "ae_self_gen","S4",1125000,"2026-01-10","2026-06-17",
+         "Patriot Biosystems",     "Cell therapy tracking", False),
+    ]
 
-        # Amount
-        amount = _generate_amount(segment)
+    # founder-owned deals tracking
+    # Samples SPR-007 (Nadia, S2) + SPR-008 (Evan, S1) = 2 founder-owned
+    # open_specs adds 4 more (Nadia S1, Evan S1, Nadia S2, Evan S2) = 4
+    # Total founder-owned with amount=0: 6 ✓
+    founder_owned_ids: list[str] = []
 
-        # Dates
-        created = _random_weekday_date(*created_date_range)
-        if is_closed:
-            close = _random_weekday_date(*close_date_range)
-            # Ensure close_date is after created_date
-            if close <= created:
-                close = created + timedelta(days=random.randint(30, 90))
-        else:
-            close = _random_weekday_date(*close_date_range)
-            if close <= created:
-                close = created + timedelta(days=random.randint(45, 120))
-
-        deal_name = _generate_deal_name(company["name"], deal_type)
+    for spec in open_specs:
+        (owner, seg, src, stage_code, amt, created, close_date, acct, suffix, is_founder_owned) = spec
+        stage_name = STAGE_NAMES[stage_code]
+        forecast_cat = FORECAST_CAT[stage_code]
+        raw_stage = stage_name
+        if is_founder_owned and stage_code in ("S1", "S2"):
+            raw_stage = FOUNDER_RAW_STAGES[stage_code]
 
         deal = {
-            "id": deal_id,
-            "name": deal_name,
-            "amount": amount,
-            "stage": target_stage,
-            "close_date": close.isoformat(),
-            "owner_id": ae_id,
-            "type": deal_type,
-            "created_date": created.isoformat(),
-            "segment": segment,
-            "source": source,
-            "is_closed": "true" if is_closed else "false",
-            "is_won": "true" if is_won else "false",
+            "id": _make_id(counter),
+            "name": f"{acct} - {suffix}",
+            "account": acct,
+            "owner": owner,
+            "segment": seg,
+            "source_channel": src,
+            "stage": stage_code,
+            "amount": amt,
+            "arr": amt,
+            "created_date": created,
+            "close_date": close_date,
+            "is_closed": False,
+            "is_won": False,
+            "lost_reason": "",
+            "raw_stage": raw_stage,
+            "type": "new_business",
+            "forecast_category": forecast_cat,
         }
-
-        # Generate stage history
-        _generate_stage_history(deal_id, target_stage, is_closed, is_won, created, close, history)
-
-        return deal
-
-    # Sprout segment-distribution helper: 50% Mid-Market, 50% Commercial.
-    def _pick_segment() -> str:
-        return "Mid-Market" if random.random() < 0.5 else "Commercial"
-
-    # -----------------------------------------------------------------------
-    # 1) Open deals (~60) distributed across stages — smaller team, fewer deals
-    # -----------------------------------------------------------------------
-    open_stage_distribution = {
-        "Discovery": 14,
-        "Qualification": 12,
-        "Technical Evaluation": 14,
-        "Business Case": 10,
-        "Negotiation": 8,
-        "Closed Won": 6,  # Recent wins this quarter (Q2 in progress)
-    }
-
-    for stage, count in open_stage_distribution.items():
-        is_won = stage == "Closed Won"
-        is_closed = is_won
-        for _ in range(count):
-            segment = _pick_segment()
-            if is_won:
-                # Recent wins: closed this quarter (Q2 in progress as of TODAY)
-                close_range = (FY_Q2_START, TODAY)
-                created_range = (HIST_Q4_START, FY_Q1_START + timedelta(days=15))
-            else:
-                # Open deals: close dates spread across Q2 and Q3
-                close_range = (TODAY - timedelta(days=5), FY_Q3_END)
-                created_range = (HIST_Q4_START, TODAY - timedelta(days=7))
-
-            deal = _make_deal(stage, is_closed, is_won, segment, close_range, created_range)
-            deals.append(deal)
-
-    # -----------------------------------------------------------------------
-    # 2) Q1 Closed Won (~20) — completed quarter, demonstrates real bookings
-    # -----------------------------------------------------------------------
-    for _ in range(20):
-        segment = _pick_segment()
-        close_range = (FY_Q1_START, FY_Q1_END)
-        created_range = (HIST_Q4_START - timedelta(days=60), FY_Q1_START + timedelta(days=15))
-        deal = _make_deal(TERMINAL_WON, True, True, segment, close_range, created_range)
+        if is_founder_owned:
+            founder_owned_ids.append(_make_id(counter))
         deals.append(deal)
+        counter += 1
 
-    # -----------------------------------------------------------------------
-    # 3) Historical (FY25) Closed Won (~25) over Q3 + Q4
-    # -----------------------------------------------------------------------
-    for _ in range(25):
-        segment = _pick_segment()
-        if random.random() < 0.45:
-            close_range = (HIST_Q3_START, HIST_Q3_END)
-            created_range = (HIST_Q3_START - timedelta(days=120), HIST_Q3_END - timedelta(days=30))
-        else:
-            close_range = (HIST_Q4_START, HIST_Q4_END)
-            created_range = (HIST_Q4_START - timedelta(days=120), HIST_Q4_END - timedelta(days=30))
-        deal = _make_deal(TERMINAL_WON, True, True, segment, close_range, created_range)
-        deals.append(deal)
+    return deals, founder_owned_ids
 
-    # -----------------------------------------------------------------------
-    # 4) Historical Closed Lost (~40) over past 2 quarters + Q1
-    # -----------------------------------------------------------------------
-    for _ in range(40):
-        segment = _pick_segment()
-        roll = random.random()
-        if roll < 0.30:
-            close_range = (HIST_Q3_START, HIST_Q3_END)
-            created_range = (HIST_Q3_START - timedelta(days=120), HIST_Q3_END - timedelta(days=30))
-        elif roll < 0.65:
-            close_range = (HIST_Q4_START, HIST_Q4_END)
-            created_range = (HIST_Q4_START - timedelta(days=120), HIST_Q4_END - timedelta(days=30))
-        else:
-            close_range = (FY_Q1_START, FY_Q1_END)
-            created_range = (HIST_Q4_START, FY_Q1_END - timedelta(days=15))
 
-        deal = _make_deal(TERMINAL_LOST, True, False, segment, close_range, created_range)
-        deals.append(deal)
+# ---------------------------------------------------------------------------
+# Stage history generation
+# ---------------------------------------------------------------------------
 
-    # -----------------------------------------------------------------------
-    # 4) Apply dirty data mutations
-    # -----------------------------------------------------------------------
-    open_deal_indices = [i for i, d in enumerate(deals) if d["is_closed"] == "false"]
-    all_indices = list(range(len(deals)))
+def _build_stage_history(all_deals: list[dict], stale_s1s2_ids: list[str]) -> list[dict]:
+    """Build stage_history rows for all 25 deals.
 
-    # 5-8 deals with missing Amount
-    missing_amount_count = random.randint(5, 8)
-    dirty_missing_amount_indices = random.sample(open_deal_indices, min(missing_amount_count, len(open_deal_indices)))
-    for idx in dirty_missing_amount_indices:
-        deals[idx]["amount"] = ""
+    Audit anomalies encoded:
+    - 6 founder-owned deals: amount=0, raw_stage uses "Discovery/Qualification - ICP Check"
+    - 2 deals moved S1→S2 without amount or close-date update for 21+ days
+    """
+    rows = []
+    stale_set = set(stale_s1s2_ids)
 
-    # 3 deals with missing CloseDate
-    available_for_missing_close = [i for i in open_deal_indices if i not in dirty_missing_amount_indices]
-    dirty_missing_close_date_indices = random.sample(available_for_missing_close, min(3, len(available_for_missing_close)))
-    for idx in dirty_missing_close_date_indices:
-        deals[idx]["close_date"] = ""
-
-    # 2-3 deals with departed AE owners
-    departed_count = random.randint(2, 3)
-    available_for_departed = [
-        i for i in open_deal_indices
-        if i not in dirty_missing_amount_indices and i not in dirty_missing_close_date_indices
-    ]
-    dirty_departed_owner_indices = random.sample(available_for_departed, min(departed_count, len(available_for_departed)))
-    for j, idx in enumerate(dirty_departed_owner_indices):
-        deals[idx]["owner_id"] = DEPARTED_AE_IDS[j % len(DEPARTED_AE_IDS)]
-
-    # ~10 deals that pushed CloseDate 2-3 times
-    available_for_push = [
-        i for i in open_deal_indices
-        if i not in dirty_missing_amount_indices
-        and i not in dirty_missing_close_date_indices
-        and i not in dirty_departed_owner_indices
-    ]
-    dirty_pusher_indices = random.sample(available_for_push, min(10, len(available_for_push)))
-    for idx in dirty_pusher_indices:
-        deal = deals[idx]
-        push_count = random.randint(2, 3)
-        current_close = date.fromisoformat(deal["close_date"])
+    for deal in all_deals:
+        deal_id = deal["id"]
+        segment = deal["segment"]
         created = date.fromisoformat(deal["created_date"])
+        is_closed = deal["is_closed"]
+        is_won = deal["is_won"]
+        stage_code = deal["stage"]
 
-        # Generate pushes — each push moves close date out by 2-6 weeks
-        push_date = created + timedelta(days=random.randint(20, 40))
-        for p in range(push_count):
-            old_close = current_close - timedelta(days=random.randint(14, 42) * (push_count - p))
-            history.append({
-                "deal_id": deal["id"],
-                "from_stage": deal["stage"],
-                "to_stage": deal["stage"],
-                "transition_date": _format_datetime(push_date),
-                "_is_push": True,
-                "_old_close": old_close.isoformat(),
-                "_new_close": deal["close_date"],
-            })
-            push_date += timedelta(days=random.randint(14, 30))
-
-    # Several deals at Technical Evaluation sitting 200+ days with no movement
-    te_deals = [
-        i for i in open_deal_indices
-        if deals[i]["stage"] == "Technical Evaluation"
-        and i not in dirty_missing_amount_indices
-        and i not in dirty_missing_close_date_indices
-        and i not in dirty_departed_owner_indices
-        and i not in dirty_pusher_indices
-    ]
-    stale_count = min(5, len(te_deals))
-    dirty_stale_indices = random.sample(te_deals, stale_count)
-    for idx in dirty_stale_indices:
-        # Push created_date way back so time-in-stage > 200 days
-        old_created = TODAY - timedelta(days=random.randint(210, 300))
-        deals[idx]["created_date"] = old_created.isoformat()
-        # Rewrite stage history: entered Tech Eval early, no movement since
-        deal_id = deals[idx]["id"]
-        # Remove existing history for this deal and regenerate
-        history[:] = [h for h in history if h["deal_id"] != deal_id]
-        enter_discovery = old_created
-        enter_qual = enter_discovery + timedelta(days=random.randint(7, 14))
-        enter_te = enter_qual + timedelta(days=random.randint(7, 14))
-        history.extend([
-            {"deal_id": deal_id, "from_stage": "", "to_stage": "Discovery",
-             "transition_date": _format_datetime(enter_discovery)},
-            {"deal_id": deal_id, "from_stage": "Discovery", "to_stage": "Qualification",
-             "transition_date": _format_datetime(enter_qual)},
-            {"deal_id": deal_id, "from_stage": "Qualification", "to_stage": "Technical Evaluation",
-             "transition_date": _format_datetime(enter_te)},
-        ])
-
-    # 1 Closed Won deal with $0 Amount
-    cw_deals = [i for i, d in enumerate(deals) if d["stage"] == TERMINAL_WON and d["is_closed"] == "true"]
-    if cw_deals:
-        dirty_zero_amount_cw_index = random.choice(cw_deals)
-        deals[dirty_zero_amount_cw_index]["amount"] = 0
-
-    # 1 deal in Business Case with CloseDate in the past
-    bc_deals = [
-        i for i in open_deal_indices
-        if deals[i]["stage"] == "Business Case"
-        and i not in dirty_missing_amount_indices
-        and i not in dirty_missing_close_date_indices
-        and i not in dirty_departed_owner_indices
-    ]
-    if bc_deals:
-        dirty_past_close_bc_index = random.choice(bc_deals)
-        past_date = TODAY - timedelta(days=random.randint(20, 45))
-        deals[dirty_past_close_bc_index]["close_date"] = past_date.isoformat()
-
-    return deals, history
-
-
-def _format_datetime(d: date) -> str:
-    """Format a date as an ISO datetime string with a plausible time."""
-    hour = random.randint(8, 17)
-    minute = random.choice([0, 15, 30, 45])
-    return f"{d.isoformat()}T{hour:02d}:{minute:02d}:00"
-
-
-def _generate_stage_history(
-    deal_id: str,
-    current_stage: str,
-    is_closed: bool,
-    is_won: bool,
-    created: date,
-    close_date: date,
-    history: list[dict],
-) -> None:
-    """Generate realistic stage progression history for a deal."""
-    # Determine the progression path
-    if is_closed and is_won:
-        # Closed Won: went through stages up to Negotiation, then Closed Won
-        # Sometimes skip a stage
-        stages_to_traverse = list(OPEN_STAGES)
-        # Randomly skip 0-1 stages (but not Discovery — always start there)
-        if random.random() < 0.3 and len(stages_to_traverse) > 2:
-            skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-            stages_to_traverse.pop(skip_idx)
-        stages_to_traverse.append(TERMINAL_WON)
-    elif is_closed and not is_won:
-        # Closed Lost: went through some stages then lost
-        # Pick a random stage to lose at
-        lose_at = random.randint(1, len(OPEN_STAGES) - 1)
-        stages_to_traverse = OPEN_STAGES[:lose_at + 1]
-        # Sometimes skip a stage
-        if random.random() < 0.2 and len(stages_to_traverse) > 2:
-            skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-            stages_to_traverse.pop(skip_idx)
-        stages_to_traverse.append(TERMINAL_LOST)
-    else:
-        # Open deal: went through stages up to current_stage
-        if current_stage in OPEN_STAGES:
-            target_idx = OPEN_STAGES.index(current_stage)
-            stages_to_traverse = OPEN_STAGES[:target_idx + 1]
-            # Sometimes skip a stage (but not if only 1-2 stages)
-            if random.random() < 0.15 and len(stages_to_traverse) > 2:
-                skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-                stages_to_traverse.pop(skip_idx)
-        elif current_stage == TERMINAL_WON:
-            # Recent wins
-            stages_to_traverse = list(OPEN_STAGES)
-            if random.random() < 0.3 and len(stages_to_traverse) > 2:
-                skip_idx = random.randint(1, len(stages_to_traverse) - 2)
-                stages_to_traverse.pop(skip_idx)
-            stages_to_traverse.append(TERMINAL_WON)
+        if is_closed and is_won:
+            # Full progression: Discovery → Qualification → Tech Eval → Biz Case → Negotiation → Won
+            stages = ["Discovery", "Qualification", "Technical Evaluation", "Business Case", "Negotiation", "Closed Won"]
+            # Sometimes skip one middle stage
+            if random.random() < 0.25:
+                skip = random.randint(1, 3)
+                stages = [s for i, s in enumerate(stages) if i != skip]
+        elif is_closed and not is_won:
+            # Progressed to some stage then lost
+            all_open = ["Discovery", "Qualification", "Technical Evaluation", "Business Case", "Negotiation"]
+            # Pick where they lost
+            lose_at = random.randint(1, 4)
+            stages = all_open[:lose_at + 1] + ["Closed Lost"]
         else:
-            stages_to_traverse = ["Discovery"]
+            # Open deal — go up to current stage
+            stage_name = STAGE_NAMES.get(stage_code, stage_code)
+            all_open = ["Discovery", "Qualification", "Technical Evaluation", "Business Case", "Negotiation"]
+            if stage_name in all_open:
+                idx = all_open.index(stage_name)
+                stages = all_open[:idx + 1]
+            else:
+                stages = ["Discovery"]
 
-    # Generate transition dates
-    transition_date = created
-    for i, stage in enumerate(stages_to_traverse):
-        from_stage = "" if i == 0 else stages_to_traverse[i - 1]
+        anomaly = deal_id in stale_set
+        deal_rows = _stage_history_for_deal(
+            deal_id, segment, stages, created,
+            anomaly_s1_to_s2_stale=anomaly,
+        )
+        rows.extend(deal_rows)
 
-        history.append({
-            "deal_id": deal_id,
-            "from_stage": from_stage,
-            "to_stage": stage,
-            "transition_date": _format_datetime(transition_date),
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# Team members CSV
+# ---------------------------------------------------------------------------
+
+def _build_team_members() -> list[dict]:
+    rows = []
+
+    # Active AEs
+    ae_data = [
+        ("AE-M01", "Maya Singh",   "ae", "mid_market", "2025-03-10", True),
+        ("AE-M02", "Jordan Reyes", "ae", "mid_market", "2025-06-02", True),
+        ("AE-M03", "Tessa Nguyen", "ae", "mid_market", "2025-09-15", True),
+        ("AE-C01", "Owen Hart",    "ae", "commercial", "2025-08-04", True),
+        ("AE-M04", "Priya Desai",  "ae", "mid_market", "2026-03-03", True),
+        ("AE-C02", "Leo Alvarez",  "ae", "commercial", "2026-04-14", True),
+    ]
+    for (tid, name, role, seg, start, active) in ae_data:
+        rows.append({
+            "id": tid,
+            "name": name,
+            "role": role,
+            "segment": seg,
+            "start_date": start,
+            "is_active": "true" if active else "false",
+            "manager_id": "",
         })
 
-        # Next transition 15-45 days later
-        if i < len(stages_to_traverse) - 1:
-            transition_date += timedelta(days=random.randint(15, 45))
-            # Don't go past close_date for closed deals
-            if is_closed and transition_date > close_date:
-                transition_date = close_date - timedelta(days=random.randint(1, 5))
-                if transition_date < created:
-                    transition_date = created + timedelta(days=1)
+    # Founders
+    rows.append({
+        "id": "FOUND-01", "name": "Nadia Bloom", "role": "founder",
+        "segment": "", "start_date": "2024-01-01",
+        "is_active": "true", "manager_id": "",
+    })
+    rows.append({
+        "id": "FOUND-02", "name": "Evan Mercer", "role": "founder",
+        "segment": "", "start_date": "2024-01-01",
+        "is_active": "true", "manager_id": "",
+    })
+
+    # SDRs
+    rows.append({
+        "id": "SDR-01", "name": "Jamie Weston", "role": "sdr",
+        "segment": "", "start_date": "2026-01-15",
+        "is_active": "true", "manager_id": "",
+    })
+    rows.append({
+        "id": "SDR-02", "name": "Dani Ortega", "role": "sdr",
+        "segment": "", "start_date": "2026-01-15",
+        "is_active": "true", "manager_id": "",
+    })
+
+    # SE
+    rows.append({
+        "id": "SE-01", "name": "Rowan Khan", "role": "se",
+        "segment": "", "start_date": "2025-11-01",
+        "is_active": "true", "manager_id": "",
+    })
+
+    return rows
 
 
 # ---------------------------------------------------------------------------
-# CSV writing
+# CSV writing utilities
 # ---------------------------------------------------------------------------
 
-
-def _rows_to_csv_string(rows: list[dict], fieldnames: list[str]) -> str:
-    """Serialize rows to a CSV string with Unix line endings."""
+def _rows_to_csv(rows: list[dict], fieldnames: list[str]) -> str:
     buf = io.StringIO(newline="")
-    writer = csv.DictWriter(buf, fieldnames=fieldnames, quoting=csv.QUOTE_MINIMAL, extrasaction="ignore")
+    writer = csv.DictWriter(
+        buf, fieldnames=fieldnames,
+        quoting=csv.QUOTE_MINIMAL,
+        extrasaction="ignore",
+    )
     writer.writeheader()
     writer.writerows(rows)
-    # csv module writes \r\n; normalize to \n for cross-platform determinism
     return buf.getvalue().replace("\r\n", "\n")
 
 
 def _write_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> str:
-    """Write rows to CSV and return the content string."""
-    content = _rows_to_csv_string(rows, fieldnames)
+    content = _rows_to_csv(rows, fieldnames)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="") as fh:
         fh.write(content)
@@ -694,160 +804,165 @@ def _write_csv(path: Path, rows: list[dict], fieldnames: list[str]) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Main generation orchestrator
+# Owner name → ID mapping (matches team_members.csv ids)
 # ---------------------------------------------------------------------------
+
+OWNER_NAME_TO_ID: dict[str, str] = {
+    "Maya Singh":   "AE-M01",
+    "Jordan Reyes": "AE-M02",
+    "Tessa Nguyen": "AE-M03",
+    "Owen Hart":    "AE-C01",
+    "Priya Desai":  "AE-M04",
+    "Leo Alvarez":  "AE-C02",
+    "Nadia Bloom":  "FOUND-01",
+    "Evan Mercer":  "FOUND-02",
+}
+
+# Stage code → full model stage name (for CSV output, matching field_mappings)
+STAGE_CODE_TO_NAME: dict[str, str] = {
+    "S1": "Discovery",
+    "S2": "Qualification",
+    "S3": "Technical Evaluation",
+    "S4": "Business Case",
+    "S5": "Negotiation",
+    "Won": "Closed Won",
+    "Lost": "Closed Lost",
+}
+
+# ---------------------------------------------------------------------------
+# Main generation logic
+# ---------------------------------------------------------------------------
+
+# Engine-compatible deals.csv columns (owner_id required, source matches field_mappings)
+DEALS_FIELDS = [
+    "id", "name", "amount", "stage", "close_date", "owner_id",
+    "type", "created_date", "segment", "source", "is_closed", "is_won",
+    "arr", "forecast_category", "owner_name",
+]
+
+TEAM_FIELDS = ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"]
+
+HISTORY_FIELDS = ["deal_id", "from_stage", "to_stage", "transition_date"]
+
+
+def _to_csv_deal(d: dict) -> dict:
+    """Convert internal deal dict to engine-compatible CSV row."""
+    stage_code = d["stage"]
+    # Map stage code to full name; fall through if already a full name
+    stage_name = STAGE_CODE_TO_NAME.get(stage_code, stage_code)
+    owner_name = d["owner"]
+    owner_id = OWNER_NAME_TO_ID.get(owner_name, owner_name)
+
+    return {
+        "id": d["id"],
+        "name": d["name"],
+        "amount": d["amount"] if d["amount"] != 0 else "",
+        "stage": stage_name,
+        "close_date": d["close_date"],
+        "owner_id": owner_id,
+        "type": d["type"],
+        "created_date": d["created_date"],
+        "segment": d["segment"],
+        "source": d["source_channel"],
+        "is_closed": "true" if d["is_closed"] else "false",
+        "is_won": "true" if d["is_won"] else "false",
+        "arr": d["arr"] if d["arr"] != 0 else "",
+        "forecast_category": d["forecast_category"],
+        "owner_name": owner_name,
+    }
 
 
 def generate_all(output_dir: Path) -> dict[str, str]:
-    """Generate all CSV files and return {filename: content} for verification.
-
-    Reseeds random at the start for determinism.
-    """
+    """Generate all CSV files deterministically. Returns {filename: content}."""
     random.seed(SEED)
 
-    # 1) Load roster
-    roster = load_roster(ROSTER_PATH)
-    team_rows = roster_to_csv_rows(roster)
+    # --- Build deals ---
+    all_deals = list(SAMPLE_DEALS)  # 9 anchor deals
 
-    # 2) Generate companies
-    companies = generate_companies(150)
+    generated_deals, founder_owned_ids = _build_generated_deals(random)
+    all_deals.extend(generated_deals)
 
-    # 3) Generate contacts
-    contacts = generate_contacts(companies, 200)
+    assert len(all_deals) == 25, f"Expected 25 deals, got {len(all_deals)}"
 
-    # 4) Generate deals and stage history
-    deals, stage_history = generate_deals(roster, companies)
+    # Identify stale S1→S2 anomaly deals (2 deals where stage_history shows 21+ days in S1).
+    # "Stale" means the deal moved S1→S2 but without amount or close-date cleanup for 21+ days.
+    # We pick open non-founder deals that have passed S1 (currently at S2 or beyond).
+    # If <2 S2 non-founder deals, fall back to S3+ non-founder deals.
+    open_non_founder_past_s1 = [
+        d["id"] for d in all_deals
+        if not d["is_closed"]
+        and d["stage"] in ("S2", "S3", "S4", "S5")
+        and d["owner"] not in FOUNDER_NAMES
+    ]
+    stale_s1s2_ids = open_non_founder_past_s1[:2]
 
-    # Sort stage history by deal_id then transition_date for readability
-    stage_history.sort(key=lambda h: (h["deal_id"], h["transition_date"]))
+    # Convert to engine-compatible CSV rows
+    deals_csv_rows = [_to_csv_deal(d) for d in all_deals]
 
-    # 5) Write all CSVs
+    # --- Build team members ---
+    team_rows = _build_team_members()
+
+    # --- Build stage history ---
+    history_rows = _build_stage_history(all_deals, stale_s1s2_ids)
+    history_rows.sort(key=lambda r: (r["deal_id"], r["transition_date"]))
+
+    # --- Write CSVs ---
     output_dir = Path(output_dir)
     results: dict[str, str] = {}
-
-    results["team_members.csv"] = _write_csv(
-        output_dir / "team_members.csv",
-        team_rows,
-        ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"],
-    )
-
-    results["companies.csv"] = _write_csv(
-        output_dir / "companies.csv",
-        companies,
-        ["id", "name", "segment", "industry", "employee_count"],
-    )
-
-    results["contacts.csv"] = _write_csv(
-        output_dir / "contacts.csv",
-        contacts,
-        ["id", "name", "email", "company_id", "title"],
-    )
 
     results["deals.csv"] = _write_csv(
-        output_dir / "deals.csv",
-        deals,
-        ["id", "name", "amount", "stage", "close_date", "owner_id", "type", "created_date", "segment", "source", "is_closed", "is_won"],
+        output_dir / "deals.csv", deals_csv_rows, DEALS_FIELDS
     )
-
+    results["team_members.csv"] = _write_csv(
+        output_dir / "team_members.csv", team_rows, TEAM_FIELDS
+    )
     results["stage_history.csv"] = _write_csv(
-        output_dir / "stage_history.csv",
-        stage_history,
-        ["deal_id", "from_stage", "to_stage", "transition_date"],
+        output_dir / "stage_history.csv", history_rows, HISTORY_FIELDS
     )
 
     return results
 
 
 # ---------------------------------------------------------------------------
-# Verification
+# Summary / verification helpers
 # ---------------------------------------------------------------------------
 
+def _print_summary(all_deals: list[dict]) -> None:
+    open_deals = [d for d in all_deals if not d["is_closed"]]
+    won_ytd = [
+        d for d in all_deals
+        if d["is_closed"] and d["is_won"]
+        and YTD_START <= date.fromisoformat(d["close_date"]) <= YTD_END
+    ]
+    lost_ytd = [
+        d for d in all_deals
+        if d["is_closed"] and not d["is_won"]
+        and YTD_START <= date.fromisoformat(d["close_date"]) <= YTD_END
+    ]
+    open_pipe = sum(d["amount"] for d in open_deals if d["amount"])
+    won_arr = sum(d["arr"] for d in won_ytd)
+    lost_arr = sum(d["arr"] for d in lost_ytd)
+    founder_zero = [d for d in all_deals if d["owner"] in FOUNDER_NAMES and d["amount"] == 0]
 
-def verify(output_dir: Path) -> bool:
-    """Regenerate data and compare against committed files.
+    print(f"  Total deals: {len(all_deals)}")
+    print(f"  Open deals: {len(open_deals)} (pipe ${open_pipe:,.0f})")
+    print(f"  Closed-won YTD: {len(won_ytd)} (ARR ${won_arr:,.0f})")
+    print(f"  Closed-lost YTD: {len(lost_ytd)} (ARR ${lost_arr:,.0f})")
+    print(f"  Founder-owned $0 deals: {len(founder_zero)}")
 
-    Returns True if all files match, False otherwise.
-    """
-    # Generate fresh content
-    fresh = generate_all_to_strings()
-
-    output_dir = Path(output_dir)
-    all_match = True
-
-    for filename, fresh_content in fresh.items():
-        filepath = output_dir / filename
-        if not filepath.exists():
-            print(f"MISSING: {filepath}")
-            all_match = False
-            continue
-
-        with open(filepath, encoding="utf-8", newline="") as fh:
-            existing_content = fh.read()
-        if existing_content != fresh_content:
-            # Find first difference
-            fresh_lines = fresh_content.splitlines()
-            existing_lines = existing_content.splitlines()
-            for i, (fl, el) in enumerate(zip(fresh_lines, existing_lines)):
-                if fl != el:
-                    print(f"DIFF: {filename} line {i + 1}")
-                    print(f"  expected: {fl[:120]}")
-                    print(f"  got:      {el[:120]}")
-                    break
-            else:
-                if len(fresh_lines) != len(existing_lines):
-                    print(f"DIFF: {filename} line count differs ({len(fresh_lines)} vs {len(existing_lines)})")
-            all_match = False
-        else:
-            print(f"OK: {filename}")
-
-    return all_match
-
-
-def generate_all_to_strings() -> dict[str, str]:
-    """Generate all CSV content as strings without writing to disk."""
-    random.seed(SEED)
-
-    roster = load_roster(ROSTER_PATH)
-    team_rows = roster_to_csv_rows(roster)
-    companies = generate_companies(150)
-    contacts = generate_contacts(companies, 200)
-    deals, stage_history = generate_deals(roster, companies)
-    stage_history.sort(key=lambda h: (h["deal_id"], h["transition_date"]))
-
-    results: dict[str, str] = {}
-
-    results["team_members.csv"] = _rows_to_csv_string(
-        team_rows,
-        ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"],
-    )
-    results["companies.csv"] = _rows_to_csv_string(
-        companies,
-        ["id", "name", "segment", "industry", "employee_count"],
-    )
-    results["contacts.csv"] = _rows_to_csv_string(
-        contacts,
-        ["id", "name", "email", "company_id", "title"],
-    )
-    results["deals.csv"] = _rows_to_csv_string(
-        deals,
-        ["id", "name", "amount", "stage", "close_date", "owner_id", "type", "created_date", "segment", "source", "is_closed", "is_won"],
-    )
-    results["stage_history.csv"] = _rows_to_csv_string(
-        stage_history,
-        ["deal_id", "from_stage", "to_stage", "transition_date"],
-    )
-
-    return results
+    by_stage = {}
+    for d in open_deals:
+        by_stage[d["stage"]] = by_stage.get(d["stage"], 0) + 1
+    print(f"  Open by stage: {dict(sorted(by_stage.items()))}")
 
 
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate deterministic example CSV data for the Sprout Labs demo org.",
+        description="Generate deterministic Sprout Labs CSV data."
     )
     parser.add_argument(
         "--output-dir",
@@ -855,30 +970,22 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_OUTPUT_DIR,
         help=f"Output directory (default: {DEFAULT_OUTPUT_DIR})",
     )
-    parser.add_argument(
-        "--verify",
-        action="store_true",
-        help="Regenerate and diff against existing files (exit 1 if different).",
-    )
-
     args = parser.parse_args(argv)
 
-    if args.verify:
-        print(f"Verifying deterministic output against {args.output_dir} ...")
-        if verify(args.output_dir):
-            print("All files match. Determinism verified.")
-            return 0
-        else:
-            print("FAIL: Generated output differs from committed files.")
-            return 1
-    else:
-        print(f"Generating Sprout Labs data to {args.output_dir} ...")
-        results = generate_all(args.output_dir)
-        for filename, content in results.items():
-            line_count = content.count("\n")
-            print(f"  {filename}: {line_count} rows (including header)")
-        print("Done.")
-        return 0
+    print(f"Generating Sprout Labs data to {args.output_dir} ...")
+    results = generate_all(args.output_dir)
+    for filename, content in results.items():
+        line_count = content.count("\n")
+        print(f"  {filename}: {line_count} rows (including header)")
+
+    # Print summary (re-seed to reconstruct deal list for reporting)
+    random.seed(SEED)
+    all_deals_check = list(SAMPLE_DEALS)
+    generated, _ = _build_generated_deals(random)
+    all_deals_check.extend(generated)
+    _print_summary(all_deals_check)
+    print("Done.")
+    return 0
 
 
 if __name__ == "__main__":

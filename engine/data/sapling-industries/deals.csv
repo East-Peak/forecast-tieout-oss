@@ -1,361 +1,201 @@
-id,name,amount,stage,close_date,owner_id,type,created_date,segment,source,is_closed,is_won
-D-001,Radiant Technologies - Platform Renewal,394000,Discovery,2026-07-13,AE-E01,Renewal,2025-12-25,Enterprise,Inbound,false,false
-D-002,Drake Digital - API Gateway Expansion,195000,Discovery,2026-06-18,AE-M01,Expansion,2026-02-18,Mid-Market,Partner,false,false
-D-003,Spectra Labs - Security Module Expansion,202000,Discovery,2026-06-01,AE-M04,Expansion,2026-02-24,Mid-Market,Partner,false,false
-D-004,Mercury Solutions - Monitoring,141000,Discovery,2026-06-12,AE-M04,New Business,2025-12-09,Mid-Market,Event,false,false
-D-005,Solstice Sciences - Security Module Renewal,340000,Discovery,2026-05-29,AE-E05,Renewal,2025-11-17,Enterprise,Outbound,false,false
-D-006,Verdant Group - Compliance Expansion,193000,Discovery,2026-05-05,AE-M02,Expansion,2026-02-18,Mid-Market,PLG,false,false
-D-007,Solstice Sciences - Security Module,461000,Discovery,2026-07-16,AE-E04,New Business,2025-11-07,Enterprise,PLG,false,false
-D-008,Forge Inc - Platform,249000,Discovery,2026-06-01,AE-M01,New Business,2025-12-08,Mid-Market,Partner,false,false
-D-009,Coral Networks - Monitoring Expansion,633000,Discovery,2026-04-17,AE-E05,Expansion,2026-02-16,Enterprise,PLG,false,false
-D-010,Borealis Systems - Platform,636000,Discovery,2026-07-02,AE-E02,New Business,2025-12-22,Enterprise,Inbound,false,false
-D-011,Monolith Global - Analytics,770000,Discovery,2026-06-02,AE-E05,New Business,2026-01-21,Enterprise,Inbound,false,false
-D-012,Ridge Digital - Platform,779000,Discovery,2026-05-21,AE-X01,New Business,2025-12-02,Enterprise,Event,false,false
-D-013,Ridge Global - Security Module,137000,Discovery,2026-07-01,AE-M07,New Business,2025-12-11,Mid-Market,Outbound,false,false
-D-014,Vector Ventures - Enterprise Suite Expansion,542000,Discovery,2026-05-07,AE-E03,Expansion,2025-11-07,Enterprise,Outbound,false,false
-D-015,Onyx Digital - Security Module Expansion,672000,Discovery,2026-04-15,AE-E03,Expansion,2026-01-06,Enterprise,Inbound,false,false
-D-016,Sapphire Sciences - Enterprise Suite,187000,Discovery,2026-05-13,AE-M05,New Business,2026-02-12,Mid-Market,Outbound,false,false
-D-017,Compass Group - Platform Renewal,,Discovery,2026-05-08,AE-E05,Renewal,2025-11-11,Enterprise,Partner,false,false
-D-018,Orbit Partners - Security Module Renewal,550000,Discovery,2026-07-02,AE-E06,Renewal,2025-12-17,Enterprise,Inbound,false,false
-D-019,Mercury Solutions - Monitoring,181000,Discovery,2026-07-07,AE-M05,New Business,2026-02-20,Mid-Market,Event,false,false
-D-020,Keystone Labs - Security Module,604000,Discovery,2026-07-07,AE-E04,New Business,2026-03-05,Enterprise,Inbound,false,false
-D-021,Cipher Labs - API Gateway,557000,Discovery,2026-07-21,AE-E01,New Business,2025-11-13,Enterprise,Inbound,false,false
-D-022,Cascade Networks - Analytics,180000,Discovery,2026-06-09,AE-M02,New Business,2026-03-06,Mid-Market,Inbound,false,false
-D-023,Summit Technologies - Compliance,164000,Discovery,2026-07-31,AE-M02,New Business,2026-01-15,Mid-Market,Inbound,false,false
-D-024,Dynamo Technologies - Security Module,308000,Discovery,2026-06-02,AE-E05,New Business,2025-12-02,Enterprise,Outbound,false,false
-D-025,Synapse Labs - Analytics,91000,Discovery,2026-04-10,AE-M02,New Business,2026-02-02,Mid-Market,Inbound,false,false
-D-026,Cipher Ventures - Security Module Expansion,92000,Discovery,2026-04-27,AE-M07,Expansion,2025-12-03,Mid-Market,Event,false,false
-D-027,Pulse Systems - Platform,226000,Discovery,2026-07-30,AE-M06,New Business,2026-01-12,Mid-Market,Partner,false,false
-D-028,Pulse Industries - Enterprise Suite Expansion,145000,Discovery,2026-07-31,AE-M02,Expansion,2025-11-26,Mid-Market,Partner,false,false
-D-029,Opal Software - Data Pipeline Expansion,236000,Discovery,2026-04-24,AE-M07,Expansion,2025-12-29,Mid-Market,Inbound,false,false
-D-030,Ridge Labs - Enterprise Suite Expansion,250000,Discovery,2026-04-14,AE-E05,Expansion,2026-02-11,Enterprise,Outbound,false,false
-D-031,Nexus Corp - API Gateway,134000,Discovery,2026-07-13,AE-M01,New Business,2026-02-27,Mid-Market,Partner,false,false
-D-032,Vertex Partners - Monitoring,196000,Discovery,2026-05-21,AE-M04,New Business,2026-01-16,Mid-Market,Event,false,false
-D-033,Titan Software - Platform Expansion,225000,Discovery,2026-07-22,AE-M02,Expansion,2026-01-21,Mid-Market,Partner,false,false
-D-034,Beacon Data - API Gateway Expansion,602000,Discovery,2026-06-29,AE-E04,Expansion,2025-11-19,Enterprise,Inbound,false,false
-D-035,Vector Ventures - Monitoring,677000,Discovery,2026-06-30,AE-E04,New Business,2026-02-19,Enterprise,Partner,false,false
-D-036,Catalyst Partners - API Gateway,148000,Discovery,2026-05-13,AE-M05,New Business,2026-03-25,Mid-Market,Inbound,false,false
-D-037,Granite Digital - Monitoring Renewal,172000,Discovery,2026-03-31,AE-M02,Renewal,2026-01-26,Mid-Market,Event,false,false
-D-038,Cedar Corp - Monitoring,367000,Discovery,2026-04-15,AE-E01,New Business,2026-01-13,Enterprise,Partner,false,false
-D-039,Dynamo Technologies - Enterprise Suite Renewal,695000,Qualification,2026-06-02,AE-E05,Renewal,2026-02-11,Enterprise,Inbound,false,false
-D-040,Phoenix Platforms - Analytics Expansion,682000,Qualification,2026-06-10,AE-E04,Expansion,2026-01-09,Enterprise,Event,false,false
-D-041,Tempest Technologies - Platform,595000,Qualification,2026-06-01,AE-E03,New Business,2026-03-27,Enterprise,PLG,false,false
-D-042,Granite Dynamics - Analytics,250000,Qualification,2026-04-07,AE-E06,New Business,2026-02-06,Enterprise,Inbound,false,false
-D-043,Basalt Partners - Analytics,80000,Qualification,2026-04-16,AE-M04,New Business,2026-01-29,Mid-Market,Inbound,false,false
-D-044,Onyx Digital - Enterprise Suite,787000,Qualification,2026-05-26,AE-X02,New Business,2026-02-03,Enterprise,Inbound,false,false
-D-045,Quantum Software - API Gateway,80000,Qualification,2026-07-28,AE-M07,New Business,2026-03-11,Mid-Market,Partner,false,false
-D-046,Ember Group - Platform Expansion,699000,Qualification,,AE-E01,Expansion,2025-12-03,Enterprise,Inbound,false,false
-D-047,Nebula Inc - Monitoring,664000,Qualification,2026-07-06,AE-E03,New Business,2026-01-12,Enterprise,Partner,false,false
-D-048,Flint Analytics - API Gateway Expansion,733000,Qualification,2026-05-20,AE-E02,Expansion,2026-02-19,Enterprise,Partner,false,false
-D-049,Pulse Data - Enterprise Suite Expansion,80000,Qualification,2026-04-03,AE-X01,Expansion,2026-01-29,Mid-Market,Partner,false,false
-D-050,Thrive Ventures - API Gateway,250000,Qualification,2026-07-21,AE-E06,New Business,2026-01-21,Enterprise,Outbound,false,false
-D-051,Dynamo Technologies - Monitoring Renewal,250000,Qualification,2026-06-18,AE-E01,Renewal,2025-12-26,Enterprise,Inbound,false,false
-D-052,Marble Group - Monitoring Renewal,125000,Qualification,2026-07-09,AE-M04,Renewal,2026-03-12,Mid-Market,Event,false,false
-D-053,Nebula Analytics - Enterprise Suite,655000,Qualification,2026-04-15,AE-E06,New Business,2026-01-21,Enterprise,Event,false,false
-D-054,Aether Ventures - Data Pipeline,478000,Qualification,2026-06-16,AE-E05,New Business,2025-11-25,Enterprise,Inbound,false,false
-D-055,Flint Digital - Monitoring,,Qualification,2026-06-11,AE-M02,New Business,2025-11-18,Mid-Market,Inbound,false,false
-D-056,Orbit Ventures - Enterprise Suite Expansion,658000,Qualification,2026-06-23,AE-E02,Expansion,2026-02-18,Enterprise,Inbound,false,false
-D-057,Beacon Partners - Data Pipeline,145000,Qualification,2026-07-17,AE-M01,New Business,2025-12-11,Mid-Market,PLG,false,false
-D-058,Vanguard Global - API Gateway,522000,Qualification,2026-07-09,AE-E06,New Business,2026-03-19,Enterprise,Inbound,false,false
-D-059,Vanguard Ventures - Security Module,137000,Qualification,2026-07-14,AE-M07,New Business,2025-12-31,Mid-Market,Outbound,false,false
-D-060,Helix Global - Platform,907000,Qualification,2026-07-10,AE-E05,New Business,2026-02-18,Enterprise,Outbound,false,false
-D-061,Opal Software - Platform,283000,Qualification,2026-05-27,AE-M02,New Business,2026-02-23,Mid-Market,Inbound,false,false
-D-062,Thrive Ventures - API Gateway,250000,Qualification,2026-04-10,AE-E01,New Business,2026-03-13,Enterprise,Partner,false,false
-D-063,Nebula Inc - Security Module,688000,Qualification,2026-06-16,AE-E06,New Business,2025-11-14,Enterprise,Event,false,false
-D-064,Horizon Global - Analytics Expansion,152000,Qualification,2026-07-03,AE-M01,Expansion,2025-11-20,Mid-Market,Partner,false,false
-D-065,Pulse Industries - Data Pipeline Expansion,189000,Qualification,2026-03-30,AE-M02,Expansion,2025-12-30,Mid-Market,Inbound,false,false
-D-066,Marble Corp - Compliance Expansion,,Qualification,2026-04-20,AE-M07,Expansion,2026-02-18,Mid-Market,Outbound,false,false
-D-067,Pavilion Ventures - Security Module,189000,Qualification,2026-07-28,AE-M07,New Business,2025-11-28,Mid-Market,Outbound,false,false
-D-068,Monolith Global - Data Pipeline,336000,Qualification,2026-05-19,AE-E03,New Business,2026-03-23,Enterprise,Partner,false,false
-D-069,Zenith Labs - Analytics Expansion,236000,Qualification,2026-04-10,AE-M03,Expansion,2026-02-17,Mid-Market,Partner,false,false
-D-070,Verdant Corp - API Gateway,772000,Qualification,2026-04-16,AE-E04,New Business,2025-11-20,Enterprise,Inbound,false,false
-D-071,Pulse Systems - Enterprise Suite,302000,Technical Evaluation,2026-07-28,AE-M07,New Business,2026-03-02,Mid-Market,Event,false,false
-D-072,Granite Labs - API Gateway,178000,Technical Evaluation,2026-05-13,AE-M03,New Business,2026-01-06,Mid-Market,Event,false,false
-D-073,Beacon Partners - Security Module,125000,Technical Evaluation,2026-05-12,AE-M02,New Business,2026-02-04,Mid-Market,Outbound,false,false
-D-074,Cedar Inc - Compliance,514000,Technical Evaluation,2026-05-20,AE-E04,New Business,2026-02-27,Enterprise,Outbound,false,false
-D-075,Basalt Group - Enterprise Suite,195000,Technical Evaluation,2026-07-21,AE-M06,New Business,2025-12-04,Mid-Market,Outbound,false,false
-D-076,Vector Ventures - Compliance,552000,Technical Evaluation,2026-06-08,AE-E02,New Business,2025-11-04,Enterprise,Inbound,false,false
-D-077,Nebula Cloud - Data Pipeline Expansion,80000,Technical Evaluation,2026-06-23,AE-M04,Expansion,2025-12-19,Mid-Market,Outbound,false,false
-D-078,Dynamo Industries - Data Pipeline,88000,Technical Evaluation,2026-04-09,AE-M05,New Business,2026-02-17,Mid-Market,Inbound,false,false
-D-079,Beacon Data - Enterprise Suite Expansion,349000,Technical Evaluation,2026-07-14,AE-E04,Expansion,2026-01-08,Enterprise,PLG,false,false
-D-080,Phoenix Platforms - Platform Expansion,569000,Technical Evaluation,2026-04-09,AE-E03,Expansion,2025-11-18,Enterprise,Inbound,false,false
-D-081,Verdant Corp - Monitoring Expansion,514000,Technical Evaluation,2026-07-09,AE-E04,Expansion,2025-11-06,Enterprise,PLG,false,false
-D-082,Coral Data - Compliance,84000,Technical Evaluation,2026-06-01,AE-M04,New Business,2026-02-11,Mid-Market,Partner,false,false
-D-083,Forge Inc - Data Pipeline,192000,Technical Evaluation,2026-06-26,AE-M02,New Business,2025-12-08,Mid-Market,PLG,false,false
-D-084,Flint Networks - Analytics Renewal,244000,Technical Evaluation,2026-06-24,AE-M04,Renewal,2026-03-12,Mid-Market,Outbound,false,false
-D-085,Lattice Ventures - API Gateway,169000,Technical Evaluation,2026-07-27,AE-M03,New Business,2026-02-27,Mid-Market,Inbound,false,false
-D-086,Bedrock Analytics - Security Module,152000,Technical Evaluation,2026-05-04,AE-M06,New Business,2026-03-12,Mid-Market,Inbound,false,false
-D-087,Cascade Partners - Monitoring Expansion,96000,Technical Evaluation,2026-04-17,AE-M04,Expansion,2026-03-05,Mid-Market,Outbound,false,false
-D-088,Phoenix Dynamics - Security Module,182000,Technical Evaluation,2026-04-07,AE-M02,New Business,2026-01-08,Mid-Market,Outbound,false,false
-D-089,Axiom Solutions - Compliance Renewal,300000,Technical Evaluation,2026-07-22,AE-M01,Renewal,2025-11-10,Mid-Market,Event,false,false
-D-090,Quantum Software - API Gateway Expansion,271000,Technical Evaluation,2026-06-18,AE-M04,Expansion,2025-06-11,Mid-Market,Outbound,false,false
-D-091,Sapphire Platforms - Monitoring,461000,Technical Evaluation,2026-07-08,AE-E04,New Business,2026-03-19,Enterprise,Inbound,false,false
-D-092,Verdant Corp - Enterprise Suite,598000,Technical Evaluation,2026-06-24,AE-E06,New Business,2026-02-27,Enterprise,Event,false,false
-D-093,Summit Technologies - Security Module Expansion,214000,Technical Evaluation,2026-07-17,AE-M07,Expansion,2026-03-09,Mid-Market,Partner,false,false
-D-094,Horizon Global - Compliance,,Technical Evaluation,2026-06-10,AE-M07,New Business,2025-11-17,Mid-Market,Partner,false,false
-D-095,Ironclad Sciences - Monitoring,287000,Technical Evaluation,2026-05-08,AE-M06,New Business,2026-02-25,Mid-Market,Event,false,false
-D-096,Nebula Inc - Compliance Renewal,,Technical Evaluation,2026-07-24,AE-E02,Renewal,2026-02-20,Enterprise,Inbound,false,false
-D-097,Cipher Ventures - Platform,134000,Technical Evaluation,2026-05-05,AE-M02,New Business,2026-01-05,Mid-Market,Event,false,false
-D-098,Granite Networks - Platform Expansion,223000,Technical Evaluation,2026-04-28,AE-M03,Expansion,2025-08-18,Mid-Market,Inbound,false,false
-D-099,Granite Digital - Monitoring Expansion,,Technical Evaluation,2026-04-30,AE-M05,Expansion,2025-12-31,Mid-Market,Inbound,false,false
-D-100,Sequoia Sciences - Enterprise Suite,80000,Technical Evaluation,2026-05-28,AE-M05,New Business,2026-01-13,Mid-Market,Inbound,false,false
-D-101,Quantum Software - API Gateway,157000,Technical Evaluation,2026-07-10,AE-M03,New Business,2025-11-04,Mid-Market,Outbound,false,false
-D-102,Synapse Platforms - Enterprise Suite,239000,Technical Evaluation,2026-06-11,AE-M03,New Business,2025-11-04,Mid-Market,Outbound,false,false
-D-103,Synapse Platforms - Enterprise Suite Expansion,257000,Technical Evaluation,2026-04-27,AE-M05,Expansion,2026-03-20,Mid-Market,Partner,false,false
-D-104,Nebula Cloud - Compliance Renewal,194000,Technical Evaluation,2026-06-25,AE-M06,Renewal,2025-08-02,Mid-Market,Partner,false,false
-D-105,Forge Cloud - Enterprise Suite Expansion,238000,Technical Evaluation,2026-06-23,AE-M07,Expansion,2025-11-12,Mid-Market,Outbound,false,false
-D-106,Cobalt Corp - Platform Renewal,225000,Technical Evaluation,2026-06-03,AE-M01,Renewal,2026-03-27,Mid-Market,Inbound,false,false
-D-107,Dynamo Technologies - API Gateway,594000,Technical Evaluation,2026-05-06,AE-E03,New Business,2025-08-11,Enterprise,Inbound,false,false
-D-108,Granite Networks - Platform,154000,Technical Evaluation,2026-05-01,AE-M03,New Business,2025-12-03,Mid-Market,Inbound,false,false
-D-109,Ironclad Sciences - Compliance,151000,Technical Evaluation,2026-06-18,AE-M01,New Business,2025-07-16,Mid-Market,Outbound,false,false
-D-110,Marble Inc - Compliance,218000,Technical Evaluation,2026-06-05,AE-M01,New Business,2025-11-27,Mid-Market,PLG,false,false
-D-111,Pulse Systems - Data Pipeline,170000,Technical Evaluation,2026-07-10,AE-M03,New Business,2026-03-25,Mid-Market,Inbound,false,false
-D-112,Prism Group - Security Module Expansion,147000,Technical Evaluation,2026-07-16,AE-M04,Expansion,2026-03-04,Mid-Market,Outbound,false,false
-D-113,Tempest Solutions - API Gateway Renewal,613000,Business Case,2026-07-17,AE-E03,Renewal,2026-02-06,Enterprise,Inbound,false,false
-D-114,Granite Digital - Data Pipeline Expansion,158000,Business Case,2026-07-31,AE-M05,Expansion,2025-12-22,Mid-Market,Inbound,false,false
-D-115,Coral Data - Platform,184000,Business Case,2026-07-10,AE-M02,New Business,2026-03-25,Mid-Market,Outbound,false,false
-D-116,Catalyst Partners - Enterprise Suite Expansion,110000,Business Case,2026-07-06,AE-M04,Expansion,2026-03-26,Mid-Market,Outbound,false,false
-D-117,Vanguard Platforms - Security Module,167000,Business Case,2026-04-14,AE-M07,New Business,2025-11-06,Mid-Market,Event,false,false
-D-118,Cedar Corp - Monitoring,581000,Business Case,2026-04-13,AE-E02,New Business,2025-12-25,Enterprise,Event,false,false
-D-119,Compass Group - Enterprise Suite,528000,Business Case,2026-07-02,AE-E01,New Business,2026-01-28,Enterprise,Outbound,false,false
-D-120,Pulse Data - Security Module Expansion,193000,Business Case,2026-07-29,AE-M01,Expansion,2026-01-01,Mid-Market,Inbound,false,false
-D-121,Beacon Data - Security Module Renewal,468000,Business Case,,AE-E06,Renewal,2026-01-28,Enterprise,Partner,false,false
-D-122,Ridge Digital - Enterprise Suite Renewal,250000,Business Case,2026-06-15,AE-E04,Renewal,2025-11-25,Enterprise,Partner,false,false
-D-123,Ironclad Sciences - Compliance,245000,Business Case,2026-02-27,AE-M05,New Business,2026-01-29,Mid-Market,Event,false,false
-D-124,Basalt Partners - Compliance Expansion,271000,Business Case,2026-04-28,AE-M04,Expansion,2026-01-07,Mid-Market,Partner,false,false
-D-125,Cobalt Corp - Security Module Renewal,,Business Case,2026-07-30,AE-M03,Renewal,2025-11-17,Mid-Market,Partner,false,false
-D-126,Flint Systems - Compliance,639000,Business Case,2026-06-22,AE-E03,New Business,2025-11-10,Enterprise,Partner,false,false
-D-127,Granite Digital - Analytics,142000,Business Case,2026-07-01,AE-M01,New Business,2025-11-10,Mid-Market,Partner,false,false
-D-128,Orbit Systems - Monitoring,264000,Business Case,2026-06-17,AE-M07,New Business,2026-03-26,Mid-Market,PLG,false,false
-D-129,Granite Networks - Data Pipeline Expansion,199000,Business Case,2026-05-14,AE-M06,Expansion,2026-02-27,Mid-Market,Outbound,false,false
-D-130,Catalyst Ventures - Security Module,493000,Business Case,2026-04-08,AE-E01,New Business,2025-12-31,Enterprise,PLG,false,false
-D-131,Pavilion Ventures - API Gateway,121000,Business Case,2026-04-07,AE-M05,New Business,2025-11-03,Mid-Market,Partner,false,false
-D-132,Helix Data - Security Module,107000,Business Case,2026-05-13,AE-M03,New Business,2025-12-15,Mid-Market,Event,false,false
-D-133,Monolith Cloud - Security Module Renewal,171000,Business Case,2026-07-17,AE-M04,Renewal,2025-12-24,Mid-Market,Partner,false,false
-D-134,Flint Networks - Data Pipeline Expansion,171000,Business Case,2026-03-27,AE-M07,Expansion,2026-01-13,Mid-Market,Event,false,false
-D-135,Drake Global - Data Pipeline Expansion,240000,Business Case,2026-05-12,AE-M04,Expansion,2025-11-14,Mid-Market,Event,false,false
-D-136,Vanguard Platforms - Security Module,134000,Business Case,2026-04-13,AE-M07,New Business,2026-03-02,Mid-Market,Partner,false,false
-D-137,Marble Corp - Analytics Renewal,156000,Business Case,2026-04-17,AE-M03,Renewal,2026-03-13,Mid-Market,Partner,false,false
-D-138,Prism Group - Enterprise Suite Expansion,205000,Business Case,2026-07-14,AE-M07,Expansion,2025-11-07,Mid-Market,Outbound,false,false
-D-139,Tempest Solutions - Security Module Expansion,616000,Business Case,2026-03-30,AE-E03,Expansion,2025-12-10,Enterprise,Inbound,false,false
-D-140,Catalyst Partners - Compliance,156000,Business Case,2026-06-04,AE-M04,New Business,2026-02-20,Mid-Market,Event,false,false
-D-141,Beacon Global - Monitoring Renewal,135000,Business Case,2026-06-17,AE-M03,Renewal,2025-11-20,Mid-Market,Partner,false,false
-D-142,Summit Global - Enterprise Suite Expansion,144000,Business Case,2026-07-27,AE-M03,Expansion,2026-03-10,Mid-Market,Partner,false,false
-D-143,Cobalt Corp - Enterprise Suite Renewal,80000,Business Case,2026-05-13,AE-M05,Renewal,2026-01-12,Mid-Market,Outbound,false,false
-D-144,Cipher Software - Monitoring Expansion,189000,Business Case,2026-07-13,AE-M02,Expansion,2026-01-15,Mid-Market,Event,false,false
-D-145,Aether Analytics - API Gateway,441000,Negotiation,2026-04-16,AE-E01,New Business,2025-11-26,Enterprise,Outbound,false,false
-D-146,Sapphire Platforms - Data Pipeline,315000,Negotiation,2026-04-14,AE-E06,New Business,2025-12-05,Enterprise,Inbound,false,false
-D-147,Vanguard Global - Compliance,580000,Negotiation,2026-06-18,AE-E04,New Business,2025-12-08,Enterprise,Partner,false,false
-D-148,Cipher Ventures - Security Module Renewal,119000,Negotiation,2026-06-15,AE-M05,Renewal,2025-11-26,Mid-Market,Outbound,false,false
-D-149,Vector Solutions - Compliance,136000,Negotiation,2026-06-05,AE-M07,New Business,2026-01-15,Mid-Market,Outbound,false,false
-D-150,Forge Cloud - Monitoring Expansion,80000,Negotiation,,AE-M05,Expansion,2026-01-22,Mid-Market,Inbound,false,false
-D-151,Cascade Labs - Security Module,162000,Negotiation,2026-04-03,AE-M06,New Business,2026-01-05,Mid-Market,Event,false,false
-D-152,Ember Systems - Analytics Expansion,261000,Negotiation,2026-05-18,AE-M03,Expansion,2026-02-03,Mid-Market,Partner,false,false
-D-153,Cipher Software - Analytics Expansion,225000,Negotiation,2026-04-02,AE-M07,Expansion,2025-11-14,Mid-Market,Outbound,false,false
-D-154,Summit Technologies - Platform,104000,Negotiation,2026-04-14,AE-M05,New Business,2026-02-16,Mid-Market,Partner,false,false
-D-155,Vanguard Solutions - Security Module,250000,Negotiation,2026-06-05,AE-E03,New Business,2025-12-03,Enterprise,Inbound,false,false
-D-156,Pinnacle Global - Data Pipeline,197000,Negotiation,2026-07-29,AE-M01,New Business,2025-12-03,Mid-Market,Inbound,false,false
-D-157,Nimbus Technologies - Analytics,292000,Negotiation,2026-05-22,AE-E01,New Business,2026-03-19,Enterprise,Inbound,false,false
-D-158,Cedar Corp - Security Module Renewal,408000,Negotiation,2026-07-15,AE-E04,Renewal,2026-03-30,Enterprise,Inbound,false,false
-D-159,Nova Technologies - Security Module,84000,Negotiation,2026-04-13,AE-M07,New Business,2025-11-24,Mid-Market,Outbound,false,false
-D-160,Verdant Corp - Data Pipeline,383000,Negotiation,2026-07-20,AE-E03,New Business,2026-01-23,Enterprise,PLG,false,false
-D-161,Titan Software - API Gateway,220000,Negotiation,2026-05-27,AE-M05,New Business,2026-02-25,Mid-Market,Inbound,false,false
-D-162,Ember Systems - Analytics,99000,Negotiation,2026-06-22,AE-M05,New Business,2025-11-25,Mid-Market,Inbound,false,false
-D-163,Cobalt Solutions - Analytics,,Negotiation,2026-04-29,AE-E05,New Business,2025-12-03,Enterprise,Outbound,false,false
-D-164,Vanguard Solutions - Data Pipeline,359000,Negotiation,2026-06-17,AE-E03,New Business,2026-03-09,Enterprise,Outbound,false,false
-D-165,Prism Group - Monitoring,193000,Negotiation,2026-04-06,AE-M07,New Business,2025-12-30,Mid-Market,Partner,false,false
-D-166,Summit Technologies - API Gateway,194000,Negotiation,2026-07-09,AE-M05,New Business,2026-03-30,Mid-Market,Event,false,false
-D-167,Synapse Global - Compliance,199000,Closed Won,2026-02-03,AE-M02,New Business,2025-11-17,Mid-Market,Inbound,true,true
-D-168,Sable Ventures - Analytics,270000,Closed Won,2026-02-10,AE-M02,New Business,2026-02-05,Mid-Market,Inbound,true,true
-D-169,Flint Networks - Compliance,222000,Closed Won,2026-02-04,AE-M02,New Business,2025-12-08,Mid-Market,Outbound,true,true
-D-170,Cedar Inc - Enterprise Suite,741000,Closed Won,2026-03-12,AE-E01,New Business,2026-01-01,Enterprise,Partner,true,true
-D-171,Bedrock Analytics - Security Module,299000,Closed Won,2026-05-13,AE-M06,New Business,2026-02-23,Mid-Market,Event,true,true
-D-172,Ember Inc - Monitoring Renewal,184000,Closed Won,2026-03-31,AE-M06,Renewal,2025-12-08,Mid-Market,Outbound,true,true
-D-173,Sequoia Global - API Gateway,701000,Closed Won,2026-02-18,AE-E02,New Business,2025-11-18,Enterprise,Inbound,true,true
-D-174,Aether Dynamics - Analytics,496000,Closed Won,2026-02-05,AE-E04,New Business,2025-11-19,Enterprise,Outbound,true,true
-D-175,Monolith Global - Monitoring,516000,Closed Won,2026-03-13,AE-E04,New Business,2026-01-09,Enterprise,Partner,true,true
-D-176,Monolith Software - Enterprise Suite Expansion,278000,Closed Won,2026-03-02,AE-M07,Expansion,2025-11-05,Mid-Market,Event,true,true
-D-177,Catalyst Ventures - Platform Expansion,552000,Closed Won,2026-03-06,AE-E05,Expansion,2025-11-13,Enterprise,Inbound,true,true
-D-178,Pinnacle Global - Security Module Renewal,0,Closed Won,2026-04-07,AE-M07,Renewal,2026-03-03,Mid-Market,PLG,true,true
-D-179,Verdant Digital - API Gateway,748000,Closed Won,2026-03-26,AE-E06,New Business,2026-02-27,Enterprise,Event,true,true
-D-180,Cascade Labs - API Gateway Expansion,263000,Closed Won,2026-03-12,AE-M05,Expansion,2025-11-06,Mid-Market,Inbound,true,true
-D-181,Keystone Labs - Platform,609000,Closed Won,2026-01-09,AE-E04,New Business,2025-12-03,Enterprise,PLG,true,true
-D-182,Vanguard Solutions - Analytics Expansion,364000,Closed Won,2025-09-17,AE-E01,Expansion,2025-06-03,Enterprise,Partner,true,true
-D-183,Granite Networks - Compliance,277000,Closed Won,2026-02-11,AE-M04,New Business,2025-12-30,Mid-Market,Inbound,true,true
-D-184,Prism Group - Compliance,200000,Closed Won,2025-09-02,AE-M05,New Business,2025-08-01,Mid-Market,PLG,true,true
-D-185,Vector Ventures - Data Pipeline,595000,Closed Won,2025-10-02,AE-E02,New Business,2025-06-24,Enterprise,Inbound,true,true
-D-186,Ridge Labs - Monitoring Expansion,767000,Closed Won,2025-12-04,AE-E04,Expansion,2025-11-03,Enterprise,Outbound,true,true
-D-187,Cedar Corp - Security Module,654000,Closed Won,2025-12-24,AE-E03,New Business,2025-07-29,Enterprise,Event,true,true
-D-188,Catalyst Ventures - Analytics Renewal,372000,Closed Won,2025-12-31,AE-E06,Renewal,2025-08-19,Enterprise,PLG,true,true
-D-189,Dynamo Industries - Data Pipeline,177000,Closed Won,2025-08-07,AE-M04,New Business,2025-05-14,Mid-Market,Inbound,true,true
-D-190,Monolith Software - Enterprise Suite Renewal,169000,Closed Won,2026-01-27,AE-M07,Renewal,2025-07-14,Mid-Market,Partner,true,true
-D-191,Cipher Solutions - Security Module,223000,Closed Won,2025-08-06,AE-M01,New Business,2025-05-16,Mid-Market,PLG,true,true
-D-192,Flint Sciences - Monitoring,191000,Closed Won,2025-10-31,AE-M01,New Business,2025-05-21,Mid-Market,Event,true,true
-D-193,Sapphire Industries - Platform,80000,Closed Won,2025-12-26,AE-M06,New Business,2025-11-05,Mid-Market,Inbound,true,true
-D-194,Axiom Solutions - Compliance Expansion,263000,Closed Won,2025-10-14,AE-M01,Expansion,2025-05-19,Mid-Market,Inbound,true,true
-D-195,Sapphire Sciences - Data Pipeline Expansion,182000,Closed Won,2025-08-06,AE-M05,Expansion,2025-04-11,Mid-Market,Inbound,true,true
-D-196,Vanguard Solutions - Compliance Expansion,546000,Closed Won,2025-10-24,AE-E01,Expansion,2025-04-08,Enterprise,Outbound,true,true
-D-197,Monolith Global - API Gateway,910000,Closed Won,2025-11-01,AE-E03,New Business,2025-09-25,Enterprise,Inbound,true,true
-D-198,Cipher Labs - Analytics,596000,Closed Won,2025-12-25,AE-E01,New Business,2025-08-18,Enterprise,Inbound,true,true
-D-199,Cascade Labs - Analytics,235000,Closed Won,2025-11-27,AE-M06,New Business,2025-11-14,Mid-Market,Inbound,true,true
-D-200,Cobalt Corp - Security Module,239000,Closed Won,2025-10-09,AE-M05,New Business,2025-07-30,Mid-Market,Event,true,true
-D-201,Aegis Software - API Gateway Expansion,218000,Closed Won,2025-09-17,AE-M05,Expansion,2025-04-15,Mid-Market,PLG,true,true
-D-202,Vanguard Ventures - Enterprise Suite,116000,Closed Won,2026-01-19,AE-M07,New Business,2025-10-03,Mid-Market,Outbound,true,true
-D-203,Vanguard Global - Platform,495000,Closed Won,2026-01-06,AE-E02,New Business,2025-09-26,Enterprise,PLG,true,true
-D-204,Coral Networks - Analytics Expansion,587000,Closed Won,2026-01-19,AE-E05,Expansion,2025-09-10,Enterprise,Event,true,true
-D-205,Monolith Global - Enterprise Suite Expansion,250000,Closed Won,2025-11-25,AE-E01,Expansion,2025-09-22,Enterprise,Partner,true,true
-D-206,Flint Systems - Compliance,716000,Closed Won,2025-11-04,AE-E03,New Business,2025-08-27,Enterprise,Partner,true,true
-D-207,Vector Ventures - Compliance,533000,Closed Won,2025-08-04,AE-E01,New Business,2025-05-09,Enterprise,Event,true,true
-D-208,Onyx Digital - API Gateway,541000,Closed Won,2026-01-14,AE-E04,New Business,2025-07-09,Enterprise,Inbound,true,true
-D-209,Dynamo Industries - Compliance Expansion,177000,Closed Won,2025-10-15,AE-M05,Expansion,2025-04-03,Mid-Market,Inbound,true,true
-D-210,Granite Labs - Monitoring Expansion,261000,Closed Won,2026-01-15,AE-M05,Expansion,2025-07-09,Mid-Market,Inbound,true,true
-D-211,Nebula Inc - Monitoring Renewal,787000,Closed Won,2025-10-30,AE-E04,Renewal,2025-08-07,Enterprise,Partner,true,true
-D-212,Pinnacle Global - API Gateway Expansion,270000,Closed Won,2025-10-10,AE-M07,Expansion,2025-05-06,Mid-Market,Outbound,true,true
-D-213,Marble Inc - Enterprise Suite Renewal,248000,Closed Won,2025-09-05,AE-M05,Renewal,2025-05-28,Mid-Market,Partner,true,true
-D-214,Pinnacle Global - Monitoring,250000,Closed Won,2026-01-20,AE-M07,New Business,2025-12-10,Mid-Market,Inbound,true,true
-D-215,Marble Digital - Analytics Expansion,80000,Closed Won,2025-11-26,AE-M01,Expansion,2025-10-01,Mid-Market,Inbound,true,true
-D-216,Cedar Corp - Compliance,519000,Closed Won,2026-01-26,AE-E01,New Business,2025-10-13,Enterprise,PLG,true,true
-D-217,Cedar Corp - Enterprise Suite,622000,Closed Won,2025-10-17,AE-E06,New Business,2025-04-22,Enterprise,Partner,true,true
-D-218,Marble Group - Analytics Renewal,80000,Closed Won,2025-10-10,AE-M05,Renewal,2025-08-28,Mid-Market,Inbound,true,true
-D-219,Sequoia Global - API Gateway Expansion,700000,Closed Won,2025-09-18,AE-E05,Expansion,2025-08-28,Enterprise,Inbound,true,true
-D-220,Forge Inc - Platform,88000,Closed Won,2025-11-14,AE-M03,New Business,2025-10-06,Mid-Market,Outbound,true,true
-D-221,Summit Global - Compliance,171000,Closed Won,2025-11-12,AE-M05,New Business,2025-09-30,Mid-Market,Inbound,true,true
-D-222,Spectra Sciences - Analytics Renewal,252000,Closed Won,2025-12-15,AE-M01,Renewal,2025-11-04,Mid-Market,Partner,true,true
-D-223,Verdant Ventures - Compliance,181000,Closed Won,2025-10-16,AE-M02,New Business,2025-09-02,Mid-Market,Partner,true,true
-D-224,Cobalt Solutions - Security Module,533000,Closed Won,2025-10-10,AE-E06,New Business,2025-09-04,Enterprise,Inbound,true,true
-D-225,Mercury Solutions - Security Module Expansion,80000,Closed Won,2026-01-16,AE-M05,Expansion,2025-11-06,Mid-Market,Outbound,true,true
-D-226,Phoenix Platforms - Monitoring Expansion,636000,Closed Won,2025-10-21,AE-E06,Expansion,2025-05-02,Enterprise,Partner,true,true
-D-227,Vertex Partners - Security Module,217000,Closed Won,2025-08-20,AE-M05,New Business,2025-07-24,Mid-Market,Outbound,true,true
-D-228,Phoenix Dynamics - Security Module,222000,Closed Won,2025-11-17,AE-M07,New Business,2025-10-14,Mid-Market,Outbound,true,true
-D-229,Aegis Software - Data Pipeline Renewal,130000,Closed Won,2025-12-08,AE-M05,Renewal,2025-09-24,Mid-Market,Inbound,true,true
-D-230,Vanguard Solutions - Enterprise Suite,774000,Closed Won,2025-08-21,AE-E01,New Business,2025-08-04,Enterprise,Outbound,true,true
-D-231,Beacon Global - Monitoring,137000,Closed Won,2026-01-08,AE-M06,New Business,2025-10-14,Mid-Market,Outbound,true,true
-D-232,Thrive Group - Analytics Expansion,214000,Closed Won,2025-08-15,AE-M04,Expansion,2025-06-26,Mid-Market,Outbound,true,true
-D-233,Lattice Ventures - API Gateway,168000,Closed Won,2026-01-21,AE-M05,New Business,2025-07-11,Mid-Market,Partner,true,true
-D-234,Vanguard Ventures - Analytics,145000,Closed Won,2026-01-19,AE-M06,New Business,2025-11-10,Mid-Market,Inbound,true,true
-D-235,Cipher Software - Data Pipeline,146000,Closed Won,2025-10-17,AE-M06,New Business,2025-08-29,Mid-Market,Partner,true,true
-D-236,Nebula Inc - Enterprise Suite Expansion,393000,Closed Won,2025-09-18,AE-E03,Expansion,2025-04-29,Enterprise,Partner,true,true
-D-237,Summit Technologies - API Gateway,148000,Closed Won,2025-12-05,AE-M07,New Business,2025-10-27,Mid-Market,Partner,true,true
-D-238,Nebula Inc - Data Pipeline Expansion,451000,Closed Won,2025-08-18,AE-E06,Expansion,2025-05-30,Enterprise,Outbound,true,true
-D-239,Compass Software - Security Module Renewal,107000,Closed Won,2025-11-12,AE-M02,Renewal,2025-10-06,Mid-Market,Inbound,true,true
-D-240,Titan Software - Security Module,184000,Closed Won,2026-01-17,AE-M01,New Business,2025-12-17,Mid-Market,Inbound,true,true
-D-241,Aether Dynamics - API Gateway,664000,Closed Won,2025-09-12,AE-E01,New Business,2025-07-11,Enterprise,Event,true,true
-D-242,Vector Solutions - Monitoring,184000,Closed Won,2025-12-31,AE-M07,New Business,2025-10-17,Mid-Market,Outbound,true,true
-D-243,Cobalt Corp - Compliance Expansion,161000,Closed Won,2025-09-01,AE-M04,Expansion,2025-07-15,Mid-Market,Event,true,true
-D-244,Ridge Technologies - API Gateway Renewal,134000,Closed Won,2025-11-12,AE-M06,Renewal,2025-11-06,Mid-Market,Outbound,true,true
-D-245,Axiom Inc - Security Module,459000,Closed Won,2025-08-27,AE-E03,New Business,2025-08-08,Enterprise,Partner,true,true
-D-246,Radiant Systems - Enterprise Suite,217000,Closed Won,2025-09-22,AE-M01,New Business,2025-06-05,Mid-Market,Outbound,true,true
-D-247,Keystone Data - Security Module Renewal,154000,Closed Won,2025-09-10,AE-M01,Renewal,2025-09-09,Mid-Market,Partner,true,true
-D-248,Opal Software - Compliance Expansion,167000,Closed Won,2026-01-19,AE-M05,Expansion,2025-09-08,Mid-Market,Partner,true,true
-D-249,Sapphire Industries - Platform Expansion,154000,Closed Won,2025-10-29,AE-M05,Expansion,2025-04-29,Mid-Market,Outbound,true,true
-D-250,Granite Dynamics - Security Module,697000,Closed Won,2026-01-01,AE-E02,New Business,2025-10-02,Enterprise,Event,true,true
-D-251,Basalt Group - Analytics Expansion,263000,Closed Lost,2025-11-28,AE-M03,Expansion,2025-09-18,Mid-Market,Partner,true,false
-D-252,Flint Corp - API Gateway,233000,Closed Lost,2025-10-19,AE-M07,New Business,2025-09-17,Mid-Market,Event,true,false
-D-253,Nebula Cloud - Security Module,166000,Closed Lost,2026-01-09,AE-M05,New Business,2025-12-10,Mid-Market,Inbound,true,false
-D-254,Dynamo Systems - Monitoring,101000,Closed Lost,2026-01-09,AE-M07,New Business,2025-09-25,Mid-Market,Partner,true,false
-D-255,Dynamo Industries - Analytics Renewal,166000,Closed Lost,2025-12-22,AE-M07,Renewal,2025-12-01,Mid-Market,Partner,true,false
-D-256,Ridge Digital - Platform,479000,Closed Lost,2025-10-30,AE-E03,New Business,2025-07-29,Enterprise,Inbound,true,false
-D-257,Spectra Platforms - Security Module Renewal,668000,Closed Lost,2025-12-05,AE-E06,Renewal,2025-09-18,Enterprise,Partner,true,false
-D-258,Thrive Ventures - Data Pipeline,647000,Closed Lost,2025-08-18,AE-E04,New Business,2025-05-09,Enterprise,Event,true,false
-D-259,Orbit Ventures - Data Pipeline Expansion,538000,Closed Lost,2025-12-30,AE-E04,Expansion,2025-12-29,Enterprise,Inbound,true,false
-D-260,Radiant Systems - Platform,80000,Closed Lost,2025-12-09,AE-M01,New Business,2025-11-04,Mid-Market,Event,true,false
-D-261,Solstice Corp - Compliance Expansion,189000,Closed Lost,2025-11-11,AE-M01,Expansion,2025-08-14,Mid-Market,Partner,true,false
-D-262,Granite Platforms - Analytics,250000,Closed Lost,2026-01-29,AE-E03,New Business,2025-11-24,Enterprise,Event,true,false
-D-263,Ridge Global - Monitoring Renewal,208000,Closed Lost,2025-08-22,AE-M02,Renewal,2025-07-04,Mid-Market,Partner,true,false
-D-264,Tempest Solutions - Security Module,333000,Closed Lost,2025-12-31,AE-E05,New Business,2025-08-15,Enterprise,Inbound,true,false
-D-265,Forge Cloud - Enterprise Suite,154000,Closed Lost,2025-11-05,AE-M01,New Business,2025-10-09,Mid-Market,Partner,true,false
-D-266,Onyx Cloud - Platform Expansion,260000,Closed Lost,2025-09-11,AE-M06,Expansion,2025-07-09,Mid-Market,Outbound,true,false
-D-267,Prism Group - API Gateway,156000,Closed Lost,2026-01-23,AE-M04,New Business,2025-09-15,Mid-Market,Inbound,true,false
-D-268,Helix Global - Enterprise Suite,252000,Closed Lost,2026-01-28,AE-E03,New Business,2025-07-31,Enterprise,Inbound,true,false
-D-269,Ridge Digital - Data Pipeline Renewal,894000,Closed Lost,2025-10-24,AE-E02,Renewal,2025-08-22,Enterprise,PLG,true,false
-D-270,Flint Digital - API Gateway,93000,Closed Lost,2025-09-10,AE-M05,New Business,2025-06-26,Mid-Market,Partner,true,false
-D-271,Prism Group - Security Module,80000,Closed Lost,2025-08-15,AE-M02,New Business,2025-05-19,Mid-Market,Event,true,false
-D-272,Granite Dynamics - Compliance,383000,Closed Lost,2025-11-08,AE-E05,New Business,2025-08-26,Enterprise,Outbound,true,false
-D-273,Flint Networks - Enterprise Suite,115000,Closed Lost,2025-12-17,AE-M01,New Business,2025-10-14,Mid-Market,Partner,true,false
-D-274,Ridge Technologies - Analytics Renewal,212000,Closed Lost,2026-01-30,AE-M03,Renewal,2025-12-11,Mid-Market,Outbound,true,false
-D-275,Nebula Inc - Security Module,510000,Closed Lost,2025-10-09,AE-E05,New Business,2025-08-04,Enterprise,Outbound,true,false
-D-276,Cedar Inc - Data Pipeline Expansion,536000,Closed Lost,2025-11-13,AE-E06,Expansion,2025-09-10,Enterprise,Partner,true,false
-D-277,Prism Partners - Data Pipeline,198000,Closed Lost,2025-11-07,AE-M04,New Business,2025-07-17,Mid-Market,Outbound,true,false
-D-278,Thrive Ventures - Compliance Expansion,532000,Closed Lost,2025-10-07,AE-E02,Expansion,2025-08-13,Enterprise,PLG,true,false
-D-279,Compass Digital - Monitoring Expansion,657000,Closed Lost,2025-12-22,AE-E05,Expansion,2025-07-04,Enterprise,Outbound,true,false
-D-280,Orbit Systems - Platform,127000,Closed Lost,2025-08-15,AE-M01,New Business,2025-07-10,Mid-Market,Event,true,false
-D-281,Sapphire Sciences - Analytics,256000,Closed Lost,2025-12-18,AE-M07,New Business,2025-07-22,Mid-Market,Inbound,true,false
-D-282,Falcon Platforms - Data Pipeline,220000,Closed Lost,2025-09-05,AE-M01,New Business,2025-06-06,Mid-Market,PLG,true,false
-D-283,Sapphire Platforms - API Gateway Renewal,619000,Closed Lost,2025-11-12,AE-E02,Renewal,2025-10-16,Enterprise,Event,true,false
-D-284,Tempest Technologies - Monitoring,431000,Closed Lost,2026-01-20,AE-E05,New Business,2025-09-03,Enterprise,Inbound,true,false
-D-285,Nebula Analytics - Monitoring,490000,Closed Lost,2025-12-15,AE-E03,New Business,2025-10-30,Enterprise,Outbound,true,false
-D-286,Sequoia Sciences - Data Pipeline,228000,Closed Lost,2026-01-07,AE-M04,New Business,2025-09-05,Mid-Market,Partner,true,false
-D-287,Radiant Systems - Data Pipeline,217000,Closed Lost,2025-12-29,AE-M03,New Business,2025-11-10,Mid-Market,Event,true,false
-D-288,Axiom Solutions - Security Module,214000,Closed Lost,2025-08-12,AE-M07,New Business,2025-05-01,Mid-Market,Partner,true,false
-D-289,Thrive Ventures - Platform,868000,Closed Lost,2025-11-24,AE-E01,New Business,2025-07-21,Enterprise,Event,true,false
-D-290,Monolith Cloud - API Gateway,119000,Closed Lost,2025-10-03,AE-M03,New Business,2025-08-12,Mid-Market,Partner,true,false
-D-291,Opal Software - Enterprise Suite Expansion,255000,Closed Lost,2026-01-20,AE-M07,Expansion,2025-07-18,Mid-Market,Partner,true,false
-D-292,Compass Digital - Security Module Expansion,716000,Closed Lost,2025-12-25,AE-E03,Expansion,2025-07-09,Enterprise,Partner,true,false
-D-293,Ember Group - Security Module,952000,Closed Lost,2025-12-12,AE-E04,New Business,2025-09-30,Enterprise,Outbound,true,false
-D-294,Cascade Networks - Platform,119000,Closed Lost,2025-10-06,AE-M07,New Business,2025-07-10,Mid-Market,Outbound,true,false
-D-295,Cobalt Corp - Enterprise Suite,250000,Closed Lost,2025-10-29,AE-M06,New Business,2025-06-05,Mid-Market,Outbound,true,false
-D-296,Granite Networks - Analytics Expansion,304000,Closed Lost,2026-01-27,AE-M05,Expansion,2025-08-08,Mid-Market,Outbound,true,false
-D-297,Nebula Analytics - Platform Expansion,569000,Closed Lost,2026-01-09,AE-E06,Expansion,2025-10-07,Enterprise,Event,true,false
-D-298,Borealis Systems - Data Pipeline,540000,Closed Lost,2025-09-01,AE-E02,New Business,2025-08-08,Enterprise,Partner,true,false
-D-299,Sapphire Industries - Data Pipeline,259000,Closed Lost,2025-11-30,AE-M07,New Business,2025-09-10,Mid-Market,PLG,true,false
-D-300,Monolith Global - Security Module,539000,Closed Lost,2026-01-13,AE-E05,New Business,2025-07-24,Enterprise,Inbound,true,false
-D-301,Monolith Global - API Gateway,624000,Closed Lost,2025-10-06,AE-E03,New Business,2025-04-14,Enterprise,Outbound,true,false
-D-302,Cipher Software - Monitoring Renewal,171000,Closed Lost,2025-11-18,AE-M06,Renewal,2025-10-27,Mid-Market,Inbound,true,false
-D-303,Drake Digital - Analytics Expansion,209000,Closed Lost,2025-10-01,AE-M01,Expansion,2025-09-18,Mid-Market,Partner,true,false
-D-304,Azure Dynamics - Platform,196000,Closed Lost,2026-02-26,AE-M07,New Business,2025-12-16,Mid-Market,Partner,true,false
-D-305,Solstice Sciences - API Gateway Renewal,580000,Closed Lost,2025-10-22,AE-E04,Renewal,2025-09-03,Enterprise,Outbound,true,false
-D-306,Keystone Labs - Analytics Expansion,687000,Closed Lost,2025-11-19,AE-E06,Expansion,2025-09-24,Enterprise,Outbound,true,false
-D-307,Keystone Data - Monitoring Renewal,171000,Closed Lost,2025-09-02,AE-M06,Renewal,2025-08-20,Mid-Market,Event,true,false
-D-308,Onyx Cloud - Platform,126000,Closed Lost,2025-12-03,AE-M06,New Business,2025-11-19,Mid-Market,Inbound,true,false
-D-309,Compass Software - Security Module Expansion,273000,Closed Lost,2026-01-22,AE-M06,Expansion,2025-08-28,Mid-Market,Event,true,false
-D-310,Quantum Software - Compliance Expansion,300000,Closed Lost,2025-10-08,AE-M05,Expansion,2025-08-28,Mid-Market,Outbound,true,false
-D-311,Synapse Labs - Security Module,191000,Closed Lost,2025-08-15,AE-M03,New Business,2025-06-10,Mid-Market,Outbound,true,false
-D-312,Pulse Data - API Gateway Expansion,228000,Closed Lost,2026-02-16,AE-M05,Expansion,2025-12-19,Mid-Market,Outbound,true,false
-D-313,Prism Partners - Compliance Expansion,275000,Closed Lost,2026-01-19,AE-M06,Expansion,2025-11-27,Mid-Market,PLG,true,false
-D-314,Beacon Global - API Gateway,150000,Closed Lost,2025-12-19,AE-M02,New Business,2025-09-26,Mid-Market,Partner,true,false
-D-315,Obsidian Ventures - Data Pipeline Renewal,189000,Closed Lost,2026-01-05,AE-M07,Renewal,2025-12-05,Mid-Market,PLG,true,false
-D-316,Ember Inc - API Gateway Expansion,140000,Closed Lost,2025-08-21,AE-M05,Expansion,2025-06-19,Mid-Market,PLG,true,false
-D-317,Helix Data - Data Pipeline Renewal,138000,Closed Lost,2025-10-28,AE-M03,Renewal,2025-04-18,Mid-Market,Partner,true,false
-D-318,Marble Corp - Security Module,240000,Closed Lost,2026-01-14,AE-M07,New Business,2025-09-10,Mid-Market,Event,true,false
-D-319,Synapse Platforms - Monitoring,164000,Closed Lost,2026-01-12,AE-M05,New Business,2025-07-16,Mid-Market,Outbound,true,false
-D-320,Vanguard Platforms - Platform,80000,Closed Lost,2025-09-15,AE-M07,New Business,2025-04-03,Mid-Market,Partner,true,false
-D-321,Dynamo Systems - Analytics Renewal,193000,Closed Lost,2026-01-05,AE-M02,Renewal,2025-08-14,Mid-Market,Inbound,true,false
-D-322,Opal Software - Monitoring,126000,Closed Lost,2025-09-30,AE-M03,New Business,2025-07-02,Mid-Market,Inbound,true,false
-D-323,Cascade Partners - Compliance Expansion,82000,Closed Lost,2025-11-12,AE-M02,Expansion,2025-08-04,Mid-Market,PLG,true,false
-D-324,Vector Ventures - Compliance Renewal,377000,Closed Lost,2026-01-05,AE-E04,Renewal,2025-10-28,Enterprise,Partner,true,false
-D-325,Cobalt Ventures - Enterprise Suite,345000,Closed Lost,2025-11-09,AE-E01,New Business,2025-09-02,Enterprise,Outbound,true,false
-D-326,Pavilion Ventures - Data Pipeline Expansion,190000,Closed Lost,2025-12-01,AE-M03,Expansion,2025-11-06,Mid-Market,Outbound,true,false
-D-327,Vanguard Solutions - Monitoring,1036000,Closed Lost,2025-12-04,AE-E05,New Business,2025-09-10,Enterprise,Inbound,true,false
-D-328,Onyx Digital - Security Module,450000,Closed Lost,2025-10-24,AE-E01,New Business,2025-07-31,Enterprise,PLG,true,false
-D-329,Dynamo Industries - Analytics Expansion,274000,Closed Lost,2026-01-21,AE-M03,Expansion,2025-10-22,Mid-Market,Partner,true,false
-D-330,Nimbus Technologies - Data Pipeline Renewal,299000,Closed Lost,2025-08-07,AE-E04,Renewal,2025-05-26,Enterprise,PLG,true,false
-D-331,Titan Software - Compliance Expansion,157000,Closed Lost,2025-11-06,AE-M06,Expansion,2025-08-29,Mid-Market,PLG,true,false
-D-332,Cobalt Solutions - Data Pipeline,507000,Closed Lost,2026-01-23,AE-E01,New Business,2025-07-15,Enterprise,PLG,true,false
-D-333,Pavilion Ventures - API Gateway Expansion,214000,Closed Lost,2025-12-26,AE-M05,Expansion,2025-09-30,Mid-Market,Event,true,false
-D-334,Aether Ventures - Platform,754000,Closed Lost,2025-08-01,AE-E02,New Business,2025-04-29,Enterprise,PLG,true,false
-D-335,Sapphire Sciences - Security Module,170000,Closed Lost,2026-01-08,AE-M07,New Business,2025-10-17,Mid-Market,Inbound,true,false
-D-336,Onyx Digital - Monitoring Expansion,547000,Closed Lost,2026-01-26,AE-E02,Expansion,2025-09-26,Enterprise,Inbound,true,false
-D-337,Onyx Digital - Data Pipeline,648000,Closed Lost,2025-12-05,AE-E04,New Business,2025-09-04,Enterprise,Outbound,true,false
-D-338,Coral Data - Security Module,157000,Closed Lost,2026-01-20,AE-M01,New Business,2025-11-20,Mid-Market,Event,true,false
-D-339,Thrive Ventures - Monitoring Expansion,465000,Closed Lost,2025-11-20,AE-E01,Expansion,2025-08-27,Enterprise,Outbound,true,false
-D-340,Nebula Inc - Monitoring,250000,Closed Lost,2026-01-28,AE-E01,New Business,2025-07-17,Enterprise,Outbound,true,false
-D-341,Solstice Sciences - Enterprise Suite,687000,Closed Lost,2025-09-01,AE-E06,New Business,2025-06-26,Enterprise,Event,true,false
-D-342,Vector Systems - Data Pipeline,243000,Closed Lost,2025-12-23,AE-M05,New Business,2025-12-08,Mid-Market,Inbound,true,false
-D-343,Axiom Inc - Analytics,425000,Closed Lost,2025-12-12,AE-E03,New Business,2025-09-05,Enterprise,Outbound,true,false
-D-344,Axiom Data - Compliance,80000,Closed Lost,2026-01-28,AE-M07,New Business,2025-10-09,Mid-Market,Inbound,true,false
-D-345,Azure Dynamics - API Gateway Expansion,195000,Closed Lost,2026-01-26,AE-M06,Expansion,2025-11-26,Mid-Market,Inbound,true,false
-D-346,Vector Solutions - Enterprise Suite Expansion,245000,Closed Lost,2026-01-31,AE-M06,Expansion,2025-11-24,Mid-Market,Outbound,true,false
-D-347,Crimson Software - Compliance,188000,Closed Lost,2025-12-31,AE-M06,New Business,2025-08-20,Mid-Market,Partner,true,false
-D-348,Marble Corp - Data Pipeline,156000,Closed Lost,2026-02-01,AE-M07,New Business,2025-12-22,Mid-Market,Inbound,true,false
-D-349,Flint Corp - Data Pipeline Expansion,116000,Closed Lost,2025-12-08,AE-M02,Expansion,2025-12-05,Mid-Market,Outbound,true,false
-D-350,Granite Labs - Compliance,179000,Closed Lost,2026-01-08,AE-M03,New Business,2025-12-09,Mid-Market,PLG,true,false
-D-351,Drake Global - Enterprise Suite,227000,Closed Lost,2025-12-02,AE-M04,New Business,2025-07-17,Mid-Market,Inbound,true,false
-D-352,Solstice Corp - Compliance,138000,Closed Lost,2025-11-20,AE-M01,New Business,2025-10-01,Mid-Market,Partner,true,false
-D-353,Atlas Group - Enterprise Suite,270000,Closed Lost,2026-01-22,AE-M05,New Business,2025-12-09,Mid-Market,Inbound,true,false
-D-354,Summit Technologies - Analytics Expansion,118000,Closed Lost,2025-10-17,AE-M07,Expansion,2025-05-02,Mid-Market,Partner,true,false
-D-355,Pulse Industries - API Gateway Renewal,145000,Closed Lost,2025-10-06,AE-M02,Renewal,2025-07-03,Mid-Market,Outbound,true,false
-D-356,Vanguard Ventures - Analytics Renewal,123000,Closed Lost,2025-08-26,AE-M05,Renewal,2025-07-08,Mid-Market,Event,true,false
-D-357,Opal Software - Compliance,151000,Closed Lost,2025-10-06,AE-M03,New Business,2025-08-26,Mid-Market,Event,true,false
-D-358,Cipher Ventures - API Gateway Renewal,170000,Closed Lost,2025-12-22,AE-M01,Renewal,2025-07-18,Mid-Market,Outbound,true,false
-D-359,Atlas Group - API Gateway Expansion,270000,Closed Lost,2025-12-02,AE-M03,Expansion,2025-10-22,Mid-Market,Inbound,true,false
-D-360,Drake Digital - Enterprise Suite Renewal,125000,Closed Lost,2025-11-05,AE-M05,Renewal,2025-09-17,Mid-Market,PLG,true,false
+id,name,account,owner,owner_id,segment,source_channel,stage,amount,arr,created_date,close_date,is_closed,is_won,lost_reason,raw_stage,type,forecast_category
+SAP-001,Brassline Components - Multi-plant rollout,Brassline Components,Sienna Patel,AE-M02,mid_market,outbound,Closed Won,420000,420000,2026-01-12,2026-04-24,true,true,,Closed Won,new_business,Closed
+SAP-002,Northspan Conveyance - Workforce hub,Northspan Conveyance,Lucas Brennan,AE-M01,mid_market,inbound,Closed Won,285000,285000,2026-02-03,2026-04-28,true,true,,Closed Won,new_business,Closed
+SAP-003,TorqueFox Warehouse - Self-serve expansion,TorqueFox Warehouse,Brielle Navarro,AE-C04,commercial,inbound,Closed Won,64000,64000,2026-03-07,2026-04-30,true,true,,Closed Won,expansion,Closed
+SAP-004,Telos Robotics - EMEA standardization,Telos Robotics,Naomi Walsh,AE-E01,enterprise,partner,Business Case,1400000,1400000,2025-12-09,2026-04-15,false,false,,Business Case - Legal Review,new_business,Best Case
+SAP-005,Vellum Precision - Audit fabric,Vellum Precision,Diego Suzuki,AE-E04,enterprise,partner,Business Case,1180000,1180000,2026-01-16,2026-04-22,false,false,,Business Case - Legal Review,new_business,Best Case
+SAP-006,QuickForge Ops - Starter bundle,QuickForge Ops,Lila Hart,AE-C08,commercial,inbound,Qualification,36000,36000,2026-04-22,2026-05-29,false,false,,Qualification,new_business,Pipeline
+SAP-007,Foundry Lane Systems - Instrumentation cloud,Foundry Lane Systems,Ezra Lindgren,AE-M05,mid_market,outbound,Technical Evaluation,260000,260000,2026-03-18,2026-06-26,false,false,,Technical Evaluation,new_business,Best Case
+SAP-008,Iron Ridge Plastics - EU rollout,Iron Ridge Plastics,Tobias Mendez,AE-E02,enterprise,partner,Closed Lost,760000,760000,2025-11-20,2026-03-27,true,false,Legal review exceeded sponsor window,Closed Lost,new_business,Closed
+SAP-009,SnapDock Field Tools - Team edition,SnapDock Field Tools,Andrej Novak,AE-C07,commercial,inbound,Closed Lost,28000,28000,2026-02-25,2026-04-14,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-010,Millwork Partners - Operations hub,Millwork Partners,Sienna Patel,AE-M02,mid_market,inbound,Closed Won,310000,310000,2026-01-20,2026-04-15,true,true,,Closed Won,new_business,Closed
+SAP-011,Telos Robotics - NA compliance suite,Telos Robotics,Tobias Mendez,AE-E02,enterprise,partner,Business Case,920000,920000,2025-11-30,2026-04-28,false,false,,Business Case - Legal Review,new_business,Best Case
+SAP-012,Stratos Dynamics - Platform modernization,Stratos Dynamics,Helena Park,AE-E03,enterprise,partner,Business Case,1600000,1600000,2025-12-15,2026-04-18,false,false,,Business Case - Legal Review,new_business,Best Case
+SAP-013,EasyLift Tools - Self-serve trial,EasyLift Tools,June Holloway,AE-C01,commercial,self_serve,Qualification,66000,66000,2026-04-15,2026-05-20,false,false,,Qualification,new_business,Pipeline
+SAP-014,RapidFlex Tools - Self-serve trial,RapidFlex Tools,Rafael Costa,AE-C02,commercial,self_serve,Qualification,50000,50000,2026-03-28,2026-04-28,false,false,,Qualification,new_business,Pipeline
+SAP-015,Xeon Fabrication - Team edition,Xeon Fabrication,Jenna Ellis,AE-E08,enterprise,self_serve,Closed Won,1017000,1017000,2025-12-15,2026-03-26,true,true,,Closed Won,new_business,Closed
+SAP-016,Upton Services - Compliance suite,Upton Services,Sienna Patel,AE-M02,mid_market,outbound,Closed Won,289000,289000,2025-12-18,2026-02-13,true,true,,Closed Won,new_business,Closed
+SAP-017,Norden Components - Infrastructure expansion,Norden Components,Lucas Brennan,AE-M01,mid_market,ae_self_gen,Closed Won,186000,186000,2026-02-11,2026-04-15,true,true,,Closed Won,new_business,Closed
+SAP-018,Anvil Solutions - Workforce hub,Anvil Solutions,Wren Beauchamp,AE-M04,mid_market,inbound,Closed Won,239000,239000,2026-03-09,2026-04-13,true,true,,Closed Won,new_business,Closed
+SAP-019,JetFab Tools - Infrastructure expansion,JetFab Tools,Brielle Navarro,AE-C04,commercial,inbound,Closed Won,85000,85000,2026-02-16,2026-03-08,true,true,,Closed Won,new_business,Closed
+SAP-020,BriefForge Fast - Starter bundle,BriefForge Fast,Paige Ellison,AE-C06,commercial,self_serve,Closed Won,101000,101000,2026-02-09,2026-03-02,true,true,,Closed Won,new_business,Closed
+SAP-021,PitchBolt Ops - Team edition,PitchBolt Ops,Brielle Navarro,AE-C04,commercial,self_serve,Closed Won,34000,34000,2026-04-09,2026-05-01,true,true,,Closed Won,new_business,Closed
+SAP-022,NiftBolt Ops - Team edition,NiftBolt Ops,Imani Tate,AE-C03,commercial,self_serve,Closed Won,55000,55000,2026-01-19,2026-02-04,true,true,,Closed Won,new_business,Closed
+SAP-023,ImpactForge Ops - Workforce hub,ImpactForge Ops,Paige Ellison,AE-C06,commercial,inbound,Closed Won,41000,41000,2026-01-19,2026-02-12,true,true,,Closed Won,new_business,Closed
+SAP-024,Pinecrest Components - Workforce hub,Pinecrest Components,Felix Andersson,AE-M03,mid_market,partner,Closed Won,222000,222000,2026-02-16,2026-03-29,true,true,,Closed Won,new_business,Closed
+SAP-025,Galena Works - Operations suite,Galena Works,Malik Okoro,AE-E07,enterprise,partner,Closed Won,697000,697000,2025-11-10,2026-04-02,true,true,,Closed Won,new_business,Closed
+SAP-026,SnapForge Tools - Analytics platform,SnapForge Tools,Imani Tate,AE-C03,commercial,inbound,Closed Won,66000,66000,2026-02-09,2026-03-07,true,true,,Closed Won,new_business,Closed
+SAP-027,Graymark Services - Starter bundle,Graymark Services,Benji Flores,AE-M09,mid_market,partner,Closed Won,116000,116000,2026-03-02,2026-04-24,true,true,,Closed Won,new_business,Closed
+SAP-028,Rockvale Systems - Team edition,Rockvale Systems,Hannah Cho,AE-M10,mid_market,inbound,Closed Won,401000,401000,2026-01-02,2026-02-28,true,true,,Closed Won,new_business,Closed
+SAP-029,Elara Precision - Platform rollout,Elara Precision,Helena Park,AE-E03,enterprise,ae_self_gen,Closed Won,907000,907000,2025-10-16,2026-02-24,true,true,,Closed Won,new_business,Closed
+SAP-030,FlexWeld Micro - Analytics platform,FlexWeld Micro,Andrej Novak,AE-C07,commercial,self_serve,Closed Won,72000,72000,2026-02-02,2026-02-26,true,true,,Closed Won,new_business,Closed
+SAP-031,Magnite Systems - Integration layer,Magnite Systems,Malik Okoro,AE-E07,enterprise,inbound,Closed Won,613000,613000,2026-01-01,2026-03-27,true,true,,Closed Won,new_business,Closed
+SAP-032,Xerxes Components - Operations suite,Xerxes Components,Benji Flores,AE-M09,mid_market,outbound,Closed Won,178000,178000,2026-02-06,2026-04-09,true,true,,Closed Won,new_business,Closed
+SAP-033,Kronos Fabrication - Integration layer,Kronos Fabrication,Tobias Mendez,AE-E02,enterprise,ae_self_gen,Closed Won,545000,545000,2026-01-07,2026-04-08,true,true,,Closed Won,new_business,Closed
+SAP-034,DashBolt Ops - Infrastructure expansion,DashBolt Ops,June Holloway,AE-C01,commercial,ae_self_gen,Closed Won,43000,43000,2026-02-02,2026-02-18,true,true,,Closed Won,new_business,Closed
+SAP-035,HammerLine Quick - Starter bundle,HammerLine Quick,Theo Mercer,AE-C05,commercial,inbound,Closed Won,25000,25000,2026-01-19,2026-02-05,true,true,,Closed Won,new_business,Closed
+SAP-036,Treemont Components - Platform rollout,Treemont Components,Wren Beauchamp,AE-M04,mid_market,inbound,Closed Won,319000,319000,2025-12-19,2026-02-07,true,true,,Closed Won,new_business,Closed
+SAP-037,Southfield Systems - Compliance suite,Southfield Systems,Owen Delgado,AE-M13,mid_market,outbound,Closed Won,159000,159000,2026-02-10,2026-04-08,true,true,,Closed Won,new_business,Closed
+SAP-038,Zion Systems - Workforce hub,Zion Systems,Lucas Brennan,AE-M01,mid_market,inbound,Closed Won,208000,208000,2025-12-30,2026-02-23,true,true,,Closed Won,new_business,Closed
+SAP-039,Jasper Systems - Workforce hub,Jasper Systems,Idris Vance,AE-M07,mid_market,partner,Closed Won,177000,177000,2026-01-19,2026-03-05,true,true,,Closed Won,new_business,Closed
+SAP-040,Willowbrook Fabrication - Starter bundle,Willowbrook Fabrication,Sienna Patel,AE-M02,mid_market,ae_self_gen,Closed Won,143000,143000,2026-01-14,2026-02-26,true,true,,Closed Won,new_business,Closed
+SAP-041,Echelon Precision - Platform rollout,Echelon Precision,Malik Okoro,AE-E07,enterprise,outbound,Closed Won,327000,327000,2025-10-27,2026-03-19,true,true,,Closed Won,new_business,Closed
+SAP-042,Stanton Services - Operations suite,Stanton Services,Matteo Russo,AE-M11,mid_market,inbound,Closed Won,165000,165000,2025-12-15,2026-02-09,true,true,,Closed Won,new_business,Closed
+SAP-043,Millbrook Services - Team edition,Millbrook Services,Felix Andersson,AE-M03,mid_market,ae_self_gen,Closed Won,253000,253000,2025-12-23,2026-02-07,true,true,,Closed Won,new_business,Closed
+SAP-044,Belmont Components - Integration layer,Belmont Components,Wren Beauchamp,AE-M04,mid_market,inbound,Closed Won,229000,229000,2026-02-20,2026-04-13,true,true,,Closed Won,new_business,Closed
+SAP-045,Quakertown Fabrication - Compliance suite,Quakertown Fabrication,Felix Andersson,AE-M03,mid_market,inbound,Closed Won,289000,289000,2026-02-02,2026-03-18,true,true,,Closed Won,new_business,Closed
+SAP-046,Noctilucent Manufacturing - Operations suite,Noctilucent Manufacturing,Priyanka Sen,AE-E09,enterprise,outbound,Closed Won,1129000,1129000,2026-01-26,2026-04-21,true,true,,Closed Won,new_business,Closed
+SAP-047,Upland Solutions - Field operations,Upland Solutions,Wren Beauchamp,AE-M04,mid_market,self_serve,Closed Won,211000,211000,2026-01-01,2026-02-22,true,true,,Closed Won,new_business,Closed
+SAP-048,Eastbridge Fabrication - Operations suite,Eastbridge Fabrication,Hannah Cho,AE-M10,mid_market,inbound,Closed Won,295000,295000,2026-02-23,2026-04-15,true,true,,Closed Won,new_business,Closed
+SAP-049,MicroForge Quick - Starter bundle,MicroForge Quick,Theo Mercer,AE-C05,commercial,self_serve,Closed Won,43000,43000,2026-03-26,2026-04-10,true,true,,Closed Won,new_business,Closed
+SAP-050,IronClip Fast - Compliance suite,IronClip Fast,Brielle Navarro,AE-C04,commercial,self_serve,Closed Won,57000,57000,2026-03-30,2026-04-11,true,true,,Closed Won,new_business,Closed
+SAP-051,KeyBolt Lite - Starter bundle,KeyBolt Lite,June Holloway,AE-C01,commercial,ae_self_gen,Closed Won,44000,44000,2026-04-14,2026-04-29,true,true,,Closed Won,new_business,Closed
+SAP-052,Knightsbridge Fabrication - Field operations,Knightsbridge Fabrication,Kira Wallace,AE-M12,mid_market,inbound,Closed Won,305000,305000,2026-01-05,2026-02-26,true,true,,Closed Won,new_business,Closed
+SAP-053,Kingston Services - Analytics module,Kingston Services,Kira Wallace,AE-M12,mid_market,inbound,Closed Lost,213000,213000,2026-01-01,2026-03-08,true,false,No decision - budget freeze,Closed Lost,new_business,Closed
+SAP-054,Westside Services - Operations hub,Westside Services,Felix Andersson,AE-M03,mid_market,inbound,Closed Lost,110000,110000,2026-01-12,2026-02-17,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-055,Valhalla Components - Team edition,Valhalla Components,Kira Wallace,AE-M12,mid_market,ae_self_gen,Closed Lost,407000,407000,2026-01-05,2026-02-01,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-056,Riverside Fabrication - Enterprise suite,Riverside Fabrication,Lucas Brennan,AE-M01,mid_market,outbound,Closed Lost,110000,110000,2026-02-02,2026-02-26,true,false,Technical requirements not met,Closed Lost,new_business,Closed
+SAP-057,Norwood Systems - Team edition,Norwood Systems,Benji Flores,AE-M09,mid_market,inbound,Closed Lost,201000,201000,2026-02-09,2026-03-28,true,false,Chose competitor solution,Closed Lost,new_business,Closed
+SAP-058,Bridgeway Systems - Integration suite,Bridgeway Systems,Wren Beauchamp,AE-M04,mid_market,outbound,Closed Lost,304000,304000,2026-03-11,2026-04-07,true,false,Legal review exceeded sponsor window,Closed Lost,new_business,Closed
+SAP-059,CrankSet Tools - Compliance layer,CrankSet Tools,Andrej Novak,AE-C07,commercial,ae_self_gen,Closed Lost,40000,40000,2026-02-27,2026-03-16,true,false,Champion left company,Closed Lost,new_business,Closed
+SAP-060,UltraLift Fast - Analytics module,UltraLift Fast,June Holloway,AE-C01,commercial,self_serve,Closed Lost,53000,53000,2026-04-03,2026-05-03,true,false,No decision - budget freeze,Closed Lost,new_business,Closed
+SAP-061,Cerium Industrial - Workforce platform,Cerium Industrial,Anika Volkov,AE-E05,enterprise,outbound,Closed Lost,940000,940000,2026-02-04,2026-04-10,true,false,Legal review exceeded sponsor window,Closed Lost,new_business,Closed
+SAP-062,Zenith Components - Platform rollout,Zenith Components,Chloe Mercer,AE-M08,mid_market,inbound,Closed Lost,276000,276000,2026-01-12,2026-02-13,true,false,Procurement stalled,Closed Lost,new_business,Closed
+SAP-063,LeanForge Fast - Enterprise suite,LeanForge Fast,Brielle Navarro,AE-C04,commercial,inbound,Closed Lost,72000,72000,2026-04-01,2026-05-02,true,false,Procurement stalled,Closed Lost,new_business,Closed
+SAP-064,Meridian Alloys - Analytics module,Meridian Alloys,Tobias Mendez,AE-E02,enterprise,outbound,Closed Lost,840000,840000,2025-12-11,2026-02-21,true,false,Chose competitor solution,Closed Lost,new_business,Closed
+SAP-065,AgileBolt Tools - Workforce platform,AgileBolt Tools,Theo Mercer,AE-C05,commercial,self_serve,Closed Lost,65000,65000,2026-02-12,2026-03-02,true,false,Technical requirements not met,Closed Lost,new_business,Closed
+SAP-066,Iridium Works - Workforce platform,Iridium Works,Diego Suzuki,AE-E04,enterprise,outbound,Closed Lost,882000,882000,2026-01-22,2026-04-30,true,false,Procurement stalled,Closed Lost,new_business,Closed
+SAP-067,Novum Engineering - Compliance layer,Novum Engineering,Claire Dufour,AE-E06,enterprise,inbound,Closed Lost,719000,719000,2025-12-09,2026-03-19,true,false,No decision - budget freeze,Closed Lost,new_business,Closed
+SAP-068,Cromwell Fabrication - Workforce platform,Cromwell Fabrication,Maya Brennan,AE-M06,mid_market,ae_self_gen,Closed Lost,318000,318000,2026-01-16,2026-03-04,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-069,Acton Services - Workforce platform,Acton Services,Owen Delgado,AE-M13,mid_market,inbound,Closed Lost,150000,150000,2026-01-26,2026-03-25,true,false,Timing - pushed to next fiscal,Closed Lost,new_business,Closed
+SAP-070,Cobalt Forge Industries - Team edition,Cobalt Forge Industries,Naomi Walsh,AE-E01,enterprise,outbound,Closed Lost,686000,686000,2025-11-17,2026-04-18,true,false,No decision - budget freeze,Closed Lost,new_business,Closed
+SAP-071,Harborview Manufacturing - Integration suite,Harborview Manufacturing,Priyanka Sen,AE-E09,enterprise,inbound,Closed Lost,877000,877000,2025-12-22,2026-03-22,true,false,Procurement stalled,Closed Lost,new_business,Closed
+SAP-072,Dyson Metalworks - Operations hub,Dyson Metalworks,Jenna Ellis,AE-E08,enterprise,outbound,Closed Lost,945000,945000,2026-01-29,2026-04-17,true,false,Chose competitor solution,Closed Lost,new_business,Closed
+SAP-073,Lattice Industrial - Workforce platform,Lattice Industrial,Naomi Walsh,AE-E01,enterprise,inbound,Closed Lost,623000,623000,2025-12-01,2026-03-16,true,false,Procurement stalled,Closed Lost,new_business,Closed
+SAP-074,Vinemont Systems - Analytics module,Vinemont Systems,Maya Brennan,AE-M06,mid_market,inbound,Closed Lost,334000,334000,2026-03-02,2026-04-15,true,false,Technical requirements not met,Closed Lost,new_business,Closed
+SAP-075,Yuma Industrial - Workforce platform,Yuma Industrial,Naomi Walsh,AE-E01,enterprise,ae_self_gen,Closed Lost,320000,320000,2025-09-15,2026-02-26,true,false,Timing - pushed to next fiscal,Closed Lost,new_business,Closed
+SAP-076,SprintLift Depot - Team edition,SprintLift Depot,Andrej Novak,AE-C07,commercial,outbound,Closed Lost,55000,55000,2026-03-18,2026-04-15,true,false,Timing - pushed to next fiscal,Closed Lost,new_business,Closed
+SAP-077,Timber Creek Components - Compliance layer,Timber Creek Components,Ezra Lindgren,AE-M05,mid_market,outbound,Closed Lost,110000,110000,2026-02-12,2026-04-14,true,false,Internal reprioritization,Closed Lost,new_business,Closed
+SAP-078,WeldFlash Quick - Analytics module,WeldFlash Quick,Brielle Navarro,AE-C04,commercial,self_serve,Closed Lost,41000,41000,2026-03-02,2026-03-28,true,false,Legal review exceeded sponsor window,Closed Lost,new_business,Closed
+SAP-079,Pembrook Components - Enterprise suite,Pembrook Components,Maya Brennan,AE-M06,mid_market,outbound,Closed Lost,201000,201000,2026-01-26,2026-03-22,true,false,Champion left company,Closed Lost,new_business,Closed
+SAP-080,ProForge Works - Platform rollout,ProForge Works,Imani Tate,AE-C03,commercial,ae_self_gen,Closed Lost,55000,55000,2026-01-12,2026-02-09,true,false,Price - went with lower-cost alternative,Closed Lost,new_business,Closed
+SAP-081,Glenside Services - Team edition,Glenside Services,Chloe Mercer,AE-M08,mid_market,outbound,Closed Lost,194000,194000,2026-03-05,2026-04-05,true,false,Legal review exceeded sponsor window,Closed Lost,new_business,Closed
+SAP-082,Eastwood Services - Compliance layer,Eastwood Services,Matteo Russo,AE-M11,mid_market,self_serve,Closed Lost,125000,125000,2026-03-30,2026-04-27,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-083,CrispWeld Quick - Team edition,CrispWeld Quick,June Holloway,AE-C01,commercial,ae_self_gen,Closed Lost,68000,68000,2026-03-10,2026-04-08,true,false,Champion left company,Closed Lost,new_business,Closed
+SAP-084,Kelvin Fabrication - Integration suite,Kelvin Fabrication,Malik Okoro,AE-E07,enterprise,outbound,Closed Lost,1157000,1157000,2025-12-10,2026-04-04,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-085,LiftFlex Ops - Integration suite,LiftFlex Ops,Brielle Navarro,AE-C04,commercial,inbound,Closed Lost,66000,66000,2026-04-02,2026-04-23,true,false,Price - went with lower-cost alternative,Closed Lost,new_business,Closed
+SAP-086,Mapleton Fabrication - Operations hub,Mapleton Fabrication,Maya Brennan,AE-M06,mid_market,outbound,Closed Lost,316000,316000,2025-12-31,2026-03-12,true,false,Price - went with lower-cost alternative,Closed Lost,new_business,Closed
+SAP-087,ZipLift Ops - Workforce platform,ZipLift Ops,Brielle Navarro,AE-C04,commercial,self_serve,Closed Lost,80000,80000,2026-03-23,2026-04-02,true,false,Legal review exceeded sponsor window,Closed Lost,new_business,Closed
+SAP-088,Linden Components - Analytics module,Linden Components,Owen Delgado,AE-M13,mid_market,inbound,Closed Lost,333000,333000,2026-01-15,2026-02-10,true,false,Chose lower-priced point solution,Closed Lost,new_business,Closed
+SAP-089,Northgate Services - Platform rollout,Northgate Services,Kira Wallace,AE-M12,mid_market,inbound,Closed Lost,183000,183000,2026-01-16,2026-03-07,true,false,Price - went with lower-cost alternative,Closed Lost,new_business,Closed
+SAP-090,Jameson Systems - Operations hub,Jameson Systems,Owen Delgado,AE-M13,mid_market,inbound,Closed Lost,232000,232000,2026-02-16,2026-03-29,true,false,Price - went with lower-cost alternative,Closed Lost,new_business,Closed
+SAP-091,Valmont Fabrication - Analytics platform,Valmont Fabrication,Maya Brennan,AE-M06,mid_market,inbound,Qualification,229000,229000,2026-05-18,2026-07-18,false,false,,Qualification,new_business,Pipeline
+SAP-092,Groton Fabrication - Enterprise suite,Groton Fabrication,Chloe Mercer,AE-M08,mid_market,inbound,Qualification,244000,244000,2026-04-13,2026-06-29,false,false,,Qualification,new_business,Pipeline
+SAP-093,Oakwood Fabrication - Starter bundle,Oakwood Fabrication,Benji Flores,AE-M09,mid_market,ae_self_gen,Qualification,208000,208000,2026-07-06,2026-08-26,false,false,,Qualification,new_business,Pipeline
+SAP-094,HopBolt Quick - Integration layer,HopBolt Quick,Lila Hart,AE-C08,commercial,inbound,Qualification,35000,35000,2026-08-28,2026-09-15,false,false,,Qualification,new_business,Pipeline
+SAP-095,Argon Metalworks - Workforce hub,Argon Metalworks,Naomi Walsh,AE-E01,enterprise,inbound,Qualification,594000,594000,2026-02-17,2026-06-26,false,false,,Qualification,new_business,Pipeline
+SAP-096,FastForge Works - Compliance suite,FastForge Works,Paige Ellison,AE-C06,commercial,ae_self_gen,Qualification,68000,68000,2026-08-25,2026-09-22,false,false,,Qualification,new_business,Pipeline
+SAP-097,Silverstone Fabrication - Starter bundle,Silverstone Fabrication,Chloe Mercer,AE-M08,mid_market,outbound,Qualification,220000,220000,2026-05-13,2026-07-10,false,false,,Qualification,new_business,Pipeline
+SAP-098,Ridgeway Components - Infrastructure module,Ridgeway Components,Kira Wallace,AE-M12,mid_market,partner,Qualification,110000,110000,2026-05-08,2026-06-12,false,false,,Qualification,new_business,Pipeline
+SAP-099,Hamden Components - Starter bundle,Hamden Components,Sienna Patel,AE-M02,mid_market,outbound,Qualification,320000,320000,2026-08-25,2026-10-26,false,false,,Qualification,new_business,Pipeline
+SAP-100,Upstate Fabrication - Enterprise suite,Upstate Fabrication,Kira Wallace,AE-M12,mid_market,inbound,Qualification,199000,199000,2026-05-27,2026-07-16,false,false,,Qualification,new_business,Pipeline
+SAP-101,Monolith Precision - Analytics platform,Monolith Precision,Jenna Ellis,AE-E08,enterprise,outbound,Qualification,867000,867000,2026-04-13,2026-07-18,false,false,,Qualification,new_business,Pipeline
+SAP-102,Beryllium Tech - Analytics platform,Beryllium Tech,Priyanka Sen,AE-E09,enterprise,partner,Qualification,991000,991000,2026-01-12,2026-06-30,false,false,,Qualification,new_business,Pipeline
+SAP-103,Ironwood Fabrication - Starter bundle,Ironwood Fabrication,Wren Beauchamp,AE-M04,mid_market,inbound,Qualification,194000,194000,2026-06-12,2026-07-16,false,false,,Qualification,new_business,Pipeline
+SAP-104,Ximena Systems - Starter bundle,Ximena Systems,Idris Vance,AE-M07,mid_market,inbound,Qualification,160000,160000,2026-05-06,2026-07-17,false,false,,Qualification,new_business,Pipeline
+SAP-105,Palladium Systems - Platform rollout,Palladium Systems,Jenna Ellis,AE-E08,enterprise,inbound,Qualification,892000,892000,2026-03-30,2026-09-14,false,false,,Qualification,new_business,Pipeline
+SAP-106,Vanadium Systems - Operations suite,Vanadium Systems,Malik Okoro,AE-E07,enterprise,outbound,Qualification,818000,818000,2026-04-27,2026-09-17,false,false,,Qualification,new_business,Pipeline
+SAP-107,Kerrigan Solutions - Starter bundle,Kerrigan Solutions,Wren Beauchamp,AE-M04,mid_market,ae_self_gen,Qualification,120000,120000,2026-04-09,2026-06-07,false,false,,Qualification,new_business,Pipeline
+SAP-108,Thornwood Systems - Enterprise suite,Thornwood Systems,Ezra Lindgren,AE-M05,mid_market,inbound,Qualification,156000,156000,2026-06-15,2026-08-03,false,false,,Qualification,new_business,Pipeline
+SAP-109,TightBolt Works - Integration layer,TightBolt Works,Paige Ellison,AE-C06,commercial,self_serve,Qualification,20000,20000,2026-05-22,2026-06-09,false,false,,Qualification,new_business,Pipeline
+SAP-110,Coldfront Systems - Compliance suite,Coldfront Systems,Felix Andersson,AE-M03,mid_market,partner,Technical Evaluation,143000,143000,2026-07-27,2026-10-07,false,false,,Technical Evaluation,new_business,Best Case
+SAP-111,Queensbury Services - Workforce hub,Queensbury Services,Kira Wallace,AE-M12,mid_market,outbound,Technical Evaluation,259000,259000,2026-08-26,2026-10-18,false,false,,Technical Evaluation,new_business,Best Case
+SAP-112,Dalton Components - Integration layer,Dalton Components,Sienna Patel,AE-M02,mid_market,ae_self_gen,Technical Evaluation,207000,207000,2026-05-01,2026-06-26,false,false,,Technical Evaluation,new_business,Best Case
+SAP-113,RapidWeld Fast - Workforce hub,RapidWeld Fast,Lila Hart,AE-C08,commercial,outbound,Technical Evaluation,52000,52000,2026-05-18,2026-06-04,false,false,,Technical Evaluation,new_business,Best Case
+SAP-114,Aphelion Systems - Workforce hub,Aphelion Systems,Anika Volkov,AE-E05,enterprise,outbound,Technical Evaluation,1126000,1126000,2026-03-02,2026-06-07,false,false,,Technical Evaluation,new_business,Best Case
+SAP-115,KeenBolt Works - Platform rollout,KeenBolt Works,Paige Ellison,AE-C06,commercial,ae_self_gen,Technical Evaluation,52000,52000,2026-09-07,2026-09-30,false,false,,Technical Evaluation,new_business,Best Case
+SAP-116,Quincy Services - Starter bundle,Quincy Services,Sienna Patel,AE-M02,mid_market,partner,Technical Evaluation,234000,234000,2026-08-26,2026-09-28,false,false,,Technical Evaluation,new_business,Best Case
+SAP-117,Duratek Systems - Starter bundle,Duratek Systems,Malik Okoro,AE-E07,enterprise,inbound,Technical Evaluation,824000,824000,2026-07-22,2026-10-12,false,false,,Technical Evaluation,new_business,Best Case
+SAP-118,Elmwood Fabrication - Analytics platform,Elmwood Fabrication,Lucas Brennan,AE-M01,mid_market,partner,Technical Evaluation,172000,172000,2026-06-01,2026-08-15,false,false,,Technical Evaluation,new_business,Best Case
+SAP-119,Irondale Components - Operations suite,Irondale Components,Kira Wallace,AE-M12,mid_market,outbound,Technical Evaluation,340000,340000,2026-05-18,2026-06-27,false,false,,Technical Evaluation,new_business,Best Case
+SAP-120,Longview Systems - Enterprise suite,Longview Systems,Lucas Brennan,AE-M01,mid_market,self_serve,Technical Evaluation,303000,303000,2026-06-02,2026-07-11,false,false,,Technical Evaluation,new_business,Best Case
+SAP-121,Garnet Industrial - Compliance suite,Garnet Industrial,Anika Volkov,AE-E05,enterprise,inbound,Technical Evaluation,468000,468000,2026-04-03,2026-07-21,false,false,,Technical Evaluation,new_business,Best Case
+SAP-122,Umbra Industrial - Operations suite,Umbra Industrial,Claire Dufour,AE-E06,enterprise,inbound,Technical Evaluation,834000,834000,2025-12-30,2026-06-23,false,false,,Technical Evaluation,new_business,Best Case
+SAP-123,Westbrook Manufacturing - Operations suite,Westbrook Manufacturing,Malik Okoro,AE-E07,enterprise,outbound,Technical Evaluation,866000,866000,2025-12-29,2026-06-20,false,false,,Technical Evaluation,new_business,Best Case
+SAP-124,Orchard Systems - Analytics platform,Orchard Systems,Lucas Brennan,AE-M01,mid_market,ae_self_gen,Technical Evaluation,210000,210000,2026-05-25,2026-08-02,false,false,,Technical Evaluation,new_business,Best Case
+SAP-125,Fairview Components - Integration layer,Fairview Components,Benji Flores,AE-M09,mid_market,outbound,Technical Evaluation,203000,203000,2026-06-02,2026-07-30,false,false,,Technical Evaluation,new_business,Best Case
+SAP-126,Halide Manufacturing - Field operations,Halide Manufacturing,Malik Okoro,AE-E07,enterprise,outbound,Technical Evaluation,710000,710000,2026-03-24,2026-06-08,false,false,,Technical Evaluation,new_business,Best Case
+SAP-127,Claremont Services - Platform rollout,Claremont Services,Wren Beauchamp,AE-M04,mid_market,partner,Technical Evaluation,248000,248000,2026-04-14,2026-05-29,false,false,,Technical Evaluation,new_business,Best Case
+SAP-128,Crestline Manufacturing - Infrastructure module,Crestline Manufacturing,Naomi Walsh,AE-E01,enterprise,ae_self_gen,Technical Evaluation,1029000,1029000,2026-03-02,2026-06-22,false,false,,Technical Evaluation,new_business,Best Case
+SAP-129,VaultBolt Depot - Analytics platform,VaultBolt Depot,June Holloway,AE-C01,commercial,inbound,Technical Evaluation,58000,58000,2026-06-05,2026-06-29,false,false,,Technical Evaluation,new_business,Best Case
+SAP-130,Yardley Services - Operations suite,Yardley Services,Felix Andersson,AE-M03,mid_market,inbound,Technical Evaluation,274000,274000,2026-03-20,2026-06-02,false,false,,Technical Evaluation,new_business,Best Case
+SAP-131,Rosemont Components - Workforce hub,Rosemont Components,Wren Beauchamp,AE-M04,mid_market,outbound,Technical Evaluation,258000,258000,2026-05-12,2026-07-25,false,false,,Technical Evaluation,new_business,Best Case
+SAP-132,XpressForge Tools - Starter bundle,XpressForge Tools,Paige Ellison,AE-C06,commercial,inbound,Technical Evaluation,62000,62000,2026-06-30,2026-07-19,false,false,,Technical Evaluation,new_business,Best Case
+SAP-133,Xerox Components - Integration layer,Xerox Components,Wren Beauchamp,AE-M04,mid_market,inbound,Technical Evaluation,230000,230000,2026-07-24,2026-09-04,false,false,,Technical Evaluation,new_business,Best Case
+SAP-134,Flint Engineering - Field operations,Flint Engineering,Diego Suzuki,AE-E04,enterprise,inbound,Technical Evaluation,675000,675000,2026-05-13,2026-08-26,false,false,,Technical Evaluation,new_business,Best Case
+SAP-135,NanoWeld Tools - Starter bundle,NanoWeld Tools,Andrej Novak,AE-C07,commercial,ae_self_gen,Technical Evaluation,52000,52000,2026-08-06,2026-08-18,false,false,,Technical Evaluation,new_business,Best Case
+SAP-136,Jasper Industrial - Workforce hub,Jasper Industrial,Priyanka Sen,AE-E09,enterprise,outbound,Technical Evaluation,503000,503000,2026-05-04,2026-10-10,false,false,,Technical Evaluation,new_business,Best Case
+SAP-137,MiniWeld Quick - Field operations,MiniWeld Quick,June Holloway,AE-C01,commercial,self_serve,Technical Evaluation,84000,84000,2026-06-16,2026-07-03,false,false,,Technical Evaluation,new_business,Best Case
+SAP-138,Fulcrum Engineering - Workforce hub,Fulcrum Engineering,Priyanka Sen,AE-E09,enterprise,outbound,Technical Evaluation,470000,470000,2026-05-15,2026-09-26,false,false,,Technical Evaluation,new_business,Best Case
+SAP-139,Yellowstone Systems - Starter bundle,Yellowstone Systems,Lucas Brennan,AE-M01,mid_market,outbound,Technical Evaluation,110000,110000,2026-04-20,2026-06-18,false,false,,Technical Evaluation,new_business,Best Case
+SAP-140,BoltRush Services - Analytics platform,BoltRush Services,Theo Mercer,AE-C05,commercial,self_serve,Technical Evaluation,79000,79000,2026-08-25,2026-09-08,false,false,,Technical Evaluation,new_business,Best Case
+SAP-141,Foxhill Components - Enterprise suite,Foxhill Components,Wren Beauchamp,AE-M04,mid_market,inbound,Technical Evaluation,212000,212000,2026-08-11,2026-09-29,false,false,,Technical Evaluation,new_business,Best Case
+SAP-142,YieldBolt Works - Analytics platform,YieldBolt Works,Rafael Costa,AE-C02,commercial,inbound,Business Case,49000,49000,2026-05-20,2026-06-16,false,false,,Business Case,new_business,Best Case
+SAP-143,Oakridge Systems - Integration layer,Oakridge Systems,Lucas Brennan,AE-M01,mid_market,partner,Business Case,111000,111000,2026-06-18,2026-07-23,false,false,,Business Case,new_business,Best Case
+SAP-144,Sinter Works - Infrastructure module,Sinter Works,Tobias Mendez,AE-E02,enterprise,inbound,Business Case,758000,758000,2026-06-12,2026-09-09,false,false,,Business Case - Legal Review,new_business,Best Case
+SAP-145,Dellmar Services - Compliance suite,Dellmar Services,Owen Delgado,AE-M13,mid_market,outbound,Business Case,256000,256000,2026-05-18,2026-07-06,false,false,,Business Case,new_business,Best Case
+SAP-146,Jericho Metals - Compliance suite,Jericho Metals,Jenna Ellis,AE-E08,enterprise,ae_self_gen,Business Case,320000,320000,2026-04-13,2026-06-22,false,false,,Business Case,new_business,Best Case
+SAP-147,Dunmore Systems - Field operations,Dunmore Systems,Felix Andersson,AE-M03,mid_market,partner,Business Case,196000,196000,2026-06-15,2026-08-04,false,false,,Business Case,new_business,Best Case
+SAP-148,Yarmouth Fabrication - Infrastructure module,Yarmouth Fabrication,Idris Vance,AE-M07,mid_market,inbound,Business Case,145000,145000,2026-03-09,2026-05-22,false,false,,Business Case,new_business,Best Case
+SAP-149,QuickDrill Fast - Starter bundle,QuickDrill Fast,Andrej Novak,AE-C07,commercial,inbound,Business Case,66000,66000,2026-06-08,2026-06-30,false,false,,Business Case,new_business,Best Case
+SAP-150,Luminos Engineering - Enterprise suite,Luminos Engineering,Tobias Mendez,AE-E02,enterprise,partner,Business Case,454000,454000,2026-05-18,2026-08-28,false,false,,Business Case,new_business,Best Case
+SAP-151,Markham Components - Infrastructure module,Markham Components,Sienna Patel,AE-M02,mid_market,inbound,Business Case,276000,276000,2026-04-13,2026-05-21,false,false,,Business Case,new_business,Best Case
+SAP-152,Ardmore Fabrication - Compliance suite,Ardmore Fabrication,Ezra Lindgren,AE-M05,mid_market,outbound,Business Case,206000,206000,2026-03-30,2026-06-02,false,false,,Business Case,new_business,Best Case
+SAP-153,Lakewood Fabrication - Platform rollout,Lakewood Fabrication,Sienna Patel,AE-M02,mid_market,inbound,Business Case,217000,217000,2026-03-31,2026-06-12,false,false,,Business Case,new_business,Best Case
+SAP-154,Rhenium Tech - Compliance suite,Rhenium Tech,Anika Volkov,AE-E05,enterprise,ae_self_gen,Business Case,780000,780000,2026-06-01,2026-09-06,false,false,,Business Case,new_business,Best Case
+SAP-155,Iverton Services - Integration layer,Iverton Services,Wren Beauchamp,AE-M04,mid_market,outbound,Business Case,318000,318000,2026-06-16,2026-07-17,false,false,,Business Case,new_business,Best Case
+SAP-156,Ingot Systems - Compliance suite,Ingot Systems,Anika Volkov,AE-E05,enterprise,partner,Business Case,942000,942000,2026-03-31,2026-09-09,false,false,,Business Case,new_business,Best Case
+SAP-157,Zephyr Precision - Workforce hub,Zephyr Precision,Claire Dufour,AE-E06,enterprise,partner,Business Case,702000,702000,2025-12-22,2026-06-27,false,false,,Business Case,new_business,Best Case
+SAP-158,Foxboro Systems - Workforce hub,Foxboro Systems,Ezra Lindgren,AE-M05,mid_market,self_serve,Business Case,292000,292000,2026-05-11,2026-07-23,false,false,,Business Case,new_business,Best Case
+SAP-159,Castleton Logistics - Infrastructure module,Castleton Logistics,Felix Andersson,AE-M03,mid_market,ae_self_gen,Business Case,134000,134000,2026-04-08,2026-05-19,false,false,,Business Case,new_business,Best Case
+SAP-160,Titanite Engineering - Integration layer,Titanite Engineering,Naomi Walsh,AE-E01,enterprise,outbound,Business Case,941000,941000,2026-04-03,2026-06-25,false,false,,Business Case - Legal Review,new_business,Best Case
+SAP-161,Weston Services - Compliance suite,Weston Services,Sienna Patel,AE-M02,mid_market,ae_self_gen,Business Case,192000,192000,2026-04-08,2026-06-20,false,false,,Business Case,new_business,Best Case
+SAP-162,TinderBolt Works - Platform rollout,TinderBolt Works,Rafael Costa,AE-C02,commercial,inbound,Business Case,46000,46000,2026-07-23,2026-08-21,false,false,,Business Case,new_business,Best Case
+SAP-163,Junction Components - Starter bundle,Junction Components,Idris Vance,AE-M07,mid_market,ae_self_gen,Business Case,141000,141000,2026-06-24,2026-08-21,false,false,,Business Case,new_business,Best Case
+SAP-164,Nexus Heavy Industries - Operations suite,Nexus Heavy Industries,Naomi Walsh,AE-E01,enterprise,partner,Business Case,814000,814000,2026-04-06,2026-07-04,false,false,,Business Case,new_business,Best Case
+SAP-165,JumpLift Tools - Starter bundle,JumpLift Tools,Lila Hart,AE-C08,commercial,self_serve,Business Case,80000,80000,2026-06-08,2026-07-06,false,false,,Business Case,new_business,Best Case
+SAP-166,Prescott Services - Starter bundle,Prescott Services,Felix Andersson,AE-M03,mid_market,inbound,Business Case,125000,125000,2026-04-24,2026-07-06,false,false,,Business Case,new_business,Best Case
+SAP-167,Alcott Systems - Integration layer,Alcott Systems,Anika Volkov,AE-E05,enterprise,inbound,Business Case,967000,967000,2026-03-06,2026-06-18,false,false,,Business Case,new_business,Best Case
+SAP-168,DrillPad Express - Starter bundle,DrillPad Express,June Holloway,AE-C01,commercial,inbound,Business Case,56000,56000,2026-05-25,2026-06-13,false,false,,Business Case,new_business,Best Case
+SAP-169,Hillside Manufacturing - Field operations,Hillside Manufacturing,Idris Vance,AE-M07,mid_market,ae_self_gen,Business Case,236000,236000,2026-06-15,2026-08-26,false,false,,Business Case,new_business,Best Case
+SAP-170,Hillcrest Systems - Infrastructure module,Hillcrest Systems,Felix Andersson,AE-M03,mid_market,ae_self_gen,Business Case,168000,168000,2026-03-23,2026-06-04,false,false,,Business Case,new_business,Best Case
+SAP-171,Oakridge Systems - Compliance suite,Oakridge Systems,Kira Wallace,AE-M12,mid_market,ae_self_gen,Business Case,191000,191000,2026-04-08,2026-06-18,false,false,,Business Case,new_business,Best Case
+SAP-172,Bastion Manufacturing - Workforce hub,Bastion Manufacturing,Jenna Ellis,AE-E08,enterprise,ae_self_gen,Business Case,427000,427000,2026-03-10,2026-08-08,false,false,,Business Case,new_business,Best Case
+SAP-173,Xerxes Components - Compliance suite,Xerxes Components,Maya Brennan,AE-M06,mid_market,ae_self_gen,Business Case,311000,311000,2026-04-20,2026-06-04,false,false,,Business Case,new_business,Best Case
+SAP-174,GearPulse Works - Enterprise suite,GearPulse Works,Imani Tate,AE-C03,commercial,partner,Business Case,18000,18000,2026-05-15,2026-06-14,false,false,,Business Case,new_business,Best Case
+SAP-175,OmegaLift Tools - Analytics platform,OmegaLift Tools,Theo Mercer,AE-C05,commercial,inbound,Business Case,86000,86000,2026-08-10,2026-09-09,false,false,,Business Case,new_business,Best Case
+SAP-176,Fairview Components - Operations suite,Fairview Components,Felix Andersson,AE-M03,mid_market,outbound,Business Case,171000,171000,2026-06-01,2026-07-03,false,false,,Business Case,new_business,Best Case
+SAP-177,Ceres Industrial - Platform rollout,Ceres Industrial,Priyanka Sen,AE-E09,enterprise,inbound,Business Case,409000,409000,2026-03-23,2026-09-05,false,false,,Business Case,new_business,Best Case
+SAP-178,Norwood Systems - Operations suite,Norwood Systems,Sienna Patel,AE-M02,mid_market,inbound,Business Case,309000,309000,2026-04-27,2026-05-27,false,false,,Business Case,new_business,Best Case
+SAP-179,Kinetic Fabrication - Enterprise suite,Kinetic Fabrication,Claire Dufour,AE-E06,enterprise,outbound,Negotiation,320000,320000,2026-03-05,2026-06-07,false,false,,Negotiation,new_business,Commit
+SAP-180,Timber Creek Components - Field operations,Timber Creek Components,Sienna Patel,AE-M02,mid_market,ae_self_gen,Negotiation,284000,284000,2026-05-15,2026-06-18,false,false,,Negotiation,new_business,Commit
+SAP-181,SpeedForge Ops - Integration layer,SpeedForge Ops,Theo Mercer,AE-C05,commercial,self_serve,Negotiation,70000,70000,2026-07-07,2026-07-30,false,false,,Negotiation,new_business,Commit
+SAP-182,Quorum Manufacturing - Field operations,Quorum Manufacturing,Helena Park,AE-E03,enterprise,ae_self_gen,Negotiation,886000,886000,2026-02-09,2026-07-01,false,false,,Negotiation,new_business,Commit
+SAP-183,QuickPulse Ops - Operations suite,QuickPulse Ops,June Holloway,AE-C01,commercial,self_serve,Negotiation,58000,58000,2026-06-15,2026-07-04,false,false,,Negotiation,new_business,Commit
+SAP-184,Eastwood Services - Infrastructure module,Eastwood Services,Owen Delgado,AE-M13,mid_market,outbound,Negotiation,283000,283000,2026-06-01,2026-07-16,false,false,,Negotiation,new_business,Commit
+SAP-185,Timber Creek Components - Compliance suite,Timber Creek Components,Hannah Cho,AE-M10,mid_market,partner,Negotiation,225000,225000,2026-04-13,2026-06-23,false,false,,Negotiation,new_business,Commit
+SAP-186,Prescott Services - Starter bundle,Prescott Services,Felix Andersson,AE-M03,mid_market,outbound,Negotiation,278000,278000,2026-03-27,2026-05-20,false,false,,Negotiation,new_business,Commit
+SAP-187,OmniLift Depot - Operations suite,OmniLift Depot,June Holloway,AE-C01,commercial,inbound,Negotiation,28000,28000,2026-06-08,2026-06-23,false,false,,Negotiation,new_business,Commit
+SAP-188,Rosemont Components - Field operations,Rosemont Components,Ezra Lindgren,AE-M05,mid_market,ae_self_gen,Negotiation,254000,254000,2026-04-23,2026-05-24,false,false,,Negotiation,new_business,Commit
+SAP-189,Bridgeway Systems - Workforce hub,Bridgeway Systems,Benji Flores,AE-M09,mid_market,inbound,Negotiation,110000,110000,2026-05-12,2026-06-11,false,false,,Negotiation,new_business,Commit
+SAP-190,Zenith Components - Starter bundle,Zenith Components,Wren Beauchamp,AE-M04,mid_market,partner,Negotiation,173000,173000,2026-04-09,2026-06-13,false,false,,Negotiation,new_business,Commit
+SAP-191,PocketBolt Works - Platform rollout,PocketBolt Works,Paige Ellison,AE-C06,commercial,outbound,Negotiation,66000,66000,2026-06-23,2026-07-25,false,false,,Negotiation,new_business,Commit
+SAP-192,Obsidian Industries - Field operations,Obsidian Industries,Naomi Walsh,AE-E01,enterprise,outbound,Negotiation,713000,713000,2026-01-19,2026-05-31,false,false,,Negotiation,new_business,Commit
+SAP-193,Argon Metalworks - Integration layer,Argon Metalworks,Jenna Ellis,AE-E08,enterprise,outbound,Negotiation,958000,958000,2025-12-26,2026-05-15,false,false,,Negotiation,new_business,Commit
+SAP-194,Northgate Services - Platform rollout,Northgate Services,Felix Andersson,AE-M03,mid_market,partner,Negotiation,240000,240000,2026-03-23,2026-05-10,false,false,,Negotiation,new_business,Commit
+SAP-195,GlideWeld Depot - Platform rollout,GlideWeld Depot,Andrej Novak,AE-C07,commercial,partner,Negotiation,73000,73000,2026-06-30,2026-07-18,false,false,,Negotiation,new_business,Commit
+SAP-196,Stanton Services - Compliance suite,Stanton Services,Hannah Cho,AE-M10,mid_market,ae_self_gen,Negotiation,261000,261000,2026-03-06,2026-05-22,false,false,,Negotiation,new_business,Commit
+SAP-197,Eastwood Services - Compliance suite,Eastwood Services,Matteo Russo,AE-M11,mid_market,outbound,Negotiation,222000,222000,2026-05-06,2026-06-11,false,false,,Negotiation,new_business,Commit
+SAP-198,Iron Ridge Plastics - Infrastructure module,Iron Ridge Plastics,Priyanka Sen,AE-E09,enterprise,inbound,Negotiation,828000,828000,2025-12-08,2026-06-09,false,false,,Negotiation,new_business,Commit
+SAP-199,UniteLift Ops - Field operations,UniteLift Ops,Brielle Navarro,AE-C04,commercial,self_serve,Negotiation,54000,54000,2026-07-03,2026-07-28,false,false,,Negotiation,new_business,Commit
+SAP-200,Novum Engineering - Compliance suite,Novum Engineering,Helena Park,AE-E03,enterprise,ae_self_gen,Negotiation,320000,320000,2026-01-05,2026-06-17,false,false,,Negotiation,new_business,Commit

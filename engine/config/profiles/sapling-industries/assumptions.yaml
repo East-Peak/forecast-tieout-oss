@@ -1,8 +1,61 @@
+# Sapling Industries — assumptions for FY26 segment-shift plan.
+# Three-segment: enterprise (legal bottleneck), mid-market (engine), commercial (surprise +60%).
+
 stage_rates:
-  Discovery: 0.06
-  Qualification: 0.14
-  Technical Evaluation: 0.28
-  Business Case: 0.52
-  Negotiation: 0.78
+  Discovery: 0.07
+  Qualification: 0.15
+  Technical Evaluation: 0.29
+  Business Case: 0.51
+  Negotiation: 0.77
+
 lookback_days: 365
 monte_carlo_iterations: 10000
+
+funnel:
+  mql_to_s0: 0.27
+  s0_to_s1: 0.55
+  s1_to_s2: 0.47
+  s2_to_won: 0.33
+  avg_acv: 387000
+  source_mix: {marketing_sourced: 0.50, sdr_sourced: 0.26, ae_sourced: 0.24}
+
+segment_share: {enterprise: 0.34, mid_market: 0.46, commercial: 0.20}
+
+avg_acv: {enterprise: 780000, mid_market: 240000, commercial: 58000}
+
+productivity_per_ae_per_month: {enterprise: 195000, mid_market: 140000, commercial: 72000}
+
+segment_productivity:
+  enterprise:
+    annual_quota: 2800000
+    attainment_rate: 0.82
+    productivity_per_ae_per_month: 195000
+    ramp_curve: {month_1: 0.00, month_2: 0.10, month_3: 0.25, month_4: 0.45, month_5: 0.70, month_6_plus: 1.00}
+  mid_market:
+    annual_quota: 1800000
+    attainment_rate: 0.91
+    productivity_per_ae_per_month: 140000
+    ramp_curve: {month_1: 0.00, month_2: 0.30, month_3: 0.60, month_4_plus: 1.00}
+  commercial:
+    annual_quota: 850000
+    attainment_rate: 0.96
+    productivity_per_ae_per_month: 72000
+    ramp_curve: {month_1: 0.00, month_2: 0.45, month_3_plus: 1.00}
+
+capacity:
+  attainment_rate: 0.86
+
+waterfall_rates:
+  mql_to_s0: 0.27
+  s0_to_s1: 0.55
+  s1_to_s2: 0.47
+  s2_to_won: 0.33
+
+target_setter_defaults:
+  win_rate_starting: 0.34
+  win_rate_created: 0.33
+  push_rate: 0.23
+  loss_rate: 0.44
+  ae_self_gen_pct: 0.24
+  segment_share: {enterprise: 0.34, mid_market: 0.46, commercial: 0.20}
+  acv: {enterprise: 780000, mid_market: 240000, commercial: 58000}

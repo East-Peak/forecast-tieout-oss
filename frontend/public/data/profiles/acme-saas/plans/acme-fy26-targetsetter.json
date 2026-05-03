@@ -30,14 +30,19 @@
           "2027-01-01": 4000000
         },
         "quarterly_rollup": {
-          "Q1FY26": 7000000,
-          "Q2FY26": 9000000,
-          "Q3FY26": 12000000,
-          "Q4FY26": 12000000
+          "Q1": 7000000,
+          "Q2": 9000000,
+          "Q3": 12000000,
+          "Q4": 12000000
         },
         "annual_rollup": 40000000
       },
-      "seat_targets": null
+      "seat_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {},
+        "quarterly_rollup": {},
+        "annual_rollup": 0
+      }
     }
   },
   "views": {
@@ -52,7 +57,7 @@
       "component_ids": [
         "sales_led"
       ],
-      "seat_target_owner_component_id": null,
+      "seat_target_owner_component_id": "sales_led",
       "derived": true
     }
   }

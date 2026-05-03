@@ -1,0 +1,16 @@
+scenarios:
+  - id: sdr-signal
+    label: SDR Signal Emerges
+    description:
+      primary: Tightened qualification plus a credible outbound motion improves late-quarter conversion.
+      secondary: Founder learning still exists, but fewer wrong-fit meetings reach POC and outbound contributes more real pipeline.
+    win_rate_starting: 0.30
+    win_rate_created: 0.36
+    push_rate: 0.20
+    loss_rate: 0.44
+    ae_self_gen_pct: 0.27
+    mql_to_s0: 0.17
+    s0_to_s1: 0.63
+    s1_to_s2: 0.41
+    segment_share: {mid_market: 0.76, commercial: 0.24}
+    acv: {mid_market: 175000, commercial: 58000}
