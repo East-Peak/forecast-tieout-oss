@@ -16,6 +16,29 @@ const TABS = [
 const TARGET_SETTER_TAB = { to: "/targets", label: "Target Setter" } as const;
 const SCENARIO_TAB = { to: "/scenario", label: "Scenario Planner" } as const;
 
+// Per-profile descriptors and accent palettes. Drives the org-selector
+// dropdown labels (so the company size is obvious at a glance) and the
+// top-of-page accent stripe (so each demo profile feels distinct rather
+// than under-branded).
+const PROFILE_META: Record<
+  string,
+  { scale: string; accent: string }
+> = {
+  "acme-saas": { scale: "$40M FY26 target", accent: "bg-blue-500" },
+  "mighty-oak-holdings": { scale: "$80M FY26 target · $720M base", accent: "bg-amber-600" },
+  "sapling-industries": { scale: "$100M FY26 target", accent: "bg-emerald-500" },
+  "sprout-labs": { scale: "$10M FY26 target", accent: "bg-teal-500" },
+};
+
+function profileLabel(profile: { id: string; name: string }): string {
+  const meta = PROFILE_META[profile.id];
+  return meta ? `${profile.name} · ${meta.scale}` : profile.name;
+}
+
+function profileAccent(profileId: string | undefined): string {
+  return (profileId && PROFILE_META[profileId]?.accent) || "bg-slate-400";
+}
+
 export default function Layout() {
   const location = useLocation();
   const { user, signOut } = useAuthContext();
@@ -48,9 +71,15 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-surface">
+      {/* Profile-colored accent stripe; thin enough to read as branding,
+          not loud enough to compete with content. */}
+      <div className={`h-1 ${profileAccent(selectedOrgProfile?.id)}`} />
       <header className="border-b border-border px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-lg font-semibold text-text-primary">Forecast Tieout</h1>
+          <div className="flex flex-col leading-tight">
+            <h1 className="text-lg font-semibold text-text-primary">Forecast Tieout</h1>
+            <p className="text-xs text-text-muted">Plan vs. pipeline reality</p>
+          </div>
           {selectedOrgProfile && (
             orgProfiles.length > 1 ? (
               <select
@@ -62,13 +91,13 @@ export default function Layout() {
               >
                 {orgProfiles.map((profile) => (
                   <option key={profile.id} value={profile.id}>
-                    {profile.name}
+                    {profileLabel(profile)}
                   </option>
                 ))}
               </select>
             ) : (
               <span className="rounded-full border border-border bg-surface-raised px-3 py-1 text-xs font-medium text-text-secondary">
-                {selectedOrgProfile.name}
+                {profileLabel(selectedOrgProfile)}
               </span>
             )
           )}
