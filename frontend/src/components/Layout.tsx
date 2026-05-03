@@ -71,6 +71,10 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-surface">
+      {/* Sticky chrome: accent stripe + title/dropdowns + plan notice + tab strip
+          stay pinned to the top while page content scrolls underneath, so the
+          reader always knows which profile/plan they're looking at. */}
+      <div className="sticky top-0 z-40 bg-surface shadow-sm">
       {/* Profile-colored accent stripe; thin enough to read as branding,
           not loud enough to compete with content. */}
       <div className={`h-1 ${profileAccent(selectedOrgProfile?.id)}`} />
@@ -216,6 +220,7 @@ export default function Layout() {
         </NavLink>
       </nav>
       {showStaleBanner && <StalenessBanner staleDays={staleDays} />}
+      </div>
       <main className="p-6">
         <Outlet />
       </main>
