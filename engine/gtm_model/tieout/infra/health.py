@@ -46,7 +46,7 @@ class TieoutHealthChecker:
         try:
             from gtm_model.data_health import assess_freshness
 
-            freshness_data = self.owner._try_cdw_freshness()
+            freshness_data = self.owner.connector_gateway.try_cdw_freshness()
             if not freshness_data:
                 return {
                     "overall_status": "yellow",
@@ -76,7 +76,7 @@ class TieoutHealthChecker:
                     "source": source_label,
                 }
             else:
-                cdw_bookings = self.owner._try_cdw_bookings("Q1FY26")
+                cdw_bookings = self.owner.connector_gateway.try_cdw_bookings("Q1FY26")
                 if cdw_bookings is not None:
                     bookings_result = {
                         "status": "ok",
@@ -129,7 +129,7 @@ class TieoutHealthChecker:
             yaml_q1_pipeline = self.owner.targets.get("quarterly_targets", {}).get(
                 "Q1FY26", {}
             ).get("pipeline_target", 0)
-            cdw_weekly = self.owner._try_weekly_targets_from_cdw("Q1FY26")
+            cdw_weekly = self.owner.connector_gateway.try_weekly_targets_from_cdw("Q1FY26")
             if cdw_weekly:
                 cdw_weekly_sum = sum(week.get("pipeline", 0) for week in cdw_weekly.values())
                 from gtm_model.data_health import reconcile_targets

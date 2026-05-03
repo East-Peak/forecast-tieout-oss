@@ -167,26 +167,6 @@ class PlanningTieout:
     # warehouse helpers (with graceful fallback)
     # ------------------------------------------------------------------
 
-    def _try_cdw_freshness(self) -> dict:
-        """Check warehouse freshness; returns empty dict on failure."""
-        return self.connector_gateway.try_cdw_freshness()
-
-    def _try_funnel_from_cdw(self, quarter: str) -> Optional[dict]:
-        """Try to build funnel from warehouse; returns None on failure."""
-        return self.connector_gateway.try_funnel_from_cdw(quarter)
-
-    def _try_cdw_bookings(self, quarter: str) -> Optional[float]:
-        """Try to get warehouse bookings; returns None on failure."""
-        return self.connector_gateway.try_cdw_bookings(quarter)
-
-    def _try_sf_bookings(self, quarter: str) -> Optional[float]:
-        """Try to get SF bookings for reconciliation; returns None on failure."""
-        return self.connector_gateway.try_sf_bookings(quarter)
-
-    def _try_closed_won_timing(self) -> Optional[list[dict]]:
-        """Try to get closed-won timing distribution; returns None on failure."""
-        return self.connector_gateway.try_closed_won_timing()
-
     def _get_open_inventory_snapshot(self, as_of: Optional[date] = None):
         """Return the current open opportunity inventory, preferring warehouse over Salesforce."""
         return self.data_access.get_open_inventory_snapshot(as_of=as_of)
@@ -201,18 +181,6 @@ class PlanningTieout:
         Returns a list of ISO date strings, one per phantom AE.
         """
         return self.data_access.generate_staggered_start_dates(count)
-
-    def _try_roster(self, ae_overrides: Optional[dict] = None) -> Optional[list[dict]]:
-        """Try to build full roster from warehouse + YAML; returns None on failure.
-
-        Returns None if the resulting roster is empty (no real people found)
-        so callers fall back to headcount-based capacity from config.
-        """
-        return self.data_access.try_roster(ae_overrides=ae_overrides)
-
-    def _try_weekly_targets_from_cdw(self, quarter: str) -> Optional[dict]:
-        """Try to get weekly targets from warehouse seeds; returns None on failure."""
-        return self.connector_gateway.try_weekly_targets_from_cdw(quarter)
 
     def _compute_trailing_ramped_ae_months(
         self,

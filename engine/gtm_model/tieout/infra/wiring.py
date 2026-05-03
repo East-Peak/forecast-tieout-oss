@@ -55,7 +55,7 @@ def build_tieout_components(
         get_cdw=lambda: owner.cdw if owner.cdw is not None else owner._get_cdw(),
         get_sf=lambda: owner.sf if owner.sf is not None else owner._get_sf(),
         is_cdw_query_failed=lambda: owner._cdw_queries_failed,
-        try_closed_won_timing=lambda: owner._try_closed_won_timing(),
+        try_closed_won_timing=lambda: connectors.try_closed_won_timing(),
         get_closed_won_timing_source=lambda: owner._closed_won_timing_source,
         get_beginning_arr_snapshot=lambda: owner._get_beginning_arr_snapshot(),
         get_backend=lambda: getattr(owner, "_get_profile_backend", lambda: None)(),
@@ -126,7 +126,7 @@ def build_tieout_components(
         get_config_conversion_rates=lambda quarter, td: owner._get_config_conversion_rates(quarter, td),
         estimate_ae_selfgen_s0_weekly=lambda td: owner._estimate_ae_selfgen_s0_weekly(td),
         rebalance_projection_pipeline_values=lambda projection, td: owner._rebalance_projection_pipeline_values(projection, td),
-        try_roster=lambda ae_overrides=None: owner._try_roster(ae_overrides),
+        try_roster=lambda ae_overrides=None: data_access.try_roster(ae_overrides),
         get_observed_decay_curve=lambda: owner._get_observed_decay_curve(),
         get_s2_to_won_rate=lambda: owner._get_s2_to_won_rate(),
         summarize_source_breakdown=lambda projection, mode, actual_streams=None: owner._summarize_source_breakdown(
@@ -134,7 +134,7 @@ def build_tieout_components(
             mode=mode,
             actual_streams=actual_streams,
         ),
-        try_cdw_bookings=lambda quarter: owner._try_cdw_bookings(quarter),
+        try_cdw_bookings=lambda quarter: connectors.try_cdw_bookings(quarter),
     )
 
     projection = TieoutProjectionCalculator(
@@ -142,7 +142,7 @@ def build_tieout_components(
         quarters=owner.QUARTERS,
         get_targets=lambda: owner.targets,
         get_assumptions=lambda: owner.assumptions,
-        try_roster=lambda ae_overrides=None: owner._try_roster(ae_overrides),
+        try_roster=lambda ae_overrides=None: data_access.try_roster(ae_overrides),
         monthly_capacity_row_factory=monthly_capacity_row_factory,
         get_s2_to_won_rate=lambda: owner._get_s2_to_won_rate(),
         get_rolling_s2_to_won_rate=lambda: owner._get_rolling_s2_to_won_rate(),
@@ -171,9 +171,9 @@ def build_tieout_components(
         quarters=owner.QUARTERS,
         get_config_dir=lambda: owner.config_dir,
         get_assumptions=lambda: owner.assumptions,
-        try_cdw_freshness=lambda: owner._try_cdw_freshness(),
+        try_cdw_freshness=lambda: connectors.try_cdw_freshness(),
         get_cdw=lambda: owner._get_cdw(),
-        try_funnel_from_cdw=lambda quarter: owner._try_funnel_from_cdw(quarter),
+        try_funnel_from_cdw=lambda quarter: connectors.try_funnel_from_cdw(quarter),
         get_td_quarter=lambda quarter: owner._get_td_quarter(quarter),
         derive_weekly_targets=lambda quarter, td: owner._derive_weekly_targets(quarter, td),
         config_driven_bottoms_up=lambda **kwargs: owner._config_driven_bottoms_up(**kwargs),
@@ -206,7 +206,7 @@ def build_tieout_components(
         build_config_sales_led_stream_fallbacks=lambda: owner._build_config_sales_led_stream_fallbacks(),
         # Trajectory fallback still routes through compute() for the same seam.
         compute_plan_scenario=lambda **kwargs: owner.compute(**kwargs),
-        try_roster=lambda ae_overrides=None: owner._try_roster(ae_overrides),
+        try_roster=lambda ae_overrides=None: data_access.try_roster(ae_overrides),
         get_self_serve_velocity=lambda: owner._get_self_serve_velocity(),
     )
 
@@ -224,7 +224,7 @@ def build_tieout_components(
         get_stage_velocity_days=lambda: owner._get_stage_velocity_days(),
         get_runtime_funnel_rates=lambda: owner._get_runtime_funnel_rates(),
         describe_runtime_funnel_rates=lambda: owner._describe_runtime_funnel_rates(),
-        try_roster=lambda ae_overrides=None: owner._try_roster(ae_overrides),
+        try_roster=lambda ae_overrides=None: data_access.try_roster(ae_overrides),
         get_observed_ae_productivity=lambda roster, as_of, lookback_days=180: owner._get_observed_ae_productivity(
             roster,
             as_of,
