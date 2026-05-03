@@ -214,10 +214,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+// Inert default for the unprotected demo: AuthProvider only mounts when
+// VITE_PROTECTED_DATA_MODE is set, but Layout still calls useAuthContext to
+// render the optional sign-out widget. Returning a no-op value lets Layout's
+// existing `user?.email && ...` check skip the auth UI cleanly.
+const ANONYMOUS_AUTH: AuthContextValue = {
+  status: "unauthenticated",
+  user: null,
+  session: null,
+  allowlistEntry: null,
+  error: null,
+  signInWithGoogle: async () => {},
+  signOut: async () => {},
+};
+
 export function useAuthContext(): AuthContextValue {
-  const value = useContext(AuthContext);
-  if (!value) {
-    throw new Error("useAuthContext must be used within an AuthProvider.");
-  }
-  return value;
+  return useContext(AuthContext) ?? ANONYMOUS_AUTH;
 }
