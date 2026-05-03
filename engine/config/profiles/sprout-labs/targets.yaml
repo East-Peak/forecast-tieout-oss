@@ -1,0 +1,20 @@
+# Sprout Labs — calendar-year fiscal, $10M ARR target.
+# Story: scrappy startup, aggressive Q4-loaded plan to hit $10M run rate.
+# Q1 small (just hired), Q2-Q3 ramping, Q4 crunch.
+
+fiscal_year_start: 2026-01-01
+
+# Beginning-of-FY ARR base. Sprout is a graduating-from-seed company —
+# entered FY26 with ~$2M run rate; targeting $10M new business takes
+# them to ~$12M ending ARR.
+beginning_arr: 2000000
+
+annual_target: 10000000
+annual_targets:
+  new_business_arr: 10000000
+
+quarterly_targets:
+  Q1: 1500000
+  Q2: 2000000
+  Q3: 2500000
+  Q4: 4000000  # Q4 hiring crunch — need to land big

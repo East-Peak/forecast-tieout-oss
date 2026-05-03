@@ -1,0 +1,5 @@
+# Development / CI dependencies (install with: pip install -r engine/requirements-dev.txt)
+# Includes runtime requirements + tools needed for tests, validation, and CI.
+
+-r requirements.txt
+pytest>=7.0

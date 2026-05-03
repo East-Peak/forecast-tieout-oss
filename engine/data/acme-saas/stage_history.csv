@@ -1,0 +1,1605 @@
+deal_id,from_stage,to_stage,transition_date
+D-001,,Discovery,2025-11-14T09:45:00
+D-002,,Discovery,2026-01-29T09:30:00
+D-003,,Discovery,2025-11-24T08:30:00
+D-004,,Discovery,2025-12-10T16:00:00
+D-005,,Discovery,2025-11-12T11:45:00
+D-006,,Discovery,2026-02-03T12:45:00
+D-007,,Discovery,2026-03-04T09:00:00
+D-008,,Discovery,2026-02-20T13:00:00
+D-009,,Discovery,2026-01-21T13:15:00
+D-010,,Discovery,2026-02-23T11:15:00
+D-011,,Discovery,2026-02-26T08:15:00
+D-012,,Discovery,2026-03-27T09:30:00
+D-013,,Discovery,2025-11-12T12:00:00
+D-014,,Discovery,2025-11-27T13:30:00
+D-014,Discovery,Discovery,2025-12-29T12:00:00
+D-014,Discovery,Discovery,2026-01-20T10:00:00
+D-015,,Discovery,2025-12-05T11:00:00
+D-016,,Discovery,2026-03-20T11:30:00
+D-017,,Discovery,2026-01-26T15:30:00
+D-018,,Discovery,2025-11-21T13:00:00
+D-019,,Discovery,2026-02-23T14:30:00
+D-020,,Discovery,2026-03-12T10:45:00
+D-021,,Discovery,2025-12-10T09:15:00
+D-022,,Discovery,2025-11-07T14:00:00
+D-023,,Discovery,2026-03-06T09:45:00
+D-024,,Discovery,2026-01-21T12:30:00
+D-025,,Discovery,2025-12-02T11:45:00
+D-026,,Discovery,2025-12-04T15:45:00
+D-027,,Discovery,2026-03-13T10:45:00
+D-028,,Discovery,2025-12-12T16:30:00
+D-029,,Discovery,2026-03-17T17:15:00
+D-030,,Discovery,2025-11-21T17:45:00
+D-031,,Discovery,2026-01-02T09:00:00
+D-032,,Discovery,2026-01-20T13:45:00
+D-033,,Discovery,2025-11-25T17:45:00
+D-033,Discovery,Discovery,2025-12-30T09:15:00
+D-033,Discovery,Discovery,2026-01-26T13:45:00
+D-034,,Discovery,2025-12-19T16:45:00
+D-035,,Discovery,2025-12-26T12:45:00
+D-036,,Discovery,2026-02-19T14:30:00
+D-037,,Discovery,2026-02-24T17:00:00
+D-038,,Discovery,2026-03-23T16:45:00
+D-039,,Discovery,2026-03-12T13:15:00
+D-040,,Discovery,2026-03-17T08:30:00
+D-041,,Discovery,2025-11-07T17:15:00
+D-041,Discovery,Qualification,2025-12-15T08:45:00
+D-042,,Discovery,2026-03-27T15:30:00
+D-042,Discovery,Qualification,2026-04-24T10:45:00
+D-043,,Discovery,2026-03-13T15:45:00
+D-043,Discovery,Qualification,2026-04-07T10:45:00
+D-044,,Discovery,2026-01-07T12:30:00
+D-044,Discovery,Qualification,2026-01-29T12:30:00
+D-045,,Discovery,2026-01-13T14:30:00
+D-045,Discovery,Qualification,2026-02-27T10:30:00
+D-046,,Discovery,2026-03-03T12:30:00
+D-046,Discovery,Qualification,2026-03-22T09:15:00
+D-047,,Discovery,2025-11-26T16:15:00
+D-047,Discovery,Qualification,2025-12-24T15:45:00
+D-048,,Discovery,2026-03-27T10:45:00
+D-048,Discovery,Qualification,2026-05-09T10:00:00
+D-049,,Discovery,2025-11-10T13:30:00
+D-049,Discovery,Qualification,2025-12-09T16:45:00
+D-050,,Discovery,2025-12-12T08:30:00
+D-050,Discovery,Qualification,2026-01-21T12:15:00
+D-051,,Discovery,2026-03-03T14:15:00
+D-051,Discovery,Qualification,2026-04-01T12:30:00
+D-052,,Discovery,2025-12-01T16:30:00
+D-052,Qualification,Qualification,2026-01-02T13:15:00
+D-052,Discovery,Qualification,2026-01-07T09:30:00
+D-052,Qualification,Qualification,2026-01-29T09:15:00
+D-053,,Discovery,2026-02-04T11:15:00
+D-053,Discovery,Qualification,2026-03-12T17:00:00
+D-054,,Discovery,2026-03-10T16:45:00
+D-054,Discovery,Qualification,2026-03-28T11:45:00
+D-055,,Discovery,2026-03-24T14:30:00
+D-055,Discovery,Qualification,2026-05-04T08:15:00
+D-056,,Discovery,2025-11-18T14:15:00
+D-056,Discovery,Qualification,2025-12-27T10:45:00
+D-057,,Discovery,2026-03-19T16:45:00
+D-057,Discovery,Qualification,2026-04-19T10:15:00
+D-058,,Discovery,2026-03-20T11:45:00
+D-058,Discovery,Qualification,2026-04-15T10:30:00
+D-059,,Discovery,2025-11-05T08:45:00
+D-059,Discovery,Qualification,2025-12-09T08:15:00
+D-060,,Discovery,2026-03-09T13:15:00
+D-060,Discovery,Qualification,2026-04-02T10:15:00
+D-061,,Discovery,2026-02-18T14:30:00
+D-061,Discovery,Qualification,2026-03-27T14:45:00
+D-062,,Discovery,2026-01-16T08:45:00
+D-062,Discovery,Qualification,2026-03-02T14:15:00
+D-063,,Discovery,2026-03-18T17:00:00
+D-063,Discovery,Qualification,2026-04-29T09:15:00
+D-064,,Discovery,2025-12-24T08:15:00
+D-064,Discovery,Qualification,2026-02-06T11:00:00
+D-065,,Discovery,2026-01-01T14:45:00
+D-065,Discovery,Qualification,2026-02-02T13:30:00
+D-066,,Discovery,2026-01-21T14:00:00
+D-066,Discovery,Qualification,2026-02-23T11:15:00
+D-067,,Discovery,2026-01-02T15:45:00
+D-067,Discovery,Qualification,2026-01-31T10:30:00
+D-068,,Discovery,2025-11-20T14:15:00
+D-068,Discovery,Qualification,2025-12-31T11:00:00
+D-069,,Discovery,2026-03-04T16:45:00
+D-069,Discovery,Qualification,2026-03-19T08:30:00
+D-070,,Discovery,2026-02-19T09:15:00
+D-070,Discovery,Qualification,2026-03-13T11:30:00
+D-071,,Discovery,2026-01-16T08:00:00
+D-071,Discovery,Qualification,2026-02-12T14:45:00
+D-072,,Discovery,2026-02-20T09:00:00
+D-072,Discovery,Qualification,2026-03-14T11:45:00
+D-073,,Discovery,2026-01-20T14:00:00
+D-073,Discovery,Qualification,2026-02-13T10:15:00
+D-074,,Discovery,2025-11-21T14:15:00
+D-074,Discovery,Qualification,2026-01-01T09:30:00
+D-075,,Discovery,2025-12-29T17:45:00
+D-075,Discovery,Qualification,2026-01-15T17:30:00
+D-076,,Discovery,2025-12-10T09:00:00
+D-076,Discovery,Qualification,2025-12-25T12:45:00
+D-076,Qualification,Technical Evaluation,2026-01-20T12:00:00
+D-077,,Discovery,2026-01-30T13:45:00
+D-077,Discovery,Qualification,2026-02-14T12:45:00
+D-077,Qualification,Technical Evaluation,2026-03-13T09:15:00
+D-078,,Discovery,2026-01-08T12:45:00
+D-078,Discovery,Technical Evaluation,2026-02-01T15:00:00
+D-079,,Discovery,2026-02-10T13:45:00
+D-079,Discovery,Qualification,2026-03-07T14:15:00
+D-079,Qualification,Technical Evaluation,2026-03-31T13:15:00
+D-080,,Discovery,2026-03-06T12:45:00
+D-080,Discovery,Qualification,2026-04-01T09:15:00
+D-080,Qualification,Technical Evaluation,2026-05-04T16:15:00
+D-081,,Discovery,2026-01-14T14:45:00
+D-081,Discovery,Qualification,2026-02-02T12:15:00
+D-081,Qualification,Technical Evaluation,2026-02-25T10:45:00
+D-082,,Discovery,2026-02-11T13:00:00
+D-082,Discovery,Qualification,2026-03-01T11:30:00
+D-082,Qualification,Technical Evaluation,2026-03-21T17:00:00
+D-083,,Discovery,2026-03-11T14:45:00
+D-083,Discovery,Qualification,2026-04-19T17:15:00
+D-083,Qualification,Technical Evaluation,2026-05-15T08:45:00
+D-084,,Discovery,2025-06-23T11:30:00
+D-084,Discovery,Qualification,2025-07-06T13:00:00
+D-084,Qualification,Technical Evaluation,2025-07-19T15:15:00
+D-085,,Discovery,2026-01-02T13:45:00
+D-085,Discovery,Qualification,2026-02-16T15:15:00
+D-085,Qualification,Technical Evaluation,2026-03-28T14:15:00
+D-086,,Discovery,2025-07-09T13:30:00
+D-086,Discovery,Qualification,2025-07-19T15:45:00
+D-086,Qualification,Technical Evaluation,2025-07-27T14:45:00
+D-087,,Discovery,2026-01-20T17:00:00
+D-087,Discovery,Qualification,2026-02-15T13:45:00
+D-087,Qualification,Technical Evaluation,2026-03-21T10:30:00
+D-088,,Discovery,2026-01-01T10:45:00
+D-088,Discovery,Qualification,2026-01-29T17:15:00
+D-088,Qualification,Technical Evaluation,2026-03-03T14:45:00
+D-089,,Discovery,2026-02-24T15:15:00
+D-089,Discovery,Qualification,2026-03-17T14:45:00
+D-089,Qualification,Technical Evaluation,2026-04-14T15:45:00
+D-090,,Discovery,2026-01-14T12:15:00
+D-090,Discovery,Qualification,2026-02-22T15:45:00
+D-090,Qualification,Technical Evaluation,2026-03-26T16:00:00
+D-091,,Discovery,2025-08-15T11:30:00
+D-091,Discovery,Qualification,2025-08-26T14:00:00
+D-091,Qualification,Technical Evaluation,2025-09-04T17:30:00
+D-092,,Discovery,2025-12-31T17:45:00
+D-092,Discovery,Qualification,2026-01-20T17:15:00
+D-092,Qualification,Technical Evaluation,2026-03-01T11:15:00
+D-093,,Discovery,2026-01-14T16:00:00
+D-093,Discovery,Qualification,2026-02-02T14:00:00
+D-093,Qualification,Technical Evaluation,2026-02-25T10:15:00
+D-094,,Discovery,2026-03-06T14:45:00
+D-094,Discovery,Qualification,2026-03-23T09:45:00
+D-094,Qualification,Technical Evaluation,2026-04-23T12:30:00
+D-095,,Discovery,2026-02-26T16:45:00
+D-095,Discovery,Qualification,2026-03-19T14:15:00
+D-095,Qualification,Technical Evaluation,2026-04-18T12:30:00
+D-096,,Discovery,2026-03-05T08:00:00
+D-096,Discovery,Technical Evaluation,2026-04-18T10:45:00
+D-097,,Discovery,2025-11-24T13:15:00
+D-097,Discovery,Qualification,2025-12-10T14:30:00
+D-097,Qualification,Technical Evaluation,2026-01-17T11:45:00
+D-098,,Discovery,2025-12-04T15:00:00
+D-098,Discovery,Qualification,2025-12-19T13:00:00
+D-098,Qualification,Technical Evaluation,2026-01-30T14:15:00
+D-099,,Discovery,2026-01-16T10:15:00
+D-099,Discovery,Qualification,2026-02-02T16:00:00
+D-099,Qualification,Technical Evaluation,2026-03-08T10:45:00
+D-100,,Discovery,2025-12-26T17:45:00
+D-100,Discovery,Technical Evaluation,2026-01-21T14:30:00
+D-101,,Discovery,2026-01-12T12:15:00
+D-101,Discovery,Qualification,2026-02-12T17:15:00
+D-101,Qualification,Technical Evaluation,2026-03-22T14:30:00
+D-102,,Discovery,2025-08-18T14:45:00
+D-102,Discovery,Qualification,2025-08-28T14:30:00
+D-102,Qualification,Technical Evaluation,2025-09-11T13:00:00
+D-103,,Discovery,2026-02-10T14:00:00
+D-103,Discovery,Qualification,2026-03-17T16:15:00
+D-103,Qualification,Technical Evaluation,2026-04-09T09:30:00
+D-104,,Discovery,2025-11-17T11:00:00
+D-104,Discovery,Qualification,2025-12-09T09:45:00
+D-104,Qualification,Technical Evaluation,2025-12-27T15:00:00
+D-105,,Discovery,2026-01-28T10:30:00
+D-105,Discovery,Qualification,2026-03-07T09:00:00
+D-105,Qualification,Technical Evaluation,2026-04-01T14:30:00
+D-106,,Discovery,2026-02-25T17:15:00
+D-106,Discovery,Qualification,2026-03-23T10:30:00
+D-106,Qualification,Technical Evaluation,2026-05-01T09:00:00
+D-107,,Discovery,2025-12-09T14:15:00
+D-107,Discovery,Qualification,2026-01-03T11:45:00
+D-107,Technical Evaluation,Technical Evaluation,2026-01-14T12:00:00
+D-107,Technical Evaluation,Technical Evaluation,2026-02-03T08:00:00
+D-107,Qualification,Technical Evaluation,2026-02-16T13:30:00
+D-108,,Discovery,2025-11-14T09:45:00
+D-108,Technical Evaluation,Technical Evaluation,2025-12-08T13:15:00
+D-108,Discovery,Qualification,2025-12-26T12:30:00
+D-108,Technical Evaluation,Technical Evaluation,2025-12-29T11:30:00
+D-108,Qualification,Technical Evaluation,2026-01-20T09:45:00
+D-109,,Discovery,2026-03-20T14:00:00
+D-109,Discovery,Qualification,2026-04-11T16:30:00
+D-109,Qualification,Technical Evaluation,2026-05-16T08:30:00
+D-110,,Discovery,2025-12-31T10:30:00
+D-110,Discovery,Qualification,2026-01-17T08:15:00
+D-110,Qualification,Technical Evaluation,2026-03-01T16:45:00
+D-111,,Discovery,2026-02-09T10:15:00
+D-111,Discovery,Qualification,2026-03-05T12:30:00
+D-111,Qualification,Technical Evaluation,2026-04-18T14:30:00
+D-112,,Discovery,2026-03-30T15:30:00
+D-112,Discovery,Technical Evaluation,2026-04-27T09:30:00
+D-113,,Discovery,2025-11-11T13:45:00
+D-113,Discovery,Technical Evaluation,2025-12-12T08:30:00
+D-114,,Discovery,2025-08-12T10:15:00
+D-114,Discovery,Qualification,2025-08-19T09:15:00
+D-114,Qualification,Technical Evaluation,2025-08-31T12:30:00
+D-115,,Discovery,2025-11-20T09:30:00
+D-115,Discovery,Qualification,2025-12-08T08:45:00
+D-115,Qualification,Technical Evaluation,2025-12-24T10:45:00
+D-116,,Discovery,2025-12-15T12:30:00
+D-116,Discovery,Qualification,2026-01-13T10:00:00
+D-116,Qualification,Technical Evaluation,2026-02-16T17:15:00
+D-117,,Discovery,2026-02-16T16:00:00
+D-117,Discovery,Qualification,2026-03-15T13:45:00
+D-117,Technical Evaluation,Technical Evaluation,2026-03-23T13:15:00
+D-117,Qualification,Technical Evaluation,2026-04-16T15:30:00
+D-117,Technical Evaluation,Technical Evaluation,2026-04-18T15:00:00
+D-118,,Discovery,2026-01-21T08:45:00
+D-118,Discovery,Technical Evaluation,2026-02-21T13:15:00
+D-119,,Discovery,2026-01-30T17:30:00
+D-119,Discovery,Qualification,2026-03-11T13:00:00
+D-119,Qualification,Technical Evaluation,2026-04-17T13:15:00
+D-120,,Discovery,2026-01-19T17:15:00
+D-120,Discovery,Technical Evaluation,2026-02-03T16:45:00
+D-121,,Discovery,2026-01-22T09:30:00
+D-121,Discovery,Technical Evaluation,2026-03-08T09:30:00
+D-122,,Discovery,2026-01-22T14:45:00
+D-122,Discovery,Qualification,2026-02-26T13:15:00
+D-122,Qualification,Technical Evaluation,2026-04-04T16:30:00
+D-123,,Discovery,2026-03-27T13:15:00
+D-123,Discovery,Qualification,2026-05-01T17:00:00
+D-123,Qualification,Technical Evaluation,2026-06-14T15:15:00
+D-124,,Discovery,2026-02-23T09:30:00
+D-124,Discovery,Qualification,2026-03-18T09:00:00
+D-124,Qualification,Technical Evaluation,2026-04-03T14:45:00
+D-125,,Discovery,2026-03-03T09:00:00
+D-125,Discovery,Qualification,2026-03-27T08:30:00
+D-125,Qualification,Technical Evaluation,2026-04-19T09:00:00
+D-126,,Discovery,2025-11-24T14:15:00
+D-126,Discovery,Qualification,2025-12-28T14:15:00
+D-126,Qualification,Technical Evaluation,2026-01-13T09:30:00
+D-126,Technical Evaluation,Business Case,2026-02-03T11:45:00
+D-127,,Discovery,2025-11-13T13:00:00
+D-127,Discovery,Qualification,2025-12-11T09:30:00
+D-127,Qualification,Technical Evaluation,2026-01-21T17:45:00
+D-127,Technical Evaluation,Business Case,2026-02-11T09:00:00
+D-128,,Discovery,2026-02-10T12:00:00
+D-128,Discovery,Qualification,2026-03-17T16:45:00
+D-128,Qualification,Technical Evaluation,2026-04-06T13:45:00
+D-128,Technical Evaluation,Business Case,2026-05-02T10:45:00
+D-129,,Discovery,2025-11-25T14:15:00
+D-129,Discovery,Qualification,2025-12-27T08:45:00
+D-129,Qualification,Technical Evaluation,2026-02-06T16:45:00
+D-129,Technical Evaluation,Business Case,2026-03-23T16:45:00
+D-130,,Discovery,2026-03-09T10:15:00
+D-130,Discovery,Qualification,2026-03-30T11:15:00
+D-130,Qualification,Business Case,2026-04-15T14:00:00
+D-131,,Discovery,2025-11-18T16:30:00
+D-131,Discovery,Qualification,2025-12-30T12:45:00
+D-131,Qualification,Technical Evaluation,2026-02-12T08:45:00
+D-131,Technical Evaluation,Business Case,2026-03-02T14:15:00
+D-132,,Discovery,2025-11-26T12:45:00
+D-132,Discovery,Qualification,2025-12-31T15:45:00
+D-132,Qualification,Technical Evaluation,2026-01-16T10:30:00
+D-132,Technical Evaluation,Business Case,2026-02-12T10:45:00
+D-133,,Discovery,2026-01-26T15:00:00
+D-133,Discovery,Qualification,2026-03-09T11:15:00
+D-133,Qualification,Technical Evaluation,2026-04-02T15:30:00
+D-133,Technical Evaluation,Business Case,2026-04-25T14:00:00
+D-134,,Discovery,2026-02-04T10:00:00
+D-134,Discovery,Qualification,2026-02-28T16:45:00
+D-134,Qualification,Technical Evaluation,2026-03-19T16:00:00
+D-134,Technical Evaluation,Business Case,2026-04-08T11:15:00
+D-135,,Discovery,2026-02-27T11:30:00
+D-135,Discovery,Qualification,2026-03-29T17:45:00
+D-135,Qualification,Technical Evaluation,2026-04-18T15:30:00
+D-135,Technical Evaluation,Business Case,2026-05-14T10:30:00
+D-136,,Discovery,2025-12-12T11:15:00
+D-136,Discovery,Qualification,2026-01-04T14:00:00
+D-136,Qualification,Technical Evaluation,2026-02-15T08:45:00
+D-136,Technical Evaluation,Business Case,2026-03-31T10:15:00
+D-137,,Discovery,2026-02-17T11:45:00
+D-137,Discovery,Qualification,2026-03-13T16:45:00
+D-137,Qualification,Technical Evaluation,2026-04-15T09:00:00
+D-137,Technical Evaluation,Business Case,2026-05-16T13:30:00
+D-138,,Discovery,2026-01-23T12:15:00
+D-138,Discovery,Qualification,2026-02-11T16:15:00
+D-138,Qualification,Technical Evaluation,2026-03-26T08:45:00
+D-138,Technical Evaluation,Business Case,2026-05-01T13:15:00
+D-139,,Discovery,2025-11-10T11:45:00
+D-139,Discovery,Qualification,2025-12-24T13:30:00
+D-139,Qualification,Technical Evaluation,2026-02-04T10:15:00
+D-139,Technical Evaluation,Business Case,2026-02-28T09:45:00
+D-140,,Discovery,2026-01-30T13:30:00
+D-140,Discovery,Qualification,2026-02-22T17:30:00
+D-140,Qualification,Technical Evaluation,2026-03-23T09:45:00
+D-140,Technical Evaluation,Business Case,2026-04-08T17:00:00
+D-141,,Discovery,2025-12-09T17:45:00
+D-141,Discovery,Qualification,2025-12-28T13:15:00
+D-141,Qualification,Technical Evaluation,2026-02-05T09:45:00
+D-141,Technical Evaluation,Business Case,2026-03-02T10:30:00
+D-142,,Discovery,2025-12-11T14:45:00
+D-142,Discovery,Qualification,2026-01-08T15:45:00
+D-142,Qualification,Business Case,2026-01-23T08:15:00
+D-143,,Discovery,2026-01-28T10:00:00
+D-143,Discovery,Qualification,2026-03-10T08:30:00
+D-143,Qualification,Business Case,2026-04-24T12:45:00
+D-144,,Discovery,2025-12-05T11:15:00
+D-144,Discovery,Qualification,2026-01-19T14:00:00
+D-144,Qualification,Technical Evaluation,2026-02-10T11:15:00
+D-144,Technical Evaluation,Business Case,2026-03-03T08:15:00
+D-145,,Discovery,2025-11-13T08:00:00
+D-145,Discovery,Qualification,2025-12-20T09:45:00
+D-145,Qualification,Technical Evaluation,2026-01-18T14:00:00
+D-145,Technical Evaluation,Business Case,2026-02-19T12:45:00
+D-146,,Discovery,2026-02-16T12:15:00
+D-146,Discovery,Qualification,2026-03-16T09:00:00
+D-146,Qualification,Technical Evaluation,2026-04-09T09:00:00
+D-146,Technical Evaluation,Business Case,2026-05-09T11:15:00
+D-147,,Discovery,2025-12-24T08:00:00
+D-147,Discovery,Qualification,2026-01-29T09:00:00
+D-147,Qualification,Technical Evaluation,2026-03-11T17:45:00
+D-147,Technical Evaluation,Business Case,2026-03-30T09:00:00
+D-148,,Discovery,2026-01-15T08:30:00
+D-148,Discovery,Technical Evaluation,2026-02-10T13:45:00
+D-148,Technical Evaluation,Business Case,2026-03-20T09:00:00
+D-149,,Discovery,2026-01-08T13:15:00
+D-149,Discovery,Qualification,2026-01-26T14:45:00
+D-149,Qualification,Technical Evaluation,2026-03-12T15:30:00
+D-149,Technical Evaluation,Business Case,2026-04-22T14:45:00
+D-150,,Discovery,2025-12-11T15:45:00
+D-150,Discovery,Qualification,2025-12-31T17:45:00
+D-150,Qualification,Technical Evaluation,2026-02-08T13:00:00
+D-150,Technical Evaluation,Business Case,2026-03-22T10:45:00
+D-151,,Discovery,2026-03-25T17:00:00
+D-151,Discovery,Qualification,2026-04-22T11:45:00
+D-151,Qualification,Technical Evaluation,2026-05-18T14:15:00
+D-151,Technical Evaluation,Business Case,2026-06-28T16:00:00
+D-152,,Discovery,2025-11-20T13:30:00
+D-152,Discovery,Qualification,2025-12-06T16:15:00
+D-152,Qualification,Technical Evaluation,2026-01-07T14:45:00
+D-152,Technical Evaluation,Business Case,2026-02-17T11:00:00
+D-153,,Discovery,2025-11-05T16:00:00
+D-153,Discovery,Qualification,2025-12-16T09:30:00
+D-153,Qualification,Technical Evaluation,2026-01-28T16:15:00
+D-153,Technical Evaluation,Business Case,2026-03-04T15:30:00
+D-154,,Discovery,2026-03-02T09:00:00
+D-154,Discovery,Qualification,2026-04-10T11:00:00
+D-154,Qualification,Technical Evaluation,2026-05-05T13:30:00
+D-154,Technical Evaluation,Business Case,2026-06-06T16:30:00
+D-155,,Discovery,2025-11-28T14:15:00
+D-155,Discovery,Qualification,2025-12-27T11:30:00
+D-155,Qualification,Technical Evaluation,2026-01-14T14:00:00
+D-155,Technical Evaluation,Business Case,2026-02-27T17:00:00
+D-156,,Discovery,2025-12-05T16:45:00
+D-156,Discovery,Technical Evaluation,2026-01-15T17:45:00
+D-156,Technical Evaluation,Business Case,2026-02-28T16:15:00
+D-157,,Discovery,2026-01-22T17:15:00
+D-157,Discovery,Qualification,2026-02-14T14:30:00
+D-157,Qualification,Technical Evaluation,2026-03-10T15:15:00
+D-157,Technical Evaluation,Business Case,2026-03-29T14:30:00
+D-158,,Discovery,2025-12-26T12:30:00
+D-158,Discovery,Qualification,2026-02-08T10:15:00
+D-158,Qualification,Technical Evaluation,2026-03-11T16:30:00
+D-158,Technical Evaluation,Business Case,2026-04-17T09:30:00
+D-159,,Discovery,2025-11-04T08:00:00
+D-159,Discovery,Technical Evaluation,2025-11-25T12:15:00
+D-159,Business Case,Business Case,2025-12-08T09:00:00
+D-159,Technical Evaluation,Business Case,2025-12-19T12:15:00
+D-159,Business Case,Business Case,2025-12-26T12:15:00
+D-160,,Discovery,2026-02-24T16:45:00
+D-160,Discovery,Qualification,2026-03-18T16:30:00
+D-160,Qualification,Technical Evaluation,2026-04-24T08:45:00
+D-160,Technical Evaluation,Business Case,2026-05-21T14:30:00
+D-161,,Discovery,2026-02-03T11:30:00
+D-161,Discovery,Qualification,2026-03-04T10:00:00
+D-161,Qualification,Technical Evaluation,2026-03-24T10:00:00
+D-161,Technical Evaluation,Business Case,2026-04-20T08:45:00
+D-161,Business Case,Negotiation,2026-05-13T16:30:00
+D-162,,Discovery,2025-12-10T17:00:00
+D-162,Discovery,Qualification,2026-01-18T17:30:00
+D-162,Qualification,Technical Evaluation,2026-02-17T17:30:00
+D-162,Technical Evaluation,Business Case,2026-03-06T13:15:00
+D-162,Business Case,Negotiation,2026-04-20T10:00:00
+D-163,,Discovery,2026-01-15T08:00:00
+D-163,Discovery,Qualification,2026-02-20T13:45:00
+D-163,Qualification,Technical Evaluation,2026-03-14T17:15:00
+D-163,Technical Evaluation,Business Case,2026-04-28T08:30:00
+D-163,Business Case,Negotiation,2026-05-25T09:45:00
+D-164,,Discovery,2026-02-04T12:15:00
+D-164,Discovery,Qualification,2026-03-01T16:00:00
+D-164,Qualification,Technical Evaluation,2026-04-15T09:15:00
+D-164,Technical Evaluation,Business Case,2026-05-30T16:00:00
+D-164,Business Case,Negotiation,2026-07-04T09:15:00
+D-165,,Discovery,2026-02-20T10:00:00
+D-165,Discovery,Qualification,2026-03-21T13:00:00
+D-165,Qualification,Technical Evaluation,2026-04-07T09:00:00
+D-165,Technical Evaluation,Business Case,2026-04-27T12:00:00
+D-165,Business Case,Negotiation,2026-05-30T11:30:00
+D-166,,Discovery,2025-12-01T17:00:00
+D-166,Discovery,Qualification,2026-01-09T17:00:00
+D-166,Qualification,Technical Evaluation,2026-02-15T09:30:00
+D-166,Technical Evaluation,Business Case,2026-03-31T16:00:00
+D-166,Business Case,Negotiation,2026-04-24T12:00:00
+D-167,,Discovery,2025-12-05T16:30:00
+D-167,Discovery,Qualification,2026-01-19T10:30:00
+D-167,Qualification,Technical Evaluation,2026-02-24T13:00:00
+D-167,Technical Evaluation,Business Case,2026-03-28T16:15:00
+D-167,Business Case,Negotiation,2026-04-15T08:00:00
+D-168,,Discovery,2025-12-24T16:15:00
+D-168,Discovery,Qualification,2026-01-13T10:15:00
+D-168,Qualification,Technical Evaluation,2026-02-16T12:15:00
+D-168,Technical Evaluation,Business Case,2026-03-06T10:00:00
+D-168,Business Case,Negotiation,2026-04-17T16:45:00
+D-169,,Discovery,2025-12-03T09:15:00
+D-169,Discovery,Qualification,2025-12-28T15:45:00
+D-169,Negotiation,Negotiation,2026-01-12T14:30:00
+D-169,Qualification,Technical Evaluation,2026-01-22T17:30:00
+D-169,Negotiation,Negotiation,2026-01-31T11:00:00
+D-169,Technical Evaluation,Negotiation,2026-02-28T17:15:00
+D-170,,Discovery,2026-01-20T14:30:00
+D-170,Discovery,Qualification,2026-03-02T13:15:00
+D-170,Qualification,Technical Evaluation,2026-04-07T13:45:00
+D-170,Technical Evaluation,Business Case,2026-05-06T15:30:00
+D-170,Business Case,Negotiation,2026-06-14T12:45:00
+D-171,,Discovery,2026-03-18T09:00:00
+D-171,Discovery,Qualification,2026-04-30T08:00:00
+D-171,Qualification,Technical Evaluation,2026-06-10T17:45:00
+D-171,Technical Evaluation,Business Case,2026-07-19T17:15:00
+D-171,Business Case,Negotiation,2026-09-01T08:30:00
+D-172,,Discovery,2026-01-14T09:45:00
+D-172,Discovery,Qualification,2026-02-09T16:00:00
+D-172,Qualification,Technical Evaluation,2026-03-17T11:15:00
+D-172,Technical Evaluation,Business Case,2026-04-25T16:15:00
+D-172,Business Case,Negotiation,2026-05-24T10:15:00
+D-173,,Discovery,2025-12-30T11:30:00
+D-173,Discovery,Qualification,2026-01-26T15:45:00
+D-173,Qualification,Technical Evaluation,2026-03-10T08:00:00
+D-173,Technical Evaluation,Business Case,2026-04-14T13:00:00
+D-173,Business Case,Negotiation,2026-05-21T16:30:00
+D-174,,Discovery,2026-02-05T14:15:00
+D-174,Negotiation,Negotiation,2026-03-06T10:00:00
+D-174,Discovery,Qualification,2026-03-08T14:30:00
+D-174,Negotiation,Negotiation,2026-03-23T13:45:00
+D-174,Qualification,Technical Evaluation,2026-04-18T13:45:00
+D-174,Technical Evaluation,Business Case,2026-05-28T15:00:00
+D-174,Business Case,Negotiation,2026-06-28T10:45:00
+D-175,,Discovery,2025-12-01T13:00:00
+D-175,Discovery,Qualification,2025-12-31T15:45:00
+D-175,Qualification,Technical Evaluation,2026-01-21T17:15:00
+D-175,Technical Evaluation,Business Case,2026-02-25T14:00:00
+D-175,Business Case,Negotiation,2026-03-19T08:15:00
+D-176,,Discovery,2026-03-27T10:45:00
+D-176,Negotiation,Negotiation,2026-04-29T17:15:00
+D-176,Discovery,Qualification,2026-04-30T17:00:00
+D-176,Negotiation,Negotiation,2026-05-13T16:00:00
+D-176,Qualification,Technical Evaluation,2026-06-12T12:00:00
+D-176,Technical Evaluation,Business Case,2026-07-03T15:45:00
+D-176,Business Case,Negotiation,2026-08-14T15:15:00
+D-177,,Discovery,2026-01-07T17:00:00
+D-177,Discovery,Qualification,2026-01-29T14:45:00
+D-177,Qualification,Technical Evaluation,2026-02-17T09:00:00
+D-177,Technical Evaluation,Business Case,2026-03-10T16:45:00
+D-177,Business Case,Negotiation,2026-04-20T10:00:00
+D-178,,Discovery,2025-12-01T17:00:00
+D-178,Discovery,Qualification,2026-01-13T14:45:00
+D-178,Qualification,Technical Evaluation,2026-02-08T08:45:00
+D-178,Technical Evaluation,Business Case,2026-03-02T15:45:00
+D-178,Business Case,Negotiation,2026-03-28T17:00:00
+D-179,,Discovery,2026-03-20T08:00:00
+D-179,Discovery,Qualification,2026-04-20T08:45:00
+D-179,Qualification,Technical Evaluation,2026-05-25T11:30:00
+D-179,Technical Evaluation,Business Case,2026-06-22T13:00:00
+D-179,Business Case,Negotiation,2026-07-11T14:30:00
+D-180,,Discovery,2026-02-10T16:45:00
+D-180,Discovery,Qualification,2026-03-02T13:45:00
+D-180,Qualification,Technical Evaluation,2026-03-25T12:30:00
+D-180,Technical Evaluation,Business Case,2026-05-03T14:15:00
+D-180,Business Case,Negotiation,2026-06-14T09:15:00
+D-181,,Discovery,2025-11-14T08:00:00
+D-181,Discovery,Qualification,2025-12-25T10:45:00
+D-181,Qualification,Technical Evaluation,2026-02-07T17:45:00
+D-181,Technical Evaluation,Business Case,2026-02-24T09:30:00
+D-181,Business Case,Negotiation,2026-03-18T13:00:00
+D-182,,Discovery,2025-12-15T11:30:00
+D-182,Discovery,Qualification,2026-01-05T08:15:00
+D-182,Qualification,Technical Evaluation,2026-02-08T10:00:00
+D-182,Technical Evaluation,Business Case,2026-03-06T11:00:00
+D-182,Business Case,Negotiation,2026-03-26T09:30:00
+D-183,,Discovery,2025-11-18T16:30:00
+D-183,Discovery,Qualification,2025-12-14T12:15:00
+D-183,Qualification,Technical Evaluation,2026-01-17T11:45:00
+D-183,Technical Evaluation,Business Case,2026-03-02T14:00:00
+D-183,Business Case,Negotiation,2026-03-25T10:45:00
+D-184,,Discovery,2026-03-12T17:30:00
+D-184,Discovery,Qualification,2026-04-18T15:45:00
+D-184,Qualification,Technical Evaluation,2026-05-21T15:15:00
+D-184,Technical Evaluation,Business Case,2026-06-29T13:45:00
+D-184,Business Case,Negotiation,2026-08-04T15:00:00
+D-185,,Discovery,2026-01-20T08:30:00
+D-185,Discovery,Qualification,2026-02-11T12:00:00
+D-185,Qualification,Technical Evaluation,2026-03-10T13:00:00
+D-185,Technical Evaluation,Business Case,2026-04-11T10:45:00
+D-185,Business Case,Negotiation,2026-05-06T13:15:00
+D-186,,Discovery,2026-02-25T12:15:00
+D-186,Discovery,Technical Evaluation,2026-03-19T11:15:00
+D-186,Technical Evaluation,Business Case,2026-04-22T13:15:00
+D-186,Negotiation,Closed Won,2026-04-23T17:00:00
+D-186,Business Case,Negotiation,2026-04-26T09:00:00
+D-187,Negotiation,Closed Won,2026-02-23T08:15:00
+D-187,,Discovery,2026-02-23T17:15:00
+D-187,Qualification,Technical Evaluation,2026-02-24T08:30:00
+D-187,Discovery,Qualification,2026-02-24T14:45:00
+D-187,Technical Evaluation,Business Case,2026-02-24T15:00:00
+D-187,Business Case,Negotiation,2026-02-24T15:30:00
+D-188,,Discovery,2025-11-24T13:30:00
+D-188,Discovery,Qualification,2025-12-14T15:45:00
+D-188,Qualification,Technical Evaluation,2026-01-04T14:30:00
+D-188,Technical Evaluation,Negotiation,2026-01-30T14:30:00
+D-188,Negotiation,Closed Won,2026-02-28T10:15:00
+D-189,,Discovery,2026-02-18T10:45:00
+D-189,Business Case,Negotiation,2026-02-21T08:45:00
+D-189,Technical Evaluation,Business Case,2026-02-22T12:30:00
+D-189,Negotiation,Closed Won,2026-02-24T08:15:00
+D-189,Qualification,Technical Evaluation,2026-02-24T16:30:00
+D-189,Discovery,Qualification,2026-02-25T10:45:00
+D-190,,Discovery,2025-12-04T12:30:00
+D-190,Discovery,Qualification,2025-12-19T14:00:00
+D-190,Qualification,Technical Evaluation,2026-01-14T17:15:00
+D-190,Technical Evaluation,Business Case,2026-02-16T17:15:00
+D-190,Negotiation,Closed Won,2026-03-14T15:45:00
+D-190,Business Case,Negotiation,2026-03-16T13:30:00
+D-191,,Discovery,2026-02-12T17:45:00
+D-191,Business Case,Negotiation,2026-03-12T13:45:00
+D-191,Technical Evaluation,Business Case,2026-03-13T12:45:00
+D-191,Negotiation,Closed Won,2026-03-14T10:00:00
+D-191,Qualification,Technical Evaluation,2026-03-14T13:30:00
+D-191,Discovery,Qualification,2026-03-15T09:15:00
+D-192,,Discovery,2025-11-11T09:00:00
+D-192,Discovery,Qualification,2025-12-25T15:00:00
+D-192,Qualification,Technical Evaluation,2026-01-09T14:00:00
+D-192,Technical Evaluation,Business Case,2026-01-27T12:15:00
+D-192,Business Case,Negotiation,2026-02-13T14:30:00
+D-192,Negotiation,Closed Won,2026-02-25T12:45:00
+D-193,,Discovery,2025-12-12T16:30:00
+D-193,Discovery,Qualification,2026-01-13T15:15:00
+D-193,Qualification,Technical Evaluation,2026-02-27T16:15:00
+D-193,Business Case,Negotiation,2026-03-28T14:30:00
+D-193,Negotiation,Closed Won,2026-03-30T15:15:00
+D-193,Technical Evaluation,Business Case,2026-04-01T17:45:00
+D-194,,Discovery,2025-12-09T10:30:00
+D-194,Discovery,Qualification,2026-01-02T15:00:00
+D-194,Technical Evaluation,Business Case,2026-01-29T12:15:00
+D-194,Qualification,Technical Evaluation,2026-01-29T15:30:00
+D-194,Negotiation,Closed Won,2026-01-29T16:45:00
+D-194,Business Case,Negotiation,2026-02-01T16:30:00
+D-195,,Discovery,2025-12-25T16:30:00
+D-195,Discovery,Qualification,2026-01-22T11:00:00
+D-195,Qualification,Technical Evaluation,2026-02-11T10:30:00
+D-195,Negotiation,Closed Won,2026-02-26T15:15:00
+D-195,Technical Evaluation,Negotiation,2026-03-01T15:45:00
+D-196,,Discovery,2025-11-14T08:15:00
+D-196,Discovery,Qualification,2025-12-01T10:00:00
+D-196,Qualification,Business Case,2025-12-31T11:30:00
+D-196,Business Case,Negotiation,2026-01-28T12:45:00
+D-196,Negotiation,Closed Won,2026-02-23T15:00:00
+D-197,,Discovery,2026-02-23T09:15:00
+D-197,Qualification,Technical Evaluation,2026-03-01T09:15:00
+D-197,Discovery,Qualification,2026-03-01T11:00:00
+D-197,Negotiation,Closed Won,2026-03-01T12:15:00
+D-197,Technical Evaluation,Business Case,2026-03-01T12:30:00
+D-197,Business Case,Negotiation,2026-03-04T16:00:00
+D-198,,Discovery,2026-01-21T17:00:00
+D-198,Qualification,Technical Evaluation,2026-01-29T17:15:00
+D-198,Discovery,Qualification,2026-01-31T08:00:00
+D-198,Negotiation,Closed Won,2026-02-01T08:30:00
+D-198,Technical Evaluation,Business Case,2026-02-01T11:15:00
+D-198,Business Case,Negotiation,2026-02-01T17:30:00
+D-199,,Discovery,2025-12-15T13:15:00
+D-199,Discovery,Qualification,2026-01-07T08:45:00
+D-199,Qualification,Technical Evaluation,2026-02-13T15:30:00
+D-199,Negotiation,Closed Won,2026-02-20T16:15:00
+D-199,Technical Evaluation,Business Case,2026-02-21T11:15:00
+D-199,Business Case,Negotiation,2026-02-22T13:45:00
+D-200,,Discovery,2025-12-17T16:45:00
+D-200,Discovery,Qualification,2026-01-24T10:00:00
+D-200,Qualification,Technical Evaluation,2026-02-27T13:15:00
+D-200,Technical Evaluation,Business Case,2026-03-24T09:45:00
+D-200,Business Case,Negotiation,2026-03-26T15:15:00
+D-200,Negotiation,Closed Won,2026-03-28T13:45:00
+D-201,,Discovery,2025-08-05T14:45:00
+D-201,Discovery,Qualification,2025-08-20T17:30:00
+D-201,Qualification,Technical Evaluation,2025-08-22T11:00:00
+D-201,Technical Evaluation,Negotiation,2025-08-23T15:00:00
+D-201,Negotiation,Closed Won,2025-08-24T13:45:00
+D-202,,Discovery,2025-07-22T16:00:00
+D-202,Discovery,Qualification,2025-08-09T11:45:00
+D-202,Qualification,Technical Evaluation,2025-08-30T11:15:00
+D-202,Technical Evaluation,Business Case,2025-10-02T10:45:00
+D-202,Business Case,Negotiation,2025-11-09T09:30:00
+D-202,Negotiation,Closed Won,2025-12-05T14:00:00
+D-203,,Discovery,2025-07-02T14:45:00
+D-203,Discovery,Qualification,2025-08-12T13:15:00
+D-203,Qualification,Technical Evaluation,2025-09-05T11:45:00
+D-203,Technical Evaluation,Business Case,2025-09-05T12:30:00
+D-203,Business Case,Negotiation,2025-09-06T15:45:00
+D-203,Negotiation,Closed Won,2025-09-09T12:00:00
+D-204,,Discovery,2025-09-22T16:15:00
+D-204,Discovery,Qualification,2025-10-10T08:45:00
+D-204,Technical Evaluation,Business Case,2025-10-29T11:15:00
+D-204,Business Case,Negotiation,2025-10-31T09:45:00
+D-204,Negotiation,Closed Won,2025-11-01T09:30:00
+D-204,Qualification,Technical Evaluation,2025-11-01T10:30:00
+D-205,,Discovery,2025-06-18T13:30:00
+D-205,Discovery,Technical Evaluation,2025-07-31T14:45:00
+D-205,Business Case,Negotiation,2025-08-01T08:30:00
+D-205,Technical Evaluation,Business Case,2025-08-04T11:00:00
+D-205,Negotiation,Closed Won,2025-08-04T13:15:00
+D-206,,Discovery,2025-12-03T14:15:00
+D-206,Discovery,Qualification,2025-12-22T13:00:00
+D-206,Qualification,Business Case,2026-01-08T08:45:00
+D-206,Negotiation,Closed Won,2026-01-11T10:45:00
+D-206,Business Case,Negotiation,2026-01-12T14:45:00
+D-207,,Discovery,2025-10-22T14:30:00
+D-207,Discovery,Qualification,2025-11-17T11:30:00
+D-207,Qualification,Business Case,2025-12-07T08:30:00
+D-207,Business Case,Negotiation,2025-12-09T17:45:00
+D-207,Negotiation,Closed Won,2025-12-10T15:00:00
+D-208,,Discovery,2025-04-24T10:30:00
+D-208,Discovery,Qualification,2025-05-09T13:00:00
+D-208,Qualification,Technical Evaluation,2025-06-02T15:45:00
+D-208,Technical Evaluation,Negotiation,2025-06-17T13:15:00
+D-208,Negotiation,Closed Won,2025-07-25T16:15:00
+D-209,,Discovery,2025-07-08T12:15:00
+D-209,Discovery,Technical Evaluation,2025-08-17T17:30:00
+D-209,Technical Evaluation,Business Case,2025-09-02T15:00:00
+D-209,Business Case,Negotiation,2025-09-19T14:30:00
+D-209,Negotiation,Closed Won,2025-10-25T13:00:00
+D-210,,Discovery,2026-01-01T17:00:00
+D-210,Discovery,Qualification,2026-01-21T11:45:00
+D-210,Qualification,Technical Evaluation,2026-02-22T08:00:00
+D-210,Technical Evaluation,Business Case,2026-03-16T16:30:00
+D-210,Business Case,Negotiation,2026-03-25T14:15:00
+D-210,Negotiation,Closed Won,2026-03-26T13:30:00
+D-211,,Discovery,2025-04-10T10:00:00
+D-211,Discovery,Qualification,2025-05-18T14:15:00
+D-211,Qualification,Business Case,2025-06-15T11:15:00
+D-211,Business Case,Negotiation,2025-07-13T12:30:00
+D-211,Negotiation,Closed Won,2025-08-11T16:15:00
+D-212,,Discovery,2025-09-30T10:15:00
+D-212,Business Case,Negotiation,2025-10-03T12:15:00
+D-212,Qualification,Technical Evaluation,2025-10-04T10:00:00
+D-212,Technical Evaluation,Business Case,2025-10-04T14:45:00
+D-212,Negotiation,Closed Won,2025-10-05T09:15:00
+D-212,Discovery,Qualification,2025-10-06T16:00:00
+D-213,,Discovery,2025-07-10T15:15:00
+D-213,Discovery,Qualification,2025-08-10T17:45:00
+D-213,Qualification,Technical Evaluation,2025-09-16T13:15:00
+D-213,Technical Evaluation,Business Case,2025-10-28T14:45:00
+D-213,Business Case,Negotiation,2025-11-27T10:15:00
+D-213,Negotiation,Closed Won,2025-12-14T08:45:00
+D-214,,Discovery,2025-07-24T11:45:00
+D-214,Discovery,Qualification,2025-08-20T08:45:00
+D-214,Qualification,Technical Evaluation,2025-09-27T13:45:00
+D-214,Technical Evaluation,Business Case,2025-09-27T17:00:00
+D-214,Negotiation,Closed Won,2025-10-01T11:45:00
+D-214,Business Case,Negotiation,2025-10-01T15:45:00
+D-215,,Discovery,2025-06-19T17:00:00
+D-215,Discovery,Qualification,2025-07-26T16:15:00
+D-215,Qualification,Technical Evaluation,2025-08-24T15:00:00
+D-215,Technical Evaluation,Business Case,2025-09-24T09:15:00
+D-215,Business Case,Negotiation,2025-09-24T16:15:00
+D-215,Negotiation,Closed Won,2025-09-25T13:45:00
+D-216,,Discovery,2025-12-17T15:30:00
+D-216,Discovery,Qualification,2026-01-03T16:45:00
+D-216,Qualification,Technical Evaluation,2026-02-10T16:15:00
+D-216,Technical Evaluation,Negotiation,2026-02-25T14:00:00
+D-216,Negotiation,Closed Won,2026-02-28T13:15:00
+D-217,,Discovery,2025-05-19T12:00:00
+D-217,Discovery,Qualification,2025-06-17T15:45:00
+D-217,Qualification,Technical Evaluation,2025-07-19T08:45:00
+D-217,Technical Evaluation,Business Case,2025-08-10T11:45:00
+D-217,Negotiation,Closed Won,2025-08-21T08:15:00
+D-217,Business Case,Negotiation,2025-08-22T15:00:00
+D-218,,Discovery,2025-05-20T08:15:00
+D-218,Discovery,Qualification,2025-07-01T08:30:00
+D-218,Qualification,Technical Evaluation,2025-07-26T09:00:00
+D-218,Technical Evaluation,Business Case,2025-08-13T14:15:00
+D-218,Negotiation,Closed Won,2025-08-15T17:30:00
+D-218,Business Case,Negotiation,2025-08-16T17:15:00
+D-219,,Discovery,2025-08-21T13:45:00
+D-219,Discovery,Qualification,2025-09-21T11:15:00
+D-219,Business Case,Negotiation,2025-09-25T12:45:00
+D-219,Negotiation,Closed Won,2025-09-27T12:30:00
+D-219,Qualification,Business Case,2025-09-29T09:00:00
+D-220,,Discovery,2025-08-19T08:00:00
+D-220,Discovery,Qualification,2025-09-03T15:00:00
+D-220,Qualification,Technical Evaluation,2025-10-11T11:45:00
+D-220,Technical Evaluation,Business Case,2025-11-08T08:30:00
+D-220,Business Case,Negotiation,2025-12-04T16:15:00
+D-220,Negotiation,Closed Won,2025-12-19T11:30:00
+D-221,,Discovery,2025-08-26T15:45:00
+D-221,Discovery,Qualification,2025-10-05T08:15:00
+D-221,Qualification,Business Case,2025-11-04T10:45:00
+D-221,Business Case,Negotiation,2025-11-12T13:45:00
+D-221,Negotiation,Closed Won,2025-11-13T08:30:00
+D-222,,Discovery,2025-10-02T13:45:00
+D-222,Discovery,Qualification,2025-11-06T16:15:00
+D-222,Qualification,Technical Evaluation,2025-11-15T14:15:00
+D-222,Negotiation,Closed Won,2025-11-16T11:30:00
+D-222,Technical Evaluation,Business Case,2025-11-19T12:30:00
+D-222,Business Case,Negotiation,2025-11-19T12:45:00
+D-223,,Discovery,2025-11-10T10:15:00
+D-223,Discovery,Qualification,2025-12-05T15:30:00
+D-223,Qualification,Technical Evaluation,2026-01-13T13:15:00
+D-223,Negotiation,Closed Won,2026-01-25T09:00:00
+D-223,Business Case,Negotiation,2026-01-29T15:45:00
+D-223,Technical Evaluation,Business Case,2026-01-29T16:15:00
+D-224,,Discovery,2025-08-14T11:30:00
+D-224,Discovery,Qualification,2025-09-04T11:30:00
+D-224,Qualification,Business Case,2025-09-27T16:30:00
+D-224,Business Case,Negotiation,2025-10-20T09:30:00
+D-224,Negotiation,Closed Won,2025-10-22T12:00:00
+D-225,,Discovery,2025-12-31T17:30:00
+D-225,Qualification,Business Case,2026-01-09T08:00:00
+D-225,Discovery,Qualification,2026-01-09T08:15:00
+D-225,Negotiation,Closed Won,2026-01-11T17:45:00
+D-225,Business Case,Negotiation,2026-01-12T09:45:00
+D-226,,Discovery,2025-04-23T15:00:00
+D-226,Discovery,Qualification,2025-05-22T12:45:00
+D-226,Qualification,Technical Evaluation,2025-06-21T11:15:00
+D-226,Technical Evaluation,Negotiation,2025-07-10T17:30:00
+D-226,Negotiation,Closed Won,2025-08-23T13:45:00
+D-227,,Discovery,2025-10-30T14:00:00
+D-227,Discovery,Qualification,2025-11-24T16:00:00
+D-227,Technical Evaluation,Business Case,2025-12-10T14:15:00
+D-227,Negotiation,Closed Won,2025-12-11T09:30:00
+D-227,Qualification,Technical Evaluation,2025-12-12T16:45:00
+D-227,Business Case,Negotiation,2025-12-13T16:15:00
+D-228,,Discovery,2025-09-02T15:30:00
+D-228,Discovery,Qualification,2025-10-04T09:45:00
+D-228,Qualification,Technical Evaluation,2025-10-24T12:45:00
+D-228,Negotiation,Closed Won,2025-11-05T14:30:00
+D-228,Technical Evaluation,Negotiation,2025-11-10T17:00:00
+D-229,,Discovery,2025-07-04T12:45:00
+D-229,Discovery,Qualification,2025-08-07T17:45:00
+D-229,Qualification,Technical Evaluation,2025-08-28T11:30:00
+D-229,Technical Evaluation,Business Case,2025-09-21T17:30:00
+D-229,Business Case,Negotiation,2025-11-04T14:30:00
+D-229,Negotiation,Closed Won,2025-11-14T08:45:00
+D-230,,Discovery,2025-07-04T08:15:00
+D-230,Discovery,Qualification,2025-08-01T17:45:00
+D-230,Qualification,Business Case,2025-09-05T13:45:00
+D-230,Business Case,Negotiation,2025-10-02T14:45:00
+D-230,Negotiation,Closed Won,2025-11-03T11:15:00
+D-231,,Discovery,2025-05-07T14:15:00
+D-231,Discovery,Qualification,2025-05-24T10:45:00
+D-231,Qualification,Business Case,2025-07-05T15:45:00
+D-231,Business Case,Negotiation,2025-08-08T10:45:00
+D-231,Negotiation,Closed Won,2025-09-08T14:45:00
+D-232,,Discovery,2025-06-02T16:30:00
+D-232,Discovery,Qualification,2025-06-18T08:45:00
+D-232,Qualification,Technical Evaluation,2025-07-25T13:00:00
+D-232,Technical Evaluation,Business Case,2025-08-27T15:00:00
+D-232,Business Case,Negotiation,2025-09-15T16:30:00
+D-232,Negotiation,Closed Won,2025-10-14T16:00:00
+D-233,,Discovery,2025-11-19T13:00:00
+D-233,Discovery,Qualification,2025-12-19T15:45:00
+D-233,Business Case,Negotiation,2026-01-09T12:30:00
+D-233,Negotiation,Closed Won,2026-01-10T17:15:00
+D-233,Technical Evaluation,Business Case,2026-01-11T12:15:00
+D-233,Qualification,Technical Evaluation,2026-01-11T14:30:00
+D-234,,Discovery,2025-11-05T12:30:00
+D-234,Discovery,Qualification,2025-11-06T12:30:00
+D-234,Business Case,Negotiation,2025-11-07T13:15:00
+D-234,Qualification,Technical Evaluation,2025-11-08T08:00:00
+D-234,Negotiation,Closed Won,2025-11-09T15:15:00
+D-234,Technical Evaluation,Business Case,2025-11-09T17:15:00
+D-235,,Discovery,2025-10-17T10:15:00
+D-235,Discovery,Qualification,2025-11-19T13:00:00
+D-235,Technical Evaluation,Business Case,2025-11-27T14:45:00
+D-235,Negotiation,Closed Won,2025-11-27T15:30:00
+D-235,Business Case,Negotiation,2025-11-27T16:15:00
+D-235,Qualification,Technical Evaluation,2025-11-28T09:00:00
+D-236,,Discovery,2025-12-24T13:45:00
+D-236,Discovery,Qualification,2026-01-27T12:30:00
+D-236,Qualification,Technical Evaluation,2026-02-19T12:00:00
+D-236,Technical Evaluation,Negotiation,2026-02-20T14:45:00
+D-236,Negotiation,Closed Won,2026-02-23T17:15:00
+D-237,,Discovery,2025-07-29T13:15:00
+D-237,Discovery,Qualification,2025-09-05T12:30:00
+D-237,Qualification,Technical Evaluation,2025-09-26T08:00:00
+D-237,Technical Evaluation,Business Case,2025-10-30T09:00:00
+D-237,Business Case,Negotiation,2025-12-14T17:15:00
+D-237,Negotiation,Closed Won,2026-01-02T09:00:00
+D-238,,Discovery,2025-08-01T09:45:00
+D-238,Discovery,Qualification,2025-09-14T12:45:00
+D-238,Qualification,Business Case,2025-10-21T13:30:00
+D-238,Business Case,Negotiation,2025-11-10T09:30:00
+D-238,Negotiation,Closed Won,2025-12-19T08:45:00
+D-239,,Discovery,2025-08-18T14:15:00
+D-239,Discovery,Qualification,2025-09-21T09:45:00
+D-239,Qualification,Technical Evaluation,2025-10-28T12:00:00
+D-239,Technical Evaluation,Negotiation,2025-11-13T09:00:00
+D-239,Negotiation,Closed Won,2025-12-16T12:45:00
+D-240,,Discovery,2025-12-30T15:45:00
+D-240,Technical Evaluation,Business Case,2026-01-08T13:30:00
+D-240,Discovery,Qualification,2026-01-09T09:15:00
+D-240,Qualification,Technical Evaluation,2026-01-09T15:00:00
+D-240,Business Case,Negotiation,2026-01-10T14:00:00
+D-240,Negotiation,Closed Won,2026-01-12T13:30:00
+D-241,,Discovery,2025-12-29T15:15:00
+D-241,Discovery,Qualification,2026-01-17T08:15:00
+D-241,Qualification,Technical Evaluation,2026-02-01T17:15:00
+D-241,Technical Evaluation,Business Case,2026-03-03T14:00:00
+D-241,Business Case,Negotiation,2026-03-04T12:45:00
+D-241,Negotiation,Closed Won,2026-03-05T08:00:00
+D-242,,Discovery,2025-08-14T11:00:00
+D-242,Discovery,Qualification,2025-08-30T10:45:00
+D-242,Technical Evaluation,Business Case,2025-10-03T08:15:00
+D-242,Qualification,Technical Evaluation,2025-10-04T08:45:00
+D-242,Business Case,Negotiation,2025-10-06T08:15:00
+D-242,Negotiation,Closed Won,2025-10-07T12:00:00
+D-243,,Discovery,2025-07-21T17:15:00
+D-243,Discovery,Qualification,2025-08-15T11:00:00
+D-243,Technical Evaluation,Business Case,2025-09-08T10:45:00
+D-243,Business Case,Negotiation,2025-09-08T16:15:00
+D-243,Qualification,Technical Evaluation,2025-09-09T13:00:00
+D-243,Negotiation,Closed Won,2025-09-09T17:00:00
+D-244,,Discovery,2025-11-05T17:30:00
+D-244,Discovery,Technical Evaluation,2025-11-07T10:15:00
+D-244,Technical Evaluation,Business Case,2025-11-08T16:45:00
+D-244,Business Case,Negotiation,2025-11-09T10:00:00
+D-244,Negotiation,Closed Won,2025-11-09T15:00:00
+D-245,,Discovery,2025-07-28T16:15:00
+D-245,Discovery,Qualification,2025-08-26T11:30:00
+D-245,Qualification,Technical Evaluation,2025-09-11T11:00:00
+D-245,Technical Evaluation,Business Case,2025-10-21T10:45:00
+D-245,Business Case,Negotiation,2025-11-20T10:15:00
+D-245,Negotiation,Closed Won,2025-12-26T08:00:00
+D-246,,Discovery,2025-07-28T16:15:00
+D-246,Technical Evaluation,Business Case,2025-08-04T13:15:00
+D-246,Negotiation,Closed Won,2025-08-04T14:15:00
+D-246,Qualification,Technical Evaluation,2025-08-04T15:30:00
+D-246,Business Case,Negotiation,2025-08-05T13:15:00
+D-246,Discovery,Qualification,2025-08-05T15:00:00
+D-247,,Discovery,2025-07-28T11:30:00
+D-247,Discovery,Qualification,2025-08-20T11:30:00
+D-247,Qualification,Technical Evaluation,2025-09-08T08:00:00
+D-247,Negotiation,Closed Won,2025-09-15T10:30:00
+D-247,Technical Evaluation,Negotiation,2025-09-17T09:45:00
+D-248,,Discovery,2025-04-25T11:45:00
+D-248,Discovery,Qualification,2025-06-05T15:30:00
+D-248,Qualification,Technical Evaluation,2025-06-20T14:15:00
+D-248,Technical Evaluation,Business Case,2025-07-12T13:45:00
+D-248,Business Case,Negotiation,2025-08-14T11:15:00
+D-248,Negotiation,Closed Won,2025-09-17T08:45:00
+D-249,,Discovery,2025-04-28T14:15:00
+D-249,Discovery,Technical Evaluation,2025-05-17T13:30:00
+D-249,Technical Evaluation,Business Case,2025-06-08T09:00:00
+D-249,Business Case,Negotiation,2025-07-08T12:15:00
+D-249,Negotiation,Closed Won,2025-08-14T15:00:00
+D-250,,Discovery,2025-10-06T08:00:00
+D-250,Discovery,Qualification,2025-11-02T13:00:00
+D-250,Qualification,Technical Evaluation,2025-11-26T14:30:00
+D-250,Technical Evaluation,Business Case,2026-01-02T17:15:00
+D-250,Negotiation,Closed Won,2026-01-19T16:30:00
+D-250,Business Case,Negotiation,2026-01-19T17:30:00
+D-251,,Discovery,2025-10-01T15:15:00
+D-251,Negotiation,Closed Won,2025-11-04T15:00:00
+D-251,Technical Evaluation,Business Case,2025-11-05T16:45:00
+D-251,Discovery,Technical Evaluation,2025-11-06T13:30:00
+D-251,Business Case,Negotiation,2025-11-07T09:30:00
+D-252,,Discovery,2025-08-21T12:00:00
+D-252,Discovery,Technical Evaluation,2025-09-08T10:30:00
+D-252,Technical Evaluation,Business Case,2025-09-26T10:45:00
+D-252,Business Case,Negotiation,2025-10-15T11:00:00
+D-252,Negotiation,Closed Won,2025-11-08T14:15:00
+D-253,,Discovery,2025-08-14T13:30:00
+D-253,Discovery,Qualification,2025-09-13T17:45:00
+D-253,Qualification,Technical Evaluation,2025-10-12T12:15:00
+D-253,Business Case,Negotiation,2025-10-18T13:30:00
+D-253,Technical Evaluation,Business Case,2025-10-19T10:30:00
+D-253,Negotiation,Closed Won,2025-10-21T10:30:00
+D-254,,Discovery,2026-01-01T08:30:00
+D-254,Negotiation,Closed Won,2026-01-24T16:15:00
+D-254,Business Case,Negotiation,2026-01-25T13:15:00
+D-254,Technical Evaluation,Business Case,2026-01-26T11:00:00
+D-254,Discovery,Technical Evaluation,2026-01-26T15:30:00
+D-255,,Discovery,2025-05-12T12:45:00
+D-255,Discovery,Qualification,2025-06-24T12:15:00
+D-255,Business Case,Negotiation,2025-07-27T09:30:00
+D-255,Qualification,Technical Evaluation,2025-07-27T15:30:00
+D-255,Negotiation,Closed Won,2025-07-28T17:15:00
+D-255,Technical Evaluation,Business Case,2025-07-31T15:00:00
+D-256,,Discovery,2025-05-29T15:00:00
+D-256,Discovery,Qualification,2025-06-29T14:15:00
+D-256,Qualification,Technical Evaluation,2025-07-29T13:00:00
+D-256,Negotiation,Closed Won,2025-09-01T13:45:00
+D-256,Technical Evaluation,Negotiation,2025-09-02T14:15:00
+D-257,,Discovery,2025-07-25T14:45:00
+D-257,Discovery,Qualification,2025-08-13T17:00:00
+D-257,Qualification,Technical Evaluation,2025-09-01T11:30:00
+D-257,Technical Evaluation,Negotiation,2025-09-18T13:00:00
+D-257,Negotiation,Closed Won,2025-09-18T14:00:00
+D-258,,Discovery,2025-11-26T12:45:00
+D-258,Discovery,Qualification,2025-12-12T12:30:00
+D-258,Qualification,Technical Evaluation,2026-01-02T15:15:00
+D-258,Business Case,Negotiation,2026-01-03T09:30:00
+D-258,Negotiation,Closed Won,2026-01-05T15:15:00
+D-258,Technical Evaluation,Business Case,2026-01-06T10:30:00
+D-259,,Discovery,2025-09-08T09:30:00
+D-259,Discovery,Qualification,2025-10-09T17:00:00
+D-259,Qualification,Technical Evaluation,2025-11-20T12:15:00
+D-259,Technical Evaluation,Business Case,2025-12-23T08:15:00
+D-259,Business Case,Negotiation,2026-01-17T15:15:00
+D-259,Negotiation,Closed Won,2026-01-18T08:30:00
+D-260,,Discovery,2025-07-23T10:00:00
+D-260,Discovery,Qualification,2025-08-26T10:30:00
+D-260,Qualification,Technical Evaluation,2025-10-07T13:30:00
+D-260,Technical Evaluation,Business Case,2025-10-30T13:00:00
+D-260,Business Case,Negotiation,2025-12-01T17:30:00
+D-260,Negotiation,Closed Won,2026-01-03T08:15:00
+D-261,,Discovery,2025-05-29T09:00:00
+D-261,Discovery,Qualification,2025-07-09T10:00:00
+D-261,Qualification,Technical Evaluation,2025-08-08T13:30:00
+D-261,Business Case,Negotiation,2025-08-20T16:30:00
+D-261,Negotiation,Closed Won,2025-08-22T08:00:00
+D-261,Technical Evaluation,Business Case,2025-08-22T10:45:00
+D-262,,Discovery,2025-07-24T14:00:00
+D-262,Discovery,Qualification,2025-08-14T09:00:00
+D-262,Qualification,Business Case,2025-09-23T16:00:00
+D-262,Business Case,Negotiation,2025-10-23T09:30:00
+D-262,Negotiation,Closed Won,2025-11-08T09:30:00
+D-263,,Discovery,2025-10-01T12:30:00
+D-263,Discovery,Qualification,2025-10-27T10:15:00
+D-263,Technical Evaluation,Negotiation,2025-10-30T08:15:00
+D-263,Qualification,Technical Evaluation,2025-10-30T09:00:00
+D-263,Negotiation,Closed Won,2025-11-02T12:15:00
+D-264,,Discovery,2026-01-01T09:15:00
+D-264,Discovery,Qualification,2026-02-11T13:45:00
+D-264,Negotiation,Closed Won,2026-02-20T12:00:00
+D-264,Qualification,Technical Evaluation,2026-02-21T16:15:00
+D-264,Technical Evaluation,Business Case,2026-02-22T13:00:00
+D-264,Business Case,Negotiation,2026-02-22T16:15:00
+D-265,,Discovery,2025-10-16T15:30:00
+D-265,Discovery,Technical Evaluation,2025-11-05T08:45:00
+D-265,Negotiation,Closed Won,2025-12-04T17:00:00
+D-265,Business Case,Negotiation,2025-12-07T09:15:00
+D-265,Technical Evaluation,Business Case,2025-12-07T14:45:00
+D-266,,Discovery,2025-12-03T15:30:00
+D-266,Business Case,Negotiation,2025-12-17T14:45:00
+D-266,Discovery,Qualification,2025-12-17T17:30:00
+D-266,Qualification,Business Case,2025-12-18T13:45:00
+D-266,Negotiation,Closed Won,2025-12-19T10:45:00
+D-267,,Discovery,2025-08-08T13:15:00
+D-267,Discovery,Qualification,2025-09-01T17:00:00
+D-267,Technical Evaluation,Business Case,2025-09-14T11:30:00
+D-267,Business Case,Negotiation,2025-09-14T15:30:00
+D-267,Negotiation,Closed Won,2025-09-15T16:00:00
+D-267,Qualification,Technical Evaluation,2025-09-17T16:45:00
+D-268,,Discovery,2025-07-08T16:30:00
+D-268,Discovery,Technical Evaluation,2025-08-20T10:45:00
+D-268,Technical Evaluation,Business Case,2025-09-17T10:30:00
+D-268,Business Case,Negotiation,2025-09-22T15:00:00
+D-268,Negotiation,Closed Won,2025-09-22T16:45:00
+D-269,,Discovery,2025-09-24T13:00:00
+D-269,Qualification,Business Case,2025-10-31T13:30:00
+D-269,Business Case,Negotiation,2025-11-01T08:15:00
+D-269,Negotiation,Closed Won,2025-11-02T12:00:00
+D-269,Discovery,Qualification,2025-11-02T13:45:00
+D-270,,Discovery,2025-06-25T14:45:00
+D-270,Discovery,Qualification,2025-07-18T08:45:00
+D-270,Business Case,Negotiation,2025-08-01T09:15:00
+D-270,Technical Evaluation,Business Case,2025-08-01T13:00:00
+D-270,Negotiation,Closed Won,2025-08-01T16:30:00
+D-270,Qualification,Technical Evaluation,2025-08-04T13:45:00
+D-271,,Discovery,2025-08-18T17:45:00
+D-271,Qualification,Business Case,2025-08-23T09:30:00
+D-271,Negotiation,Closed Won,2025-08-26T13:00:00
+D-271,Discovery,Qualification,2025-08-26T17:00:00
+D-271,Business Case,Negotiation,2025-08-27T17:45:00
+D-272,,Discovery,2025-07-18T16:15:00
+D-272,Business Case,Negotiation,2025-08-28T08:15:00
+D-272,Technical Evaluation,Business Case,2025-08-28T17:45:00
+D-272,Negotiation,Closed Won,2025-08-29T10:15:00
+D-272,Qualification,Technical Evaluation,2025-08-29T11:45:00
+D-272,Discovery,Qualification,2025-08-30T08:15:00
+D-273,,Discovery,2025-10-17T12:15:00
+D-273,Discovery,Qualification,2025-11-13T11:00:00
+D-273,Business Case,Negotiation,2025-12-01T14:00:00
+D-273,Qualification,Technical Evaluation,2025-12-02T11:00:00
+D-273,Technical Evaluation,Business Case,2025-12-02T15:45:00
+D-273,Negotiation,Closed Won,2025-12-03T12:15:00
+D-274,,Discovery,2025-11-05T12:00:00
+D-274,Technical Evaluation,Business Case,2025-12-03T09:30:00
+D-274,Discovery,Qualification,2025-12-04T13:00:00
+D-274,Negotiation,Closed Won,2025-12-05T13:45:00
+D-274,Qualification,Technical Evaluation,2025-12-06T11:00:00
+D-274,Business Case,Negotiation,2025-12-07T11:00:00
+D-275,,Discovery,2025-12-01T09:30:00
+D-275,Business Case,Negotiation,2025-12-28T08:00:00
+D-275,Technical Evaluation,Business Case,2025-12-29T13:30:00
+D-275,Qualification,Technical Evaluation,2025-12-31T12:15:00
+D-275,Negotiation,Closed Won,2025-12-31T12:45:00
+D-275,Discovery,Qualification,2026-01-02T14:45:00
+D-276,,Discovery,2025-09-02T12:15:00
+D-276,Discovery,Technical Evaluation,2025-10-14T10:45:00
+D-276,Technical Evaluation,Business Case,2025-11-18T13:45:00
+D-276,Negotiation,Closed Won,2025-11-29T15:45:00
+D-276,Business Case,Negotiation,2025-12-02T12:00:00
+D-277,,Discovery,2025-07-02T08:00:00
+D-277,Discovery,Qualification,2025-08-06T10:45:00
+D-277,Qualification,Technical Evaluation,2025-09-15T10:00:00
+D-277,Negotiation,Closed Won,2025-09-18T10:45:00
+D-277,Technical Evaluation,Business Case,2025-09-21T12:30:00
+D-277,Business Case,Negotiation,2025-09-22T09:15:00
+D-278,,Discovery,2025-09-25T11:00:00
+D-278,Qualification,Technical Evaluation,2025-10-11T17:15:00
+D-278,Discovery,Qualification,2025-10-12T10:45:00
+D-278,Negotiation,Closed Won,2025-10-13T08:45:00
+D-278,Business Case,Negotiation,2025-10-14T15:15:00
+D-278,Technical Evaluation,Business Case,2025-10-14T16:15:00
+D-279,,Discovery,2025-10-23T11:15:00
+D-279,Discovery,Qualification,2025-12-07T12:30:00
+D-279,Qualification,Technical Evaluation,2025-12-25T14:15:00
+D-279,Negotiation,Closed Won,2025-12-26T11:45:00
+D-279,Technical Evaluation,Negotiation,2025-12-27T17:15:00
+D-280,,Discovery,2025-10-27T15:00:00
+D-280,Discovery,Qualification,2025-11-11T15:15:00
+D-280,Technical Evaluation,Business Case,2025-11-28T14:30:00
+D-280,Negotiation,Closed Won,2025-11-29T11:45:00
+D-280,Qualification,Technical Evaluation,2025-11-29T14:15:00
+D-280,Business Case,Negotiation,2025-12-01T16:00:00
+D-281,,Discovery,2025-12-09T10:00:00
+D-281,Qualification,Technical Evaluation,2025-12-15T13:45:00
+D-281,Business Case,Negotiation,2025-12-16T09:30:00
+D-281,Discovery,Qualification,2025-12-17T12:15:00
+D-281,Negotiation,Closed Lost,2025-12-17T15:30:00
+D-281,Technical Evaluation,Business Case,2025-12-18T13:45:00
+D-282,,Discovery,2025-09-09T13:45:00
+D-282,Discovery,Qualification,2025-10-18T10:45:00
+D-282,Qualification,Technical Evaluation,2025-11-03T11:15:00
+D-282,Technical Evaluation,Business Case,2025-11-19T11:15:00
+D-282,Business Case,Negotiation,2025-12-05T15:30:00
+D-282,Negotiation,Closed Lost,2025-12-25T15:45:00
+D-283,,Discovery,2025-08-01T10:15:00
+D-283,Discovery,Qualification,2025-09-08T16:30:00
+D-283,Qualification,Business Case,2025-10-11T17:15:00
+D-283,Business Case,Closed Lost,2025-11-13T08:15:00
+D-284,,Discovery,2025-09-24T09:30:00
+D-284,Discovery,Qualification,2025-10-13T08:00:00
+D-284,Negotiation,Closed Lost,2025-10-22T10:15:00
+D-284,Business Case,Negotiation,2025-10-22T15:30:00
+D-284,Qualification,Technical Evaluation,2025-10-23T15:30:00
+D-284,Technical Evaluation,Business Case,2025-10-26T13:00:00
+D-285,,Discovery,2025-10-14T14:00:00
+D-285,Discovery,Qualification,2025-10-29T11:15:00
+D-285,Qualification,Technical Evaluation,2025-11-25T14:30:00
+D-285,Technical Evaluation,Closed Lost,2025-12-01T09:30:00
+D-286,,Discovery,2025-08-12T15:30:00
+D-286,Discovery,Qualification,2025-08-21T14:00:00
+D-286,Technical Evaluation,Business Case,2025-08-22T09:00:00
+D-286,Qualification,Technical Evaluation,2025-08-22T13:15:00
+D-286,Business Case,Negotiation,2025-08-23T15:15:00
+D-286,Negotiation,Closed Lost,2025-08-24T15:00:00
+D-287,,Discovery,2025-08-14T08:00:00
+D-287,Discovery,Qualification,2025-09-14T14:45:00
+D-287,Qualification,Closed Lost,2025-09-20T17:30:00
+D-288,,Discovery,2025-08-19T12:30:00
+D-288,Discovery,Qualification,2025-09-21T15:45:00
+D-288,Qualification,Technical Evaluation,2025-10-25T12:30:00
+D-288,Negotiation,Closed Lost,2025-11-01T08:00:00
+D-288,Business Case,Negotiation,2025-11-01T12:00:00
+D-288,Technical Evaluation,Business Case,2025-11-04T11:15:00
+D-289,,Discovery,2025-08-05T09:15:00
+D-289,Discovery,Qualification,2025-08-24T08:15:00
+D-289,Business Case,Negotiation,2025-09-03T11:00:00
+D-289,Technical Evaluation,Business Case,2025-09-04T10:15:00
+D-289,Negotiation,Closed Lost,2025-09-04T10:45:00
+D-289,Qualification,Technical Evaluation,2025-09-07T11:00:00
+D-290,,Discovery,2025-08-01T14:00:00
+D-290,Discovery,Qualification,2025-08-26T08:00:00
+D-290,Qualification,Technical Evaluation,2025-09-30T14:45:00
+D-290,Technical Evaluation,Closed Lost,2025-10-10T17:30:00
+D-291,,Discovery,2025-08-22T13:45:00
+D-291,Discovery,Qualification,2025-08-31T08:15:00
+D-291,Negotiation,Closed Lost,2025-09-01T17:45:00
+D-291,Qualification,Technical Evaluation,2025-09-02T15:30:00
+D-291,Technical Evaluation,Negotiation,2025-09-02T16:15:00
+D-292,,Discovery,2025-07-04T09:45:00
+D-292,Discovery,Qualification,2025-07-23T10:15:00
+D-292,Qualification,Technical Evaluation,2025-08-12T17:45:00
+D-292,Technical Evaluation,Closed Lost,2025-08-30T14:45:00
+D-293,,Discovery,2025-04-11T15:30:00
+D-293,Discovery,Technical Evaluation,2025-05-06T13:00:00
+D-293,Technical Evaluation,Closed Lost,2025-06-14T16:30:00
+D-294,,Discovery,2025-07-16T17:00:00
+D-294,Discovery,Qualification,2025-08-26T16:00:00
+D-294,Qualification,Closed Lost,2025-09-26T09:15:00
+D-295,,Discovery,2025-07-29T09:15:00
+D-295,Discovery,Qualification,2025-08-27T14:00:00
+D-295,Qualification,Technical Evaluation,2025-09-18T15:30:00
+D-295,Technical Evaluation,Business Case,2025-10-12T16:15:00
+D-295,Business Case,Closed Lost,2025-10-29T12:30:00
+D-296,,Discovery,2025-05-08T16:30:00
+D-296,Discovery,Qualification,2025-06-22T08:45:00
+D-296,Qualification,Technical Evaluation,2025-07-11T08:00:00
+D-296,Technical Evaluation,Business Case,2025-07-28T13:30:00
+D-296,Business Case,Negotiation,2025-08-24T10:45:00
+D-296,Negotiation,Closed Lost,2025-09-09T14:00:00
+D-297,,Discovery,2025-09-17T13:30:00
+D-297,Discovery,Qualification,2025-10-02T12:15:00
+D-297,Qualification,Technical Evaluation,2025-11-08T14:45:00
+D-297,Technical Evaluation,Business Case,2025-12-13T11:45:00
+D-297,Business Case,Closed Lost,2025-12-21T14:15:00
+D-298,,Discovery,2025-05-05T16:30:00
+D-298,Discovery,Technical Evaluation,2025-06-13T10:00:00
+D-298,Technical Evaluation,Closed Lost,2025-06-28T16:30:00
+D-299,,Discovery,2025-10-02T08:45:00
+D-299,Discovery,Qualification,2025-10-27T11:15:00
+D-299,Technical Evaluation,Business Case,2025-11-03T16:15:00
+D-299,Qualification,Technical Evaluation,2025-11-04T12:15:00
+D-299,Negotiation,Closed Lost,2025-11-04T15:00:00
+D-299,Business Case,Negotiation,2025-11-04T16:15:00
+D-300,,Discovery,2025-05-06T16:45:00
+D-300,Discovery,Qualification,2025-06-08T16:45:00
+D-300,Qualification,Technical Evaluation,2025-07-20T12:45:00
+D-300,Technical Evaluation,Negotiation,2025-08-24T14:45:00
+D-300,Negotiation,Closed Lost,2025-09-30T15:45:00
+D-301,,Discovery,2025-05-27T13:00:00
+D-301,Discovery,Qualification,2025-06-30T14:00:00
+D-301,Qualification,Technical Evaluation,2025-07-18T13:30:00
+D-301,Technical Evaluation,Closed Lost,2025-08-03T16:15:00
+D-302,,Discovery,2025-05-09T12:30:00
+D-302,Discovery,Qualification,2025-05-30T10:45:00
+D-302,Qualification,Closed Lost,2025-06-14T09:30:00
+D-303,,Discovery,2025-09-05T10:30:00
+D-303,Discovery,Qualification,2025-09-22T17:45:00
+D-303,Qualification,Technical Evaluation,2025-10-19T11:45:00
+D-303,Technical Evaluation,Business Case,2025-11-01T08:45:00
+D-303,Business Case,Negotiation,2025-11-03T09:15:00
+D-303,Negotiation,Closed Lost,2025-11-05T17:30:00
+D-304,,Discovery,2025-04-16T08:00:00
+D-304,Discovery,Qualification,2025-05-22T16:15:00
+D-304,Qualification,Technical Evaluation,2025-07-06T08:30:00
+D-304,Technical Evaluation,Business Case,2025-08-15T11:15:00
+D-304,Business Case,Negotiation,2025-09-25T17:45:00
+D-304,Negotiation,Closed Lost,2025-10-01T17:30:00
+D-305,,Discovery,2025-05-02T09:15:00
+D-305,Discovery,Qualification,2025-05-26T14:15:00
+D-305,Qualification,Business Case,2025-06-11T17:30:00
+D-305,Business Case,Closed Lost,2025-07-01T08:00:00
+D-306,,Discovery,2025-04-16T16:45:00
+D-306,Discovery,Qualification,2025-05-31T09:30:00
+D-306,Qualification,Technical Evaluation,2025-06-16T13:45:00
+D-306,Technical Evaluation,Closed Lost,2025-07-18T14:00:00
+D-307,,Discovery,2025-09-16T16:15:00
+D-307,Discovery,Qualification,2025-10-26T10:30:00
+D-307,Technical Evaluation,Negotiation,2025-11-16T15:00:00
+D-307,Negotiation,Closed Lost,2025-11-17T17:30:00
+D-307,Qualification,Technical Evaluation,2025-11-19T11:45:00
+D-308,,Discovery,2025-06-06T11:30:00
+D-308,Discovery,Qualification,2025-06-22T10:00:00
+D-308,Qualification,Technical Evaluation,2025-07-16T09:45:00
+D-308,Technical Evaluation,Business Case,2025-08-22T09:15:00
+D-308,Business Case,Closed Lost,2025-09-29T16:30:00
+D-309,,Discovery,2025-10-01T17:30:00
+D-309,Discovery,Qualification,2025-10-16T10:00:00
+D-309,Qualification,Technical Evaluation,2025-11-11T08:00:00
+D-309,Business Case,Closed Lost,2025-11-11T16:00:00
+D-309,Technical Evaluation,Business Case,2025-11-13T14:45:00
+D-310,,Discovery,2025-12-22T14:30:00
+D-310,Discovery,Qualification,2026-01-18T10:00:00
+D-310,Qualification,Technical Evaluation,2026-01-22T13:15:00
+D-310,Business Case,Closed Lost,2026-01-23T13:15:00
+D-310,Technical Evaluation,Business Case,2026-01-25T11:00:00
+D-311,,Discovery,2025-12-31T14:00:00
+D-311,Qualification,Closed Lost,2026-01-25T11:15:00
+D-311,Discovery,Qualification,2026-01-27T17:45:00
+D-312,,Discovery,2025-08-14T16:30:00
+D-312,Discovery,Qualification,2025-08-31T15:00:00
+D-312,Qualification,Closed Lost,2025-09-01T08:30:00
+D-313,,Discovery,2025-07-16T13:00:00
+D-313,Discovery,Technical Evaluation,2025-08-28T17:00:00
+D-313,Technical Evaluation,Business Case,2025-10-05T11:45:00
+D-313,Business Case,Closed Lost,2025-11-19T09:15:00
+D-314,,Discovery,2025-04-09T15:15:00
+D-314,Discovery,Qualification,2025-05-24T13:00:00
+D-314,Qualification,Technical Evaluation,2025-07-04T13:15:00
+D-314,Technical Evaluation,Business Case,2025-08-18T09:45:00
+D-314,Business Case,Closed Lost,2025-09-26T09:45:00
+D-315,,Discovery,2025-04-18T14:00:00
+D-315,Discovery,Qualification,2025-05-06T08:00:00
+D-315,Qualification,Technical Evaluation,2025-05-30T14:45:00
+D-315,Technical Evaluation,Business Case,2025-06-17T17:45:00
+D-315,Business Case,Closed Lost,2025-07-09T17:00:00
+D-316,,Discovery,2025-12-23T17:00:00
+D-316,Discovery,Technical Evaluation,2026-01-25T11:15:00
+D-316,Technical Evaluation,Closed Lost,2026-02-15T12:30:00
+D-317,,Discovery,2025-10-23T16:15:00
+D-317,Discovery,Qualification,2025-11-11T15:30:00
+D-317,Qualification,Technical Evaluation,2025-12-15T13:30:00
+D-317,Business Case,Closed Lost,2026-01-03T16:00:00
+D-317,Technical Evaluation,Business Case,2026-01-04T16:15:00
+D-318,,Discovery,2025-05-21T17:30:00
+D-318,Discovery,Qualification,2025-06-24T12:45:00
+D-318,Qualification,Technical Evaluation,2025-07-19T10:00:00
+D-318,Technical Evaluation,Business Case,2025-08-17T08:45:00
+D-318,Business Case,Closed Lost,2025-09-08T08:15:00
+D-319,,Discovery,2025-10-08T08:30:00
+D-319,Discovery,Qualification,2025-10-23T09:30:00
+D-319,Qualification,Technical Evaluation,2025-11-07T16:00:00
+D-319,Technical Evaluation,Closed Lost,2025-11-26T12:45:00
+D-320,,Discovery,2025-08-29T11:15:00
+D-320,Discovery,Qualification,2025-09-19T08:15:00
+D-320,Qualification,Technical Evaluation,2025-10-30T12:00:00
+D-320,Technical Evaluation,Business Case,2025-11-14T10:45:00
+D-320,Business Case,Closed Lost,2025-12-03T13:15:00
+D-321,,Discovery,2025-07-23T10:15:00
+D-321,Discovery,Qualification,2025-08-13T16:45:00
+D-321,Qualification,Closed Lost,2025-09-19T13:30:00
+D-322,,Discovery,2025-11-18T12:15:00
+D-322,Technical Evaluation,Business Case,2025-12-03T14:30:00
+D-322,Business Case,Closed Lost,2025-12-03T15:15:00
+D-322,Discovery,Qualification,2025-12-03T17:45:00
+D-322,Qualification,Technical Evaluation,2025-12-07T15:00:00
+D-323,,Discovery,2025-09-16T11:45:00
+D-323,Discovery,Qualification,2025-10-07T12:45:00
+D-323,Qualification,Technical Evaluation,2025-10-25T17:15:00
+D-323,Technical Evaluation,Closed Lost,2025-10-26T12:00:00
+D-324,,Discovery,2025-07-31T13:45:00
+D-324,Discovery,Qualification,2025-08-25T12:45:00
+D-324,Qualification,Technical Evaluation,2025-09-09T10:45:00
+D-324,Technical Evaluation,Business Case,2025-09-21T09:30:00
+D-324,Negotiation,Closed Lost,2025-09-21T11:00:00
+D-324,Business Case,Negotiation,2025-09-23T12:00:00
+D-325,,Discovery,2025-09-24T12:30:00
+D-325,Qualification,Business Case,2025-10-31T08:45:00
+D-325,Business Case,Closed Lost,2025-10-31T10:45:00
+D-325,Discovery,Qualification,2025-11-03T14:45:00
+D-326,,Discovery,2025-10-31T11:45:00
+D-326,Discovery,Qualification,2025-12-09T14:15:00
+D-326,Qualification,Closed Lost,2025-12-26T16:00:00
+D-327,,Discovery,2025-10-20T08:00:00
+D-327,Discovery,Qualification,2025-12-03T10:15:00
+D-327,Qualification,Technical Evaluation,2026-01-17T13:45:00
+D-327,Business Case,Closed Lost,2026-01-23T11:45:00
+D-327,Technical Evaluation,Business Case,2026-01-25T14:00:00
+D-328,,Discovery,2025-08-18T09:45:00
+D-328,Discovery,Qualification,2025-09-11T11:15:00
+D-328,Qualification,Closed Lost,2025-10-05T16:00:00
+D-329,,Discovery,2025-05-06T14:15:00
+D-329,Discovery,Qualification,2025-05-25T11:30:00
+D-329,Qualification,Technical Evaluation,2025-06-22T15:15:00
+D-329,Technical Evaluation,Business Case,2025-07-26T17:30:00
+D-329,Business Case,Negotiation,2025-08-28T11:45:00
+D-329,Negotiation,Closed Lost,2025-09-20T11:00:00
+D-330,,Discovery,2025-06-26T09:30:00
+D-330,Discovery,Qualification,2025-07-31T15:30:00
+D-330,Qualification,Technical Evaluation,2025-09-06T12:45:00
+D-330,Business Case,Negotiation,2025-09-27T14:45:00
+D-330,Technical Evaluation,Business Case,2025-09-30T14:15:00
+D-330,Negotiation,Closed Lost,2025-09-30T17:00:00
+D-331,,Discovery,2025-12-29T16:00:00
+D-331,Discovery,Qualification,2026-01-24T09:00:00
+D-331,Qualification,Technical Evaluation,2026-02-24T13:45:00
+D-331,Business Case,Negotiation,2026-03-22T08:45:00
+D-331,Technical Evaluation,Business Case,2026-03-25T10:30:00
+D-331,Negotiation,Closed Lost,2026-03-26T15:45:00
+D-332,,Discovery,2025-10-01T09:15:00
+D-332,Discovery,Qualification,2025-11-07T15:15:00
+D-332,Business Case,Negotiation,2025-11-17T09:45:00
+D-332,Qualification,Technical Evaluation,2025-11-17T10:15:00
+D-332,Negotiation,Closed Lost,2025-11-19T08:30:00
+D-332,Technical Evaluation,Business Case,2025-11-19T17:00:00
+D-333,,Discovery,2025-09-12T15:00:00
+D-333,Business Case,Negotiation,2025-10-02T08:00:00
+D-333,Negotiation,Closed Lost,2025-10-04T09:15:00
+D-333,Technical Evaluation,Business Case,2025-10-04T11:00:00
+D-333,Qualification,Technical Evaluation,2025-10-04T11:30:00
+D-333,Discovery,Qualification,2025-10-05T08:45:00
+D-334,,Discovery,2025-04-14T11:15:00
+D-334,Discovery,Qualification,2025-05-28T16:45:00
+D-334,Qualification,Technical Evaluation,2025-07-12T14:00:00
+D-334,Technical Evaluation,Business Case,2025-08-03T11:00:00
+D-334,Business Case,Closed Lost,2025-08-29T13:15:00
+D-335,,Discovery,2025-12-10T14:30:00
+D-335,Discovery,Qualification,2025-12-13T15:00:00
+D-335,Qualification,Closed Lost,2025-12-13T17:15:00
+D-336,,Discovery,2025-05-07T15:00:00
+D-336,Discovery,Qualification,2025-06-01T08:45:00
+D-336,Qualification,Technical Evaluation,2025-06-28T16:15:00
+D-336,Technical Evaluation,Business Case,2025-07-29T17:00:00
+D-336,Business Case,Closed Lost,2025-08-20T08:00:00
+D-337,,Discovery,2025-10-08T17:45:00
+D-337,Discovery,Qualification,2025-11-15T13:15:00
+D-337,Technical Evaluation,Closed Lost,2025-11-24T08:15:00
+D-337,Qualification,Technical Evaluation,2025-11-24T08:45:00
+D-338,,Discovery,2025-06-05T10:45:00
+D-338,Discovery,Qualification,2025-07-10T08:00:00
+D-338,Qualification,Technical Evaluation,2025-08-21T15:00:00
+D-338,Technical Evaluation,Business Case,2025-10-05T11:00:00
+D-338,Business Case,Negotiation,2025-10-25T11:15:00
+D-338,Negotiation,Closed Lost,2025-10-25T17:15:00
+D-339,,Discovery,2025-06-19T15:00:00
+D-339,Discovery,Qualification,2025-08-03T13:45:00
+D-339,Qualification,Technical Evaluation,2025-08-30T10:45:00
+D-339,Technical Evaluation,Closed Lost,2025-09-28T14:45:00
+D-340,,Discovery,2025-07-25T15:30:00
+D-340,Discovery,Qualification,2025-08-23T12:45:00
+D-340,Qualification,Technical Evaluation,2025-09-24T17:45:00
+D-340,Technical Evaluation,Closed Lost,2025-10-11T13:15:00
+D-341,,Discovery,2025-07-18T17:00:00
+D-341,Discovery,Qualification,2025-08-15T08:00:00
+D-341,Qualification,Technical Evaluation,2025-09-11T17:15:00
+D-341,Technical Evaluation,Business Case,2025-09-13T12:30:00
+D-341,Business Case,Negotiation,2025-09-13T13:00:00
+D-341,Negotiation,Closed Lost,2025-09-13T14:15:00
+D-342,,Discovery,2025-09-04T17:15:00
+D-342,Discovery,Qualification,2025-09-19T09:00:00
+D-342,Technical Evaluation,Business Case,2025-10-22T09:15:00
+D-342,Business Case,Closed Lost,2025-10-23T10:45:00
+D-342,Qualification,Technical Evaluation,2025-10-24T14:45:00
+D-343,,Discovery,2025-04-25T11:45:00
+D-343,Discovery,Qualification,2025-06-01T12:00:00
+D-343,Qualification,Technical Evaluation,2025-06-21T15:00:00
+D-343,Technical Evaluation,Closed Lost,2025-07-09T09:45:00
+D-344,,Discovery,2025-08-07T09:45:00
+D-344,Discovery,Qualification,2025-09-09T11:15:00
+D-344,Qualification,Technical Evaluation,2025-09-30T08:15:00
+D-344,Technical Evaluation,Closed Lost,2025-11-09T11:30:00
+D-345,,Discovery,2025-07-25T17:15:00
+D-345,Discovery,Technical Evaluation,2025-08-24T15:00:00
+D-345,Technical Evaluation,Business Case,2025-09-08T08:30:00
+D-345,Business Case,Closed Lost,2025-10-17T08:00:00
+D-346,,Discovery,2025-09-10T13:30:00
+D-346,Discovery,Qualification,2025-10-16T13:30:00
+D-346,Qualification,Technical Evaluation,2025-11-26T11:30:00
+D-346,Business Case,Closed Lost,2026-01-01T13:30:00
+D-346,Technical Evaluation,Business Case,2026-01-01T14:45:00
+D-347,,Discovery,2025-06-13T15:45:00
+D-347,Discovery,Qualification,2025-07-19T11:00:00
+D-347,Qualification,Technical Evaluation,2025-08-23T13:00:00
+D-347,Technical Evaluation,Business Case,2025-09-27T13:00:00
+D-347,Business Case,Closed Lost,2025-10-26T15:15:00
+D-348,,Discovery,2025-09-18T11:15:00
+D-348,Negotiation,Closed Lost,2025-10-24T11:15:00
+D-348,Technical Evaluation,Business Case,2025-10-24T15:15:00
+D-348,Discovery,Qualification,2025-10-24T17:00:00
+D-348,Qualification,Technical Evaluation,2025-10-25T09:30:00
+D-348,Business Case,Negotiation,2025-10-25T09:45:00
+D-349,,Discovery,2025-10-10T16:45:00
+D-349,Discovery,Qualification,2025-10-27T13:15:00
+D-349,Qualification,Closed Lost,2025-11-28T17:00:00
+D-350,,Discovery,2025-07-23T09:00:00
+D-350,Discovery,Qualification,2025-08-17T17:15:00
+D-350,Qualification,Closed Lost,2025-08-28T17:30:00
+D-351,,Discovery,2025-07-11T10:15:00
+D-351,Discovery,Qualification,2025-07-29T14:00:00
+D-351,Qualification,Technical Evaluation,2025-08-30T15:30:00
+D-351,Technical Evaluation,Business Case,2025-09-18T12:15:00
+D-351,Business Case,Closed Lost,2025-09-20T10:30:00
+D-352,,Discovery,2025-08-04T14:00:00
+D-352,Discovery,Qualification,2025-09-13T13:15:00
+D-352,Qualification,Technical Evaluation,2025-10-24T11:15:00
+D-352,Technical Evaluation,Closed Lost,2025-11-30T08:15:00
+D-353,,Discovery,2025-10-20T14:00:00
+D-353,Discovery,Qualification,2025-11-20T12:30:00
+D-353,Qualification,Technical Evaluation,2025-12-27T11:45:00
+D-353,Technical Evaluation,Business Case,2026-01-14T10:30:00
+D-353,Business Case,Closed Lost,2026-01-21T08:30:00
+D-354,,Discovery,2025-05-26T17:00:00
+D-354,Discovery,Qualification,2025-07-01T10:45:00
+D-354,Qualification,Closed Lost,2025-08-15T14:15:00
+D-355,,Discovery,2025-07-23T14:45:00
+D-355,Technical Evaluation,Closed Lost,2025-08-16T09:45:00
+D-355,Discovery,Technical Evaluation,2025-08-16T17:15:00
+D-356,,Discovery,2025-07-25T17:45:00
+D-356,Discovery,Qualification,2025-08-17T09:15:00
+D-356,Qualification,Closed Lost,2025-09-13T15:45:00
+D-357,,Discovery,2025-09-29T17:00:00
+D-357,Qualification,Closed Lost,2025-10-03T10:00:00
+D-357,Discovery,Qualification,2025-10-06T09:15:00
+D-358,,Discovery,2025-08-14T09:30:00
+D-358,Discovery,Qualification,2025-09-09T16:15:00
+D-358,Qualification,Closed Lost,2025-10-07T08:15:00
+D-359,,Discovery,2025-10-02T08:15:00
+D-359,Discovery,Qualification,2025-10-18T11:15:00
+D-359,Qualification,Closed Lost,2025-11-11T11:15:00
+D-360,,Discovery,2025-04-22T10:45:00
+D-360,Discovery,Qualification,2025-05-21T09:30:00
+D-360,Qualification,Technical Evaluation,2025-06-26T14:15:00
+D-360,Technical Evaluation,Business Case,2025-07-28T11:00:00
+D-360,Business Case,Closed Lost,2025-09-01T12:15:00
+D-361,,Discovery,2025-10-23T16:00:00
+D-361,Discovery,Technical Evaluation,2025-11-28T16:45:00
+D-361,Technical Evaluation,Closed Lost,2025-12-15T13:00:00
+D-362,,Discovery,2025-04-28T09:15:00
+D-362,Discovery,Qualification,2025-05-29T12:45:00
+D-362,Qualification,Technical Evaluation,2025-06-16T16:30:00
+D-362,Technical Evaluation,Business Case,2025-07-23T17:30:00
+D-362,Business Case,Negotiation,2025-08-24T12:00:00
+D-362,Negotiation,Closed Lost,2025-09-17T10:30:00
+D-363,,Discovery,2025-07-15T10:15:00
+D-363,Discovery,Technical Evaluation,2025-08-11T17:30:00
+D-363,Technical Evaluation,Business Case,2025-08-27T13:15:00
+D-363,Business Case,Closed Lost,2025-09-26T14:45:00
+D-364,,Discovery,2025-11-14T13:00:00
+D-364,Technical Evaluation,Business Case,2025-12-07T16:45:00
+D-364,Discovery,Qualification,2025-12-09T09:15:00
+D-364,Qualification,Technical Evaluation,2025-12-09T10:00:00
+D-364,Business Case,Closed Lost,2025-12-09T14:15:00
+D-365,,Discovery,2025-10-20T16:00:00
+D-365,Discovery,Qualification,2025-11-23T15:15:00
+D-365,Qualification,Technical Evaluation,2025-12-29T16:15:00
+D-365,Technical Evaluation,Closed Lost,2026-01-18T09:30:00
+D-366,,Discovery,2025-08-01T15:30:00
+D-366,Discovery,Qualification,2025-08-24T11:00:00
+D-366,Qualification,Closed Lost,2025-10-01T17:45:00
+D-367,,Discovery,2025-04-04T10:45:00
+D-367,Discovery,Qualification,2025-04-30T08:00:00
+D-367,Qualification,Business Case,2025-05-28T15:15:00
+D-367,Business Case,Closed Lost,2025-06-14T16:15:00
+D-368,,Discovery,2025-10-13T10:30:00
+D-368,Discovery,Qualification,2025-10-31T15:45:00
+D-368,Qualification,Technical Evaluation,2025-11-20T10:30:00
+D-368,Technical Evaluation,Business Case,2025-12-14T08:30:00
+D-368,Business Case,Closed Lost,2025-12-16T09:15:00
+D-369,,Discovery,2025-06-10T10:30:00
+D-369,Discovery,Qualification,2025-07-19T14:45:00
+D-369,Qualification,Technical Evaluation,2025-08-07T09:00:00
+D-369,Technical Evaluation,Business Case,2025-09-16T08:15:00
+D-369,Business Case,Negotiation,2025-09-20T16:00:00
+D-369,Negotiation,Closed Lost,2025-09-21T08:30:00
+D-370,,Discovery,2025-07-25T10:15:00
+D-370,Discovery,Qualification,2025-08-17T09:30:00
+D-370,Qualification,Technical Evaluation,2025-09-23T11:45:00
+D-370,Technical Evaluation,Closed Lost,2025-10-14T15:00:00
+D-371,,Discovery,2025-08-06T10:45:00
+D-371,Discovery,Qualification,2025-08-21T17:15:00
+D-371,Qualification,Technical Evaluation,2025-09-07T08:45:00
+D-371,Technical Evaluation,Business Case,2025-10-05T16:30:00
+D-371,Business Case,Closed Lost,2025-11-11T11:15:00
+D-372,,Discovery,2025-10-01T10:00:00
+D-372,Discovery,Qualification,2025-10-16T08:30:00
+D-372,Qualification,Technical Evaluation,2025-11-06T12:45:00
+D-372,Technical Evaluation,Business Case,2025-11-29T17:00:00
+D-372,Business Case,Closed Lost,2025-12-22T12:45:00
+D-373,,Discovery,2025-07-04T11:45:00
+D-373,Discovery,Qualification,2025-07-21T09:15:00
+D-373,Qualification,Technical Evaluation,2025-08-25T17:00:00
+D-373,Technical Evaluation,Closed Lost,2025-09-10T17:15:00
+D-374,,Discovery,2025-06-19T14:30:00
+D-374,Discovery,Technical Evaluation,2025-08-01T16:30:00
+D-374,Technical Evaluation,Closed Lost,2025-09-13T13:45:00
+D-375,,Discovery,2025-05-15T17:00:00
+D-375,Discovery,Qualification,2025-06-24T11:45:00
+D-375,Qualification,Technical Evaluation,2025-07-24T16:00:00
+D-375,Technical Evaluation,Closed Lost,2025-08-13T15:45:00
+D-376,,Discovery,2025-05-28T16:30:00
+D-376,Discovery,Qualification,2025-06-21T11:30:00
+D-376,Qualification,Technical Evaluation,2025-07-28T12:00:00
+D-376,Technical Evaluation,Business Case,2025-08-17T11:00:00
+D-376,Business Case,Negotiation,2025-09-18T11:30:00
+D-376,Negotiation,Closed Lost,2025-10-04T10:30:00
+D-377,,Discovery,2025-04-03T16:30:00
+D-377,Discovery,Qualification,2025-05-11T10:45:00
+D-377,Qualification,Technical Evaluation,2025-06-23T17:30:00
+D-377,Technical Evaluation,Business Case,2025-07-18T08:00:00
+D-377,Business Case,Closed Lost,2025-08-28T13:15:00
+D-378,,Discovery,2025-04-30T17:15:00
+D-378,Discovery,Qualification,2025-06-10T15:15:00
+D-378,Qualification,Technical Evaluation,2025-07-05T12:15:00
+D-378,Technical Evaluation,Business Case,2025-08-07T14:15:00
+D-378,Business Case,Closed Lost,2025-09-05T11:45:00
+D-379,,Discovery,2025-11-06T10:45:00
+D-379,Discovery,Qualification,2025-11-19T11:00:00
+D-379,Qualification,Closed Lost,2025-11-23T14:15:00
+D-380,,Discovery,2025-07-07T08:15:00
+D-380,Discovery,Technical Evaluation,2025-07-29T09:30:00
+D-380,Technical Evaluation,Business Case,2025-08-17T17:00:00
+D-380,Business Case,Negotiation,2025-09-26T08:00:00
+D-380,Negotiation,Closed Lost,2025-10-28T13:00:00
+D-381,,Discovery,2025-11-20T08:00:00
+D-381,Discovery,Qualification,2025-12-22T12:00:00
+D-381,Qualification,Closed Lost,2026-01-22T14:15:00
+D-382,,Discovery,2025-05-30T09:15:00
+D-382,Discovery,Qualification,2025-06-17T12:30:00
+D-382,Qualification,Closed Lost,2025-07-04T17:30:00
+D-383,Technical Evaluation,Business Case,2025-12-24T10:15:00
+D-383,,Discovery,2025-12-24T12:30:00
+D-383,Discovery,Qualification,2025-12-24T12:45:00
+D-383,Qualification,Technical Evaluation,2025-12-25T12:00:00
+D-383,Business Case,Closed Lost,2025-12-25T14:45:00
+D-384,,Discovery,2025-09-24T15:45:00
+D-384,Discovery,Qualification,2025-10-24T14:30:00
+D-384,Qualification,Technical Evaluation,2025-11-12T11:45:00
+D-384,Business Case,Negotiation,2025-11-12T11:45:00
+D-384,Negotiation,Closed Lost,2025-11-12T14:15:00
+D-384,Technical Evaluation,Business Case,2025-11-12T15:45:00
+D-385,,Discovery,2025-05-01T10:30:00
+D-385,Discovery,Qualification,2025-05-30T10:45:00
+D-385,Qualification,Technical Evaluation,2025-06-21T11:15:00
+D-385,Technical Evaluation,Business Case,2025-07-07T10:00:00
+D-385,Business Case,Closed Lost,2025-08-06T14:00:00
+D-386,,Discovery,2025-09-02T09:00:00
+D-386,Discovery,Technical Evaluation,2025-09-29T10:15:00
+D-386,Business Case,Closed Lost,2025-09-29T13:45:00
+D-386,Technical Evaluation,Business Case,2025-10-01T16:30:00
+D-387,,Discovery,2025-08-14T16:30:00
+D-387,Discovery,Qualification,2025-09-20T11:45:00
+D-387,Qualification,Technical Evaluation,2025-11-03T10:30:00
+D-387,Technical Evaluation,Business Case,2025-11-20T16:45:00
+D-387,Business Case,Closed Lost,2025-12-23T11:45:00
+D-388,,Discovery,2025-04-22T14:45:00
+D-388,Discovery,Qualification,2025-05-12T08:30:00
+D-388,Qualification,Technical Evaluation,2025-06-16T14:15:00
+D-388,Technical Evaluation,Business Case,2025-07-09T09:00:00
+D-388,Business Case,Negotiation,2025-07-26T13:30:00
+D-388,Negotiation,Closed Lost,2025-08-10T11:30:00
+D-389,,Discovery,2025-04-11T15:00:00
+D-389,Discovery,Qualification,2025-04-27T13:00:00
+D-389,Qualification,Closed Lost,2025-06-11T12:00:00
+D-390,,Discovery,2025-10-03T16:00:00
+D-390,Discovery,Qualification,2025-11-03T10:00:00
+D-390,Qualification,Technical Evaluation,2025-11-13T15:00:00
+D-390,Technical Evaluation,Business Case,2025-11-15T10:45:00
+D-390,Business Case,Closed Lost,2025-11-16T11:15:00
+D-391,,Discovery,2025-12-17T13:30:00
+D-391,Technical Evaluation,Business Case,2026-01-01T09:15:00
+D-391,Discovery,Qualification,2026-01-01T14:00:00
+D-391,Business Case,Negotiation,2026-01-02T09:00:00
+D-391,Qualification,Technical Evaluation,2026-01-02T11:15:00
+D-391,Negotiation,Closed Lost,2026-01-03T16:00:00
+D-392,,Discovery,2025-10-02T15:30:00
+D-392,Discovery,Qualification,2025-11-01T12:45:00
+D-392,Technical Evaluation,Closed Lost,2025-11-09T12:45:00
+D-392,Qualification,Technical Evaluation,2025-11-10T09:45:00
+D-393,,Discovery,2025-12-25T08:00:00
+D-393,Discovery,Qualification,2026-02-01T11:00:00
+D-393,Qualification,Technical Evaluation,2026-02-20T09:30:00
+D-393,Technical Evaluation,Business Case,2026-02-23T17:45:00
+D-393,Business Case,Closed Lost,2026-02-24T11:45:00
+D-394,,Discovery,2025-10-31T14:45:00
+D-394,Technical Evaluation,Closed Lost,2025-11-10T09:30:00
+D-394,Discovery,Qualification,2025-11-10T13:00:00
+D-394,Qualification,Technical Evaluation,2025-11-11T17:45:00
+D-395,,Discovery,2025-10-09T11:00:00
+D-395,Discovery,Qualification,2025-11-23T14:30:00
+D-395,Business Case,Negotiation,2025-12-14T15:45:00
+D-395,Negotiation,Closed Lost,2025-12-15T12:15:00
+D-395,Qualification,Technical Evaluation,2025-12-16T10:00:00
+D-395,Technical Evaluation,Business Case,2025-12-16T12:45:00
+D-396,,Discovery,2025-05-23T10:45:00
+D-396,Discovery,Qualification,2025-06-18T17:45:00
+D-396,Qualification,Technical Evaluation,2025-07-29T08:15:00
+D-396,Technical Evaluation,Business Case,2025-08-15T17:15:00
+D-396,Business Case,Negotiation,2025-09-09T13:00:00
+D-396,Negotiation,Closed Lost,2025-09-19T10:45:00
+D-397,,Discovery,2025-05-05T11:45:00
+D-397,Discovery,Qualification,2025-06-11T16:15:00
+D-397,Qualification,Closed Lost,2025-07-15T14:15:00
+D-398,,Discovery,2025-08-04T13:30:00
+D-398,Discovery,Qualification,2025-09-14T16:45:00
+D-398,Qualification,Technical Evaluation,2025-10-15T13:00:00
+D-398,Technical Evaluation,Business Case,2025-11-28T10:45:00
+D-398,Business Case,Negotiation,2025-12-26T13:15:00
+D-398,Negotiation,Closed Lost,2026-01-27T17:15:00
+D-399,,Discovery,2025-04-25T14:00:00
+D-399,Discovery,Qualification,2025-05-25T17:00:00
+D-399,Qualification,Closed Lost,2025-06-29T15:00:00
+D-400,,Discovery,2025-08-04T14:00:00
+D-400,Discovery,Qualification,2025-09-18T13:15:00
+D-400,Qualification,Technical Evaluation,2025-10-19T12:30:00
+D-400,Technical Evaluation,Business Case,2025-12-01T12:30:00
+D-400,Negotiation,Closed Lost,2025-12-11T08:00:00
+D-400,Business Case,Negotiation,2025-12-11T11:00:00

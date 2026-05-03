@@ -1,0 +1,20 @@
+org_name: "Mighty Oak Holdings"
+org_id: "mighty-oak-holdings"
+timezone: "US/Eastern"
+
+# April-start fiscal year (Apr 1 - Mar 31). Tests a third calendar shape
+# distinct from both Acme (Feb-start) and Sprout (calendar year).
+fiscal_year_start_month: 4
+
+revenue_metric: "bookings"
+
+# Declarative backend selection.
+data_access:
+  type: csv
+  params:
+    path: engine/data/mighty-oak-holdings
+
+# Story: mature enterprise, $800M ARR run, renewal compression risk.
+# Heavy renewal book ($400M+ annually) — even small churn % moves the
+# needle. New business is steady but the renewal motion dominates.
+description: "Mighty Oak Holdings — $800M ARR run, April-start fiscal, renewal compression"

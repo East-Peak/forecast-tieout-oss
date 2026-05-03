@@ -1,0 +1,102 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Python deps
+        run: pip install -r engine/requirements-dev.txt
+
+      - name: Install Node deps
+        run: cd frontend && npm ci
+
+      - name: Validate Acme SaaS profile
+        run: python -m engine.scripts.validate_profile --profile-dir engine/config/profiles/acme-saas
+
+      - name: Engine tests
+        run: python -m pytest engine/tests/ -v
+
+      - name: Parity tests
+        run: python -m pytest tests/parity/ -v
+
+      - name: TypeScript check
+        run: cd frontend && npx tsc --noEmit
+
+      - name: Frontend tests (vitest)
+        run: cd frontend && npm test -- --run
+
+      - name: Frontend build
+        run: cd frontend && npm run build
+
+      - name: Example data determinism check
+        run: python -m engine.scripts.generate_acme_data --verify
+
+      - name: Regenerate Acme demo snapshot
+        # generate_acme_snapshot.py is the demo-data generator (synthetic
+        # Acme profile). Runs end-to-end so any regression in the engine
+        # →snapshot contract is caught in CI, not just locally.
+        run: python -m engine.scripts.generate_acme_snapshot
+
+      - name: Smoke-test canonical generator on Acme CSV
+        # The canonical generator (generate_snapshot.py) supports the
+        # CSV-backed Acme profile via the ProfileBackend abstraction
+        # (see ARCHITECTURE.md). This run uses --as-of for deterministic
+        # output and asserts the snapshot actually carries CSV-derived
+        # signals.
+        run: |
+          mkdir -p /tmp/canonical-smoke/profiles
+          python -m engine.scripts.generate_snapshot \
+            --profile-id acme-saas \
+            --as-of 2026-04-06 \
+            --output /tmp/canonical-smoke/snapshot.json \
+            --profiles-output-dir /tmp/canonical-smoke/profiles
+          python -c "
+          import json, jsonschema
+          schema = json.load(open('schema/snapshot.schema.json'))
+          snap = json.load(open('/tmp/canonical-smoke/snapshot.json'))
+          # 1. Strict schema validation (canonical now matches the schema)
+          jsonschema.validate(snap, schema)
+          # 2. Canonical-on-CSV must produce real data
+          deals = len(snap.get('pipeline', {}).get('deals', []))
+          beginning_arr = snap.get('beginning_arr', 0)
+          assert deals > 0, f'FAIL: canonical-on-Acme produced {deals} deals'
+          assert beginning_arr > 0, f'FAIL: beginning_arr=\${beginning_arr}'
+          # 3. Backend-derived signals (not config defaults)
+          rates = snap.get('rates', {})
+          velocity_days = rates.get('stage_velocity_days') or {}
+          assert any(isinstance(v, float) and v != int(v) for v in velocity_days.values()), \
+              f'FAIL: stage_velocity_days look config-default: {velocity_days}'
+          # 4. as_of honored
+          assert snap.get('as_of') == '2026-04-06', f'FAIL: as_of={snap.get(\"as_of\")}'
+          print(f'PASS: canonical-on-Acme — {deals} deals, beginning_arr=\${beginning_arr:,.0f}, schema valid, backend velocity, as_of honored')
+          "
+
+      - name: Snapshot schema validation
+        # Validates the freshly-regenerated snapshot against the schema. If
+        # the engine emits a shape that doesn't match what the frontend
+        # contract expects, this fails the build.
+        run: |
+          python -c "
+          import json, jsonschema
+          schema = json.load(open('schema/snapshot.schema.json'))
+          snap = json.load(open('frontend/public/data/profiles/acme-saas/snapshot.json'))
+          jsonschema.validate(snap, schema)
+          print('snapshot.json validates against schema')
+          "

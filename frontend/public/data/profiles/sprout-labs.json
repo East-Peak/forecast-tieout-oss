@@ -1,0 +1,25 @@
+{
+  "id": "sprout-labs",
+  "slug": "sprout-labs",
+  "name": "Sprout Labs",
+  "description": "Sprout Labs \u2014 $10M ARR run, calendar-year fiscal, Q4 hiring crunch",
+  "version": 1,
+  "data": {
+    "snapshot": "./sprout-labs/snapshot.json",
+    "plan_manifest": "./sprout-labs/plans/index.json"
+  },
+  "connectors": {
+    "crm": "CSV",
+    "warehouse": "CSV",
+    "fallback_order": {}
+  },
+  "metadata": {},
+  "trust": {
+    "finance_motion": "Sales-led",
+    "timing_semantics": {
+      "wins": "CloseDate",
+      "losses": "Closed At",
+      "pipeline_actuals": "First S2 entry"
+    }
+  }
+}

@@ -1,0 +1,216 @@
+team_members:
+  # --- VP Sales ---
+  - id: "VP-S"
+    name: "Michael Grant"
+    role: "vp_sales"
+    segment: null
+    start_date: "2022-01-15"
+    quota: 0
+
+  # --- Managers ---
+  - id: "MGR-E"
+    name: "Diana Frost"
+    role: "manager"
+    segment: "Enterprise"
+    start_date: "2022-06-01"
+    quota: 0
+
+  - id: "MGR-M"
+    name: "Robert Nash"
+    role: "manager"
+    segment: "Mid-Market"
+    start_date: "2022-09-01"
+    quota: 0
+
+  - id: "MGR-C"
+    name: "Karen Hughes"
+    role: "manager"
+    segment: "Commercial"
+    start_date: "2023-02-01"
+    quota: 0
+
+  # --- Enterprise AEs ($4M quota, 1 ramping at $2M) ---
+  # Effective: 4 x $4M + 1 x $2M = $18M
+  - id: "AE-E01"
+    name: "Sarah Chen"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2023-06-01"
+    quota: 4000000
+    status: "tenured"
+
+  - id: "AE-E02"
+    name: "Marcus Williams"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-01-15"
+    quota: 4000000
+    status: "tenured"
+
+  - id: "AE-E03"
+    name: "Priya Patel"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-03-01"
+    quota: 4000000
+    status: "tenured"
+
+  - id: "AE-E04"
+    name: "James O'Brien"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-08-01"
+    quota: 4000000
+    status: "tenured"
+
+  - id: "AE-E05"
+    name: "Nina Kowalski"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2026-04-01"
+    quota: 2000000
+    status: "ramping"
+
+  # --- Mid-Market AEs ($2M quota, 1 ramping at $1M) ---
+  # Effective: 7 x $2M + 1 x $1M = $15M
+  - id: "AE-M01"
+    name: "David Kim"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2023-04-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M02"
+    name: "Rachel Torres"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2023-08-15"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M03"
+    name: "Alex Johnson"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-01-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M04"
+    name: "Megan Liu"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-05-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M05"
+    name: "Chris Anderson"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-09-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M06"
+    name: "Jessica Brown"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-01-15"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M07"
+    name: "Ryan Mitchell"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-06-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M08"
+    name: "Sofia Garcia"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2026-05-01"
+    quota: 1000000
+    status: "ramping"
+
+  # --- Commercial AEs ($1.15M quota, 1 ramping at $575K) ---
+  # Effective: 6 x $1.15M + 1 x $575K = $7.475M
+  - id: "AE-C01"
+    name: "Emily Watson"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-02-01"
+    quota: 1150000
+    status: "tenured"
+
+  - id: "AE-C02"
+    name: "Tyler Reed"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-04-15"
+    quota: 1150000
+    status: "tenured"
+
+  - id: "AE-C03"
+    name: "Amanda Foster"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-07-01"
+    quota: 1150000
+    status: "tenured"
+
+  - id: "AE-C04"
+    name: "Brandon Lee"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2024-11-01"
+    quota: 1150000
+    status: "tenured"
+
+  - id: "AE-C05"
+    name: "Olivia Martinez"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2025-03-01"
+    quota: 1150000
+    status: "tenured"
+
+  - id: "AE-C06"
+    name: "Nathan Wright"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2025-08-01"
+    quota: 1150000
+    status: "tenured"
+
+  - id: "AE-C07"
+    name: "Liam Park"
+    role: "ae"
+    segment: "Commercial"
+    manager_id: "MGR-C"
+    start_date: "2026-06-01"
+    quota: 575000
+    status: "ramping"

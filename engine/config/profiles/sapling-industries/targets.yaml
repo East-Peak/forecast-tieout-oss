@@ -1,0 +1,18 @@
+# Sapling Industries — Feb-start fiscal, $100M ARR target.
+# Story: $80M starting ARR + $100M new business → $180M ending. Big growth
+# but the team is capacity-constrained for it.
+
+fiscal_year_start: 2026-02-01
+beginning_arr: 80000000
+
+annual_target: 100000000
+annual_targets:
+  new_business_arr: 100000000
+
+# Front-loaded plan — capacity is the limit, so they need to land deals
+# early before bench burnout. Q4 actually lighter than Q3.
+quarterly_targets:
+  Q1: 22000000
+  Q2: 26000000
+  Q3: 28000000
+  Q4: 24000000

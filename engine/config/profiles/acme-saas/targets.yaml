@@ -1,0 +1,27 @@
+# Acme SaaS demo targets.
+#
+# Two flavors of consumer:
+#  1. generate_acme_snapshot.py reads `annual_target` (scalar) and
+#     `quarterly_targets` as scalars.
+#  2. generate_snapshot.py (canonical) reads `fiscal_year_start`,
+#     `annual_targets.new_business_arr`, and `quarterly_targets`. Quarter
+#     values may be either scalars (treated as bookings_target) or dicts
+#     (rich v2 form with per-metric breakdown).
+fiscal_year_start: 2026-02-01
+
+# Beginning-of-FY ARR base used as the trajectory anchor when the
+# canonical generator can't derive it from raw deals (Acme's bundled
+# deals.csv doesn't include effective_start_date / effective_end_date,
+# so derived/arr_snapshot returns 0 and we fall back to this config).
+# Tells a coherent demo story: $24M starting ARR, $40M new business in
+# the FY → $64M target ending ARR, ~2.7x growth.
+beginning_arr: 24000000
+
+annual_target: 40000000
+annual_targets:
+  new_business_arr: 40000000
+quarterly_targets:
+  Q1: 7000000
+  Q2: 9000000
+  Q3: 12000000
+  Q4: 12000000

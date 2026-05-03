@@ -1,0 +1,25 @@
+{
+  "id": "mighty-oak-holdings",
+  "slug": "mighty-oak-holdings",
+  "name": "Mighty Oak Holdings",
+  "description": "Mighty Oak Holdings \u2014 $800M ARR run, April-start fiscal, renewal compression",
+  "version": 1,
+  "data": {
+    "snapshot": "./mighty-oak-holdings/snapshot.json",
+    "plan_manifest": "./mighty-oak-holdings/plans/index.json"
+  },
+  "connectors": {
+    "crm": "CSV",
+    "warehouse": "CSV",
+    "fallback_order": {}
+  },
+  "metadata": {},
+  "trust": {
+    "finance_motion": "Sales-led",
+    "timing_semantics": {
+      "wins": "CloseDate",
+      "losses": "Closed At",
+      "pipeline_actuals": "First S2 entry"
+    }
+  }
+}

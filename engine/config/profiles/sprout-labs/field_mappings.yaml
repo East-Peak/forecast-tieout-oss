@@ -1,0 +1,38 @@
+# Sprout Labs field mappings.
+# Same stage vocabulary as Acme demo (Discovery / Qualification / etc.) —
+# matches what most CRMs export by default. Forkers replicate this for
+# their own profile by changing the keys to their CRM's stage names.
+
+opportunity:
+  amount:
+    sf_field: "Amount"
+  stage:
+    sf_field: "StageName"
+    stage_mapping:
+      "Discovery": "S1"
+      "Qualification": "S2"
+      "Technical Evaluation": "S3"
+      "Business Case": "S4"
+      "Negotiation": "S5"
+      "Closed Won": "Won"
+      "Closed Lost": "Lost"
+  close_date:
+    sf_field: "CloseDate"
+  owner_id:
+    sf_field: "OwnerId"
+  type:
+    sf_field: "Type"
+  created_date:
+    sf_field: "CreatedDate"
+  name:
+    sf_field: "Name"
+  id:
+    sf_field: "Id"
+
+account:
+  name:
+    sf_field: "Name"
+  id:
+    sf_field: "Id"
+  segment:
+    sf_field: "Segment__c"

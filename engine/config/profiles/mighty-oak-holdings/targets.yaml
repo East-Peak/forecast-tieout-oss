@@ -1,0 +1,19 @@
+# Mighty Oak Holdings — April-start fiscal, $800M ARR run.
+# Story: $720M starting ARR + $80M new business → $800M ending. Big
+# renewal book ($400M+/yr) — modest 3-5% net retention compression
+# would offset most new business. Renewal motion is load-bearing.
+
+fiscal_year_start: 2026-04-01
+beginning_arr: 720000000
+
+annual_target: 80000000
+annual_targets:
+  new_business_arr: 80000000
+
+# Mature enterprise — relatively flat quarterly distribution. No big seasonal
+# spikes; the business is past the hyper-growth phase.
+quarterly_targets:
+  Q1: 18000000
+  Q2: 20000000
+  Q3: 21000000
+  Q4: 21000000

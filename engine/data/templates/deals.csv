@@ -1,0 +1,3 @@
+id,name,amount,stage,close_date,owner_id,type,created_date,segment,source,is_closed,is_won
+D001,Acme Corp - Platform,250000,Technical Evaluation,2026-06-30,U001,New Business,2026-01-15,Enterprise,Outbound,false,false
+D002,Beta Inc - Expansion,80000,Negotiation,2026-07-15,U002,Expansion,2026-02-01,Mid-Market,Inbound,false,false

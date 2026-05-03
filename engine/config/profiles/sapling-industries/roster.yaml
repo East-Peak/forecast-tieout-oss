@@ -1,0 +1,177 @@
+team_members:
+  # Sapling Industries roster — Feb-start fiscal, $100M target.
+  # Capacity-constrained: pipeline is healthy but the team is undersized
+  # for the target. ~15 effective AEs covering Enterprise + Mid-Market.
+
+  # --- VP Sales ---
+  - id: "VP-S"
+    name: "Marcus Hale"
+    role: "vp_sales"
+    segment: null
+    start_date: "2022-04-15"
+    quota: 0
+
+  # --- Managers ---
+  - id: "MGR-E"
+    name: "Priya Nair"
+    role: "manager"
+    segment: "Enterprise"
+    start_date: "2022-08-01"
+    quota: 0
+
+  - id: "MGR-M"
+    name: "Connor Fitzgerald"
+    role: "manager"
+    segment: "Mid-Market"
+    start_date: "2023-01-15"
+    quota: 0
+
+  # --- Enterprise AEs ($3M quota each) ---
+  - id: "AE-E01"
+    name: "Naomi Walsh"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2023-03-01"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E02"
+    name: "Tobias Mendez"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2023-08-15"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E03"
+    name: "Helena Park"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-02-01"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E04"
+    name: "Diego Suzuki"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-09-01"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E05"
+    name: "Anika Volkov"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2025-04-15"
+    quota: 3000000
+    status: "tenured"
+
+  # --- Mid-Market AEs ($2M quota each) ---
+  - id: "AE-M01"
+    name: "Lucas Brennan"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2023-05-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M02"
+    name: "Sienna Patel"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2023-11-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M03"
+    name: "Felix Andersson"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-04-15"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M04"
+    name: "Wren Beauchamp"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-10-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M05"
+    name: "Ezra Lindgren"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-03-15"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M06"
+    name: "Maya Brennan"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-08-01"
+    quota: 2000000
+    status: "tenured"
+
+  # --- Q1 ramps (capacity-constrained narrative) ---
+  - id: "AE-E06"
+    name: "Soren Ahmadi"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2026-02-15"
+    quota: 1500000  # ramping
+    status: "ramping"
+
+  - id: "AE-M07"
+    name: "Idris Vance"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2026-03-01"
+    quota: 1000000  # ramping
+    status: "ramping"
+
+  # --- SDRs ---
+  - id: "SDR-01"
+    name: "Phoebe Aldridge"
+    role: "sdr"
+    segment: null
+    start_date: "2024-06-01"
+    quota: 0
+
+  - id: "SDR-02"
+    name: "Imani Tate"
+    role: "sdr"
+    segment: null
+    start_date: "2025-01-15"
+    quota: 0
+
+  # --- SEs ---
+  - id: "SE-01"
+    name: "Henrik Lindqvist"
+    role: "se"
+    segment: null
+    start_date: "2023-09-15"
+    quota: 0
+
+  - id: "SE-02"
+    name: "Yara Ozaki"
+    role: "se"
+    segment: null
+    start_date: "2024-11-01"
+    quota: 0

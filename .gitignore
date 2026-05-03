@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Real org data (keep demo profiles only)
+# The four shipped demos are allowlisted below; everything else is
+# ignored so users following the README ("drop real CSVs in
+# engine/data/<profile>/", "copy a demo profile under
+# engine/config/profiles/") don't accidentally commit real data.
+frontend/public/data/profiles/*/
+!frontend/public/data/profiles/acme-saas/
+!frontend/public/data/profiles/sprout-labs/
+!frontend/public/data/profiles/sapling-industries/
+!frontend/public/data/profiles/mighty-oak-holdings/
+
+frontend/public/data/profiles/*.json
+!frontend/public/data/profiles/index.json
+!frontend/public/data/profiles/acme-saas.json
+!frontend/public/data/profiles/sprout-labs.json
+!frontend/public/data/profiles/sapling-industries.json
+!frontend/public/data/profiles/mighty-oak-holdings.json
+
+engine/data/*/
+!engine/data/acme-saas/
+!engine/data/sprout-labs/
+!engine/data/sapling-industries/
+!engine/data/mighty-oak-holdings/
+!engine/data/templates/
+
+engine/config/profiles/*/
+!engine/config/profiles/acme-saas/
+!engine/config/profiles/sprout-labs/
+!engine/config/profiles/sapling-industries/
+!engine/config/profiles/mighty-oak-holdings/

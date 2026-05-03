@@ -1,0 +1,8 @@
+stages:
+  - {name: "Discovery", order: 1, probability: 0.05}
+  - {name: "Qualification", order: 2, probability: 0.12}
+  - {name: "Technical Evaluation", order: 3, probability: 0.25}
+  - {name: "Business Case", order: 4, probability: 0.50}
+  - {name: "Negotiation", order: 5, probability: 0.75}
+  - {name: "Closed Won", order: 99, probability: 1.0}
+  - {name: "Closed Lost", order: 100, probability: 0.0}

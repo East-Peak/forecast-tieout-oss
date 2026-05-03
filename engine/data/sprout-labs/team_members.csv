@@ -1,0 +1,13 @@
+id,name,role,segment,start_date,is_active,manager_id
+VP-S,Olivia Park,vp_sales,,2024-03-01,true,
+MGR-1,Devon Patel,manager,Mid-Market,2024-06-01,true,
+AE-M01,Jordan Reyes,AE,Mid-Market,2024-08-01,true,MGR-1
+AE-M02,Casey Thompson,AE,Mid-Market,2024-11-01,true,MGR-1
+AE-M03,Riley Chen,AE,Mid-Market,2025-02-15,true,MGR-1
+AE-M04,Avery Brooks,AE,Mid-Market,2025-05-01,true,MGR-1
+AE-C01,Quinn Foster,AE,Commercial,2025-01-15,true,MGR-1
+AE-C02,Sage Morgan,AE,Commercial,2025-04-01,true,MGR-1
+AE-M05,Taylor Ng,AE,Mid-Market,2026-09-15,true,MGR-1
+AE-C03,Morgan Lee,AE,Commercial,2026-10-01,true,MGR-1
+SDR-01,Cameron West,sdr,,2024-09-01,true,
+SE-01,Rowan Khan,se,,2024-10-15,true,

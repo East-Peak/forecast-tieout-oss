@@ -1,0 +1,231 @@
+team_members:
+  # Mighty Oak Holdings roster — April-start fiscal, $800M ARR.
+  # Mature enterprise with full GTM org structure including a renewal team.
+
+  # --- Sales leadership ---
+  - id: "VP-S"
+    name: "Vivienne Ashworth"
+    role: "vp_sales"
+    segment: null
+    start_date: "2020-06-01"
+    quota: 0
+
+  # --- Managers (3 segments) ---
+  - id: "MGR-SE"
+    name: "Cyrus Bellamy"
+    role: "manager"
+    segment: "Strategic Enterprise"
+    start_date: "2021-09-01"
+    quota: 0
+
+  - id: "MGR-E"
+    name: "Adaeze Onuoha"
+    role: "manager"
+    segment: "Enterprise"
+    start_date: "2021-11-15"
+    quota: 0
+
+  - id: "MGR-M"
+    name: "Sterling Park"
+    role: "manager"
+    segment: "Mid-Market"
+    start_date: "2022-04-01"
+    quota: 0
+
+  # --- Strategic Enterprise AEs ($5M quota each) ---
+  - id: "AE-SE01"
+    name: "Reginald Tannenbaum"
+    role: "ae"
+    segment: "Strategic Enterprise"
+    manager_id: "MGR-SE"
+    start_date: "2022-01-15"
+    quota: 5000000
+    status: "tenured"
+
+  - id: "AE-SE02"
+    name: "Ananya Krishnamurthy"
+    role: "ae"
+    segment: "Strategic Enterprise"
+    manager_id: "MGR-SE"
+    start_date: "2022-06-01"
+    quota: 5000000
+    status: "tenured"
+
+  - id: "AE-SE03"
+    name: "Bartholomew Greco"
+    role: "ae"
+    segment: "Strategic Enterprise"
+    manager_id: "MGR-SE"
+    start_date: "2023-02-15"
+    quota: 5000000
+    status: "tenured"
+
+  - id: "AE-SE04"
+    name: "Mireille Bouvier"
+    role: "ae"
+    segment: "Strategic Enterprise"
+    manager_id: "MGR-SE"
+    start_date: "2023-09-01"
+    quota: 5000000
+    status: "tenured"
+
+  # --- Enterprise AEs ($3M quota each) ---
+  - id: "AE-E01"
+    name: "Octavia Nguyen"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2022-08-15"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E02"
+    name: "Theron Whitmore"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2023-01-15"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E03"
+    name: "Kaela Ondieki"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2023-06-01"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E04"
+    name: "Lucien Dubois"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-01-15"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E05"
+    name: "Solene Matsuoka"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2024-08-01"
+    quota: 3000000
+    status: "tenured"
+
+  - id: "AE-E06"
+    name: "Cassius Pell"
+    role: "ae"
+    segment: "Enterprise"
+    manager_id: "MGR-E"
+    start_date: "2025-03-01"
+    quota: 3000000
+    status: "tenured"
+
+  # --- Mid-Market AEs ($2M quota each) ---
+  - id: "AE-M01"
+    name: "Indira Vasquez"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2022-11-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M02"
+    name: "Phineas Okafor"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2023-04-15"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M03"
+    name: "Beatrix Holloway"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2023-10-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M04"
+    name: "Yusuf Bashir"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-04-15"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M05"
+    name: "Esperanza Vega"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2024-10-01"
+    quota: 2000000
+    status: "tenured"
+
+  - id: "AE-M06"
+    name: "Geoffrey Baxter"
+    role: "ae"
+    segment: "Mid-Market"
+    manager_id: "MGR-M"
+    start_date: "2025-05-15"
+    quota: 2000000
+    status: "tenured"
+
+  # --- SDR team ---
+  - id: "SDR-01"
+    name: "Anastasia Volkov"
+    role: "sdr"
+    segment: null
+    start_date: "2024-02-01"
+    quota: 0
+
+  - id: "SDR-02"
+    name: "Tomohiro Yamamoto"
+    role: "sdr"
+    segment: null
+    start_date: "2024-06-15"
+    quota: 0
+
+  - id: "SDR-03"
+    name: "Margot Henley"
+    role: "sdr"
+    segment: null
+    start_date: "2025-01-15"
+    quota: 0
+
+  - id: "SDR-04"
+    name: "Reza Farahani"
+    role: "sdr"
+    segment: null
+    start_date: "2025-07-01"
+    quota: 0
+
+  # --- SE team ---
+  - id: "SE-01"
+    name: "Constantin Marek"
+    role: "se"
+    segment: null
+    start_date: "2022-11-15"
+    quota: 0
+
+  - id: "SE-02"
+    name: "Naima Aboud"
+    role: "se"
+    segment: null
+    start_date: "2023-08-01"
+    quota: 0
+
+  - id: "SE-03"
+    name: "Erasmus Vogel"
+    role: "se"
+    segment: null
+    start_date: "2024-05-15"
+    quota: 0

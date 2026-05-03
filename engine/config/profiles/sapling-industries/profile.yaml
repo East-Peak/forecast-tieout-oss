@@ -1,0 +1,20 @@
+org_name: "Sapling Industries"
+org_id: "sapling-industries"
+timezone: "US/Eastern"
+
+# Feb-start fiscal year (Feb 1 - Jan 31). Same calendar as Acme but
+# Sapling exercises the engine at 10x the scale.
+fiscal_year_start_month: 2
+
+revenue_metric: "bookings"
+
+# Declarative backend selection.
+data_access:
+  type: csv
+  params:
+    path: engine/data/sapling-industries
+
+# Story: mid-market growing fast, $100M ARR run, capacity-constrained.
+# Too few AEs for the pipeline they have — coverage looks healthy but
+# bookings throughput is throttled by team size.
+description: "Sapling Industries — $100M ARR run, Feb-start fiscal, capacity constrained"

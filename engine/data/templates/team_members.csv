@@ -1,0 +1,3 @@
+id,name,role,segment,start_date,is_active,manager_id
+U001,Alice Johnson,AE,Enterprise,2025-06-01,true,M001
+U002,Bob Smith,AE,Mid-Market,2025-09-15,true,M001

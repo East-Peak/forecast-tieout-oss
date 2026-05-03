@@ -1,0 +1,151 @@
+id,name,segment,industry,employee_count
+COMP-001,Coral Software,Mid-Market,Media,1204
+COMP-002,Nebula Platforms,Mid-Market,Healthcare,539
+COMP-003,Nexus Platforms,Enterprise,Healthcare,11356
+COMP-004,Sterling Labs,Mid-Market,Technology,1424
+COMP-005,Helix Networks,Enterprise,Finance,12495
+COMP-006,Aegis Analytics,Mid-Market,Finance,239
+COMP-007,Quantum Data,Enterprise,Retail,8162
+COMP-008,Nimbus Cloud,Mid-Market,Energy,297
+COMP-009,Borealis Technologies,Mid-Market,Manufacturing,755
+COMP-010,Verdant Industries,Mid-Market,Retail,585
+COMP-011,Crest Partners,Enterprise,Manufacturing,9017
+COMP-012,Opal Cloud,Mid-Market,Healthcare,1022
+COMP-013,Quantum Systems,Enterprise,Manufacturing,9065
+COMP-014,Atlas Analytics,Mid-Market,Finance,443
+COMP-015,Opal Systems,Strategic Enterprise,Media,65978
+COMP-016,Axiom Group,Mid-Market,Education,942
+COMP-017,Quantum Global,Enterprise,Education,10409
+COMP-018,Cobalt Networks,Mid-Market,Energy,581
+COMP-019,Apex Sciences,Strategic Enterprise,Technology,54678
+COMP-020,Nexus Technologies,Enterprise,Retail,9569
+COMP-021,Flint Sciences,Enterprise,Education,9330
+COMP-022,Phoenix Partners,Mid-Market,Retail,987
+COMP-023,Dynamo Corp,Mid-Market,Media,1138
+COMP-024,Phoenix Networks,Strategic Enterprise,Retail,71970
+COMP-025,Nexus Systems,Mid-Market,Healthcare,1922
+COMP-026,Spectra Inc,Mid-Market,Retail,1975
+COMP-027,Phoenix Data,Mid-Market,Media,585
+COMP-028,Sterling Dynamics,Enterprise,Retail,11969
+COMP-029,Basalt Platforms,Enterprise,Manufacturing,7406
+COMP-030,Ridge Inc,Mid-Market,Finance,1740
+COMP-031,Lumen Systems,Strategic Enterprise,Education,42035
+COMP-032,Atlas Labs,Mid-Market,Manufacturing,1241
+COMP-033,Sapphire Software,Enterprise,Media,3287
+COMP-034,Prism Labs,Enterprise,Energy,7544
+COMP-035,Falcon Labs,Mid-Market,Manufacturing,408
+COMP-036,Coral Labs,Mid-Market,Healthcare,496
+COMP-037,Beacon Solutions,Enterprise,Manufacturing,5948
+COMP-038,Mercury Global,Strategic Enterprise,Education,102152
+COMP-039,Ridge Corp,Enterprise,Healthcare,9793
+COMP-040,Zenith Data,Mid-Market,Retail,393
+COMP-041,Sable Partners,Enterprise,Education,4293
+COMP-042,Obsidian Ventures,Enterprise,Media,14099
+COMP-043,Beacon Sciences,Enterprise,Technology,11792
+COMP-044,Prism Technologies,Mid-Market,Finance,274
+COMP-045,Sable Dynamics,Enterprise,Technology,5074
+COMP-046,Sable Platforms,Enterprise,Education,3216
+COMP-047,Pinnacle Digital,Enterprise,Finance,12269
+COMP-048,Sentry Group,Mid-Market,Energy,661
+COMP-049,Titan Dynamics,Enterprise,Manufacturing,12398
+COMP-050,Crimson Global,Enterprise,Retail,4971
+COMP-051,Pavilion Cloud,Mid-Market,Technology,402
+COMP-052,Cobalt Platforms,Enterprise,Technology,9761
+COMP-053,Flint Systems,Enterprise,Education,13266
+COMP-054,Atlas Partners,Enterprise,Energy,4704
+COMP-055,Synapse Labs,Mid-Market,Education,1300
+COMP-056,Lumen Industries,Mid-Market,Technology,848
+COMP-057,Summit Corp,Strategic Enterprise,Retail,194743
+COMP-058,Atlas Networks,Mid-Market,Education,1856
+COMP-059,Obsidian Corp,Enterprise,Technology,2174
+COMP-060,Lattice Group,Strategic Enterprise,Healthcare,119892
+COMP-061,Ironclad Systems,Mid-Market,Retail,1059
+COMP-062,Indigo Sciences,Mid-Market,Energy,1604
+COMP-063,Titan Analytics,Mid-Market,Education,863
+COMP-064,Onyx Technologies,Strategic Enterprise,Media,160810
+COMP-065,Forge Inc,Mid-Market,Finance,1811
+COMP-066,Bedrock Dynamics,Enterprise,Media,9516
+COMP-067,Nimbus Systems,Mid-Market,Manufacturing,1834
+COMP-068,Monolith Partners,Strategic Enterprise,Technology,47958
+COMP-069,Nexus Analytics,Mid-Market,Education,1567
+COMP-070,Onyx Group,Strategic Enterprise,Education,193858
+COMP-071,Orbit Digital,Enterprise,Retail,7170
+COMP-072,Nexus Industries,Mid-Market,Finance,260
+COMP-073,Sterling Cloud,Mid-Market,Retail,1099
+COMP-074,Sapphire Global,Mid-Market,Retail,663
+COMP-075,Verdant Networks,Strategic Enterprise,Manufacturing,121397
+COMP-076,Marble Analytics,Mid-Market,Manufacturing,589
+COMP-077,Sentry Inc,Mid-Market,Healthcare,395
+COMP-078,Cobalt Sciences,Enterprise,Healthcare,11375
+COMP-079,Horizon Labs,Strategic Enterprise,Manufacturing,197991
+COMP-080,Cedar Digital,Mid-Market,Education,312
+COMP-081,Spectra Networks,Mid-Market,Energy,815
+COMP-082,Forge Software,Mid-Market,Healthcare,1123
+COMP-083,Compass Data,Enterprise,Education,6009
+COMP-084,Lattice Analytics,Mid-Market,Technology,427
+COMP-085,Compass Digital,Enterprise,Retail,8416
+COMP-086,Axiom Labs,Mid-Market,Energy,638
+COMP-087,Thrive Industries,Enterprise,Healthcare,7465
+COMP-088,Drake Systems,Strategic Enterprise,Manufacturing,20837
+COMP-089,Prism Inc,Mid-Market,Energy,1752
+COMP-090,Bedrock Systems,Mid-Market,Technology,749
+COMP-091,Keystone Cloud,Mid-Market,Manufacturing,1072
+COMP-092,Cedar Networks,Enterprise,Manufacturing,4759
+COMP-093,Nimbus Technologies,Enterprise,Finance,7041
+COMP-094,Marble Global,Enterprise,Energy,11523
+COMP-095,Coral Systems,Strategic Enterprise,Education,161960
+COMP-096,Granite Sciences,Mid-Market,Education,1728
+COMP-097,Catalyst Networks,Mid-Market,Retail,1785
+COMP-098,Tempest Labs,Strategic Enterprise,Retail,193618
+COMP-099,Ironclad Ventures,Mid-Market,Energy,511
+COMP-100,Onyx Dynamics,Enterprise,Finance,10966
+COMP-101,Indigo Partners,Enterprise,Manufacturing,6062
+COMP-102,Vertex Labs,Enterprise,Finance,10760
+COMP-103,Paragon Analytics,Mid-Market,Media,1811
+COMP-104,Sapphire Digital,Enterprise,Healthcare,8718
+COMP-105,Horizon Corp,Strategic Enterprise,Media,137474
+COMP-106,Marble Inc,Mid-Market,Media,1133
+COMP-107,Atlas Cloud,Strategic Enterprise,Retail,188851
+COMP-108,Falcon Ventures,Mid-Market,Media,1692
+COMP-109,Ember Networks,Mid-Market,Manufacturing,246
+COMP-110,Forge Cloud,Strategic Enterprise,Manufacturing,179613
+COMP-111,Lumen Solutions,Strategic Enterprise,Finance,53976
+COMP-112,Vanguard Industries,Mid-Market,Education,1701
+COMP-113,Bedrock Data,Mid-Market,Finance,1498
+COMP-114,Basalt Networks,Mid-Market,Energy,349
+COMP-115,Pinnacle Partners,Mid-Market,Energy,615
+COMP-116,Axiom Partners,Mid-Market,Energy,1391
+COMP-117,Axiom Solutions,Enterprise,Energy,12434
+COMP-118,Onyx Inc,Enterprise,Energy,6960
+COMP-119,Solstice Analytics,Strategic Enterprise,Energy,118671
+COMP-120,Horizon Cloud,Enterprise,Energy,4797
+COMP-121,Vanguard Corp,Mid-Market,Healthcare,666
+COMP-122,Cipher Ventures,Mid-Market,Energy,1352
+COMP-123,Verdant Partners,Strategic Enterprise,Media,189673
+COMP-124,Coral Digital,Mid-Market,Education,702
+COMP-125,Ironclad Data,Enterprise,Finance,4297
+COMP-126,Titan Partners,Mid-Market,Healthcare,1142
+COMP-127,Aegis Corp,Enterprise,Media,13484
+COMP-128,Sequoia Cloud,Mid-Market,Energy,504
+COMP-129,Sterling Partners,Mid-Market,Technology,1568
+COMP-130,Ironclad Networks,Mid-Market,Education,1509
+COMP-131,Aegis Networks,Strategic Enterprise,Retail,131216
+COMP-132,Monolith Inc,Mid-Market,Technology,651
+COMP-133,Forge Industries,Strategic Enterprise,Retail,116922
+COMP-134,Paragon Software,Mid-Market,Retail,1019
+COMP-135,Pinnacle Analytics,Mid-Market,Energy,976
+COMP-136,Spectra Group,Mid-Market,Education,1956
+COMP-137,Aegis Solutions,Mid-Market,Technology,459
+COMP-138,Horizon Technologies,Strategic Enterprise,Retail,73597
+COMP-139,Orbit Technologies,Strategic Enterprise,Finance,46734
+COMP-140,Bedrock Group,Mid-Market,Healthcare,1842
+COMP-141,Vector Data,Enterprise,Healthcare,7007
+COMP-142,Summit Solutions,Strategic Enterprise,Retail,48935
+COMP-143,Apex Digital,Enterprise,Technology,7478
+COMP-144,Nebula Solutions,Strategic Enterprise,Media,120989
+COMP-145,Crest Cloud,Enterprise,Healthcare,9902
+COMP-146,Cascade Solutions,Enterprise,Finance,10648
+COMP-147,Eclipse Labs,Mid-Market,Energy,942
+COMP-148,Cipher Analytics,Enterprise,Finance,8569
+COMP-149,Zenith Networks,Mid-Market,Retail,1526
+COMP-150,Mercury Inc,Mid-Market,Healthcare,1487

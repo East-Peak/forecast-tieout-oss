@@ -1,0 +1,516 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/forecast-tieout/snapshot/1.0.0/snapshot.schema.json",
+  "title": "Forecast Snapshot",
+  "description": "Language-neutral contract between the Python forecasting engine and the React frontend.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "engine_version",
+    "profile_id",
+    "capabilities",
+    "generated_at",
+    "as_of",
+    "actuals",
+    "pipeline",
+    "rates",
+    "roster",
+    "model_output",
+    "scenario_building_blocks",
+    "assumptions",
+    "health_status",
+    "beginning_arr",
+    "top_down_plan"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Semver tracking the shape of this contract (not engine behavior).",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0"]
+    },
+    "engine_version": {
+      "type": "string",
+      "description": "Version of the Python engine that produced this snapshot."
+    },
+    "profile_id": {
+      "type": "string",
+      "description": "Identifier for the configuration profile used to generate this snapshot."
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Flags indicating which data sources were available at generation time.",
+      "required": ["has_stage_history", "has_contacts", "has_companies"],
+      "additionalProperties": true,
+      "properties": {
+        "has_stage_history": { "type": "boolean" },
+        "has_contacts": { "type": "boolean" },
+        "has_companies": { "type": "boolean" }
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the snapshot was generated.",
+      "format": "date-time"
+    },
+    "git_sha": {
+      "type": "string",
+      "description": "Git commit SHA of the engine at generation time."
+    },
+    "as_of": {
+      "type": "string",
+      "description": "ISO 8601 date representing the effective date of the snapshot data.",
+      "format": "date"
+    },
+
+    "actuals": {
+      "type": "object",
+      "description": "Historical actuals — bookings, losses, pipeline creation, MQLs.",
+      "additionalProperties": true,
+      "required": ["bookings_by_month", "mql_by_month"],
+      "properties": {
+        "bookings_by_month": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["month", "total"],
+            "additionalProperties": true,
+            "properties": {
+              "month": { "type": "string" },
+              "total": { "type": "number" }
+            }
+          }
+        },
+        "losses_by_month": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["month", "total"],
+            "additionalProperties": true,
+            "properties": {
+              "month": { "type": "string" },
+              "total": { "type": "number" }
+            }
+          }
+        },
+        "pipeline_created_by_month": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["month", "total"],
+            "additionalProperties": true,
+            "properties": {
+              "month": { "type": "string" },
+              "total": { "type": "number" }
+            }
+          }
+        },
+        "pipeline_entered_s2_by_month": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["month", "total"],
+            "additionalProperties": true,
+            "properties": {
+              "month": { "type": "string" },
+              "total": { "type": "number" }
+            }
+          }
+        },
+        "mql_by_month": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["month_index", "value"],
+            "additionalProperties": true,
+            "properties": {
+              "month_index": { "type": "integer" },
+              "value": { "type": "number" }
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "pipeline": {
+      "type": "object",
+      "description": "Current pipeline state — deals and stage inventory.",
+      "additionalProperties": true,
+      "required": ["deals", "inventory_by_stage", "provenance"],
+      "properties": {
+        "deals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "opp_id", "stage", "amount", "arr", "metric_value",
+              "close_date", "created_date", "source_stream",
+              "owner_name", "opp_type", "forecast_category"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "opp_id": { "type": "string" },
+              "stage": { "type": "string" },
+              "amount": { "type": "number" },
+              "arr": { "type": "number" },
+              "metric_value": { "type": "number" },
+              "close_date": { "type": ["string", "null"] },
+              "created_date": { "type": ["string", "null"] },
+              "source_stream": { "type": "string" },
+              "owner_name": { "type": "string" },
+              "opp_type": { "type": "string" },
+              "forecast_category": { "type": "string" }
+            }
+          }
+        },
+        "inventory_by_stage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["stage", "count", "total_value"],
+            "additionalProperties": true,
+            "properties": {
+              "stage": { "type": "string" },
+              "count": { "type": "integer" },
+              "total_value": { "type": "number" }
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "rates": {
+      "type": "object",
+      "description": "Conversion rates, velocity, and funnel metrics.",
+      "additionalProperties": true,
+      "required": ["stage_conversion", "stage_velocity_days", "overall_win_rate", "funnel_rates"],
+      "properties": {
+        "stage_conversion": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "stage_velocity_days": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "overall_win_rate": { "type": "number" },
+        "funnel_rates": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+
+    "roster": {
+      "type": "object",
+      "description": "AE roster, capacity, ramp curves, and productivity.",
+      "additionalProperties": true,
+      "required": [
+        "current_aes", "trajectory_roster", "trajectory_roster_meta",
+        "effective_capacity", "observed_productivity", "observed_ramp_curve"
+      ],
+      "properties": {
+        "current_aes": {
+          "type": "array",
+          "items": { "type": "object", "additionalProperties": true }
+        },
+        "trajectory_roster": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "trajectory_roster_meta": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "effective_capacity": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CapacityRow" }
+        },
+        "observed_productivity": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "observed_ramp_curve": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "model_output": {
+      "type": "object",
+      "description": "Pre-computed view models for frontend charts.",
+      "additionalProperties": true,
+      "required": ["bookings_bridge", "capacity_headcount", "funnel_health", "pipeline_inventory"],
+      "properties": {
+        "bookings_bridge": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "months", "existing_wins", "future_wins", "total_expected",
+            "capped", "overflow", "plan_existing_wins", "plan_future_wins",
+            "plan_total", "trajectory_quarters", "plan_quarters",
+            "provenance", "source_detail", "capacity_warnings"
+          ],
+          "properties": {
+            "months": { "type": "array", "items": { "type": "string" } },
+            "existing_wins": { "type": "array", "items": { "type": "number" } },
+            "future_wins": { "type": "array", "items": { "type": "number" } },
+            "total_expected": { "type": "array", "items": { "type": "number" } },
+            "capped": { "type": "array", "items": { "type": "number" } },
+            "overflow": { "type": "array", "items": { "type": "number" } },
+            "plan_existing_wins": { "type": "array", "items": { "type": "number" } },
+            "plan_future_wins": { "type": "array", "items": { "type": "number" } },
+            "plan_total": { "type": "array", "items": { "type": "number" } },
+            "trajectory_quarters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/QuarterData" }
+            },
+            "plan_quarters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/QuarterData" }
+            },
+            "provenance": { "type": "object", "additionalProperties": true },
+            "source_detail": {
+              "type": "array",
+              "items": { "type": "object", "additionalProperties": true }
+            },
+            "capacity_warnings": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "capacity_headcount": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "trajectory_capacity", "plan_capacity",
+            "trajectory_quarters", "plan_quarters"
+          ],
+          "properties": {
+            "trajectory_capacity": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/CapacityRow" }
+            },
+            "plan_capacity": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/CapacityRow" }
+            },
+            "trajectory_quarters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/QuarterData" }
+            },
+            "plan_quarters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/QuarterData" }
+            }
+          }
+        },
+        "funnel_health": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "trajectory_quarters", "plan_quarters",
+            "funnel_rates", "funnel_rate_descriptions",
+            "mql_actuals", "rolling_s2_to_won"
+          ],
+          "properties": {
+            "trajectory_quarters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/QuarterData" }
+            },
+            "plan_quarters": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/QuarterData" }
+            },
+            "funnel_rates": {
+              "type": "object",
+              "additionalProperties": { "type": "number" }
+            },
+            "funnel_rate_descriptions": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "mql_actuals": {
+              "type": "array",
+              "items": {}
+            },
+            "rolling_s2_to_won": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "pipeline_inventory": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "months", "existing_wins", "existing_losses",
+            "existing_remaining", "future_wins",
+            "pipeline_creation", "provenance"
+          ],
+          "properties": {
+            "months": { "type": "array", "items": { "type": "string" } },
+            "existing_wins": { "type": "array", "items": { "type": "number" } },
+            "existing_losses": { "type": "array", "items": { "type": "number" } },
+            "existing_remaining": { "type": "array", "items": { "type": "number" } },
+            "future_wins": { "type": "array", "items": { "type": "number" } },
+            "pipeline_creation": { "type": "array", "items": { "type": "number" } },
+            "provenance": { "type": "object", "additionalProperties": true }
+          }
+        }
+      }
+    },
+
+    "scenario_building_blocks": {
+      "type": "object",
+      "description": "Monthly decomposition arrays for scenario modeling.",
+      "additionalProperties": true,
+      "required": [
+        "months", "monthly_is_actual",
+        "monthly_inventory_wins", "monthly_inventory_losses", "monthly_inventory_remaining",
+        "monthly_ae_creation", "monthly_mql_creation", "monthly_future_wins",
+        "monthly_ae_count", "monthly_ae_capacity", "monthly_ae_ramped", "monthly_blended_ramp",
+        "monthly_total_expected", "monthly_capped",
+        "observed_values", "decay_curve", "stage_win_rates", "funnel_rates"
+      ],
+      "properties": {
+        "months": { "type": "array", "items": { "type": "string" } },
+        "monthly_is_actual": { "type": "array", "items": { "type": "boolean" } },
+        "monthly_inventory_wins": { "type": "array", "items": { "type": "number" } },
+        "monthly_inventory_losses": { "type": "array", "items": { "type": "number" } },
+        "monthly_inventory_remaining": { "type": "array", "items": { "type": "number" } },
+        "monthly_ae_creation": { "type": "array", "items": { "type": "number" } },
+        "monthly_mql_creation": { "type": "array", "items": { "type": "number" } },
+        "monthly_future_wins": { "type": "array", "items": { "type": "number" } },
+        "monthly_ae_count": { "type": "array", "items": { "type": "number" } },
+        "monthly_ae_capacity": { "type": "array", "items": { "type": "number" } },
+        "monthly_ae_ramped": { "type": "array", "items": { "type": "number" } },
+        "monthly_blended_ramp": { "type": "array", "items": { "type": "number" } },
+        "monthly_total_expected": { "type": "array", "items": { "type": "number" } },
+        "monthly_capped": { "type": "array", "items": { "type": "number" } },
+        "observed_values": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": [
+            "win_rate", "avg_deal_size", "avg_cycle_days",
+            "ramp_months", "productivity_per_ae_per_month"
+          ],
+          "properties": {
+            "win_rate": { "type": "number" },
+            "avg_deal_size": { "type": "number" },
+            "avg_cycle_days": { "type": "number" },
+            "ramp_months": { "type": "number" },
+            "productivity_per_ae_per_month": { "type": "number" }
+          }
+        },
+        "decay_curve": { "type": "array", "items": { "type": "number" } },
+        "stage_win_rates": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "funnel_rates": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        }
+      }
+    },
+
+    "assumptions": {
+      "type": "object",
+      "description": "Engine assumptions and tuning parameters.",
+      "additionalProperties": true
+    },
+
+    "health_status": {
+      "type": "object",
+      "description": "Data quality and health check results.",
+      "additionalProperties": true
+    },
+
+    "beginning_arr": {
+      "type": "number",
+      "description": "Starting ARR baseline for the forecast period."
+    },
+
+    "beginning_arr_provenance": {
+      "type": "object",
+      "description": "Lineage for beginning_arr value.",
+      "additionalProperties": true
+    },
+
+    "bookings_summary_provenance": {
+      "type": "object",
+      "description": "Lineage for bookings summary.",
+      "additionalProperties": true
+    },
+
+    "top_down_plan": {
+      "type": "object",
+      "description": "Board-level top-down targets.",
+      "additionalProperties": true
+    },
+
+    "provenance": {
+      "type": "object",
+      "description": "Top-level data lineage and generation metadata.",
+      "additionalProperties": true
+    }
+  },
+
+  "$defs": {
+    "CapacityRow": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "month", "ae_total", "ae_ramped", "ae_ramping",
+        "se_total", "sdr_total", "ae_capacity",
+        "ae_capacity_ramped", "ae_capacity_ramping",
+        "blended_ramp_pct", "monthly_target"
+      ],
+      "properties": {
+        "month": { "type": "string" },
+        "label": { "type": "string" },
+        "ae_total": { "type": "number" },
+        "ae_ramped": { "type": "number" },
+        "ae_ramping": { "type": "number" },
+        "se_total": { "type": "number" },
+        "sdr_total": { "type": "number" },
+        "ae_capacity": { "type": "number" },
+        "ae_capacity_ramped": { "type": "number" },
+        "ae_capacity_ramping": { "type": "number" },
+        "blended_ramp_pct": { "type": "number" },
+        "monthly_target": { "type": "number" }
+      }
+    },
+    "QuarterData": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "quarter", "period_start", "period_end",
+        "td_bookings", "bu_sales_led_arr", "actual_bookings"
+      ],
+      "properties": {
+        "quarter": { "type": "string" },
+        "period_start": { "type": "string" },
+        "period_end": { "type": "string" },
+        "td_bookings": { "type": "number" },
+        "bu_sales_led_arr": { "type": "number" },
+        "actual_bookings": { "type": "number" }
+      }
+    }
+  }
+}

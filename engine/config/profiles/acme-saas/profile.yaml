@@ -1,0 +1,18 @@
+org_name: "Acme SaaS"
+org_id: "acme-saas"
+description: "Demo profile with synthetic B2B SaaS data"
+timezone: "US/Pacific"
+fiscal_year_start_month: 2
+revenue_metric: "bookings"
+
+# Declarative backend selection. Path is repo-root-relative.
+# Forkers replace this with their own backend choice + params.
+data_access:
+  type: csv
+  params:
+    path: engine/data/acme-saas
+
+# Legacy fields kept during the deprecation window. Will be removed
+# once data_access is the sole source of truth for backend selection.
+connector: "csv"
+data_dir: "engine/data/acme-saas"

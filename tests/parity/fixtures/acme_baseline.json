@@ -1,0 +1,21 @@
+{
+  "deals": [
+    {"id": "D1", "metric_value": 250000, "stage": "Technical Evaluation"},
+    {"id": "D2", "metric_value": 150000, "stage": "Business Case"},
+    {"id": "D3", "metric_value": 0, "stage": "Negotiation"},
+    {"id": "D4", "metric_value": null, "stage": "Discovery"},
+    {"id": "D5", "metric_value": 400000, "stage": "Unknown Stage"}
+  ],
+  "stage_win_rates": {
+    "Discovery": 0.05,
+    "Qualification": 0.12,
+    "Technical Evaluation": 0.25,
+    "Business Case": 0.50,
+    "Negotiation": 0.75
+  },
+  "capacity": {
+    "ae_count": 20,
+    "productivity_per_ae": 150000,
+    "ramp_factor": 0.85
+  }
+}

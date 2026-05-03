@@ -1,0 +1,25 @@
+id,name,role,segment,start_date,is_active,manager_id
+VP-S,Michael Grant,vp_sales,,2022-01-15,true,
+MGR-E,Diana Frost,manager,Enterprise,2022-06-01,true,
+MGR-M,Robert Nash,manager,Mid-Market,2022-09-01,true,
+MGR-C,Karen Hughes,manager,Commercial,2023-02-01,true,
+AE-E01,Sarah Chen,AE,Enterprise,2023-06-01,true,MGR-E
+AE-E02,Marcus Williams,AE,Enterprise,2024-01-15,true,MGR-E
+AE-E03,Priya Patel,AE,Enterprise,2024-03-01,true,MGR-E
+AE-E04,James O'Brien,AE,Enterprise,2024-08-01,true,MGR-E
+AE-E05,Nina Kowalski,AE,Enterprise,2026-04-01,true,MGR-E
+AE-M01,David Kim,AE,Mid-Market,2023-04-01,true,MGR-M
+AE-M02,Rachel Torres,AE,Mid-Market,2023-08-15,true,MGR-M
+AE-M03,Alex Johnson,AE,Mid-Market,2024-01-01,true,MGR-M
+AE-M04,Megan Liu,AE,Mid-Market,2024-05-01,true,MGR-M
+AE-M05,Chris Anderson,AE,Mid-Market,2024-09-01,true,MGR-M
+AE-M06,Jessica Brown,AE,Mid-Market,2025-01-15,true,MGR-M
+AE-M07,Ryan Mitchell,AE,Mid-Market,2025-06-01,true,MGR-M
+AE-M08,Sofia Garcia,AE,Mid-Market,2026-05-01,true,MGR-M
+AE-C01,Emily Watson,AE,Commercial,2024-02-01,true,MGR-C
+AE-C02,Tyler Reed,AE,Commercial,2024-04-15,true,MGR-C
+AE-C03,Amanda Foster,AE,Commercial,2024-07-01,true,MGR-C
+AE-C04,Brandon Lee,AE,Commercial,2024-11-01,true,MGR-C
+AE-C05,Olivia Martinez,AE,Commercial,2025-03-01,true,MGR-C
+AE-C06,Nathan Wright,AE,Commercial,2025-08-01,true,MGR-C
+AE-C07,Liam Park,AE,Commercial,2026-06-01,true,MGR-C

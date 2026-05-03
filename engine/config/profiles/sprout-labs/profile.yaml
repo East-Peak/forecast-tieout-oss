@@ -1,0 +1,20 @@
+org_name: "Sprout Labs"
+org_id: "sprout-labs"
+timezone: "US/Pacific"
+
+# Sprout uses a calendar-year fiscal (Jan 1 - Dec 31). Tests whether the
+# engine's quarter handling generalizes beyond Acme's Feb-start fiscal.
+fiscal_year_start_month: 1
+
+revenue_metric: "bookings"
+
+# Declarative backend selection.
+data_access:
+  type: csv
+  params:
+    path: engine/data/sprout-labs
+
+# Story: scrappy seed-stage-graduate startup pushing for $10M ARR. Q4
+# hiring crunch — they need to add capacity to hit aggressive new-logo
+# targets. Mostly Commercial / Mid-Market segments, no Enterprise yet.
+description: "Sprout Labs — $10M ARR run, calendar-year fiscal, Q4 hiring crunch"

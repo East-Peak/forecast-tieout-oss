@@ -1,0 +1,25 @@
+{
+  "id": "acme-saas",
+  "slug": "acme-saas",
+  "name": "Acme SaaS",
+  "description": "Demo profile with synthetic B2B SaaS data",
+  "version": 1,
+  "data": {
+    "snapshot": "./acme-saas/snapshot.json",
+    "plan_manifest": "./acme-saas/plans/index.json"
+  },
+  "connectors": {
+    "crm": "CSV",
+    "warehouse": "CSV",
+    "fallback_order": {}
+  },
+  "metadata": {},
+  "trust": {
+    "finance_motion": "Sales-led",
+    "timing_semantics": {
+      "wins": "CloseDate",
+      "losses": "Closed At",
+      "pipeline_actuals": "First S2 entry"
+    }
+  }
+}

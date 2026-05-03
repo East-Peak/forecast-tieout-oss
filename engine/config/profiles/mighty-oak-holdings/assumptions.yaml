@@ -1,0 +1,8 @@
+stage_rates:
+  Discovery: 0.04
+  Qualification: 0.10
+  Technical Evaluation: 0.22
+  Business Case: 0.45
+  Negotiation: 0.72
+lookback_days: 365
+monte_carlo_iterations: 10000

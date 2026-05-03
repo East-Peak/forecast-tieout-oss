@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "id": "baseline",
+  "name": "baseline",
+  "version": "1.0",
+  "created_date": "",
+  "default_comparison_view_id": "sales_led_operating",
+  "components": {
+    "sales_led": {
+      "label": "Sales-Led",
+      "category": "new_logo_sales_led",
+      "modeled_status": "scenario_modeled",
+      "approval_status": "working_draft",
+      "basis": "consultant_capacity_recut",
+      "as_of": "",
+      "arr_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {
+          "2026-04-01": 6000000,
+          "2026-05-01": 6000000,
+          "2026-06-01": 6000000,
+          "2026-07-01": 6666666,
+          "2026-08-01": 6666666,
+          "2026-09-01": 6666668,
+          "2026-10-01": 7000000,
+          "2026-11-01": 7000000,
+          "2026-12-01": 7000000,
+          "2027-01-01": 7000000,
+          "2027-02-01": 7000000,
+          "2027-03-01": 7000000
+        },
+        "quarterly_rollup": {
+          "Q1": 18000000,
+          "Q2": 20000000,
+          "Q3": 21000000,
+          "Q4": 21000000
+        },
+        "annual_rollup": 80000000
+      },
+      "seat_targets": {
+        "canonical_grain": "monthly",
+        "monthly": {},
+        "quarterly_rollup": {},
+        "annual_rollup": 0
+      }
+    }
+  },
+  "views": {
+    "sales_led_operating": {
+      "label": "Sales-Led Plan",
+      "treatment_class": "operator_comparable",
+      "supported_grains": [
+        "monthly",
+        "quarterly",
+        "annual"
+      ],
+      "component_ids": [
+        "sales_led"
+      ],
+      "seat_target_owner_component_id": "sales_led",
+      "derived": true
+    }
+  }
+}

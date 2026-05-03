@@ -1,0 +1,361 @@
+id,name,amount,stage,close_date,owner_id,type,created_date,segment,source,is_closed,is_won
+D-001,Orbit Technologies - Platform Renewal,1675000,Discovery,2026-07-20,AE-SE04,Renewal,2026-01-16,Strategic Enterprise,Partner,false,false
+D-002,Mercury Global - API Gateway Renewal,1337000,Discovery,2026-09-04,AE-SE02,Renewal,2026-03-09,Strategic Enterprise,Event,false,false
+D-003,Opal Systems - Platform Expansion,2404000,Discovery,2026-04-16,AE-SE02,Expansion,2026-02-19,Strategic Enterprise,Outbound,false,false
+D-004,Ironclad Networks - Monitoring,178000,Discovery,2026-09-24,AE-M04,New Business,2026-03-24,Mid-Market,Outbound,false,false
+D-005,Atlas Cloud - Monitoring Renewal,2107000,Discovery,2026-04-02,AE-SE04,Renewal,2026-03-27,Strategic Enterprise,Outbound,false,false
+D-006,Sentry Group - Security Module Expansion,155000,Discovery,2026-08-12,AE-M04,Expansion,2026-03-05,Mid-Market,Event,false,false
+D-007,Crimson Global - API Gateway Expansion,947000,Discovery,2026-07-17,AE-E04,Expansion,2026-01-23,Enterprise,Outbound,false,false
+D-008,Cedar Networks - API Gateway Renewal,301000,Discovery,2026-04-10,AE-X02,Renewal,2026-03-25,Enterprise,Outbound,false,false
+D-009,Sable Dynamics - Enterprise Suite Expansion,591000,Discovery,2026-06-09,AE-E03,Expansion,2026-03-13,Enterprise,Event,false,false
+D-010,Forge Inc - Monitoring Expansion,117000,Discovery,2026-06-25,AE-M03,Expansion,2026-01-29,Mid-Market,PLG,false,false
+D-011,Verdant Industries - Enterprise Suite Expansion,80000,Discovery,2026-07-23,AE-M02,Expansion,2026-01-07,Mid-Market,Outbound,false,false
+D-012,Vanguard Industries - Platform Renewal,209000,Discovery,2026-06-10,AE-M06,Renewal,2026-03-17,Mid-Market,Partner,false,false
+D-013,Helix Networks - API Gateway,614000,Discovery,2026-03-31,AE-E04,New Business,2026-03-25,Enterprise,Outbound,false,false
+D-014,Apex Sciences - Platform Renewal,1497000,Discovery,2026-06-22,AE-SE03,Renewal,2026-01-12,Strategic Enterprise,Outbound,false,false
+D-015,Horizon Technologies - Enterprise Suite Renewal,2467000,Discovery,2026-04-03,AE-SE01,Renewal,2026-01-09,Strategic Enterprise,Inbound,false,false
+D-016,Horizon Labs - API Gateway Renewal,1582000,Discovery,2026-09-11,AE-SE01,Renewal,2026-02-12,Strategic Enterprise,Event,false,false
+D-017,Spectra Inc - Platform Expansion,80000,Discovery,2026-05-22,AE-M03,Expansion,2026-02-25,Mid-Market,PLG,false,false
+D-018,Axiom Partners - Enterprise Suite,148000,Discovery,2026-03-27,AE-M04,New Business,2026-01-20,Mid-Market,PLG,false,false
+D-019,Nexus Analytics - Compliance Renewal,230000,Discovery,2026-08-27,AE-M03,Renewal,2026-01-01,Mid-Market,PLG,false,false
+D-020,Marble Inc - Analytics,112000,Discovery,2026-05-20,AE-M02,New Business,2026-01-19,Mid-Market,Inbound,false,false
+D-021,Phoenix Networks - Analytics Expansion,800000,Discovery,2026-08-11,AE-SE03,Expansion,2026-03-02,Strategic Enterprise,PLG,false,false
+D-022,Eclipse Labs - API Gateway Renewal,221000,Discovery,2026-04-02,AE-M03,Renewal,2026-01-15,Mid-Market,Inbound,false,false
+D-023,Prism Technologies - Compliance Renewal,123000,Discovery,,AE-M04,Renewal,2026-02-09,Mid-Market,Inbound,false,false
+D-024,Mercury Inc - Monitoring,162000,Discovery,2026-05-11,AE-M06,New Business,2026-03-13,Mid-Market,Inbound,false,false
+D-025,Vector Data - Security Module,551000,Discovery,2026-09-29,AE-E04,New Business,2026-03-25,Enterprise,Inbound,false,false
+D-026,Forge Inc - API Gateway Expansion,89000,Discovery,2026-07-14,AE-M05,Expansion,2026-01-07,Mid-Market,Event,false,false
+D-027,Ridge Corp - Data Pipeline Renewal,614000,Discovery,2026-04-16,AE-E05,Renewal,2026-02-18,Enterprise,Event,false,false
+D-028,Cobalt Platforms - Security Module Expansion,362000,Discovery,2026-09-09,AE-E04,Expansion,2026-01-08,Enterprise,Inbound,false,false
+D-029,Marble Global - Compliance Renewal,609000,Discovery,2026-07-31,AE-E05,Renewal,2026-01-28,Enterprise,Outbound,false,false
+D-030,Beacon Solutions - API Gateway Renewal,271000,Discovery,2026-07-08,AE-E01,Renewal,2026-03-24,Enterprise,Partner,false,false
+D-031,Drake Systems - API Gateway Expansion,2163000,Discovery,2026-06-03,AE-SE03,Expansion,2026-03-11,Strategic Enterprise,Partner,false,false
+D-032,Ridge Inc - Analytics,80000,Discovery,2026-08-20,AE-M04,New Business,2026-02-19,Mid-Market,PLG,false,false
+D-033,Vertex Labs - Security Module Renewal,363000,Discovery,2026-09-02,AE-E05,Renewal,2026-01-01,Enterprise,Inbound,false,false
+D-034,Vector Data - Analytics Renewal,721000,Discovery,2026-08-24,AE-E04,Renewal,2026-02-11,Enterprise,Inbound,false,false
+D-035,Aegis Corp - Monitoring Renewal,692000,Discovery,2026-05-19,AE-E01,Renewal,2026-03-11,Enterprise,Outbound,false,false
+D-036,Mercury Global - Security Module Expansion,2081000,Discovery,2026-06-03,AE-SE03,Expansion,2026-01-26,Strategic Enterprise,Inbound,false,false
+D-037,Crest Partners - Analytics Renewal,,Discovery,2026-08-04,AE-E01,Renewal,2026-01-23,Enterprise,Inbound,false,false
+D-038,Sentry Inc - Monitoring Renewal,188000,Discovery,2026-09-23,AE-M03,Renewal,2026-03-23,Mid-Market,Inbound,false,false
+D-039,Marble Analytics - API Gateway Expansion,185000,Qualification,2026-06-17,AE-M03,Expansion,2026-01-07,Mid-Market,Partner,false,false
+D-040,Marble Analytics - Enterprise Suite Renewal,149000,Qualification,2026-04-03,AE-M06,Renewal,2026-01-29,Mid-Market,Partner,false,false
+D-041,Obsidian Ventures - Security Module Renewal,658000,Qualification,2026-05-19,AE-E02,Renewal,2026-02-06,Enterprise,Outbound,false,false
+D-042,Borealis Technologies - API Gateway,147000,Qualification,2026-07-28,AE-M05,New Business,2026-02-09,Mid-Market,Inbound,false,false
+D-043,Horizon Cloud - Compliance Renewal,699000,Qualification,2026-08-25,AE-E02,Renewal,2026-03-18,Enterprise,Event,false,false
+D-044,Nexus Industries - Platform,185000,Qualification,2026-05-22,AE-M01,New Business,2026-01-07,Mid-Market,Event,false,false
+D-045,Coral Digital - API Gateway,163000,Qualification,2026-07-15,AE-M03,New Business,2026-01-07,Mid-Market,PLG,false,false
+D-046,Crest Partners - API Gateway Expansion,1039000,Qualification,2026-07-08,AE-E02,Expansion,2026-01-13,Enterprise,Outbound,false,false
+D-047,Onyx Inc - Monitoring Expansion,836000,Qualification,2026-04-03,AE-E05,Expansion,2026-01-01,Enterprise,Partner,false,false
+D-048,Sterling Labs - API Gateway,161000,Qualification,2026-08-28,AE-M04,New Business,2026-02-23,Mid-Market,Event,false,false
+D-049,Summit Corp - Data Pipeline Expansion,,Qualification,2026-08-21,AE-SE02,Expansion,2026-03-27,Strategic Enterprise,PLG,false,false
+D-050,Bedrock Dynamics - Compliance Renewal,,Qualification,2026-08-27,AE-E03,Renewal,2026-01-20,Enterprise,Event,false,false
+D-051,Coral Digital - Data Pipeline Renewal,197000,Qualification,2026-04-17,AE-M02,Renewal,2026-03-25,Mid-Market,Partner,false,false
+D-052,Nimbus Technologies - API Gateway,613000,Qualification,2026-06-24,AE-E03,New Business,2026-01-23,Enterprise,PLG,false,false
+D-053,Aegis Networks - API Gateway Renewal,800000,Qualification,2026-07-23,AE-SE02,Renewal,2026-02-06,Strategic Enterprise,Outbound,false,false
+D-054,Vanguard Industries - Analytics,285000,Qualification,2026-05-06,AE-M04,New Business,2026-02-02,Mid-Market,Partner,false,false
+D-055,Vertex Labs - Compliance Renewal,688000,Qualification,2026-08-04,AE-E01,Renewal,2026-03-18,Enterprise,Partner,false,false
+D-056,Nexus Industries - Monitoring Renewal,184000,Qualification,2026-08-06,AE-M01,Renewal,2026-01-27,Mid-Market,PLG,false,false
+D-057,Pinnacle Digital - Enterprise Suite,795000,Qualification,2026-05-14,AE-E05,New Business,2026-01-28,Enterprise,Partner,false,false
+D-058,Pinnacle Analytics - Enterprise Suite Renewal,123000,Qualification,2026-09-10,AE-M04,Renewal,2026-01-01,Mid-Market,Event,false,false
+D-059,Nexus Technologies - Enterprise Suite Renewal,369000,Qualification,2026-09-28,AE-E02,Renewal,2026-01-06,Enterprise,Outbound,false,false
+D-060,Forge Cloud - Platform Renewal,2811000,Qualification,2026-05-05,AE-SE03,Renewal,2026-03-24,Strategic Enterprise,Partner,false,false
+D-061,Nexus Analytics - Data Pipeline Expansion,219000,Qualification,2026-09-03,AE-M06,Expansion,2026-02-26,Mid-Market,Outbound,false,false
+D-062,Summit Solutions - Compliance,800000,Qualification,2026-05-26,AE-SE02,New Business,2026-01-21,Strategic Enterprise,Inbound,false,false
+D-063,Vanguard Corp - Analytics,82000,Qualification,2026-08-18,AE-M06,New Business,2026-01-30,Mid-Market,Event,false,false
+D-064,Lattice Group - Monitoring Expansion,2810000,Qualification,2026-07-22,AE-SE01,Expansion,2026-02-03,Strategic Enterprise,Partner,false,false
+D-065,Axiom Partners - Platform Expansion,232000,Qualification,2026-05-06,AE-M06,Expansion,2026-01-16,Mid-Market,Inbound,false,false
+D-066,Compass Data - Analytics,727000,Qualification,2026-05-27,AE-E04,New Business,2026-01-08,Enterprise,Inbound,false,false
+D-067,Orbit Technologies - Security Module,800000,Qualification,2026-05-27,AE-SE03,New Business,2026-03-19,Strategic Enterprise,Inbound,false,false
+D-068,Axiom Group - Monitoring Renewal,241000,Qualification,2026-09-16,AE-M04,Renewal,2026-01-30,Mid-Market,Inbound,false,false
+D-069,Cobalt Sciences - Enterprise Suite Renewal,696000,Qualification,2026-05-19,AE-E03,Renewal,2026-02-24,Enterprise,Inbound,false,false
+D-070,Quantum Data - API Gateway Renewal,401000,Qualification,2026-08-18,AE-E01,Renewal,2026-01-30,Enterprise,Outbound,false,false
+D-071,Tempest Labs - Analytics,2118000,Technical Evaluation,2026-06-04,AE-SE02,New Business,2026-02-06,Strategic Enterprise,Event,false,false
+D-072,Indigo Partners - Platform Renewal,509000,Technical Evaluation,2026-08-12,AE-X01,Renewal,2026-03-30,Enterprise,Outbound,false,false
+D-073,Phoenix Partners - Analytics,120000,Technical Evaluation,2026-06-19,AE-M02,New Business,2026-03-24,Mid-Market,Inbound,false,false
+D-074,Titan Analytics - Monitoring Expansion,214000,Technical Evaluation,2026-05-18,AE-M04,Expansion,2026-01-06,Mid-Market,Partner,false,false
+D-075,Nebula Platforms - Analytics Renewal,190000,Technical Evaluation,2026-07-27,AE-M06,Renewal,2026-02-25,Mid-Market,Partner,false,false
+D-076,Solstice Analytics - Analytics Renewal,1207000,Technical Evaluation,2026-08-05,AE-SE01,Renewal,2026-03-25,Strategic Enterprise,Outbound,false,false
+D-077,Phoenix Networks - Compliance Renewal,3689000,Technical Evaluation,2026-07-15,AE-SE01,Renewal,2025-08-19,Strategic Enterprise,Inbound,false,false
+D-078,Monolith Partners - API Gateway Renewal,1038000,Technical Evaluation,2026-08-07,AE-SE03,Renewal,2026-01-09,Strategic Enterprise,Partner,false,false
+D-079,Synapse Labs - Security Module,154000,Technical Evaluation,2026-07-02,AE-M02,New Business,2026-03-13,Mid-Market,PLG,false,false
+D-080,Phoenix Networks - API Gateway,2015000,Technical Evaluation,2026-04-06,AE-SE04,New Business,2025-09-05,Strategic Enterprise,Inbound,false,false
+D-081,Ironclad Networks - Data Pipeline,209000,Technical Evaluation,2026-06-09,AE-M04,New Business,2026-02-05,Mid-Market,Outbound,false,false
+D-082,Lattice Analytics - Platform Expansion,166000,Technical Evaluation,2026-08-14,AE-M06,Expansion,2026-01-20,Mid-Market,Outbound,false,false
+D-083,Quantum Systems - API Gateway Expansion,799000,Technical Evaluation,2026-04-23,AE-E03,Expansion,2025-07-11,Enterprise,Inbound,false,false
+D-084,Sapphire Software - Data Pipeline Renewal,524000,Technical Evaluation,2026-07-02,AE-E04,Renewal,2025-08-02,Enterprise,Inbound,false,false
+D-085,Onyx Dynamics - API Gateway Expansion,490000,Technical Evaluation,2026-06-15,AE-E05,Expansion,2026-03-24,Enterprise,Partner,false,false
+D-086,Pinnacle Digital - API Gateway,455000,Technical Evaluation,2026-07-31,AE-E06,New Business,2026-01-08,Enterprise,Partner,false,false
+D-087,Paragon Software - Security Module,135000,Technical Evaluation,2026-09-28,AE-M02,New Business,2026-02-04,Mid-Market,Inbound,false,false
+D-088,Ironclad Ventures - Analytics,198000,Technical Evaluation,2026-04-23,AE-M03,New Business,2026-01-14,Mid-Market,Inbound,false,false
+D-089,Quantum Global - Monitoring Expansion,815000,Technical Evaluation,2026-08-27,AE-E02,Expansion,2026-01-08,Enterprise,Inbound,false,false
+D-090,Forge Industries - Monitoring Renewal,2271000,Technical Evaluation,2026-04-23,AE-SE02,Renewal,2026-03-11,Strategic Enterprise,Partner,false,false
+D-091,Cobalt Platforms - Data Pipeline Renewal,829000,Technical Evaluation,2026-04-07,AE-E02,Renewal,2025-07-15,Enterprise,Inbound,false,false
+D-092,Ridge Corp - Security Module Expansion,282000,Technical Evaluation,2026-06-22,AE-E06,Expansion,2026-03-17,Enterprise,Partner,false,false
+D-093,Pavilion Cloud - Security Module Renewal,219000,Technical Evaluation,2026-08-26,AE-M03,Renewal,2026-01-15,Mid-Market,Outbound,false,false
+D-094,Coral Software - Compliance Renewal,164000,Technical Evaluation,2026-09-28,AE-M02,Renewal,2026-01-23,Mid-Market,Outbound,false,false
+D-095,Forge Cloud - Monitoring,2603000,Technical Evaluation,2026-09-07,AE-SE01,New Business,2026-03-30,Strategic Enterprise,Inbound,false,false
+D-096,Ironclad Systems - Compliance,232000,Technical Evaluation,2026-04-15,AE-M01,New Business,2026-01-26,Mid-Market,Partner,false,false
+D-097,Summit Corp - Analytics Expansion,877000,Technical Evaluation,2026-07-15,AE-SE03,Expansion,2026-01-20,Strategic Enterprise,Event,false,false
+D-098,Obsidian Ventures - Data Pipeline Expansion,685000,Technical Evaluation,,AE-E01,Expansion,2026-02-02,Enterprise,Event,false,false
+D-099,Summit Solutions - Analytics Renewal,1270000,Technical Evaluation,2026-05-08,AE-SE02,Renewal,2026-01-16,Strategic Enterprise,Inbound,false,false
+D-100,Vanguard Industries - Analytics Renewal,128000,Technical Evaluation,2026-09-29,AE-M06,Renewal,2026-03-25,Mid-Market,Partner,false,false
+D-101,Borealis Technologies - Compliance Renewal,,Technical Evaluation,2026-06-15,AE-M04,Renewal,2026-01-29,Mid-Market,Event,false,false
+D-102,Ironclad Networks - API Gateway Expansion,279000,Technical Evaluation,2026-05-18,AE-M06,Expansion,2026-02-20,Mid-Market,Partner,false,false
+D-103,Forge Cloud - Enterprise Suite Expansion,800000,Technical Evaluation,2026-07-23,AE-X01,Expansion,2026-02-23,Strategic Enterprise,Partner,false,false
+D-104,Lattice Analytics - API Gateway Expansion,193000,Technical Evaluation,,AE-M02,Expansion,2026-02-24,Mid-Market,Inbound,false,false
+D-105,Eclipse Labs - Enterprise Suite Renewal,210000,Technical Evaluation,2026-05-14,AE-M01,Renewal,2026-02-23,Mid-Market,PLG,false,false
+D-106,Pinnacle Partners - Analytics Expansion,236000,Technical Evaluation,2026-06-01,AE-M06,Expansion,2026-01-05,Mid-Market,Event,false,false
+D-107,Nimbus Technologies - Enterprise Suite Renewal,612000,Technical Evaluation,2026-05-26,AE-E04,Renewal,2026-03-16,Enterprise,PLG,false,false
+D-108,Sapphire Software - Analytics,509000,Technical Evaluation,2026-07-01,AE-E05,New Business,2026-03-11,Enterprise,Inbound,false,false
+D-109,Mercury Global - Compliance,1928000,Technical Evaluation,2026-08-26,AE-SE03,New Business,2026-01-07,Strategic Enterprise,Event,false,false
+D-110,Bedrock Data - Data Pipeline Expansion,227000,Technical Evaluation,2026-09-01,AE-M05,Expansion,2026-02-17,Mid-Market,Event,false,false
+D-111,Borealis Technologies - API Gateway,141000,Technical Evaluation,2026-09-16,AE-M06,New Business,2026-03-09,Mid-Market,PLG,false,false
+D-112,Prism Technologies - API Gateway Expansion,169000,Technical Evaluation,2026-08-28,AE-M05,Expansion,2026-01-14,Mid-Market,Inbound,false,false
+D-113,Nimbus Technologies - API Gateway,686000,Business Case,2026-04-14,AE-E03,New Business,2026-01-06,Enterprise,Outbound,false,false
+D-114,Atlas Networks - Data Pipeline Renewal,188000,Business Case,2026-09-08,AE-M01,Renewal,2026-01-29,Mid-Market,Inbound,false,false
+D-115,Ridge Corp - Security Module Expansion,512000,Business Case,2026-09-08,AE-E03,Expansion,2026-01-09,Enterprise,Outbound,false,false
+D-116,Beacon Solutions - Compliance,355000,Business Case,2026-05-05,AE-E03,New Business,2026-03-17,Enterprise,Event,false,false
+D-117,Bedrock Systems - API Gateway Renewal,185000,Business Case,2026-05-26,AE-M04,Renewal,2026-03-03,Mid-Market,PLG,false,false
+D-118,Lumen Solutions - Enterprise Suite Renewal,1999000,Business Case,2026-03-27,AE-SE02,Renewal,2026-02-02,Strategic Enterprise,PLG,false,false
+D-119,Cobalt Sciences - Enterprise Suite Expansion,409000,Business Case,2026-05-26,AE-E06,Expansion,2026-03-02,Enterprise,Inbound,false,false
+D-120,Lattice Analytics - Security Module Expansion,144000,Business Case,2026-07-14,AE-M06,Expansion,2026-02-24,Mid-Market,Partner,false,false
+D-121,Axiom Labs - Analytics Renewal,140000,Business Case,2026-09-21,AE-M03,Renewal,2026-01-20,Mid-Market,Outbound,false,false
+D-122,Lumen Solutions - Data Pipeline,2362000,Business Case,2026-08-05,AE-SE02,New Business,2026-01-01,Strategic Enterprise,Outbound,false,false
+D-123,Sapphire Software - Compliance Renewal,722000,Business Case,2026-04-29,AE-E03,Renewal,2026-02-27,Enterprise,Inbound,false,false
+D-124,Orbit Digital - Data Pipeline,637000,Business Case,2026-09-28,AE-E02,New Business,2026-02-06,Enterprise,Outbound,false,false
+D-125,Thrive Industries - Platform Renewal,380000,Business Case,2026-05-15,AE-E01,Renewal,2026-02-04,Enterprise,Inbound,false,false
+D-126,Axiom Group - API Gateway Renewal,193000,Business Case,2026-03-30,AE-M03,Renewal,2026-02-27,Mid-Market,PLG,false,false
+D-127,Nexus Technologies - Monitoring Renewal,369000,Business Case,2026-05-29,AE-E05,Renewal,2026-03-17,Enterprise,Inbound,false,false
+D-128,Coral Software - Security Module,257000,Business Case,2026-05-20,AE-M03,New Business,2026-02-11,Mid-Market,Event,false,false
+D-129,Summit Corp - Enterprise Suite,2369000,Business Case,2026-07-22,AE-SE02,New Business,2026-03-12,Strategic Enterprise,PLG,false,false
+D-130,Beacon Solutions - Platform Renewal,498000,Business Case,2026-04-22,AE-E06,Renewal,2026-01-30,Enterprise,PLG,false,false
+D-131,Flint Sciences - Platform,555000,Business Case,2026-03-17,AE-E04,New Business,2026-01-22,Enterprise,PLG,false,false
+D-132,Cipher Analytics - Security Module Renewal,,Business Case,2026-05-06,AE-E01,Renewal,2026-01-06,Enterprise,PLG,false,false
+D-133,Bedrock Group - Platform Renewal,165000,Business Case,2026-03-30,AE-M03,Renewal,2026-03-27,Mid-Market,Inbound,false,false
+D-134,Sterling Labs - API Gateway Renewal,116000,Business Case,2026-04-27,AE-M04,Renewal,2026-03-04,Mid-Market,Inbound,false,false
+D-135,Monolith Partners - Platform,1525000,Business Case,2026-06-23,AE-SE01,New Business,2026-01-26,Strategic Enterprise,Outbound,false,false
+D-136,Ironclad Data - API Gateway Renewal,592000,Business Case,2026-06-22,AE-E05,Renewal,2026-02-17,Enterprise,Partner,false,false
+D-137,Summit Corp - Monitoring Expansion,3050000,Business Case,2026-06-01,AE-SE01,Expansion,2026-03-05,Strategic Enterprise,Inbound,false,false
+D-138,Catalyst Networks - Analytics Renewal,166000,Business Case,2026-07-07,AE-M03,Renewal,2026-03-30,Mid-Market,Inbound,false,false
+D-139,Verdant Networks - Data Pipeline Renewal,1680000,Business Case,2026-05-22,AE-SE03,Renewal,2026-02-18,Strategic Enterprise,Outbound,false,false
+D-140,Sable Dynamics - Monitoring Expansion,407000,Business Case,2026-08-12,AE-E01,Expansion,2026-01-30,Enterprise,Inbound,false,false
+D-141,Cascade Solutions - Monitoring,347000,Business Case,2026-08-31,AE-E05,New Business,2026-02-17,Enterprise,Outbound,false,false
+D-142,Lattice Analytics - Platform,80000,Business Case,2026-04-20,AE-M01,New Business,2026-02-19,Mid-Market,Partner,false,false
+D-143,Pinnacle Digital - Monitoring Renewal,542000,Business Case,2026-05-15,AE-E02,Renewal,2026-02-17,Enterprise,Inbound,false,false
+D-144,Nebula Solutions - API Gateway,2625000,Business Case,2026-06-30,AE-SE01,New Business,2026-01-13,Strategic Enterprise,Inbound,false,false
+D-145,Prism Technologies - Monitoring Expansion,121000,Negotiation,2026-09-29,AE-M04,Expansion,2026-03-26,Mid-Market,Outbound,false,false
+D-146,Falcon Labs - Data Pipeline,217000,Negotiation,2026-08-11,AE-M04,New Business,2026-03-20,Mid-Market,Inbound,false,false
+D-147,Spectra Networks - API Gateway Renewal,281000,Negotiation,2026-05-21,AE-M01,Renewal,2026-02-04,Mid-Market,Inbound,false,false
+D-148,Ridge Inc - Monitoring Renewal,221000,Negotiation,2026-05-22,AE-M06,Renewal,2026-01-16,Mid-Market,Partner,false,false
+D-149,Compass Digital - API Gateway Renewal,610000,Negotiation,2026-07-30,AE-E06,Renewal,2026-01-09,Enterprise,PLG,false,false
+D-150,Paragon Software - API Gateway Renewal,238000,Negotiation,2026-09-18,AE-M06,Renewal,2026-02-03,Mid-Market,Inbound,false,false
+D-151,Pinnacle Partners - Platform Expansion,190000,Negotiation,2026-07-28,AE-M03,Expansion,2026-03-13,Mid-Market,Outbound,false,false
+D-152,Forge Cloud - API Gateway Renewal,1371000,Negotiation,2026-04-07,AE-SE04,Renewal,2026-01-09,Strategic Enterprise,Outbound,false,false
+D-153,Nexus Industries - Data Pipeline Expansion,148000,Negotiation,2026-09-21,AE-M05,Expansion,2026-02-18,Mid-Market,Outbound,false,false
+D-154,Atlas Networks - Data Pipeline Renewal,291000,Negotiation,2026-05-19,AE-M01,Renewal,2026-01-29,Mid-Market,PLG,false,false
+D-155,Prism Technologies - Compliance Expansion,232000,Negotiation,2026-09-03,AE-M06,Expansion,2026-01-15,Mid-Market,PLG,false,false
+D-156,Aegis Analytics - Monitoring Expansion,178000,Negotiation,2026-08-19,AE-M03,Expansion,2026-02-13,Mid-Market,Outbound,false,false
+D-157,Nimbus Technologies - Platform,531000,Negotiation,2026-06-30,AE-E06,New Business,2026-03-30,Enterprise,Partner,false,false
+D-158,Ridge Corp - Analytics Renewal,920000,Negotiation,2026-08-26,AE-E03,Renewal,2026-02-27,Enterprise,PLG,false,false
+D-159,Pavilion Cloud - Security Module Renewal,,Negotiation,2026-09-21,AE-M04,Renewal,2026-02-03,Mid-Market,Partner,false,false
+D-160,Falcon Ventures - Compliance Renewal,106000,Negotiation,2026-05-04,AE-M03,Renewal,2026-03-09,Mid-Market,Inbound,false,false
+D-161,Obsidian Ventures - Platform Expansion,456000,Negotiation,2026-06-11,AE-E05,Expansion,2026-02-04,Enterprise,Partner,false,false
+D-162,Indigo Sciences - Platform Renewal,144000,Negotiation,2026-07-01,AE-M02,Renewal,2026-03-16,Mid-Market,PLG,false,false
+D-163,Ironclad Data - Enterprise Suite Expansion,466000,Negotiation,2026-04-10,AE-E05,Expansion,2026-03-24,Enterprise,Partner,false,false
+D-164,Obsidian Corp - Compliance Expansion,717000,Negotiation,2026-08-10,AE-E04,Expansion,2026-03-19,Enterprise,Inbound,false,false
+D-165,Coral Software - Data Pipeline Expansion,131000,Negotiation,2026-09-11,AE-M02,Expansion,2026-01-27,Mid-Market,Outbound,false,false
+D-166,Sequoia Cloud - Security Module Expansion,86000,Negotiation,2026-04-15,AE-M03,Expansion,2026-03-30,Mid-Market,Event,false,false
+D-167,Prism Technologies - Security Module,192000,Closed Won,2026-04-06,AE-M03,New Business,2026-02-20,Mid-Market,Event,true,true
+D-168,Bedrock Systems - Compliance Expansion,262000,Closed Won,2026-05-31,AE-M01,Expansion,2026-04-07,Mid-Market,Inbound,true,true
+D-169,Zenith Networks - Analytics Renewal,111000,Closed Won,2026-04-02,AE-M06,Renewal,2026-02-16,Mid-Market,Event,true,true
+D-170,Flint Sciences - Compliance,727000,Closed Won,2026-06-19,AE-E04,New Business,2026-04-03,Enterprise,Partner,true,true
+D-171,Phoenix Partners - Enterprise Suite Expansion,168000,Closed Won,2026-04-01,AE-M03,Expansion,2026-02-20,Mid-Market,Outbound,true,true
+D-172,Cascade Solutions - Security Module Renewal,250000,Closed Won,2026-06-23,AE-E02,Renewal,2026-04-27,Enterprise,PLG,true,true
+D-173,Lattice Group - Analytics Renewal,1745000,Closed Won,2026-04-03,AE-SE02,Renewal,2026-02-02,Strategic Enterprise,PLG,true,true
+D-174,Nimbus Technologies - Security Module Renewal,611000,Closed Won,2026-04-01,AE-E01,Renewal,2026-03-06,Enterprise,Outbound,true,true
+D-175,Nexus Analytics - Enterprise Suite Renewal,107000,Closed Won,2026-04-06,AE-M01,Renewal,2026-02-23,Mid-Market,Outbound,true,true
+D-176,Forge Software - Analytics Renewal,165000,Closed Won,2026-04-01,AE-M02,Renewal,2026-01-02,Mid-Market,Partner,true,true
+D-177,Vertex Labs - Monitoring Renewal,355000,Closed Won,2026-04-06,AE-E04,Renewal,2026-04-03,Enterprise,Partner,true,true
+D-178,Ember Networks - Platform Expansion,190000,Closed Won,2026-04-02,AE-M06,Expansion,2026-03-03,Mid-Market,Inbound,true,true
+D-179,Keystone Cloud - API Gateway Renewal,270000,Closed Won,2026-04-01,AE-M05,Renewal,2026-02-23,Mid-Market,Outbound,true,true
+D-180,Cedar Networks - Data Pipeline,681000,Closed Won,2026-04-06,AE-E01,New Business,2026-02-17,Enterprise,Inbound,true,true
+D-181,Forge Cloud - Security Module Expansion,3074000,Closed Won,2026-01-08,AE-SE01,Expansion,2025-09-30,Strategic Enterprise,Event,true,true
+D-182,Cedar Networks - API Gateway,250000,Closed Won,2026-03-13,AE-E03,New Business,2025-12-04,Enterprise,Inbound,true,true
+D-183,Crest Cloud - Monitoring Renewal,727000,Closed Won,2026-01-12,AE-E06,Renewal,2025-12-30,Enterprise,Outbound,true,true
+D-184,Quantum Systems - Enterprise Suite,631000,Closed Won,2026-01-30,AE-E02,New Business,2025-11-05,Enterprise,Event,true,true
+D-185,Mercury Global - Analytics,2496000,Closed Won,2025-11-24,AE-SE03,New Business,2025-06-19,Strategic Enterprise,Partner,true,true
+D-186,Onyx Dynamics - Monitoring,337000,Closed Won,2025-12-30,AE-E02,New Business,2025-11-04,Enterprise,PLG,true,true
+D-187,Onyx Technologies - Analytics Expansion,1468000,Closed Won,2026-02-25,AE-SE02,Expansion,2025-10-13,Strategic Enterprise,Partner,true,true
+D-188,Sterling Cloud - Enterprise Suite,184000,Closed Won,2026-01-09,AE-M06,New Business,2025-10-27,Mid-Market,PLG,true,true
+D-189,Vertex Labs - Security Module Expansion,427000,Closed Won,2026-02-10,AE-E05,Expansion,2025-10-10,Enterprise,Event,true,true
+D-190,Compass Data - Security Module,634000,Closed Won,2026-04-06,AE-E06,New Business,2026-02-23,Enterprise,PLG,true,true
+D-191,Forge Inc - Analytics Renewal,188000,Closed Won,2026-03-29,AE-M02,Renewal,2026-02-25,Mid-Market,Event,true,true
+D-192,Verdant Industries - Platform Renewal,289000,Closed Won,2026-04-07,AE-M01,Renewal,2026-02-17,Mid-Market,Outbound,true,true
+D-193,Catalyst Networks - Platform Renewal,214000,Closed Won,2025-11-06,AE-M01,Renewal,2025-08-15,Mid-Market,Partner,true,true
+D-194,Monolith Inc - Compliance Renewal,148000,Closed Won,2025-11-25,AE-M02,Renewal,2025-10-24,Mid-Market,Outbound,true,true
+D-195,Cobalt Platforms - Security Module Renewal,871000,Closed Won,2025-10-16,AE-E05,Renewal,2025-06-19,Enterprise,Inbound,true,true
+D-196,Ironclad Systems - API Gateway,255000,Closed Won,2025-12-02,AE-M01,New Business,2025-10-14,Mid-Market,Partner,true,true
+D-197,Quantum Global - Monitoring,532000,Closed Won,2026-01-30,AE-E06,New Business,2025-11-13,Enterprise,Outbound,true,true
+D-198,Mercury Inc - Data Pipeline Renewal,184000,Closed Won,2026-03-18,AE-M03,Renewal,2026-02-16,Mid-Market,Outbound,true,true
+D-199,Forge Inc - Monitoring,154000,Closed Won,2026-02-18,AE-M04,New Business,2025-09-22,Mid-Market,Inbound,true,true
+D-200,Verdant Industries - API Gateway Renewal,215000,Closed Won,2026-02-11,AE-M06,Renewal,2025-11-24,Mid-Market,Outbound,true,true
+D-201,Ironclad Ventures - Monitoring Renewal,251000,Closed Won,2026-02-19,AE-M02,Renewal,2026-01-21,Mid-Market,Event,true,true
+D-202,Lattice Group - Analytics Renewal,2339000,Closed Won,2026-02-18,AE-SE01,Renewal,2025-09-08,Strategic Enterprise,Inbound,true,true
+D-203,Summit Corp - Monitoring,2544000,Closed Won,2025-11-26,AE-SE03,New Business,2025-06-11,Strategic Enterprise,Outbound,true,true
+D-204,Beacon Solutions - Monitoring Renewal,391000,Closed Won,2026-01-07,AE-E06,Renewal,2025-11-12,Enterprise,PLG,true,true
+D-205,Bedrock Dynamics - API Gateway Renewal,332000,Closed Won,2026-01-20,AE-E05,Renewal,2025-12-17,Enterprise,Inbound,true,true
+D-206,Atlas Labs - Analytics,158000,Closed Won,2026-02-23,AE-M03,New Business,2026-02-17,Mid-Market,Event,true,true
+D-207,Vector Data - Platform Renewal,596000,Closed Won,2026-03-25,AE-E01,Renewal,2025-11-25,Enterprise,Outbound,true,true
+D-208,Lumen Systems - Security Module,1718000,Closed Won,2025-11-27,AE-SE02,New Business,2025-10-02,Strategic Enterprise,Event,true,true
+D-209,Flint Sciences - Data Pipeline Expansion,391000,Closed Won,2025-12-03,AE-E02,Expansion,2025-11-26,Enterprise,Outbound,true,true
+D-210,Cobalt Platforms - Security Module,454000,Closed Won,2025-10-08,AE-E04,New Business,2025-09-15,Enterprise,Outbound,true,true
+D-211,Cascade Solutions - API Gateway Renewal,538000,Closed Won,2025-12-15,AE-E01,Renewal,2025-11-11,Enterprise,PLG,true,true
+D-212,Nebula Solutions - Data Pipeline Renewal,800000,Closed Won,2025-12-01,AE-SE03,Renewal,2025-08-20,Strategic Enterprise,Partner,true,true
+D-213,Sable Platforms - Enterprise Suite Expansion,634000,Closed Won,2026-03-23,AE-E06,Expansion,2026-01-05,Enterprise,Inbound,true,true
+D-214,Atlas Cloud - Monitoring Renewal,2202000,Closed Won,2026-01-30,AE-SE04,Renewal,2025-09-19,Strategic Enterprise,Outbound,true,true
+D-215,Vector Data - Data Pipeline Renewal,319000,Closed Won,2026-03-04,AE-E05,Renewal,2025-09-11,Enterprise,Inbound,true,true
+D-216,Obsidian Corp - Security Module Renewal,634000,Closed Won,2026-02-23,AE-E06,Renewal,2026-01-07,Enterprise,Partner,true,true
+D-217,Sapphire Digital - Security Module Renewal,671000,Closed Won,2026-02-17,AE-E03,Renewal,2025-11-20,Enterprise,Inbound,true,true
+D-218,Verdant Networks - Data Pipeline Renewal,1035000,Closed Won,2025-12-09,AE-SE01,Renewal,2025-09-01,Strategic Enterprise,Partner,true,true
+D-219,Cobalt Platforms - API Gateway,449000,Closed Won,2026-02-09,AE-E02,New Business,2025-10-20,Enterprise,Partner,true,true
+D-220,Basalt Platforms - Compliance Expansion,357000,Closed Won,2025-10-13,AE-E05,Expansion,2025-08-19,Enterprise,Event,true,true
+D-221,Monolith Partners - Data Pipeline Renewal,1634000,Closed Won,2026-03-23,AE-SE01,Renewal,2025-09-26,Strategic Enterprise,Outbound,true,true
+D-222,Opal Systems - Platform Renewal,2568000,Closed Won,2025-11-07,AE-SE01,Renewal,2025-09-10,Strategic Enterprise,PLG,true,true
+D-223,Verdant Industries - Compliance Expansion,178000,Closed Won,2026-01-30,AE-M04,Expansion,2026-01-19,Mid-Market,Event,true,true
+D-224,Nimbus Systems - Platform Expansion,182000,Closed Won,2026-01-23,AE-M02,Expansion,2025-12-10,Mid-Market,PLG,true,true
+D-225,Verdant Networks - Enterprise Suite Expansion,1337000,Closed Won,2025-10-31,AE-SE03,Expansion,2025-08-18,Strategic Enterprise,Inbound,true,true
+D-226,Cipher Analytics - Security Module Renewal,618000,Closed Won,2026-03-12,AE-E01,Renewal,2025-09-11,Enterprise,Event,true,true
+D-227,Keystone Cloud - Monitoring Renewal,209000,Closed Won,2026-01-01,AE-M04,Renewal,2025-11-05,Mid-Market,Event,true,true
+D-228,Paragon Analytics - Data Pipeline Expansion,182000,Closed Won,2026-02-09,AE-M03,Expansion,2025-11-13,Mid-Market,Inbound,true,true
+D-229,Quantum Global - Security Module Expansion,517000,Closed Won,2025-12-15,AE-E05,Expansion,2025-09-23,Enterprise,Outbound,true,true
+D-230,Atlas Partners - Enterprise Suite Renewal,473000,Closed Won,2026-01-15,AE-E04,Renewal,2026-01-05,Enterprise,Outbound,true,true
+D-231,Phoenix Partners - Analytics Renewal,80000,Closed Won,2026-02-24,AE-M01,Renewal,2025-11-03,Mid-Market,PLG,true,true
+D-232,Ironclad Ventures - Data Pipeline,152000,Closed Won,2025-12-23,AE-M02,New Business,2025-07-31,Mid-Market,Event,true,true
+D-233,Sentry Inc - Compliance,119000,Closed Won,2026-03-10,AE-M05,New Business,2026-01-09,Mid-Market,Inbound,true,true
+D-234,Nimbus Systems - Enterprise Suite,80000,Closed Won,2025-12-26,AE-M01,New Business,2025-08-25,Mid-Market,Inbound,true,true
+D-235,Sapphire Digital - Monitoring Renewal,920000,Closed Won,2026-02-04,AE-E03,Renewal,2025-11-11,Enterprise,Partner,true,true
+D-236,Nimbus Systems - Security Module Renewal,192000,Closed Won,2025-11-21,AE-M06,Renewal,2025-08-14,Mid-Market,PLG,true,true
+D-237,Prism Labs - Data Pipeline Renewal,0,Closed Won,2026-03-05,AE-E01,Renewal,2026-02-23,Enterprise,Inbound,true,true
+D-238,Marble Inc - API Gateway Renewal,224000,Closed Won,2025-10-22,AE-M04,Renewal,2025-08-13,Mid-Market,Inbound,true,true
+D-239,Nebula Solutions - Platform Expansion,2077000,Closed Won,2026-02-01,AE-SE02,Expansion,2025-11-06,Strategic Enterprise,Outbound,true,true
+D-240,Flint Sciences - API Gateway Renewal,518000,Closed Won,2025-12-04,AE-E06,Renewal,2025-10-28,Enterprise,Event,true,true
+D-241,Titan Analytics - Platform Renewal,147000,Closed Won,2026-03-24,AE-M04,Renewal,2025-09-15,Mid-Market,Inbound,true,true
+D-242,Aegis Corp - Enterprise Suite Renewal,426000,Closed Won,2025-11-26,AE-E06,Renewal,2025-06-16,Enterprise,Partner,true,true
+D-243,Aegis Solutions - Compliance Renewal,177000,Closed Won,2026-01-15,AE-M05,Renewal,2025-12-26,Mid-Market,Partner,true,true
+D-244,Sable Platforms - API Gateway Renewal,749000,Closed Won,2026-03-17,AE-E02,Renewal,2025-12-22,Enterprise,Outbound,true,true
+D-245,Sable Partners - API Gateway Renewal,543000,Closed Won,2025-10-13,AE-E05,Renewal,2025-09-12,Enterprise,Partner,true,true
+D-246,Coral Software - Enterprise Suite Expansion,142000,Closed Won,2026-02-04,AE-M04,Expansion,2025-12-24,Mid-Market,Inbound,true,true
+D-247,Sapphire Global - Compliance Renewal,230000,Closed Won,2026-01-19,AE-M02,Renewal,2025-11-13,Mid-Market,Inbound,true,true
+D-248,Axiom Partners - Compliance,80000,Closed Won,2026-03-03,AE-M01,New Business,2026-02-04,Mid-Market,Outbound,true,true
+D-249,Keystone Cloud - Analytics Renewal,161000,Closed Won,2026-01-22,AE-M03,Renewal,2025-11-24,Mid-Market,Partner,true,true
+D-250,Sentry Group - Data Pipeline Expansion,180000,Closed Won,2026-02-02,AE-M03,Expansion,2026-01-02,Mid-Market,Inbound,true,true
+D-251,Cipher Analytics - API Gateway Renewal,768000,Closed Lost,2025-12-29,AE-E01,Renewal,2025-09-17,Enterprise,Outbound,true,false
+D-252,Compass Data - Monitoring Expansion,769000,Closed Lost,2026-02-20,AE-E04,Expansion,2025-09-26,Enterprise,Partner,true,false
+D-253,Forge Industries - Monitoring Renewal,2117000,Closed Lost,2025-12-29,AE-SE03,Renewal,2025-06-26,Strategic Enterprise,Outbound,true,false
+D-254,Helix Networks - Compliance Expansion,592000,Closed Lost,2025-12-03,AE-E04,Expansion,2025-07-22,Enterprise,Partner,true,false
+D-255,Axiom Solutions - Monitoring,767000,Closed Lost,2026-01-30,AE-E04,New Business,2025-11-07,Enterprise,PLG,true,false
+D-256,Mercury Global - Platform Renewal,1494000,Closed Lost,2026-01-28,AE-SE02,Renewal,2025-12-25,Strategic Enterprise,Inbound,true,false
+D-257,Indigo Partners - Enterprise Suite Expansion,408000,Closed Lost,2025-12-04,AE-E04,Expansion,2025-06-17,Enterprise,Partner,true,false
+D-258,Beacon Sciences - Monitoring,250000,Closed Lost,2026-01-28,AE-E05,New Business,2025-12-10,Enterprise,Inbound,true,false
+D-259,Thrive Industries - Data Pipeline Renewal,895000,Closed Lost,2026-03-27,AE-E05,Renewal,2025-10-30,Enterprise,Partner,true,false
+D-260,Lattice Analytics - Enterprise Suite Expansion,145000,Closed Lost,2026-02-12,AE-M04,Expansion,2025-11-27,Mid-Market,Event,true,false
+D-261,Nexus Systems - API Gateway Renewal,170000,Closed Lost,2026-01-23,AE-M01,Renewal,2025-10-31,Mid-Market,PLG,true,false
+D-262,Nexus Technologies - Monitoring Renewal,845000,Closed Lost,2026-03-04,AE-E05,Renewal,2026-02-19,Enterprise,Event,true,false
+D-263,Indigo Partners - Enterprise Suite Renewal,675000,Closed Lost,2026-02-16,AE-E04,Renewal,2025-09-03,Enterprise,Inbound,true,false
+D-264,Thrive Industries - Data Pipeline Expansion,457000,Closed Lost,2026-02-12,AE-E05,Expansion,2025-09-17,Enterprise,Outbound,true,false
+D-265,Cipher Ventures - Compliance Renewal,165000,Closed Lost,2026-01-08,AE-M06,Renewal,2025-11-13,Mid-Market,Inbound,true,false
+D-266,Obsidian Ventures - API Gateway Renewal,1045000,Closed Lost,2026-02-06,AE-E03,Renewal,2026-01-28,Enterprise,Outbound,true,false
+D-267,Granite Sciences - API Gateway Expansion,178000,Closed Lost,2026-01-07,AE-M01,Expansion,2025-12-08,Mid-Market,Outbound,true,false
+D-268,Prism Labs - Analytics Renewal,250000,Closed Lost,2026-02-05,AE-E05,Renewal,2026-01-20,Enterprise,PLG,true,false
+D-269,Sterling Cloud - Monitoring Renewal,140000,Closed Lost,2026-02-16,AE-M03,Renewal,2025-12-24,Mid-Market,Partner,true,false
+D-270,Spectra Group - Data Pipeline,226000,Closed Lost,2026-01-22,AE-M03,New Business,2025-10-22,Mid-Market,Inbound,true,false
+D-271,Horizon Cloud - Analytics Expansion,653000,Closed Lost,2026-04-30,AE-E03,Expansion,2026-02-12,Enterprise,Inbound,true,false
+D-272,Vector Data - Monitoring Renewal,274000,Closed Lost,2026-02-20,AE-E05,Renewal,2025-09-03,Enterprise,PLG,true,false
+D-273,Catalyst Networks - Security Module Renewal,219000,Closed Lost,2026-03-24,AE-M06,Renewal,2026-02-10,Mid-Market,Outbound,true,false
+D-274,Forge Cloud - Monitoring Renewal,2886000,Closed Lost,2025-12-24,AE-SE03,Renewal,2025-11-11,Strategic Enterprise,Partner,true,false
+D-275,Compass Data - Security Module Renewal,698000,Closed Lost,2025-12-03,AE-E06,Renewal,2025-07-29,Enterprise,Outbound,true,false
+D-276,Crest Cloud - Analytics Expansion,843000,Closed Lost,2026-03-10,AE-E06,Expansion,2026-01-20,Enterprise,Event,true,false
+D-277,Pavilion Cloud - API Gateway Renewal,226000,Closed Lost,2025-12-08,AE-M02,Renewal,2025-10-06,Mid-Market,Inbound,true,false
+D-278,Paragon Analytics - Analytics Renewal,255000,Closed Lost,2025-11-12,AE-M02,Renewal,2025-11-07,Mid-Market,Event,true,false
+D-279,Lumen Systems - Monitoring Renewal,1420000,Closed Lost,2025-10-06,AE-SE02,Renewal,2025-07-28,Strategic Enterprise,Partner,true,false
+D-280,Prism Technologies - API Gateway Renewal,151000,Closed Lost,2025-10-31,AE-M02,Renewal,2025-08-04,Mid-Market,Inbound,true,false
+D-281,Sable Partners - Analytics Renewal,577000,Closed Lost,2026-04-20,AE-E06,Renewal,2026-02-26,Enterprise,Outbound,true,false
+D-282,Compass Digital - Compliance,250000,Closed Lost,2025-11-04,AE-E02,New Business,2025-06-05,Enterprise,PLG,true,false
+D-283,Bedrock Dynamics - Platform Renewal,361000,Closed Lost,2025-12-26,AE-E04,Renewal,2025-06-03,Enterprise,Outbound,true,false
+D-284,Monolith Partners - API Gateway Renewal,1311000,Closed Lost,2026-01-07,AE-SE04,Renewal,2025-12-26,Strategic Enterprise,Outbound,true,false
+D-285,Forge Cloud - Security Module Renewal,2440000,Closed Lost,2025-11-07,AE-SE03,Renewal,2025-08-15,Strategic Enterprise,Inbound,true,false
+D-286,Compass Digital - Data Pipeline,727000,Closed Lost,2026-01-08,AE-E04,New Business,2025-12-05,Enterprise,Inbound,true,false
+D-287,Lumen Industries - Data Pipeline,200000,Closed Lost,2026-01-14,AE-M04,New Business,2025-11-10,Mid-Market,PLG,true,false
+D-288,Phoenix Networks - Data Pipeline Renewal,2403000,Closed Lost,2026-01-20,AE-SE03,Renewal,2025-11-19,Strategic Enterprise,PLG,true,false
+D-289,Summit Solutions - Security Module,2257000,Closed Lost,2025-12-01,AE-SE03,New Business,2025-09-03,Strategic Enterprise,Inbound,true,false
+D-290,Coral Systems - API Gateway Renewal,1895000,Closed Lost,2026-02-09,AE-SE03,Renewal,2025-11-26,Strategic Enterprise,Event,true,false
+D-291,Sterling Dynamics - Monitoring Expansion,558000,Closed Lost,2026-02-25,AE-E04,Expansion,2026-01-08,Enterprise,Inbound,true,false
+D-292,Titan Analytics - Compliance Renewal,268000,Closed Lost,2025-10-06,AE-M06,Renewal,2025-07-08,Mid-Market,Event,true,false
+D-293,Atlas Cloud - Platform Expansion,962000,Closed Lost,2025-11-13,AE-SE01,Expansion,2025-07-18,Strategic Enterprise,PLG,true,false
+D-294,Titan Analytics - Enterprise Suite Expansion,134000,Closed Lost,2026-03-18,AE-M04,Expansion,2025-10-28,Mid-Market,Outbound,true,false
+D-295,Ridge Inc - Monitoring,128000,Closed Lost,2026-02-26,AE-M06,New Business,2025-12-09,Mid-Market,Event,true,false
+D-296,Eclipse Labs - API Gateway Renewal,176000,Closed Lost,2026-03-31,AE-M02,Renewal,2026-01-19,Mid-Market,Partner,true,false
+D-297,Beacon Solutions - Security Module Expansion,551000,Closed Lost,2026-01-14,AE-E04,Expansion,2025-12-03,Enterprise,PLG,true,false
+D-298,Spectra Group - API Gateway Renewal,248000,Closed Lost,2026-01-19,AE-M06,Renewal,2025-12-17,Mid-Market,Outbound,true,false
+D-299,Spectra Group - Platform Expansion,115000,Closed Lost,2025-11-05,AE-M03,Expansion,2025-07-11,Mid-Market,Inbound,true,false
+D-300,Onyx Dynamics - Enterprise Suite,611000,Closed Lost,2026-02-09,AE-E03,New Business,2025-11-12,Enterprise,Partner,true,false
+D-301,Quantum Global - Data Pipeline,481000,Closed Lost,2025-11-18,AE-E02,New Business,2025-06-03,Enterprise,Event,true,false
+D-302,Quantum Data - Compliance Renewal,381000,Closed Lost,2025-12-01,AE-E03,Renewal,2025-11-06,Enterprise,Partner,true,false
+D-303,Marble Inc - API Gateway Expansion,195000,Closed Lost,2025-11-05,AE-M03,Expansion,2025-09-05,Mid-Market,Outbound,true,false
+D-304,Ironclad Networks - Enterprise Suite,205000,Closed Lost,2026-02-03,AE-M01,New Business,2025-12-04,Mid-Market,Inbound,true,false
+D-305,Sterling Dynamics - Compliance Renewal,472000,Closed Lost,2026-05-11,AE-E01,Renewal,2026-02-25,Enterprise,Inbound,true,false
+D-306,Sable Partners - Data Pipeline Renewal,525000,Closed Lost,2025-11-24,AE-E02,Renewal,2025-09-02,Enterprise,Outbound,true,false
+D-307,Thrive Industries - Security Module,618000,Closed Lost,2026-03-10,AE-E05,New Business,2025-10-20,Enterprise,Outbound,true,false
+D-308,Spectra Inc - Data Pipeline Expansion,252000,Closed Lost,2025-11-10,AE-M02,Expansion,2025-09-09,Mid-Market,Outbound,true,false
+D-309,Mercury Inc - API Gateway Renewal,287000,Closed Lost,2025-11-20,AE-M02,Renewal,2025-11-06,Mid-Market,PLG,true,false
+D-310,Lattice Group - Platform Renewal,1197000,Closed Lost,2026-05-01,AE-SE01,Renewal,2026-02-27,Strategic Enterprise,Event,true,false
+D-311,Cedar Networks - Data Pipeline Renewal,491000,Closed Lost,2025-10-14,AE-E05,Renewal,2025-09-08,Enterprise,Inbound,true,false
+D-312,Prism Inc - Analytics Expansion,84000,Closed Lost,2026-03-10,AE-M02,Expansion,2026-02-20,Mid-Market,Event,true,false
+D-313,Spectra Group - Enterprise Suite Renewal,222000,Closed Lost,2026-02-19,AE-M04,Renewal,2025-10-09,Mid-Market,PLG,true,false
+D-314,Borealis Technologies - API Gateway Renewal,153000,Closed Lost,2026-04-09,AE-M06,Renewal,2026-01-28,Mid-Market,Inbound,true,false
+D-315,Cipher Analytics - Security Module Renewal,815000,Closed Lost,2025-12-30,AE-E02,Renewal,2025-09-25,Enterprise,Inbound,true,false
+D-316,Cipher Ventures - Data Pipeline Expansion,197000,Closed Lost,2026-01-16,AE-M04,Expansion,2025-12-05,Mid-Market,Partner,true,false
+D-317,Bedrock Group - Compliance Expansion,80000,Closed Lost,2025-10-01,AE-M06,Expansion,2025-06-13,Mid-Market,Inbound,true,false
+D-318,Nexus Industries - Analytics,186000,Closed Lost,2025-12-18,AE-M01,New Business,2025-08-11,Mid-Market,Partner,true,false
+D-319,Cobalt Sciences - Security Module Expansion,491000,Closed Lost,2026-03-06,AE-E05,Expansion,2025-11-14,Enterprise,Partner,true,false
+D-320,Crimson Global - Monitoring Renewal,291000,Closed Lost,2026-01-01,AE-E04,Renewal,2025-10-01,Enterprise,Outbound,true,false
+D-321,Opal Systems - Data Pipeline Renewal,1529000,Closed Lost,2026-04-15,AE-SE03,Renewal,2026-02-25,Strategic Enterprise,Outbound,true,false
+D-322,Lattice Group - Platform Expansion,1291000,Closed Lost,2026-01-06,AE-SE02,Expansion,2025-09-04,Strategic Enterprise,Inbound,true,false
+D-323,Onyx Inc - Enterprise Suite Expansion,252000,Closed Lost,2025-11-20,AE-E01,Expansion,2025-09-08,Enterprise,Event,true,false
+D-324,Crimson Global - Security Module Expansion,551000,Closed Lost,2026-02-27,AE-E06,Expansion,2025-12-12,Enterprise,Event,true,false
+D-325,Ridge Inc - Analytics Expansion,229000,Closed Lost,2025-11-03,AE-M05,Expansion,2025-09-30,Mid-Market,Outbound,true,false
+D-326,Quantum Global - Compliance,720000,Closed Lost,2026-03-16,AE-E05,New Business,2025-10-08,Enterprise,Inbound,true,false
+D-327,Forge Cloud - Security Module Expansion,2449000,Closed Lost,2026-01-02,AE-SE02,Expansion,2025-12-09,Strategic Enterprise,Partner,true,false
+D-328,Flint Systems - Monitoring Renewal,449000,Closed Lost,2026-03-20,AE-E04,Renewal,2026-01-16,Enterprise,Inbound,true,false
+D-329,Ember Networks - Platform Renewal,286000,Closed Lost,2025-10-02,AE-M02,Renewal,2025-06-18,Mid-Market,Event,true,false
+D-330,Axiom Solutions - Platform Renewal,578000,Closed Lost,2026-03-24,AE-E05,Renewal,2025-09-23,Enterprise,Event,true,false
+D-331,Spectra Inc - Platform Renewal,138000,Closed Lost,2025-12-30,AE-M05,Renewal,2025-06-17,Mid-Market,Inbound,true,false
+D-332,Indigo Partners - API Gateway Renewal,804000,Closed Lost,2026-03-09,AE-E04,Renewal,2025-10-09,Enterprise,Inbound,true,false
+D-333,Compass Data - API Gateway Expansion,431000,Closed Lost,2026-04-28,AE-E06,Expansion,2026-01-28,Enterprise,Outbound,true,false
+D-334,Spectra Networks - Platform,139000,Closed Lost,2025-12-10,AE-M02,New Business,2025-11-07,Mid-Market,PLG,true,false
+D-335,Horizon Corp - API Gateway,849000,Closed Lost,2026-02-27,AE-SE01,New Business,2025-12-26,Strategic Enterprise,Outbound,true,false
+D-336,Mercury Global - API Gateway Expansion,2041000,Closed Lost,2026-03-20,AE-SE01,Expansion,2026-01-08,Strategic Enterprise,Partner,true,false
+D-337,Ridge Corp - Compliance Renewal,433000,Closed Lost,2026-02-20,AE-E02,Renewal,2025-12-31,Enterprise,Inbound,true,false
+D-338,Falcon Labs - Enterprise Suite Renewal,242000,Closed Lost,2025-12-10,AE-M04,Renewal,2025-06-18,Mid-Market,Outbound,true,false
+D-339,Indigo Partners - Enterprise Suite Expansion,796000,Closed Lost,2026-02-08,AE-E03,Expansion,2025-11-11,Enterprise,Event,true,false
+D-340,Atlas Labs - Data Pipeline,109000,Closed Lost,2026-02-19,AE-M02,New Business,2025-09-03,Mid-Market,Event,true,false
+D-341,Axiom Partners - Compliance Renewal,166000,Closed Lost,2026-03-04,AE-M03,Renewal,2025-11-24,Mid-Market,Outbound,true,false
+D-342,Forge Industries - Platform Renewal,1961000,Closed Lost,2026-02-03,AE-SE01,Renewal,2025-12-17,Strategic Enterprise,Event,true,false
+D-343,Forge Cloud - Security Module Expansion,955000,Closed Lost,2025-11-13,AE-SE01,Expansion,2025-10-22,Strategic Enterprise,Outbound,true,false
+D-344,Flint Systems - Data Pipeline Expansion,719000,Closed Lost,2026-01-29,AE-E05,Expansion,2025-11-27,Enterprise,Outbound,true,false
+D-345,Sentry Inc - Monitoring Expansion,167000,Closed Lost,2025-12-05,AE-M05,Expansion,2025-10-22,Mid-Market,Inbound,true,false
+D-346,Orbit Digital - Security Module Renewal,396000,Closed Lost,2025-11-20,AE-E03,Renewal,2025-07-01,Enterprise,Outbound,true,false
+D-347,Paragon Analytics - Security Module Renewal,185000,Closed Lost,2026-02-04,AE-M02,Renewal,2025-11-19,Mid-Market,PLG,true,false
+D-348,Ridge Corp - Platform Renewal,376000,Closed Lost,2026-02-05,AE-E04,Renewal,2025-10-06,Enterprise,Partner,true,false
+D-349,Granite Sciences - Enterprise Suite Renewal,106000,Closed Lost,2026-01-14,AE-M03,Renewal,2025-12-04,Mid-Market,PLG,true,false
+D-350,Crest Partners - Data Pipeline Renewal,784000,Closed Lost,2026-02-10,AE-E05,Renewal,2025-10-03,Enterprise,PLG,true,false
+D-351,Atlas Cloud - Enterprise Suite Expansion,2940000,Closed Lost,2025-12-31,AE-SE02,Expansion,2025-09-19,Strategic Enterprise,Partner,true,false
+D-352,Horizon Corp - API Gateway,1144000,Closed Lost,2026-03-05,AE-SE01,New Business,2026-02-27,Strategic Enterprise,Event,true,false
+D-353,Catalyst Networks - Analytics Renewal,232000,Closed Lost,2026-01-21,AE-M03,Renewal,2026-01-05,Mid-Market,Event,true,false
+D-354,Atlas Analytics - Monitoring,109000,Closed Lost,2025-11-18,AE-M02,New Business,2025-09-05,Mid-Market,Inbound,true,false
+D-355,Indigo Sciences - Monitoring Renewal,177000,Closed Lost,2026-01-22,AE-M02,Renewal,2025-12-01,Mid-Market,Outbound,true,false
+D-356,Mercury Global - Monitoring Expansion,2553000,Closed Lost,2025-12-02,AE-SE01,Expansion,2025-09-03,Strategic Enterprise,Inbound,true,false
+D-357,Sterling Dynamics - Platform Renewal,309000,Closed Lost,2026-01-19,AE-E01,Renewal,2025-11-28,Enterprise,Outbound,true,false
+D-358,Cobalt Platforms - Enterprise Suite,447000,Closed Lost,2026-03-27,AE-E01,New Business,2025-09-15,Enterprise,Event,true,false
+D-359,Flint Sciences - Platform,388000,Closed Lost,2025-11-11,AE-E02,New Business,2025-07-25,Enterprise,PLG,true,false
+D-360,Ridge Inc - Analytics Renewal,115000,Closed Lost,2026-03-19,AE-M04,Renewal,2026-02-10,Mid-Market,Partner,true,false

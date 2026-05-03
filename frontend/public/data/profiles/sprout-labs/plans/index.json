@@ -1,0 +1,8 @@
+{
+  "plans": [
+    {
+      "id": "baseline",
+      "path": "./baseline.json"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+id,name,role,segment,start_date,is_active,manager_id
+VP-S,Marcus Hale,vp_sales,,2022-04-15,true,
+MGR-E,Priya Nair,manager,Enterprise,2022-08-01,true,
+MGR-M,Connor Fitzgerald,manager,Mid-Market,2023-01-15,true,
+AE-E01,Naomi Walsh,AE,Enterprise,2023-03-01,true,MGR-E
+AE-E02,Tobias Mendez,AE,Enterprise,2023-08-15,true,MGR-E
+AE-E03,Helena Park,AE,Enterprise,2024-02-01,true,MGR-E
+AE-E04,Diego Suzuki,AE,Enterprise,2024-09-01,true,MGR-E
+AE-E05,Anika Volkov,AE,Enterprise,2025-04-15,true,MGR-E
+AE-M01,Lucas Brennan,AE,Mid-Market,2023-05-01,true,MGR-M
+AE-M02,Sienna Patel,AE,Mid-Market,2023-11-01,true,MGR-M
+AE-M03,Felix Andersson,AE,Mid-Market,2024-04-15,true,MGR-M
+AE-M04,Wren Beauchamp,AE,Mid-Market,2024-10-01,true,MGR-M
+AE-M05,Ezra Lindgren,AE,Mid-Market,2025-03-15,true,MGR-M
+AE-M06,Maya Brennan,AE,Mid-Market,2025-08-01,true,MGR-M
+AE-E06,Soren Ahmadi,AE,Enterprise,2026-02-15,true,MGR-E
+AE-M07,Idris Vance,AE,Mid-Market,2026-03-01,true,MGR-M
+SDR-01,Phoebe Aldridge,sdr,,2024-06-01,true,
+SDR-02,Imani Tate,sdr,,2025-01-15,true,
+SE-01,Henrik Lindqvist,se,,2023-09-15,true,
+SE-02,Yara Ozaki,se,,2024-11-01,true,

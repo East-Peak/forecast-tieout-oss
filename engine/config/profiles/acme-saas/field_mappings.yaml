@@ -1,0 +1,49 @@
+# Field mappings for the Acme SaaS demo profile.
+#
+# This file declares two things:
+# 1. Which source-system field names map to engine model concepts (the
+#    `opportunity:` and `account:` blocks; see `engine/connectors/field_mapping.py`
+#    for how they're consumed).
+# 2. How source-system stage names normalize to engine model stages
+#    (the `opportunity.stage.stage_mapping` block).
+#
+# Forkers replicating this for a new profile: copy this file, swap in
+# your source-system field names and stage vocabulary. The `stage_mapping`
+# values must be model stages (S0..S5/Won/Lost or "Renewal").
+
+opportunity:
+  amount:
+    sf_field: "Amount"
+  stage:
+    sf_field: "StageName"
+    # Acme's CRM uses long-form stage names. Map them to engine model
+    # stages so downstream analytics (rate registry, win-rate computations,
+    # inventory ordering) speak one vocabulary.
+    stage_mapping:
+      "Discovery": "S1"
+      "Qualification": "S2"
+      "Technical Evaluation": "S3"
+      "Business Case": "S4"
+      "Negotiation": "S5"
+      "Closed Won": "Won"
+      "Closed Lost": "Lost"
+  close_date:
+    sf_field: "CloseDate"
+  owner_id:
+    sf_field: "OwnerId"
+  type:
+    sf_field: "Type"
+  created_date:
+    sf_field: "CreatedDate"
+  name:
+    sf_field: "Name"
+  id:
+    sf_field: "Id"
+
+account:
+  name:
+    sf_field: "Name"
+  id:
+    sf_field: "Id"
+  segment:
+    sf_field: "Segment__c"
