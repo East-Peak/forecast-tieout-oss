@@ -53,3 +53,4 @@ engine/config/profiles/*/
 !engine/config/profiles/sprout-labs/
 !engine/config/profiles/sapling-industries/
 !engine/config/profiles/mighty-oak-holdings/
+.vercel
