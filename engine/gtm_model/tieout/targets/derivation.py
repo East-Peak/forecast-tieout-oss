@@ -110,7 +110,17 @@ class TieoutWeeklyTargetDeriver:
     def get_td_quarter(self, quarter: str) -> dict:
         """Extract top-down targets for a quarter."""
         targets = self.get_targets()
-        qt = targets.get("quarterly_targets", {}).get(quarter, {})
+        # Tolerate both shapes for quarterly_targets values:
+        #   1. scalar int  -> treated as bookings_target only
+        #   2. dict        -> read bookings_target / pipeline_target / etc. directly
+        # Demo profiles ship the scalar shape; richer profiles can use dicts.
+        raw_qt = targets.get("quarterly_targets", {}).get(quarter)
+        if isinstance(raw_qt, (int, float)):
+            qt = {"bookings_target": raw_qt}
+        elif isinstance(raw_qt, dict):
+            qt = raw_qt
+        else:
+            qt = {}
         ht = targets.get("headcount_targets", {}).get(quarter, {})
         wt = targets.get(f"weekly_targets_{quarter}", {})
         activity = wt.get("activity", {})

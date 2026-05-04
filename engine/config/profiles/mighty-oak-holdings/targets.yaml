@@ -1,28 +1,13 @@
-# Mighty Oak Holdings — Feb-start fiscal, $640M beginning ARR.
-# Story: $640M starting ARR + $160M new ARR → $800M ending. Mature enterprise
-# with excellent renewals (95% gross retention, 110% NRR) masking a new-logo
-# shortfall driven by LedgerFox price competition.
-#
-# Trajectory: plan calls for $160M; trajectory shows ~$114M — the -$46M gap
-# is concentrated in strategic + enterprise new-logo.
-
-fiscal_year_start: "2026-02-01"
+fiscal_year_start: '2026-02-01'
 beginning_arr: 640000000
-
 annual_target: 160000000
 annual_targets:
   new_business_arr: 160000000
-
-# Q1FY26 = Feb/Mar/Apr 2026  Q2 = May/Jun/Jul  Q3 = Aug/Sep/Oct  Q4 = Nov/Dec/Jan2027
-# Scalar format required by the validator's sum check (float(v) must succeed).
-# Keys use Q1/Q2/Q3/Q4 for label consistency; the engine looks up Q1FY26-style
-# keys in derivation.py and gracefully defaults to {} when not found.
 quarterly_targets:
-  Q1: 32000000
-  Q2: 36000000
-  Q3: 42000000
-  Q4: 50000000
-
+  Q1FY26: 32000000
+  Q2FY26: 36000000
+  Q3FY26: 42000000
+  Q4FY26: 50000000
 quarterly_details:
   Q1FY26:
     bookings_target: 32000000
@@ -44,67 +29,157 @@ quarterly_details:
     pipeline_target: 175000000
     total_net_new: 50000000
     ending_arr: 800000000
-
 quarterly_trajectory:
   Q1FY26: 24000000
   Q2FY26: 25000000
   Q3FY26: 28000000
   Q4FY26: 37000000
-
 monthly_ae_targets:
-  "2026-02-01": 89
-  "2026-03-01": 93
-  "2026-04-01": 96
-  "2026-05-01": 98
-  "2026-06-01": 98
-  "2026-07-01": 99
-  "2026-08-01": 100
-  "2026-09-01": 100
-  "2026-10-01": 101
-  "2026-11-01": 102
-  "2026-12-01": 102
-  "2027-01-01": 102
-
+  '2026-02-01': 89
+  '2026-03-01': 93
+  '2026-04-01': 96
+  '2026-05-01': 98
+  '2026-06-01': 98
+  '2026-07-01': 99
+  '2026-08-01': 100
+  '2026-09-01': 100
+  '2026-10-01': 101
+  '2026-11-01': 102
+  '2026-12-01': 102
+  '2027-01-01': 102
 headcount_targets:
-  Q1: {account_executives: 96, sales_engineers: 14, sdrs: 18, total_gtm: 128}
-  Q2: {account_executives: 99, sales_engineers: 15, sdrs: 18, total_gtm: 132}
-  Q3: {account_executives: 101, sales_engineers: 16, sdrs: 19, total_gtm: 136}
-  Q4: {account_executives: 102, sales_engineers: 16, sdrs: 19, total_gtm: 137}
-
+  Q1FY26:
+    account_executives: 96
+    sales_engineers: 14
+    sdrs: 18
+    total_gtm: 128
+  Q2FY26:
+    account_executives: 99
+    sales_engineers: 15
+    sdrs: 18
+    total_gtm: 132
+  Q3FY26:
+    account_executives: 101
+    sales_engineers: 16
+    sdrs: 19
+    total_gtm: 136
+  Q4FY26:
+    account_executives: 102
+    sales_engineers: 16
+    sdrs: 19
+    total_gtm: 137
 hiring_schedule:
-  - {name: "Priyam Shah", segment: strategic_enterprise, start_date: "2026-02-10", quota: 2500000, ramp_months: 6, status: approved}
-  - {name: "Jada Collins", segment: enterprise, start_date: "2026-02-03", quota: 1500000, ramp_months: 6, status: approved}
-  - {name: "June Holloway", segment: mid_market, start_date: "2026-02-24", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Alicia Monroe", segment: strategic_enterprise, start_date: "2026-03-17", quota: 2500000, ramp_months: 6, status: approved}
-  - {name: "Nolan Pierce", segment: enterprise, start_date: "2026-03-10", quota: 1500000, ramp_months: 6, status: approved}
-  - {name: "Rafael Costa", segment: mid_market, start_date: "2026-03-03", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Brielle Navarro", segment: mid_market, start_date: "2026-03-24", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Basil Okafor", segment: strategic_enterprise, start_date: "2026-04-21", quota: 2500000, ramp_months: 6, status: approved}
-  - {name: "Priyanka Sen", segment: enterprise, start_date: "2026-04-07", quota: 1500000, ramp_months: 6, status: approved}
-  - {name: "Theo Mercer", segment: mid_market, start_date: "2026-04-14", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Paige Ellison", segment: mid_market, start_date: "2026-05-12", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Andrej Novak", segment: mid_market, start_date: "2026-05-19", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Asha Raman", segment: strategic_enterprise, start_date: "2026-07-06", quota: 2500000, ramp_months: 6, status: planned}
-  - {name: "Nico Petrov", segment: enterprise, start_date: "2026-08-17", quota: 1500000, ramp_months: 6, status: planned}
-  - {name: "Lila Hart", segment: mid_market, start_date: "2026-10-05", quota: 900000, ramp_months: 4, status: planned}
-  - {name: "Owen Delgado", segment: enterprise, start_date: "2026-11-02", quota: 1500000, ramp_months: 6, status: planned}
-
+- name: Priyam Shah
+  segment: strategic_enterprise
+  start_date: '2026-02-10'
+  quota: 2500000
+  ramp_months: 6
+  status: approved
+- name: Jada Collins
+  segment: enterprise
+  start_date: '2026-02-03'
+  quota: 1500000
+  ramp_months: 6
+  status: approved
+- name: June Holloway
+  segment: mid_market
+  start_date: '2026-02-24'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Alicia Monroe
+  segment: strategic_enterprise
+  start_date: '2026-03-17'
+  quota: 2500000
+  ramp_months: 6
+  status: approved
+- name: Nolan Pierce
+  segment: enterprise
+  start_date: '2026-03-10'
+  quota: 1500000
+  ramp_months: 6
+  status: approved
+- name: Rafael Costa
+  segment: mid_market
+  start_date: '2026-03-03'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Brielle Navarro
+  segment: mid_market
+  start_date: '2026-03-24'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Basil Okafor
+  segment: strategic_enterprise
+  start_date: '2026-04-21'
+  quota: 2500000
+  ramp_months: 6
+  status: approved
+- name: Priyanka Sen
+  segment: enterprise
+  start_date: '2026-04-07'
+  quota: 1500000
+  ramp_months: 6
+  status: approved
+- name: Theo Mercer
+  segment: mid_market
+  start_date: '2026-04-14'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Paige Ellison
+  segment: mid_market
+  start_date: '2026-05-12'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Andrej Novak
+  segment: mid_market
+  start_date: '2026-05-19'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Asha Raman
+  segment: strategic_enterprise
+  start_date: '2026-07-06'
+  quota: 2500000
+  ramp_months: 6
+  status: planned
+- name: Nico Petrov
+  segment: enterprise
+  start_date: '2026-08-17'
+  quota: 1500000
+  ramp_months: 6
+  status: planned
+- name: Lila Hart
+  segment: mid_market
+  start_date: '2026-10-05'
+  quota: 900000
+  ramp_months: 4
+  status: planned
+- name: Owen Delgado
+  segment: enterprise
+  start_date: '2026-11-02'
+  quota: 1500000
+  ramp_months: 6
+  status: planned
 top_down_plan:
   preset_id: mighty-fy26-abm-gap
   plan_id: mighty-fy26-abm-gap
-  label: "Mighty Oak FY26 ABM Recovery Plan"
-  version: "1.0"
+  label: Mighty Oak FY26 ABM Recovery Plan
+  version: '1.0'
   status: working_draft
   basis: new_logo_gap_recut
-  created_date: "2026-02-01"
-
+  created_date: '2026-02-01'
 plan_cases:
   mighty-fy26-abm-gap:
     top_down_plan:
       preset_id: mighty-fy26-abm-gap
       plan_id: mighty-fy26-abm-gap
-      label: "Mighty Oak FY26 ABM Recovery Plan"
-      version: "1.0"
+      label: Mighty Oak FY26 ABM Recovery Plan
+      version: '1.0'
       status: working_draft
       basis: new_logo_gap_recut
-      created_date: "2026-02-01"
+      created_date: '2026-02-01'

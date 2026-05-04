@@ -7,8 +7,8 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-05-03T23:54:52.003922Z",
-  "git_sha": "cd48cebab92f9cc1edfe9fa3ac19a3b4cec2e5d9",
+  "generated_at": "2026-05-04T00:04:43.981741Z",
+  "git_sha": "79c38ed92b525254060d9ac7284f105948d70db8",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
@@ -2614,8 +2614,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 5,
+        "sdr_total": 6,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2628,8 +2628,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 5,
+        "sdr_total": 6,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2642,8 +2642,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 5,
+        "sdr_total": 6,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2656,8 +2656,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 5,
+        "sdr_total": 6,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2670,8 +2670,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 5,
+        "sdr_total": 6,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2684,8 +2684,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 5,
+        "sdr_total": 6,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2698,8 +2698,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 6,
+        "sdr_total": 7,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2712,8 +2712,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 6,
+        "sdr_total": 7,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2726,8 +2726,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 6,
+        "sdr_total": 7,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2740,8 +2740,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 6,
+        "sdr_total": 7,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2754,8 +2754,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 6,
+        "sdr_total": 7,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2768,8 +2768,8 @@
         "ae_total": 45,
         "ae_ramped": 45,
         "ae_ramping": 0,
-        "se_total": 0,
-        "sdr_total": 0,
+        "se_total": 6,
+        "sdr_total": 7,
         "ae_capacity": 3563333.333333331,
         "ae_capacity_ramped": 0,
         "ae_capacity_ramping": 0,
@@ -2923,18 +2923,18 @@
           "quarter": "Q1FY26",
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
-          "td_bookings": 0,
+          "td_bookings": 12000000,
           "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 12000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 7882429.607323945,
@@ -2953,11 +2953,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -7882429.607323945,
-            "bookings_pct": 0,
+            "bookings": 4117570.3926760554,
+            "bookings_pct": 0.34313086605633797,
             "total": -9557429.607323945,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -3148,14 +3148,14 @@
             "quarter_state": "completed",
             "elapsed_fraction": 1.0,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 12000000.0,
+            "pace_gap": -12000000.0,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 12000000.0,
             "remaining_bu_bookings": 7882429.607323945,
             "reforecast_bookings": 7882429.607323945,
-            "reforecast_gap": 7882429.607323945,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -4117570.3926760554,
+            "reforecast_gap_pct": -0.34313086605633797,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -3165,18 +3165,18 @@
           "quarter": "Q2FY26",
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
-          "td_bookings": 0,
+          "td_bookings": 14000000,
           "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 14000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 24089010.57492958,
@@ -3195,11 +3195,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -24089010.57492958,
-            "bookings_pct": 0,
+            "bookings": -10089010.57492958,
+            "bookings_pct": -0.72064361249497,
             "total": -25903622.01903944,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -3390,14 +3390,14 @@
             "quarter_state": "in_progress",
             "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 456521.73913043475,
+            "pace_gap": -456521.73913043475,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 14000000.0,
             "remaining_bu_bookings": 24089010.57492958,
             "reforecast_bookings": 24089010.57492958,
-            "reforecast_gap": 24089010.57492958,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 10089010.57492958,
+            "reforecast_gap_pct": 0.72064361249497,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -3407,18 +3407,18 @@
           "quarter": "Q3FY26",
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
-          "td_bookings": 0,
+          "td_bookings": 16000000,
           "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 16000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 18142495.976197183,
@@ -3437,11 +3437,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -18142495.976197183,
-            "bookings_pct": 0,
+            "bookings": -2142495.976197183,
+            "bookings_pct": -0.13390599851232396,
             "total": -20373161.750592634,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -3635,11 +3635,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 16000000.0,
             "remaining_bu_bookings": 18142495.976197183,
             "reforecast_bookings": 18142495.976197183,
-            "reforecast_gap": 18142495.976197183,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 2142495.976197183,
+            "reforecast_gap_pct": 0.13390599851232396,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -3649,18 +3649,18 @@
           "quarter": "Q4FY26",
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
-          "td_bookings": 0,
+          "td_bookings": 18000000,
           "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 18000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 14552290.267605636,
@@ -3679,11 +3679,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -14552290.267605636,
-            "bookings_pct": 0,
+            "bookings": 3447709.7323943637,
+            "bookings_pct": 0.19153942957746464,
             "total": -17115584.718259975,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -3877,11 +3877,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 18000000.0,
             "remaining_bu_bookings": 14552290.267605636,
             "reforecast_bookings": 14552290.267605636,
-            "reforecast_gap": 14552290.267605636,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -3447709.7323943637,
+            "reforecast_gap_pct": -0.19153942957746464,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -3893,18 +3893,18 @@
           "quarter": "Q1FY26",
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
-          "td_bookings": 0,
+          "td_bookings": 12000000,
           "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 12000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 7882429.607323945,
@@ -3923,11 +3923,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -7882429.607323945,
-            "bookings_pct": 0,
+            "bookings": 4117570.3926760554,
+            "bookings_pct": 0.34313086605633797,
             "total": -9557429.607323945,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -4118,14 +4118,14 @@
             "quarter_state": "completed",
             "elapsed_fraction": 1.0,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 12000000.0,
+            "pace_gap": -12000000.0,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 12000000.0,
             "remaining_bu_bookings": 7882429.607323945,
             "reforecast_bookings": 7882429.607323945,
-            "reforecast_gap": 7882429.607323945,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -4117570.3926760554,
+            "reforecast_gap_pct": -0.34313086605633797,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -4135,18 +4135,18 @@
           "quarter": "Q2FY26",
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
-          "td_bookings": 0,
+          "td_bookings": 14000000,
           "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 14000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 24089010.57492958,
@@ -4165,11 +4165,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -24089010.57492958,
-            "bookings_pct": 0,
+            "bookings": -10089010.57492958,
+            "bookings_pct": -0.72064361249497,
             "total": -25903622.01903944,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -4360,14 +4360,14 @@
             "quarter_state": "in_progress",
             "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 456521.73913043475,
+            "pace_gap": -456521.73913043475,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 14000000.0,
             "remaining_bu_bookings": 24089010.57492958,
             "reforecast_bookings": 24089010.57492958,
-            "reforecast_gap": 24089010.57492958,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 10089010.57492958,
+            "reforecast_gap_pct": 0.72064361249497,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -4377,18 +4377,18 @@
           "quarter": "Q3FY26",
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
-          "td_bookings": 0,
+          "td_bookings": 16000000,
           "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 16000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 18142495.976197183,
@@ -4407,11 +4407,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -18142495.976197183,
-            "bookings_pct": 0,
+            "bookings": -2142495.976197183,
+            "bookings_pct": -0.13390599851232396,
             "total": -20373161.750592634,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -4605,11 +4605,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 16000000.0,
             "remaining_bu_bookings": 18142495.976197183,
             "reforecast_bookings": 18142495.976197183,
-            "reforecast_gap": 18142495.976197183,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 2142495.976197183,
+            "reforecast_gap_pct": 0.13390599851232396,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -4619,18 +4619,18 @@
           "quarter": "Q4FY26",
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
-          "td_bookings": 0,
+          "td_bookings": 18000000,
           "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 18000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 14552290.267605636,
@@ -4649,11 +4649,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -14552290.267605636,
-            "bookings_pct": 0,
+            "bookings": 3447709.7323943637,
+            "bookings_pct": 0.19153942957746464,
             "total": -17115584.718259975,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -4847,11 +4847,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 18000000.0,
             "remaining_bu_bookings": 14552290.267605636,
             "reforecast_bookings": 14552290.267605636,
-            "reforecast_gap": 14552290.267605636,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -3447709.7323943637,
+            "reforecast_gap_pct": -0.19153942957746464,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -5484,7 +5484,12 @@
           "pipeline_created": 187412.50000000006
         }
       ],
-      "capacity_warnings": []
+      "capacity_warnings": [
+        "Q1FY26: 45 AEs on roster vs 30 in plan (15 hires behind). Forecast uses actual roster, not plan targets.",
+        "Q2FY26: 45 AEs on roster vs 30 in plan (15 hires behind). Forecast uses actual roster, not plan targets.",
+        "Q3FY26: 45 AEs on roster vs 32 in plan (13 hires behind). Forecast uses actual roster, not plan targets.",
+        "Q4FY26: 45 AEs on roster vs 32 in plan (13 hires behind). Forecast uses actual roster, not plan targets."
+      ]
     },
     "capacity_headcount": {
       "trajectory_capacity": [
@@ -5494,8 +5499,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5508,8 +5513,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5522,8 +5527,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5536,8 +5541,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5550,8 +5555,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5564,8 +5569,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5578,8 +5583,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5592,8 +5597,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5606,8 +5611,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5620,8 +5625,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5634,8 +5639,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5648,8 +5653,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5664,8 +5669,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5678,8 +5683,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5692,8 +5697,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5706,8 +5711,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5720,8 +5725,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5734,8 +5739,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 5,
+          "sdr_total": 6,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5748,8 +5753,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5762,8 +5767,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5776,8 +5781,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5790,8 +5795,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5804,8 +5809,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5818,8 +5823,8 @@
           "ae_total": 45,
           "ae_ramped": 45,
           "ae_ramping": 0,
-          "se_total": 0,
-          "sdr_total": 0,
+          "se_total": 6,
+          "sdr_total": 7,
           "ae_capacity": 3563333.333333331,
           "ae_capacity_ramped": 0,
           "ae_capacity_ramping": 0,
@@ -5832,18 +5837,18 @@
           "quarter": "Q1FY26",
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
-          "td_bookings": 0,
+          "td_bookings": 12000000,
           "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 12000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 7882429.607323945,
@@ -5862,11 +5867,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -7882429.607323945,
-            "bookings_pct": 0,
+            "bookings": 4117570.3926760554,
+            "bookings_pct": 0.34313086605633797,
             "total": -9557429.607323945,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -6057,14 +6062,14 @@
             "quarter_state": "completed",
             "elapsed_fraction": 1.0,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 12000000.0,
+            "pace_gap": -12000000.0,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 12000000.0,
             "remaining_bu_bookings": 7882429.607323945,
             "reforecast_bookings": 7882429.607323945,
-            "reforecast_gap": 7882429.607323945,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -4117570.3926760554,
+            "reforecast_gap_pct": -0.34313086605633797,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -6074,18 +6079,18 @@
           "quarter": "Q2FY26",
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
-          "td_bookings": 0,
+          "td_bookings": 14000000,
           "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 14000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 24089010.57492958,
@@ -6104,11 +6109,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -24089010.57492958,
-            "bookings_pct": 0,
+            "bookings": -10089010.57492958,
+            "bookings_pct": -0.72064361249497,
             "total": -25903622.01903944,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -6299,14 +6304,14 @@
             "quarter_state": "in_progress",
             "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 456521.73913043475,
+            "pace_gap": -456521.73913043475,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 14000000.0,
             "remaining_bu_bookings": 24089010.57492958,
             "reforecast_bookings": 24089010.57492958,
-            "reforecast_gap": 24089010.57492958,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 10089010.57492958,
+            "reforecast_gap_pct": 0.72064361249497,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -6316,18 +6321,18 @@
           "quarter": "Q3FY26",
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
-          "td_bookings": 0,
+          "td_bookings": 16000000,
           "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 16000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 18142495.976197183,
@@ -6346,11 +6351,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -18142495.976197183,
-            "bookings_pct": 0,
+            "bookings": -2142495.976197183,
+            "bookings_pct": -0.13390599851232396,
             "total": -20373161.750592634,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -6544,11 +6549,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 16000000.0,
             "remaining_bu_bookings": 18142495.976197183,
             "reforecast_bookings": 18142495.976197183,
-            "reforecast_gap": 18142495.976197183,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 2142495.976197183,
+            "reforecast_gap_pct": 0.13390599851232396,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -6558,18 +6563,18 @@
           "quarter": "Q4FY26",
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
-          "td_bookings": 0,
+          "td_bookings": 18000000,
           "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 18000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 14552290.267605636,
@@ -6588,11 +6593,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -14552290.267605636,
-            "bookings_pct": 0,
+            "bookings": 3447709.7323943637,
+            "bookings_pct": 0.19153942957746464,
             "total": -17115584.718259975,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -6786,11 +6791,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 18000000.0,
             "remaining_bu_bookings": 14552290.267605636,
             "reforecast_bookings": 14552290.267605636,
-            "reforecast_gap": 14552290.267605636,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -3447709.7323943637,
+            "reforecast_gap_pct": -0.19153942957746464,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -6802,18 +6807,18 @@
           "quarter": "Q1FY26",
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
-          "td_bookings": 0,
+          "td_bookings": 12000000,
           "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 12000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 7882429.607323945,
@@ -6832,11 +6837,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -7882429.607323945,
-            "bookings_pct": 0,
+            "bookings": 4117570.3926760554,
+            "bookings_pct": 0.34313086605633797,
             "total": -9557429.607323945,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -7027,14 +7032,14 @@
             "quarter_state": "completed",
             "elapsed_fraction": 1.0,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 12000000.0,
+            "pace_gap": -12000000.0,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 12000000.0,
             "remaining_bu_bookings": 7882429.607323945,
             "reforecast_bookings": 7882429.607323945,
-            "reforecast_gap": 7882429.607323945,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -4117570.3926760554,
+            "reforecast_gap_pct": -0.34313086605633797,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -7044,18 +7049,18 @@
           "quarter": "Q2FY26",
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
-          "td_bookings": 0,
+          "td_bookings": 14000000,
           "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 14000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 24089010.57492958,
@@ -7074,11 +7079,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -24089010.57492958,
-            "bookings_pct": 0,
+            "bookings": -10089010.57492958,
+            "bookings_pct": -0.72064361249497,
             "total": -25903622.01903944,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -7269,14 +7274,14 @@
             "quarter_state": "in_progress",
             "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 456521.73913043475,
+            "pace_gap": -456521.73913043475,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 14000000.0,
             "remaining_bu_bookings": 24089010.57492958,
             "reforecast_bookings": 24089010.57492958,
-            "reforecast_gap": 24089010.57492958,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 10089010.57492958,
+            "reforecast_gap_pct": 0.72064361249497,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -7286,18 +7291,18 @@
           "quarter": "Q3FY26",
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
-          "td_bookings": 0,
+          "td_bookings": 16000000,
           "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 16000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 18142495.976197183,
@@ -7316,11 +7321,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -18142495.976197183,
-            "bookings_pct": 0,
+            "bookings": -2142495.976197183,
+            "bookings_pct": -0.13390599851232396,
             "total": -20373161.750592634,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -7514,11 +7519,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 16000000.0,
             "remaining_bu_bookings": 18142495.976197183,
             "reforecast_bookings": 18142495.976197183,
-            "reforecast_gap": 18142495.976197183,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 2142495.976197183,
+            "reforecast_gap_pct": 0.13390599851232396,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -7528,18 +7533,18 @@
           "quarter": "Q4FY26",
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
-          "td_bookings": 0,
+          "td_bookings": 18000000,
           "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 18000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 14552290.267605636,
@@ -7558,11 +7563,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -14552290.267605636,
-            "bookings_pct": 0,
+            "bookings": 3447709.7323943637,
+            "bookings_pct": 0.19153942957746464,
             "total": -17115584.718259975,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -7756,11 +7761,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 18000000.0,
             "remaining_bu_bookings": 14552290.267605636,
             "reforecast_bookings": 14552290.267605636,
-            "reforecast_gap": 14552290.267605636,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -3447709.7323943637,
+            "reforecast_gap_pct": -0.19153942957746464,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -7774,18 +7779,18 @@
           "quarter": "Q1FY26",
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
-          "td_bookings": 0,
+          "td_bookings": 12000000,
           "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 12000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 7882429.607323945,
@@ -7804,11 +7809,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -7882429.607323945,
-            "bookings_pct": 0,
+            "bookings": 4117570.3926760554,
+            "bookings_pct": 0.34313086605633797,
             "total": -9557429.607323945,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -7999,14 +8004,14 @@
             "quarter_state": "completed",
             "elapsed_fraction": 1.0,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 12000000.0,
+            "pace_gap": -12000000.0,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 12000000.0,
             "remaining_bu_bookings": 7882429.607323945,
             "reforecast_bookings": 7882429.607323945,
-            "reforecast_gap": 7882429.607323945,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -4117570.3926760554,
+            "reforecast_gap_pct": -0.34313086605633797,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -8016,18 +8021,18 @@
           "quarter": "Q2FY26",
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
-          "td_bookings": 0,
+          "td_bookings": 14000000,
           "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 14000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 24089010.57492958,
@@ -8046,11 +8051,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -24089010.57492958,
-            "bookings_pct": 0,
+            "bookings": -10089010.57492958,
+            "bookings_pct": -0.72064361249497,
             "total": -25903622.01903944,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -8241,14 +8246,14 @@
             "quarter_state": "in_progress",
             "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 456521.73913043475,
+            "pace_gap": -456521.73913043475,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 14000000.0,
             "remaining_bu_bookings": 24089010.57492958,
             "reforecast_bookings": 24089010.57492958,
-            "reforecast_gap": 24089010.57492958,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 10089010.57492958,
+            "reforecast_gap_pct": 0.72064361249497,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -8258,18 +8263,18 @@
           "quarter": "Q3FY26",
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
-          "td_bookings": 0,
+          "td_bookings": 16000000,
           "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 16000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 18142495.976197183,
@@ -8288,11 +8293,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -18142495.976197183,
-            "bookings_pct": 0,
+            "bookings": -2142495.976197183,
+            "bookings_pct": -0.13390599851232396,
             "total": -20373161.750592634,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -8486,11 +8491,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 16000000.0,
             "remaining_bu_bookings": 18142495.976197183,
             "reforecast_bookings": 18142495.976197183,
-            "reforecast_gap": 18142495.976197183,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 2142495.976197183,
+            "reforecast_gap_pct": 0.13390599851232396,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -8500,18 +8505,18 @@
           "quarter": "Q4FY26",
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
-          "td_bookings": 0,
+          "td_bookings": 18000000,
           "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 18000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 14552290.267605636,
@@ -8530,11 +8535,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -14552290.267605636,
-            "bookings_pct": 0,
+            "bookings": 3447709.7323943637,
+            "bookings_pct": 0.19153942957746464,
             "total": -17115584.718259975,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -8728,11 +8733,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 18000000.0,
             "remaining_bu_bookings": 14552290.267605636,
             "reforecast_bookings": 14552290.267605636,
-            "reforecast_gap": 14552290.267605636,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -3447709.7323943637,
+            "reforecast_gap_pct": -0.19153942957746464,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -8744,18 +8749,18 @@
           "quarter": "Q1FY26",
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
-          "td_bookings": 0,
+          "td_bookings": 12000000,
           "bu_sales_led_arr": 7882429.607323945,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 12000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 7882429.607323945,
@@ -8774,11 +8779,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -7882429.607323945,
-            "bookings_pct": 0,
+            "bookings": 4117570.3926760554,
+            "bookings_pct": 0.34313086605633797,
             "total": -9557429.607323945,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -8969,14 +8974,14 @@
             "quarter_state": "completed",
             "elapsed_fraction": 1.0,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 12000000.0,
+            "pace_gap": -12000000.0,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 12000000.0,
             "remaining_bu_bookings": 7882429.607323945,
             "reforecast_bookings": 7882429.607323945,
-            "reforecast_gap": 7882429.607323945,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -4117570.3926760554,
+            "reforecast_gap_pct": -0.34313086605633797,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -8986,18 +8991,18 @@
           "quarter": "Q2FY26",
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
-          "td_bookings": 0,
+          "td_bookings": 14000000,
           "bu_sales_led_arr": 24089010.57492958,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 14000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 30,
+            "total_gtm": 41
           },
           "bottoms_up": {
             "sales_led_arr": 24089010.57492958,
@@ -9016,11 +9021,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -24089010.57492958,
-            "bookings_pct": 0,
+            "bookings": -10089010.57492958,
+            "bookings_pct": -0.72064361249497,
             "total": -25903622.01903944,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "critical_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -9211,14 +9216,14 @@
             "quarter_state": "in_progress",
             "elapsed_fraction": 0.03260869565217391,
             "actual_bookings": 0.0,
-            "plan_to_date_bookings": 0.0,
-            "pace_gap": 0.0,
-            "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "plan_to_date_bookings": 456521.73913043475,
+            "pace_gap": -456521.73913043475,
+            "pace_gap_pct": -1.0,
+            "remaining_plan_bookings": 14000000.0,
             "remaining_bu_bookings": 24089010.57492958,
             "reforecast_bookings": 24089010.57492958,
-            "reforecast_gap": 24089010.57492958,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 10089010.57492958,
+            "reforecast_gap_pct": 0.72064361249497,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -9228,18 +9233,18 @@
           "quarter": "Q3FY26",
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
-          "td_bookings": 0,
+          "td_bookings": 16000000,
           "bu_sales_led_arr": 18142495.976197183,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 16000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 18142495.976197183,
@@ -9258,11 +9263,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -18142495.976197183,
-            "bookings_pct": 0,
+            "bookings": -2142495.976197183,
+            "bookings_pct": -0.13390599851232396,
             "total": -20373161.750592634,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -9456,11 +9461,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 16000000.0,
             "remaining_bu_bookings": 18142495.976197183,
             "reforecast_bookings": 18142495.976197183,
-            "reforecast_gap": 18142495.976197183,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": 2142495.976197183,
+            "reforecast_gap_pct": 0.13390599851232396,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -9470,18 +9475,18 @@
           "quarter": "Q4FY26",
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
-          "td_bookings": 0,
+          "td_bookings": 18000000,
           "bu_sales_led_arr": 14552290.267605636,
           "actual_bookings": 0.0,
           "top_down": {
-            "bookings": 0,
+            "bookings": 18000000,
             "plg": 0,
             "expansion": 0,
             "total_net_new": 0,
             "ending_arr": 0,
             "pipeline_target": 0,
-            "aes": 0,
-            "total_gtm": 0
+            "aes": 32,
+            "total_gtm": 45
           },
           "bottoms_up": {
             "sales_led_arr": 14552290.267605636,
@@ -9500,11 +9505,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": -14552290.267605636,
-            "bookings_pct": 0,
+            "bookings": 3447709.7323943637,
+            "bookings_pct": 0.19153942957746464,
             "total": -17115584.718259975,
             "total_pct": 0,
-            "status": "aligned"
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -9698,11 +9703,11 @@
             "plan_to_date_bookings": 0.0,
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
-            "remaining_plan_bookings": 0.0,
+            "remaining_plan_bookings": 18000000.0,
             "remaining_bu_bookings": 14552290.267605636,
             "reforecast_bookings": 14552290.267605636,
-            "reforecast_gap": 14552290.267605636,
-            "reforecast_gap_pct": 0.0,
+            "reforecast_gap": -3447709.7323943637,
+            "reforecast_gap_pct": -0.19153942957746464,
             "has_actuals": false
           },
           "confidence_tier": "planned",

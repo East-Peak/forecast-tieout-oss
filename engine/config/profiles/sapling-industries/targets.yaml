@@ -1,25 +1,13 @@
-# Sapling Industries — Feb-start FY26.
-# Story: $40M beginning ARR + $60M new ARR → $100M EOY (150% YoY).
-# Tale of three segments: enterprise grinding (legal bottleneck),
-# mid-market the engine, commercial surprise +60% vs plan.
-
-fiscal_year_start: "2026-02-01"
+fiscal_year_start: '2026-02-01'
 beginning_arr: 40000000
-
 annual_target: 60000000
 annual_targets:
   new_business_arr: 60000000
-
-# Quarterly targets — scalar bookings values per quarter.
-# Using Q1/Q2/Q3/Q4 short keys so validator can sum them as floats.
-# The Q1FY26-format rich plan detail lives in quarterly_plan_details below.
 quarterly_targets:
-  Q1: 12000000
-  Q2: 14000000
-  Q3: 16000000
-  Q4: 18000000
-
-# Rich per-quarter plan detail (supplemental — not read by validator).
+  Q1FY26: 12000000
+  Q2FY26: 14000000
+  Q3FY26: 16000000
+  Q4FY26: 18000000
 quarterly_plan_details:
   Q1FY26:
     bookings_target: 12000000
@@ -41,50 +29,86 @@ quarterly_plan_details:
     pipeline_target: 41000000
     total_net_new: 18000000
     ending_arr: 100000000
-
 monthly_ae_targets:
-  "2026-02-01": 27
-  "2026-03-01": 28
-  "2026-04-01": 30
-  "2026-05-01": 30
-  "2026-06-01": 30
-  "2026-07-01": 30
-  "2026-08-01": 31
-  "2026-09-01": 31
-  "2026-10-01": 32
-  "2026-11-01": 32
-  "2026-12-01": 32
-  "2027-01-01": 32
-
+  '2026-02-01': 27
+  '2026-03-01': 28
+  '2026-04-01': 30
+  '2026-05-01': 30
+  '2026-06-01': 30
+  '2026-07-01': 30
+  '2026-08-01': 31
+  '2026-09-01': 31
+  '2026-10-01': 32
+  '2026-11-01': 32
+  '2026-12-01': 32
+  '2027-01-01': 32
 headcount_targets:
-  Q1: {account_executives: 30, sales_engineers: 5, sdrs: 6, total_gtm: 41}
-  Q2: {account_executives: 30, sales_engineers: 5, sdrs: 6, total_gtm: 41}
-  Q3: {account_executives: 32, sales_engineers: 6, sdrs: 7, total_gtm: 45}
-  Q4: {account_executives: 32, sales_engineers: 6, sdrs: 7, total_gtm: 45}
-
+  Q1FY26:
+    account_executives: 30
+    sales_engineers: 5
+    sdrs: 6
+    total_gtm: 41
+  Q2FY26:
+    account_executives: 30
+    sales_engineers: 5
+    sdrs: 6
+    total_gtm: 41
+  Q3FY26:
+    account_executives: 32
+    sales_engineers: 6
+    sdrs: 7
+    total_gtm: 45
+  Q4FY26:
+    account_executives: 32
+    sales_engineers: 6
+    sdrs: 7
+    total_gtm: 45
 hiring_schedule:
-  - {name: "Priyanka Sen", segment: enterprise, start_date: "2026-03-17", quota: 1400000, ramp_months: 6, status: approved}
-  - {name: "Owen Delgado", segment: mid_market, start_date: "2026-04-07", quota: 900000, ramp_months: 4, status: approved}
-  - {name: "Lila Hart", segment: commercial, start_date: "2026-04-21", quota: 425000, ramp_months: 3, status: approved}
-  - {name: "Celeste Ramirez", segment: mid_market, start_date: "2026-08-03", quota: 900000, ramp_months: 4, status: planned}
-  - {name: "Dorian Pike", segment: commercial, start_date: "2026-10-05", quota: 425000, ramp_months: 3, status: planned}
-
+- name: Priyanka Sen
+  segment: enterprise
+  start_date: '2026-03-17'
+  quota: 1400000
+  ramp_months: 6
+  status: approved
+- name: Owen Delgado
+  segment: mid_market
+  start_date: '2026-04-07'
+  quota: 900000
+  ramp_months: 4
+  status: approved
+- name: Lila Hart
+  segment: commercial
+  start_date: '2026-04-21'
+  quota: 425000
+  ramp_months: 3
+  status: approved
+- name: Celeste Ramirez
+  segment: mid_market
+  start_date: '2026-08-03'
+  quota: 900000
+  ramp_months: 4
+  status: planned
+- name: Dorian Pike
+  segment: commercial
+  start_date: '2026-10-05'
+  quota: 425000
+  ramp_months: 3
+  status: planned
 top_down_plan:
   preset_id: sapling-fy26-segment-shift
   plan_id: sapling-fy26-segment-shift
-  label: "Sapling FY26 Segment Shift Plan"
-  version: "1.0"
+  label: Sapling FY26 Segment Shift Plan
+  version: '1.0'
   status: working_draft
   basis: segment_mix_recut
-  created_date: "2026-02-01"
-
+  created_date: '2026-02-01'
 plan_cases:
   sapling-fy26-segment-shift:
     top_down_plan:
       preset_id: sapling-fy26-segment-shift
       plan_id: sapling-fy26-segment-shift
-      label: "Sapling FY26 Segment Shift Plan"
-      version: "1.0"
+      label: Sapling FY26 Segment Shift Plan
+      version: '1.0'
       status: working_draft
       basis: segment_mix_recut
-      created_date: "2026-02-01"
+      created_date: '2026-02-01'
