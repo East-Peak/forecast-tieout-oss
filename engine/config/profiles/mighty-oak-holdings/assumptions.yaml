@@ -7,7 +7,7 @@ stage_rates:
 lookback_days: 365
 monte_carlo_iterations: 10000
 funnel:
-  mql_to_s0: 0.006
+  mql_to_s0: 0.08
   s0_to_s1: 0.44
   s1_to_s2: 0.38
   s2_to_won: 0.21
