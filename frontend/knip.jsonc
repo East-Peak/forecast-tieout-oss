@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // Dead-code gate (2026-07-03): dead FILES + unused DEPENDENCIES fail `verify`.
+  // Export/type checks deferred.
+  "include": ["files", "dependencies"],
+  "ignore": [
+    // BASELINED pending consent-gated deletion (abandoned snapshot-loading
+    // feature — same as the parity sibling bdr-capacity-planner; Codex-verify):
+    "src/components/SnapshotError.tsx",
+    "src/lib/snapshotLoader.ts",
+  ],
+}
