@@ -55,13 +55,30 @@ interface ChartTuple {
   values: number[];
 }
 
+interface TableIssueTuple {
+  page: string;
+  persona: PersonaId;
+  table: string;
+  issue: string;
+}
+
+interface TableAllowlistEntry extends Omit<TableIssueTuple, "persona"> {
+  persona: PersonaId | "*";
+  rationale: string;
+}
+
 interface RenderAllowlist {
   metrics: Array<MetricTuple & { rationale: string }>;
   charts: Array<Omit<ChartTuple, "values"> & { rationale: string }>;
+  tables: TableAllowlistEntry[];
 }
 
 const DATA_ROOT = "http://localhost/data";
 const DEGENERATE_VALUE = /^(\$0(?:\.0+)?[KMB]?|--|—|NaN|\$NaN|undefined|null|Infinity|\s*)$/i;
+const DEGENERATE_TABLE_CELL =
+  /^(?:\$?0(?:\.0+)?(?:[KMB])?|0(?:\.0+)?%|0(?:\.0+)?pp|--|—|NaN|\$NaN|undefined|null|\s*)$/i;
+const NUMERIC_TABLE_CELL =
+  /^\(?[+-]?\$?\d[\d,]*(?:\.\d+)?(?:[KMB])?(?:%|pp)?\)?$/i;
 
 const PAGES = [
   { path: "/bookings", label: "Bookings Bridge", Component: BookingsBridge, expectedCharts: 2 },
@@ -73,6 +90,18 @@ const PAGES = [
   { path: "/methodology", label: "Methodology", Component: Methodology, expectedCharts: 0 },
   { path: "/targets", label: "Target Setter", Component: TargetSetter, expectedCharts: 1 },
   { path: "/scenario", label: "Scenario Planner", Component: ScenarioPlanner, expectedCharts: 2 },
+] as const;
+
+const SAPLING_HEADLINE_ASSERTIONS = [
+  { path: "/bookings", label: "Bookings Bridge", Component: BookingsBridge, expectedText: "$50.4M" },
+  { path: "/capacity", label: "Capacity & Headcount", Component: CapacityHeadcount, expectedText: "$22.5M" },
+  { path: "/funnel", label: "Funnel Health", Component: FunnelHealth, expectedText: "$8.0M" },
+  { path: "/inventory", label: "Pipeline Inventory", Component: PipelineInventory, expectedText: "$115.4M" },
+  { path: "/audit", label: "Audit", Component: AuditReadiness, expectedText: "$8.0M" },
+  { path: "/export", label: "Export Pack", Component: ExportPack, expectedText: "$60.0M" },
+  { path: "/methodology", label: "Methodology", Component: Methodology, expectedText: "$978K" },
+  { path: "/targets", label: "Target Setter", Component: TargetSetter, expectedText: "$50.0M plan" },
+  { path: "/scenario", label: "Scenario Planner", Component: ScenarioPlanner, expectedText: "$50.4M" },
 ] as const;
 
 const PERSONAS: PersonaFixture[] = [
@@ -95,6 +124,9 @@ describe("render integrity allowlist", () => {
       ...allowlist.charts
         .filter((entry) => entry.rationale.trim().length === 0)
         .map((entry) => `chart ${entry.page}/${entry.persona}/${entry.chart}`),
+      ...allowlist.tables
+        .filter((entry) => entry.rationale.trim().length === 0)
+        .map((entry) => `table ${entry.page}/${entry.persona}/${entry.table}/${entry.issue}`),
     ];
 
     expect(missingRationales).toEqual([]);
@@ -106,6 +138,8 @@ describe("all public pages render non-degenerate metrics and non-empty charts", 
     const allowlist = allowlistJson as RenderAllowlist;
     const metrics: MetricTuple[] = [];
     const charts: ChartTuple[] = [];
+    const tableIssues: TableIssueTuple[] = [];
+    let tablesChecked = 0;
     const failures: string[] = [];
 
     for (const persona of PERSONAS) {
@@ -113,8 +147,11 @@ describe("all public pages render non-degenerate metrics and non-empty charts", 
         const { container } = renderPage(persona, page.path, <page.Component />);
         const pageMetrics = collectMetrics(container, page.label, persona.id);
         const pageCharts = collectCharts(container, page.label, persona.id);
+        const pageTableIssues = collectTableIssues(container, page.label, persona.id);
         metrics.push(...pageMetrics);
         charts.push(...pageCharts);
+        tableIssues.push(...pageTableIssues);
+        tablesChecked += container.querySelectorAll("table").length;
 
         const missingChartCount = page.expectedCharts - pageCharts.length;
         if (missingChartCount > 0) {
@@ -142,6 +179,13 @@ describe("all public pages render non-degenerate metrics and non-empty charts", 
           );
         }
 
+        for (const tuple of pageTableIssues) {
+          if (isAllowedTableIssue(allowlist, tuple)) continue;
+          failures.push(
+            `${tuple.page} / ${tuple.persona} / ${tuple.table} has degenerate table data: ${tuple.issue}`,
+          );
+        }
+
         cleanup();
       }
     }
@@ -149,6 +193,7 @@ describe("all public pages render non-degenerate metrics and non-empty charts", 
     expect(PERSONAS.length * PAGES.length).toBe(27);
     expect(metrics).toHaveLength(129);
     expect(charts).toHaveLength(27);
+    expect(tablesChecked).toBeGreaterThan(0);
     expect(failures).toEqual([]);
   });
 
@@ -163,6 +208,34 @@ describe("all public pages render non-degenerate metrics and non-empty charts", 
         (metric) => metric.label,
       );
       expect(labels).not.toContain("YTD Recurring (~85%)");
+      cleanup();
+    }
+  });
+
+  it("suppresses Funnel Health stream tables when the snapshot lacks contracted data", () => {
+    for (const persona of PERSONAS) {
+      const { container } = renderPage(persona, "/funnel", <FunnelHealth />);
+      const tableLabels = collectTableLabels(container);
+
+      expect(tableLabels).not.toContain("Q1FY26 Conversion Rates by Stream");
+
+      const sourceBreakdown = findTable(container, "Q1FY26 Source Stream Breakdown");
+      expect(sourceBreakdown).not.toBeNull();
+      expect(tableHeaders(sourceBreakdown!)).not.toContain("Actual Opps");
+      expect(tableHeaders(sourceBreakdown!)).not.toContain("Actual Pipeline");
+      expect(tableFirstColumn(sourceBreakdown!)).not.toContain("PLG");
+
+      cleanup();
+    }
+  });
+
+  it("shows known-correct Sapling headline numbers on every public page", () => {
+    const sapling = PERSONAS.find((persona) => persona.id === "sapling-industries");
+    expect(sapling).toBeDefined();
+
+    for (const page of SAPLING_HEADLINE_ASSERTIONS) {
+      const { container } = renderPage(sapling!, page.path, <page.Component />);
+      expect(normalizeCell(container.textContent ?? ""), page.label).toContain(page.expectedText);
       cleanup();
     }
   });
@@ -257,6 +330,97 @@ function collectCharts(
   );
 }
 
+function collectTableIssues(
+  container: HTMLElement,
+  page: string,
+  persona: PersonaId,
+): TableIssueTuple[] {
+  return Array.from(container.querySelectorAll<HTMLTableElement>("table")).flatMap(
+    (table, tableIndex) => {
+      const label = resolveTableLabel(table, tableIndex);
+      const rows = Array.from(table.querySelectorAll("tbody tr")).map((row) =>
+        Array.from(row.querySelectorAll("td")).map((cell) => normalizeCell(cell.textContent ?? "")),
+      );
+      const nonEmptyRows = rows.filter((row) => row.some((cell) => cell.length > 0));
+      if (nonEmptyRows.length === 0) return [];
+
+      const issues: TableIssueTuple[] = [];
+      const dataRows = nonEmptyRows.map((row) => row.slice(1));
+      const flattenedDataCells = dataRows.flat();
+      if (
+        flattenedDataCells.length > 0 &&
+        flattenedDataCells.every(isDegenerateTableCell)
+      ) {
+        issues.push({
+          page,
+          persona,
+          table: label,
+          issue: "all data cells are degenerate",
+        });
+      }
+
+      const headers = Array.from(table.querySelectorAll("thead th")).map((cell) =>
+        normalizeCell(cell.textContent ?? ""),
+      );
+      const columnCount = Math.max(...nonEmptyRows.map((row) => row.length));
+      for (let columnIndex = 1; columnIndex < columnCount; columnIndex += 1) {
+        const columnCells = nonEmptyRows
+          .map((row) => row[columnIndex] ?? "")
+          .filter((cell) => cell.length > 0);
+        if (columnCells.length === 0) continue;
+        if (!columnCells.every(isDegenerateTableCell)) continue;
+        if (!columnCells.every(isNumericOrDegenerateTableCell)) continue;
+
+        const siblingCells = nonEmptyRows.flatMap((row) =>
+          row.filter((_, index) => index > 0 && index !== columnIndex),
+        );
+        const siblingHasCarriedData = siblingCells.some(
+          (cell) => cell.length > 0 && !isDegenerateTableCell(cell),
+        );
+        if (!siblingHasCarriedData) continue;
+
+        issues.push({
+          page,
+          persona,
+          table: label,
+          issue: `column "${headers[columnIndex] ?? `#${columnIndex + 1}`}" is entirely degenerate while sibling columns carry data`,
+        });
+      }
+
+      return issues;
+    },
+  );
+}
+
+function collectTableLabels(container: HTMLElement): string[] {
+  return Array.from(container.querySelectorAll<HTMLTableElement>("table")).map(
+    (table, index) => resolveTableLabel(table, index),
+  );
+}
+
+function findTable(
+  container: HTMLElement,
+  label: string,
+): HTMLTableElement | null {
+  return (
+    Array.from(container.querySelectorAll<HTMLTableElement>("table")).find(
+      (table, index) => resolveTableLabel(table, index) === label,
+    ) ?? null
+  );
+}
+
+function tableHeaders(table: HTMLTableElement): string[] {
+  return Array.from(table.querySelectorAll("thead th")).map((cell) =>
+    normalizeCell(cell.textContent ?? ""),
+  );
+}
+
+function tableFirstColumn(table: HTMLTableElement): string[] {
+  return Array.from(table.querySelectorAll("tbody tr")).map((row) =>
+    normalizeCell(row.querySelector("td")?.textContent ?? ""),
+  );
+}
+
 function parseSeriesValues(raw: string): number[] {
   try {
     const parsed = JSON.parse(raw) as unknown;
@@ -286,4 +450,40 @@ function isAllowedChart(allowlist: RenderAllowlist, tuple: ChartTuple): boolean 
       entry.chart === tuple.chart &&
       entry.primarySeries === tuple.primarySeries,
   );
+}
+
+function isAllowedTableIssue(
+  allowlist: RenderAllowlist,
+  tuple: TableIssueTuple,
+): boolean {
+  return allowlist.tables.some(
+    (entry) =>
+      entry.page === tuple.page &&
+      (entry.persona === "*" || entry.persona === tuple.persona) &&
+      entry.table === tuple.table &&
+      entry.issue === tuple.issue,
+  );
+}
+
+function normalizeCell(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function isDegenerateTableCell(value: string): boolean {
+  return DEGENERATE_TABLE_CELL.test(value);
+}
+
+function isNumericOrDegenerateTableCell(value: string): boolean {
+  return isDegenerateTableCell(value) || NUMERIC_TABLE_CELL.test(value);
+}
+
+function resolveTableLabel(table: HTMLTableElement, tableIndex: number): string {
+  let current: HTMLElement | null = table.parentElement;
+  while (current && current.tagName !== "BODY") {
+    const heading = current.querySelector<HTMLElement>("h1, h2, h3, h4");
+    const headingText = heading?.textContent?.trim();
+    if (headingText) return headingText;
+    current = current.parentElement;
+  }
+  return `table #${tableIndex + 1}`;
 }

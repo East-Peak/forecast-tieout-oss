@@ -1,4 +1,76 @@
 {
   "metrics": [],
-  "charts": []
+  "charts": [],
+  "tables": [
+    {
+      "page": "Funnel Health",
+      "persona": "*",
+      "table": "Quarterly Funnel Summary",
+      "issue": "column \"MQLs/wk (Plan)\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Legacy cross-quarter summary does not own weekly plan pacing; Weekly Funnel Pace is the contracted current-quarter plan view."
+    },
+    {
+      "page": "Funnel Health",
+      "persona": "*",
+      "table": "Quarterly Funnel Summary",
+      "issue": "column \"MQLs/wk (Actual)\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Weekly actuals are not carried as a reliable cross-quarter contract in committed snapshots; suppressing the summary is round B."
+    },
+    {
+      "page": "Funnel Health",
+      "persona": "*",
+      "table": "Quarterly Funnel Summary",
+      "issue": "column \"S0/wk (Actual)\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Weekly actuals are not carried as a reliable cross-quarter contract in committed snapshots; suppressing the summary is round B."
+    },
+    {
+      "page": "Funnel Health",
+      "persona": "*",
+      "table": "Quarterly Funnel Summary",
+      "issue": "column \"S2/wk (Plan)\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Legacy cross-quarter summary does not own weekly plan pacing; Weekly Funnel Pace is the contracted current-quarter plan view."
+    },
+    {
+      "page": "Funnel Health",
+      "persona": "*",
+      "table": "Quarterly Funnel Summary",
+      "issue": "column \"S2/wk (Actual)\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Weekly actuals are not carried as a reliable cross-quarter contract in committed snapshots; suppressing the summary is round B."
+    },
+    {
+      "page": "Audit",
+      "persona": "*",
+      "table": "Quarter Tie-Out",
+      "issue": "column \"Max Delta\" is entirely degenerate while sibling columns carry data",
+      "rationale": "All-zero max deltas are the expected passing reconciliation value; nonzero deltas would indicate a tie-out defect."
+    },
+    {
+      "page": "Audit",
+      "persona": "*",
+      "table": "Actual Month Lock Check",
+      "issue": "column \"Future Wins\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Confirmed actual months should have zero projected future wins; all-zero is the invariant this table proves."
+    },
+    {
+      "page": "Target Setter",
+      "persona": "*",
+      "table": "Target Setter",
+      "issue": "all data cells are degenerate",
+      "rationale": "The current public solve scope is infeasible in Q2FY26, so the funnel-math table truthfully renders zero incremental ask."
+    },
+    {
+      "page": "Target Setter",
+      "persona": "*",
+      "table": "Monthly & weekly cadence",
+      "issue": "column \"Q2FY26(infeasible)\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Q2FY26 is explicitly marked infeasible; starting pipeline already exceeds target, so incremental monthly/weekly ask is zero."
+    },
+    {
+      "page": "Scenario Planner",
+      "persona": "*",
+      "table": "Monthly Breakdown",
+      "issue": "column \"Overflow\" is entirely degenerate while sibling columns carry data",
+      "rationale": "Sapling and Mighty Oak committed scenario fixtures have no capacity overflow; zero overflow is the expected healthy value."
+    }
+  ]
 }

@@ -87,6 +87,12 @@ const SOURCE_LABELS: Record<string, string> = {
   plan: "Plan config",
 };
 
+const STREAM_RATE_COLUMNS = [
+  { key: "marketing_sdr", label: "Marketing/SDR" },
+  { key: "ae_selfgen", label: "AE Self-Gen" },
+  { key: "plg", label: "PLG" },
+] as const;
+
 function humanSourceLabel(source: string): string {
   return SOURCE_LABELS[source] ?? source;
 }
@@ -116,6 +122,48 @@ function deltaPctStr(plan: number | null, actual: number | null): string {
   const pctVal = ((actual - plan) / Math.abs(plan)) * 100;
   const sign = pctVal >= 0 ? "+" : "";
   return `${sign}${pctVal.toFixed(0)}%`;
+}
+
+function readRate(value: unknown): number | null {
+  const record = asRecord(value);
+  return typeof record?.rate === "number" ? record.rate : null;
+}
+
+function streamHasPipelineActivity(stream: Record<string, unknown> | undefined): boolean {
+  if (!stream) return false;
+  const scalarKeys = [
+    "weekly_input",
+    "weekly_s0_count",
+    "weekly_s1_count",
+    "weekly_s2_count",
+    "quarter_pipeline_created",
+    "actual_opp_count",
+    "actual_pipeline",
+  ];
+  return scalarKeys.some((key) => {
+    const value = stream[key];
+    return typeof value === "number" && Math.abs(value) > 1e-9;
+  });
+}
+
+function hasPlgSourceStream(data: FunnelHealthData): boolean {
+  return data.trajectory_quarters.some((quarter) => {
+    const quarterRecord = quarter as Record<string, unknown>;
+    const breakdown = asRecord(quarterRecord.source_breakdown);
+    const streams = asRecord(breakdown?.streams);
+    return streamHasPipelineActivity(asRecord(streams?.plg) ?? undefined);
+  });
+}
+
+function hasActualStreamData(streams: Record<string, unknown>[]): boolean {
+  return streams.some((stream) => {
+    const actualOpps = stream.actual_opp_count;
+    const actualPipeline = stream.actual_pipeline;
+    return (
+      (typeof actualOpps === "number" && Math.abs(actualOpps) > 1e-9) ||
+      (typeof actualPipeline === "number" && Math.abs(actualPipeline) > 1e-9)
+    );
+  });
 }
 
 export default function FunnelHealth() {
@@ -304,8 +352,22 @@ export default function FunnelHealth() {
     ? ((rollingS2 as Record<string, unknown>).method as string) ?? ""
     : "";
 
+  const profileHasPlgSourceStream = hasPlgSourceStream(data);
   const streams = sourceBreakdown?.streams as Record<string, Record<string, unknown>> | undefined;
-  const streamEntries = streams ? Object.values(streams).filter((s) => typeof s === "object") : [];
+  const streamEntries = streams
+    ? Object.values(streams).filter((s) => typeof s === "object")
+    : [];
+  const visibleStreamEntries = streamEntries.filter((stream) => {
+    const key = stream.stream_key as string | undefined;
+    return key !== "plg" || profileHasPlgSourceStream;
+  });
+  const showActualStreamColumns = hasActualStreamData(visibleStreamEntries);
+  const streamRateColumns = STREAM_RATE_COLUMNS.filter((column) => {
+    if (column.key === "plg" && !profileHasPlgSourceStream) return false;
+    return Object.values(conversionRates ?? {}).some((streamsByTransition) =>
+      readRate(streamsByTransition?.[column.key]) !== null,
+    );
+  });
 
   const hasExpansion = expansionBreakdown && typeof expansionBreakdown === "object";
 
@@ -636,61 +698,57 @@ export default function FunnelHealth() {
             title={`${selectedQtr} Conversion Rates by Stream`}
             subtitle="Per-stream rates used in bottoms-up model for this quarter."
           />
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableHeaderCell>Transition</TableHeaderCell>
-                <TableHeaderCell className="text-right">Marketing/SDR</TableHeaderCell>
-                <TableHeaderCell className="text-right">AE Self-Gen</TableHeaderCell>
-                <TableHeaderCell className="text-right">PLG</TableHeaderCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Object.entries(conversionRates).map(([transition, streams]) => {
-                const mktg = streams?.marketing_sdr as Record<string, unknown> | undefined;
-                const ae = streams?.ae_selfgen as Record<string, unknown> | undefined;
-                const plg = streams?.plg as Record<string, unknown> | undefined;
-                return (
+          {streamRateColumns.length > 0 ? (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell>Transition</TableHeaderCell>
+                  {streamRateColumns.map((column) => (
+                    <TableHeaderCell key={column.key} className="text-right">
+                      {column.label}
+                    </TableHeaderCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.entries(conversionRates).map(([transition, streams]) => (
                   <TableRow key={transition}>
                     <TableCell className="font-mono text-sm">
                       {transition.replace(/_/g, " ").replace(/to/g, "\u2192")}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <span className="font-medium">{pct(mktg?.rate as number | null)}</span>
-                      {(mktg?.n as number) ? (
-                        <span className="text-xs text-slate-400 ml-1">
-                          n={mktg?.n as number}
-                        </span>
-                      ) : null}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="font-medium">{pct(ae?.rate as number | null)}</span>
-                      {(ae?.n as number) ? (
-                        <span className="text-xs text-slate-400 ml-1">
-                          n={ae?.n as number}
-                        </span>
-                      ) : null}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="font-medium">{pct(plg?.rate as number | null)}</span>
-                      {(plg?.n as number) ? (
-                        <span className="text-xs text-slate-400 ml-1">
-                          n={plg?.n as number}
-                        </span>
-                      ) : null}
-                    </TableCell>
+                    {streamRateColumns.map((column) => {
+                      const stream = streams?.[column.key] as Record<string, unknown> | undefined;
+                      const rate = readRate(stream);
+                      return (
+                        <TableCell key={column.key} className="text-right">
+                          <span className="font-medium">{pct(rate)}</span>
+                          {(stream?.n as number) ? (
+                            <span className="text-xs text-slate-400 ml-1">
+                              n={stream?.n as number}
+                            </span>
+                          ) : null}
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm text-slate-500">
+                Stream-specific conversion rates are not available for this
+                quarter. The model is using blended quarter rates instead.
+              </p>
+            </div>
+          )}
         </Card>
       )}
 
       {/* ================================================================= */}
       {/* Section 4: Source Stream Breakdown                                  */}
       {/* ================================================================= */}
-      {streamEntries.length > 0 && (
+      {visibleStreamEntries.length > 0 && (
         <Card>
           <SectionHeader
             title={`${selectedQtr} Source Stream Breakdown`}
@@ -705,12 +763,16 @@ export default function FunnelHealth() {
                 <TableHeaderCell className="text-right">S1 / wk</TableHeaderCell>
                 <TableHeaderCell className="text-right">S2 / wk</TableHeaderCell>
                 <TableHeaderCell className="text-right">Qtr Pipeline</TableHeaderCell>
-                <TableHeaderCell className="text-right">Actual Opps</TableHeaderCell>
-                <TableHeaderCell className="text-right">Actual Pipeline</TableHeaderCell>
+                {showActualStreamColumns ? (
+                  <>
+                    <TableHeaderCell className="text-right">Actual Opps</TableHeaderCell>
+                    <TableHeaderCell className="text-right">Actual Pipeline</TableHeaderCell>
+                  </>
+                ) : null}
               </TableRow>
             </TableHead>
             <TableBody>
-              {streamEntries.map((stream) => {
+              {visibleStreamEntries.map((stream) => {
                 const s = stream as Record<string, unknown>;
                 return (
                   <TableRow key={s.stream_key as string}>
@@ -732,12 +794,16 @@ export default function FunnelHealth() {
                     <TableCell className="text-right font-mono text-sm">
                       {formatMoney((s.quarter_pipeline_created as number) ?? 0)}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-sm">
-                      {num(s.actual_opp_count as number)}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm">
-                      {formatMoney((s.actual_pipeline as number) ?? 0)}
-                    </TableCell>
+                    {showActualStreamColumns ? (
+                      <>
+                        <TableCell className="text-right font-mono text-sm">
+                          {num(s.actual_opp_count as number)}
+                        </TableCell>
+                        <TableCell className="text-right font-mono text-sm">
+                          {formatMoney((s.actual_pipeline as number) ?? 0)}
+                        </TableCell>
+                      </>
+                    ) : null}
                   </TableRow>
                 );
               })}
@@ -746,7 +812,7 @@ export default function FunnelHealth() {
                 <TableCell className="font-semibold text-sm">Total</TableCell>
                 <TableCell className="text-right font-mono text-sm font-semibold">
                   {num(
-                    streamEntries.reduce(
+                    visibleStreamEntries.reduce(
                       (acc, s) => acc + ((s as Record<string, unknown>).weekly_input as number ?? 0),
                       0
                     ),
@@ -755,7 +821,7 @@ export default function FunnelHealth() {
                 </TableCell>
                 <TableCell className="text-right font-mono text-sm font-semibold">
                   {num(
-                    streamEntries.reduce(
+                    visibleStreamEntries.reduce(
                       (acc, s) => acc + ((s as Record<string, unknown>).weekly_s0_count as number ?? 0),
                       0
                     ),
@@ -764,7 +830,7 @@ export default function FunnelHealth() {
                 </TableCell>
                 <TableCell className="text-right font-mono text-sm font-semibold">
                   {num(
-                    streamEntries.reduce(
+                    visibleStreamEntries.reduce(
                       (acc, s) => acc + ((s as Record<string, unknown>).weekly_s1_count as number ?? 0),
                       0
                     ),
@@ -773,7 +839,7 @@ export default function FunnelHealth() {
                 </TableCell>
                 <TableCell className="text-right font-mono text-sm font-semibold">
                   {num(
-                    streamEntries.reduce(
+                    visibleStreamEntries.reduce(
                       (acc, s) => acc + ((s as Record<string, unknown>).weekly_s2_count as number ?? 0),
                       0
                     ),
@@ -782,28 +848,32 @@ export default function FunnelHealth() {
                 </TableCell>
                 <TableCell className="text-right font-mono text-sm font-semibold">
                   {formatMoney(
-                    streamEntries.reduce(
+                    visibleStreamEntries.reduce(
                       (acc, s) => acc + ((s as Record<string, unknown>).quarter_pipeline_created as number ?? 0),
                       0
                     )
                   )}
                 </TableCell>
-                <TableCell className="text-right font-mono text-sm font-semibold">
-                  {num(
-                    streamEntries.reduce(
-                      (acc, s) => acc + ((s as Record<string, unknown>).actual_opp_count as number ?? 0),
-                      0
-                    )
-                  )}
-                </TableCell>
-                <TableCell className="text-right font-mono text-sm font-semibold">
-                  {formatMoney(
-                    streamEntries.reduce(
-                      (acc, s) => acc + ((s as Record<string, unknown>).actual_pipeline as number ?? 0),
-                      0
-                    )
-                  )}
-                </TableCell>
+                {showActualStreamColumns ? (
+                  <>
+                    <TableCell className="text-right font-mono text-sm font-semibold">
+                      {num(
+                        visibleStreamEntries.reduce(
+                          (acc, s) => acc + ((s as Record<string, unknown>).actual_opp_count as number ?? 0),
+                          0
+                        )
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-sm font-semibold">
+                      {formatMoney(
+                        visibleStreamEntries.reduce(
+                          (acc, s) => acc + ((s as Record<string, unknown>).actual_pipeline as number ?? 0),
+                          0
+                        )
+                      )}
+                    </TableCell>
+                  </>
+                ) : null}
               </TableRow>
             </TableBody>
           </Table>
