@@ -30,7 +30,7 @@ productivity_per_ae_per_month:
   commercial: 34300
 segment_productivity:
   enterprise:
-    annual_quota: 2800000
+    annual_quota: 20600000
     attainment_rate: 0.82
     productivity_per_ae_per_month: 92800
     ramp_curve:
@@ -41,7 +41,7 @@ segment_productivity:
       month_5: 0.7
       month_6_plus: 1.0
   mid_market:
-    annual_quota: 1800000
+    annual_quota: 13250000
     attainment_rate: 0.91
     productivity_per_ae_per_month: 66600
     ramp_curve:
@@ -50,7 +50,7 @@ segment_productivity:
       month_3: 0.6
       month_4_plus: 1.0
   commercial:
-    annual_quota: 850000
+    annual_quota: 6250000
     attainment_rate: 0.96
     productivity_per_ae_per_month: 34300
     ramp_curve:

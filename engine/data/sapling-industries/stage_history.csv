@@ -621,378 +621,382 @@ SAP-135,,Discovery,2025-09-29T17:00:00
 SAP-135,Discovery,Qualification,2025-10-17T15:00:00
 SAP-135,Qualification,Technical Evaluation,2025-11-10T08:30:00
 SAP-135,Technical Evaluation,Closed Lost,2025-12-08T15:00:00
-SAP-136,,Discovery,2026-06-10T13:00:00
-SAP-136,Discovery,Qualification,2026-06-16T12:15:00
-SAP-137,,Discovery,2026-08-03T13:15:00
-SAP-137,Discovery,Qualification,2026-08-07T12:45:00
-SAP-138,,Discovery,2026-04-27T17:15:00
-SAP-138,Discovery,Qualification,2026-05-13T08:00:00
-SAP-139,,Discovery,2026-06-11T15:00:00
-SAP-139,Discovery,Qualification,2026-06-29T11:45:00
-SAP-140,,Discovery,2026-03-12T12:45:00
-SAP-140,Discovery,Qualification,2026-04-10T08:15:00
-SAP-141,,Discovery,2026-07-20T12:15:00
-SAP-141,Discovery,Qualification,2026-07-23T10:30:00
-SAP-142,,Discovery,2026-03-23T10:30:00
-SAP-142,Discovery,Qualification,2026-04-10T12:30:00
-SAP-143,,Discovery,2026-05-04T16:15:00
-SAP-143,Discovery,Qualification,2026-05-11T16:30:00
-SAP-144,,Discovery,2026-04-10T12:00:00
-SAP-144,Discovery,Qualification,2026-04-22T08:30:00
-SAP-145,,Discovery,2026-10-13T13:30:00
-SAP-145,Discovery,Qualification,2026-10-16T17:00:00
-SAP-146,,Discovery,2026-07-01T17:00:00
-SAP-146,Discovery,Qualification,2026-07-06T09:45:00
-SAP-147,,Discovery,2026-06-15T12:45:00
-SAP-147,Discovery,Qualification,2026-06-29T16:45:00
-SAP-148,,Discovery,2026-07-24T09:30:00
-SAP-148,Discovery,Qualification,2026-07-27T13:30:00
-SAP-149,,Discovery,2026-05-08T13:00:00
-SAP-149,Discovery,Qualification,2026-06-01T08:45:00
-SAP-150,,Discovery,2026-03-24T13:30:00
-SAP-150,Discovery,Qualification,2026-04-06T13:45:00
-SAP-151,,Discovery,2026-04-16T11:15:00
-SAP-151,Discovery,Qualification,2026-05-04T12:30:00
-SAP-152,,Discovery,2026-06-12T10:00:00
-SAP-152,Discovery,Qualification,2026-06-24T17:00:00
-SAP-153,,Discovery,2026-06-18T16:15:00
-SAP-153,Discovery,Qualification,2026-06-26T11:15:00
-SAP-154,,Discovery,2026-08-11T08:45:00
-SAP-154,Discovery,Qualification,2026-08-17T09:15:00
-SAP-155,,Discovery,2026-08-12T13:30:00
-SAP-155,Discovery,Qualification,2026-08-17T13:30:00
-SAP-155,Qualification,Technical Evaluation,2026-08-24T15:45:00
-SAP-156,,Discovery,2026-08-05T11:30:00
-SAP-156,Discovery,Technical Evaluation,2026-08-17T09:45:00
-SAP-157,,Discovery,2026-04-15T11:00:00
-SAP-157,Discovery,Qualification,2026-05-04T17:30:00
-SAP-157,Qualification,Technical Evaluation,2026-06-01T15:15:00
-SAP-158,,Discovery,2026-06-22T09:15:00
-SAP-158,Discovery,Qualification,2026-06-24T15:00:00
-SAP-158,Qualification,Technical Evaluation,2026-06-29T12:45:00
-SAP-159,,Discovery,2026-07-28T14:15:00
-SAP-159,Discovery,Qualification,2026-08-03T10:45:00
-SAP-159,Qualification,Technical Evaluation,2026-08-10T10:00:00
-SAP-160,,Discovery,2026-07-20T15:30:00
-SAP-160,Discovery,Qualification,2026-07-27T10:00:00
-SAP-160,Qualification,Technical Evaluation,2026-08-13T17:30:00
-SAP-161,,Discovery,2026-09-23T16:15:00
-SAP-161,Discovery,Qualification,2026-09-28T12:00:00
-SAP-161,Qualification,Technical Evaluation,2026-10-05T10:30:00
-SAP-162,,Discovery,2026-06-24T12:45:00
-SAP-162,Discovery,Qualification,2026-06-29T16:30:00
-SAP-162,Qualification,Technical Evaluation,2026-07-02T13:00:00
-SAP-163,,Discovery,2026-08-17T17:30:00
-SAP-163,Discovery,Technical Evaluation,2026-08-20T12:15:00
-SAP-164,,Discovery,2026-06-08T11:15:00
-SAP-164,Discovery,Qualification,2026-06-22T17:15:00
-SAP-164,Qualification,Technical Evaluation,2026-07-06T10:15:00
-SAP-165,,Discovery,2026-08-03T16:45:00
-SAP-165,Discovery,Qualification,2026-08-06T12:15:00
-SAP-165,Qualification,Technical Evaluation,2026-08-11T10:45:00
-SAP-166,,Discovery,2026-06-10T10:15:00
-SAP-166,Discovery,Qualification,2026-06-19T08:15:00
-SAP-166,Qualification,Technical Evaluation,2026-07-09T16:00:00
-SAP-167,,Discovery,2026-07-01T16:30:00
-SAP-167,Discovery,Qualification,2026-07-09T11:15:00
-SAP-167,Qualification,Technical Evaluation,2026-07-23T09:00:00
-SAP-168,,Discovery,2026-05-26T14:15:00
-SAP-168,Discovery,Qualification,2026-06-01T08:30:00
-SAP-168,Qualification,Technical Evaluation,2026-06-09T09:45:00
-SAP-169,,Discovery,2026-06-10T12:30:00
-SAP-169,Discovery,Qualification,2026-06-29T08:30:00
-SAP-169,Qualification,Technical Evaluation,2026-07-24T09:15:00
-SAP-170,,Discovery,2026-06-01T17:15:00
-SAP-170,Discovery,Qualification,2026-06-12T14:00:00
-SAP-170,Qualification,Technical Evaluation,2026-07-01T13:45:00
-SAP-171,,Discovery,2026-06-15T12:00:00
-SAP-171,Discovery,Technical Evaluation,2026-06-24T16:15:00
-SAP-172,,Discovery,2026-09-03T12:00:00
-SAP-172,Discovery,Qualification,2026-09-07T14:15:00
-SAP-172,Qualification,Technical Evaluation,2026-09-11T13:30:00
-SAP-173,,Discovery,2026-06-30T12:00:00
-SAP-173,Discovery,Qualification,2026-07-10T15:30:00
-SAP-173,Qualification,Technical Evaluation,2026-07-24T17:45:00
-SAP-174,,Discovery,2026-07-13T09:45:00
-SAP-174,Discovery,Technical Evaluation,2026-07-17T17:00:00
-SAP-175,,Discovery,2026-06-16T12:00:00
-SAP-175,Discovery,Qualification,2026-06-18T15:00:00
-SAP-175,Qualification,Technical Evaluation,2026-06-22T17:45:00
-SAP-176,,Discovery,2026-06-29T13:30:00
-SAP-176,Discovery,Qualification,2026-07-07T08:15:00
-SAP-176,Qualification,Technical Evaluation,2026-07-20T13:30:00
-SAP-177,,Discovery,2026-02-23T14:30:00
-SAP-177,Discovery,Qualification,2026-03-06T15:45:00
-SAP-177,Qualification,Technical Evaluation,2026-03-30T13:00:00
-SAP-178,,Discovery,2026-06-10T16:30:00
-SAP-178,Discovery,Qualification,2026-06-19T11:15:00
-SAP-178,Qualification,Technical Evaluation,2026-07-06T17:30:00
-SAP-179,,Discovery,2026-06-08T16:45:00
-SAP-179,Discovery,Qualification,2026-06-24T13:30:00
-SAP-179,Qualification,Technical Evaluation,2026-07-13T11:00:00
-SAP-180,,Discovery,2026-05-04T10:45:00
-SAP-180,Discovery,Qualification,2026-05-20T17:45:00
-SAP-180,Qualification,Technical Evaluation,2026-06-15T13:30:00
-SAP-181,,Discovery,2026-07-03T08:00:00
-SAP-181,Discovery,Qualification,2026-07-10T08:15:00
-SAP-181,Qualification,Technical Evaluation,2026-07-20T11:30:00
-SAP-182,,Discovery,2026-04-13T08:00:00
-SAP-182,Discovery,Qualification,2026-05-11T11:45:00
-SAP-182,Qualification,Technical Evaluation,2026-06-11T17:00:00
-SAP-183,,Discovery,2026-05-13T09:00:00
-SAP-183,Discovery,Technical Evaluation,2026-05-18T15:00:00
-SAP-184,,Discovery,2026-07-29T10:15:00
-SAP-184,Discovery,Technical Evaluation,2026-08-05T13:30:00
-SAP-185,,Discovery,2026-03-02T08:45:00
-SAP-185,Discovery,Qualification,2026-03-11T15:30:00
-SAP-185,Qualification,Technical Evaluation,2026-04-22T15:15:00
-SAP-186,,Discovery,2026-05-21T09:15:00
-SAP-186,Discovery,Qualification,2026-06-02T08:00:00
-SAP-186,Qualification,Technical Evaluation,2026-06-15T12:30:00
-SAP-187,,Discovery,2026-05-21T08:30:00
-SAP-187,Discovery,Qualification,2026-06-01T12:00:00
-SAP-187,Qualification,Technical Evaluation,2026-06-08T11:30:00
-SAP-187,Technical Evaluation,Business Case,2026-06-29T15:45:00
-SAP-188,,Discovery,2026-06-30T15:30:00
-SAP-188,Discovery,Qualification,2026-07-06T13:45:00
-SAP-188,Qualification,Technical Evaluation,2026-07-13T10:30:00
-SAP-188,Technical Evaluation,Business Case,2026-07-20T14:45:00
-SAP-189,,Discovery,2026-03-26T15:45:00
-SAP-189,Discovery,Qualification,2026-04-06T11:45:00
-SAP-189,Qualification,Technical Evaluation,2026-05-13T14:15:00
-SAP-189,Technical Evaluation,Business Case,2026-06-15T15:15:00
-SAP-190,,Discovery,2026-05-14T15:15:00
-SAP-190,Discovery,Qualification,2026-05-28T10:15:00
-SAP-190,Qualification,Technical Evaluation,2026-06-08T09:00:00
-SAP-190,Technical Evaluation,Business Case,2026-06-29T09:45:00
-SAP-191,,Discovery,2026-06-10T09:15:00
-SAP-191,Discovery,Qualification,2026-06-15T08:45:00
-SAP-191,Qualification,Technical Evaluation,2026-06-25T08:15:00
-SAP-191,Technical Evaluation,Business Case,2026-07-13T16:45:00
-SAP-192,,Discovery,2026-04-23T10:15:00
-SAP-192,Discovery,Qualification,2026-05-04T08:45:00
-SAP-192,Qualification,Technical Evaluation,2026-05-19T12:00:00
-SAP-192,Technical Evaluation,Business Case,2026-06-05T12:15:00
-SAP-193,,Discovery,2026-02-13T15:45:00
-SAP-193,Discovery,Qualification,2026-02-27T09:30:00
-SAP-193,Qualification,Technical Evaluation,2026-03-25T14:15:00
-SAP-193,Technical Evaluation,Business Case,2026-04-17T09:30:00
-SAP-194,,Discovery,2026-03-23T13:15:00
-SAP-194,Discovery,Qualification,2026-04-06T15:30:00
-SAP-194,Qualification,Technical Evaluation,2026-04-17T15:45:00
-SAP-194,Technical Evaluation,Business Case,2026-05-04T10:30:00
-SAP-195,,Discovery,2026-03-09T10:30:00
-SAP-195,Discovery,Qualification,2026-03-23T14:00:00
-SAP-195,Qualification,Technical Evaluation,2026-04-08T13:30:00
-SAP-195,Technical Evaluation,Business Case,2026-04-30T10:00:00
-SAP-196,,Discovery,2026-07-13T14:45:00
-SAP-196,Discovery,Technical Evaluation,2026-07-27T12:30:00
-SAP-196,Technical Evaluation,Business Case,2026-08-07T16:45:00
-SAP-197,,Discovery,2026-03-30T10:15:00
-SAP-197,Discovery,Qualification,2026-04-09T17:45:00
-SAP-197,Qualification,Business Case,2026-04-22T15:45:00
-SAP-198,,Discovery,2026-06-03T10:45:00
-SAP-198,Discovery,Qualification,2026-06-12T13:15:00
-SAP-198,Qualification,Technical Evaluation,2026-07-01T13:45:00
-SAP-198,Technical Evaluation,Business Case,2026-08-31T10:30:00
-SAP-199,,Discovery,2026-07-17T11:45:00
-SAP-199,Discovery,Qualification,2026-07-20T10:15:00
-SAP-199,Qualification,Technical Evaluation,2026-07-24T10:00:00
-SAP-199,Technical Evaluation,Business Case,2026-07-28T09:45:00
-SAP-200,,Discovery,2026-03-06T14:00:00
-SAP-200,Discovery,Qualification,2026-03-11T12:00:00
-SAP-200,Qualification,Technical Evaluation,2026-03-23T10:30:00
-SAP-200,Technical Evaluation,Business Case,2026-04-10T10:45:00
-SAP-201,,Discovery,2026-05-27T12:15:00
-SAP-201,Discovery,Qualification,2026-06-01T14:45:00
-SAP-201,Qualification,Technical Evaluation,2026-06-08T17:30:00
-SAP-201,Technical Evaluation,Business Case,2026-06-17T13:00:00
-SAP-202,,Discovery,2026-08-13T08:30:00
-SAP-202,Discovery,Qualification,2026-08-17T16:00:00
-SAP-202,Qualification,Technical Evaluation,2026-08-24T14:00:00
-SAP-202,Technical Evaluation,Business Case,2026-08-31T13:15:00
-SAP-203,,Discovery,2026-04-15T12:30:00
-SAP-203,Discovery,Qualification,2026-04-20T12:30:00
-SAP-203,Qualification,Technical Evaluation,2026-05-14T12:15:00
-SAP-203,Technical Evaluation,Business Case,2026-06-08T08:15:00
-SAP-204,,Discovery,2026-04-20T15:30:00
-SAP-204,Discovery,Qualification,2026-04-28T11:45:00
-SAP-204,Qualification,Technical Evaluation,2026-05-06T09:15:00
-SAP-204,Technical Evaluation,Business Case,2026-05-26T10:00:00
-SAP-205,,Discovery,2026-05-05T14:00:00
-SAP-205,Discovery,Qualification,2026-05-14T17:15:00
-SAP-205,Qualification,Technical Evaluation,2026-05-26T14:45:00
-SAP-205,Technical Evaluation,Business Case,2026-06-16T10:30:00
-SAP-206,,Discovery,2026-03-10T11:00:00
-SAP-206,Discovery,Technical Evaluation,2026-03-23T08:30:00
-SAP-206,Technical Evaluation,Business Case,2026-04-06T11:45:00
-SAP-207,,Discovery,2026-03-02T10:45:00
-SAP-207,Discovery,Qualification,2026-03-18T12:30:00
-SAP-207,Qualification,Technical Evaluation,2026-04-15T14:00:00
-SAP-207,Technical Evaluation,Business Case,2026-05-13T14:15:00
-SAP-208,,Discovery,2026-06-29T14:00:00
-SAP-208,Discovery,Qualification,2026-07-08T14:00:00
-SAP-208,Qualification,Technical Evaluation,2026-07-16T12:45:00
-SAP-208,Technical Evaluation,Business Case,2026-07-31T12:00:00
-SAP-209,,Discovery,2026-08-03T16:00:00
-SAP-209,Discovery,Qualification,2026-08-05T10:30:00
-SAP-209,Qualification,Technical Evaluation,2026-08-10T12:30:00
-SAP-209,Technical Evaluation,Business Case,2026-08-21T08:30:00
-SAP-210,,Discovery,2026-07-23T10:00:00
-SAP-210,Discovery,Qualification,2026-07-27T12:45:00
-SAP-210,Qualification,Technical Evaluation,2026-07-31T13:30:00
-SAP-210,Technical Evaluation,Business Case,2026-08-06T16:30:00
-SAP-211,,Discovery,2026-07-29T10:30:00
-SAP-211,Discovery,Qualification,2026-08-03T15:15:00
-SAP-211,Qualification,Technical Evaluation,2026-08-10T15:30:00
-SAP-211,Technical Evaluation,Business Case,2026-08-17T11:00:00
-SAP-212,,Discovery,2026-03-16T14:00:00
-SAP-212,Discovery,Qualification,2026-04-06T17:00:00
-SAP-212,Qualification,Technical Evaluation,2026-05-11T17:30:00
-SAP-212,Technical Evaluation,Business Case,2026-06-08T12:00:00
-SAP-213,,Discovery,2026-05-11T11:30:00
-SAP-213,Discovery,Qualification,2026-05-15T13:00:00
-SAP-213,Qualification,Technical Evaluation,2026-05-19T13:45:00
-SAP-213,Technical Evaluation,Business Case,2026-05-28T13:30:00
-SAP-214,,Discovery,2026-06-18T11:30:00
-SAP-214,Discovery,Qualification,2026-06-22T11:30:00
-SAP-214,Qualification,Technical Evaluation,2026-06-25T13:30:00
-SAP-214,Technical Evaluation,Business Case,2026-07-01T10:15:00
-SAP-215,,Discovery,2026-07-30T09:45:00
-SAP-215,Discovery,Technical Evaluation,2026-08-06T11:30:00
-SAP-215,Technical Evaluation,Business Case,2026-08-17T12:30:00
-SAP-216,,Discovery,2026-06-08T10:00:00
-SAP-216,Discovery,Qualification,2026-06-15T14:45:00
-SAP-216,Qualification,Technical Evaluation,2026-07-06T16:00:00
-SAP-216,Technical Evaluation,Business Case,2026-07-30T11:45:00
-SAP-217,,Discovery,2026-03-03T10:15:00
-SAP-217,Discovery,Qualification,2026-03-20T17:15:00
-SAP-217,Qualification,Technical Evaluation,2026-04-10T17:30:00
-SAP-217,Technical Evaluation,Business Case,2026-05-04T10:15:00
-SAP-218,,Discovery,2026-04-09T15:00:00
-SAP-218,Discovery,Qualification,2026-04-27T14:30:00
+SAP-136,,Discovery,2026-10-08T13:00:00
+SAP-136,Discovery,Qualification,2026-10-14T12:15:00
+SAP-137,,Discovery,2026-11-24T13:15:00
+SAP-137,Discovery,Qualification,2026-11-30T12:45:00
+SAP-138,,Discovery,2026-07-30T17:15:00
+SAP-138,Discovery,Qualification,2026-08-17T08:00:00
+SAP-139,,Discovery,2026-09-28T15:00:00
+SAP-139,Discovery,Qualification,2026-10-14T11:45:00
+SAP-140,,Discovery,2026-06-30T12:45:00
+SAP-140,Discovery,Qualification,2026-07-29T08:15:00
+SAP-141,,Discovery,2027-01-11T13:30:00
+SAP-141,Discovery,Qualification,2027-01-14T12:15:00
+SAP-142,,Discovery,2026-08-31T09:15:00
+SAP-142,Discovery,Qualification,2026-09-07T10:00:00
+SAP-143,,Discovery,2026-11-30T10:15:00
+SAP-143,Discovery,Qualification,2026-12-04T10:15:00
+SAP-144,,Discovery,2026-08-31T10:15:00
+SAP-144,Discovery,Qualification,2026-09-11T12:00:00
+SAP-145,,Discovery,2026-10-21T11:30:00
+SAP-145,Discovery,Qualification,2026-10-30T13:30:00
+SAP-146,,Discovery,2026-10-26T11:15:00
+SAP-146,Discovery,Qualification,2026-11-02T16:30:00
+SAP-147,,Discovery,2026-09-22T14:30:00
+SAP-147,Discovery,Qualification,2026-10-07T12:45:00
+SAP-148,,Discovery,2026-06-29T15:30:00
+SAP-148,Discovery,Qualification,2026-07-24T09:30:00
+SAP-149,,Discovery,2026-12-02T14:00:00
+SAP-149,Discovery,Qualification,2026-12-09T17:00:00
+SAP-150,,Discovery,2026-10-12T11:15:00
+SAP-150,Discovery,Qualification,2026-10-30T12:30:00
+SAP-151,,Discovery,2026-08-18T15:15:00
+SAP-151,Discovery,Qualification,2026-09-14T14:30:00
+SAP-152,,Discovery,2026-07-20T15:00:00
+SAP-152,Discovery,Qualification,2026-08-03T14:15:00
+SAP-153,,Discovery,2026-10-26T08:00:00
+SAP-153,Discovery,Qualification,2026-10-29T16:15:00
+SAP-154,,Discovery,2026-09-08T16:45:00
+SAP-154,Discovery,Qualification,2026-09-16T12:00:00
+SAP-155,,Discovery,2026-07-23T12:00:00
+SAP-155,Discovery,Qualification,2026-07-30T13:45:00
+SAP-155,Qualification,Technical Evaluation,2026-08-17T12:45:00
+SAP-156,,Discovery,2026-08-17T16:00:00
+SAP-156,Discovery,Qualification,2026-09-02T11:15:00
+SAP-156,Qualification,Technical Evaluation,2026-09-10T16:45:00
+SAP-157,,Discovery,2026-06-23T11:00:00
+SAP-157,Discovery,Qualification,2026-07-10T17:30:00
+SAP-157,Qualification,Technical Evaluation,2026-08-05T15:15:00
+SAP-158,,Discovery,2027-01-01T08:00:00
+SAP-158,Discovery,Qualification,2027-01-04T14:15:00
+SAP-158,Qualification,Technical Evaluation,2027-01-08T08:30:00
+SAP-159,,Discovery,2026-10-26T14:15:00
+SAP-159,Discovery,Qualification,2026-11-04T10:45:00
+SAP-159,Qualification,Technical Evaluation,2026-11-19T16:45:00
+SAP-160,,Discovery,2026-05-29T15:30:00
+SAP-160,Discovery,Qualification,2026-06-15T10:00:00
+SAP-160,Qualification,Technical Evaluation,2026-08-03T10:30:00
+SAP-161,,Discovery,2026-12-01T16:15:00
+SAP-161,Discovery,Qualification,2026-12-04T12:00:00
+SAP-161,Qualification,Technical Evaluation,2026-12-09T10:30:00
+SAP-162,,Discovery,2026-09-01T12:45:00
+SAP-162,Discovery,Qualification,2026-09-07T16:30:00
+SAP-162,Qualification,Technical Evaluation,2026-09-10T13:00:00
+SAP-163,,Discovery,2026-10-26T17:30:00
+SAP-163,Discovery,Technical Evaluation,2026-10-29T12:15:00
+SAP-164,,Discovery,2026-08-14T11:15:00
+SAP-164,Discovery,Qualification,2026-08-28T17:15:00
+SAP-164,Qualification,Technical Evaluation,2026-09-10T10:15:00
+SAP-165,,Discovery,2026-10-12T16:45:00
+SAP-165,Discovery,Qualification,2026-10-15T12:15:00
+SAP-165,Qualification,Technical Evaluation,2026-10-20T10:45:00
+SAP-166,,Discovery,2026-08-18T10:15:00
+SAP-166,Discovery,Qualification,2026-08-27T08:15:00
+SAP-166,Qualification,Technical Evaluation,2026-09-16T16:00:00
+SAP-167,,Discovery,2026-09-08T16:30:00
+SAP-167,Discovery,Qualification,2026-09-16T11:15:00
+SAP-167,Qualification,Technical Evaluation,2026-09-30T09:00:00
+SAP-168,,Discovery,2026-08-03T14:15:00
+SAP-168,Discovery,Qualification,2026-08-07T08:30:00
+SAP-168,Qualification,Technical Evaluation,2026-08-17T09:45:00
+SAP-169,,Discovery,2026-09-15T12:30:00
+SAP-169,Discovery,Qualification,2026-10-05T08:30:00
+SAP-169,Qualification,Technical Evaluation,2026-10-30T09:15:00
+SAP-170,,Discovery,2026-08-07T17:15:00
+SAP-170,Discovery,Qualification,2026-08-18T14:00:00
+SAP-170,Qualification,Technical Evaluation,2026-09-07T13:45:00
+SAP-171,,Discovery,2026-10-12T08:15:00
+SAP-171,Discovery,Qualification,2026-10-22T10:30:00
+SAP-171,Qualification,Technical Evaluation,2026-11-02T10:30:00
+SAP-172,,Discovery,2026-09-30T12:00:00
+SAP-172,Discovery,Qualification,2026-10-07T14:15:00
+SAP-172,Qualification,Technical Evaluation,2026-10-16T13:30:00
+SAP-173,,Discovery,2026-09-07T12:00:00
+SAP-173,Discovery,Qualification,2026-09-17T15:30:00
+SAP-173,Qualification,Technical Evaluation,2026-10-01T17:45:00
+SAP-174,,Discovery,2026-12-23T12:00:00
+SAP-174,Discovery,Technical Evaluation,2026-12-28T13:00:00
+SAP-175,,Discovery,2026-08-24T12:00:00
+SAP-175,Discovery,Qualification,2026-08-26T15:00:00
+SAP-175,Qualification,Technical Evaluation,2026-08-31T17:45:00
+SAP-176,,Discovery,2026-07-13T10:30:00
+SAP-176,Discovery,Qualification,2026-07-20T15:00:00
+SAP-176,Qualification,Technical Evaluation,2026-08-03T13:30:00
+SAP-177,,Discovery,2026-05-04T14:30:00
+SAP-177,Discovery,Qualification,2026-05-15T15:45:00
+SAP-177,Qualification,Technical Evaluation,2026-06-08T13:00:00
+SAP-178,,Discovery,2026-08-18T16:30:00
+SAP-178,Discovery,Qualification,2026-08-27T11:15:00
+SAP-178,Qualification,Technical Evaluation,2026-09-14T17:30:00
+SAP-179,,Discovery,2026-08-17T16:45:00
+SAP-179,Discovery,Qualification,2026-09-02T13:30:00
+SAP-179,Qualification,Technical Evaluation,2026-09-21T11:00:00
+SAP-180,,Discovery,2026-07-13T10:45:00
+SAP-180,Discovery,Qualification,2026-07-29T17:45:00
+SAP-180,Qualification,Technical Evaluation,2026-08-24T13:30:00
+SAP-181,,Discovery,2026-09-16T08:00:00
+SAP-181,Discovery,Qualification,2026-09-23T08:15:00
+SAP-181,Qualification,Technical Evaluation,2026-10-05T11:30:00
+SAP-182,,Discovery,2026-06-22T08:00:00
+SAP-182,Discovery,Qualification,2026-07-20T11:45:00
+SAP-182,Qualification,Technical Evaluation,2026-08-20T17:00:00
+SAP-183,,Discovery,2026-07-21T09:00:00
+SAP-183,Discovery,Technical Evaluation,2026-07-24T15:00:00
+SAP-184,,Discovery,2026-10-06T10:15:00
+SAP-184,Discovery,Technical Evaluation,2026-10-13T13:30:00
+SAP-185,,Discovery,2026-05-11T08:45:00
+SAP-185,Discovery,Qualification,2026-05-20T15:30:00
+SAP-185,Qualification,Technical Evaluation,2026-07-01T15:15:00
+SAP-186,,Discovery,2026-10-19T11:00:00
+SAP-186,Discovery,Qualification,2026-10-30T14:00:00
+SAP-186,Qualification,Technical Evaluation,2026-11-18T08:30:00
+SAP-187,,Discovery,2026-08-12T15:45:00
+SAP-187,Discovery,Qualification,2026-08-17T15:45:00
+SAP-187,Qualification,Technical Evaluation,2026-08-24T09:00:00
+SAP-187,Technical Evaluation,Business Case,2026-08-31T12:45:00
+SAP-188,,Discovery,2026-08-06T09:45:00
+SAP-188,Discovery,Qualification,2026-08-10T15:30:00
+SAP-188,Qualification,Technical Evaluation,2026-08-13T14:15:00
+SAP-188,Technical Evaluation,Business Case,2026-08-18T14:45:00
+SAP-189,,Discovery,2026-08-17T16:00:00
+SAP-189,Discovery,Qualification,2026-08-25T08:15:00
+SAP-189,Qualification,Technical Evaluation,2026-09-08T10:30:00
+SAP-189,Technical Evaluation,Business Case,2026-09-24T11:45:00
+SAP-190,,Discovery,2026-09-01T08:30:00
+SAP-190,Discovery,Qualification,2026-09-04T15:15:00
+SAP-190,Qualification,Technical Evaluation,2026-09-09T10:45:00
+SAP-190,Technical Evaluation,Business Case,2026-09-14T08:15:00
+SAP-191,,Discovery,2026-05-22T08:00:00
+SAP-191,Discovery,Qualification,2026-06-01T10:30:00
+SAP-191,Qualification,Technical Evaluation,2026-06-08T08:45:00
+SAP-191,Technical Evaluation,Business Case,2026-06-22T08:15:00
+SAP-192,,Discovery,2026-07-13T13:15:00
+SAP-192,Discovery,Qualification,2026-07-20T09:00:00
+SAP-192,Qualification,Technical Evaluation,2026-08-04T12:00:00
+SAP-192,Technical Evaluation,Business Case,2026-08-21T12:15:00
+SAP-193,,Discovery,2026-04-14T15:45:00
+SAP-193,Discovery,Qualification,2026-04-28T09:30:00
+SAP-193,Qualification,Technical Evaluation,2026-05-25T14:15:00
+SAP-193,Technical Evaluation,Business Case,2026-06-17T09:30:00
+SAP-194,,Discovery,2026-04-13T13:15:00
+SAP-194,Discovery,Qualification,2026-04-27T15:30:00
+SAP-194,Qualification,Technical Evaluation,2026-05-08T15:45:00
+SAP-194,Technical Evaluation,Business Case,2026-05-25T10:30:00
+SAP-195,,Discovery,2026-04-09T10:30:00
+SAP-195,Discovery,Qualification,2026-04-21T14:00:00
+SAP-195,Qualification,Technical Evaluation,2026-05-07T13:30:00
+SAP-195,Technical Evaluation,Business Case,2026-05-29T10:00:00
+SAP-196,,Discovery,2026-05-11T15:00:00
+SAP-196,Discovery,Qualification,2026-05-18T12:00:00
+SAP-196,Qualification,Technical Evaluation,2026-06-02T15:30:00
+SAP-196,Technical Evaluation,Business Case,2026-06-12T10:30:00
+SAP-197,,Discovery,2026-07-13T15:45:00
+SAP-197,Discovery,Qualification,2026-07-27T12:00:00
+SAP-197,Qualification,Technical Evaluation,2026-08-21T09:45:00
+SAP-197,Technical Evaluation,Business Case,2026-10-05T10:45:00
+SAP-198,,Discovery,2026-06-18T13:15:00
+SAP-198,Discovery,Qualification,2026-06-29T12:00:00
+SAP-198,Qualification,Technical Evaluation,2026-07-13T11:45:00
+SAP-198,Technical Evaluation,Business Case,2026-07-31T11:45:00
+SAP-199,,Discovery,2026-07-13T12:45:00
+SAP-199,Discovery,Qualification,2026-08-05T08:15:00
+SAP-199,Qualification,Technical Evaluation,2026-08-31T08:45:00
+SAP-199,Technical Evaluation,Business Case,2026-10-20T12:00:00
+SAP-200,,Discovery,2026-09-14T09:30:00
+SAP-200,Discovery,Qualification,2026-09-18T11:30:00
+SAP-200,Qualification,Technical Evaluation,2026-09-23T14:45:00
+SAP-200,Technical Evaluation,Business Case,2026-09-30T17:30:00
+SAP-201,,Discovery,2026-06-10T08:30:00
+SAP-201,Discovery,Qualification,2026-06-18T16:00:00
+SAP-201,Qualification,Technical Evaluation,2026-07-07T13:45:00
+SAP-201,Technical Evaluation,Business Case,2026-07-29T10:30:00
+SAP-202,,Discovery,2026-02-25T13:30:00
+SAP-202,Discovery,Qualification,2026-03-09T12:30:00
+SAP-202,Qualification,Technical Evaluation,2026-04-17T12:15:00
+SAP-202,Technical Evaluation,Business Case,2026-06-12T08:15:00
+SAP-203,,Discovery,2026-05-12T15:45:00
+SAP-203,Discovery,Qualification,2026-05-20T17:00:00
+SAP-203,Qualification,Technical Evaluation,2026-06-03T13:15:00
+SAP-203,Technical Evaluation,Business Case,2026-06-18T14:30:00
+SAP-204,,Discovery,2026-09-25T14:00:00
+SAP-204,Discovery,Qualification,2026-09-29T17:15:00
+SAP-204,Qualification,Business Case,2026-10-05T14:45:00
+SAP-205,,Discovery,2026-06-29T16:15:00
+SAP-205,Discovery,Technical Evaluation,2026-07-06T12:00:00
+SAP-205,Technical Evaluation,Business Case,2026-07-20T11:45:00
+SAP-206,,Discovery,2026-04-13T10:45:00
+SAP-206,Discovery,Technical Evaluation,2026-04-29T12:30:00
+SAP-206,Technical Evaluation,Business Case,2026-06-15T14:00:00
+SAP-207,,Discovery,2026-08-14T16:45:00
+SAP-207,Discovery,Qualification,2026-08-24T16:45:00
+SAP-207,Qualification,Technical Evaluation,2026-09-07T09:30:00
+SAP-207,Technical Evaluation,Business Case,2026-09-23T13:30:00
+SAP-208,,Discovery,2026-08-06T11:00:00
+SAP-208,Discovery,Qualification,2026-08-17T10:30:00
+SAP-208,Qualification,Technical Evaluation,2026-09-02T12:30:00
+SAP-208,Technical Evaluation,Business Case,2026-10-22T16:30:00
+SAP-209,,Discovery,2026-04-23T17:45:00
+SAP-209,Discovery,Qualification,2026-04-27T11:30:00
+SAP-209,Qualification,Technical Evaluation,2026-05-04T13:30:00
+SAP-209,Technical Evaluation,Business Case,2026-05-11T08:15:00
+SAP-210,,Discovery,2026-09-03T12:30:00
+SAP-210,Discovery,Qualification,2026-09-07T09:30:00
+SAP-210,Qualification,Business Case,2026-09-14T13:15:00
+SAP-211,,Discovery,2026-06-01T14:00:00
+SAP-211,Discovery,Technical Evaluation,2026-06-22T17:00:00
+SAP-211,Technical Evaluation,Business Case,2026-08-14T17:30:00
+SAP-212,,Discovery,2026-05-19T13:00:00
+SAP-212,Discovery,Qualification,2026-05-22T14:30:00
+SAP-212,Qualification,Technical Evaluation,2026-05-26T13:30:00
+SAP-212,Technical Evaluation,Business Case,2026-06-09T13:00:00
+SAP-213,,Discovery,2026-05-04T14:15:00
+SAP-213,Discovery,Qualification,2026-05-22T16:15:00
+SAP-213,Qualification,Technical Evaluation,2026-06-12T08:30:00
+SAP-213,Technical Evaluation,Business Case,2026-07-13T15:30:00
+SAP-214,,Discovery,2026-02-27T10:00:00
+SAP-214,Discovery,Qualification,2026-03-13T10:45:00
+SAP-214,Qualification,Technical Evaluation,2026-04-20T12:15:00
+SAP-214,Technical Evaluation,Business Case,2026-05-26T15:00:00
+SAP-215,,Discovery,2026-06-11T10:00:00
+SAP-215,Discovery,Qualification,2026-06-17T14:45:00
+SAP-215,Qualification,Technical Evaluation,2026-07-08T16:00:00
+SAP-215,Technical Evaluation,Business Case,2026-08-03T11:45:00
+SAP-216,,Discovery,2026-03-31T12:15:00
+SAP-216,Discovery,Qualification,2026-04-20T11:30:00
+SAP-216,Qualification,Technical Evaluation,2026-05-13T17:15:00
+SAP-216,Technical Evaluation,Business Case,2026-06-19T17:30:00
+SAP-217,,Discovery,2026-06-01T15:00:00
+SAP-217,Discovery,Qualification,2026-06-03T14:30:00
+SAP-217,Qualification,Technical Evaluation,2026-06-08T11:30:00
+SAP-217,Technical Evaluation,Business Case,2026-06-17T15:00:00
+SAP-218,,Discovery,2026-05-05T09:00:00
+SAP-218,Discovery,Qualification,2026-05-07T09:45:00
 SAP-218,Qualification,Technical Evaluation,2026-05-11T11:30:00
-SAP-218,Technical Evaluation,Business Case,2026-06-15T09:00:00
-SAP-219,,Discovery,2026-06-22T09:45:00
-SAP-219,Discovery,Qualification,2026-06-29T11:30:00
-SAP-219,Qualification,Business Case,2026-07-08T11:45:00
-SAP-220,,Discovery,2026-05-11T15:00:00
-SAP-220,Discovery,Qualification,2026-05-13T12:45:00
-SAP-220,Qualification,Technical Evaluation,2026-05-18T17:30:00
-SAP-220,Technical Evaluation,Business Case,2026-05-25T08:00:00
-SAP-221,,Discovery,2026-07-21T11:15:00
-SAP-221,Discovery,Qualification,2026-07-28T13:45:00
-SAP-221,Qualification,Technical Evaluation,2026-08-10T11:45:00
-SAP-221,Technical Evaluation,Business Case,2026-08-31T17:00:00
-SAP-222,,Discovery,2026-05-08T15:45:00
-SAP-222,Discovery,Qualification,2026-06-08T09:45:00
-SAP-222,Qualification,Business Case,2026-07-13T09:45:00
-SAP-223,,Discovery,2026-08-19T08:45:00
-SAP-223,Discovery,Qualification,2026-08-24T16:00:00
-SAP-223,Qualification,Technical Evaluation,2026-08-31T17:00:00
-SAP-223,Technical Evaluation,Business Case,2026-09-07T13:15:00
-SAP-224,,Discovery,2026-01-06T13:30:00
-SAP-224,Discovery,Qualification,2026-02-03T09:00:00
-SAP-224,Qualification,Technical Evaluation,2026-02-23T10:30:00
-SAP-224,Technical Evaluation,Business Case,2026-03-18T12:15:00
-SAP-224,Business Case,Negotiation,2026-05-06T08:30:00
-SAP-225,,Discovery,2026-05-05T17:15:00
-SAP-225,Discovery,Qualification,2026-05-11T10:00:00
-SAP-225,Qualification,Technical Evaluation,2026-05-25T10:45:00
-SAP-225,Technical Evaluation,Business Case,2026-06-15T08:45:00
-SAP-225,Business Case,Negotiation,2026-07-06T14:45:00
-SAP-226,,Discovery,2026-04-29T15:00:00
-SAP-226,Discovery,Qualification,2026-05-01T09:45:00
-SAP-226,Qualification,Technical Evaluation,2026-05-05T09:30:00
-SAP-226,Technical Evaluation,Business Case,2026-05-11T10:00:00
-SAP-226,Business Case,Negotiation,2026-05-19T14:30:00
-SAP-227,,Discovery,2025-11-10T12:30:00
-SAP-227,Discovery,Qualification,2025-12-02T12:30:00
-SAP-227,Qualification,Technical Evaluation,2026-01-02T12:00:00
-SAP-227,Technical Evaluation,Business Case,2026-01-22T08:45:00
-SAP-227,Business Case,Negotiation,2026-04-28T10:15:00
-SAP-228,,Discovery,2026-05-06T08:15:00
-SAP-228,Discovery,Qualification,2026-05-14T13:30:00
-SAP-228,Qualification,Technical Evaluation,2026-05-25T16:45:00
-SAP-228,Technical Evaluation,Business Case,2026-06-11T09:45:00
-SAP-228,Business Case,Negotiation,2026-06-25T09:00:00
-SAP-229,,Discovery,2025-12-19T08:30:00
-SAP-229,Discovery,Qualification,2026-01-12T11:45:00
-SAP-229,Qualification,Technical Evaluation,2026-01-26T09:15:00
-SAP-229,Technical Evaluation,Negotiation,2026-02-19T13:15:00
-SAP-230,,Discovery,2026-06-29T16:45:00
-SAP-230,Discovery,Qualification,2026-07-02T16:45:00
-SAP-230,Qualification,Technical Evaluation,2026-07-07T08:30:00
-SAP-230,Technical Evaluation,Business Case,2026-07-13T10:00:00
-SAP-230,Business Case,Negotiation,2026-07-21T13:00:00
-SAP-231,,Discovery,2026-06-18T12:30:00
-SAP-231,Discovery,Qualification,2026-06-22T09:15:00
-SAP-231,Qualification,Technical Evaluation,2026-06-29T17:15:00
-SAP-231,Technical Evaluation,Business Case,2026-07-06T11:30:00
-SAP-231,Business Case,Negotiation,2026-07-17T14:00:00
-SAP-232,,Discovery,2025-12-15T11:15:00
-SAP-232,Discovery,Qualification,2026-01-01T15:15:00
-SAP-232,Qualification,Business Case,2026-01-15T11:30:00
-SAP-232,Business Case,Negotiation,2026-03-11T16:00:00
-SAP-233,,Discovery,2026-05-01T15:00:00
-SAP-233,Discovery,Qualification,2026-05-14T08:15:00
-SAP-233,Qualification,Technical Evaluation,2026-05-21T16:15:00
-SAP-233,Technical Evaluation,Business Case,2026-06-15T13:45:00
-SAP-233,Business Case,Negotiation,2026-07-03T14:30:00
-SAP-234,,Discovery,2026-05-25T08:45:00
-SAP-234,Discovery,Qualification,2026-06-01T14:45:00
-SAP-234,Qualification,Technical Evaluation,2026-06-12T14:30:00
-SAP-234,Technical Evaluation,Business Case,2026-06-29T12:00:00
-SAP-234,Business Case,Negotiation,2026-07-17T16:30:00
-SAP-235,,Discovery,2026-05-21T14:00:00
-SAP-235,Discovery,Qualification,2026-05-26T15:00:00
-SAP-235,Qualification,Technical Evaluation,2026-05-29T15:00:00
-SAP-235,Technical Evaluation,Business Case,2026-06-05T10:00:00
-SAP-235,Business Case,Negotiation,2026-06-15T11:45:00
-SAP-236,,Discovery,2026-05-25T10:00:00
-SAP-236,Discovery,Qualification,2026-05-28T11:00:00
-SAP-236,Qualification,Technical Evaluation,2026-06-02T17:30:00
-SAP-236,Technical Evaluation,Business Case,2026-06-09T12:00:00
-SAP-236,Business Case,Negotiation,2026-06-18T09:45:00
-SAP-237,,Discovery,2026-04-09T13:30:00
-SAP-237,Discovery,Qualification,2026-04-17T17:30:00
-SAP-237,Qualification,Business Case,2026-05-04T10:00:00
-SAP-237,Business Case,Negotiation,2026-05-18T15:30:00
-SAP-238,,Discovery,2026-03-23T17:00:00
-SAP-238,Discovery,Qualification,2026-04-14T09:00:00
-SAP-238,Qualification,Technical Evaluation,2026-05-07T10:15:00
-SAP-238,Technical Evaluation,Business Case,2026-06-18T15:45:00
-SAP-238,Business Case,Negotiation,2026-09-09T14:15:00
-SAP-239,,Discovery,2026-04-06T09:45:00
-SAP-239,Discovery,Qualification,2026-04-23T11:00:00
-SAP-239,Qualification,Business Case,2026-05-25T14:15:00
-SAP-239,Business Case,Negotiation,2026-08-07T12:45:00
-SAP-240,,Discovery,2026-03-31T08:30:00
-SAP-240,Discovery,Qualification,2026-04-06T17:45:00
-SAP-240,Qualification,Technical Evaluation,2026-04-20T14:45:00
-SAP-240,Technical Evaluation,Business Case,2026-05-11T12:45:00
-SAP-240,Business Case,Negotiation,2026-06-01T08:45:00
-SAP-241,,Discovery,2025-12-05T08:15:00
-SAP-241,Discovery,Qualification,2025-12-22T10:45:00
-SAP-241,Qualification,Technical Evaluation,2026-01-15T13:00:00
-SAP-241,Technical Evaluation,Negotiation,2026-02-24T16:30:00
-SAP-242,,Discovery,2026-04-29T11:30:00
-SAP-242,Discovery,Qualification,2026-05-08T16:30:00
-SAP-242,Qualification,Technical Evaluation,2026-05-20T12:15:00
-SAP-242,Technical Evaluation,Business Case,2026-06-09T10:15:00
-SAP-242,Business Case,Negotiation,2026-06-29T11:15:00
-SAP-243,,Discovery,2026-06-05T12:30:00
-SAP-243,Discovery,Qualification,2026-06-08T10:00:00
-SAP-243,Qualification,Technical Evaluation,2026-06-11T12:00:00
-SAP-243,Technical Evaluation,Business Case,2026-06-18T11:00:00
-SAP-243,Business Case,Negotiation,2026-06-24T13:45:00
-SAP-244,,Discovery,2026-05-25T11:15:00
-SAP-244,Discovery,Qualification,2026-06-04T08:15:00
-SAP-244,Qualification,Technical Evaluation,2026-06-23T15:30:00
-SAP-244,Technical Evaluation,Business Case,2026-07-03T09:45:00
-SAP-244,Business Case,Negotiation,2026-07-16T17:45:00
-SAP-245,,Discovery,2026-02-19T09:00:00
-SAP-245,Discovery,Qualification,2026-03-10T16:15:00
-SAP-245,Qualification,Technical Evaluation,2026-03-31T16:00:00
-SAP-245,Technical Evaluation,Business Case,2026-04-28T11:45:00
-SAP-245,Business Case,Negotiation,2026-08-25T10:15:00
+SAP-218,Technical Evaluation,Business Case,2026-05-18T11:45:00
+SAP-219,,Discovery,2026-05-26T08:30:00
+SAP-219,Discovery,Qualification,2026-05-29T12:30:00
+SAP-219,Qualification,Business Case,2026-06-03T08:45:00
+SAP-220,,Discovery,2026-05-18T10:45:00
+SAP-220,Discovery,Qualification,2026-05-20T12:00:00
+SAP-220,Qualification,Technical Evaluation,2026-05-25T14:30:00
+SAP-220,Technical Evaluation,Business Case,2026-06-02T12:15:00
+SAP-221,,Discovery,2026-06-12T17:45:00
+SAP-221,Discovery,Qualification,2026-06-22T10:45:00
+SAP-221,Qualification,Technical Evaluation,2026-07-06T08:00:00
+SAP-221,Technical Evaluation,Business Case,2026-07-17T15:15:00
+SAP-222,,Discovery,2026-04-20T16:45:00
+SAP-222,Discovery,Qualification,2026-05-04T08:30:00
+SAP-222,Qualification,Technical Evaluation,2026-05-12T12:00:00
+SAP-222,Technical Evaluation,Business Case,2026-05-25T13:15:00
+SAP-223,,Discovery,2026-03-03T15:00:00
+SAP-223,Discovery,Qualification,2026-03-30T10:30:00
+SAP-223,Qualification,Technical Evaluation,2026-04-13T12:15:00
+SAP-223,Technical Evaluation,Business Case,2026-05-05T08:30:00
+SAP-224,,Discovery,2026-05-05T12:15:00
+SAP-224,Discovery,Qualification,2026-05-18T16:15:00
+SAP-224,Qualification,Technical Evaluation,2026-05-27T10:00:00
+SAP-224,Technical Evaluation,Business Case,2026-06-12T10:45:00
+SAP-224,Business Case,Negotiation,2026-07-06T08:45:00
+SAP-225,,Discovery,2026-05-29T09:45:00
+SAP-225,Discovery,Qualification,2026-06-01T17:00:00
+SAP-225,Qualification,Technical Evaluation,2026-06-08T14:45:00
+SAP-225,Technical Evaluation,Business Case,2026-06-17T10:00:00
+SAP-225,Business Case,Negotiation,2026-06-24T10:15:00
+SAP-226,,Discovery,2026-06-12T08:30:00
+SAP-226,Discovery,Qualification,2026-06-15T12:30:00
+SAP-226,Qualification,Business Case,2026-06-22T12:30:00
+SAP-226,Business Case,Negotiation,2026-07-02T12:00:00
+SAP-227,,Discovery,2026-06-18T10:30:00
+SAP-227,Discovery,Qualification,2026-06-22T17:15:00
+SAP-227,Qualification,Technical Evaluation,2026-06-26T08:15:00
+SAP-227,Technical Evaluation,Business Case,2026-07-03T13:30:00
+SAP-227,Business Case,Negotiation,2026-07-09T16:45:00
+SAP-228,,Discovery,2026-06-03T08:30:00
+SAP-228,Discovery,Qualification,2026-06-08T08:15:00
+SAP-228,Qualification,Technical Evaluation,2026-06-11T17:15:00
+SAP-228,Technical Evaluation,Business Case,2026-06-15T12:00:00
+SAP-228,Business Case,Negotiation,2026-06-22T11:45:00
+SAP-229,,Discovery,2026-05-11T17:30:00
+SAP-229,Discovery,Qualification,2026-05-15T15:45:00
+SAP-229,Qualification,Technical Evaluation,2026-05-21T14:00:00
+SAP-229,Technical Evaluation,Business Case,2026-05-28T14:45:00
+SAP-229,Business Case,Negotiation,2026-06-08T08:30:00
+SAP-230,,Discovery,2026-05-14T14:15:00
+SAP-230,Discovery,Qualification,2026-05-25T13:30:00
+SAP-230,Qualification,Technical Evaluation,2026-06-08T13:00:00
+SAP-230,Technical Evaluation,Business Case,2026-06-22T17:30:00
+SAP-230,Business Case,Negotiation,2026-07-06T09:15:00
+SAP-231,,Discovery,2026-05-26T08:15:00
+SAP-231,Discovery,Qualification,2026-06-01T17:15:00
+SAP-231,Qualification,Technical Evaluation,2026-06-05T10:15:00
+SAP-231,Technical Evaluation,Business Case,2026-06-09T11:15:00
+SAP-231,Business Case,Negotiation,2026-06-18T15:15:00
+SAP-232,,Discovery,2026-06-25T17:00:00
+SAP-232,Discovery,Qualification,2026-06-29T14:15:00
+SAP-232,Qualification,Technical Evaluation,2026-07-02T08:15:00
+SAP-232,Technical Evaluation,Business Case,2026-07-06T12:00:00
+SAP-232,Business Case,Negotiation,2026-07-16T09:00:00
+SAP-233,,Discovery,2026-05-04T08:45:00
+SAP-233,Discovery,Qualification,2026-05-11T08:00:00
+SAP-233,Qualification,Technical Evaluation,2026-05-21T11:45:00
+SAP-233,Technical Evaluation,Business Case,2026-06-03T09:00:00
+SAP-233,Business Case,Negotiation,2026-06-29T14:30:00
+SAP-234,,Discovery,2026-05-01T16:30:00
+SAP-234,Discovery,Qualification,2026-05-05T13:00:00
+SAP-234,Qualification,Business Case,2026-05-11T16:15:00
+SAP-234,Business Case,Negotiation,2026-05-18T08:15:00
+SAP-235,,Discovery,2026-03-23T08:45:00
+SAP-235,Discovery,Qualification,2026-03-30T16:45:00
+SAP-235,Qualification,Technical Evaluation,2026-04-06T12:45:00
+SAP-235,Technical Evaluation,Business Case,2026-04-27T13:15:00
+SAP-235,Business Case,Negotiation,2026-05-21T08:15:00
+SAP-236,,Discovery,2026-02-13T15:30:00
+SAP-236,Discovery,Qualification,2026-03-03T08:45:00
+SAP-236,Qualification,Technical Evaluation,2026-03-30T09:45:00
+SAP-236,Technical Evaluation,Business Case,2026-04-29T13:15:00
+SAP-236,Business Case,Negotiation,2026-08-20T11:00:00
+SAP-237,,Discovery,2026-05-06T10:00:00
+SAP-237,Discovery,Qualification,2026-05-12T15:30:00
+SAP-237,Qualification,Technical Evaluation,2026-05-25T12:00:00
+SAP-237,Technical Evaluation,Business Case,2026-06-08T16:00:00
+SAP-237,Business Case,Negotiation,2026-06-30T17:00:00
+SAP-238,,Discovery,2025-12-26T14:45:00
+SAP-238,Discovery,Qualification,2026-01-13T17:45:00
+SAP-238,Qualification,Technical Evaluation,2026-01-29T11:45:00
+SAP-238,Technical Evaluation,Business Case,2026-03-02T14:00:00
+SAP-238,Business Case,Negotiation,2026-04-30T10:00:00
+SAP-239,,Discovery,2026-06-04T10:15:00
+SAP-239,Discovery,Qualification,2026-06-12T15:45:00
+SAP-239,Qualification,Technical Evaluation,2026-06-24T09:30:00
+SAP-239,Technical Evaluation,Business Case,2026-07-13T15:15:00
+SAP-239,Business Case,Negotiation,2026-08-04T08:30:00
+SAP-240,,Discovery,2026-04-20T11:45:00
+SAP-240,Discovery,Qualification,2026-04-27T14:00:00
+SAP-240,Qualification,Technical Evaluation,2026-05-08T16:45:00
+SAP-240,Technical Evaluation,Business Case,2026-05-19T16:15:00
+SAP-240,Business Case,Negotiation,2026-06-08T09:45:00
+SAP-241,,Discovery,2026-03-30T12:30:00
+SAP-241,Discovery,Qualification,2026-04-06T12:30:00
+SAP-241,Qualification,Technical Evaluation,2026-04-20T08:45:00
+SAP-241,Technical Evaluation,Business Case,2026-05-05T17:00:00
+SAP-241,Business Case,Negotiation,2026-06-01T13:15:00
+SAP-242,,Discovery,2026-06-03T13:15:00
+SAP-242,Discovery,Qualification,2026-06-08T11:15:00
+SAP-242,Qualification,Technical Evaluation,2026-06-15T09:45:00
+SAP-242,Technical Evaluation,Business Case,2026-06-22T10:15:00
+SAP-242,Business Case,Negotiation,2026-07-03T13:15:00
+SAP-243,,Discovery,2026-03-02T15:15:00
+SAP-243,Discovery,Qualification,2026-03-10T15:00:00
+SAP-243,Qualification,Technical Evaluation,2026-03-23T14:15:00
+SAP-243,Technical Evaluation,Business Case,2026-04-10T14:15:00
+SAP-243,Business Case,Negotiation,2026-05-04T08:15:00
+SAP-244,,Discovery,2026-01-06T11:00:00
+SAP-244,Discovery,Qualification,2026-01-26T14:00:00
+SAP-244,Qualification,Business Case,2026-02-12T09:45:00
+SAP-244,Business Case,Negotiation,2026-04-24T10:30:00
+SAP-245,,Discovery,2026-02-16T09:00:00
+SAP-245,Discovery,Qualification,2026-03-02T11:45:00
+SAP-245,Qualification,Technical Evaluation,2026-04-06T10:15:00
+SAP-245,Technical Evaluation,Business Case,2026-05-12T10:30:00
+SAP-245,Business Case,Negotiation,2026-10-07T14:30:00

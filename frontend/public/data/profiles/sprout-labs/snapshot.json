@@ -7,56 +7,60 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-07-04T15:09:35.702766Z",
+  "generated_at": "2026-07-04T15:52:37.284341Z",
   "git_sha": "persona-phase2",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
       {
         "month": "2026-03-01",
-        "total": 57000.0
+        "total": 1132000.0
+      },
+      {
+        "month": "2026-04-01",
+        "total": 318000.0
       }
     ],
     "losses_by_month": [
       {
         "month": "2026-02-01",
-        "total": 56000.0
+        "total": 395000.0
       },
       {
         "month": "2026-03-01",
-        "total": 76000.0
+        "total": 290000.0
       },
       {
         "month": "2026-04-01",
-        "total": 60000.0
+        "total": 575000.0
       }
     ],
     "pipeline_created_by_month": [
       {
         "month": "2026-02-01",
-        "total": 185000.0
+        "total": 1075000.0
       },
       {
         "month": "2026-03-01",
-        "total": 127000.0
+        "total": 3795000.0
       },
       {
         "month": "2026-04-01",
-        "total": 0.0
+        "total": 800000.0
       }
     ],
     "pipeline_entered_s2_by_month": [
       {
         "month": "2026-02-01",
-        "total": 278000.0
+        "total": 2295000.0
       },
       {
         "month": "2026-03-01",
-        "total": 90000.0
+        "total": 3450000.0
       },
       {
         "month": "2026-04-01",
-        "total": 60000.0
+        "total": 505000.0
       }
     ],
     "mql_by_month": [
@@ -113,9 +117,9 @@
       {
         "opp_id": "SPR-006",
         "stage": "S3",
-        "amount": 26000.0,
-        "arr": 26000.0,
-        "metric_value": 26000.0,
+        "amount": 180000.0,
+        "arr": 180000.0,
+        "metric_value": 180000.0,
         "close_date": "2026-06-24",
         "created_date": "2026-03-12",
         "source_stream": "outbound",
@@ -152,9 +156,9 @@
       {
         "opp_id": "SPR-009",
         "stage": "S5",
-        "amount": 37000.0,
-        "arr": 37000.0,
-        "metric_value": 37000.0,
+        "amount": 260000.0,
+        "arr": 260000.0,
+        "metric_value": 260000.0,
         "close_date": "2026-05-21",
         "created_date": "2026-02-26",
         "source_stream": "ae_self_gen",
@@ -191,9 +195,9 @@
       {
         "opp_id": "SPR-018",
         "stage": "S1",
-        "amount": 25000.0,
-        "arr": 25000.0,
-        "metric_value": 25000.0,
+        "amount": 45000.0,
+        "arr": 45000.0,
+        "metric_value": 45000.0,
         "close_date": "2026-07-01",
         "created_date": "2026-04-10",
         "source_stream": "outbound",
@@ -217,9 +221,9 @@
       {
         "opp_id": "SPR-020",
         "stage": "S2",
-        "amount": 41000.0,
-        "arr": 41000.0,
-        "metric_value": 41000.0,
+        "amount": 290000.0,
+        "arr": 290000.0,
+        "metric_value": 290000.0,
         "close_date": "2026-07-15",
         "created_date": "2026-03-08",
         "source_stream": "outbound",
@@ -243,9 +247,9 @@
       {
         "opp_id": "SPR-022",
         "stage": "S3",
-        "amount": 60000.0,
-        "arr": 60000.0,
-        "metric_value": 60000.0,
+        "amount": 455000.0,
+        "arr": 455000.0,
+        "metric_value": 455000.0,
         "close_date": "2026-07-10",
         "created_date": "2026-02-15",
         "source_stream": "outbound",
@@ -256,9 +260,9 @@
       {
         "opp_id": "SPR-023",
         "stage": "S3",
-        "amount": 60000.0,
-        "arr": 60000.0,
-        "metric_value": 60000.0,
+        "amount": 505000.0,
+        "arr": 505000.0,
+        "metric_value": 505000.0,
         "close_date": "2026-07-22",
         "created_date": "2026-03-01",
         "source_stream": "ae_self_gen",
@@ -269,9 +273,9 @@
       {
         "opp_id": "SPR-024",
         "stage": "S4",
-        "amount": 60000.0,
-        "arr": 60000.0,
-        "metric_value": 60000.0,
+        "amount": 985000.0,
+        "arr": 985000.0,
+        "metric_value": 985000.0,
         "close_date": "2026-06-05",
         "created_date": "2026-01-20",
         "source_stream": "outbound",
@@ -282,13 +286,65 @@
       {
         "opp_id": "SPR-025",
         "stage": "S4",
-        "amount": 60000.0,
-        "arr": 60000.0,
-        "metric_value": 60000.0,
+        "amount": 1125000.0,
+        "arr": 1125000.0,
+        "metric_value": 1125000.0,
         "close_date": "2026-06-17",
         "created_date": "2026-01-10",
         "source_stream": "ae_self_gen",
         "owner_name": "Jordan Reyes",
+        "opp_type": "new_business",
+        "forecast_category": "Commit"
+      },
+      {
+        "opp_id": "SPR-026",
+        "stage": "S3",
+        "amount": 1000000.0,
+        "arr": 1000000.0,
+        "metric_value": 1000000.0,
+        "close_date": "2026-09-11",
+        "created_date": "2026-03-18",
+        "source_stream": "outbound",
+        "owner_name": "Maya Singh",
+        "opp_type": "new_business",
+        "forecast_category": "Best Case"
+      },
+      {
+        "opp_id": "SPR-027",
+        "stage": "S3",
+        "amount": 800000.0,
+        "arr": 800000.0,
+        "metric_value": 800000.0,
+        "close_date": "2026-10-09",
+        "created_date": "2026-04-02",
+        "source_stream": "inbound",
+        "owner_name": "Tessa Nguyen",
+        "opp_type": "new_business",
+        "forecast_category": "Best Case"
+      },
+      {
+        "opp_id": "SPR-028",
+        "stage": "S4",
+        "amount": 880000.0,
+        "arr": 880000.0,
+        "metric_value": 880000.0,
+        "close_date": "2026-12-04",
+        "created_date": "2026-03-05",
+        "source_stream": "ae_self_gen",
+        "owner_name": "Jordan Reyes",
+        "opp_type": "new_business",
+        "forecast_category": "Commit"
+      },
+      {
+        "opp_id": "SPR-029",
+        "stage": "S4",
+        "amount": 940000.0,
+        "arr": 940000.0,
+        "metric_value": 940000.0,
+        "close_date": "2027-01-08",
+        "created_date": "2026-03-12",
+        "source_stream": "outbound",
+        "owner_name": "Maya Singh",
         "opp_type": "new_business",
         "forecast_category": "Commit"
       }
@@ -297,34 +353,34 @@
       {
         "stage": "S1",
         "count": 4,
-        "total_value": 25000.0
+        "total_value": 45000.0
       },
       {
         "stage": "S2",
         "count": 4,
-        "total_value": 41000.0
+        "total_value": 290000.0
       },
       {
         "stage": "S3",
-        "count": 3,
-        "total_value": 146000.0
+        "count": 5,
+        "total_value": 2940000.0
       },
       {
         "stage": "S4",
-        "count": 2,
-        "total_value": 120000.0
+        "count": 4,
+        "total_value": 3930000.0
       },
       {
         "stage": "S5",
         "count": 1,
-        "total_value": 37000.0
+        "total_value": 260000.0
       }
     ],
     "provenance": {
       "source": "ProfileBackend",
       "method": "backend_fetch_deals",
       "is_live": true,
-      "opp_count": 14
+      "opp_count": 18
     }
   },
   "rates": {
@@ -338,9 +394,9 @@
     },
     "stage_velocity_days": {
       "S0": 14,
-      "S1": 16.61904761904762,
-      "S2": 20.294117647058822,
-      "S3": 38.45454545454545,
+      "S1": 16.72,
+      "S2": 20.523809523809526,
+      "S3": 38.30769230769231,
       "S4": 22.25,
       "S5": 15.125
     },
@@ -363,6 +419,7 @@
         "start_date": "2025-03-10",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -373,6 +430,7 @@
         "start_date": "2025-06-02",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -383,6 +441,7 @@
         "start_date": "2025-09-15",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -393,6 +452,7 @@
         "start_date": "2025-08-04",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -403,6 +463,7 @@
         "start_date": "2026-03-03",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -413,6 +474,7 @@
         "start_date": "2026-04-14",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -423,6 +485,7 @@
         "start_date": "2024-01-01",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -433,6 +496,7 @@
         "start_date": "2024-01-01",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -443,6 +507,7 @@
         "start_date": "2026-01-15",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -453,6 +518,7 @@
         "start_date": "2026-01-15",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       },
       {
@@ -463,6 +529,7 @@
         "start_date": "2025-11-01",
         "is_active": true,
         "manager_id": null,
+        "annual_quota": null,
         "tier": "active"
       }
     ],
@@ -476,6 +543,7 @@
           "start_date": "2025-03-10",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -486,6 +554,7 @@
           "start_date": "2025-06-02",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -496,6 +565,7 @@
           "start_date": "2025-09-15",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -506,6 +576,7 @@
           "start_date": "2025-08-04",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -516,6 +587,7 @@
           "start_date": "2026-03-03",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -526,6 +598,7 @@
           "start_date": "2026-04-14",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -536,6 +609,7 @@
           "start_date": "2024-01-01",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -546,6 +620,7 @@
           "start_date": "2024-01-01",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -556,6 +631,7 @@
           "start_date": "2026-01-15",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -566,6 +642,7 @@
           "start_date": "2026-01-15",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         },
         {
@@ -576,6 +653,7 @@
           "start_date": "2025-11-01",
           "is_active": true,
           "manager_id": null,
+          "annual_quota": null,
           "tier": "active"
         }
       ],
@@ -786,17 +864,17 @@
       ],
       "existing_wins": [
         0.0,
-        57000.0,
+        1132000.0,
+        318000.0,
+        208000.0,
+        1056000.0,
+        333437.0,
         0.0,
-        29600.0,
-        63840.0,
-        45205.0,
+        240000.0,
+        192000.0,
         0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        422400.0,
+        451200.0
       ],
       "future_wins": [
         0.0,
@@ -814,38 +892,38 @@
       ],
       "total_expected": [
         0.0,
-        57000.0,
-        0.0,
-        34210.0500992,
-        70357.1223936,
-        52932.3466816,
+        1132000.0,
+        318000.0,
+        212610.0500992,
+        1062517.1223936,
+        341164.3466816,
         8341.5032064,
-        8942.7391872,
-        9233.0207424,
+        248942.7391872,
+        201233.0207424,
         9112.4289984,
-        9494.015731200001,
-        9531.9159936
+        431894.0157312,
+        460731.9159936
       ],
       "capped": [
         0.0,
-        57000.0,
-        0.0,
-        34210.0500992,
-        70357.1223936,
-        52932.3466816,
+        1132000.0,
+        318000.0,
+        212610.0500992,
+        821666.6666666666,
+        582014.8024085333,
         8341.5032064,
-        8942.7391872,
-        9233.0207424,
+        248942.7391872,
+        201233.0207424,
         9112.4289984,
-        9494.015731200001,
-        9531.9159936
+        431894.0157312,
+        460731.9159936
       ],
       "overflow": [
         0.0,
         0.0,
         0.0,
         0.0,
-        0.0,
+        240850.45572693332,
         0.0,
         0.0,
         0.0,
@@ -858,15 +936,15 @@
         0.0,
         0.0,
         0.0,
-        29600.0,
-        63840.0,
-        45205.0,
+        208000.0,
+        1056000.0,
+        333437.0,
         0.0,
+        240000.0,
+        192000.0,
         0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        422400.0,
+        451200.0
       ],
       "plan_future_wins": [
         23897.8381824,
@@ -886,15 +964,15 @@
         23897.8381824,
         62731.82522879999,
         94097.73784320001,
-        149835.9983552,
-        197145.1286112,
-        192699.470032,
+        328235.9983552,
+        1189305.1286112,
+        480931.470032,
         155709.35190720003,
-        154962.544464,
-        162430.618896,
+        394962.54446400004,
+        354430.61889599997,
         164297.637504,
-        158696.58168000003,
-        162430.618896
+        581096.5816800001,
+        613630.618896
       ],
       "trajectory_quarters": [
         {
@@ -902,7 +980,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 1600000,
-          "bu_sales_led_arr": 1708.9572864,
+          "bu_sales_led_arr": 1450000.0,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1600000,
@@ -915,10 +993,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 1708.9572864,
+            "sales_led_arr": 1450000.0,
             "plg_arr": 0.0,
             "expansion_arr": 83750.0,
-            "total_arr": 85458.9572864,
+            "total_arr": 1533750.0,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -931,11 +1009,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1598291.0427136,
-            "bookings_pct": 0.998931901696,
-            "total": 1514541.0427136,
-            "total_pct": 0.946588151696,
-            "status": "critical_gap"
+            "bookings": 150000.0,
+            "bookings_pct": 0.09375,
+            "total": 66250.0,
+            "total_pct": 0.04140625,
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -1130,10 +1208,10 @@
             "pace_gap": -1600000.0,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1600000.0,
-            "remaining_bu_bookings": 1708.9572864,
-            "reforecast_bookings": 1708.9572864,
-            "reforecast_gap": -1598291.0427136,
-            "reforecast_gap_pct": -0.998931901696,
+            "remaining_bu_bookings": 1450000.0,
+            "reforecast_bookings": 1450000.0,
+            "reforecast_gap": -150000.0,
+            "reforecast_gap_pct": -0.09375,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -1144,7 +1222,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 1700000,
-          "bu_sales_led_arr": 157499.51917440002,
+          "bu_sales_led_arr": 1616291.5191743998,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1700000,
@@ -1157,10 +1235,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 157499.51917440002,
+            "sales_led_arr": 1616291.5191743998,
             "plg_arr": 0.0,
             "expansion_arr": 84844.384359296,
-            "total_arr": 242343.90353369602,
+            "total_arr": 1701135.9035336957,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -1173,11 +1251,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1542500.4808256,
-            "bookings_pct": 0.9073532240150588,
-            "total": 1457656.096466304,
-            "total_pct": 0.8574447626272377,
-            "status": "critical_gap"
+            "bookings": 83708.48082560021,
+            "bookings_pct": 0.04924028283858836,
+            "total": -1135.9035336957313,
+            "total_pct": -0.0006681785492327831,
+            "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -1372,10 +1450,10 @@
             "pace_gap": -1201086.9565217393,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1700000.0,
-            "remaining_bu_bookings": 157499.51917440002,
-            "reforecast_bookings": 157499.51917440002,
-            "reforecast_gap": -1542500.4808256,
-            "reforecast_gap_pct": -0.9073532240150588,
+            "remaining_bu_bookings": 1616291.5191743998,
+            "reforecast_bookings": 1616291.5191743998,
+            "reforecast_gap": -83708.48082560021,
+            "reforecast_gap_pct": -0.04924028283858836,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -1386,7 +1464,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 2100000,
-          "bu_sales_led_arr": 26517.263136,
+          "bu_sales_led_arr": 458517.263136,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2100000,
@@ -1399,10 +1477,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 26517.263136,
+            "sales_led_arr": 458517.263136,
             "plg_arr": 0.0,
-            "expansion_arr": 89854.54291230143,
-            "total_arr": 116371.80604830143,
+            "expansion_arr": 111736.42291230144,
+            "total_arr": 570253.6860483014,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -1415,10 +1493,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2073482.736864,
-            "bookings_pct": 0.9873727318400001,
-            "total": 1983628.1939516985,
-            "total_pct": 0.9445848542627135,
+            "bookings": 1641482.736864,
+            "bookings_pct": 0.7816584461257143,
+            "total": 1529746.3139516986,
+            "total_pct": 0.728450625691285,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -1585,19 +1663,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 2327802.860820096,
-            "sales_led_base_arr": 2202802.860820096,
+            "opening_arr": 3786594.860820096,
+            "sales_led_base_arr": 3661594.860820096,
             "plg_base_arr": 125000.0,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2202802.860820096,
+            "sales_led_usage_eligible_arr": 3661594.860820096,
             "plg_usage_eligible_arr": 112500.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 33042.04291230144,
+            "usage_expansion_arr": 54923.92291230144,
             "plg_expansion_arr": 14062.5,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 89854.54291230143
+            "total_expansion_arr": 111736.42291230144
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -1614,10 +1692,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2100000.0,
-            "remaining_bu_bookings": 26517.263136,
-            "reforecast_bookings": 26517.263136,
-            "reforecast_gap": -2073482.736864,
-            "reforecast_gap_pct": -0.9873727318400001,
+            "remaining_bu_bookings": 458517.263136,
+            "reforecast_bookings": 458517.263136,
+            "reforecast_gap": -1641482.736864,
+            "reforecast_gap_pct": -0.7816584461257143,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -1628,7 +1706,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 2600000,
-          "bu_sales_led_arr": 28138.3607232,
+          "bu_sales_led_arr": 901738.3607232,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2600000,
@@ -1641,10 +1719,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 28138.3607232,
+            "sales_led_arr": 901738.3607232,
             "plg_arr": 0.0,
-            "expansion_arr": 92951.68250302596,
-            "total_arr": 121090.04322622597,
+            "expansion_arr": 121641.79070302595,
+            "total_arr": 1023380.151426226,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -1657,10 +1735,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2571861.6392768,
-            "bookings_pct": 0.9891775535680001,
-            "total": 2478909.956773774,
-            "total_pct": 0.9534269064514517,
+            "bookings": 1698261.6392768,
+            "bookings_pct": 0.653177553568,
+            "total": 1576619.848573774,
+            "total_pct": 0.6063922494514515,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -1827,19 +1905,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 2444174.6668683975,
-            "sales_led_base_arr": 2305112.1668683975,
+            "opening_arr": 4356848.546868397,
+            "sales_led_base_arr": 4217786.046868397,
             "plg_base_arr": 139062.5,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2305112.1668683975,
+            "sales_led_usage_eligible_arr": 4217786.046868397,
             "plg_usage_eligible_arr": 125000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 34576.682503025964,
+            "usage_expansion_arr": 63266.79070302595,
             "plg_expansion_arr": 15625.000000000004,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 92951.68250302596
+            "total_expansion_arr": 121641.79070302595
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -1856,10 +1934,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2600000.0,
-            "remaining_bu_bookings": 28138.3607232,
-            "reforecast_bookings": 28138.3607232,
-            "reforecast_gap": -2571861.6392768,
-            "reforecast_gap_pct": -0.9891775535680001,
+            "remaining_bu_bookings": 901738.3607232,
+            "reforecast_bookings": 901738.3607232,
+            "reforecast_gap": -1698261.6392768,
+            "reforecast_gap_pct": -0.653177553568,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -2114,7 +2192,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 1700000,
-          "bu_sales_led_arr": 539680.5969984,
+          "bu_sales_led_arr": 1998472.5969984,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1700000,
@@ -2127,10 +2205,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 539680.5969984,
+            "sales_led_arr": 1998472.5969984,
             "plg_arr": 0,
             "expansion_arr": 87529.661018816,
-            "total_arr": 627210.2580172161,
+            "total_arr": 2086002.258017216,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -2143,11 +2221,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1160319.4030016,
-            "bookings_pct": 0.6825408252950588,
-            "total": 1072789.741982784,
-            "total_pct": 0.6310527894016376,
-            "status": "critical_gap"
+            "bookings": -298472.59699840005,
+            "bookings_pct": -0.1755721158814118,
+            "total": -386002.2580172161,
+            "total_pct": -0.22706015177483302,
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -2342,10 +2420,10 @@
             "pace_gap": -1201086.9565217393,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1700000.0,
-            "remaining_bu_bookings": 539680.5969984,
-            "reforecast_bookings": 539680.5969984,
-            "reforecast_gap": -1160319.4030016,
-            "reforecast_gap_pct": -0.6825408252950588,
+            "remaining_bu_bookings": 1998472.5969984,
+            "reforecast_bookings": 1998472.5969984,
+            "reforecast_gap": 298472.59699840005,
+            "reforecast_gap_pct": 0.1755721158814118,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -2356,7 +2434,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 2100000,
-          "bu_sales_led_arr": 473102.51526720007,
+          "bu_sales_led_arr": 905102.5152672001,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2100000,
@@ -2369,10 +2447,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 473102.51526720007,
+            "sales_led_arr": 905102.5152672001,
             "plg_arr": 0,
-            "expansion_arr": 98312.81488907425,
-            "total_arr": 571415.3301562744,
+            "expansion_arr": 120194.69488907425,
+            "total_arr": 1025297.2101562743,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -2385,10 +2463,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1626897.4847328,
-            "bookings_pct": 0.774713087968,
-            "total": 1528584.6698437256,
-            "total_pct": 0.7278974618303455,
+            "bookings": 1194897.4847328,
+            "bookings_pct": 0.5689988022537142,
+            "total": 1074702.7898437257,
+            "total_pct": 0.511763233258917,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -2555,19 +2633,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 2891687.659271616,
-            "sales_led_base_arr": 2766687.659271616,
+            "opening_arr": 4350479.6592716165,
+            "sales_led_base_arr": 4225479.6592716165,
             "plg_base_arr": 125000.0,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2766687.659271616,
+            "sales_led_usage_eligible_arr": 4225479.6592716165,
             "plg_usage_eligible_arr": 112500.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 41500.31488907424,
+            "usage_expansion_arr": 63382.19488907424,
             "plg_expansion_arr": 14062.5,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 98312.81488907425
+            "total_expansion_arr": 120194.69488907425
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -2584,10 +2662,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2100000.0,
-            "remaining_bu_bookings": 473102.51526720007,
-            "reforecast_bookings": 473102.51526720007,
-            "reforecast_gap": -1626897.4847328,
-            "reforecast_gap_pct": -0.774713087968,
+            "remaining_bu_bookings": 905102.5152672001,
+            "reforecast_bookings": 905102.5152672001,
+            "reforecast_gap": -1194897.4847328,
+            "reforecast_gap_pct": -0.5689988022537142,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -2598,7 +2676,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 2600000,
-          "bu_sales_led_arr": 485424.83808,
+          "bu_sales_led_arr": 1359024.8380800001,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2600000,
@@ -2611,10 +2689,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 485424.83808,
+            "sales_led_arr": 1359024.8380800001,
             "plg_arr": 0,
-            "expansion_arr": 108235.60734141835,
-            "total_arr": 593660.4454214184,
+            "expansion_arr": 136925.71554141835,
+            "total_arr": 1495950.5536214185,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -2627,10 +2705,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2114575.16192,
-            "bookings_pct": 0.8132981391999999,
-            "total": 2006339.5545785816,
-            "total_pct": 0.7716690594533007,
+            "bookings": 1240975.1619199999,
+            "bookings_pct": 0.47729813919999997,
+            "total": 1104049.4463785815,
+            "total_pct": 0.4246344024533006,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -2797,19 +2875,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 3463102.98942789,
-            "sales_led_base_arr": 3324040.48942789,
+            "opening_arr": 5375776.8694278905,
+            "sales_led_base_arr": 5236714.3694278905,
             "plg_base_arr": 139062.5,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 3324040.48942789,
+            "sales_led_usage_eligible_arr": 5236714.3694278905,
             "plg_usage_eligible_arr": 125000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 49860.60734141835,
+            "usage_expansion_arr": 78550.71554141835,
             "plg_expansion_arr": 15625.000000000004,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 108235.60734141835
+            "total_expansion_arr": 136925.71554141835
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -2826,10 +2904,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2600000.0,
-            "remaining_bu_bookings": 485424.83808,
-            "reforecast_bookings": 485424.83808,
-            "reforecast_gap": -2114575.16192,
-            "reforecast_gap_pct": -0.8132981391999999,
+            "remaining_bu_bookings": 1359024.8380800001,
+            "reforecast_bookings": 1359024.8380800001,
+            "reforecast_gap": -1240975.1619199999,
+            "reforecast_gap_pct": -0.47729813919999997,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -2841,7 +2919,7 @@
         "fallback_from": null,
         "fallback_reason": null,
         "inventory_is_live": true,
-        "inventory_opportunity_count": 14,
+        "inventory_opportunity_count": 18,
         "inventory_metric_selection": "ARR__c else Amount",
         "future_generation_method": "monthly_pipeline_created x monthly_future_generation_win_rate x close_timing_curve",
         "future_generation_basis": [
@@ -2874,23 +2952,23 @@
         ],
         "as_of": "2026-04-06",
         "capacity_treatment": "push",
-        "starting_inventory": 369000.0,
+        "starting_inventory": 7465000.0,
         "inventory_by_stage": {
-          "S3": 146000.0,
-          "S5": 37000.0,
-          "S1": 25000.0,
-          "S2": 41000.0,
-          "S4": 120000.0
+          "S3": 2940000.0,
+          "S5": 260000.0,
+          "S1": 45000.0,
+          "S2": 290000.0,
+          "S4": 3930000.0
         },
         "inventory_count_by_stage": {
-          "S3": 3,
+          "S3": 5,
           "S5": 1,
           "S1": 1,
           "S2": 1,
-          "S4": 2
+          "S4": 4
         },
         "resolution_method_counts": {
-          "close_date": 8,
+          "close_date": 12,
           "velocity": 0,
           "out_of_range": 0
         },
@@ -2900,11 +2978,11 @@
             0.0,
             0.0,
             0.0,
-            6240.0,
-            28800.0,
+            43200.0,
+            230400.0,
             0.0,
-            0.0,
-            0.0,
+            240000.0,
+            192000.0,
             0.0,
             0.0,
             0.0
@@ -2913,7 +2991,7 @@
             0.0,
             0.0,
             0.0,
-            29600.0,
+            208000.0,
             0.0,
             0.0,
             0.0,
@@ -2929,7 +3007,7 @@
             0.0,
             0.0,
             0.0,
-            2465.0,
+            4437.0,
             0.0,
             0.0,
             0.0,
@@ -2943,7 +3021,7 @@
             0.0,
             0.0,
             0.0,
-            13940.000000000002,
+            98600.0,
             0.0,
             0.0,
             0.0,
@@ -2956,14 +3034,14 @@
             0.0,
             0.0,
             0.0,
-            57600.0,
+            1012800.0,
             0.0,
             0.0,
             0.0,
             0.0,
             0.0,
-            0.0,
-            0.0
+            422400.0,
+            451200.0
           ]
         },
         "s2_to_won_source": "ProfileBackend",
@@ -3878,7 +3956,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 1600000,
-          "bu_sales_led_arr": 1708.9572864,
+          "bu_sales_led_arr": 1450000.0,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1600000,
@@ -3891,10 +3969,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 1708.9572864,
+            "sales_led_arr": 1450000.0,
             "plg_arr": 0.0,
             "expansion_arr": 83750.0,
-            "total_arr": 85458.9572864,
+            "total_arr": 1533750.0,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -3907,11 +3985,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1598291.0427136,
-            "bookings_pct": 0.998931901696,
-            "total": 1514541.0427136,
-            "total_pct": 0.946588151696,
-            "status": "critical_gap"
+            "bookings": 150000.0,
+            "bookings_pct": 0.09375,
+            "total": 66250.0,
+            "total_pct": 0.04140625,
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -4106,10 +4184,10 @@
             "pace_gap": -1600000.0,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1600000.0,
-            "remaining_bu_bookings": 1708.9572864,
-            "reforecast_bookings": 1708.9572864,
-            "reforecast_gap": -1598291.0427136,
-            "reforecast_gap_pct": -0.998931901696,
+            "remaining_bu_bookings": 1450000.0,
+            "reforecast_bookings": 1450000.0,
+            "reforecast_gap": -150000.0,
+            "reforecast_gap_pct": -0.09375,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -4120,7 +4198,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 1700000,
-          "bu_sales_led_arr": 157499.51917440002,
+          "bu_sales_led_arr": 1616291.5191743998,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1700000,
@@ -4133,10 +4211,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 157499.51917440002,
+            "sales_led_arr": 1616291.5191743998,
             "plg_arr": 0.0,
             "expansion_arr": 84844.384359296,
-            "total_arr": 242343.90353369602,
+            "total_arr": 1701135.9035336957,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -4149,11 +4227,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1542500.4808256,
-            "bookings_pct": 0.9073532240150588,
-            "total": 1457656.096466304,
-            "total_pct": 0.8574447626272377,
-            "status": "critical_gap"
+            "bookings": 83708.48082560021,
+            "bookings_pct": 0.04924028283858836,
+            "total": -1135.9035336957313,
+            "total_pct": -0.0006681785492327831,
+            "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -4348,10 +4426,10 @@
             "pace_gap": -1201086.9565217393,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1700000.0,
-            "remaining_bu_bookings": 157499.51917440002,
-            "reforecast_bookings": 157499.51917440002,
-            "reforecast_gap": -1542500.4808256,
-            "reforecast_gap_pct": -0.9073532240150588,
+            "remaining_bu_bookings": 1616291.5191743998,
+            "reforecast_bookings": 1616291.5191743998,
+            "reforecast_gap": -83708.48082560021,
+            "reforecast_gap_pct": -0.04924028283858836,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -4362,7 +4440,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 2100000,
-          "bu_sales_led_arr": 26517.263136,
+          "bu_sales_led_arr": 458517.263136,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2100000,
@@ -4375,10 +4453,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 26517.263136,
+            "sales_led_arr": 458517.263136,
             "plg_arr": 0.0,
-            "expansion_arr": 89854.54291230143,
-            "total_arr": 116371.80604830143,
+            "expansion_arr": 111736.42291230144,
+            "total_arr": 570253.6860483014,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -4391,10 +4469,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2073482.736864,
-            "bookings_pct": 0.9873727318400001,
-            "total": 1983628.1939516985,
-            "total_pct": 0.9445848542627135,
+            "bookings": 1641482.736864,
+            "bookings_pct": 0.7816584461257143,
+            "total": 1529746.3139516986,
+            "total_pct": 0.728450625691285,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -4561,19 +4639,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 2327802.860820096,
-            "sales_led_base_arr": 2202802.860820096,
+            "opening_arr": 3786594.860820096,
+            "sales_led_base_arr": 3661594.860820096,
             "plg_base_arr": 125000.0,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2202802.860820096,
+            "sales_led_usage_eligible_arr": 3661594.860820096,
             "plg_usage_eligible_arr": 112500.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 33042.04291230144,
+            "usage_expansion_arr": 54923.92291230144,
             "plg_expansion_arr": 14062.5,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 89854.54291230143
+            "total_expansion_arr": 111736.42291230144
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -4590,10 +4668,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2100000.0,
-            "remaining_bu_bookings": 26517.263136,
-            "reforecast_bookings": 26517.263136,
-            "reforecast_gap": -2073482.736864,
-            "reforecast_gap_pct": -0.9873727318400001,
+            "remaining_bu_bookings": 458517.263136,
+            "reforecast_bookings": 458517.263136,
+            "reforecast_gap": -1641482.736864,
+            "reforecast_gap_pct": -0.7816584461257143,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -4604,7 +4682,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 2600000,
-          "bu_sales_led_arr": 28138.3607232,
+          "bu_sales_led_arr": 901738.3607232,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2600000,
@@ -4617,10 +4695,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 28138.3607232,
+            "sales_led_arr": 901738.3607232,
             "plg_arr": 0.0,
-            "expansion_arr": 92951.68250302596,
-            "total_arr": 121090.04322622597,
+            "expansion_arr": 121641.79070302595,
+            "total_arr": 1023380.151426226,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -4633,10 +4711,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2571861.6392768,
-            "bookings_pct": 0.9891775535680001,
-            "total": 2478909.956773774,
-            "total_pct": 0.9534269064514517,
+            "bookings": 1698261.6392768,
+            "bookings_pct": 0.653177553568,
+            "total": 1576619.848573774,
+            "total_pct": 0.6063922494514515,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -4803,19 +4881,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 2444174.6668683975,
-            "sales_led_base_arr": 2305112.1668683975,
+            "opening_arr": 4356848.546868397,
+            "sales_led_base_arr": 4217786.046868397,
             "plg_base_arr": 139062.5,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2305112.1668683975,
+            "sales_led_usage_eligible_arr": 4217786.046868397,
             "plg_usage_eligible_arr": 125000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 34576.682503025964,
+            "usage_expansion_arr": 63266.79070302595,
             "plg_expansion_arr": 15625.000000000004,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 92951.68250302596
+            "total_expansion_arr": 121641.79070302595
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -4832,10 +4910,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2600000.0,
-            "remaining_bu_bookings": 28138.3607232,
-            "reforecast_bookings": 28138.3607232,
-            "reforecast_gap": -2571861.6392768,
-            "reforecast_gap_pct": -0.9891775535680001,
+            "remaining_bu_bookings": 901738.3607232,
+            "reforecast_bookings": 901738.3607232,
+            "reforecast_gap": -1698261.6392768,
+            "reforecast_gap_pct": -0.653177553568,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -5090,7 +5168,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 1700000,
-          "bu_sales_led_arr": 539680.5969984,
+          "bu_sales_led_arr": 1998472.5969984,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1700000,
@@ -5103,10 +5181,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 539680.5969984,
+            "sales_led_arr": 1998472.5969984,
             "plg_arr": 0,
             "expansion_arr": 87529.661018816,
-            "total_arr": 627210.2580172161,
+            "total_arr": 2086002.258017216,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -5119,11 +5197,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1160319.4030016,
-            "bookings_pct": 0.6825408252950588,
-            "total": 1072789.741982784,
-            "total_pct": 0.6310527894016376,
-            "status": "critical_gap"
+            "bookings": -298472.59699840005,
+            "bookings_pct": -0.1755721158814118,
+            "total": -386002.2580172161,
+            "total_pct": -0.22706015177483302,
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -5318,10 +5396,10 @@
             "pace_gap": -1201086.9565217393,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1700000.0,
-            "remaining_bu_bookings": 539680.5969984,
-            "reforecast_bookings": 539680.5969984,
-            "reforecast_gap": -1160319.4030016,
-            "reforecast_gap_pct": -0.6825408252950588,
+            "remaining_bu_bookings": 1998472.5969984,
+            "reforecast_bookings": 1998472.5969984,
+            "reforecast_gap": 298472.59699840005,
+            "reforecast_gap_pct": 0.1755721158814118,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -5332,7 +5410,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 2100000,
-          "bu_sales_led_arr": 473102.51526720007,
+          "bu_sales_led_arr": 905102.5152672001,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2100000,
@@ -5345,10 +5423,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 473102.51526720007,
+            "sales_led_arr": 905102.5152672001,
             "plg_arr": 0,
-            "expansion_arr": 98312.81488907425,
-            "total_arr": 571415.3301562744,
+            "expansion_arr": 120194.69488907425,
+            "total_arr": 1025297.2101562743,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -5361,10 +5439,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1626897.4847328,
-            "bookings_pct": 0.774713087968,
-            "total": 1528584.6698437256,
-            "total_pct": 0.7278974618303455,
+            "bookings": 1194897.4847328,
+            "bookings_pct": 0.5689988022537142,
+            "total": 1074702.7898437257,
+            "total_pct": 0.511763233258917,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -5531,19 +5609,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 2891687.659271616,
-            "sales_led_base_arr": 2766687.659271616,
+            "opening_arr": 4350479.6592716165,
+            "sales_led_base_arr": 4225479.6592716165,
             "plg_base_arr": 125000.0,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2766687.659271616,
+            "sales_led_usage_eligible_arr": 4225479.6592716165,
             "plg_usage_eligible_arr": 112500.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 41500.31488907424,
+            "usage_expansion_arr": 63382.19488907424,
             "plg_expansion_arr": 14062.5,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 98312.81488907425
+            "total_expansion_arr": 120194.69488907425
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -5560,10 +5638,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2100000.0,
-            "remaining_bu_bookings": 473102.51526720007,
-            "reforecast_bookings": 473102.51526720007,
-            "reforecast_gap": -1626897.4847328,
-            "reforecast_gap_pct": -0.774713087968,
+            "remaining_bu_bookings": 905102.5152672001,
+            "reforecast_bookings": 905102.5152672001,
+            "reforecast_gap": -1194897.4847328,
+            "reforecast_gap_pct": -0.5689988022537142,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -5574,7 +5652,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 2600000,
-          "bu_sales_led_arr": 485424.83808,
+          "bu_sales_led_arr": 1359024.8380800001,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2600000,
@@ -5587,10 +5665,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 485424.83808,
+            "sales_led_arr": 1359024.8380800001,
             "plg_arr": 0,
-            "expansion_arr": 108235.60734141835,
-            "total_arr": 593660.4454214184,
+            "expansion_arr": 136925.71554141835,
+            "total_arr": 1495950.5536214185,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -5603,10 +5681,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2114575.16192,
-            "bookings_pct": 0.8132981391999999,
-            "total": 2006339.5545785816,
-            "total_pct": 0.7716690594533007,
+            "bookings": 1240975.1619199999,
+            "bookings_pct": 0.47729813919999997,
+            "total": 1104049.4463785815,
+            "total_pct": 0.4246344024533006,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -5773,19 +5851,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 3463102.98942789,
-            "sales_led_base_arr": 3324040.48942789,
+            "opening_arr": 5375776.8694278905,
+            "sales_led_base_arr": 5236714.3694278905,
             "plg_base_arr": 139062.5,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 3324040.48942789,
+            "sales_led_usage_eligible_arr": 5236714.3694278905,
             "plg_usage_eligible_arr": 125000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 49860.60734141835,
+            "usage_expansion_arr": 78550.71554141835,
             "plg_expansion_arr": 15625.000000000004,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 108235.60734141835
+            "total_expansion_arr": 136925.71554141835
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -5802,10 +5880,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2600000.0,
-            "remaining_bu_bookings": 485424.83808,
-            "reforecast_bookings": 485424.83808,
-            "reforecast_gap": -2114575.16192,
-            "reforecast_gap_pct": -0.8132981391999999,
+            "remaining_bu_bookings": 1359024.8380800001,
+            "reforecast_bookings": 1359024.8380800001,
+            "reforecast_gap": -1240975.1619199999,
+            "reforecast_gap_pct": -0.47729813919999997,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -5820,7 +5898,7 @@
           "period_start": "2026-02-01",
           "period_end": "2026-04-30",
           "td_bookings": 1600000,
-          "bu_sales_led_arr": 1708.9572864,
+          "bu_sales_led_arr": 1450000.0,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1600000,
@@ -5833,10 +5911,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 1708.9572864,
+            "sales_led_arr": 1450000.0,
             "plg_arr": 0.0,
             "expansion_arr": 83750.0,
-            "total_arr": 85458.9572864,
+            "total_arr": 1533750.0,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -5849,11 +5927,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1598291.0427136,
-            "bookings_pct": 0.998931901696,
-            "total": 1514541.0427136,
-            "total_pct": 0.946588151696,
-            "status": "critical_gap"
+            "bookings": 150000.0,
+            "bookings_pct": 0.09375,
+            "total": 66250.0,
+            "total_pct": 0.04140625,
+            "status": "minor_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -6048,10 +6126,10 @@
             "pace_gap": -1600000.0,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1600000.0,
-            "remaining_bu_bookings": 1708.9572864,
-            "reforecast_bookings": 1708.9572864,
-            "reforecast_gap": -1598291.0427136,
-            "reforecast_gap_pct": -0.998931901696,
+            "remaining_bu_bookings": 1450000.0,
+            "reforecast_bookings": 1450000.0,
+            "reforecast_gap": -150000.0,
+            "reforecast_gap_pct": -0.09375,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -6062,7 +6140,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 1700000,
-          "bu_sales_led_arr": 157499.51917440002,
+          "bu_sales_led_arr": 1616291.5191743998,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1700000,
@@ -6075,10 +6153,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 157499.51917440002,
+            "sales_led_arr": 1616291.5191743998,
             "plg_arr": 0.0,
             "expansion_arr": 84844.384359296,
-            "total_arr": 242343.90353369602,
+            "total_arr": 1701135.9035336957,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -6091,11 +6169,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1542500.4808256,
-            "bookings_pct": 0.9073532240150588,
-            "total": 1457656.096466304,
-            "total_pct": 0.8574447626272377,
-            "status": "critical_gap"
+            "bookings": 83708.48082560021,
+            "bookings_pct": 0.04924028283858836,
+            "total": -1135.9035336957313,
+            "total_pct": -0.0006681785492327831,
+            "status": "aligned"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -6290,10 +6368,10 @@
             "pace_gap": -1201086.9565217393,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1700000.0,
-            "remaining_bu_bookings": 157499.51917440002,
-            "reforecast_bookings": 157499.51917440002,
-            "reforecast_gap": -1542500.4808256,
-            "reforecast_gap_pct": -0.9073532240150588,
+            "remaining_bu_bookings": 1616291.5191743998,
+            "reforecast_bookings": 1616291.5191743998,
+            "reforecast_gap": -83708.48082560021,
+            "reforecast_gap_pct": -0.04924028283858836,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -6304,7 +6382,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 2100000,
-          "bu_sales_led_arr": 26517.263136,
+          "bu_sales_led_arr": 458517.263136,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2100000,
@@ -6317,10 +6395,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 26517.263136,
+            "sales_led_arr": 458517.263136,
             "plg_arr": 0.0,
-            "expansion_arr": 89854.54291230143,
-            "total_arr": 116371.80604830143,
+            "expansion_arr": 111736.42291230144,
+            "total_arr": 570253.6860483014,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -6333,10 +6411,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2073482.736864,
-            "bookings_pct": 0.9873727318400001,
-            "total": 1983628.1939516985,
-            "total_pct": 0.9445848542627135,
+            "bookings": 1641482.736864,
+            "bookings_pct": 0.7816584461257143,
+            "total": 1529746.3139516986,
+            "total_pct": 0.728450625691285,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -6503,19 +6581,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 2327802.860820096,
-            "sales_led_base_arr": 2202802.860820096,
+            "opening_arr": 3786594.860820096,
+            "sales_led_base_arr": 3661594.860820096,
             "plg_base_arr": 125000.0,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2202802.860820096,
+            "sales_led_usage_eligible_arr": 3661594.860820096,
             "plg_usage_eligible_arr": 112500.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 33042.04291230144,
+            "usage_expansion_arr": 54923.92291230144,
             "plg_expansion_arr": 14062.5,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 89854.54291230143
+            "total_expansion_arr": 111736.42291230144
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -6532,10 +6610,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2100000.0,
-            "remaining_bu_bookings": 26517.263136,
-            "reforecast_bookings": 26517.263136,
-            "reforecast_gap": -2073482.736864,
-            "reforecast_gap_pct": -0.9873727318400001,
+            "remaining_bu_bookings": 458517.263136,
+            "reforecast_bookings": 458517.263136,
+            "reforecast_gap": -1641482.736864,
+            "reforecast_gap_pct": -0.7816584461257143,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -6546,7 +6624,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 2600000,
-          "bu_sales_led_arr": 28138.3607232,
+          "bu_sales_led_arr": 901738.3607232,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2600000,
@@ -6559,10 +6637,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 28138.3607232,
+            "sales_led_arr": 901738.3607232,
             "plg_arr": 0.0,
-            "expansion_arr": 92951.68250302596,
-            "total_arr": 121090.04322622597,
+            "expansion_arr": 121641.79070302595,
+            "total_arr": 1023380.151426226,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -6575,10 +6653,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2571861.6392768,
-            "bookings_pct": 0.9891775535680001,
-            "total": 2478909.956773774,
-            "total_pct": 0.9534269064514517,
+            "bookings": 1698261.6392768,
+            "bookings_pct": 0.653177553568,
+            "total": 1576619.848573774,
+            "total_pct": 0.6063922494514515,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -6745,19 +6823,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 2444174.6668683975,
-            "sales_led_base_arr": 2305112.1668683975,
+            "opening_arr": 4356848.546868397,
+            "sales_led_base_arr": 4217786.046868397,
             "plg_base_arr": 139062.5,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2305112.1668683975,
+            "sales_led_usage_eligible_arr": 4217786.046868397,
             "plg_usage_eligible_arr": 125000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 34576.682503025964,
+            "usage_expansion_arr": 63266.79070302595,
             "plg_expansion_arr": 15625.000000000004,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 92951.68250302596
+            "total_expansion_arr": 121641.79070302595
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -6774,10 +6852,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2600000.0,
-            "remaining_bu_bookings": 28138.3607232,
-            "reforecast_bookings": 28138.3607232,
-            "reforecast_gap": -2571861.6392768,
-            "reforecast_gap_pct": -0.9891775535680001,
+            "remaining_bu_bookings": 901738.3607232,
+            "reforecast_bookings": 901738.3607232,
+            "reforecast_gap": -1698261.6392768,
+            "reforecast_gap_pct": -0.653177553568,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -7032,7 +7110,7 @@
           "period_start": "2026-05-01",
           "period_end": "2026-07-31",
           "td_bookings": 1700000,
-          "bu_sales_led_arr": 539680.5969984,
+          "bu_sales_led_arr": 1998472.5969984,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 1700000,
@@ -7045,10 +7123,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 539680.5969984,
+            "sales_led_arr": 1998472.5969984,
             "plg_arr": 0,
             "expansion_arr": 87529.661018816,
-            "total_arr": 627210.2580172161,
+            "total_arr": 2086002.258017216,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -7061,11 +7139,11 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1160319.4030016,
-            "bookings_pct": 0.6825408252950588,
-            "total": 1072789.741982784,
-            "total_pct": 0.6310527894016376,
-            "status": "critical_gap"
+            "bookings": -298472.59699840005,
+            "bookings_pct": -0.1755721158814118,
+            "total": -386002.2580172161,
+            "total_pct": -0.22706015177483302,
+            "status": "significant_gap"
           },
           "conversion_rates": {
             "mql_to_s0": {
@@ -7260,10 +7338,10 @@
             "pace_gap": -1201086.9565217393,
             "pace_gap_pct": -1.0,
             "remaining_plan_bookings": 1700000.0,
-            "remaining_bu_bookings": 539680.5969984,
-            "reforecast_bookings": 539680.5969984,
-            "reforecast_gap": -1160319.4030016,
-            "reforecast_gap_pct": -0.6825408252950588,
+            "remaining_bu_bookings": 1998472.5969984,
+            "reforecast_bookings": 1998472.5969984,
+            "reforecast_gap": 298472.59699840005,
+            "reforecast_gap_pct": 0.1755721158814118,
             "has_actuals": false
           },
           "confidence_tier": "committed",
@@ -7274,7 +7352,7 @@
           "period_start": "2026-08-01",
           "period_end": "2026-10-31",
           "td_bookings": 2100000,
-          "bu_sales_led_arr": 473102.51526720007,
+          "bu_sales_led_arr": 905102.5152672001,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2100000,
@@ -7287,10 +7365,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 473102.51526720007,
+            "sales_led_arr": 905102.5152672001,
             "plg_arr": 0,
-            "expansion_arr": 98312.81488907425,
-            "total_arr": 571415.3301562744,
+            "expansion_arr": 120194.69488907425,
+            "total_arr": 1025297.2101562743,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -7303,10 +7381,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 1626897.4847328,
-            "bookings_pct": 0.774713087968,
-            "total": 1528584.6698437256,
-            "total_pct": 0.7278974618303455,
+            "bookings": 1194897.4847328,
+            "bookings_pct": 0.5689988022537142,
+            "total": 1074702.7898437257,
+            "total_pct": 0.511763233258917,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -7473,19 +7551,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q3FY26",
-            "opening_arr": 2891687.659271616,
-            "sales_led_base_arr": 2766687.659271616,
+            "opening_arr": 4350479.6592716165,
+            "sales_led_base_arr": 4225479.6592716165,
             "plg_base_arr": 125000.0,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 2766687.659271616,
+            "sales_led_usage_eligible_arr": 4225479.6592716165,
             "plg_usage_eligible_arr": 112500.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 41500.31488907424,
+            "usage_expansion_arr": 63382.19488907424,
             "plg_expansion_arr": 14062.5,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 98312.81488907425
+            "total_expansion_arr": 120194.69488907425
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -7502,10 +7580,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2100000.0,
-            "remaining_bu_bookings": 473102.51526720007,
-            "reforecast_bookings": 473102.51526720007,
-            "reforecast_gap": -1626897.4847328,
-            "reforecast_gap_pct": -0.774713087968,
+            "remaining_bu_bookings": 905102.5152672001,
+            "reforecast_bookings": 905102.5152672001,
+            "reforecast_gap": -1194897.4847328,
+            "reforecast_gap_pct": -0.5689988022537142,
             "has_actuals": false
           },
           "confidence_tier": "building",
@@ -7516,7 +7594,7 @@
           "period_start": "2026-11-01",
           "period_end": "2027-01-31",
           "td_bookings": 2600000,
-          "bu_sales_led_arr": 485424.83808,
+          "bu_sales_led_arr": 1359024.8380800001,
           "actual_bookings": 0.0,
           "top_down": {
             "bookings": 2600000,
@@ -7529,10 +7607,10 @@
             "total_gtm": 9
           },
           "bottoms_up": {
-            "sales_led_arr": 485424.83808,
+            "sales_led_arr": 1359024.8380800001,
             "plg_arr": 0,
-            "expansion_arr": 108235.60734141835,
-            "total_arr": 593660.4454214184,
+            "expansion_arr": 136925.71554141835,
+            "total_arr": 1495950.5536214185,
             "ramped_aes": 11,
             "total_aes": 11
           },
@@ -7545,10 +7623,10 @@
             "s2_weekly": 0
           },
           "gap": {
-            "bookings": 2114575.16192,
-            "bookings_pct": 0.8132981391999999,
-            "total": 2006339.5545785816,
-            "total_pct": 0.7716690594533007,
+            "bookings": 1240975.1619199999,
+            "bookings_pct": 0.47729813919999997,
+            "total": 1104049.4463785815,
+            "total_pct": 0.4246344024533006,
             "status": "critical_gap"
           },
           "conversion_rates": {
@@ -7715,19 +7793,19 @@
           },
           "expansion_breakdown": {
             "quarter": "Q4FY26",
-            "opening_arr": 3463102.98942789,
-            "sales_led_base_arr": 3324040.48942789,
+            "opening_arr": 5375776.8694278905,
+            "sales_led_base_arr": 5236714.3694278905,
             "plg_base_arr": 139062.5,
             "renewable_sales_led_arr": 475000.0,
-            "sales_led_usage_eligible_arr": 3324040.48942789,
+            "sales_led_usage_eligible_arr": 5236714.3694278905,
             "plg_usage_eligible_arr": 125000.0,
             "committed_consumption_arr": 0.0,
             "program_maturity_factor": 1.0,
             "renewal_expansion_arr": 42750.0,
-            "usage_expansion_arr": 49860.60734141835,
+            "usage_expansion_arr": 78550.71554141835,
             "plg_expansion_arr": 15625.000000000004,
             "consumption_true_forward_arr": 0.0,
-            "total_expansion_arr": 108235.60734141835
+            "total_expansion_arr": 136925.71554141835
           },
           "target_provenance": {
             "status": "missing_weekly_targets",
@@ -7744,10 +7822,10 @@
             "pace_gap": 0.0,
             "pace_gap_pct": 0.0,
             "remaining_plan_bookings": 2600000.0,
-            "remaining_bu_bookings": 485424.83808,
-            "reforecast_bookings": 485424.83808,
-            "reforecast_gap": -2114575.16192,
-            "reforecast_gap_pct": -0.8132981391999999,
+            "remaining_bu_bookings": 1359024.8380800001,
+            "reforecast_bookings": 1359024.8380800001,
+            "reforecast_gap": -1240975.1619199999,
+            "reforecast_gap_pct": -0.47729813919999997,
             "has_actuals": false
           },
           "confidence_tier": "planned",
@@ -7822,45 +7900,45 @@
       ],
       "existing_wins": [
         0.0,
-        57000.0,
+        1132000.0,
+        318000.0,
+        208000.0,
+        1056000.0,
+        333437.0,
         0.0,
-        29600.0,
-        63840.0,
-        45205.0,
+        240000.0,
+        192000.0,
         0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        422400.0,
+        451200.0
       ],
       "existing_losses": [
-        56000.0,
-        76000.0,
-        60000.0,
-        7399.999999999998,
-        82160.0,
-        140795.0,
+        395000.0,
+        290000.0,
+        575000.0,
+        51999.999999999985,
+        1234000.0,
+        961563.0,
         0.0,
+        760000.0,
+        608000.0,
         0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        457600.0,
+        488800.0
       ],
       "existing_remaining": [
-        369000.0,
-        369000.0,
-        369000.0,
-        369000.0,
-        332000.0,
-        186000.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0
+        7465000.0,
+        7465000.0,
+        7465000.0,
+        7465000.0,
+        7205000.0,
+        4915000.0,
+        3620000.0,
+        3620000.0,
+        2620000.0,
+        1820000.0,
+        1820000.0,
+        940000.0
       ],
       "future_wins": [
         0.0,
@@ -7877,9 +7955,9 @@
         9531.9159936
       ],
       "pipeline_creation": [
-        278000.0,
-        90000.0,
-        60000.0,
+        2295000.0,
+        3450000.0,
+        505000.0,
         33694.75199999999,
         31668.0,
         25334.399999999998,
@@ -7895,7 +7973,7 @@
         "fallback_from": null,
         "fallback_reason": null,
         "inventory_is_live": true,
-        "inventory_opportunity_count": 14,
+        "inventory_opportunity_count": 18,
         "inventory_metric_selection": "ARR__c else Amount",
         "future_generation_method": "monthly_pipeline_created x monthly_future_generation_win_rate x close_timing_curve",
         "future_generation_basis": [
@@ -7928,23 +8006,23 @@
         ],
         "as_of": "2026-04-06",
         "capacity_treatment": "push",
-        "starting_inventory": 369000.0,
+        "starting_inventory": 7465000.0,
         "inventory_by_stage": {
-          "S3": 146000.0,
-          "S5": 37000.0,
-          "S1": 25000.0,
-          "S2": 41000.0,
-          "S4": 120000.0
+          "S3": 2940000.0,
+          "S5": 260000.0,
+          "S1": 45000.0,
+          "S2": 290000.0,
+          "S4": 3930000.0
         },
         "inventory_count_by_stage": {
-          "S3": 3,
+          "S3": 5,
           "S5": 1,
           "S1": 1,
           "S2": 1,
-          "S4": 2
+          "S4": 4
         },
         "resolution_method_counts": {
-          "close_date": 8,
+          "close_date": 12,
           "velocity": 0,
           "out_of_range": 0
         },
@@ -7954,11 +8032,11 @@
             0.0,
             0.0,
             0.0,
-            6240.0,
-            28800.0,
+            43200.0,
+            230400.0,
             0.0,
-            0.0,
-            0.0,
+            240000.0,
+            192000.0,
             0.0,
             0.0,
             0.0
@@ -7967,7 +8045,7 @@
             0.0,
             0.0,
             0.0,
-            29600.0,
+            208000.0,
             0.0,
             0.0,
             0.0,
@@ -7983,7 +8061,7 @@
             0.0,
             0.0,
             0.0,
-            2465.0,
+            4437.0,
             0.0,
             0.0,
             0.0,
@@ -7997,7 +8075,7 @@
             0.0,
             0.0,
             0.0,
-            13940.000000000002,
+            98600.0,
             0.0,
             0.0,
             0.0,
@@ -8010,14 +8088,14 @@
             0.0,
             0.0,
             0.0,
-            57600.0,
+            1012800.0,
             0.0,
             0.0,
             0.0,
             0.0,
             0.0,
-            0.0,
-            0.0
+            422400.0,
+            451200.0
           ]
         },
         "s2_to_won_source": "ProfileBackend",
@@ -8124,50 +8202,50 @@
     ],
     "monthly_inventory_wins": [
       0.0,
-      57000.0,
+      1132000.0,
+      318000.0,
+      208000.0,
+      1056000.0,
+      333437.0,
       0.0,
-      29600.0,
-      63840.0,
-      45205.0,
+      240000.0,
+      192000.0,
       0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
+      422400.0,
+      451200.0
     ],
     "monthly_inventory_losses": [
-      56000.0,
-      76000.0,
-      60000.0,
-      7399.999999999998,
-      82160.0,
-      140795.0,
+      395000.0,
+      290000.0,
+      575000.0,
+      51999.999999999985,
+      1234000.0,
+      961563.0,
       0.0,
+      760000.0,
+      608000.0,
       0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
+      457600.0,
+      488800.0
     ],
     "monthly_inventory_remaining": [
-      369000.0,
-      369000.0,
-      369000.0,
-      369000.0,
-      332000.0,
-      186000.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
+      7465000.0,
+      7465000.0,
+      7465000.0,
+      7465000.0,
+      7205000.0,
+      4915000.0,
+      3620000.0,
+      3620000.0,
+      2620000.0,
+      1820000.0,
+      1820000.0,
+      940000.0
     ],
     "monthly_ae_creation": [
-      278000.0,
-      90000.0,
-      60000.0,
+      2295000.0,
+      3450000.0,
+      505000.0,
       25334.399999999998,
       31668.0,
       25334.399999999998,
@@ -8264,36 +8342,36 @@
     ],
     "monthly_total_expected": [
       0.0,
-      57000.0,
-      0.0,
-      34210.0500992,
-      70357.1223936,
-      52932.3466816,
+      1132000.0,
+      318000.0,
+      212610.0500992,
+      1062517.1223936,
+      341164.3466816,
       8341.5032064,
-      8942.7391872,
-      9233.0207424,
+      248942.7391872,
+      201233.0207424,
       9112.4289984,
-      9494.015731200001,
-      9531.9159936
+      431894.0157312,
+      460731.9159936
     ],
     "monthly_capped": [
       0.0,
-      57000.0,
-      0.0,
-      34210.0500992,
-      70357.1223936,
-      52932.3466816,
+      1132000.0,
+      318000.0,
+      212610.0500992,
+      821666.6666666666,
+      582014.8024085333,
       8341.5032064,
-      8942.7391872,
-      9233.0207424,
+      248942.7391872,
+      201233.0207424,
       9112.4289984,
-      9494.015731200001,
-      9531.9159936
+      431894.0157312,
+      460731.9159936
     ],
     "observed_values": {
       "win_rate": 0.34,
-      "avg_deal_size": 46125.0,
-      "avg_cycle_days": 96.12366310160428,
+      "avg_deal_size": 622083.3333333334,
+      "avg_cycle_days": 96.20650183150184,
       "ramp_months": 6.0,
       "productivity_per_ae_per_month": 0.0
     },
@@ -8374,50 +8452,50 @@
     ],
     "monthly_inventory_wins": [
       0.0,
-      57000.0,
+      1132000.0,
+      318000.0,
+      208000.0,
+      1056000.0,
+      333437.0,
       0.0,
-      29600.0,
-      63840.0,
-      45205.0,
+      240000.0,
+      192000.0,
       0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
+      422400.0,
+      451200.0
     ],
     "monthly_inventory_losses": [
-      56000.0,
-      76000.0,
-      60000.0,
-      7399.999999999998,
-      82160.0,
-      140795.0,
+      395000.0,
+      290000.0,
+      575000.0,
+      51999.999999999985,
+      1234000.0,
+      961563.0,
       0.0,
+      760000.0,
+      608000.0,
       0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
+      457600.0,
+      488800.0
     ],
     "monthly_inventory_remaining": [
-      369000.0,
-      369000.0,
-      369000.0,
-      369000.0,
-      332000.0,
-      186000.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0
+      7465000.0,
+      7465000.0,
+      7465000.0,
+      7465000.0,
+      7205000.0,
+      4915000.0,
+      3620000.0,
+      3620000.0,
+      2620000.0,
+      1820000.0,
+      1820000.0,
+      940000.0
     ],
     "monthly_ae_creation": [
-      278000.0,
-      90000.0,
-      60000.0,
+      2295000.0,
+      3450000.0,
+      505000.0,
       25334.399999999998,
       31668.0,
       25334.399999999998,
@@ -8514,36 +8592,36 @@
     ],
     "monthly_total_expected": [
       0.0,
-      57000.0,
-      0.0,
-      34210.0500992,
-      70357.1223936,
-      52932.3466816,
+      1132000.0,
+      318000.0,
+      212610.0500992,
+      1062517.1223936,
+      341164.3466816,
       8341.5032064,
-      8942.7391872,
-      9233.0207424,
+      248942.7391872,
+      201233.0207424,
       9112.4289984,
-      9494.015731200001,
-      9531.9159936
+      431894.0157312,
+      460731.9159936
     ],
     "monthly_capped": [
       0.0,
-      57000.0,
-      0.0,
-      34210.0500992,
-      70357.1223936,
-      52932.3466816,
+      1132000.0,
+      318000.0,
+      212610.0500992,
+      821666.6666666666,
+      582014.8024085333,
       8341.5032064,
-      8942.7391872,
-      9233.0207424,
+      248942.7391872,
+      201233.0207424,
       9112.4289984,
-      9494.015731200001,
-      9531.9159936
+      431894.0157312,
+      460731.9159936
     ],
     "observed_values": {
       "win_rate": 0.34,
-      "avg_deal_size": 46125.0,
-      "avg_cycle_days": 96.12366310160428,
+      "avg_deal_size": 622083.3333333334,
+      "avg_cycle_days": 96.20650183150184,
       "ramp_months": 6.0,
       "productivity_per_ae_per_month": 0.0
     },
@@ -8676,7 +8754,7 @@
       "source": "ProfileBackend",
       "method": "backend_fetch_deals",
       "is_live": true,
-      "opp_count": 14
+      "opp_count": 18
     },
     "roster": {
       "source": "warehouse + roster.yaml"

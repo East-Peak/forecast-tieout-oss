@@ -382,7 +382,12 @@ def calculate_monthly_capacity(roster: list[dict], month: date) -> dict:
             continue
 
         segment = _normalize_segment(rep.get("segment") or "enterprise")
-        annual_quota = rep.get("annual_quota") or _get_segment_quota(segment)
+        if rep.get("annual_quota") is not None:
+            annual_quota = rep["annual_quota"]
+        elif rep.get("quota") is not None:
+            annual_quota = rep["quota"]
+        else:
+            annual_quota = _get_segment_quota(segment)
         attainment = rep.get("attainment_rate") or _get_segment_attainment(segment)
 
         months = _months_since(start, month)

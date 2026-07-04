@@ -105,6 +105,13 @@ ACV_PARAMS = {
     "commercial":  {"mean": 28_000, "std":  7_000, "min": 14_000, "max": 45_000},
 }
 
+BOOKINGS_VALUE_MULTIPLIER_BY_QUARTER = {
+    "Q1FY26": 7.0,
+    "Q2FY26": 9.5,
+    "Q3FY26": 16.0,
+    "Q4FY26": 25.0,
+}
+
 # Median cycle days per segment (for creating realistic created_date)
 CYCLE_DAYS = {"enterprise": 119, "mid_market": 49, "commercial": 21}
 
@@ -311,6 +318,18 @@ def _acv(segment: str) -> float:
     return round(v / 1000) * 1000
 
 
+def _fy26_quarter_for_date(value: date) -> str:
+    if FY_START <= value <= FY_Q1_END:
+        return "Q1FY26"
+    if FY_Q2_START <= value <= FY_Q2_END:
+        return "Q2FY26"
+    if FY_Q3_START <= value <= FY_Q3_END:
+        return "Q3FY26"
+    if FY_Q4_START <= value <= FY_Q4_END:
+        return "Q4FY26"
+    return "Q1FY26"
+
+
 def _channel(segment: str) -> str:
     """Pick source channel, with segment-aware weighting."""
     if segment == "commercial":
@@ -470,9 +489,8 @@ def _make_deal_row(
     deal_type: str = "new_business",
 ) -> dict:
     if amount:
-        params = ACV_PARAMS.get(segment)
-        if params:
-            amount = max(params["min"], min(params["max"], amount))
+        quarter = _fy26_quarter_for_date(close_date)
+        amount *= BOOKINGS_VALUE_MULTIPLIER_BY_QUARTER.get(quarter, 1.0)
     fc = FORECAST_CAT_BY_STAGE.get(stage, "Pipeline")
     if is_closed:
         fc = "Closed"
@@ -838,19 +856,20 @@ def generate_deals() -> tuple[list[dict], list[dict]]:
             owner = _pick_ae(seg, weight_top=(seg == "mid_market"))
             chan = _channel(seg)
 
-            # Close dates spread across Q2 and Q3 future quarters
+            # Close dates spread across Q2-Q4 so the rendered bridge shows
+            # strong near-term coverage with a visible widening gap later.
             if stage == "Negotiation":
                 close_range_start = AS_OF + timedelta(days=7)
                 close_range_end = FY_Q2_END
             elif stage == "Business Case":
                 close_range_start = AS_OF + timedelta(days=14)
-                close_range_end = FY_Q3_START + timedelta(days=45)
+                close_range_end = FY_Q3_END
             elif stage == "Technical Evaluation":
-                close_range_start = AS_OF + timedelta(days=21)
-                close_range_end = FY_Q3_END
+                close_range_start = FY_Q3_START
+                close_range_end = FY_Q4_END
             else:  # Qualification
-                close_range_start = AS_OF + timedelta(days=28)
-                close_range_end = FY_Q3_END
+                close_range_start = FY_Q4_START
+                close_range_end = FY_Q4_END
 
             close_dt = _rand_date(close_range_start, close_range_end)
             cycle = int(CYCLE_DAYS[seg] * random.uniform(0.6, 1.6))
@@ -905,6 +924,7 @@ def generate_team_members() -> list[dict]:
             "start_date": RAMP_DEBT_START_DATES.get(m["id"], m.get("start_date") or ""),
             "is_active": "true",
             "manager_id": m.get("manager_id") or "",
+            "annual_quota": m.get("quota") or "",
         })
     return rows
 
@@ -935,7 +955,10 @@ DEALS_FIELDS = [
     "is_closed", "is_won", "lost_reason", "raw_stage", "type", "forecast_category",
 ]
 
-TEAM_FIELDS = ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"]
+TEAM_FIELDS = [
+    "id", "name", "role", "segment", "start_date", "is_active", "manager_id",
+    "annual_quota",
+]
 
 HISTORY_FIELDS = ["deal_id", "from_stage", "to_stage", "transition_date"]
 

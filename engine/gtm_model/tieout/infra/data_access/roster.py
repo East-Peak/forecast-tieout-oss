@@ -112,6 +112,7 @@ class RosterMixin:
                                 ),
                                 "is_active": tm.is_active,
                                 "manager_id": tm.manager_id,
+                                "annual_quota": tm.annual_quota,
                             }
                             for tm in members
                             if tm.is_active
@@ -206,4 +207,3 @@ class RosterMixin:
             logger.warning("Roster build failed: %s", exc)
             roster_cache[cache_key] = None
             return None
-

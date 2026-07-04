@@ -112,6 +112,7 @@ class TeamMember:
     start_date: Optional[date] = None
     is_active: bool = True
     manager_id: Optional[str] = None
+    annual_quota: Optional[float] = None
     extra: dict[str, Any] = field(default_factory=dict)
 
 

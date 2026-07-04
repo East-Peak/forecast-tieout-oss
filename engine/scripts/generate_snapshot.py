@@ -828,7 +828,7 @@ def build_snapshot(
         if not match:
             return False
         quarter, fy_year = int(match.group(1)), int(match.group(2))
-        base_year = 2000 + fy_year - 1
+        base_year = 2000 + fy_year
         if quarter == 1:
             q_months = {f"{base_year}-02", f"{base_year}-03", f"{base_year}-04"}
         elif quarter == 2:

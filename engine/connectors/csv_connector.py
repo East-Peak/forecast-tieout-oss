@@ -289,6 +289,11 @@ class CSVConnector(ConnectorInterface):
                 start_date=_parse_date(_get(row, "start_date")),
                 is_active=_parse_bool(_get(row, "is_active"), default=True),
                 manager_id=_get(row, "manager_id") or None,
+                annual_quota=(
+                    float(_get(row, "annual_quota") or _get(row, "quota"))
+                    if (_get(row, "annual_quota") or _get(row, "quota"))
+                    else None
+                ),
             ))
         return members
 

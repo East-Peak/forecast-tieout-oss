@@ -12,7 +12,7 @@ Calendar: Feb-start FY26.
 
 Key metrics:
   - 600 total deals: 310 open / 156 closed-won YTD / 134 closed-lost YTD
-  - YTD won $: ~$24M (Feb 1 – May 3, 2026)
+  - YTD won $: ~$18M (Feb 1 – May 3, 2026)
   - YTD lost $: ~$41M (same window)
   - Open pipeline at as_of: ~$438M
   - Overall win rate: 34% (new-logo only 19%)
@@ -132,6 +132,23 @@ OPEN_STAGE_DIST = {
     "Negotiation":         0.20,
 }
 
+# Rendered bookings-bridge tuning. Scale only closed-won and open pipeline
+# opportunities; closed-lost evidence stays at raw competitive-loss values.
+BOOKINGS_AMOUNT_FACTOR_BY_CLOSE_MONTH = {
+    "2026-02": 0.125,
+    "2026-03": 0.09,
+    "2026-04": 0.75,
+    "2026-05": 1.30,
+    "2026-06": 2.30,
+    "2026-07": 0.50,
+    "2026-08": 0.65,
+    "2026-09": 0.62,
+    "2026-10": 0.38,
+    "2026-11": 0.33,
+    "2026-12": 0.45,
+    "2027-01": 0.36,
+}
+
 # Stage names
 OPEN_STAGES = [
     "Discovery",
@@ -217,7 +234,7 @@ NAMED_ACCOUNTS = [
         "is_closed": False, "is_won": False,
         "amount": 6_400_000,
         "created_date": date(2025, 10, 20),
-        "close_date": date(2026, 6, 30),
+        "close_date": date(2026, 7, 10),
         "raw_stage": "Negotiation - Vendor Risk",
         "type": "new_business",
         "forecast_category": "Commit",
@@ -416,6 +433,13 @@ FORECAST_CATEGORIES = {
 # ──────────────────────────────────────────────────────────────────────────────
 # Helper utilities
 # ──────────────────────────────────────────────────────────────────────────────
+
+
+def _scaled_booking_amount(amount: float, close_date: date, *, is_closed: bool, is_won: bool) -> int:
+    if is_closed and not is_won:
+        return int(round(amount))
+    factor = BOOKINGS_AMOUNT_FACTOR_BY_CLOSE_MONTH.get(close_date.strftime("%Y-%m"), 1.0)
+    return int(round((amount * factor) / 1000) * 1000)
 
 
 def _random_date(start: date, end: date) -> date:
@@ -639,6 +663,12 @@ def generate_deals(
     for nd in NAMED_ACCOUNTS:
         account = nd["account"]
         used_accounts.add(account)
+        amount = _scaled_booking_amount(
+            nd["amount"],
+            nd["close_date"],
+            is_closed=nd["is_closed"],
+            is_won=nd["is_won"],
+        )
         deal = {
             "id": nd["id"],
             "name": nd["name"],
@@ -648,8 +678,8 @@ def generate_deals(
             "segment": nd["segment"],
             "source_channel": nd["source_channel"],
             "stage": nd["stage"],
-            "amount": nd["amount"],
-            "arr": nd["amount"],
+            "amount": amount,
+            "arr": amount,
             "created_date": nd["created_date"].isoformat(),
             "close_date": nd["close_date"].isoformat(),
             "is_closed": "true" if nd["is_closed"] else "false",
@@ -691,9 +721,13 @@ def generate_deals(
         account = _gen_account_name(segment, used_accounts)
         dtype = deal_type or _pick_deal_type()
         ch = channel or _pick_channel()
-        amount = _gen_acv(segment)
-
         close = _random_weekday(*close_date_range)
+        amount = _scaled_booking_amount(
+            _gen_acv(segment),
+            close,
+            is_closed=is_closed,
+            is_won=is_won,
+        )
         # Pick created date that's guaranteed before close
         max_created = min(close_date_range[1], close - timedelta(days=14))
         actual_created_end = min(created_date_range[1], max_created)

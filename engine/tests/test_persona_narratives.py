@@ -33,6 +33,8 @@ PERSONA_GENERATORS = {
 }
 
 H2_QUARTERS = ("Q3FY26", "Q4FY26")
+FY_QUARTERS = ("Q1FY26", "Q2FY26", "Q3FY26", "Q4FY26")
+EPSILON = 1e-6
 
 
 @pytest.fixture(scope="module")
@@ -251,6 +253,97 @@ def _funnel_rate(snapshot: dict[str, Any], key: str) -> float:
     return float(rate_row)
 
 
+def _plan_values_from_quarter_blocks(snapshot: dict[str, Any]) -> list[float]:
+    """Mirror the frontend's current monthly reference for the v2 public plans.
+
+    The committed v2 plan assets use explicit monthly values that are even
+    splits of the quarter targets. The engine fixture generates snapshots into
+    a temp output tree, so this keeps the pytest layer anchored to the freshly
+    generated quarter targets without reading committed plan JSON.
+    """
+
+    quarter_targets = {
+        row["quarter"]: float(row["top_down"]["bookings"] or 0)
+        for row in snapshot["model_output"]["bookings_bridge"]["trajectory_quarters"]
+    }
+    quarter_month_counts: dict[str, int] = defaultdict(int)
+    quarter_by_month = snapshot["scenario_building_blocks"].get("quarter_by_month") or []
+    for quarter in quarter_by_month:
+        if quarter in quarter_targets:
+            quarter_month_counts[quarter] += 1
+
+    values: list[float] = []
+    for quarter in quarter_by_month:
+        if quarter not in quarter_targets:
+            values.append(0.0)
+            continue
+        values.append(quarter_targets[quarter] / quarter_month_counts[quarter])
+    return values
+
+
+def _capacity_by_month(snapshot: dict[str, Any]) -> dict[str, float]:
+    return {
+        row["month"][:10]: float(row.get("ae_capacity") or 0)
+        for row in snapshot["roster"]["effective_capacity"]
+    }
+
+
+def _quarter_metrics(snapshot: dict[str, Any]) -> dict[str, dict[str, float]]:
+    bridge = snapshot["model_output"]["bookings_bridge"]
+    plan_values = _plan_values_from_quarter_blocks(snapshot)
+    capacity_by_month = _capacity_by_month(snapshot)
+    quarter_by_month = snapshot["scenario_building_blocks"].get("quarter_by_month") or []
+    metrics = {
+        quarter: {"expected": 0.0, "existing": 0.0, "plan": 0.0, "capacity": 0.0}
+        for quarter in FY_QUARTERS
+    }
+
+    for idx, month in enumerate(bridge["months"]):
+        quarter = quarter_by_month[idx] if idx < len(quarter_by_month) else _quarter_for_month(snapshot, month)
+        if quarter not in metrics:
+            continue
+        metrics[quarter]["expected"] += float(bridge["total_expected"][idx] or 0)
+        metrics[quarter]["existing"] += float(bridge["existing_wins"][idx] or 0)
+        metrics[quarter]["plan"] += plan_values[idx] if idx < len(plan_values) else 0.0
+        metrics[quarter]["capacity"] += capacity_by_month.get(month[:10], 0.0)
+    return metrics
+
+
+def _rendered_totals(snapshot: dict[str, Any]) -> dict[str, Any]:
+    bridge = snapshot["model_output"]["bookings_bridge"]
+    plan_values = _plan_values_from_quarter_blocks(snapshot)
+    capacity_by_month = _capacity_by_month(snapshot)
+    expected_values = [float(value or 0) for value in bridge["total_expected"]]
+    capacity_values = [capacity_by_month.get(month[:10], 0.0) for month in bridge["months"]]
+    monthly_expected_to_plan = [
+        expected / plan if plan > 0 else 0.0
+        for expected, plan in zip(expected_values, plan_values)
+    ]
+    monthly_expected_to_capacity = [
+        expected / capacity if capacity > 0 else 0.0
+        for expected, capacity in zip(expected_values, capacity_values)
+    ]
+    monthly_capacity_to_plan = [
+        capacity / plan if plan > 0 else 0.0
+        for capacity, plan in zip(capacity_values, plan_values)
+    ]
+    quarter_metrics = _quarter_metrics(snapshot)
+    return {
+        "expected": sum(expected_values),
+        "plan": sum(plan_values),
+        "capacity": sum(capacity_values),
+        "monthly_expected_to_plan": monthly_expected_to_plan,
+        "monthly_expected_to_capacity": monthly_expected_to_capacity,
+        "monthly_capacity_to_plan": monthly_capacity_to_plan,
+        "quarters": quarter_metrics,
+    }
+
+
+def _quarter_gap(metrics: dict[str, Any], quarter: str) -> float:
+    quarter_metrics = metrics["quarters"][quarter]
+    return quarter_metrics["plan"] - quarter_metrics["expected"]
+
+
 def test_sprout_plan_assumes_repeatability_the_funnel_does_not_show(
     persona_snapshots: dict[str, dict[str, Any]],
 ) -> None:
@@ -369,3 +462,76 @@ def test_mighty_oak_bridge_depends_on_unsupported_expansion_assumptions(
 
     assert len(mighty.get("provenance", {})) >= 10
     assert mighty["health_status"]["overall_status"] in {"yellow", "red"}
+
+
+def test_sprout_rendered_bridge_is_a_visible_coverage_cliff(
+    persona_snapshots: dict[str, dict[str, Any]],
+) -> None:
+    metrics = _rendered_totals(persona_snapshots["sprout-labs"])
+
+    assert 0.85 <= metrics["capacity"] / metrics["plan"] <= 1.15
+    assert 0.55 <= metrics["expected"] / metrics["plan"] <= 0.70
+    assert statistics.mean(metrics["monthly_expected_to_plan"][:6]) >= 0.80
+    assert statistics.mean(metrics["monthly_expected_to_plan"][9:12]) <= 0.65
+
+
+def test_sapling_rendered_bridge_has_headline_capacity_and_growing_gap(
+    persona_snapshots: dict[str, dict[str, Any]],
+) -> None:
+    metrics = _rendered_totals(persona_snapshots["sapling-industries"])
+
+    assert max(metrics["monthly_expected_to_capacity"]) <= 1 + EPSILON
+    assert min(metrics["monthly_capacity_to_plan"]) >= 1
+    assert 0.82 <= metrics["expected"] / metrics["plan"] <= 0.92
+
+    gaps = [_quarter_gap(metrics, quarter) for quarter in ("Q2FY26", "Q3FY26", "Q4FY26")]
+    assert gaps[0] > 0
+    assert gaps[0] < gaps[1] < gaps[2]
+
+
+def test_mighty_oak_rendered_bridge_stays_below_capacity_and_plan(
+    persona_snapshots: dict[str, dict[str, Any]],
+) -> None:
+    metrics = _rendered_totals(persona_snapshots["mighty-oak-holdings"])
+    fy_shortfall = metrics["plan"] - metrics["expected"]
+    h2_shortfall = _quarter_gap(metrics, "Q3FY26") + _quarter_gap(metrics, "Q4FY26")
+    h1_existing = (
+        metrics["quarters"]["Q1FY26"]["existing"]
+        + metrics["quarters"]["Q2FY26"]["existing"]
+    )
+    h1_expected = (
+        metrics["quarters"]["Q1FY26"]["expected"]
+        + metrics["quarters"]["Q2FY26"]["expected"]
+    )
+
+    assert max(metrics["monthly_expected_to_capacity"]) <= 1 + EPSILON
+    assert max(metrics["monthly_expected_to_plan"]) <= 1 + EPSILON
+    assert 0.80 <= metrics["expected"] / metrics["plan"] <= 0.90
+    assert fy_shortfall > 0
+    assert h2_shortfall / fy_shortfall >= 0.60
+    assert h1_existing / h1_expected >= 0.60
+
+
+def test_trajectory_quarter_blocks_reconcile_to_rendered_series(
+    persona_snapshots: dict[str, dict[str, Any]],
+) -> None:
+    for profile_id, snapshot in persona_snapshots.items():
+        metrics = _rendered_totals(snapshot)
+        for quarter_block in snapshot["model_output"]["bookings_bridge"]["trajectory_quarters"]:
+            quarter = quarter_block["quarter"]
+            if quarter not in FY_QUARTERS:
+                continue
+            rendered_quarter = metrics["quarters"][quarter]
+            top_down = float(quarter_block["top_down"]["bookings"] or 0)
+            bottoms_up = float(quarter_block["bottoms_up"]["sales_led_arr"] or 0)
+
+            assert math.isclose(
+                top_down,
+                rendered_quarter["plan"],
+                rel_tol=0.15,
+            ), f"{profile_id} {quarter} top_down does not match rendered plan"
+            assert math.isclose(
+                bottoms_up,
+                rendered_quarter["expected"],
+                rel_tol=0.15,
+            ), f"{profile_id} {quarter} bottoms_up does not match rendered expected"

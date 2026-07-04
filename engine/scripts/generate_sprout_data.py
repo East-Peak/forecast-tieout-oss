@@ -12,7 +12,7 @@ Sprout Labs profile narrative (FY26, Feb-start):
   - Open pipeline at as_of: $3.85M
 
 Produces three CSV files in engine/data/sprout-labs/:
-  - deals.csv        25 deals (14 open / 6 closed-won YTD / 5 closed-lost YTD)
+  - deals.csv        29 deals (18 open / 6 closed-won YTD / 5 closed-lost YTD)
   - team_members.csv roster with AEs, founders, SDRs, SE
   - stage_history.csv stage transitions for all deals
 
@@ -72,7 +72,7 @@ SEGMENT_PARAMS = {
     },
 }
 
-# Open stage distribution: 14 open deals
+# Original open stage distribution before H2 cliff overlays: 14 open deals
 # S1 29%, S2 29%, S3 21%, S4 14%, S5 7%
 # 14 * 0.29 ≈ 4, 14 * 0.29 ≈ 4, 14 * 0.21 ≈ 3, 14 * 0.14 ≈ 2, 14 * 0.07 ≈ 1 = 14
 OPEN_STAGE_COUNTS = {
@@ -317,7 +317,7 @@ SAMPLE_DEALS = [
         "amount": 420000,
         "arr": 420000,
         "created_date": "2026-01-08",
-        "close_date": "2026-04-18",
+        "close_date": "2026-03-24",
         "is_closed": True,
         "is_won": True,
         "lost_reason": "",
@@ -336,7 +336,7 @@ SAMPLE_DEALS = [
         "amount": 310000,
         "arr": 310000,
         "created_date": "2026-01-19",
-        "close_date": "2026-04-25",
+        "close_date": "2026-03-31",
         "is_closed": True,
         "is_won": True,
         "lost_reason": "",
@@ -355,7 +355,7 @@ SAMPLE_DEALS = [
         "amount": 265000,
         "arr": 265000,
         "created_date": "2026-02-02",
-        "close_date": "2026-04-29",
+        "close_date": "2026-04-03",
         "is_closed": True,
         "is_won": True,
         "lost_reason": "",
@@ -482,7 +482,7 @@ SAMPLE_DEALS = [
 # Verify sample deals: 3 closed-won YTD, 2 closed-lost YTD, 4 open
 # SPR-001,002,003 won (Apr 18/25/29) — YTD; SPR-004,005 lost — YTD
 # SPR-006,007,008,009 open
-# Remaining 16 deals generated programmatically below
+# Remaining deals generated programmatically below
 
 
 # ---------------------------------------------------------------------------
@@ -520,7 +520,7 @@ def _build_generated_deals(seed_state: random.Random) -> list[dict]:
          "Cypress Bridge Genomics",    "Genomics platform"),
         ("Tessa Nguyen", "mid_market", "outbound",    212000, "2026-01-22", "2026-03-19",
          "Kendall Bioworks",           "MLOps suite"),
-        ("Owen Hart",    "commercial", "outbound",     53000, "2026-02-05", "2026-04-10",
+        ("Owen Hart",    "commercial", "outbound",     53000, "2026-02-05", "2026-04-06",
          "Bayshore Devtools",          "CI/CD platform"),
     ]
     for (owner, seg, src, amt, created, close, acct, suffix) in won_specs:
@@ -620,6 +620,16 @@ def _build_generated_deals(seed_state: random.Random) -> list[dict]:
          "Newbury DevOps",         "MLOps suite",       False),
         ("Jordan Reyes", "mid_market", "ae_self_gen","S4",1125000,"2026-01-10","2026-06-17",
          "Patriot Biosystems",     "Cell therapy tracking", False),
+        # H2 coverage-cliff deals: enough real pipeline to avoid a near-zero floor,
+        # but too little and too late to support the plan's repeatability premise.
+        ("Maya Singh",   "mid_market", "outbound", "S3", 1000000, "2026-03-18", "2026-09-11",
+         "Cambridge Biosensors",   "Security module", False),
+        ("Tessa Nguyen", "mid_market", "inbound",  "S3", 800000, "2026-04-02", "2026-10-09",
+         "Charles River Robotics", "Robotics OS", False),
+        ("Jordan Reyes", "mid_market", "ae_self_gen", "S4", 880000, "2026-03-05", "2026-12-04",
+         "Crestline Automation",   "Data fabric", False),
+        ("Maya Singh",   "mid_market", "outbound", "S4", 940000, "2026-03-12", "2027-01-08",
+         "Redwood Circuit Labs",   "MLOps suite", False),
     ]
 
     # founder-owned deals tracking
@@ -668,7 +678,7 @@ def _build_generated_deals(seed_state: random.Random) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def _build_stage_history(all_deals: list[dict], stale_s1s2_ids: list[str]) -> list[dict]:
-    """Build stage_history rows for all 25 deals.
+    """Build stage_history rows for all generated deals.
 
     Audit anomalies encoded:
     - 6 founder-owned deals: amount=0, raw_stage uses "Discovery/Qualification - ICP Check"
@@ -861,7 +871,7 @@ def _to_csv_deal(d: dict) -> dict:
     owner_id = OWNER_NAME_TO_ID.get(owner_name, owner_name)
     amount = d["amount"]
     if amount:
-        amount = int(max(25_000, min(60_000, round((float(amount) / 7.0) / 1000) * 1000)))
+        amount = int(round(float(amount) / 1000) * 1000)
 
     return {
         "id": d["id"],
@@ -892,7 +902,7 @@ def generate_all(output_dir: Path) -> dict[str, str]:
     generated_deals, founder_owned_ids = _build_generated_deals(random)
     all_deals.extend(generated_deals)
 
-    assert len(all_deals) == 25, f"Expected 25 deals, got {len(all_deals)}"
+    assert len(all_deals) == 29, f"Expected 29 deals, got {len(all_deals)}"
 
     # Identify stale S1→S2 anomaly deals (2 deals where stage_history shows 21+ days in S1).
     # "Stale" means the deal moved S1→S2 but without amount or close-date cleanup for 21+ days.
@@ -942,7 +952,7 @@ def generate_all_to_strings() -> dict[str, str]:
     all_deals = list(SAMPLE_DEALS)
     generated_deals, founder_owned_ids = _build_generated_deals(random)
     all_deals.extend(generated_deals)
-    assert len(all_deals) == 25, f"Expected 25 deals, got {len(all_deals)}"
+    assert len(all_deals) == 29, f"Expected 29 deals, got {len(all_deals)}"
 
     open_non_founder_past_s1 = [
         d["id"] for d in all_deals
