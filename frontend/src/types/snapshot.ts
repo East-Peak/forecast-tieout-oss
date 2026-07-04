@@ -58,13 +58,13 @@ export interface Snapshot {
   roster: Roster;
   model_output: ModelOutput;
   scenario_building_blocks: ScenarioBuildingBlocks;
-  assumptions: Record<string, unknown>;
-  health_status: Record<string, unknown>;
+  assumptions: { [key: string]: unknown };
+  health_status: { [key: string]: unknown };
   beginning_arr: number;
-  beginning_arr_provenance?: Record<string, unknown>;
-  bookings_summary_provenance?: Record<string, unknown>;
-  top_down_plan: Record<string, unknown>;
-  provenance?: Record<string, unknown>;
+  beginning_arr_provenance?: { [key: string]: unknown };
+  bookings_summary_provenance?: { [key: string]: unknown };
+  top_down_plan: { [key: string]: unknown };
+  provenance?: { [key: string]: unknown };
 
   /**
    * TargetSetter block — optional, present only when the engine is configured
@@ -88,7 +88,7 @@ export interface Actuals {
   pipeline_created_by_month?: { month: string; total: number }[];
   pipeline_entered_s2_by_month?: { month: string; total: number }[];
   mql_by_month: { month_index: number; value: number }[];
-  provenance?: Record<string, unknown>;
+  provenance?: { [key: string]: unknown };
 }
 
 // ---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ export interface Actuals {
 export interface Pipeline {
   deals: Deal[];
   inventory_by_stage: { stage: string; count: number; total_value: number }[];
-  provenance: Record<string, unknown>;
+  provenance: { [key: string]: unknown };
 }
 
 export interface Deal {
@@ -134,12 +134,12 @@ export interface Rates {
 
 /** @contract Engine snapshot roster payload. */
 export interface Roster {
-  current_aes: Record<string, unknown>[];
-  trajectory_roster: Record<string, Record<string, unknown>[]>;
-  trajectory_roster_meta: Record<string, unknown>;
+  current_aes: Array<{ [key: string]: unknown }>;
+  trajectory_roster: { [role: string]: Array<{ [key: string]: unknown }> };
+  trajectory_roster_meta: { [key: string]: unknown };
   effective_capacity: CapacityRow[];
-  observed_productivity: Record<string, unknown>;
-  observed_ramp_curve: Record<string, unknown>;
+  observed_productivity: { [key: string]: unknown };
+  observed_ramp_curve: { [key: string]: unknown };
 }
 
 export interface CapacityRow {
@@ -181,8 +181,8 @@ export interface BookingsBridgeData {
   plan_total: number[];
   trajectory_quarters: QuarterData[];
   plan_quarters: QuarterData[];
-  provenance: Record<string, unknown>;
-  source_detail: Record<string, unknown>[];
+  provenance: { [key: string]: unknown };
+  source_detail: Array<{ [key: string]: unknown }>;
   capacity_warnings: string[];
 }
 
@@ -195,6 +195,164 @@ export interface QuarterData {
   bu_sales_led_arr: number;
   actual_bookings: number;
   [key: string]: unknown;
+}
+
+interface FunnelHealthTopDown {
+  bookings?: number;
+  plg?: number;
+  expansion?: number;
+  total_net_new?: number;
+  ending_arr?: number;
+  pipeline_target?: number;
+  aes?: number;
+  total_gtm?: number;
+}
+
+interface FunnelHealthBottomsUp {
+  sales_led_arr?: number;
+  plg_arr?: number;
+  expansion_arr?: number;
+  total_arr?: number;
+  ramped_aes?: number;
+  total_aes?: number;
+}
+
+interface FunnelHealthActuals {
+  bookings?: number;
+  pipeline?: number;
+  mqls_weekly?: number;
+  s0_weekly?: number;
+  s1_weekly?: number;
+  s2_weekly?: number;
+}
+
+interface FunnelHealthGap {
+  bookings?: number;
+  bookings_pct?: number;
+  total?: number;
+  total_pct?: number;
+  status?: string;
+}
+
+interface FunnelHealthReforecast {
+  quarter_state?: string;
+  elapsed_fraction?: number;
+  actual_bookings?: number;
+  plan_to_date_bookings?: number;
+  pace_gap?: number;
+  pace_gap_pct?: number;
+  remaining_plan_bookings?: number;
+  remaining_bu_bookings?: number;
+  reforecast_bookings?: number;
+  reforecast_gap?: number;
+  reforecast_gap_pct?: number;
+  has_actuals?: boolean;
+}
+
+interface FunnelHealthTieoutMetric {
+  plan?: number;
+  actual?: number;
+  delta?: number;
+}
+
+interface FunnelHealthTieout {
+  [stageKey: string]: FunnelHealthTieoutMetric | undefined;
+  mqls_weekly?: FunnelHealthTieoutMetric;
+  s0_weekly?: FunnelHealthTieoutMetric;
+  s1_weekly?: FunnelHealthTieoutMetric;
+  s2_weekly?: FunnelHealthTieoutMetric;
+}
+
+export interface FunnelHealthConversionRate {
+  rate?: number;
+  n?: number;
+  source?: string;
+}
+
+export interface FunnelHealthConversionRateByStream {
+  [streamKey: string]: FunnelHealthConversionRate | undefined;
+  blended?: FunnelHealthConversionRate;
+  marketing_sdr?: FunnelHealthConversionRate;
+  ae_selfgen?: FunnelHealthConversionRate;
+  plg?: FunnelHealthConversionRate;
+}
+
+interface FunnelHealthConversionRates {
+  [transitionKey: string]: FunnelHealthConversionRateByStream | undefined;
+}
+
+export interface FunnelHealthSourceStream {
+  stream_key: string;
+  display_name?: string;
+  input_label?: string;
+  weekly_input?: number;
+  weekly_s0_count?: number;
+  weekly_s1_count?: number;
+  weekly_s2_count?: number;
+  monthly_input?: number[];
+  monthly_s0_count?: number[];
+  monthly_s1_count?: number[];
+  monthly_s2_count?: number[];
+  monthly_creation?: number[];
+  quarter_pipeline_created?: number;
+  actual_opp_count?: number;
+  actual_pipeline?: number;
+}
+
+interface FunnelHealthSourceBreakdown {
+  mode?: string;
+  streams?: {
+    [streamKey: string]: FunnelHealthSourceStream | undefined;
+  };
+  pipeline_value_provenance?: unknown;
+}
+
+export interface FunnelHealthExpansionBreakdown {
+  quarter?: string;
+  opening_arr?: number;
+  sales_led_base_arr?: number;
+  plg_base_arr?: number;
+  renewable_sales_led_arr?: number;
+  sales_led_usage_eligible_arr?: number;
+  plg_usage_eligible_arr?: number;
+  committed_consumption_arr?: number;
+  program_maturity_factor?: number;
+  renewal_expansion_arr?: number;
+  usage_expansion_arr?: number;
+  plg_expansion_arr?: number;
+  consumption_true_forward_arr?: number;
+  total_expansion_arr?: number;
+}
+
+interface FunnelHealthRateDescription {
+  value?: number;
+  source?: string;
+  n?: number | null;
+  methodology?: string;
+}
+
+interface FunnelHealthRollingS2ToWon {
+  rate?: number;
+  source?: string;
+  sample?: number;
+  method?: string;
+  lookback_days?: number;
+}
+
+export interface FunnelHealthQuarter extends QuarterData {
+  top_down?: FunnelHealthTopDown;
+  bottoms_up?: FunnelHealthBottomsUp;
+  actuals?: FunnelHealthActuals;
+  gap?: FunnelHealthGap;
+  conversion_rates?: FunnelHealthConversionRates;
+  funnel_tieout?: FunnelHealthTieout;
+  source_breakdown?: FunnelHealthSourceBreakdown;
+  expansion_breakdown?: FunnelHealthExpansionBreakdown;
+  reforecast?: FunnelHealthReforecast;
+  confidence_tier?: string;
+  is_derived_targets?: boolean;
+  bu_plg_arr?: number;
+  bu_expansion_arr?: number;
 }
 
 export interface CapacityHeadcountData {
@@ -230,16 +388,14 @@ export interface WaterfallRates {
 }
 
 export interface FunnelHealthData {
-  trajectory_quarters: QuarterData[];
-  plan_quarters: QuarterData[];
-  funnel_rates: Record<string, number>;
-  /**
-   * Intentionally loose: real snapshots have heterogeneous shapes per profile.
-   * Normalization via coerceRateProvenance() happens in pageHelpers.ts.
-   */
-  funnel_rate_descriptions: Record<string, unknown>;
+  trajectory_quarters: FunnelHealthQuarter[];
+  plan_quarters: FunnelHealthQuarter[];
+  funnel_rates: { [rateName: string]: number };
+  funnel_rate_descriptions: {
+    [rateName: string]: FunnelHealthRateDescription | undefined;
+  };
   mql_actuals: unknown[];
-  rolling_s2_to_won: Record<string, unknown>;
+  rolling_s2_to_won: FunnelHealthRollingS2ToWon | null;
   /** Optional: present on engine v2+ snapshots. */
   waterfall_rates?: WaterfallRates;
   waterfall_rate_descriptions?: Record<keyof WaterfallRates, WaterfallRateDescription>;
@@ -252,7 +408,7 @@ export interface PipelineInventoryData {
   existing_remaining: number[];
   future_wins: number[];
   pipeline_creation: number[];
-  provenance: Record<string, unknown>;
+  provenance: { [key: string]: unknown };
 }
 
 // ---------------------------------------------------------------------------
