@@ -9,6 +9,8 @@ venv/
 node_modules/
 dist/
 .vite/
+frontend/playwright-report/
+frontend/test-results/
 
 # Environment
 .env

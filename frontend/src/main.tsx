@@ -20,6 +20,11 @@ function ensureFavicon() {
 
 ensureFavicon();
 
+// Vercel Analytics' script only exists when Vercel serves the app; mounting it
+// on localhost/CI guarantees a 404 console error (caught by the e2e console-
+// hygiene gate). Mount it only off-localhost.
+const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname);
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter
@@ -29,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       }}
     >
       <App />
-      <Analytics />
+      {!isLocalHost && <Analytics />}
     </BrowserRouter>
   </React.StrictMode>
 );

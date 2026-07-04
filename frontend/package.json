@@ -11,6 +11,9 @@
     "build": "npm run sync:data && tsc && vite build",
     "preview": "npm run sync:data && vite preview",
     "test": "vitest",
+    "test:e2e": "npm run build && playwright test --grep @smoke",
+    "test:visual": "npm run build && VISUAL=1 playwright test --grep @visual",
+    "test:visual:update": "npm run build && VISUAL=1 playwright test --grep @visual --update-snapshots",
     "knip": "knip",
     "verify": "knip && vitest run"
   },
@@ -25,6 +28,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^25.5.0",
