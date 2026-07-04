@@ -282,7 +282,7 @@ def generate_contacts(companies: list[dict], n: int = 200) -> list[dict]:
         name = f"{first} {last}"
 
         # Generate unique email
-        domain = company["name"].lower().replace(" ", "").replace(".", "") + ".com"
+        domain = company["name"].lower().replace(" ", "").replace(".", "") + ".example"
         base_email = f"{first.lower()}.{last.lower()}@{domain}"
         email = base_email
         counter = 2
