@@ -1,26 +1,26 @@
 id,name,amount,stage,close_date,owner_id,type,created_date,segment,source,is_closed,is_won,arr,forecast_category,owner_name
-SPR-001,Northline Biofabrication - Platform rollout,420000,Closed Won,2026-04-18,AE-M01,new_business,2026-01-08,mid_market,inbound,true,true,420000,Closed,Maya Singh
-SPR-002,HarborForge Clinical - Compliance cloud,310000,Closed Won,2026-04-25,AE-M02,new_business,2026-01-19,mid_market,inbound,true,true,310000,Closed,Jordan Reyes
-SPR-003,Alder Creek Robotics - Advisor expansion,265000,Closed Won,2026-04-29,AE-M01,new_business,2026-02-02,mid_market,ae_self_gen,true,true,265000,Closed,Maya Singh
-SPR-004,Cinder Path Media - Analytics pilot,42000,Closed Lost,2026-03-21,AE-C01,new_business,2026-02-11,commercial,inbound,true,false,42000,Closed,Owen Hart
-SPR-005,Pocket Harbor Games - Ops suite,185000,Closed Lost,2026-03-28,AE-M03,new_business,2026-01-27,mid_market,inbound,true,false,185000,Closed,Tessa Nguyen
-SPR-006,SignalNest Robotics - Telemetry pilot,180000,Technical Evaluation,2026-06-24,AE-M04,new_business,2026-03-12,mid_market,outbound,false,false,180000,Best Case,Priya Desai
+SPR-001,Northline Biofabrication - Platform rollout,60000,Closed Won,2026-04-18,AE-M01,new_business,2026-01-08,mid_market,inbound,true,true,60000,Closed,Maya Singh
+SPR-002,HarborForge Clinical - Compliance cloud,44000,Closed Won,2026-04-25,AE-M02,new_business,2026-01-19,mid_market,inbound,true,true,44000,Closed,Jordan Reyes
+SPR-003,Alder Creek Robotics - Advisor expansion,38000,Closed Won,2026-04-29,AE-M01,new_business,2026-02-02,mid_market,ae_self_gen,true,true,38000,Closed,Maya Singh
+SPR-004,Cinder Path Media - Analytics pilot,25000,Closed Lost,2026-03-21,AE-C01,new_business,2026-02-11,commercial,inbound,true,false,25000,Closed,Owen Hart
+SPR-005,Pocket Harbor Games - Ops suite,26000,Closed Lost,2026-03-28,AE-M03,new_business,2026-01-27,mid_market,inbound,true,false,26000,Closed,Tessa Nguyen
+SPR-006,SignalNest Robotics - Telemetry pilot,26000,Technical Evaluation,2026-06-24,AE-M04,new_business,2026-03-12,mid_market,outbound,false,false,26000,Best Case,Priya Desai
 SPR-007,Maple Thread Health - ICP check,,Qualification,2026-05-30,FOUND-01,new_business,2026-03-18,mid_market,inbound,false,false,,Pipeline,Nadia Bloom
 SPR-008,Blue Current Dental - Founder discovery,,Discovery,2026-06-15,FOUND-02,new_business,2026-04-07,commercial,inbound,false,false,,Pipeline,Evan Mercer
-SPR-009,Helio Harbor Health - Security module,260000,Negotiation,2026-05-21,AE-M01,new_business,2026-02-26,mid_market,ae_self_gen,false,false,260000,Commit,Maya Singh
-SPR-010,Cypress Bridge Genomics - Genomics platform,190000,Closed Won,2026-03-14,AE-M01,new_business,2026-01-15,mid_market,ae_self_gen,true,true,190000,Closed,Maya Singh
-SPR-011,Kendall Bioworks - MLOps suite,212000,Closed Won,2026-03-19,AE-M03,new_business,2026-01-22,mid_market,outbound,true,true,212000,Closed,Tessa Nguyen
-SPR-012,Bayshore Devtools - CI/CD platform,53000,Closed Won,2026-04-10,AE-C01,new_business,2026-02-05,commercial,outbound,true,true,53000,Closed,Owen Hart
-SPR-013,Stillwater Biosystems - Lab automation platform,395000,Closed Lost,2026-02-28,AE-M02,new_business,2025-12-10,mid_market,inbound,true,false,395000,Closed,Jordan Reyes
-SPR-014,Marin Edge Analytics - Devtools integration,63000,Closed Lost,2026-03-05,AE-C01,new_business,2026-01-15,commercial,inbound,true,false,63000,Closed,Owen Hart
-SPR-015,Charles River Robotics - Robotics OS,575000,Closed Lost,2026-04-02,AE-M03,new_business,2025-12-20,mid_market,inbound,true,false,575000,Closed,Tessa Nguyen
+SPR-009,Helio Harbor Health - Security module,37000,Negotiation,2026-05-21,AE-M01,new_business,2026-02-26,mid_market,ae_self_gen,false,false,37000,Commit,Maya Singh
+SPR-010,Cypress Bridge Genomics - Genomics platform,27000,Closed Won,2026-03-14,AE-M01,new_business,2026-01-15,mid_market,ae_self_gen,true,true,27000,Closed,Maya Singh
+SPR-011,Kendall Bioworks - MLOps suite,30000,Closed Won,2026-03-19,AE-M03,new_business,2026-01-22,mid_market,outbound,true,true,30000,Closed,Tessa Nguyen
+SPR-012,Bayshore Devtools - CI/CD platform,25000,Closed Won,2026-04-10,AE-C01,new_business,2026-02-05,commercial,outbound,true,true,25000,Closed,Owen Hart
+SPR-013,Stillwater Biosystems - Lab automation platform,56000,Closed Lost,2026-02-28,AE-M02,new_business,2025-12-10,mid_market,inbound,true,false,56000,Closed,Jordan Reyes
+SPR-014,Marin Edge Analytics - Devtools integration,25000,Closed Lost,2026-03-05,AE-C01,new_business,2026-01-15,commercial,inbound,true,false,25000,Closed,Owen Hart
+SPR-015,Charles River Robotics - Robotics OS,60000,Closed Lost,2026-04-02,AE-M03,new_business,2025-12-20,mid_market,inbound,true,false,60000,Closed,Tessa Nguyen
 SPR-016,Ironwood Biotech - ICP check,,Discovery,2026-06-10,FOUND-01,new_business,2026-03-25,mid_market,inbound,false,false,,Pipeline,Nadia Bloom
 SPR-017,Beacon Hill Genomics - Founder discovery,,Discovery,2026-06-18,FOUND-02,new_business,2026-04-01,commercial,inbound,false,false,,Pipeline,Evan Mercer
-SPR-018,Lexington DevTools - Devtools integration,45000,Discovery,2026-07-01,AE-C02,new_business,2026-04-10,commercial,outbound,false,false,45000,Pipeline,Leo Alvarez
+SPR-018,Lexington DevTools - Devtools integration,25000,Discovery,2026-07-01,AE-C02,new_business,2026-04-10,commercial,outbound,false,false,25000,Pipeline,Leo Alvarez
 SPR-019,Cambridge Biosensors - ICP check,,Qualification,2026-06-20,FOUND-01,new_business,2026-03-05,mid_market,inbound,false,false,,Pipeline,Nadia Bloom
-SPR-020,Crestline Automation - Robotics OS,290000,Qualification,2026-07-15,AE-M02,new_business,2026-03-08,mid_market,outbound,false,false,290000,Pipeline,Jordan Reyes
+SPR-020,Crestline Automation - Robotics OS,41000,Qualification,2026-07-15,AE-M02,new_business,2026-03-08,mid_market,outbound,false,false,41000,Pipeline,Jordan Reyes
 SPR-021,Saffron Gate Systems - Analytics pilot,,Qualification,2026-06-30,FOUND-02,new_business,2026-03-20,commercial,inbound,false,false,,Pipeline,Evan Mercer
-SPR-022,Redwood Circuit Labs - Observability stack,455000,Technical Evaluation,2026-07-10,AE-M01,new_business,2026-02-15,mid_market,outbound,false,false,455000,Best Case,Maya Singh
-SPR-023,Somerville Automation - Lab automation platform,505000,Technical Evaluation,2026-07-22,AE-M03,new_business,2026-03-01,mid_market,ae_self_gen,false,false,505000,Best Case,Tessa Nguyen
-SPR-024,Newbury DevOps - MLOps suite,985000,Business Case,2026-06-05,AE-M01,new_business,2026-01-20,mid_market,outbound,false,false,985000,Commit,Maya Singh
-SPR-025,Patriot Biosystems - Cell therapy tracking,1125000,Business Case,2026-06-17,AE-M02,new_business,2026-01-10,mid_market,ae_self_gen,false,false,1125000,Commit,Jordan Reyes
+SPR-022,Redwood Circuit Labs - Observability stack,60000,Technical Evaluation,2026-07-10,AE-M01,new_business,2026-02-15,mid_market,outbound,false,false,60000,Best Case,Maya Singh
+SPR-023,Somerville Automation - Lab automation platform,60000,Technical Evaluation,2026-07-22,AE-M03,new_business,2026-03-01,mid_market,ae_self_gen,false,false,60000,Best Case,Tessa Nguyen
+SPR-024,Newbury DevOps - MLOps suite,60000,Business Case,2026-06-05,AE-M01,new_business,2026-01-20,mid_market,outbound,false,false,60000,Commit,Maya Singh
+SPR-025,Patriot Biosystems - Cell therapy tracking,60000,Business Case,2026-06-17,AE-M02,new_business,2026-01-10,mid_market,ae_self_gen,false,false,60000,Commit,Jordan Reyes

@@ -4,29 +4,45 @@ annual_target: 8000000
 annual_targets:
   new_business_arr: 8000000
 quarterly_targets:
-  Q1FY26: 1600000
-  Q2FY26: 1700000
-  Q3FY26: 2100000
-  Q4FY26: 2600000
-quarterly_plans:
   Q1FY26:
     bookings_target: 1600000
-    pipeline_target: 3400000
+    pipeline_target: 4200000
     total_net_new: 1600000
     ending_arr: 3600000
   Q2FY26:
     bookings_target: 1700000
-    pipeline_target: 3600000
+    pipeline_target: 4300000
     total_net_new: 1700000
     ending_arr: 5300000
   Q3FY26:
     bookings_target: 2100000
-    pipeline_target: 4500000
+    pipeline_target: 3300000
     total_net_new: 2100000
     ending_arr: 7400000
   Q4FY26:
     bookings_target: 2600000
-    pipeline_target: 5800000
+    pipeline_target: 4400000
+    total_net_new: 2600000
+    ending_arr: 10000000
+quarterly_plans:
+  Q1FY26:
+    bookings_target: 1600000
+    pipeline_target: 4200000
+    total_net_new: 1600000
+    ending_arr: 3600000
+  Q2FY26:
+    bookings_target: 1700000
+    pipeline_target: 4300000
+    total_net_new: 1700000
+    ending_arr: 5300000
+  Q3FY26:
+    bookings_target: 2100000
+    pipeline_target: 3300000
+    total_net_new: 2100000
+    ending_arr: 7400000
+  Q4FY26:
+    bookings_target: 2600000
+    pipeline_target: 4400000
     total_net_new: 2600000
     ending_arr: 10000000
 monthly_ae_targets:

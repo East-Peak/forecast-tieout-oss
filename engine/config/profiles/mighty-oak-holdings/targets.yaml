@@ -2,30 +2,55 @@ fiscal_year_start: '2026-02-01'
 beginning_arr: 640000000
 annual_target: 160000000
 annual_targets:
-  new_business_arr: 160000000
+  new_business_arr: 84000000
+  expansion_arr: 76000000
 quarterly_targets:
-  Q1FY26: 32000000
-  Q2FY26: 36000000
-  Q3FY26: 42000000
-  Q4FY26: 50000000
-quarterly_details:
   Q1FY26:
-    bookings_target: 32000000
+    bookings_target: 17000000
+    expansion_target: 15000000
     pipeline_target: 110000000
     total_net_new: 32000000
     ending_arr: 672000000
   Q2FY26:
-    bookings_target: 36000000
+    bookings_target: 19000000
+    expansion_target: 17000000
     pipeline_target: 125000000
     total_net_new: 36000000
     ending_arr: 708000000
   Q3FY26:
-    bookings_target: 42000000
+    bookings_target: 22000000
+    expansion_target: 20000000
     pipeline_target: 145000000
     total_net_new: 42000000
     ending_arr: 750000000
   Q4FY26:
-    bookings_target: 50000000
+    bookings_target: 26000000
+    expansion_target: 24000000
+    pipeline_target: 175000000
+    total_net_new: 50000000
+    ending_arr: 800000000
+quarterly_details:
+  Q1FY26:
+    bookings_target: 17000000
+    expansion_target: 15000000
+    pipeline_target: 110000000
+    total_net_new: 32000000
+    ending_arr: 672000000
+  Q2FY26:
+    bookings_target: 19000000
+    expansion_target: 17000000
+    pipeline_target: 125000000
+    total_net_new: 36000000
+    ending_arr: 708000000
+  Q3FY26:
+    bookings_target: 22000000
+    expansion_target: 20000000
+    pipeline_target: 145000000
+    total_net_new: 42000000
+    ending_arr: 750000000
+  Q4FY26:
+    bookings_target: 26000000
+    expansion_target: 24000000
     pipeline_target: 175000000
     total_net_new: 50000000
     ending_arr: 800000000

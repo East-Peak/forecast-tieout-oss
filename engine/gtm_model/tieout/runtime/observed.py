@@ -65,6 +65,7 @@ class TieoutObservedSignalResolver:
     get_sf: Callable[[], object | None]
     is_cdw_query_failed: Callable[[], bool]
     get_beginning_arr_snapshot: Callable[[], tuple[float, dict]]
+    get_backend: Optional[Callable[[], object | None]] = None
 
     _arr_movements_cache: Optional[dict] = None
     _self_serve_velocity_cache: Optional[dict] = None
@@ -381,8 +382,23 @@ class TieoutObservedSignalResolver:
         as_of: date,
         lookback_days: int = 180,
     ) -> tuple[Optional[list[float]], str]:
-        """Get trailing weekly MQL volume with warehouse-first fallback."""
+        """Get trailing weekly MQL volume with backend/warehouse/SF fallback."""
         start_date = as_of - timedelta(days=lookback_days)
+
+        if self.get_backend is not None:
+            try:
+                backend = self.get_backend()
+                if backend is not None and hasattr(backend, "compute_mql_signals"):
+                    signals = backend.compute_mql_signals(
+                        as_of=as_of,
+                        lookback_days=lookback_days,
+                    )
+                    weekly_counts = getattr(signals, "weekly_counts", None) if signals else None
+                    values = [float(row.get("count", 0) or 0.0) for row in weekly_counts or []]
+                    if values:
+                        return values, getattr(signals, "source", None) or "ProfileBackend"
+            except Exception as exc:
+                logger.info("Could not load trailing MQLs from ProfileBackend: %s", exc)
 
         cdw = self.get_cdw()
         if cdw is not None and not self.is_cdw_query_failed():
@@ -440,6 +456,67 @@ class TieoutObservedSignalResolver:
         query_start = fy_start if fy_start is not None else (
             date(as_of.year - 1, as_of.month, 1)
         )
+        window_start_month = (fy_start or as_of).replace(day=1)
+
+        def _add_months(month_start: date, offset: int) -> date:
+            raw_month = month_start.month + offset - 1
+            return date(
+                month_start.year + raw_month // 12,
+                raw_month % 12 + 1,
+                1,
+            )
+
+        def _align_monthly_counts(
+            monthly_counts: dict[date, float],
+            all_queried_months: set[date],
+        ) -> tuple[list, int | None]:
+            aligned: list = [None] * months
+            aligned_partial_idx: int | None = None
+            for month_idx in range(months):
+                month_date = _add_months(window_start_month, month_idx)
+                _, days_in_month = monthrange(month_date.year, month_date.month)
+                month_end = month_date.replace(day=days_in_month)
+
+                if month_end < as_of:
+                    if month_date in monthly_counts:
+                        aligned[month_idx] = monthly_counts[month_date]
+                    elif month_date in all_queried_months:
+                        aligned[month_idx] = 0.0
+                elif month_date.year == as_of.year and month_date.month == as_of.month:
+                    days_elapsed = (as_of - month_date).days + 1
+                    if days_elapsed > 0 and month_date in monthly_counts:
+                        aligned[month_idx] = (
+                            monthly_counts[month_date] / days_elapsed * days_in_month
+                        )
+                        aligned_partial_idx = month_idx
+                    elif month_date in all_queried_months:
+                        aligned[month_idx] = 0.0
+                        aligned_partial_idx = month_idx
+            return aligned, aligned_partial_idx
+
+        if self.get_backend is not None:
+            try:
+                backend = self.get_backend()
+                if backend is not None and hasattr(backend, "compute_monthly_mql_actuals"):
+                    series = backend.compute_monthly_mql_actuals(
+                        as_of=as_of,
+                        months=months,
+                        fy_start=fy_start,
+                    )
+                    monthly_counts_raw = getattr(series, "monthly_counts", None) if series else None
+                    if monthly_counts_raw:
+                        monthly_counts = {
+                            month.replace(day=1): float(count or 0.0)
+                            for month, count in monthly_counts_raw.items()
+                        }
+                        all_queried_months: set[date] = set()
+                        m = query_start.replace(day=1)
+                        while m <= as_of_month_start:
+                            all_queried_months.add(m)
+                            m = _add_months(m, 1)
+                        return _align_monthly_counts(monthly_counts, all_queried_months)
+            except Exception as exc:
+                logger.info("Could not load monthly MQLs from ProfileBackend: %s", exc)
 
         # Reuse the same weekly-granularity MQL query then bucket by month.
         # Track whether a source was successfully queried (even if it returned
@@ -483,44 +560,9 @@ class TieoutObservedSignalResolver:
         m = query_start.replace(day=1)
         while m <= as_of_month_start:
             all_queried_months.add(m)
-            if m.month == 12:
-                m = date(m.year + 1, 1, 1)
-            else:
-                m = date(m.year, m.month + 1, 1)
+            m = _add_months(m, 1)
 
-        # Map calendar months to projection indices.
-        # Index 0 = as_of month, index 1 = next month, etc.
-        for month_idx in range(months):
-            raw_month = as_of_month_start.month + month_idx - 1
-            month_date = date(
-                as_of_month_start.year + raw_month // 12,
-                raw_month % 12 + 1,
-                1,
-            )
-            _, days_in_month = monthrange(month_date.year, month_date.month)
-            month_end = month_date.replace(day=days_in_month)
-
-            if month_end < as_of:
-                # Fully completed month
-                if month_date in monthly_counts:
-                    result[month_idx] = monthly_counts[month_date]
-                elif month_date in all_queried_months:
-                    # Queried but zero rows — real zero, not missing
-                    result[month_idx] = 0.0
-            elif month_date.year == as_of.year and month_date.month == as_of.month:
-                # Current partial month — pro-rate
-                days_elapsed = (as_of - month_date).days + 1
-                if days_elapsed > 0 and month_date in monthly_counts:
-                    result[month_idx] = (
-                        monthly_counts[month_date] / days_elapsed * days_in_month
-                    )
-                    partial_idx = month_idx
-                elif month_date in all_queried_months:
-                    result[month_idx] = 0.0
-                    partial_idx = month_idx
-            # Future months: leave as None
-
-        return result, partial_idx
+        return _align_monthly_counts(monthly_counts, all_queried_months)
 
     def get_observed_arr_movements(self) -> dict:
         """Fetch trailing-12-month ARR movements with warehouse-first fallback."""

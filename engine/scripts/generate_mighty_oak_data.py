@@ -150,16 +150,16 @@ DEAL_TYPE_WEIGHTS = [0.52, 0.22, 0.26]
 # Days in stage per segment (G)
 STAGE_DAYS: dict[str, dict[str, int]] = {
     "Strategic Enterprise": {
-        "Discovery": 15, "Qualification": 24, "Technical Evaluation": 39,
-        "Business Case": 52, "Negotiation": 48,
+        "Discovery": 20, "Qualification": 35, "Technical Evaluation": 45,
+        "Business Case": 60, "Negotiation": 55,
     },
     "Enterprise": {
-        "Discovery": 10, "Qualification": 16, "Technical Evaluation": 22,
-        "Business Case": 31, "Negotiation": 23,
+        "Discovery": 15, "Qualification": 28, "Technical Evaluation": 35,
+        "Business Case": 45, "Negotiation": 35,
     },
     "Mid-Market": {
-        "Discovery": 6, "Qualification": 8, "Technical Evaluation": 11,
-        "Business Case": 14, "Negotiation": 9,
+        "Discovery": 12, "Qualification": 22, "Technical Evaluation": 30,
+        "Business Case": 38, "Negotiation": 28,
     },
 }
 
@@ -805,17 +805,17 @@ def generate_deals(
 
             # Close date: spread across Q2/Q3/Q4 for open deals
             if stage == "Qualification":
-                close_range = (Q2_START, Q3_END)
+                close_range = (Q3_START, Q4_END)
                 created_range = (date(2026, 1, 1), AS_OF - timedelta(days=14))
             elif stage == "Technical Evaluation":
-                close_range = (Q2_START, Q3_END)
+                close_range = (Q3_START, Q4_END)
                 created_range = (date(2025, 10, 1), AS_OF - timedelta(days=30))
             elif stage == "Business Case":
-                close_range = (Q2_START, Q3_START + timedelta(days=45))
+                close_range = (Q3_START, Q4_END)
                 seg_days = SEGMENT_CYCLE_DAYS[segment]
                 created_range = (date(2025, 8, 1), AS_OF - timedelta(days=seg_days // 2))
             else:  # Negotiation
-                close_range = (Q2_START, Q2_END)
+                close_range = (Q4_START, Q4_END)
                 seg_days = SEGMENT_CYCLE_DAYS[segment]
                 created_range = (date(2025, 9, 1), AS_OF - timedelta(days=seg_days // 3))
 
@@ -962,6 +962,13 @@ DEALS_FIELDS = [
 TEAM_FIELDS = ["id", "name", "role", "segment", "start_date", "is_active", "manager_id"]
 HISTORY_FIELDS = ["deal_id", "from_stage", "to_stage", "transition_date"]
 
+MQL_FIELDS = ["month", "count"]
+
+MQL_ROWS = [
+    {"month": "2026-02-01", "count": 1220},
+    {"month": "2026-03-01", "count": 1110},
+]
+
 
 def _rows_to_csv(rows: list[dict], fieldnames: list[str]) -> str:
     buf = io.StringIO(newline="")
@@ -1006,6 +1013,9 @@ def generate_all(output_dir: Path) -> dict[str, str]:
     results["stage_history.csv"] = _write_csv(
         output_dir / "stage_history.csv", stage_history, HISTORY_FIELDS
     )
+    results["mqls.csv"] = _write_csv(
+        output_dir / "mqls.csv", MQL_ROWS, MQL_FIELDS
+    )
     return results
 
 
@@ -1019,6 +1029,7 @@ def generate_all_to_strings() -> dict[str, str]:
         "team_members.csv": _rows_to_csv(team_rows, TEAM_FIELDS),
         "deals.csv": _rows_to_csv(deals, DEALS_FIELDS),
         "stage_history.csv": _rows_to_csv(stage_history, HISTORY_FIELDS),
+        "mqls.csv": _rows_to_csv(MQL_ROWS, MQL_FIELDS),
     }
 
 
@@ -1122,10 +1133,12 @@ def main(argv: list[str] | None = None) -> int:
     _write_csv(output_dir / "team_members.csv", team_rows, TEAM_FIELDS)
     _write_csv(output_dir / "deals.csv", deals, DEALS_FIELDS)
     _write_csv(output_dir / "stage_history.csv", stage_history, HISTORY_FIELDS)
+    _write_csv(output_dir / "mqls.csv", MQL_ROWS, MQL_FIELDS)
 
     print(f"  team_members.csv: {len(team_rows)} rows")
     print(f"  deals.csv:        {len(deals)} rows")
     print(f"  stage_history.csv:{len(stage_history)} rows")
+    print(f"  mqls.csv:         {len(MQL_ROWS)} rows")
     _print_stats(deals)
     print("Done.")
     return 0

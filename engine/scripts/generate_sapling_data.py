@@ -66,10 +66,10 @@ HIST_START = date(2025, 8, 1)
 # Deal parameters per brief sections B & F
 # ---------------------------------------------------------------------------
 
-TOTAL_DEALS = 200
+TOTAL_DEALS = 245
 OPEN_DEALS = 118
 CLOSED_WON_YTD = 42   # close_date in [2026-02-01, 2026-05-03]
-CLOSED_LOST_YTD = 40  # close_date in [2026-02-01, 2026-05-03]
+CLOSED_LOST_YTD = 85  # close_date in [2026-02-01, 2026-05-03]
 
 # YTD bookings target (to anchor amounts): $11.6M won, $9.4M lost
 YTD_WON_ARR_TARGET = 11_600_000
@@ -100,9 +100,9 @@ CHANNEL_DIST = {
 
 # ACV parameters (mean, std, min, max) per segment
 ACV_PARAMS = {
-    "enterprise":  {"mean": 780_000, "std": 280_000, "min": 320_000, "max": 1_900_000},
-    "mid_market":  {"mean": 240_000, "std":  80_000, "min": 110_000, "max":   520_000},
-    "commercial":  {"mean":  58_000, "std":  22_000, "min":  18_000, "max":   120_000},
+    "enterprise":  {"mean": 55_000, "std": 14_000, "min": 32_000, "max": 85_000},
+    "mid_market":  {"mean": 40_000, "std": 10_000, "min": 24_000, "max": 65_000},
+    "commercial":  {"mean": 28_000, "std":  7_000, "min": 14_000, "max": 45_000},
 }
 
 # Median cycle days per segment (for creating realistic created_date)
@@ -239,6 +239,36 @@ TOP_MM_AES = ["AE-M01", "AE-M02", "AE-M03", "AE-M04"]
 
 # Bottom-quarter AEs (pacing at 61% attainment)
 BOTTOM_AES = ["AE-E08", "AE-E09", "AE-M11", "AE-M12", "AE-M13", "AE-C08"]
+
+RAMP_DEBT_START_DATES = {
+    "AE-E03": "2026-06-01",
+    "AE-E04": "2026-07-06",
+    "AE-E05": "2026-08-03",
+    "AE-E02": "2026-09-15",
+    "AE-E06": "2026-09-01",
+    "AE-E07": "2026-10-05",
+    "AE-E08": "2026-11-02",
+    "AE-E09": "2026-12-01",
+    "AE-M02": "2026-10-05",
+    "AE-M03": "2026-11-02",
+    "AE-M04": "2026-06-15",
+    "AE-M05": "2026-07-13",
+    "AE-M06": "2026-08-10",
+    "AE-M07": "2026-09-14",
+    "AE-M08": "2026-10-05",
+    "AE-M09": "2026-11-02",
+    "AE-M10": "2026-12-01",
+    "AE-M11": "2026-12-15",
+    "AE-M12": "2026-12-22",
+    "AE-M13": "2027-01-05",
+    "AE-C03": "2026-07-06",
+    "AE-C02": "2026-11-02",
+    "AE-C04": "2026-08-03",
+    "AE-C05": "2026-09-08",
+    "AE-C06": "2026-10-05",
+    "AE-C07": "2026-11-02",
+    "AE-C08": "2026-12-01",
+}
 
 # The four emblematic enterprise deals stuck in legal review
 LEGAL_REVIEW_DEALS = [
@@ -439,6 +469,10 @@ def _make_deal_row(
     raw_stage: str = "",
     deal_type: str = "new_business",
 ) -> dict:
+    if amount:
+        params = ACV_PARAMS.get(segment)
+        if params:
+            amount = max(params["min"], min(params["max"], amount))
     fc = FORECAST_CAT_BY_STAGE.get(stage, "Pipeline")
     if is_closed:
         fc = "Closed"
@@ -868,7 +902,7 @@ def generate_team_members() -> list[dict]:
             "name": m["name"],
             "role": "AE" if m["role"] == "ae" else m["role"],
             "segment": m.get("segment") or "",
-            "start_date": m.get("start_date") or "",
+            "start_date": RAMP_DEBT_START_DATES.get(m["id"], m.get("start_date") or ""),
             "is_active": "true",
             "manager_id": m.get("manager_id") or "",
         })
@@ -905,6 +939,14 @@ TEAM_FIELDS = ["id", "name", "role", "segment", "start_date", "is_active", "mana
 
 HISTORY_FIELDS = ["deal_id", "from_stage", "to_stage", "transition_date"]
 
+MQL_FIELDS = ["month", "count"]
+
+MQL_ROWS = [
+    {"month": "2026-02-01", "count": 850},
+    {"month": "2026-03-01", "count": 930},
+    {"month": "2026-04-01", "count": 980},
+]
+
 
 # ---------------------------------------------------------------------------
 # Main orchestrator
@@ -926,12 +968,55 @@ def generate_all(output_dir: Path) -> dict[str, str]:
     _write(output_dir / "deals.csv", deals_csv)
     _write(output_dir / "stage_history.csv", history_csv)
     _write(output_dir / "team_members.csv", team_csv)
+    mql_csv = _to_csv(MQL_ROWS, MQL_FIELDS)
+    _write(output_dir / "mqls.csv", mql_csv)
 
     results["deals.csv"] = deals_csv
     results["stage_history.csv"] = history_csv
     results["team_members.csv"] = team_csv
+    results["mqls.csv"] = mql_csv
 
     return results
+
+
+def generate_all_to_strings() -> dict[str, str]:
+    random.seed(SEED)
+    deals, history = generate_deals()
+    team_rows = generate_team_members()
+    return {
+        "deals.csv": _to_csv(deals, DEALS_FIELDS),
+        "stage_history.csv": _to_csv(history, HISTORY_FIELDS),
+        "team_members.csv": _to_csv(team_rows, TEAM_FIELDS),
+        "mqls.csv": _to_csv(MQL_ROWS, MQL_FIELDS),
+    }
+
+
+def verify(output_dir: Path) -> bool:
+    fresh = generate_all_to_strings()
+    all_match = True
+    for filename, fresh_content in fresh.items():
+        filepath = output_dir / filename
+        if not filepath.exists():
+            print(f"MISSING: {filepath}")
+            all_match = False
+            continue
+        with open(filepath, encoding="utf-8", newline="") as fh:
+            existing = fh.read()
+        if existing != fresh_content:
+            f_lines = fresh_content.splitlines()
+            e_lines = existing.splitlines()
+            for i, (expected, actual) in enumerate(zip(f_lines, e_lines)):
+                if expected != actual:
+                    print(f"DIFF {filename} line {i + 1}")
+                    print(f"  expected: {expected[:120]}")
+                    print(f"  got:      {actual[:120]}")
+                    break
+            else:
+                print(f"DIFF {filename}: line count {len(f_lines)} vs {len(e_lines)}")
+            all_match = False
+        else:
+            print(f"OK: {filename}")
+    return all_match
 
 
 def _print_summary(deals: list[dict]) -> None:
@@ -962,8 +1047,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--verify", action="store_true",
-                        help="Regenerate and check counts (no file comparison).")
+                        help="Regenerate and diff against existing files.")
     args = parser.parse_args(argv)
+
+    if args.verify:
+        print(f"Verifying against {args.output_dir} ...")
+        ok = verify(args.output_dir)
+        if ok:
+            print("All files match. Determinism verified.")
+        else:
+            print("FAIL: generated output differs from committed files.")
+        return 0 if ok else 1
 
     print(f"Generating Sapling Industries data to {args.output_dir} ...")
     results = generate_all(args.output_dir)
@@ -971,12 +1065,6 @@ def main(argv: list[str] | None = None) -> int:
     for filename, content in results.items():
         lines = content.count("\n")
         print(f"  {filename}: {lines} rows (including header)")
-
-    if args.verify:
-        # Quick sanity check on deal counts
-        random.seed(SEED)
-        deals, _ = generate_deals()
-        _print_summary(deals)
 
     print("Done.")
     return 0

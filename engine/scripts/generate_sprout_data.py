@@ -844,6 +844,13 @@ TEAM_FIELDS = ["id", "name", "role", "segment", "start_date", "is_active", "mana
 
 HISTORY_FIELDS = ["deal_id", "from_stage", "to_stage", "transition_date"]
 
+MQL_FIELDS = ["month", "count"]
+
+MQL_ROWS = [
+    {"month": "2026-02-01", "count": 16},
+    {"month": "2026-03-01", "count": 22},
+]
+
 
 def _to_csv_deal(d: dict) -> dict:
     """Convert internal deal dict to engine-compatible CSV row."""
@@ -852,11 +859,14 @@ def _to_csv_deal(d: dict) -> dict:
     stage_name = STAGE_CODE_TO_NAME.get(stage_code, stage_code)
     owner_name = d["owner"]
     owner_id = OWNER_NAME_TO_ID.get(owner_name, owner_name)
+    amount = d["amount"]
+    if amount:
+        amount = int(max(25_000, min(60_000, round((float(amount) / 7.0) / 1000) * 1000)))
 
     return {
         "id": d["id"],
         "name": d["name"],
-        "amount": d["amount"] if d["amount"] != 0 else "",
+        "amount": amount if amount != 0 else "",
         "stage": stage_name,
         "close_date": d["close_date"],
         "owner_id": owner_id,
@@ -866,7 +876,7 @@ def _to_csv_deal(d: dict) -> dict:
         "source": d["source_channel"],
         "is_closed": "true" if d["is_closed"] else "false",
         "is_won": "true" if d["is_won"] else "false",
-        "arr": d["arr"] if d["arr"] != 0 else "",
+        "arr": amount if amount != 0 else "",
         "forecast_category": d["forecast_category"],
         "owner_name": owner_name,
     }
@@ -919,8 +929,68 @@ def generate_all(output_dir: Path) -> dict[str, str]:
     results["stage_history.csv"] = _write_csv(
         output_dir / "stage_history.csv", history_rows, HISTORY_FIELDS
     )
+    results["mqls.csv"] = _write_csv(
+        output_dir / "mqls.csv", MQL_ROWS, MQL_FIELDS
+    )
 
     return results
+
+
+def generate_all_to_strings() -> dict[str, str]:
+    """Generate all CSV contents without touching disk."""
+    random.seed(SEED)
+    all_deals = list(SAMPLE_DEALS)
+    generated_deals, founder_owned_ids = _build_generated_deals(random)
+    all_deals.extend(generated_deals)
+    assert len(all_deals) == 25, f"Expected 25 deals, got {len(all_deals)}"
+
+    open_non_founder_past_s1 = [
+        d["id"] for d in all_deals
+        if not d["is_closed"]
+        and d["stage"] in ("S2", "S3", "S4", "S5")
+        and d["owner"] not in FOUNDER_NAMES
+    ]
+    stale_s1s2_ids = open_non_founder_past_s1[:2]
+
+    deals_csv_rows = [_to_csv_deal(d) for d in all_deals]
+    team_rows = _build_team_members()
+    history_rows = _build_stage_history(all_deals, stale_s1s2_ids)
+    history_rows.sort(key=lambda r: (r["deal_id"], r["transition_date"]))
+
+    return {
+        "deals.csv": _rows_to_csv(deals_csv_rows, DEALS_FIELDS),
+        "team_members.csv": _rows_to_csv(team_rows, TEAM_FIELDS),
+        "stage_history.csv": _rows_to_csv(history_rows, HISTORY_FIELDS),
+        "mqls.csv": _rows_to_csv(MQL_ROWS, MQL_FIELDS),
+    }
+
+
+def verify(output_dir: Path) -> bool:
+    fresh = generate_all_to_strings()
+    all_match = True
+    for filename, fresh_content in fresh.items():
+        filepath = output_dir / filename
+        if not filepath.exists():
+            print(f"MISSING: {filepath}")
+            all_match = False
+            continue
+        with open(filepath, encoding="utf-8", newline="") as fh:
+            existing = fh.read()
+        if existing != fresh_content:
+            f_lines = fresh_content.splitlines()
+            e_lines = existing.splitlines()
+            for i, (expected, actual) in enumerate(zip(f_lines, e_lines)):
+                if expected != actual:
+                    print(f"DIFF {filename} line {i + 1}")
+                    print(f"  expected: {expected[:120]}")
+                    print(f"  got:      {actual[:120]}")
+                    break
+            else:
+                print(f"DIFF {filename}: line count {len(f_lines)} vs {len(e_lines)}")
+            all_match = False
+        else:
+            print(f"OK: {filename}")
+    return all_match
 
 
 # ---------------------------------------------------------------------------
@@ -970,7 +1040,21 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_OUTPUT_DIR,
         help=f"Output directory (default: {DEFAULT_OUTPUT_DIR})",
     )
+    parser.add_argument(
+        "--verify",
+        action="store_true",
+        help="Regenerate and diff against existing files.",
+    )
     args = parser.parse_args(argv)
+
+    if args.verify:
+        print(f"Verifying against {args.output_dir} ...")
+        ok = verify(args.output_dir)
+        if ok:
+            print("All files match. Determinism verified.")
+        else:
+            print("FAIL: generated output differs from committed files.")
+        return 0 if ok else 1
 
     print(f"Generating Sprout Labs data to {args.output_dir} ...")
     results = generate_all(args.output_dir)

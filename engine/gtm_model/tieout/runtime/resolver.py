@@ -36,6 +36,7 @@ class TieoutRuntimeResolver:
             get_sf=self.get_sf,
             is_cdw_query_failed=self.is_cdw_query_failed,
             get_beginning_arr_snapshot=self.get_beginning_arr_snapshot,
+            get_backend=self.get_backend,
         )
         self.rates = TieoutRuntimeRateResolver(
             get_assumptions=self.get_assumptions,

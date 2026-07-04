@@ -51,6 +51,12 @@ jobs:
       - name: Example data determinism check
         run: python -m engine.scripts.generate_acme_data --verify
 
+      - name: Public persona data determinism check
+        run: |
+          python -m engine.scripts.generate_sprout_data --verify
+          python -m engine.scripts.generate_sapling_data --verify
+          python -m engine.scripts.generate_mighty_oak_data --verify
+
       - name: Regenerate Acme fixture snapshot
         # generate_acme_snapshot.py is the demo-data generator (synthetic
         # Acme profile). Runs end-to-end so any regression in the engine

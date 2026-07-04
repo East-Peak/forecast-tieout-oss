@@ -10,7 +10,7 @@ funnel:
   mql_to_s0: 0.08
   s0_to_s1: 0.44
   s1_to_s2: 0.38
-  s2_to_won: 0.21
+  s2_to_won: 0.2
   avg_acv: 500000
   source_mix:
     marketing_sourced: 0.45
@@ -62,14 +62,33 @@ segment_productivity:
       month_4_plus: 1.0
 capacity:
   attainment_rate: 0.88
+expansion_engine:
+  contract_term_months: 12
+  legacy_plg_share: 0.04
+  program_maturity_by_quarter:
+    Q1FY26: 0.60
+    Q2FY26: 0.55
+    Q3FY26: 0.50
+    Q4FY26: 0.45
+  sales_led:
+    annual_expansion_rate: 0.05
+    renewal_share: 0.50
+    usage_share: 0.50
+    renewal_uplift_rate: 0.025
+    quarterly_usage_expansion_rate: 0.00625
+    usage_lag_months: 6
+  plg:
+    annual_expansion_rate: 0.04
+    quarterly_customer_expansion_rate: 0.01
+    usage_lag_months: 9
 waterfall_rates:
   mql_to_s0: 0.22
   s0_to_s1: 0.44
   s1_to_s2: 0.38
-  s2_to_won: 0.21
+  s2_to_won: 0.2
 target_setter_defaults:
-  win_rate_starting: 0.24
-  win_rate_created: 0.21
+  win_rate_starting: 0.34
+  win_rate_created: 0.2
   push_rate: 0.31
   loss_rate: 0.48
   ae_self_gen_pct: 0.33

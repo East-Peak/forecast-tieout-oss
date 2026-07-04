@@ -14,7 +14,6 @@ data_access:
   params:
     path: engine/data/mighty-oak-holdings
 
-# Story: mature enterprise approaching $1B ARR, renewal fortress (95% GRR, 110% NRR).
-# New-logo shortfall driven by LedgerFox price competition. ABM signal building.
-# $640M beginning ARR → $160M new ARR → $800M EOY (25% YoY).
-description: "Mighty Oak Holdings — $640M beginning ARR, Feb-start fiscal, ABM recovery plan"
+# Story: mature enterprise approaching $1B ARR. The bridge closes on paper
+# because expansion assumptions do more work than the observed expansion engine supports.
+description: "Mighty Oak Holdings — $800M enterprise plan, expansion bridge at risk"

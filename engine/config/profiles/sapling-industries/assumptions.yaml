@@ -10,8 +10,8 @@ funnel:
   mql_to_s0: 0.12
   s0_to_s1: 0.55
   s1_to_s2: 0.47
-  s2_to_won: 0.33
-  avg_acv: 290000
+  s2_to_won: 0.32
+  avg_acv: 40000
   source_mix:
     marketing_sourced: 0.5
     sdr_sourced: 0.26
@@ -21,9 +21,9 @@ segment_share:
   mid_market: 0.46
   commercial: 0.2
 avg_acv:
-  enterprise: 780000
-  mid_market: 240000
-  commercial: 58000
+  enterprise: 55000
+  mid_market: 40000
+  commercial: 28000
 productivity_per_ae_per_month:
   enterprise: 92800
   mid_market: 66600
@@ -63,7 +63,7 @@ waterfall_rates:
   mql_to_s0: 0.27
   s0_to_s1: 0.55
   s1_to_s2: 0.47
-  s2_to_won: 0.33
+  s2_to_won: 0.32
 target_setter_defaults:
   win_rate_starting: 0.34
   win_rate_created: 0.33
@@ -75,6 +75,6 @@ target_setter_defaults:
     mid_market: 0.46
     commercial: 0.2
   acv:
-    enterprise: 780000
-    mid_market: 240000
-    commercial: 58000
+    enterprise: 55000
+    mid_market: 40000
+    commercial: 28000

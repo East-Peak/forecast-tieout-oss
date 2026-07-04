@@ -4,44 +4,60 @@ annual_target: 60000000
 annual_targets:
   new_business_arr: 60000000
 quarterly_targets:
-  Q1FY26: 12000000
-  Q2FY26: 14000000
-  Q3FY26: 16000000
-  Q4FY26: 18000000
+  Q1FY26:
+    bookings_target: 10000000
+    pipeline_target: 27000000
+    total_net_new: 10000000
+    ending_arr: 50000000
+  Q2FY26:
+    bookings_target: 13000000
+    pipeline_target: 34000000
+    total_net_new: 13000000
+    ending_arr: 63000000
+  Q3FY26:
+    bookings_target: 17000000
+    pipeline_target: 45000000
+    total_net_new: 17000000
+    ending_arr: 80000000
+  Q4FY26:
+    bookings_target: 20000000
+    pipeline_target: 51000000
+    total_net_new: 20000000
+    ending_arr: 100000000
 quarterly_plan_details:
   Q1FY26:
-    bookings_target: 12000000
-    pipeline_target: 28000000
-    total_net_new: 12000000
-    ending_arr: 52000000
+    bookings_target: 10000000
+    pipeline_target: 27000000
+    total_net_new: 10000000
+    ending_arr: 50000000
   Q2FY26:
-    bookings_target: 14000000
-    pipeline_target: 32000000
-    total_net_new: 14000000
-    ending_arr: 66000000
+    bookings_target: 13000000
+    pipeline_target: 34000000
+    total_net_new: 13000000
+    ending_arr: 63000000
   Q3FY26:
-    bookings_target: 16000000
-    pipeline_target: 38000000
-    total_net_new: 16000000
-    ending_arr: 82000000
+    bookings_target: 17000000
+    pipeline_target: 45000000
+    total_net_new: 17000000
+    ending_arr: 80000000
   Q4FY26:
-    bookings_target: 18000000
-    pipeline_target: 41000000
-    total_net_new: 18000000
+    bookings_target: 20000000
+    pipeline_target: 51000000
+    total_net_new: 20000000
     ending_arr: 100000000
 monthly_ae_targets:
-  '2026-02-01': 27
-  '2026-03-01': 28
+  '2026-02-01': 30
+  '2026-03-01': 30
   '2026-04-01': 30
-  '2026-05-01': 30
-  '2026-06-01': 30
-  '2026-07-01': 30
-  '2026-08-01': 31
-  '2026-09-01': 31
-  '2026-10-01': 32
-  '2026-11-01': 32
-  '2026-12-01': 32
-  '2027-01-01': 32
+  '2026-05-01': 36
+  '2026-06-01': 36
+  '2026-07-01': 36
+  '2026-08-01': 45
+  '2026-09-01': 45
+  '2026-10-01': 45
+  '2026-11-01': 45
+  '2026-12-01': 45
+  '2027-01-01': 45
 headcount_targets:
   Q1FY26:
     account_executives: 30
@@ -49,20 +65,20 @@ headcount_targets:
     sdrs: 6
     total_gtm: 41
   Q2FY26:
-    account_executives: 30
+    account_executives: 36
     sales_engineers: 5
     sdrs: 6
-    total_gtm: 41
+    total_gtm: 47
   Q3FY26:
-    account_executives: 32
+    account_executives: 45
     sales_engineers: 6
     sdrs: 7
-    total_gtm: 45
+    total_gtm: 58
   Q4FY26:
-    account_executives: 32
+    account_executives: 45
     sales_engineers: 6
     sdrs: 7
-    total_gtm: 45
+    total_gtm: 58
 hiring_schedule:
 - name: Priyanka Sen
   segment: enterprise

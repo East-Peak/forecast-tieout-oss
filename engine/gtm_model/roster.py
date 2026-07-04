@@ -315,6 +315,8 @@ def merge_roster_with_sf(
                 entry["start_date"] = _ensure_str_date(yaml_entry["start_date"])
             elif entry.get("employee_start_date"):
                 entry["start_date"] = _ensure_str_date(entry["employee_start_date"])
+            elif entry.get("start_date"):
+                entry["start_date"] = _ensure_str_date(entry["start_date"])
             else:
                 entry["start_date"] = _default_ramped_start()
 
@@ -323,7 +325,9 @@ def merge_roster_with_sf(
             elif entry.get("segment"):
                 entry["segment"] = _normalize_segment(entry["segment"])
         else:
-            if entry.get("employee_start_date"):
+            if entry.get("start_date"):
+                entry["start_date"] = _ensure_str_date(entry["start_date"])
+            elif entry.get("employee_start_date"):
                 entry["start_date"] = _ensure_str_date(entry["employee_start_date"])
             else:
                 entry["start_date"] = _default_ramped_start()

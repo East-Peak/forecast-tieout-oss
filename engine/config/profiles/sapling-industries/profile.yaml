@@ -14,7 +14,6 @@ data_access:
   params:
     path: engine/data/sapling-industries
 
-# Story: mid-market growing fast, $100M ARR run, capacity-constrained.
-# Too few AEs for the pipeline they have — coverage looks healthy but
-# bookings throughput is throttled by team size.
-description: "Sapling Industries — $100M ARR run, Feb-start fiscal, capacity constrained"
+# Story: scale-up growing into a $100M plan. Headcount is present and coverage
+# is healthy, but a large late-start cohort creates ramp debt and capacity drag.
+description: "Sapling Industries — $100M scale-up, headcount on plan but capacity short"

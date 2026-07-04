@@ -35,6 +35,12 @@ _RESOURCE_ALIASES = {
     "slip_rates.yaml": "slip_rates",
 }
 
+_PUBLIC_PROFILE_ORDER = {
+    "sprout-labs": 0,
+    "sapling-industries": 1,
+    "mighty-oak-holdings": 2,
+}
+
 
 @dataclass
 class OrgProfileResources:
@@ -247,7 +253,10 @@ def list_org_profiles(config_dir: Optional[Path] = None) -> list[OrgProfile]:
     """Load all manifest-backed profiles, or synthesize the active default."""
     cfg_dir = Path(config_dir or get_default_config_dir()).expanduser().resolve()
     profiles_dir = cfg_dir / "profiles"
-    manifest_paths = sorted(profiles_dir.glob("*/profile.yaml"))
+    manifest_paths = sorted(
+        profiles_dir.glob("*/profile.yaml"),
+        key=lambda path: (_PUBLIC_PROFILE_ORDER.get(path.parent.name, 99), path.parent.name),
+    )
     if manifest_paths:
         return [load_org_profile(config_dir=cfg_dir, profile_id=path.parent.name) for path in manifest_paths]
     return [load_org_profile(config_dir=cfg_dir, profile_id=get_active_profile_id())]
@@ -300,9 +309,14 @@ def build_frontend_org_profile_payload(profile: OrgProfile) -> dict[str, Any]:
     }
 
 
-def build_frontend_org_profile_manifest(profiles: list[OrgProfile]) -> dict[str, list[dict[str, str]]]:
+def build_frontend_org_profile_manifest(profiles: list[OrgProfile]) -> dict[str, Any]:
     """Build the frontend profile index manifest."""
+    default_profile = next(
+        (profile.id for profile in profiles if profile.id == "sapling-industries"),
+        profiles[0].id if profiles else "",
+    )
     return {
+        "default": default_profile,
         "profiles": [
             {
                 "id": profile.id,
