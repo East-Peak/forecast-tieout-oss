@@ -1,6 +1,7 @@
 {
   "name": "forecast-tieout-frontend",
   "version": "0.1.0",
+  "description": "Forecast Tieout: Reconcile the revenue plan against pipeline reality.",
   "private": true,
   "type": "module",
   "scripts": {

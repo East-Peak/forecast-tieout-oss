@@ -29,7 +29,7 @@ export function ExportDownloads({
         onClick={onDownloadCSV}
         className="flex items-center gap-2 rounded-lg border border-emerald-300 bg-slate-50 px-4 py-2.5 text-sm font-medium text-emerald-600 transition-colors hover:bg-emerald-50"
       >
-        Download CSV (Active Scenario)
+        Download CSV (Baseline Monthly)
       </button>
       <button
         onClick={onDownloadAuditReport}

@@ -21,7 +21,7 @@ import {
 
 function loadSnapshot(): Snapshot {
   const snapshotPath = resolve(
-    fileURLToPath(new URL("../../../public/data/profiles/acme-saas/snapshot.json", import.meta.url)),
+    fileURLToPath(new URL("../../../public/data/profiles/sapling-industries/snapshot.json", import.meta.url)),
   );
   return JSON.parse(readFileSync(snapshotPath, "utf-8")) as Snapshot;
 }
@@ -135,6 +135,28 @@ describe("scenario engine adapter", () => {
 
     expect(computation.engineId).toBe("frontend-local");
     expect(computation.request.profileId).toBe("demo-org");
+  });
+
+  it("does not warn on scenario-service fallback in production", async () => {
+    vi.stubEnv("DEV", false);
+    vi.stubEnv("VITE_SCENARIO_API_URL", "http://example.test/api/scenario");
+    resetScenarioServiceResolutionForTests();
+    const snapshot = loadSnapshot();
+    const overrides = cloneScenarioOverrides(buildDefaultScenarioOverrides(snapshot));
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: false,
+        status: 404,
+        headers: { get: () => "text/plain" },
+      })),
+    );
+
+    const computation = await defaultScenarioEngine.compute(snapshot, overrides, "demo-org");
+
+    expect(computation.engineId).toBe("frontend-local");
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it("hydrates a backend scenario response payload into the frontend result shape", () => {

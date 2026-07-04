@@ -16,7 +16,7 @@ export function ExportSemanticsCard({
     <Card>
       <SectionHeader
         title="Planner / Plan Semantics"
-        subtitle="How each export should be interpreted relative to the saved baseline, live planner state, and selected plan reference."
+        subtitle="How each export should be interpreted relative to the saved baseline and selected plan reference."
       />
       <div className="grid gap-3 md:grid-cols-3">
         <div className="rounded-lg border border-slate-200 bg-slate-50/80 p-3">
@@ -27,10 +27,10 @@ export function ExportSemanticsCard({
           </Text>
         </div>
         <div className="rounded-lg border border-blue-100 bg-blue-50/70 p-3">
-          <Text className="text-xs uppercase tracking-wide text-blue-700">Active Scenario CSV</Text>
+          <Text className="text-xs uppercase tracking-wide text-blue-700">Baseline Monthly CSV</Text>
           <Text className="mt-2 text-sm text-slate-700">
-            The monthly CSV carries the live planner scenario alongside the saved baseline so finance
-            can inspect the current what-if path against plan month by month.
+            The monthly CSV carries the saved baseline month by month. Scenario-aware exports are
+            intentionally deferred until Scenario Planner state is shared with this page.
           </Text>
         </div>
         <div className="rounded-lg border border-red-100 bg-red-50/70 p-3">

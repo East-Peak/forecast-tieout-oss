@@ -82,7 +82,7 @@ export default function ExportPack() {
     <div className="flex max-w-3xl flex-col gap-6">
       <SectionHeader
         title="Export Pack"
-        subtitle="Download the saved snapshot baseline, a live scenario-aware monthly CSV, or a plain-text audit report for finance review."
+        subtitle="Download the saved snapshot baseline, a baseline monthly CSV, or a plain-text audit report for finance review."
       />
 
       <ExportDownloads
@@ -133,9 +133,9 @@ export default function ExportPack() {
         }
         plannerStateNote={
           viewModel.hasScenarioEdits
-            ? `Quarter overrides are currently active in ${viewModel.editedQuarters.join(", ")}. The CSV preview and download below reflect that live planner state.`
+            ? `Quarter overrides are active in ${viewModel.editedQuarters.join(", ")}, but this export page currently writes the saved baseline only.`
             : typeof viewModel.scenarioGapToPlan === "number"
-              ? "No planner overrides are active. The scenario CSV currently matches the saved baseline for projected months."
+              ? "No planner overrides are active. The monthly CSV matches the saved baseline for projected months."
               : "No planner overrides are active. Primary gap math is suppressed because the selected plan does not expose an operator-comparable annual target."
         }
       />

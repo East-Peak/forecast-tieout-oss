@@ -19,7 +19,7 @@ interface Props {
 export function ExportCsvPreviewCard({ planNote, rows }: Props) {
   return (
     <Card>
-      <SectionHeader title="CSV Preview" caption="First 6 months of the live scenario export" />
+      <SectionHeader title="CSV Preview" caption="First 6 months of the baseline monthly export" />
       {planNote ? <Text className="mb-3 text-xs text-slate-500">{planNote}</Text> : null}
       <Table>
         <TableHead>

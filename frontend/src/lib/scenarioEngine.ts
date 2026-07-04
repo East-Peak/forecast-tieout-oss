@@ -257,7 +257,7 @@ export const defaultScenarioEngine: ScenarioEngineAdapter = {
     try {
       return await backendScenarioServiceEngine.compute(snapshot, overrides, profileId);
     } catch (error) {
-      if (resolveScenarioServiceUrl()) {
+      if (import.meta.env.DEV && resolveScenarioServiceUrl()) {
         console.warn(
           "Scenario service unavailable; falling back to frontend-local adapter.",
           error,

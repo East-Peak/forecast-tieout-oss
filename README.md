@@ -1,6 +1,6 @@
 # Forecast Tieout
 
-A planning tieout tool that reconciles your revenue plan against pipeline reality.
+Reconcile the revenue plan against pipeline reality.
 
 ## What this is
 
@@ -13,9 +13,11 @@ snapshot and renders nine views: bookings bridge, pipeline inventory,
 funnel health, capacity, scenario planning, audit readiness, export,
 methodology, target setter.
 
-Built for B2B SaaS running quarterly direct-sales motions. Three demo
-profiles ship in `engine/config/profiles/` exercising different scales
-($10M / $100M / $800M) and three different fiscal calendars.
+Built for B2B SaaS running quarterly direct-sales motions. The public
+demo ships three personas: Sprout Labs ($10M early PMF), Sapling
+Industries ($100M scale-up), and Mighty Oak Holdings ($800M mature
+enterprise). Acme SaaS remains as the CSV-ingestion engine and CI fixture
+for the "bring your own CRM export" path.
 
 ## Quick Start
 
@@ -32,7 +34,7 @@ npm run dev
 | Page | Description |
 |------|-------------|
 | **Bookings Bridge** | Plan-to-pipeline waterfall by quarter |
-| **Pipeline Inventory** | Deal list, filterable by segment, rep, stage |
+| **Pipeline Inventory** | Monthly pipeline detail showing current inventory conversion and future S2+ generation |
 | **Funnel Health** | Stage conversion + cycle time; highlights stalls |
 | **Capacity & Headcount** | Quota capacity, ramp-adjusted targets, coverage ratio |
 | **Scenario Planner** | Client-side what-if — win rates, deal sizes, rep count |
@@ -89,22 +91,46 @@ Copy any demo profile under `engine/config/profiles/` as a starting
 point, edit the YAMLs for your fiscal calendar, stages, targets, and
 roster, then validate.
 
-> Real CSVs and custom profiles are gitignored by default. The four
-> shipped demo profiles are explicitly allowlisted; anything else under
-> `engine/data/`, `engine/config/profiles/`, or
-> `frontend/public/data/profiles/` stays out of git unless you
-> deliberately commit it.
+> Real CSVs and custom profiles are gitignored by default. The three
+> public persona profiles are explicitly allowlisted for the static demo;
+> Acme SaaS is allowlisted only as the engine/CI CSV fixture. Anything
+> else under `engine/data/`, `engine/config/profiles/`, or
+> `frontend/public/data/profiles/` stays out of git unless you deliberately
+> commit it.
 
 ## Deploy
+
+### Vercel static demo
+
+The portfolio demo is Vercel-first and needs zero environment variables.
+`frontend/public/data` is bundled into the static build, and `vercel.json`
+already contains the SPA rewrite needed for direct route loads.
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+If you host the static data somewhere other than `/data`, set
+`VITE_DATA_BASE_URL` to that base URL at build time. The frontend reads
+`profiles/index.json` from that base and resolves profile snapshots and
+plan manifests relative to it.
+
+### Advanced deployment
+
+Docker remains available for self-hosting:
 
 ```bash
 docker compose up
 # Dashboard at http://localhost:8080. Set PROFILE_ID in docker-compose.yml.
 ```
 
-For production: schedule the engine via your CI of choice (cron, GitHub
-Actions, etc.) to regenerate `snapshot.json` and publish it to your CDN
-or object store. Frontend reads `VITE_SNAPSHOT_URL` at build time.
+For protected real-data deployments, schedule the engine via your CI of
+choice to regenerate snapshots and publish them to private artifact
+storage. The Supabase protected mode path uses `VITE_SUPABASE_URL`,
+`VITE_SUPABASE_ANON_KEY`, and the storage artifact settings in
+`.env.example`; leave those unset for the public static demo.
 
 ## Architecture
 
@@ -144,8 +170,8 @@ custom types via `register_backend("your-type", builder_fn)`.
 Snapshots contain deal data. Treat them accordingly.
 
 - Bundled demo snapshots are synthetic and safe to serve publicly.
-- For real data: Supabase with RLS, signed URLs via `VITE_SNAPSHOT_URL`,
-  lifecycle policies for retention.
+- For real data: use protected artifact storage such as Supabase with RLS,
+  plus lifecycle policies for retention.
 - Source credentials for whatever backend you wire up go in env vars or
   CI secrets, never committed.
 

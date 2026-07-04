@@ -81,7 +81,7 @@ export default function Layout() {
         <div className="flex items-center gap-4">
           <div className="flex flex-col leading-tight">
             <h1 className="text-lg font-semibold text-text-primary">Forecast Tieout</h1>
-            <p className="text-xs text-text-muted">Plan vs. pipeline reality</p>
+            <p className="text-xs text-text-muted">Reconcile the revenue plan against pipeline reality.</p>
           </div>
           {selectedOrgProfile && (
             orgProfiles.length > 1 ? (
