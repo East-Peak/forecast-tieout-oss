@@ -2,6 +2,21 @@ import type { QuarterKey } from "../../types/targetSetter";
 import type { Snapshot } from "../../types/snapshot";
 import { allQuartersFromSnapshot, monthsForQuarter } from "../../engine/scenario";
 
+interface MonthlyBookingTargets {
+  monthly?: { [month: string]: unknown };
+}
+
+interface SalesLedBookingComponent {
+  arrTargets?: MonthlyBookingTargets;
+  arr_targets?: MonthlyBookingTargets;
+}
+
+interface BookingPlanShape {
+  components?: {
+    sales_led?: SalesLedBookingComponent;
+  };
+}
+
 /**
  * Extract per-quarter booking targets from a plan object.
  *
@@ -17,9 +32,8 @@ import { allQuartersFromSnapshot, monthsForQuarter } from "../../engine/scenario
  */
 export function extractQuarterlyBookingsFromPlan(
   snapshot: Snapshot,
-  plan: any,
+  plan: BookingPlanShape | null | undefined,
 ): Record<QuarterKey, number> | null {
-  if (!plan || typeof plan !== "object") return null;
   const monthly =
     plan?.components?.sales_led?.arrTargets?.monthly ??
     plan?.components?.sales_led?.arr_targets?.monthly;

@@ -3,41 +3,6 @@
   "charts": [],
   "tables": [
     {
-      "page": "Funnel Health",
-      "persona": "*",
-      "table": "Quarterly Funnel Summary",
-      "issue": "column \"MQLs/wk (Plan)\" is entirely degenerate while sibling columns carry data",
-      "rationale": "Legacy cross-quarter summary does not own weekly plan pacing; Weekly Funnel Pace is the contracted current-quarter plan view."
-    },
-    {
-      "page": "Funnel Health",
-      "persona": "*",
-      "table": "Quarterly Funnel Summary",
-      "issue": "column \"MQLs/wk (Actual)\" is entirely degenerate while sibling columns carry data",
-      "rationale": "Weekly actuals are not carried as a reliable cross-quarter contract in committed snapshots; suppressing the summary is round B."
-    },
-    {
-      "page": "Funnel Health",
-      "persona": "*",
-      "table": "Quarterly Funnel Summary",
-      "issue": "column \"S0/wk (Actual)\" is entirely degenerate while sibling columns carry data",
-      "rationale": "Weekly actuals are not carried as a reliable cross-quarter contract in committed snapshots; suppressing the summary is round B."
-    },
-    {
-      "page": "Funnel Health",
-      "persona": "*",
-      "table": "Quarterly Funnel Summary",
-      "issue": "column \"S2/wk (Plan)\" is entirely degenerate while sibling columns carry data",
-      "rationale": "Legacy cross-quarter summary does not own weekly plan pacing; Weekly Funnel Pace is the contracted current-quarter plan view."
-    },
-    {
-      "page": "Funnel Health",
-      "persona": "*",
-      "table": "Quarterly Funnel Summary",
-      "issue": "column \"S2/wk (Actual)\" is entirely degenerate while sibling columns carry data",
-      "rationale": "Weekly actuals are not carried as a reliable cross-quarter contract in committed snapshots; suppressing the summary is round B."
-    },
-    {
       "page": "Audit",
       "persona": "*",
       "table": "Quarter Tie-Out",
