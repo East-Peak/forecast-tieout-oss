@@ -19,7 +19,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { BookingsBridgeData, CapacityRow } from "../types/snapshot";
-import { SectionHeader, MetricStrip, ProseNote } from "../components/workbook";
+import { DataBasisBadge, SectionHeader, MetricStrip, ProseNote } from "../components/workbook";
 import type { MetricItem } from "../components/workbook";
 import { usePlanningSessionContext } from "../context/PlanningSessionContext";
 import { formatMoney, formatMonthLabel } from "../lib/format";
@@ -29,7 +29,7 @@ import {
   getPlanQuarterTarget,
 } from "../lib/plans";
 import {
-  CHART_COLORS,
+  CHART_SERIES,
   AXIS_STYLE,
   GRID_STYLE,
   TOOLTIP_STYLE,
@@ -37,6 +37,7 @@ import {
   currencyFormatter,
   currencyTooltipFormatter,
 } from "../lib/chartTheme";
+import { getVerdictTint } from "../lib/verdictTint";
 
 const MONTHLY_SERIES = {
   existing: "Wins from Existing Pipeline",
@@ -121,6 +122,7 @@ export default function BookingsBridge() {
       value: typeof fyGap === "number" ? formatMoney(Math.abs(fyGap)) : "\u2014",
       deltaType: typeof fyGap === "number" ? (fyGap >= 0 ? "increase" : "decrease") : "unchanged",
       delta: typeof fyGap === "number" ? (fyGap >= 0 ? "Surplus" : "Shortfall") : "Suppressed",
+      verdictValue: fyGap,
     },
     {
       label: "From Existing Pipeline",
@@ -329,7 +331,7 @@ export default function BookingsBridge() {
           monthlyChartData.map((row) => row[MONTHLY_SERIES.total]),
         )}
       >
-        <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Monthly Bookings Sources</h3>
+        <h3 className="text-sm font-semibold text-ft-brand mb-1">Monthly Bookings Sources</h3>
         <p className="text-xs text-slate-500 mb-4">
           Monthly wins from existing pipeline and future pipeline, with total expected wins,
           plan target, and AE capacity overlaid for direct comparison.
@@ -341,14 +343,14 @@ export default function BookingsBridge() {
             <YAxis tickFormatter={currencyFormatter} tick={AXIS_STYLE.tick} axisLine={false} tickLine={false} width={60} />
             <Tooltip formatter={currencyTooltipFormatter} contentStyle={TOOLTIP_STYLE.contentStyle} labelStyle={TOOLTIP_STYLE.labelStyle} />
             <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-            <Area type="monotone" dataKey={MONTHLY_SERIES.existing} stackId="1" fill={CHART_COLORS.blue} stroke={CHART_COLORS.blue} strokeWidth={2} fillOpacity={0.7} isAnimationActive={false} />
-            <Area type="monotone" dataKey={MONTHLY_SERIES.future} stackId="1" fill={CHART_COLORS.emerald} stroke={CHART_COLORS.emerald} strokeWidth={2} fillOpacity={0.7} isAnimationActive={false} />
-            <Line type="monotone" dataKey={MONTHLY_SERIES.total} stroke="#475569" strokeWidth={2.5} dot={false} isAnimationActive={false} />
+            <Area type="monotone" dataKey={MONTHLY_SERIES.existing} stackId="1" {...CHART_SERIES.existingArea} />
+            <Area type="monotone" dataKey={MONTHLY_SERIES.future} stackId="1" {...CHART_SERIES.futureArea} />
+            <Line type="monotone" dataKey={MONTHLY_SERIES.total} {...CHART_SERIES.expectedLine} />
             {showMonthlyPlanTarget ? (
-              <Line type="monotone" dataKey={MONTHLY_SERIES.plan} stroke={CHART_COLORS.red} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey={MONTHLY_SERIES.plan} {...CHART_SERIES.planLine} />
             ) : null}
             {capacityRows && capacityRows.length > 0 && (
-              <Line type="monotone" dataKey={MONTHLY_SERIES.capacity} stroke={CHART_COLORS.amber} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey={MONTHLY_SERIES.capacity} {...CHART_SERIES.capacityLine} />
             )}
           </ComposedChart>
         </ResponsiveContainer>
@@ -372,7 +374,7 @@ export default function BookingsBridge() {
           cumulativeData.map((row) => row[CUMULATIVE_SERIES.total]),
         )}
       >
-        <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Cumulative Bookings Path</h3>
+        <h3 className="text-sm font-semibold text-ft-brand mb-1">Cumulative Bookings Path</h3>
         <p className="text-xs text-slate-500 mb-4">
           Running totals of existing wins, future wins, and cumulative total expected against
           cumulative plan target and cumulative AE capacity.
@@ -384,14 +386,14 @@ export default function BookingsBridge() {
             <YAxis tickFormatter={currencyFormatter} tick={AXIS_STYLE.tick} axisLine={false} tickLine={false} width={60} />
             <Tooltip formatter={currencyTooltipFormatter} contentStyle={TOOLTIP_STYLE.contentStyle} labelStyle={TOOLTIP_STYLE.labelStyle} />
             <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-            <Area type="monotone" dataKey={CUMULATIVE_SERIES.existing} stackId="1" fill={CHART_COLORS.blue} stroke={CHART_COLORS.blue} strokeWidth={2} fillOpacity={0.7} isAnimationActive={false} />
-            <Area type="monotone" dataKey={CUMULATIVE_SERIES.future} stackId="1" fill={CHART_COLORS.emerald} stroke={CHART_COLORS.emerald} strokeWidth={2} fillOpacity={0.7} isAnimationActive={false} />
-            <Line type="monotone" dataKey={CUMULATIVE_SERIES.total} stroke="#475569" strokeWidth={2.5} dot={false} isAnimationActive={false} />
+            <Area type="monotone" dataKey={CUMULATIVE_SERIES.existing} stackId="1" {...CHART_SERIES.existingArea} />
+            <Area type="monotone" dataKey={CUMULATIVE_SERIES.future} stackId="1" {...CHART_SERIES.futureArea} />
+            <Line type="monotone" dataKey={CUMULATIVE_SERIES.total} {...CHART_SERIES.expectedLine} />
             {showMonthlyPlanTarget ? (
-              <Line type="monotone" dataKey={CUMULATIVE_SERIES.plan} stroke={CHART_COLORS.red} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey={CUMULATIVE_SERIES.plan} {...CHART_SERIES.planLine} />
             ) : null}
             {hasAnyCap && (
-              <Line type="monotone" dataKey={CUMULATIVE_SERIES.capacity} stroke={CHART_COLORS.amber} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey={CUMULATIVE_SERIES.capacity} {...CHART_SERIES.capacityLine} />
             )}
           </ComposedChart>
         </ResponsiveContainer>
@@ -423,7 +425,10 @@ export default function BookingsBridge() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {quarterRows.map((r) => (
+            {quarterRows.map((r) => {
+              const gapTint = getVerdictTint(r.gap);
+              const gapPctTint = getVerdictTint(r.gapPct);
+              return (
               <TableRow key={r.quarter}>
                 <TableCell>{r.quarter}</TableCell>
                 <TableCell className="text-right">
@@ -433,24 +438,12 @@ export default function BookingsBridge() {
                   {formatMoney(r.trajectory)}
                 </TableCell>
                 <TableCell
-                  className={`text-right font-medium ${
-                    r.gap === null
-                      ? "text-slate-500"
-                      : r.gap >= 0
-                        ? "text-emerald-600"
-                        : "text-red-600"
-                  }`}
+                  className={`text-right font-medium ${gapTint.cellClassName}`}
                 >
                   {typeof r.gap === "number" ? `${r.gap >= 0 ? "+" : ""}${formatMoney(r.gap)}` : "\u2014"}
                 </TableCell>
                 <TableCell
-                  className={`text-right ${
-                    r.gapPct === null
-                      ? "text-slate-500"
-                      : r.gapPct >= 0
-                        ? "text-emerald-600"
-                        : "text-red-600"
-                  }`}
+                  className={`text-right ${gapPctTint.cellClassName}`}
                 >
                   {typeof r.gapPct === "number" ? `${r.gapPct >= 0 ? "+" : ""}${(r.gapPct * 100).toFixed(0)}%` : "\u2014"}
                 </TableCell>
@@ -463,9 +456,12 @@ export default function BookingsBridge() {
                 <TableCell className="text-right">
                   {r.actuals > 0 ? formatMoney(r.actuals) : "\u2014"}
                 </TableCell>
-                <TableCell>{r.basis}</TableCell>
+                <TableCell>
+                  <DataBasisBadge actualValue={r.actuals} />
+                </TableCell>
               </TableRow>
-            ))}
+              );
+            })}
             {/* Fiscal-year summary row */}
             <TableRow className="bg-slate-50 font-semibold">
               <TableCell>{fySummary.quarter}</TableCell>
@@ -476,24 +472,12 @@ export default function BookingsBridge() {
                 {formatMoney(fySummary.trajectory)}
               </TableCell>
               <TableCell
-                className={`text-right font-bold ${
-                  comparableQuarterly
-                    ? fySummary.gap >= 0
-                      ? "text-emerald-600"
-                      : "text-red-600"
-                    : "text-slate-500"
-                }`}
+                className={`text-right font-bold ${getVerdictTint(comparableQuarterly ? fySummary.gap : null).cellClassName}`}
               >
                 {comparableQuarterly ? `${fySummary.gap >= 0 ? "+" : ""}${formatMoney(fySummary.gap)}` : "\u2014"}
               </TableCell>
               <TableCell
-                className={`text-right ${
-                  typeof fySummary.gapPct === "number"
-                    ? fySummary.gapPct >= 0
-                      ? "text-emerald-600"
-                      : "text-red-600"
-                    : "text-slate-500"
-                }`}
+                className={`text-right ${getVerdictTint(fySummary.gapPct).cellClassName}`}
               >
                 {typeof fySummary.gapPct === "number" ? `${fySummary.gapPct >= 0 ? "+" : ""}${(fySummary.gapPct * 100).toFixed(0)}%` : "\u2014"}
               </TableCell>
@@ -522,7 +506,7 @@ export default function BookingsBridge() {
       {/* What Needs to Change */}
       {typeof fyGap === "number" && fyGap < 0 && typeof fyTarget === "number" && (
         <Card className="p-5">
-          <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">What Needs to Change</h3>
+          <h3 className="text-sm font-semibold text-ft-brand mb-1">What Needs to Change</h3>
           <p className="text-xs text-slate-500 mb-3">Top levers that could close the gap between trajectory and target.</p>
           <div className="text-sm text-slate-600">
             <p>The trajectory forecast of {formatMoney(fyTrajectory)} falls {formatMoney(Math.abs(fyGap))} short of the {formatMoney(fyTarget)} sales-led target. Key levers to close this gap include:</p>

@@ -1,15 +1,13 @@
 import {
   Card,
-  Metric,
   Table,
   TableHead,
   TableHeaderCell,
   TableBody,
   TableRow,
   TableCell,
-  Text,
 } from "../ui";
-import { SectionHeader } from "../workbook";
+import { MetricCard, SectionHeader } from "../workbook";
 import type { FunnelHealthExpansion } from "../../lib/funnelHealthViewModel";
 
 interface FunnelExpansionSectionProps {
@@ -24,26 +22,14 @@ export function FunnelExpansionSection({
       <SectionHeader title={expansion.title} subtitle={expansion.subtitle} />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {expansion.metrics.map((metric) => (
-          <div
+          <MetricCard
             key={metric.label}
-            className={`rounded-lg p-3 ${metric.tone === "emerald" ? "bg-emerald-50" : "bg-slate-50"}`}
-            data-testid="metric-card"
-          >
-            <Text className="text-xs text-slate-500" data-testid="metric-label">
-              {metric.label}
-            </Text>
-            <Metric
-              className={`text-lg ${metric.tone === "emerald" ? "text-emerald-700" : ""}`}
-              data-testid="metric-value"
-            >
-              {metric.value}
-            </Metric>
-            {metric.note ? (
-              <Text className="text-[10px] text-slate-400 mt-1 leading-tight">
-                {metric.note}
-              </Text>
-            ) : null}
-          </div>
+            label={metric.label}
+            value={metric.value}
+            note={metric.note}
+            className={`p-3 ${metric.tone === "emerald" ? "bg-green-50" : "bg-slate-50"}`}
+            valueClassName={metric.tone === "emerald" ? "text-green-700" : undefined}
+          />
         ))}
       </div>
       <Table>

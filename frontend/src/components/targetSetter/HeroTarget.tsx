@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card, Text } from "../ui";
+import { MetricCard } from "../workbook";
 
 function formatDollars(n: number): string {
   if (Math.abs(n) >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -56,17 +57,13 @@ export function HeroTarget({
           )}
         </div>
       </div>
-      <div
-        className="mt-3 text-3xl font-semibold text-slate-900 tabular-nums"
-        data-testid="metric-card"
-      >
-        <span className="sr-only" data-testid="metric-label">
-          New Pipe Must Yield
-        </span>
-        <span data-testid="metric-value">
-          {formatDollars(newPipeMustYield)} new pipe must yield
-        </span>
-      </div>
+      <MetricCard
+        label="New Pipe Must Yield"
+        value={`${formatDollars(newPipeMustYield)} new pipe must yield`}
+        frame={false}
+        className="mt-3"
+        valueClassName="text-3xl tabular-nums"
+      />
       <div className="mt-2 text-sm text-slate-600">
         <span>{formatDollars(planTotal)} plan</span>
         {" − "}

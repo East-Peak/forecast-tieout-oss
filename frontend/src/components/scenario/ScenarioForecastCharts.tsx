@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import {
   AXIS_STYLE,
-  CHART_COLORS,
+  CHART_SERIES,
   GRID_STYLE,
   LEGEND_STYLE,
   TOOLTIP_STYLE,
@@ -48,7 +48,7 @@ export function ScenarioForecastCharts({
           monthlyChartData.map((row) => row["Scenario Forecast"]),
         )}
       >
-        <h3 className="text-sm font-semibold text-slate-900">Monthly Scenario vs Plan</h3>
+        <h3 className="text-sm font-semibold text-ft-brand">Monthly Scenario vs Plan</h3>
         <p className="mt-1 text-xs text-slate-500">
           Existing inventory and future generation stay stacked, while the active scenario, modeled
           AE capacity, and monthly plan reference show whether the operating bet closes the gap.
@@ -82,54 +82,13 @@ export function ScenarioForecastCharts({
                 labelStyle={TOOLTIP_STYLE.labelStyle}
               />
               <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-              <Area
-                type="monotone"
-                dataKey="Existing Pipeline"
-                stackId="bookings"
-                fill={CHART_COLORS.blue}
-                stroke={CHART_COLORS.blue}
-                strokeWidth={2}
-                fillOpacity={0.72}
-                isAnimationActive={false}
-              />
-              <Area
-                type="monotone"
-                dataKey="Future Pipeline"
-                stackId="bookings"
-                fill={CHART_COLORS.emerald}
-                stroke={CHART_COLORS.emerald}
-                strokeWidth={2}
-                fillOpacity={0.72}
-                isAnimationActive={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="Scenario Forecast"
-                stroke={CHART_COLORS.amber}
-                strokeWidth={2.5}
-                dot={false}
-                isAnimationActive={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="AE Capacity"
-                stroke={CHART_COLORS.gray}
-                strokeWidth={2}
-                strokeDasharray="5 5"
-                dot={false}
-                isAnimationActive={false}
-              />
+              <Area type="monotone" dataKey="Existing Pipeline" stackId="bookings" {...CHART_SERIES.existingArea} />
+              <Area type="monotone" dataKey="Future Pipeline" stackId="bookings" {...CHART_SERIES.futureArea} />
+              <Line type="monotone" dataKey="Scenario Forecast" {...CHART_SERIES.expectedLine} />
               {showPlanMonthly ? (
-                <Line
-                  type="monotone"
-                  dataKey={planMonthlyLabel}
-                  stroke={CHART_COLORS.red}
-                  strokeWidth={2}
-                  strokeDasharray="3 3"
-                  dot={false}
-                  isAnimationActive={false}
-                />
+                <Line type="monotone" dataKey={planMonthlyLabel} {...CHART_SERIES.planLine} />
               ) : null}
+              <Line type="monotone" dataKey="AE Capacity" {...CHART_SERIES.capacityLine} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
@@ -144,7 +103,7 @@ export function ScenarioForecastCharts({
           cumulativeChartData.map((row) => row["Scenario Forecast"]),
         )}
       >
-        <h3 className="text-sm font-semibold text-slate-900">Cumulative Gap Closure</h3>
+        <h3 className="text-sm font-semibold text-ft-brand">Cumulative Gap Closure</h3>
         <p className="mt-1 text-xs text-slate-500">
           Compare the active scenario against the saved trajectory and the selected plan reference.
         </p>
@@ -177,33 +136,10 @@ export function ScenarioForecastCharts({
                 labelStyle={TOOLTIP_STYLE.labelStyle}
               />
               <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-              <Line
-                type="monotone"
-                dataKey="Baseline Forecast"
-                stroke={CHART_COLORS.gray}
-                strokeWidth={2}
-                strokeDasharray="5 5"
-                dot={false}
-                isAnimationActive={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="Scenario Forecast"
-                stroke={CHART_COLORS.blue}
-                strokeWidth={2.5}
-                dot={false}
-                isAnimationActive={false}
-              />
+              <Line type="monotone" dataKey="Baseline Forecast" {...CHART_SERIES.baselineLine} />
+              <Line type="monotone" dataKey="Scenario Forecast" {...CHART_SERIES.expectedLine} />
               {showPlanCumulative ? (
-                <Line
-                  type="monotone"
-                  dataKey="Cumulative Plan Reference"
-                  stroke={CHART_COLORS.red}
-                  strokeWidth={2}
-                  strokeDasharray="3 3"
-                  dot={false}
-                  isAnimationActive={false}
-                />
+                <Line type="monotone" dataKey="Cumulative Plan Reference" {...CHART_SERIES.planLine} />
               ) : null}
             </ComposedChart>
           </ResponsiveContainer>

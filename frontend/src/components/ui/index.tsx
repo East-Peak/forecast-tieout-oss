@@ -32,11 +32,11 @@ function createTextPrimitive<TDefault extends ElementType>(
 export const Text = createTextPrimitive("p", "text-sm text-slate-600");
 export const Title = createTextPrimitive(
   "h3",
-  "text-base font-semibold tracking-tight text-slate-900",
+  "text-base font-semibold text-slate-900",
 );
 export const Metric = createTextPrimitive(
   "div",
-  "text-3xl font-semibold tracking-tight text-slate-900",
+  "text-3xl font-semibold text-slate-900",
 );
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {}
@@ -45,7 +45,7 @@ export function Card({ className, ...props }: CardProps) {
   return (
     <div
       className={cx(
-        "rounded-2xl border border-slate-200 bg-white p-5 shadow-sm",
+        "rounded-ft border border-slate-200 bg-white p-ft shadow-ft",
         className,
       )}
       {...props}
@@ -58,6 +58,7 @@ type BadgeColor =
   | "gray"
   | "blue"
   | "emerald"
+  | "green"
   | "amber"
   | "red"
   | "rose"
@@ -68,6 +69,7 @@ const BADGE_STYLES: Record<BadgeColor, string> = {
   gray: "border-slate-200 bg-slate-50 text-slate-700",
   blue: "border-blue-200 bg-blue-50 text-blue-700",
   emerald: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  green: "border-green-200 bg-green-50 text-green-700",
   amber: "border-amber-200 bg-amber-50 text-amber-700",
   red: "border-red-200 bg-red-50 text-red-700",
   rose: "border-rose-200 bg-rose-50 text-rose-700",
@@ -107,7 +109,7 @@ export type DeltaType =
   | "unchanged";
 
 const DELTA_STYLES: Record<DeltaType, { color: BadgeColor; marker: string }> = {
-  increase: { color: "emerald", marker: "▲" },
+  increase: { color: "green", marker: "▲" },
   moderateIncrease: { color: "blue", marker: "▲" },
   decrease: { color: "red", marker: "▼" },
   moderateDecrease: { color: "amber", marker: "▼" },
@@ -174,7 +176,7 @@ export function TableHeaderCell({
   return (
     <th
       className={cx(
-        "px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500",
+        "px-3 py-2 text-left text-[11px] font-semibold uppercase text-ft-brand",
         className,
       )}
       {...props}
@@ -216,7 +218,7 @@ export function Callout({
   return (
     <div
       className={cx(
-        "rounded-xl border px-4 py-3 shadow-sm",
+        "rounded-ft border px-4 py-3 shadow-ft",
         CALLOUT_STYLES[color],
         className,
       )}
@@ -242,7 +244,7 @@ export function Select({
   return (
     <div className={cx("relative inline-flex w-full", className)}>
       <select
-        className="w-full appearance-none rounded-lg border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-slate-900 shadow-sm transition outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+        className="w-full appearance-none rounded-ft border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-slate-900 shadow-ft transition outline-none focus:border-ft-accent focus:ring-2 focus:ring-ft-accentSoft"
         onChange={(event) => onValueChange?.(event.target.value)}
         {...props}
       >

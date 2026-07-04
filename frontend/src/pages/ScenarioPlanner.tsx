@@ -202,6 +202,7 @@ export default function ScenarioPlanner() {
               gapClosureDelta !== null ? formatSavedDelta(gapClosureDelta) : undefined,
             deltaType:
               gapClosureDelta !== null && gapClosureDelta >= 0 ? "increase" : "decrease",
+            verdictValue: gapToPlan,
           } satisfies MetricItem,
         ]
       : []),

@@ -1,5 +1,5 @@
 import { Card, Text } from "../ui";
-import { SectionHeader } from "../workbook";
+import { MetricCard, SectionHeader } from "../workbook";
 
 interface Props {
   baselineFy: string;
@@ -27,56 +27,20 @@ export function ExportScenarioStateCard({
         subtitle="The exported CSV is built from the saved baseline scenario for the current snapshot."
       />
       <div className="grid gap-3 md:grid-cols-4">
-        <div
-          className="rounded-lg border border-slate-200 bg-slate-50/80 p-3"
-          data-testid="metric-card"
-        >
-          <Text className="text-xs uppercase tracking-wide text-slate-500">Baseline FY</Text>
-          <span className="sr-only" data-testid="metric-label">Baseline FY</span>
-          <Text className="mt-2 text-xl font-semibold text-slate-900" data-testid="metric-value">
-            {baselineFy}
-          </Text>
-        </div>
-        <div
-          className="rounded-lg border border-blue-100 bg-blue-50/70 p-3"
-          data-testid="metric-card"
-        >
-          <Text className="text-xs uppercase tracking-wide text-blue-700">Baseline Export FY</Text>
-          <span className="sr-only" data-testid="metric-label">Baseline Export FY</span>
-          <Text className="mt-2 text-xl font-semibold text-slate-900" data-testid="metric-value">
-            {scenarioFy}
-          </Text>
-        </div>
-        <div
-          className="rounded-lg border border-slate-200 bg-slate-50/80 p-3"
-          data-testid="metric-card"
-        >
-          <Text className="text-xs uppercase tracking-wide text-slate-500">Delta Vs Baseline</Text>
-          <span className="sr-only" data-testid="metric-label">Delta Vs Baseline</span>
-          <Text
-            className={`mt-2 text-xl font-semibold ${
-              scenarioDeltaPositive ? "text-emerald-700" : "text-red-700"
-            }`}
-            data-testid="metric-value"
-          >
-            {scenarioDelta}
-          </Text>
-        </div>
-        <div
-          className="rounded-lg border border-slate-200 bg-slate-50/80 p-3"
-          data-testid="metric-card"
-        >
-          <Text className="text-xs uppercase tracking-wide text-slate-500">Baseline Gap To Plan</Text>
-          <span className="sr-only" data-testid="metric-label">Baseline Gap To Plan</span>
-          <Text
-            className={`mt-2 text-xl font-semibold ${
-              scenarioGapPositive ? "text-emerald-700" : "text-red-700"
-            }`}
-            data-testid="metric-value"
-          >
-            {scenarioGapToPlan}
-          </Text>
-        </div>
+        <MetricCard label="Baseline FY" value={baselineFy} className="p-3 bg-slate-50/80" />
+        <MetricCard label="Baseline Export FY" value={scenarioFy} className="p-3 border-ft-accent bg-ft-accentSoft" />
+        <MetricCard
+          label="Delta Vs Baseline"
+          value={scenarioDelta}
+          className="p-3 bg-slate-50/80"
+          valueClassName={scenarioDeltaPositive ? "text-green-700" : "text-red-700"}
+        />
+        <MetricCard
+          label="Baseline Gap To Plan"
+          value={scenarioGapToPlan}
+          className="p-3 bg-slate-50/80"
+          valueClassName={scenarioGapPositive ? "text-green-700" : "text-red-700"}
+        />
       </div>
       <Text className="mt-3 text-xs text-slate-500">{plannerStateNote}</Text>
     </Card>

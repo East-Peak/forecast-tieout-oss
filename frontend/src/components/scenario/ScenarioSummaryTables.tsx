@@ -11,6 +11,7 @@ import {
 import type { ScenarioQuarterKey } from "../../engine/scenario";
 import type { ScenarioQuarterSummaryRow } from "../../lib/scenarioPlanner";
 import { formatMoney, formatSignedMoney } from "../../lib/scenarioPlanner";
+import { getVerdictTint } from "../../lib/verdictTint";
 
 interface MonthlyRow {
   month: string;
@@ -37,7 +38,7 @@ export function ScenarioSummaryTables({
   return (
     <>
       <Card className="mb-6 p-5">
-        <h3 className="text-sm font-semibold text-slate-900">Quarter Summary</h3>
+        <h3 className="text-sm font-semibold text-ft-brand">Quarter Summary</h3>
         <p className="mt-1 text-xs text-slate-500">
           Locked quarters are baked-in actuals. Editable quarters only move when the active scenario departs from the saved trajectory.
         </p>
@@ -92,15 +93,7 @@ export function ScenarioSummaryTables({
                   <TableCell className="text-right">{formatMoney(row.baselineCapped)}</TableCell>
                   <TableCell className="text-right font-medium">{formatMoney(row.scenarioCapped)}</TableCell>
                   <TableCell className="text-right">{formatMoney(row.scenarioExpected)}</TableCell>
-                  <TableCell
-                    className={`text-right font-medium ${
-                      row.gapToPlan === null
-                        ? "text-slate-500"
-                        : row.gapToPlan >= 0
-                          ? "text-emerald-600"
-                          : "text-red-600"
-                    }`}
-                  >
+                  <TableCell className={`text-right font-medium ${getVerdictTint(row.gapToPlan).cellClassName}`}>
                     {typeof row.gapToPlan === "number" ? formatSignedMoney(row.gapToPlan) : "\u2014"}
                   </TableCell>
                 </TableRow>
@@ -111,7 +104,7 @@ export function ScenarioSummaryTables({
       </Card>
 
       <Card className="p-5">
-        <h3 className="text-sm font-semibold text-slate-900">Monthly Breakdown</h3>
+        <h3 className="text-sm font-semibold text-ft-brand">Monthly Breakdown</h3>
         <p className="mt-1 text-xs text-slate-500">
           Monthly uncapped demand, capped forecast, and overflow are shown directly from the
           trajectory model.

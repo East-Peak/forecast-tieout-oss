@@ -29,7 +29,8 @@ import { usePlanningSessionContext } from "../context/PlanningSessionContext";
 import { formatIsoDate, formatMoney, formatMonthLabel } from "../lib/format";
 import { buildPlanMonthlyReference } from "../lib/plans";
 import {
-  CHART_COLORS,
+  CHART_SERIES,
+  REFERENCE_LINE_STYLE,
   AXIS_STYLE,
   GRID_STYLE,
   TOOLTIP_STYLE,
@@ -192,8 +193,8 @@ export default function PipelineInventory() {
         data-primary-series="Won"
         data-primary-values={JSON.stringify(activityData.map((row) => row.Won))}
       >
-        <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Monthly Pipeline Activity</h3>
-        <p className="text-xs text-slate-500 mb-4">Won (green) is grouped by contractual CloseDate month. New S2+ pipeline (blue) is grouped by the month a deal first entered S2. Losses (red) are grouped by actual Closed At month. Solid line marks where projections begin — left is observed through {actualsThroughLabel}, right is model projections. Note: losses include all closed-lost opps, not filtered to S2+ stage history.</p>
+        <h3 className="text-sm font-semibold text-ft-brand mb-1">Monthly Pipeline Activity</h3>
+        <p className="text-xs text-slate-500 mb-4">Won is grouped by contractual CloseDate month. New S2+ pipeline is grouped by the month a deal first entered S2. Losses are grouped by actual Closed At month. Solid line marks where projections begin — left is observed through {actualsThroughLabel}, right is model projections. Note: losses include all closed-lost opps, not filtered to S2+ stage history.</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={activityData}>
             <CartesianGrid horizontal={GRID_STYLE.horizontal} vertical={GRID_STYLE.vertical} stroke={GRID_STYLE.stroke} strokeDasharray={GRID_STYLE.strokeDasharray} />
@@ -201,18 +202,18 @@ export default function PipelineInventory() {
             <YAxis tickFormatter={currencyFormatter} tick={AXIS_STYLE.tick} axisLine={false} tickLine={false} width={60} />
             <Tooltip formatter={currencyTooltipFormatter} contentStyle={TOOLTIP_STYLE.contentStyle} labelStyle={TOOLTIP_STYLE.labelStyle} />
             <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-            <ReferenceLine y={0} stroke="#94a3b8" strokeWidth={1} />
+            <ReferenceLine y={0} {...REFERENCE_LINE_STYLE.zero} />
             {projectionStartLabel && (
               <ReferenceLine
                 x={projectionStartLabel}
-                stroke="#64748b"
-                strokeWidth={2}
-                label={{ value: "Projected", position: "top", fill: "#64748b", fontSize: 11 }}
+                stroke={REFERENCE_LINE_STYLE.projected.stroke}
+                strokeWidth={REFERENCE_LINE_STYLE.projected.strokeWidth}
+                label={REFERENCE_LINE_STYLE.projected.label}
               />
             )}
-            <Bar dataKey="Won" fill={CHART_COLORS.emerald} radius={[2, 2, 0, 0]} isAnimationActive={false} />
-            <Bar dataKey="New S2+ Pipeline" fill={CHART_COLORS.blue} radius={[2, 2, 0, 0]} isAnimationActive={false} />
-            <Bar dataKey="Lost" fill={CHART_COLORS.red} radius={[0, 0, 2, 2]} isAnimationActive={false} />
+            <Bar dataKey="Won" {...CHART_SERIES.actualBar} />
+            <Bar dataKey="New S2+ Pipeline" {...CHART_SERIES.pipelineBar} />
+            <Bar dataKey="Lost" {...CHART_SERIES.lossBar} />
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -229,8 +230,8 @@ export default function PipelineInventory() {
           ),
         )}
       >
-        <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Pipeline Roll-Forward</h3>
-        <p className="text-xs text-slate-500 mb-4">Projected monthly wins from existing pipeline (blue) and future S2+ pipeline creation (green). Plan Target (red dashed) and AE Capacity (amber dashed) show the monthly demand vs close-capacity envelope.</p>
+        <h3 className="text-sm font-semibold text-ft-brand mb-1">Pipeline Roll-Forward</h3>
+        <p className="text-xs text-slate-500 mb-4">Projected monthly wins from existing pipeline and future S2+ pipeline creation. Plan Target and AE Capacity show the monthly demand vs close-capacity envelope.</p>
         <ResponsiveContainer width="100%" height={320}>
           <ComposedChart data={rollForwardData}>
             <CartesianGrid horizontal={GRID_STYLE.horizontal} vertical={GRID_STYLE.vertical} stroke={GRID_STYLE.stroke} strokeDasharray={GRID_STYLE.strokeDasharray} />
@@ -238,13 +239,13 @@ export default function PipelineInventory() {
             <YAxis tickFormatter={currencyFormatter} tick={AXIS_STYLE.tick} axisLine={false} tickLine={false} width={60} />
             <Tooltip formatter={currencyTooltipFormatter} contentStyle={TOOLTIP_STYLE.contentStyle} labelStyle={TOOLTIP_STYLE.labelStyle} />
             <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-            <Area type="monotone" dataKey="Existing Pipeline" stackId="1" fill={CHART_COLORS.blue} stroke={CHART_COLORS.blue} strokeWidth={2} fillOpacity={0.7} isAnimationActive={false} />
-            <Area type="monotone" dataKey="Future Pipeline" stackId="1" fill={CHART_COLORS.emerald} stroke={CHART_COLORS.emerald} strokeWidth={2} fillOpacity={0.7} isAnimationActive={false} />
+            <Area type="monotone" dataKey="Existing Pipeline" stackId="1" {...CHART_SERIES.existingArea} />
+            <Area type="monotone" dataKey="Future Pipeline" stackId="1" {...CHART_SERIES.futureArea} />
             {showPlanTarget && (
-              <Line type="monotone" dataKey="Plan Target" stroke={CHART_COLORS.red} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="Plan Target" {...CHART_SERIES.planLine} />
             )}
             {capacityRows && capacityRows.length > 0 && (
-              <Line type="monotone" dataKey="AE Capacity" stroke={CHART_COLORS.amber} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="AE Capacity" {...CHART_SERIES.capacityLine} />
             )}
           </ComposedChart>
         </ResponsiveContainer>

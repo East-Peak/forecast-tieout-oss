@@ -20,11 +20,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { CapacityHeadcountData, Deal, PipelineInventoryData, ObservedValues } from "../types/snapshot";
-import { SectionHeader, ProseNote } from "../components/workbook";
+import { MetricCard, SectionHeader, ProseNote } from "../components/workbook";
 import { formatMoney, formatMonthLabel } from "../lib/format";
 import { buildPlanMonthlyReference } from "../lib/plans";
 import {
-  CHART_COLORS,
+  CHART_SERIES,
   AXIS_STYLE,
   GRID_STYLE,
   TOOLTIP_STYLE,
@@ -108,8 +108,8 @@ export default function CapacityHeadcount() {
   // --- Capacity vs Targets line data ---
   const capacityData = rows.map((r, i) => ({
     month: monthLabels[i],
-    Capacity: r.ae_capacity,
-    Target: showPlanMonthlyTarget ? (planMonthlyReference.values[i] ?? 0) : null,
+    "AE Capacity": r.ae_capacity,
+    "Plan Target": showPlanMonthlyTarget ? (planMonthlyReference.values[i] ?? 0) : null,
   }));
 
   return (
@@ -150,7 +150,7 @@ export default function CapacityHeadcount() {
           headcountData.map((row) => row.Ramped + row.Ramping),
         )}
       >
-        <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">AE Headcount</h3>
+        <h3 className="text-sm font-semibold text-ft-brand mb-1">AE Headcount</h3>
         <p className="text-xs text-slate-500 mb-4">Confirmed roster only (active + incoming hires with signed agreements). Does not include planned-but-unfilled positions.</p>
         <ResponsiveContainer width="100%" height={288}>
           <BarChart data={headcountData}>
@@ -159,8 +159,8 @@ export default function CapacityHeadcount() {
             <YAxis tick={AXIS_STYLE.tick} axisLine={false} tickLine={false} width={40} />
             <Tooltip contentStyle={TOOLTIP_STYLE.contentStyle} labelStyle={TOOLTIP_STYLE.labelStyle} />
             <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-            <Bar dataKey="Ramped" stackId="a" fill={CHART_COLORS.blue} radius={[2, 2, 0, 0]} isAnimationActive={false} />
-            <Bar dataKey="Ramping" stackId="a" fill="#93c5fd" radius={[2, 2, 0, 0]} isAnimationActive={false} />
+            <Bar dataKey="Ramped" stackId="a" {...CHART_SERIES.rampedBar} />
+            <Bar dataKey="Ramping" stackId="a" {...CHART_SERIES.rampingBar} />
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -170,11 +170,11 @@ export default function CapacityHeadcount() {
         className="p-5"
         data-testid="chart-container"
         data-chart-title="Close Capacity vs Targets"
-        data-primary-series="Capacity"
-        data-primary-values={JSON.stringify(capacityData.map((row) => row.Capacity))}
+        data-primary-series="AE Capacity"
+        data-primary-values={JSON.stringify(capacityData.map((row) => row["AE Capacity"]))}
       >
-        <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Close Capacity vs Targets</h3>
-        <p className="text-xs text-slate-500 mb-4">Monthly close capacity (amber) against plan targets (red).</p>
+        <h3 className="text-sm font-semibold text-ft-brand mb-1">Close Capacity vs Targets</h3>
+        <p className="text-xs text-slate-500 mb-4">Monthly close capacity against plan targets.</p>
         <ResponsiveContainer width="100%" height={288}>
           <LineChart data={capacityData}>
             <CartesianGrid horizontal={GRID_STYLE.horizontal} vertical={GRID_STYLE.vertical} stroke={GRID_STYLE.stroke} strokeDasharray={GRID_STYLE.strokeDasharray} />
@@ -182,17 +182,16 @@ export default function CapacityHeadcount() {
             <YAxis tickFormatter={currencyFormatter} tick={AXIS_STYLE.tick} axisLine={false} tickLine={false} width={60} />
             <Tooltip formatter={currencyTooltipFormatter} contentStyle={TOOLTIP_STYLE.contentStyle} labelStyle={TOOLTIP_STYLE.labelStyle} />
             <Legend iconSize={LEGEND_STYLE.iconSize} wrapperStyle={LEGEND_STYLE.wrapperStyle} />
-            <Line type="monotone" dataKey="Capacity" stroke={CHART_COLORS.amber} strokeWidth={2} dot={false} isAnimationActive={false} />
             {showPlanMonthlyTarget ? (
-              <Line type="monotone" dataKey="Target" stroke={CHART_COLORS.red} strokeWidth={2} strokeDasharray="5 5" dot={false} isAnimationActive={false} />
+              <Line type="monotone" dataKey="Plan Target" {...CHART_SERIES.planLine} />
             ) : null}
+            <Line type="monotone" dataKey="AE Capacity" {...CHART_SERIES.capacityLine} />
           </LineChart>
         </ResponsiveContainer>
       </Card>
 
       <ProseNote>
-        The gap between AE close capacity (amber) and monthly targets (red
-        dashed) indicates hiring urgency. When capacity falls below targets, the
+        The gap between AE close capacity and monthly targets indicates hiring urgency. When capacity falls below targets, the
         team cannot physically close enough deals to meet plan even with perfect
         conversion. Use the Scenario Planner to model headcount acceleration
         scenarios.
@@ -245,26 +244,19 @@ export default function CapacityHeadcount() {
         <>
           {/* SE Metrics Strip */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Card className="p-4" data-testid="metric-card">
-              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">SEs at Snapshot</p>
-              <p className="text-2xl font-semibold text-slate-800" data-testid="metric-value">{currentSECount}</p>
-            </Card>
-            <Card className="p-4" data-testid="metric-card">
-              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">S2+ Open Opps (SE-supported)</p>
-              <p className="text-2xl font-semibold text-slate-800" data-testid="metric-value">{seSupportedS2PlusDeals.length}</p>
-            </Card>
-            <Card className="p-4" data-testid="metric-card">
-              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">S2+ Opps/SE at Snapshot</p>
-              <p className={`text-2xl font-semibold ${dealsPerSE !== null && dealsPerSE > SE_DEAL_THRESHOLD ? "text-red-600" : "text-slate-800"}`} data-testid="metric-value">
-                {dealsPerSE !== null ? dealsPerSE.toFixed(1) : "\u2014"}
-              </p>
-            </Card>
-            <Card className="p-4" data-testid="metric-card">
-              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">AE:SE at Snapshot</p>
-              <p className="text-2xl font-semibold text-slate-800" data-testid="metric-value">
-                {aeSeRatioCurrent !== null ? `${aeSeRatioCurrent.toFixed(1)}:1` : "\u2014"}
-              </p>
-            </Card>
+            <MetricCard label="SEs at Snapshot" value={String(currentSECount)} className="p-4" />
+            <MetricCard label="S2+ Open Opps (SE-supported)" value={String(seSupportedS2PlusDeals.length)} className="p-4" />
+            <MetricCard
+              label="S2+ Opps/SE at Snapshot"
+              value={dealsPerSE !== null ? dealsPerSE.toFixed(1) : "\u2014"}
+              className="p-4"
+              valueClassName={dealsPerSE !== null && dealsPerSE > SE_DEAL_THRESHOLD ? "text-red-700" : undefined}
+            />
+            <MetricCard
+              label="AE:SE at Snapshot"
+              value={aeSeRatioCurrent !== null ? `${aeSeRatioCurrent.toFixed(1)}:1` : "\u2014"}
+              className="p-4"
+            />
           </div>
 
           {/* SE Capacity Risk Warning */}

@@ -4,6 +4,7 @@ import { Card, Text } from "../ui";
 import { RateProvenancePopover } from "./RateProvenancePopover";
 import type { QuarterTargets } from "../../types/targetSetter";
 import type { RateProvenance } from "../../types/snapshot";
+import { SANKEY_COLORS } from "../../lib/chartTheme";
 
 export interface FunnelSankeyProps {
   quarters: QuarterTargets[];
@@ -99,7 +100,7 @@ export function FunnelSankey({ quarters, rateByEdge }: FunnelSankeyProps) {
       data-primary-values={JSON.stringify([totalS2])}
     >
       <div className="mb-3">
-        <Text className="text-sm font-semibold text-slate-800">
+        <Text className="text-sm font-semibold text-ft-brand">
           Funnel flow — {scopeLabel} combined
         </Text>
         <Text className="text-xs text-slate-500 mt-0.5">
@@ -149,11 +150,11 @@ export function FunnelSankey({ quarters, rateByEdge }: FunnelSankeyProps) {
       {/* Color-legend for the tributary nodes */}
       <div className="mt-2 flex items-center gap-4 text-[11px] text-slate-500">
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+          <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: SANKEY_COLORS.marketing }} />
           Marketing tributary (MQL→S0)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
+          <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: SANKEY_COLORS.outbound }} />
           Outbound tributary (SDR + direct AE)
         </span>
       </div>
@@ -212,7 +213,7 @@ function CustomLink({
     <g>
       <path
         d={d}
-        stroke={hovered ? "#94a3b8" : "#cbd5e1"}
+        stroke={hovered ? SANKEY_COLORS.linkHover : SANKEY_COLORS.link}
         strokeOpacity={hovered ? 0.7 : 0.5}
         strokeWidth={linkWidth}
         fill="none"
@@ -228,7 +229,7 @@ function CustomLink({
           textAnchor="middle"
           fontSize={11}
           fontWeight={600}
-          fill="#1e293b"
+          fill={SANKEY_COLORS.label}
           pointerEvents="none"
         >
           {pct}%
@@ -265,15 +266,15 @@ function SankeyNode(props: SankeyNodeProps) {
   // Assign colors per node index (matches data.nodes order in FunnelSankey)
   // 0: MQLs, 1: drop-off, 2: Marketing S0, 3: Outbound S0, 4: Total S0, 5: S1, 6: S2
   const colors = [
-    "#3b82f6", // MQLs — blue (marketing tributary)
-    "#e2e8f0", // drop-off — faded (nearly invisible)
-    "#3b82f6", // Marketing S0 — blue
-    "#f59e0b", // Outbound S0 — amber
-    "#64748b", // Total S0 — slate
-    "#475569", // Total S1 — slate
-    "#334155", // Total S2 — slate
+    SANKEY_COLORS.marketing,
+    SANKEY_COLORS.dropOff,
+    SANKEY_COLORS.marketing,
+    SANKEY_COLORS.outbound,
+    SANKEY_COLORS.totalS0,
+    SANKEY_COLORS.totalS1,
+    SANKEY_COLORS.totalS2,
   ];
-  const fill = colors[index] ?? "#64748b";
+  const fill = colors[index] ?? SANKEY_COLORS.totalS0;
 
   // Pick the right count for the label, in same order as colors[]
   const counts = [
@@ -298,11 +299,11 @@ function SankeyNode(props: SankeyNodeProps) {
         y={y + height / 2}
         dy={4}
         fontSize={12}
-        fill="#334155"
+        fill={SANKEY_COLORS.label}
         textAnchor="start"
       >
         <tspan fontWeight={600}>{name}</tspan>
-        <tspan dx={6} fill="#64748b">
+        <tspan dx={6} fill={SANKEY_COLORS.labelMuted}>
           {count.toLocaleString()}
         </tspan>
       </text>

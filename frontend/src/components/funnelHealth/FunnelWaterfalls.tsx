@@ -12,6 +12,7 @@ import { Card } from "../ui";
 import { SectionHeader } from "../workbook";
 import {
   AXIS_STYLE,
+  CHART_COLORS,
   GRID_STYLE,
   TOOLTIP_STYLE,
   LEGEND_STYLE,
@@ -40,7 +41,7 @@ export function FunnelWaterfalls({ waterfalls }: FunnelWaterfallsProps) {
               data-primary-series="trajectory"
               data-primary-values={JSON.stringify(quarter.primaryValues)}
             >
-              <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-3">
+              <h3 className="text-sm font-semibold text-ft-brand mb-3">
                 {quarter.quarter}
               </h3>
               <ResponsiveContainer width="100%" height={220}>
@@ -72,16 +73,16 @@ export function FunnelWaterfalls({ waterfalls }: FunnelWaterfallsProps) {
                     wrapperStyle={LEGEND_STYLE.wrapperStyle}
                   />
                   <Bar
-                    dataKey="plan"
-                    fill="#94a3b8"
-                    name="Top-Down Plan"
+                    dataKey="trajectory"
+                    fill={CHART_COLORS.accent}
+                    name="Trajectory"
                     radius={[2, 2, 0, 0]}
                     isAnimationActive={false}
                   />
                   <Bar
-                    dataKey="trajectory"
-                    fill="#2563eb"
-                    name="Trajectory"
+                    dataKey="plan"
+                    fill={CHART_COLORS.brand}
+                    name="Plan Target"
                     radius={[2, 2, 0, 0]}
                     isAnimationActive={false}
                   />

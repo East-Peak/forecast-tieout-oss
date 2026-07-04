@@ -36,7 +36,7 @@ export function ScenarioPlannerHeader({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-5xl">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-lg font-semibold text-slate-900">Trajectory Scenario Planner</h2>
+              <h2 className="text-lg font-semibold text-ft-brand">Trajectory Scenario Planner</h2>
               <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600">
                 First projected month {firstProjectedLabel}
               </span>
@@ -64,7 +64,7 @@ export function ScenarioPlannerHeader({
             <button
               type="button"
               onClick={onCopyShareLink}
-              className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 transition hover:border-blue-300 hover:bg-blue-100"
+              className="rounded-ft border border-ft-brand bg-ft-brand px-3 py-2 text-xs font-medium text-white transition hover:opacity-90"
             >
               {shareStatus === "copied"
                 ? "Link Copied"
@@ -75,7 +75,7 @@ export function ScenarioPlannerHeader({
             <button
               type="button"
               onClick={onResetAll}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+              className="rounded-ft border border-ft-brand bg-white px-3 py-2 text-xs font-medium text-ft-brand transition hover:bg-ft-accentSoft"
             >
               Reset All
             </button>
@@ -83,7 +83,7 @@ export function ScenarioPlannerHeader({
         </div>
 
         <div className="grid gap-3 px-0 pt-4 xl:grid-cols-[1.35fr_1fr_1fr_1fr]">
-          <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+          <div className="rounded-ft border border-slate-200 bg-slate-50/80 p-4">
             <div className="flex items-center justify-between gap-3">
               <Text className="text-[11px] uppercase tracking-wide text-slate-600">
                 Locked-Quarter Outlook
@@ -94,22 +94,22 @@ export function ScenarioPlannerHeader({
               Actuals are fixed. {firstProjectedLabel} stays pinned to the saved snapshot.
             </Text>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
-              <div className="rounded-lg border border-white/80 bg-white/70 p-3">
+              <div className="rounded-ft border border-white/80 bg-white/70 p-3">
                 <div className="text-[11px] uppercase tracking-wide text-slate-500">Actuals to Date</div>
                 <div className="mt-1 text-xl font-semibold text-slate-900">{formatMoney(q1ActualToDate)}</div>
               </div>
-              <div className="rounded-lg border border-white/80 bg-white/70 p-3">
+              <div className="rounded-ft border border-white/80 bg-white/70 p-3">
                 <div className="text-[11px] uppercase tracking-wide text-slate-500">Remaining Projected</div>
                 <div className="mt-1 text-xl font-semibold text-slate-900">{formatMoney(q1RemainingProjection)}</div>
               </div>
-              <div className="rounded-lg border border-white/80 bg-white/70 p-3">
+              <div className="rounded-ft border border-white/80 bg-white/70 p-3">
                 <div className="text-[11px] uppercase tracking-wide text-slate-500">Total Locked Outlook</div>
                 <div className="mt-1 text-xl font-semibold text-slate-900">{formatMoney(q1LockedForecast)}</div>
               </div>
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="rounded-ft border border-slate-200 bg-white p-4">
             <Text className="text-[11px] uppercase tracking-wide text-slate-500">Projection Starts</Text>
             <div className="mt-2 text-lg font-semibold text-slate-900">{firstProjectedLabel}</div>
             <Text className="mt-1 text-[11px] leading-4 text-slate-500">
@@ -117,7 +117,7 @@ export function ScenarioPlannerHeader({
             </Text>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="rounded-ft border border-slate-200 bg-white p-4">
             <Text className="text-[11px] uppercase tracking-wide text-slate-500">
               First Editable Quarter
             </Text>
@@ -127,7 +127,7 @@ export function ScenarioPlannerHeader({
             </Text>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="rounded-ft border border-slate-200 bg-white p-4">
             <Text className="text-[11px] uppercase tracking-wide text-slate-500">Selected Plan</Text>
             <div className="mt-2 text-base font-semibold text-slate-900">{planName ?? "\u2014"}</div>
             <Text className="mt-1 text-[12px] text-slate-500">
