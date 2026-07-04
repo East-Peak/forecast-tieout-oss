@@ -23,7 +23,3 @@ export function getSupabaseClient(): SupabaseClient {
   });
   return cachedClient;
 }
-
-export function resetSupabaseClientForTests(): void {
-  cachedClient = null;
-}

@@ -118,7 +118,7 @@ export function cumulative(values: number[]): number[] {
   return result;
 }
 
-export function formatPercent(value: number): string {
+function formatPercent(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 

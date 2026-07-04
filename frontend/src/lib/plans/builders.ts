@@ -39,14 +39,6 @@ export function getPlanSeatQuarterTarget(
   return numericScalar(plan.targets.quarterEndAeTargets[quarter]);
 }
 
-export function getPlanSeatMonthlyTarget(
-  plan: PlanPreset | null,
-  month: string,
-): number | null {
-  if (!plan?.availability.comparableOnOperatorPages) return null;
-  return numericScalar(plan.targets.explicitMonthlyAeTargets[month]);
-}
-
 function buildFallbackProvenance(
   snapshotAsOf: string | null | undefined,
 ): PlanPacingProvenance {

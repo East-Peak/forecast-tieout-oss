@@ -11,6 +11,7 @@
 // All rate fields are REQUIRED; the engine and schema guarantee their presence.
 // ---------------------------------------------------------------------------
 
+/** @contract Engine snapshot target-setter scenario payload. */
 export interface SnapshotScenario {
   id: string;
   label: string;
@@ -94,6 +95,7 @@ export interface Actuals {
 // Pipeline
 // ---------------------------------------------------------------------------
 
+/** @contract Engine snapshot pipeline payload. */
 export interface Pipeline {
   deals: Deal[];
   inventory_by_stage: { stage: string; count: number; total_value: number }[];
@@ -118,6 +120,7 @@ export interface Deal {
 // Rates
 // ---------------------------------------------------------------------------
 
+/** @contract Engine snapshot rate payload. */
 export interface Rates {
   stage_conversion: Record<string, number>;
   stage_velocity_days: Record<string, number>;
@@ -129,6 +132,7 @@ export interface Rates {
 // Roster
 // ---------------------------------------------------------------------------
 
+/** @contract Engine snapshot roster payload. */
 export interface Roster {
   current_aes: Record<string, unknown>[];
   trajectory_roster: Record<string, Record<string, unknown>[]>;
@@ -157,6 +161,7 @@ export interface CapacityRow {
 // Model Output (pre-computed view models)
 // ---------------------------------------------------------------------------
 
+/** @contract Engine snapshot precomputed page view-model payload. */
 export interface ModelOutput {
   bookings_bridge: BookingsBridgeData;
   capacity_headcount: CapacityHeadcountData;
@@ -181,6 +186,7 @@ export interface BookingsBridgeData {
   capacity_warnings: string[];
 }
 
+/** @contract Shared engine snapshot quarter summary row. */
 export interface QuarterData {
   quarter: string;
   period_start: string;
@@ -212,6 +218,7 @@ export interface RateProvenance {
   date_range?: { start: string; end: string };
 }
 
+/** @contract Engine snapshot waterfall-rate provenance alias. */
 export type WaterfallRateDescription = RateProvenance;
 
 /** Four waterfall rates emitted by the engine's calibration step. */
@@ -252,6 +259,7 @@ export interface PipelineInventoryData {
 // Scenario Building Blocks
 // ---------------------------------------------------------------------------
 
+/** @contract Engine snapshot scenario-planner payload. */
 export interface ScenarioBuildingBlocks {
   months: string[];
   monthly_is_actual: boolean[];

@@ -3,18 +3,18 @@ export interface OrgProfileManifestEntry {
   path?: string;
 }
 
-export interface RawOrgProfileData {
+interface RawOrgProfileData {
   snapshot?: string;
   plan_manifest?: string;
 }
 
-export interface RawOrgProfileConnectors {
+interface RawOrgProfileConnectors {
   crm?: string;
   warehouse?: string;
   fallback_order?: Record<string, string[]>;
 }
 
-export interface RawOrgProfileTrust {
+interface RawOrgProfileTrust {
   finance_motion?: string;
   timing_semantics?: {
     wins?: string;
@@ -210,7 +210,7 @@ function humanizeFallbackStep(step: string): string {
   return step;
 }
 
-export function formatFallbackOrder(profile: OrgProfile, key: string): string {
+function formatFallbackOrder(profile: OrgProfile, key: string): string {
   const values = profile.connectors.fallbackOrder[key] || [];
   return values.map(humanizeFallbackStep).join(" -> ");
 }

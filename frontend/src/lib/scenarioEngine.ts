@@ -9,6 +9,7 @@ import type {
 } from "../engine/scenario";
 import type { Snapshot } from "../types/snapshot";
 
+/** @contract Backend scenario-service request/response wire shape. */
 export interface ScenarioServiceQuarterOverridePayload {
   addAes: number;
   aeMonthTargets: [number, number, number];
@@ -43,6 +44,7 @@ export interface ScenarioServiceResultPayload {
   fy_capped: number;
 }
 
+/** @contract Backend scenario-service response wire shape. */
 export interface ScenarioServiceResponsePayload {
   profile_id?: string;
   snapshot_path?: string;
@@ -141,7 +143,7 @@ function trimTrailingSlash(value: string): string {
   return value.endsWith("/") ? value.slice(0, -1) : value;
 }
 
-export function resolveScenarioServiceUrl(): string | null {
+function resolveScenarioServiceUrl(): string | null {
   if (cachedScenarioServiceUrl !== undefined) return cachedScenarioServiceUrl;
 
   const configuredUrl = import.meta.env.VITE_SCENARIO_API_URL as string | undefined;

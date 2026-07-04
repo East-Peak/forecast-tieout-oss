@@ -15,6 +15,7 @@
 
 export type QuarterKey = string;
 export type SegmentKey = string;
+/** @contract Target-setter scenario identifiers are runtime strings from snapshot JSON. */
 export type ScenarioId = string;
 
 // ---------------------------------------------------------------------------
@@ -94,11 +95,13 @@ export interface SolveResult {
 // CapacityInput / GapQuarter — capacity and gap analysis
 // ---------------------------------------------------------------------------
 
+/** @contract Target-setter capacity input shape shared by page helpers. */
 export interface CapacityInput {
   quarter: QuarterKey;
   mql_capacity: number;
 }
 
+/** @contract Target-setter gap-analysis row shape shared by page helpers. */
 export interface GapQuarter {
   quarter: QuarterKey;
   mqls_needed: number;
@@ -113,6 +116,7 @@ export interface GapQuarter {
 // MonthlyRow / WeeklyRow — cadenced planning grids
 // ---------------------------------------------------------------------------
 
+/** @contract Target-setter monthly cadence row shape shared by page helpers. */
 export interface MonthlyRow {
   quarter: QuarterKey;
   months: [string, string, string];
@@ -121,6 +125,7 @@ export interface MonthlyRow {
   manually_edited: boolean[];
 }
 
+/** @contract Target-setter weekly cadence row shape shared by page helpers. */
 export interface WeeklyRow {
   quarter: QuarterKey;
   weeks: string[];

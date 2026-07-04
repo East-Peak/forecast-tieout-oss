@@ -618,7 +618,7 @@ function buildAssumptionsSheet(snapshot: Snapshot): XLSX.WorkSheet {
   return ws;
 }
 
-export function generateXlsxWorkbook(
+function generateXlsxWorkbook(
   snapshot: Snapshot,
   viewModel: ExportPackViewModel,
 ): XLSX.WorkBook {

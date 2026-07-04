@@ -53,7 +53,7 @@ export function Card({ className, ...props }: CardProps) {
   );
 }
 
-export type BadgeColor =
+type BadgeColor =
   | "slate"
   | "gray"
   | "blue"

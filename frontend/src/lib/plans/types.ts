@@ -3,6 +3,7 @@ export interface PlanManifestEntry {
   path: string;
 }
 
+/** @contract Raw plan preset JSON shape consumed by the normalizer. */
 export interface RawPlanHiringEntry {
   month: string;
   count: number;
@@ -10,6 +11,7 @@ export interface RawPlanHiringEntry {
   segment?: string;
 }
 
+/** @contract Raw plan preset JSON shape consumed by the normalizer. */
 export interface RawSliderDefaults {
   win_rate?: number;
   avg_deal_size?: number;
@@ -19,8 +21,11 @@ export interface RawSliderDefaults {
 }
 
 export type PlanArrGrain = "monthly" | "quarterly" | "annual";
+/** @contract Normalized plan schema enum exposed to plan consumers. */
 export type PlanSeatGrain = "monthly" | "quarterly" | "annual";
+/** @contract Normalized plan schema enum exposed to plan consumers. */
 export type PlanTreatmentClass = "operator_comparable" | "executive_reference";
+/** @contract Normalized plan schema enum exposed to plan consumers. */
 export type PlanModeledStatus = "scenario_modeled" | "held_assumption";
 
 export type PlanPacingFieldId =
@@ -66,6 +71,7 @@ export interface SliderDefaults {
   avgCycleDays: number | null;
 }
 
+/** @contract Normalized plan target bookkeeping exposed with PlanPreset. */
 export interface PlanTargetBookkeeping {
   quarterlyBookings: Record<string, number>;
   explicitMonthlyBookings: Record<string, number>;

@@ -7,19 +7,13 @@ import type {
   ScenarioQuarterOverride,
 } from "../engine/scenario";
 
-export const PLAN_STORAGE_KEY = "forecast-tieout.plan.v1";
-export const SCENARIO_STORAGE_KEY = "forecast-tieout.scenario.v1";
+const PLAN_STORAGE_KEY = "forecast-tieout.plan.v1";
 export const PROFILE_STORAGE_KEY = "forecast-tieout.profile.v1";
 export const PLAN_QUERY_PARAM = "plan";
-export const SCENARIO_QUERY_PARAM = "scenario";
 export const PROFILE_QUERY_PARAM = "profile";
 
 export function getPlanStorageKey(profileId?: string | null): string {
   return profileId ? `${PLAN_STORAGE_KEY}.${profileId}` : PLAN_STORAGE_KEY;
-}
-
-export function getScenarioStorageKey(profileId?: string | null): string {
-  return profileId ? `${SCENARIO_STORAGE_KEY}.${profileId}` : SCENARIO_STORAGE_KEY;
 }
 
 type QuarterDiff = Partial<ScenarioQuarterOverride> & {

@@ -135,7 +135,7 @@ function toNumber(value: unknown, fallback = 0): number {
  * doesn't carry the field — there is no parser fallback; the engine is
  * snapshot-driven by design.
  */
-export function getQuarterMonthIndexes(snapshot: Snapshot, quarter: string): number[] {
+function getQuarterMonthIndexes(snapshot: Snapshot, quarter: string): number[] {
   const months = snapshot.scenario_building_blocks.months;
   const map = snapshot.scenario_building_blocks.quarter_by_month;
   if (!Array.isArray(map) || map.length !== months.length) return [];

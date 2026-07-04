@@ -45,7 +45,7 @@ export interface MethodologyViewModel {
   orgProfileName: string;
 }
 
-export const METHODOLOGY_PRINCIPLES: MethodologyPrinciple[] = [
+const METHODOLOGY_PRINCIPLES: MethodologyPrinciple[] = [
   {
     title: "Two-Scenario Architecture",
     summary:
@@ -78,7 +78,7 @@ export const METHODOLOGY_PRINCIPLES: MethodologyPrinciple[] = [
   },
 ];
 
-export function livePipelineSource(provenance: Record<string, unknown>): string {
+function livePipelineSource(provenance: Record<string, unknown>): string {
   const source = typeof provenance.source === "string" ? provenance.source : "Unknown";
   const isLive = provenance.is_live;
   if (isLive === true) return `${source} (live)`;

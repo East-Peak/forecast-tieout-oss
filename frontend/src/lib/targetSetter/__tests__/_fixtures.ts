@@ -8,7 +8,7 @@
 import type { Snapshot } from "../../../types/snapshot";
 
 /** Minimal snapshot factory: months + quarter_by_month + overridable_quarters */
-export const snap = (
+const snap = (
   months: string[],
   quarterByMonth: string[],
   overridable: string[] = [],

@@ -1,5 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  // Dead-code gate: dead FILES + unused DEPENDENCIES fail `verify`.
-  "include": ["files", "dependencies"],
+  // Dead-code gate: dead files, dependencies, exports, and exported types fail `verify`.
+  "include": ["files", "dependencies", "exports", "types"],
+  // Only exported JSON/API contract shapes carry @contract. Untagged dead exports still fail.
+  "tags": ["-contract"],
 }

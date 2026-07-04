@@ -54,7 +54,7 @@ function getOrigin(): string {
   return typeof window !== "undefined" ? window.location.origin : "http://localhost";
 }
 
-export function getDataRoot(): string {
+function getDataRoot(): string {
   const configured = import.meta.env.VITE_DATA_BASE_URL;
   return trimTrailingSlash(configured || "/data");
 }
