@@ -41,6 +41,8 @@ export interface PlanCatalogResult {
 }
 
 interface OrgProfileManifest {
+  default?: string;
+  default_profile_id?: string;
   profiles?: OrgProfileManifestEntry[];
 }
 
@@ -101,6 +103,7 @@ export async function loadOrgProfileCatalog(): Promise<OrgProfile[]> {
   try {
     const manifest = await fetchJson<OrgProfileManifest>(manifestUrl);
     const profileEntries = Array.isArray(manifest.profiles) ? manifest.profiles : [];
+    const defaultProfileId = manifest.default_profile_id ?? manifest.default ?? null;
     const loadedProfiles = await Promise.all(
       profileEntries
         .filter((entry): entry is OrgProfileManifestEntry => Boolean(entry?.path))
@@ -110,6 +113,9 @@ export async function loadOrgProfileCatalog(): Promise<OrgProfile[]> {
           return normalizeOrgProfile(profile, {
             manifestId: entry.id ?? null,
             profileUrl: resolvedPath,
+            isDefault:
+              Boolean(defaultProfileId) &&
+              (entry.id === defaultProfileId || profile.id === defaultProfileId || profile.slug === defaultProfileId),
             dataRoot,
           });
         }),

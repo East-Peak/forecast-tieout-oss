@@ -23,20 +23,18 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Real org data (keep demo profiles only)
-# The four shipped demos are allowlisted below; everything else is
+# Real org data (keep demo/fixture profiles only)
+# The three public personas and Acme engine fixture are allowlisted below; everything else is
 # ignored so users following the README ("drop real CSVs in
 # engine/data/<profile>/", "copy a demo profile under
 # engine/config/profiles/") don't accidentally commit real data.
 frontend/public/data/profiles/*/
-!frontend/public/data/profiles/acme-saas/
 !frontend/public/data/profiles/sprout-labs/
 !frontend/public/data/profiles/sapling-industries/
 !frontend/public/data/profiles/mighty-oak-holdings/
 
 frontend/public/data/profiles/*.json
 !frontend/public/data/profiles/index.json
-!frontend/public/data/profiles/acme-saas.json
 !frontend/public/data/profiles/sprout-labs.json
 !frontend/public/data/profiles/sapling-industries.json
 !frontend/public/data/profiles/mighty-oak-holdings.json

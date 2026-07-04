@@ -10,6 +10,7 @@ import {
   loadPlanCatalog as loadProtectedPlanCatalog,
   loadSnapshotFile as loadProtectedSnapshotFile,
 } from "../lib/protectedDataCatalog";
+import { resolveOrgProfileSelection } from "../lib/orgProfiles";
 import type { OrgProfile } from "../lib/orgProfiles";
 import type { PlanPreset } from "../lib/plans";
 import { isProtectedDataModeEnabled } from "../lib/runtimeConfig";
@@ -62,13 +63,10 @@ function resolveSelectedOrgProfile(
   profiles: OrgProfile[],
   preferredId: string | null | undefined,
 ): OrgProfile | null {
-  if (profiles.length === 0) return null;
-  const desiredKey = preferredId || readStoredProfileId();
-  return (
-    profiles.find((profile) => profile.id === desiredKey || profile.slug === desiredKey) ??
-    profiles[0] ??
-    null
-  );
+  return resolveOrgProfileSelection(profiles, {
+    preferredId,
+    storedId: readStoredProfileId(),
+  });
 }
 
 function resolveSelectedPlan(

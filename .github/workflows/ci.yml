@@ -51,7 +51,7 @@ jobs:
       - name: Example data determinism check
         run: python -m engine.scripts.generate_acme_data --verify
 
-      - name: Regenerate Acme demo snapshot
+      - name: Regenerate Acme fixture snapshot
         # generate_acme_snapshot.py is the demo-data generator (synthetic
         # Acme profile). Runs end-to-end so any regression in the engine
         # →snapshot contract is caught in CI, not just locally.
@@ -91,15 +91,14 @@ jobs:
           print(f'PASS: canonical-on-Acme — {deals} deals, beginning_arr=\${beginning_arr:,.0f}, schema valid, backend velocity, as_of honored')
           "
 
-      - name: Snapshot schema validation
-        # Validates the freshly-regenerated snapshot against the schema. If
-        # the engine emits a shape that doesn't match what the frontend
-        # contract expects, this fails the build.
+      - name: Public persona snapshot schema validation
+        # Validates a shipped public persona snapshot against the schema. Acme
+        # remains covered above through the CSV-backed engine fixture path.
         run: |
           python -c "
           import json, jsonschema
           schema = json.load(open('schema/snapshot.schema.json'))
-          snap = json.load(open('frontend/public/data/profiles/acme-saas/snapshot.json'))
+          snap = json.load(open('frontend/public/data/profiles/sapling-industries/snapshot.json'))
           jsonschema.validate(snap, schema)
-          print('snapshot.json validates against schema')
+          print('sapling-industries snapshot.json validates against schema')
           "

@@ -41,6 +41,7 @@ export interface OrgProfile {
   name: string;
   description: string;
   version: number;
+  isDefault: boolean;
   data: {
     snapshotUrl: string;
     planManifestUrl: string;
@@ -64,6 +65,7 @@ export interface OrgProfile {
 interface NormalizeOptions {
   manifestId?: string | null;
   profileUrl?: string | null;
+  isDefault?: boolean;
   dataRoot: string;
 }
 
@@ -92,6 +94,7 @@ export function createFallbackOrgProfile(dataRoot: string): OrgProfile {
     name: "Default Org",
     description: "Default Forecast Tieout org profile.",
     version: 1,
+    isDefault: false,
     data: {
       snapshotUrl: `${dataRoot}/profiles/default/snapshot.json`,
       planManifestUrl: `${dataRoot}/profiles/default/plans/index.json`,
@@ -119,7 +122,7 @@ export function createFallbackOrgProfile(dataRoot: string): OrgProfile {
 
 export function normalizeOrgProfile(
   raw: RawOrgProfile,
-  { manifestId, profileUrl, dataRoot }: NormalizeOptions,
+  { manifestId, profileUrl, isDefault = false, dataRoot }: NormalizeOptions,
 ): OrgProfile {
   const id =
     String(raw.id || manifestId || raw.slug || raw.name || "default").trim() ||
@@ -138,6 +141,7 @@ export function normalizeOrgProfile(
     name,
     description: String(raw.description || fallback.description),
     version: Number(raw.version || fallback.version),
+    isDefault,
     data: {
       snapshotUrl: resolveRelativeUrl(
         baseUrl,
@@ -176,6 +180,27 @@ export function normalizeOrgProfile(
       },
     },
   };
+}
+
+export function resolveOrgProfileSelection(
+  profiles: OrgProfile[],
+  {
+    preferredId,
+    storedId,
+  }: {
+    preferredId?: string | null;
+    storedId?: string | null;
+  },
+): OrgProfile | null {
+  if (profiles.length === 0) return null;
+
+  const desiredKey = preferredId || storedId || null;
+  const requestedProfile = desiredKey
+    ? profiles.find((profile) => profile.id === desiredKey || profile.slug === desiredKey)
+    : null;
+  if (requestedProfile) return requestedProfile;
+
+  return profiles.find((profile) => profile.isDefault) ?? profiles[0] ?? null;
 }
 
 function humanizeFallbackStep(step: string): string {

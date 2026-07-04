@@ -4,6 +4,7 @@ import {
   buildConnectorPolicyNotes,
   createFallbackOrgProfile,
   normalizeOrgProfile,
+  resolveOrgProfileSelection,
 } from "../orgProfiles";
 import type { RawOrgProfile } from "../orgProfiles";
 
@@ -44,5 +45,28 @@ describe("org profile helpers", () => {
     expect(notes).toHaveLength(3);
     expect(notes[0]).toContain("Warehouse observed -> CRM observed -> Config fallback");
     expect(notes[2]).toContain("warehouse + roster.yaml -> roster.yaml -> Config fallback");
+  });
+
+  it("selects the explicit default profile instead of the first manifest entry", () => {
+    const sprout = { ...createFallbackOrgProfile("/data"), id: "sprout-labs", slug: "sprout-labs" };
+    const sapling = {
+      ...createFallbackOrgProfile("/data"),
+      id: "sapling-industries",
+      slug: "sapling-industries",
+      isDefault: true,
+    };
+    const mighty = {
+      ...createFallbackOrgProfile("/data"),
+      id: "mighty-oak-holdings",
+      slug: "mighty-oak-holdings",
+    };
+
+    expect(resolveOrgProfileSelection([sprout, sapling, mighty], {})).toBe(sapling);
+    expect(resolveOrgProfileSelection([sprout, sapling, mighty], { storedId: "acme-saas" })).toBe(
+      sapling,
+    );
+    expect(resolveOrgProfileSelection([sprout, sapling, mighty], { preferredId: "sprout-labs" })).toBe(
+      sprout,
+    );
   });
 });

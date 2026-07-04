@@ -15,10 +15,22 @@ import {
 
 function loadSnapshot(): Snapshot {
   const snapshotPath = resolve(
-    fileURLToPath(new URL("../../../public/data/profiles/acme-saas/snapshot.json", import.meta.url))
+    fileURLToPath(new URL("../../../public/data/profiles/sapling-industries/snapshot.json", import.meta.url))
   );
   return JSON.parse(readFileSync(snapshotPath, "utf-8")) as Snapshot;
 }
+
+const expectedPublicPersonaFallbackExceptions = [
+  {
+    label: "AE Ramp Curve",
+    source: "Config fallback",
+    detail: "warehouse_s0_detail_unavailable",
+  },
+  { label: "Close Timing Curve", source: "Config fallback", detail: "\u2014" },
+  { label: "mql_to_s0", source: "Config assumption", detail: "\u2014" },
+  { label: "s0_to_s1", source: "Config assumption", detail: "\u2014" },
+  { label: "s1_to_s2", source: "Config assumption", detail: "\u2014" },
+];
 
 describe("audit readiness helpers", () => {
   it("shows quarter tie-out across finance-facing pages", () => {
@@ -49,11 +61,11 @@ describe("audit readiness helpers", () => {
     expect(report).toContain("Inactive Fallback Debt");
   });
 
-  it("keeps finance-critical exceptions empty for the saved snapshot", () => {
+  it("surfaces finance-critical fallback exceptions for the default public persona", () => {
     const snapshot = loadSnapshot();
     const rows = buildFallbackExceptions(snapshot);
 
-    expect(rows).toEqual([]);
+    expect(rows).toEqual(expectedPublicPersonaFallbackExceptions);
   });
 
   it("normalizes legacy PLG scope exclusions onto the stage-1 key", () => {

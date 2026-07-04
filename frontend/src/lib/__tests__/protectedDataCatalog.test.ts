@@ -91,6 +91,7 @@ describe("protectedDataCatalog", () => {
       name: "Demo Org",
       description: "",
       version: 1,
+      isDefault: false,
       data: {
         snapshotUrl: "https://protected.local/profiles/demo-org/snapshot.json",
         planManifestUrl: "https://protected.local/profiles/demo-org/plans/index.json",
@@ -176,6 +177,7 @@ describe("protectedDataCatalog", () => {
       name: "Demo Org",
       description: "",
       version: 1,
+      isDefault: false,
       data: {
         snapshotUrl: "https://protected.local/profiles/demo-org/snapshot.json",
         planManifestUrl: "https://protected.local/profiles/demo-org/plans/index.json",

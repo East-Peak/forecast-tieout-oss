@@ -14,7 +14,7 @@ import type { Snapshot } from "../../types/snapshot";
 
 function loadSnapshot(): Snapshot {
   const snapshotPath = resolve(
-    fileURLToPath(new URL("../../../public/data/profiles/acme-saas/snapshot.json", import.meta.url)),
+    fileURLToPath(new URL("../../../public/data/profiles/sapling-industries/snapshot.json", import.meta.url)),
   );
   return JSON.parse(readFileSync(snapshotPath, "utf-8")) as Snapshot;
 }

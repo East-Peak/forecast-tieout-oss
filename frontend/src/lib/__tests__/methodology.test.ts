@@ -14,10 +14,22 @@ import { makeV2TimingAwareDraftPlan } from "./planFixtures";
 
 function loadSnapshot(): Snapshot {
   const snapshotPath = resolve(
-    fileURLToPath(new URL("../../../public/data/profiles/acme-saas/snapshot.json", import.meta.url)),
+    fileURLToPath(new URL("../../../public/data/profiles/sapling-industries/snapshot.json", import.meta.url)),
   );
   return JSON.parse(readFileSync(snapshotPath, "utf-8")) as Snapshot;
 }
+
+const expectedPublicPersonaFallbackExceptions = [
+  {
+    label: "AE Ramp Curve",
+    source: "Config fallback",
+    detail: "warehouse_s0_detail_unavailable",
+  },
+  { label: "Close Timing Curve", source: "Config fallback", detail: "\u2014" },
+  { label: "mql_to_s0", source: "Config assumption", detail: "\u2014" },
+  { label: "s0_to_s1", source: "Config assumption", detail: "\u2014" },
+  { label: "s1_to_s2", source: "Config assumption", detail: "\u2014" },
+];
 
 describe("methodology view model", () => {
   // TODO(v0.2.x): recalibrate against Acme synthetic data after FY26 relabel.
@@ -61,7 +73,7 @@ describe("methodology view model", () => {
     ).toContain("note-only in v2");
   });
 
-  it("keeps the current snapshot free of finance-critical fallback exceptions", () => {
+  it("surfaces finance-critical fallback exceptions for the default public persona", () => {
     const snapshot = loadSnapshot();
     const viewModel = buildMethodologyViewModel(
       snapshot,
@@ -69,7 +81,7 @@ describe("methodology view model", () => {
       "Frontend local adapter (backend-compatible contract)",
     );
 
-    expect(viewModel.fallbackExceptions).toEqual([]);
+    expect(viewModel.fallbackExceptions).toEqual(expectedPublicPersonaFallbackExceptions);
     expect(viewModel.assumptions.length).toBeGreaterThan(10);
     expect(viewModel.criticalSignals.length).toBeGreaterThan(10);
     expect(

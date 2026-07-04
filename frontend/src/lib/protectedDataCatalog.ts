@@ -29,6 +29,8 @@ interface PlanManifest {
 }
 
 interface OrgProfileManifest {
+  default?: string;
+  default_profile_id?: string;
   profiles?: OrgProfileManifestEntry[];
 }
 
@@ -168,6 +170,7 @@ export async function loadOrgProfileCatalog(): Promise<OrgProfile[]> {
   const manifestUrl = buildProtectedUrl(buildArtifactKey(manifestKey));
   const manifest = await downloadJson<OrgProfileManifest>(manifestKey);
   const profileEntries = Array.isArray(manifest.profiles) ? manifest.profiles : [];
+  const defaultProfileId = manifest.default_profile_id ?? manifest.default ?? null;
 
   const loadedProfiles = await Promise.all(
     profileEntries
@@ -179,6 +182,9 @@ export async function loadOrgProfileCatalog(): Promise<OrgProfile[]> {
         return normalizeOrgProfile(profile, {
           manifestId: entry.id ?? null,
           profileUrl: buildProtectedUrl(profileKey),
+          isDefault:
+            Boolean(defaultProfileId) &&
+            (entry.id === defaultProfileId || profile.id === defaultProfileId || profile.slug === defaultProfileId),
           dataRoot: "https://protected.local/",
         });
       }),
