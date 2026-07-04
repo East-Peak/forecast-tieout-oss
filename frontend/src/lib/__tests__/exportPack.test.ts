@@ -57,12 +57,10 @@ describe("export pack helpers", () => {
     ).toContain("note-only in v2");
   });
 
-  // TODO(v0.2.x): recalibrate against Acme synthetic data after FY26 relabel.
-  // Test logic is sound; assertion values were calibrated against the bundled demo profiles.
-  it.skip("surfaces edited quarters and scenario deltas when overrides are active", async () => {
+  it("surfaces edited quarters and scenario deltas when overrides are active", async () => {
     const snapshot = loadSnapshot();
     const overrides = cloneScenarioOverrides(buildDefaultScenarioOverrides(snapshot));
-    overrides.Q2FY26.aeMonthTargets[2] = 24;
+    overrides.Q3FY26.mqlChangePct = 1.0;
     const baselineComputation = await frontendLocalScenarioEngine.compute(
       snapshot,
       buildDefaultScenarioOverrides(snapshot),
@@ -84,7 +82,7 @@ describe("export pack helpers", () => {
     );
 
     expect(viewModel.hasScenarioEdits).toBe(true);
-    expect(viewModel.editedQuarters).toContain("Q2FY26");
+    expect(viewModel.editedQuarters).toContain("Q3FY26");
     expect(viewModel.scenarioDelta).toBeGreaterThan(0);
   });
 

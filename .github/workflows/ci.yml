@@ -36,11 +36,17 @@ jobs:
       - name: Engine tests
         run: python -m pytest engine/tests/ -v
 
-      - name: Parity tests
+      - name: Scenario golden vectors are current
+        run: python -m tests.parity.generate_scenario_golden_vectors --verify
+
+      - name: Python scenario golden-vector parity
         run: python -m pytest tests/parity/ -v
 
       - name: TypeScript check
         run: cd frontend && npx tsc --noEmit
+
+      - name: Frontend scenario golden-vector parity
+        run: cd frontend && npm test -- --run src/engine/__tests__/scenario.golden-vectors.test.ts
 
       - name: Frontend tests (vitest)
         run: cd frontend && npm test -- --run

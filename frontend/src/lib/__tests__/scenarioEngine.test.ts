@@ -33,9 +33,7 @@ describe("scenario engine adapter", () => {
     resetScenarioServiceResolutionForTests();
   });
 
-  // TODO(v0.2.x): recalibrate against Acme synthetic data after FY26 relabel.
-  // Test logic is sound; assertion values were calibrated against the bundled demo profiles.
-  it.skip("builds a backend-compatible full request payload", () => {
+  it("builds a backend-compatible full request payload", () => {
     const snapshot = loadSnapshot();
     const overrides = cloneScenarioOverrides(buildDefaultScenarioOverrides(snapshot));
     overrides.Q2FY26.aeMonthTargets[2] = 24;
@@ -44,13 +42,11 @@ describe("scenario engine adapter", () => {
 
     expect(payload.version).toBe(1);
     expect(payload.profileId).toBe("demo-org");
-    expect(payload.quarters.Q2FY26.aeMonthTargets).toEqual([18, 20, 24]);
+    expect(payload.quarters.Q2FY26.aeMonthTargets).toEqual([18, 19, 24]);
     expect(payload.quarters.Q4FY26.avgDealSize).toBeGreaterThan(0);
   });
 
-  // TODO(v0.2.x): recalibrate against Acme synthetic data after FY26 relabel.
-  // Test logic is sound; assertion values were calibrated against the bundled demo profiles.
-  it.skip("matches the local planner result while exposing the service request", async () => {
+  it("matches the local planner result while exposing the service request", async () => {
     const snapshot = loadSnapshot();
     const overrides = cloneScenarioOverrides(buildDefaultScenarioOverrides(snapshot));
     overrides.Q2FY26.aeMonthTargets[2] = 24;
@@ -64,7 +60,7 @@ describe("scenario engine adapter", () => {
 
     expect(computation.engineId).toBe("frontend-local");
     expect(computation.request.profileId).toBe("demo-org");
-    expect(computation.request.quarters.Q2FY26.aeMonthTargets).toEqual([18, 20, 24]);
+    expect(computation.request.quarters.Q2FY26.aeMonthTargets).toEqual([18, 19, 24]);
     expect(computation.result.monthly_capped).toEqual(local.monthly_capped);
     expect(computation.result.fy_capped).toBe(local.fy_capped);
   });

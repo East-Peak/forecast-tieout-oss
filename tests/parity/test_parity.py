@@ -1,102 +1,79 @@
-"""
-Cross-language parity tests for scenario formulas.
+"""Python scenario engine parity against shared golden vectors."""
 
-These tests verify that the Python engine projection and the TypeScript
-scenario adapter produce identical results from identical inputs.
+from __future__ import annotations
 
-For now, this file tests the Python side only. The full cross-language
-parity suite (invoking the TypeScript adapter via Node) is added when
-the frontend scenario engine is fully integrated.
-"""
 import json
-import pytest
+from collections.abc import Mapping, Sequence
 from pathlib import Path
+from typing import Any
 
-FIXTURE_DIR = Path(__file__).parent / "fixtures"
-TOLERANCE = 0.001  # 0.1%
+import pytest
 
+from gtm_model.tieout.runtime.scenario_service import compute_snapshot_scenario
 
-def weighted_projection(deals, stage_rates):
-    """Reference implementation of the weighted projection formula."""
-    total = 0.0
-    for deal in deals:
-        value = deal.get("metric_value") or 0
-        if value is None:
-            value = 0
-        rate = stage_rates.get(deal["stage"], 0.0)
-        total += value * rate
-    return total
+FIXTURE_PATH = Path(__file__).parent / "fixtures" / "scenario-golden-vectors.json"
 
 
-def capacity_projection(ae_count, productivity, ramp_factor):
-    """Reference implementation of capacity projection."""
-    return ae_count * productivity * ramp_factor
+def _load_vectors() -> dict[str, Any]:
+    return json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
 
 
-@pytest.fixture
-def baseline():
-    return json.loads((FIXTURE_DIR / "acme_baseline.json").read_text())
+VECTORS = _load_vectors()
 
 
-def test_baseline_weighted_projection(baseline):
-    result = weighted_projection(baseline["deals"], baseline["stage_win_rates"])
-    # D1: 250000 * 0.25 = 62500
-    # D2: 150000 * 0.50 = 75000
-    # D3: 0 * 0.75 = 0
-    # D4: null -> 0 * 0.05 = 0
-    # D5: 400000 * 0.0 (unknown stage) = 0
-    expected = 62500 + 75000  # = 137500
-    assert abs(result - expected) < 1.0
-
-
-def test_capacity_projection(baseline):
-    cap = baseline["capacity"]
-    result = capacity_projection(
-        cap["ae_count"], cap["productivity_per_ae"], cap["ramp_factor"]
+def _assert_number_close(actual: float, expected: float, policy: Mapping[str, Any], path: str) -> None:
+    absolute_epsilon = float(policy["floats"]["absoluteEpsilon"])
+    relative_epsilon = float(policy["floats"]["relativeEpsilon"])
+    scale = max(1.0, abs(expected))
+    assert abs(actual - expected) <= max(absolute_epsilon, relative_epsilon * scale), (
+        f"{path}: actual={actual!r} expected={expected!r}"
     )
-    expected = 20 * 150000 * 0.85  # = 2,550,000
-    assert abs(result - expected) < 1.0
 
 
-def test_rate_override():
-    """Applying a rate override produces a different result."""
-    deals = [{"id": "D1", "metric_value": 100000, "stage": "Technical Evaluation"}]
-    baseline_rates = {"Technical Evaluation": 0.25}
-    override_rates = {"Technical Evaluation": 0.50}
-
-    baseline_result = weighted_projection(deals, baseline_rates)
-    override_result = weighted_projection(deals, override_rates)
-
-    assert baseline_result == 25000
-    assert override_result == 50000
-    assert override_result - baseline_result == 25000  # delta
+def _requires_exact_number(path: str, policy: Mapping[str, Any]) -> bool:
+    return any(f".{field}[" in path for field in policy.get("countFields", []))
 
 
-def test_empty_deals():
-    result = weighted_projection([], {"Discovery": 0.05})
-    assert result == 0.0
+def _assert_value_close(actual: Any, expected: Any, policy: Mapping[str, Any], path: str) -> None:
+    if isinstance(expected, bool) or isinstance(actual, bool):
+        assert actual == expected, f"{path}: actual={actual!r} expected={expected!r}"
+        return
+    if isinstance(expected, int) and isinstance(actual, int):
+        assert actual == expected, f"{path}: actual={actual!r} expected={expected!r}"
+        return
+    if isinstance(expected, (int, float)) and isinstance(actual, (int, float)):
+        if _requires_exact_number(path, policy):
+            assert actual == expected, f"{path}: actual={actual!r} expected={expected!r}"
+            return
+        _assert_number_close(float(actual), float(expected), policy, path)
+        return
+    if isinstance(expected, str) or expected is None:
+        assert actual == expected, f"{path}: actual={actual!r} expected={expected!r}"
+        return
+    if isinstance(expected, Sequence) and not isinstance(expected, (str, bytes, bytearray)):
+        assert isinstance(actual, Sequence), f"{path}: actual is not a sequence"
+        assert len(actual) == len(expected), f"{path}: actual length={len(actual)} expected={len(expected)}"
+        for index, expected_value in enumerate(expected):
+            _assert_value_close(actual[index], expected_value, policy, f"{path}[{index}]")
+        return
+    if isinstance(expected, Mapping):
+        assert isinstance(actual, Mapping), f"{path}: actual is not a mapping"
+        assert set(actual.keys()) == set(expected.keys()), (
+            f"{path}: actual keys={sorted(actual.keys())} expected={sorted(expected.keys())}"
+        )
+        for key, expected_value in expected.items():
+            _assert_value_close(actual[key], expected_value, policy, f"{path}.{key}")
+        return
+    assert actual == expected, f"{path}: actual={actual!r} expected={expected!r}"
 
 
-def test_noop_override():
-    """Override with same values as baseline produces exact same result."""
-    deals = [
-        {"id": "D1", "metric_value": 250000, "stage": "Technical Evaluation"},
-        {"id": "D2", "metric_value": 150000, "stage": "Business Case"},
-    ]
-    rates = {"Technical Evaluation": 0.25, "Business Case": 0.50}
+@pytest.mark.parametrize("case", VECTORS["cases"], ids=lambda case: case["id"])
+def test_python_scenario_engine_matches_shared_golden_vectors(case: Mapping[str, Any]) -> None:
+    result = compute_snapshot_scenario(case["input"]["snapshot"], case["input"]["overrides"]).to_dict()
 
-    result1 = weighted_projection(deals, rates)
-    result2 = weighted_projection(deals, rates)
-    assert result1 == result2  # exact equality, not tolerance
-
-
-def test_missing_amounts():
-    """Deals with null amounts are handled gracefully."""
-    deals = [
-        {"id": "D1", "metric_value": None, "stage": "Discovery"},
-        {"id": "D2", "metric_value": 0, "stage": "Discovery"},
-        {"id": "D3", "metric_value": 100000, "stage": "Discovery"},
-    ]
-    rates = {"Discovery": 0.05}
-    result = weighted_projection(deals, rates)
-    assert result == 5000  # only D3 contributes
+    _assert_value_close(
+        result,
+        case["expected"]["result"],
+        VECTORS["tolerancePolicy"],
+        case["id"],
+    )

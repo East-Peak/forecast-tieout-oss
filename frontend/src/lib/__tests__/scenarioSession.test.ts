@@ -45,9 +45,7 @@ describe("scenario session helpers", () => {
     expect(deserializeScenarioOverrides(token ?? "", baseline)).toEqual(edited);
   });
 
-  // TODO(v0.2.x): recalibrate against Acme synthetic data after FY26 relabel.
-  // Test logic is sound; assertion values were calibrated against the bundled demo profiles.
-  it.skip("continues to accept legacy uri-encoded payloads", () => {
+  it("continues to accept legacy uri-encoded payloads", () => {
     const snapshot = loadSnapshot();
     const baseline = buildDefaultScenarioOverrides(snapshot);
     const edited = cloneScenarioOverrides(baseline);
@@ -59,7 +57,7 @@ describe("scenario session helpers", () => {
         version: 1,
         quarters: {
           Q2FY26: {
-            aeMonthTargets: [18, 20, 24],
+            aeMonthTargets: [18, 19, 24],
           },
         },
       }),

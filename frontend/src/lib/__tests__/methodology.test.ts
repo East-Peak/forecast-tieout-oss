@@ -32,9 +32,7 @@ const expectedPublicPersonaFallbackExceptions = [
 ];
 
 describe("methodology view model", () => {
-  // TODO(v0.2.x): recalibrate against Acme synthetic data after FY26 relabel.
-  // Test logic is sound; assertion values were calibrated against the bundled demo profiles.
-  it.skip("keeps current finance semantics in the narrative and provenance blocks", () => {
+  it("keeps current finance semantics in the narrative and provenance blocks", () => {
     const snapshot = loadSnapshot();
     const plan = normalizePlanPreset(makeV2TimingAwareDraftPlan());
     const viewModel = buildMethodologyViewModel(
@@ -52,12 +50,12 @@ describe("methodology view model", () => {
     ).toBe(true);
     expect(
       viewModel.provenanceItems.some(
-        (item) => item.label === "Close timing source" && item.value === "Salesforce observed",
+        (item) => item.label === "Close timing source" && item.value === "Config fallback",
       ),
     ).toBe(true);
     expect(
       viewModel.provenanceItems.some(
-        (item) => item.label === "CRM connector" && item.value === "Salesforce",
+        (item) => item.label === "CRM connector" && item.value === "CSV",
       ),
     ).toBe(true);
     expect(

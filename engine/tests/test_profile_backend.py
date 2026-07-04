@@ -114,8 +114,7 @@ def test_base_compute_finance_summary_uses_derived():
 def test_csv_backend_constructed_with_field_mapping(
     acme_data_dir, acme_field_mappings
 ):
-    if not acme_data_dir.exists():
-        pytest.skip("Acme data dir not present in this environment")
+    assert acme_data_dir.exists(), "Acme fixture data must be present for CSV backend coverage"
     backend = CSVBackend(
         data_dir=acme_data_dir,
         field_mapping_path=acme_field_mappings,
@@ -128,8 +127,7 @@ def test_csv_backend_constructed_with_field_mapping(
 
 
 def test_csv_backend_capabilities_propagate(acme_data_dir, acme_field_mappings):
-    if not acme_data_dir.exists():
-        pytest.skip("Acme data dir not present")
+    assert acme_data_dir.exists(), "Acme fixture data must be present for CSV backend coverage"
     backend = CSVBackend(acme_data_dir, field_mapping_path=acme_field_mappings)
     caps = backend.capabilities()
     # Acme CSV has stage_history.csv but no companies/contacts CSVs

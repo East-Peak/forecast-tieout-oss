@@ -1,0 +1,3520 @@
+{
+  "cases": [
+    {
+      "category": "contract baseline",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            40000.0,
+            105000.0,
+            205000.0,
+            325000.0,
+            465000.0,
+            575000.0
+          ],
+          "cumulative_expected": [
+            40000.0,
+            105000.0,
+            215000.0,
+            355000.0,
+            465000.0,
+            575000.0
+          ],
+          "fy_capped": 575000.0,
+          "fy_expected": 575000.0,
+          "monthly_ae_count": [
+            2.0,
+            2.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0
+          ],
+          "monthly_ae_creation": [
+            0.0,
+            30000.0,
+            60000.0,
+            65000.0,
+            75000.0,
+            80000.0
+          ],
+          "monthly_capacity": [
+            80000.0,
+            100000.0,
+            100000.0,
+            120000.0,
+            150000.0,
+            160000.0
+          ],
+          "monthly_capped": [
+            40000.0,
+            65000.0,
+            100000.0,
+            120000.0,
+            140000.0,
+            110000.0
+          ],
+          "monthly_expected": [
+            40000.0,
+            65000.0,
+            110000.0,
+            140000.0,
+            110000.0,
+            110000.0
+          ],
+          "monthly_future_wins": [
+            0.0,
+            10000.0,
+            20000.0,
+            30000.0,
+            40000.0,
+            50000.0
+          ],
+          "monthly_inventory_wins": [
+            40000.0,
+            55000.0,
+            90000.0,
+            110000.0,
+            70000.0,
+            60000.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            10000.0,
+            20000.0,
+            22000.0,
+            24000.0,
+            26000.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            10000.0,
+            30000.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            0.0,
+            40000.0,
+            80000.0,
+            87000.0,
+            99000.0,
+            106000.0
+          ],
+          "months": [
+            "2026-01-01",
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01"
+          ]
+        }
+      },
+      "id": "synthetic-default-noop",
+      "input": {
+        "overrides": {
+          "Q1FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              2,
+              3,
+              3
+            ],
+            "avgDealSize": 100000.0,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.5,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          },
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              4,
+              4,
+              4
+            ],
+            "avgDealSize": 100000.0,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.5,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          }
+        },
+        "snapshot": {
+          "engine_version": "contract-reference",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "future_generation_win_rates": [
+                  0.2,
+                  0.22,
+                  0.24,
+                  0.26,
+                  0.28,
+                  0.3
+                ]
+              }
+            }
+          },
+          "profile_id": "synthetic-default",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "overall_win_rate": 0.25
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment_serialized": {
+                "enterprise": {
+                  "month_1": 0.2,
+                  "month_2": 0.5,
+                  "month_3": 0.8,
+                  "month_4": 1.0
+                }
+              }
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.5,
+              0.3,
+              0.2
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "monthly_ae_capacity": [
+              80000,
+              100000,
+              100000,
+              120000,
+              150000,
+              160000
+            ],
+            "monthly_ae_count": [
+              2,
+              2,
+              3,
+              3,
+              4,
+              4
+            ],
+            "monthly_ae_creation": [
+              0,
+              30000,
+              60000,
+              65000,
+              75000,
+              80000
+            ],
+            "monthly_capped": [
+              40000,
+              65000,
+              100000,
+              120000,
+              110000,
+              110000
+            ],
+            "monthly_future_wins": [
+              0,
+              10000,
+              20000,
+              30000,
+              40000,
+              50000
+            ],
+            "monthly_inventory_wins": [
+              40000,
+              55000,
+              90000,
+              110000,
+              70000,
+              60000
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0,
+              10000,
+              20000,
+              22000,
+              24000,
+              26000
+            ],
+            "monthly_total_expected": [
+              40000,
+              65000,
+              110000,
+              140000,
+              110000,
+              110000
+            ],
+            "months": [
+              "2026-01-01",
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01"
+            ],
+            "observed_values": {
+              "avg_deal_size": 100000,
+              "productivity_per_ae_per_month": 2.0
+            },
+            "overridable_quarters": [
+              "Q1FY26",
+              "Q2FY26"
+            ],
+            "quarter_by_month": [
+              "Q4FY25",
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26"
+            ]
+          },
+          "schema_version": "golden-vector-v1"
+        }
+      },
+      "rationale": "No-op override must preserve saved actual months while recomputing projected months."
+    },
+    {
+      "category": "edge: extreme overrides",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            40000.0,
+            105000.0,
+            255000.0,
+            495000.0,
+            813750.0,
+            1189750.0
+          ],
+          "cumulative_expected": [
+            40000.0,
+            105000.0,
+            378950.0,
+            840286.25,
+            1158886.0,
+            1375916.5
+          ],
+          "fy_capped": 1189750.0,
+          "fy_expected": 1375916.5,
+          "monthly_ae_count": [
+            2.0,
+            2.0,
+            6.0,
+            9.0,
+            10.0,
+            10.0
+          ],
+          "monthly_ae_creation": [
+            0.0,
+            30000.0,
+            731250.0,
+            1015625.0,
+            165000.0,
+            188000.0
+          ],
+          "monthly_capacity": [
+            80000.0,
+            100000.0,
+            150000.0,
+            240000.0,
+            318750.0,
+            376000.0
+          ],
+          "monthly_capped": [
+            40000.0,
+            65000.0,
+            150000.0,
+            240000.0,
+            318750.0,
+            376000.0
+          ],
+          "monthly_expected": [
+            40000.0,
+            65000.0,
+            273950.0,
+            461336.25,
+            318599.75,
+            217030.5
+          ],
+          "monthly_future_wins": [
+            0.0,
+            10000.0,
+            183950.0,
+            351336.25,
+            248599.75,
+            157030.5
+          ],
+          "monthly_inventory_wins": [
+            40000.0,
+            55000.0,
+            90000.0,
+            110000.0,
+            70000.0,
+            60000.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            10000.0,
+            715000.0,
+            786500.0,
+            0.0,
+            0.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            123950.0,
+            345286.25,
+            345136.0,
+            186166.5
+          ],
+          "monthly_pipeline_created": [
+            0.0,
+            40000.0,
+            1446250.0,
+            1802125.0,
+            165000.0,
+            188000.0
+          ],
+          "months": [
+            "2026-01-01",
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01"
+          ]
+        }
+      },
+      "id": "synthetic-extreme-overrides",
+      "input": {
+        "overrides": {
+          "Q1FY26": {
+            "addAes": 3,
+            "aeMonthTargets": [
+              2,
+              3,
+              6
+            ],
+            "avgDealSize": 250000.0,
+            "mqlChangePct": 1.75,
+            "mqlToS0": 0.8,
+            "s0ToS1": 0.65,
+            "s1ToS2": 0.5
+          },
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              4,
+              4,
+              4
+            ],
+            "avgDealSize": 100000.0,
+            "mqlChangePct": -1.0,
+            "mqlToS0": 0.0,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          }
+        },
+        "snapshot": {
+          "engine_version": "contract-reference",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "future_generation_win_rates": [
+                  0.2,
+                  0.22,
+                  0.24,
+                  0.26,
+                  0.28,
+                  0.3
+                ]
+              }
+            }
+          },
+          "profile_id": "synthetic-default",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "overall_win_rate": 0.25
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment_serialized": {
+                "enterprise": {
+                  "month_1": 0.2,
+                  "month_2": 0.5,
+                  "month_3": 0.8,
+                  "month_4": 1.0
+                }
+              }
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.5,
+              0.3,
+              0.2
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "monthly_ae_capacity": [
+              80000,
+              100000,
+              100000,
+              120000,
+              150000,
+              160000
+            ],
+            "monthly_ae_count": [
+              2,
+              2,
+              3,
+              3,
+              4,
+              4
+            ],
+            "monthly_ae_creation": [
+              0,
+              30000,
+              60000,
+              65000,
+              75000,
+              80000
+            ],
+            "monthly_capped": [
+              40000,
+              65000,
+              100000,
+              120000,
+              110000,
+              110000
+            ],
+            "monthly_future_wins": [
+              0,
+              10000,
+              20000,
+              30000,
+              40000,
+              50000
+            ],
+            "monthly_inventory_wins": [
+              40000,
+              55000,
+              90000,
+              110000,
+              70000,
+              60000
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0,
+              10000,
+              20000,
+              22000,
+              24000,
+              26000
+            ],
+            "monthly_total_expected": [
+              40000,
+              65000,
+              110000,
+              140000,
+              110000,
+              110000
+            ],
+            "months": [
+              "2026-01-01",
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01"
+            ],
+            "observed_values": {
+              "avg_deal_size": 100000,
+              "productivity_per_ae_per_month": 2.0
+            },
+            "overridable_quarters": [
+              "Q1FY26",
+              "Q2FY26"
+            ],
+            "quarter_by_month": [
+              "Q4FY25",
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26"
+            ]
+          },
+          "schema_version": "golden-vector-v1"
+        }
+      },
+      "rationale": "High upside, MQL shutoff, added AE cohorts, and capacity overflow in one case."
+    },
+    {
+      "category": "edge: zero pipeline and zero win rate",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cumulative_expected": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fy_capped": 0.0,
+          "fy_expected": 0.0,
+          "monthly_ae_count": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_ae_creation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_capacity": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_capped": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_expected": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_future_wins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_inventory_wins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "months": [
+            "2026-01-01",
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01"
+          ]
+        }
+      },
+      "id": "synthetic-zero-pipeline-zero-win-rate",
+      "input": {
+        "overrides": {
+          "Q1FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              0,
+              0,
+              0
+            ],
+            "avgDealSize": 100000.0,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.5,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          },
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              0,
+              0,
+              0
+            ],
+            "avgDealSize": 100000.0,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.5,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          }
+        },
+        "snapshot": {
+          "engine_version": "contract-reference",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "future_generation_win_rates": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          },
+          "profile_id": "synthetic-zero-pipeline",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "overall_win_rate": 0.0
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment_serialized": {
+                "enterprise": {}
+              }
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.5,
+              0.3,
+              0.2
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "monthly_ae_capacity": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_ae_count": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_ae_creation": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_capped": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_future_wins": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_inventory_wins": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_is_actual": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "monthly_total_expected": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "months": [
+              "2026-01-01",
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01"
+            ],
+            "observed_values": {
+              "avg_deal_size": 100000,
+              "productivity_per_ae_per_month": 2.0
+            },
+            "overridable_quarters": [
+              "Q1FY26",
+              "Q2FY26"
+            ],
+            "quarter_by_month": [
+              "Q4FY25",
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26"
+            ]
+          },
+          "schema_version": "golden-vector-v1"
+        }
+      },
+      "rationale": "All-zero pipeline, capacity, AE count, and future win rates must remain zero."
+    },
+    {
+      "category": "edge: boundary months and quarters",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            40000.0,
+            105000.0,
+            205000.0,
+            397000.0,
+            574200.0,
+            771200.0
+          ],
+          "cumulative_expected": [
+            40000.0,
+            105000.0,
+            215000.0,
+            397000.0,
+            574200.0,
+            771200.0
+          ],
+          "fy_capped": 771200.0,
+          "fy_expected": 771200.0,
+          "monthly_ae_count": [
+            2.0,
+            2.0,
+            3.0,
+            17.0,
+            18.0,
+            19.0
+          ],
+          "monthly_ae_creation": [
+            0.0,
+            30000.0,
+            60000.0,
+            345000.0,
+            355000.0,
+            380000.0
+          ],
+          "monthly_capacity": [
+            80000.0,
+            100000.0,
+            100000.0,
+            680000.0,
+            675000.0,
+            760000.0
+          ],
+          "monthly_capped": [
+            40000.0,
+            65000.0,
+            100000.0,
+            192000.0,
+            177200.0,
+            197000.0
+          ],
+          "monthly_expected": [
+            40000.0,
+            65000.0,
+            110000.0,
+            182000.0,
+            177200.0,
+            197000.0
+          ],
+          "monthly_future_wins": [
+            0.0,
+            10000.0,
+            20000.0,
+            72000.0,
+            107200.0,
+            137000.0
+          ],
+          "monthly_inventory_wins": [
+            40000.0,
+            55000.0,
+            90000.0,
+            110000.0,
+            70000.0,
+            60000.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            10000.0,
+            20000.0,
+            22000.0,
+            24000.0,
+            26000.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            0.0,
+            40000.0,
+            80000.0,
+            367000.0,
+            379000.0,
+            406000.0
+          ],
+          "months": [
+            "2026-01-01",
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01"
+          ]
+        }
+      },
+      "id": "synthetic-boundary-actual-to-projected-quarter",
+      "input": {
+        "overrides": {
+          "Q1FY26": {
+            "addAes": 10,
+            "aeMonthTargets": [
+              2,
+              2,
+              3
+            ],
+            "avgDealSize": 1000000.0,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.5,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          },
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              7,
+              8,
+              9
+            ],
+            "avgDealSize": 100000.0,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.5,
+            "s0ToS1": 0.4,
+            "s1ToS2": 0.25
+          }
+        },
+        "snapshot": {
+          "engine_version": "contract-reference",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "future_generation_win_rates": [
+                  0.3,
+                  0.3,
+                  0.3,
+                  0.3,
+                  0.3,
+                  0.3
+                ]
+              }
+            }
+          },
+          "profile_id": "synthetic-boundary-months",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "overall_win_rate": 0.25
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment_serialized": {
+                "enterprise": {
+                  "month_1": 1.0
+                }
+              }
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.5,
+              0.3,
+              0.2
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "monthly_ae_capacity": [
+              80000,
+              100000,
+              100000,
+              120000,
+              150000,
+              160000
+            ],
+            "monthly_ae_count": [
+              2,
+              2,
+              3,
+              3,
+              4,
+              4
+            ],
+            "monthly_ae_creation": [
+              0,
+              30000,
+              60000,
+              65000,
+              75000,
+              80000
+            ],
+            "monthly_capped": [
+              40000,
+              65000,
+              100000,
+              120000,
+              110000,
+              110000
+            ],
+            "monthly_future_wins": [
+              0,
+              10000,
+              20000,
+              30000,
+              40000,
+              50000
+            ],
+            "monthly_inventory_wins": [
+              40000,
+              55000,
+              90000,
+              110000,
+              70000,
+              60000
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0,
+              10000,
+              20000,
+              22000,
+              24000,
+              26000
+            ],
+            "monthly_total_expected": [
+              40000,
+              65000,
+              110000,
+              140000,
+              110000,
+              110000
+            ],
+            "months": [
+              "2026-01-01",
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01"
+            ],
+            "observed_values": {
+              "avg_deal_size": 100000,
+              "productivity_per_ae_per_month": 2.0
+            },
+            "overridable_quarters": [
+              "Q1FY26",
+              "Q2FY26"
+            ],
+            "quarter_by_month": [
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q2FY26"
+            ]
+          },
+          "schema_version": "golden-vector-v1"
+        }
+      },
+      "rationale": "A Q1 override cannot mutate actual Q1 months; Q2 overrides begin at the first projected quarter month."
+    },
+    {
+      "category": "edge: empty/missing optional blocks",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            40000.0,
+            105000.0,
+            205000.0,
+            325000.0,
+            465000.0,
+            575000.0
+          ],
+          "cumulative_expected": [
+            40000.0,
+            105000.0,
+            215000.0,
+            355000.0,
+            465000.0,
+            575000.0
+          ],
+          "fy_capped": 575000.0,
+          "fy_expected": 575000.0,
+          "monthly_ae_count": [
+            2.0,
+            2.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0
+          ],
+          "monthly_ae_creation": [
+            0.0,
+            30000.0,
+            60000.0,
+            65000.0,
+            75000.0,
+            80000.0
+          ],
+          "monthly_capacity": [
+            80000.0,
+            100000.0,
+            100000.0,
+            120000.0,
+            150000.0,
+            160000.0
+          ],
+          "monthly_capped": [
+            40000.0,
+            65000.0,
+            100000.0,
+            120000.0,
+            140000.0,
+            110000.0
+          ],
+          "monthly_expected": [
+            40000.0,
+            65000.0,
+            110000.0,
+            140000.0,
+            110000.0,
+            110000.0
+          ],
+          "monthly_future_wins": [
+            0.0,
+            10000.0,
+            20000.0,
+            30000.0,
+            40000.0,
+            50000.0
+          ],
+          "monthly_inventory_wins": [
+            40000.0,
+            55000.0,
+            90000.0,
+            110000.0,
+            70000.0,
+            60000.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            10000.0,
+            20000.0,
+            22000.0,
+            24000.0,
+            26000.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            10000.0,
+            30000.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            0.0,
+            40000.0,
+            80000.0,
+            87000.0,
+            99000.0,
+            106000.0
+          ],
+          "months": [
+            "2026-01-01",
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01"
+          ]
+        }
+      },
+      "id": "synthetic-missing-optional-quarter-blocks",
+      "input": {
+        "overrides": {},
+        "snapshot": {
+          "engine_version": "contract-reference",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {}
+            }
+          },
+          "profile_id": "synthetic-missing-optional",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "overall_win_rate": 0.25
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment_serialized": {
+                "enterprise": {}
+              }
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.5,
+              0.3,
+              0.2
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.5,
+              "s0_to_s1": 0.4,
+              "s1_to_s2": 0.25
+            },
+            "monthly_ae_capacity": [
+              80000,
+              100000,
+              100000,
+              120000,
+              150000,
+              160000
+            ],
+            "monthly_ae_count": [
+              2,
+              2,
+              3,
+              3,
+              4,
+              4
+            ],
+            "monthly_ae_creation": [
+              0,
+              30000,
+              60000,
+              65000,
+              75000,
+              80000
+            ],
+            "monthly_capped": [
+              40000,
+              65000,
+              100000,
+              120000,
+              110000,
+              110000
+            ],
+            "monthly_future_wins": [
+              0,
+              10000,
+              20000,
+              30000,
+              40000,
+              50000
+            ],
+            "monthly_inventory_wins": [
+              40000,
+              55000,
+              90000,
+              110000,
+              70000,
+              60000
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0,
+              10000,
+              20000,
+              22000,
+              24000,
+              26000
+            ],
+            "monthly_total_expected": [
+              40000,
+              65000,
+              110000,
+              140000,
+              110000,
+              110000
+            ],
+            "months": [
+              "2026-01-01",
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01"
+            ],
+            "observed_values": {
+              "avg_deal_size": 100000,
+              "productivity_per_ae_per_month": 2.0
+            }
+          },
+          "schema_version": "golden-vector-v1"
+        }
+      },
+      "rationale": "Missing overridable_quarters and quarter_by_month means no quarter edits are applied."
+    },
+    {
+      "category": "public persona committed scenario_building_blocks",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            0.0,
+            1132000.0,
+            1450000.0,
+            1902011.603904853,
+            2723678.2705715196,
+            3305876.415499413,
+            3314020.019040213,
+            3562256.822771733,
+            3762443.4517240534,
+            3770554.1509461333,
+            4201695.846468694,
+            4661867.570742934
+          ],
+          "cumulative_expected": [
+            0.0,
+            1132000.0,
+            1450000.0,
+            1662678.27057152,
+            2725306.25123264,
+            3066543.08216608,
+            3074686.68570688,
+            3322923.4894384,
+            3523110.1183907203,
+            3531220.8176128003,
+            3962362.51313536,
+            4422534.2374096
+          ],
+          "fy_capped": 4661867.570742933,
+          "fy_expected": 4422534.2374096,
+          "monthly_ae_count": [
+            9.0,
+            9.0,
+            10.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0
+          ],
+          "monthly_ae_creation": [
+            2295000.0,
+            3450000.0,
+            505000.0,
+            25334.399999999998,
+            31668.0,
+            25334.399999999998,
+            20520.864,
+            25651.080000000005,
+            20520.864,
+            25334.399999999998,
+            31668.0,
+            25334.399999999998
+          ],
+          "monthly_capacity": [
+            488333.3333333334,
+            564166.6666666667,
+            646500.0,
+            726500.0,
+            821666.6666666666,
+            843333.3333333333,
+            843333.3333333333,
+            843333.3333333333,
+            843333.3333333333,
+            843333.3333333333,
+            843333.3333333333,
+            843333.3333333333
+          ],
+          "monthly_capped": [
+            0.0,
+            1132000.0,
+            318000.0,
+            452011.6039048532,
+            821666.6666666666,
+            582198.1449278934,
+            8143.603540800001,
+            248236.80373152,
+            200186.62895232,
+            8110.699222080001,
+            431141.69552256,
+            460171.72427424
+          ],
+          "monthly_expected": [
+            0.0,
+            1132000.0,
+            318000.0,
+            212678.27057152,
+            1062627.98066112,
+            341236.83093344,
+            8143.603540800001,
+            248236.80373152,
+            200186.62895232,
+            8110.699222080001,
+            431141.69552256,
+            460171.72427424
+          ],
+          "monthly_future_wins": [
+            0.0,
+            0.0,
+            0.0,
+            4678.27057152,
+            6627.98066112,
+            7799.83093344,
+            8143.603540800001,
+            8236.803731520002,
+            8186.628952320001,
+            8110.699222080001,
+            8741.695522560001,
+            8971.72427424
+          ],
+          "monthly_inventory_wins": [
+            0.0,
+            1132000.0,
+            318000.0,
+            208000.0,
+            1056000.0,
+            333437.0,
+            0.0,
+            240000.0,
+            192000.0,
+            0.0,
+            422400.0,
+            451200.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            0.0,
+            0.0,
+            9614.404799999998,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            240961.3139944534,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            2295000.0,
+            3450000.0,
+            505000.0,
+            34948.8048,
+            31668.0,
+            25334.399999999998,
+            20520.864,
+            25651.080000000005,
+            20520.864,
+            25334.399999999998,
+            31668.0,
+            25334.399999999998
+          ],
+          "months": [
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01",
+            "2026-07-01",
+            "2026-08-01",
+            "2026-09-01",
+            "2026-10-01",
+            "2026-11-01",
+            "2026-12-01",
+            "2027-01-01"
+          ]
+        }
+      },
+      "id": "persona-sprout-labs-committed-snapshot",
+      "input": {
+        "overrides": {
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              11,
+              11,
+              11
+            ],
+            "avgDealSize": 622083.3333333334,
+            "mqlChangePct": 0.15,
+            "mqlToS0": 0.06,
+            "s0ToS1": 0.52,
+            "s1ToS2": 0.29
+          },
+          "Q3FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              11,
+              11,
+              11
+            ],
+            "avgDealSize": 622083.3333333334,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.06,
+            "s0ToS1": 0.468,
+            "s1ToS2": 0.261
+          },
+          "Q4FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              11,
+              11,
+              11
+            ],
+            "avgDealSize": 622083.3333333334,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.06,
+            "s0ToS1": 0.52,
+            "s1ToS2": 0.29
+          }
+        },
+        "snapshot": {
+          "engine_version": "unknown",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "ae_override_contract": null,
+                "ae_productivity_source": "unavailable",
+                "ae_ramp_curve": {},
+                "ae_ramp_curve_reason": "warehouse_s0_detail_unavailable",
+                "ae_ramp_curve_sample_sizes": {},
+                "ae_ramp_curve_source": "config",
+                "ae_stream_source": "config_fallback",
+                "annual_attrition_rate": 0.14400000000000002,
+                "as_of": "2026-04-06",
+                "avg_deal_size": 42000.0,
+                "capacity_treatment": "push",
+                "decay_curve_sample": 0,
+                "decay_curve_source": "config",
+                "ewma_alpha": 0.3,
+                "extrapolate_hiring": false,
+                "fallback_from": null,
+                "fallback_reason": null,
+                "fallback_used": true,
+                "future_generation_basis": [
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created"
+                ],
+                "future_generation_method": "monthly_pipeline_created x monthly_future_generation_win_rate x close_timing_curve",
+                "future_generation_win_rates": [
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34,
+                  0.34
+                ],
+                "hiring_velocity_per_month": 0.6666666666666666,
+                "include_planned": false,
+                "incoming_hires": 0,
+                "inventory_by_stage": {
+                  "S1": 45000.0,
+                  "S2": 290000.0,
+                  "S3": 2940000.0,
+                  "S4": 3930000.0,
+                  "S5": 260000.0
+                },
+                "inventory_count_by_stage": {
+                  "S1": 1,
+                  "S2": 1,
+                  "S3": 5,
+                  "S4": 4,
+                  "S5": 1
+                },
+                "inventory_is_live": true,
+                "inventory_metric_selection": "ARR__c else Amount",
+                "inventory_opportunity_count": 18,
+                "inventory_source": "ProfileBackend",
+                "mql_actuals_count": 3,
+                "mql_ewma_level": 5.139849999999999,
+                "mql_growth_cap_applied": false,
+                "mql_growth_rate": 0.0,
+                "mql_month_sources": [
+                  "actual",
+                  "actual",
+                  "partial_actual",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected"
+                ],
+                "mql_signal_source": "csv:mqls.csv",
+                "mql_trend_horizon": 0,
+                "observed_ae_productivity": 0.0,
+                "pipeline_source": "trajectory",
+                "planned_slots_excluded": 0,
+                "plg_source": "no_observed_data",
+                "projected_hires_added": 0,
+                "quarterly_overrides": null,
+                "resolution_method_counts": {
+                  "close_date": 12,
+                  "out_of_range": 0,
+                  "velocity": 0
+                },
+                "roster_snapshot_size": 11,
+                "roster_source": "warehouse + roster.yaml",
+                "s2_to_won_lookback_days": 0,
+                "s2_to_won_sample": 11,
+                "s2_to_won_source": "ProfileBackend",
+                "starting_inventory": 7465000.0,
+                "trailing_ae_sourced_s0s": 0,
+                "trailing_ramped_ae_months": 0.0,
+                "trajectory_fallback_reason": "config_ae_selfgen_fallback",
+                "wins_by_stage_month": {
+                  "S1": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    4437.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "S2": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    98600.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "S3": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    43200.0,
+                    230400.0,
+                    0.0,
+                    240000.0,
+                    192000.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "S4": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1012800.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    422400.0,
+                    451200.0
+                  ],
+                  "S5": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    208000.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                }
+              }
+            }
+          },
+          "profile_id": "sprout-labs",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.06,
+              "plg_pql_to_s1": 0.10400000000000001,
+              "plg_signup_to_pql": 0.05,
+              "s0_to_s1": 0.52,
+              "s1_to_s2": 0.29
+            },
+            "overall_win_rate": 0.34,
+            "stage_conversion": {
+              "S0": 0.051272,
+              "S1": 0.09860000000000001,
+              "S2": 0.34,
+              "S3": 0.24,
+              "S4": 0.48,
+              "S5": 0.8
+            },
+            "stage_velocity_days": {
+              "S0": 14,
+              "S1": 16.72,
+              "S2": 20.523809523809526,
+              "S3": 38.30769230769231,
+              "S4": 22.25,
+              "S5": 15.125
+            }
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment": null,
+              "reason": "warehouse_s0_detail_unavailable",
+              "sample_sizes": {},
+              "source": "config"
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.16,
+              0.26,
+              0.17,
+              0.15,
+              0.11,
+              0.06,
+              0.04,
+              0.03,
+              0.02
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.06,
+              "plg_pql_to_s1": 0.10400000000000001,
+              "plg_signup_to_pql": 0.05,
+              "s0_to_s1": 0.52,
+              "s1_to_s2": 0.29
+            },
+            "monthly_ae_capacity": [
+              488333.3333333334,
+              564166.6666666667,
+              646500.0,
+              726500.0,
+              821666.6666666666,
+              843333.3333333333,
+              843333.3333333333,
+              843333.3333333333,
+              843333.3333333333,
+              843333.3333333333,
+              843333.3333333333,
+              843333.3333333333
+            ],
+            "monthly_ae_count": [
+              9.0,
+              9.0,
+              10.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0
+            ],
+            "monthly_ae_creation": [
+              2295000.0,
+              3450000.0,
+              505000.0,
+              25334.399999999998,
+              31668.0,
+              25334.399999999998,
+              25334.399999999998,
+              31668.0,
+              25334.399999999998,
+              25334.399999999998,
+              31668.0,
+              25334.399999999998
+            ],
+            "monthly_ae_ramped": [
+              6.0,
+              6.0,
+              7.0,
+              7.0,
+              10.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0,
+              11.0
+            ],
+            "monthly_blended_ramp": [
+              0.6666666666666666,
+              0.6666666666666666,
+              0.7,
+              0.6363636363636364,
+              0.9090909090909091,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "monthly_capped": [
+              0.0,
+              1132000.0,
+              318000.0,
+              212610.0500992,
+              821666.6666666666,
+              582014.8024085333,
+              8341.5032064,
+              248942.7391872,
+              201233.0207424,
+              9112.4289984,
+              431894.0157312,
+              460731.9159936
+            ],
+            "monthly_future_wins": [
+              0.0,
+              0.0,
+              0.0,
+              4610.0500992,
+              6517.1223936,
+              7727.3466816,
+              8341.5032064,
+              8942.7391872,
+              9233.0207424,
+              9112.4289984,
+              9494.015731200001,
+              9531.9159936
+            ],
+            "monthly_inventory_losses": [
+              395000.0,
+              290000.0,
+              575000.0,
+              51999.999999999985,
+              1234000.0,
+              961563.0,
+              0.0,
+              760000.0,
+              608000.0,
+              0.0,
+              457600.0,
+              488800.0
+            ],
+            "monthly_inventory_remaining": [
+              7465000.0,
+              7465000.0,
+              7465000.0,
+              7465000.0,
+              7205000.0,
+              4915000.0,
+              3620000.0,
+              3620000.0,
+              2620000.0,
+              1820000.0,
+              1820000.0,
+              940000.0
+            ],
+            "monthly_inventory_wins": [
+              0.0,
+              1132000.0,
+              318000.0,
+              208000.0,
+              1056000.0,
+              333437.0,
+              0.0,
+              240000.0,
+              192000.0,
+              0.0,
+              422400.0,
+              451200.0
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0.0,
+              0.0,
+              0.0,
+              8360.351999999999,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "monthly_total_expected": [
+              0.0,
+              1132000.0,
+              318000.0,
+              212610.0500992,
+              1062517.1223936,
+              341164.3466816,
+              8341.5032064,
+              248942.7391872,
+              201233.0207424,
+              9112.4289984,
+              431894.0157312,
+              460731.9159936
+            ],
+            "months": [
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01",
+              "2026-07-01",
+              "2026-08-01",
+              "2026-09-01",
+              "2026-10-01",
+              "2026-11-01",
+              "2026-12-01",
+              "2027-01-01"
+            ],
+            "observed_values": {
+              "avg_cycle_days": 96.20650183150184,
+              "avg_deal_size": 622083.3333333334,
+              "productivity_per_ae_per_month": 0.0,
+              "ramp_months": 6.0,
+              "win_rate": 0.34
+            },
+            "overridable_quarters": [
+              "Q2FY26",
+              "Q3FY26",
+              "Q4FY26"
+            ],
+            "quarter_by_month": [
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q3FY26",
+              "Q3FY26",
+              "Q3FY26",
+              "Q4FY26",
+              "Q4FY26",
+              "Q4FY26"
+            ],
+            "stage_win_rates": {
+              "S0": 0.051272,
+              "S1": 0.09860000000000001,
+              "S2": 0.34,
+              "S3": 0.24,
+              "S4": 0.48,
+              "S5": 0.8
+            }
+          },
+          "schema_version": "1.0.0"
+        }
+      },
+      "rationale": "sprout-labs real committed scenario_building_blocks with representative override."
+    },
+    {
+      "category": "public persona committed scenario_building_blocks",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            4088000.0,
+            7448000.0,
+            8043000.0,
+            10895250.718285713,
+            15515250.718285713,
+            19720608.607785713,
+            23411817.33442857,
+            27978421.65092857,
+            34396845.31,
+            39206943.16667858,
+            45993719.253071435,
+            50047046.811964296
+          ],
+          "cumulative_expected": [
+            4088000.0,
+            7448000.0,
+            8043000.0,
+            10895250.718285713,
+            15539708.071571428,
+            19720608.607785713,
+            23411817.33442857,
+            27978421.65092857,
+            34396845.31,
+            39206943.16667858,
+            45993719.253071435,
+            50047046.811964296
+          ],
+          "fy_capped": 50047046.81196429,
+          "fy_expected": 50047046.81196429,
+          "monthly_ae_count": [
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            19.0,
+            20.0,
+            23.0,
+            27.0,
+            30.0,
+            34.0,
+            42.0,
+            44.0
+          ],
+          "monthly_ae_creation": [
+            18823000.0,
+            12612000.0,
+            2106000.0,
+            41360.0,
+            51700.0,
+            41360.0,
+            33501.6,
+            41877.0,
+            33501.6,
+            41360.0,
+            51700.0,
+            41360.0
+          ],
+          "monthly_capacity": [
+            4590833.333333333,
+            4620000.0,
+            4620000.0,
+            4620000.0,
+            4620000.0,
+            4924166.666666668,
+            5943333.333333338,
+            7893333.333333338,
+            10652499.999999996,
+            14144999.999999994,
+            18009166.66666668,
+            22499583.333333354
+          ],
+          "monthly_capped": [
+            4088000.0,
+            3360000.0,
+            595000.0,
+            2852250.7182857143,
+            4620000.0,
+            4205357.8895,
+            3691208.7266428573,
+            4566604.316500001,
+            6418423.659071429,
+            4810097.856678572,
+            6786776.086392857,
+            4053327.5588928577
+          ],
+          "monthly_expected": [
+            4088000.0,
+            3360000.0,
+            595000.0,
+            2852250.7182857143,
+            4644457.353285714,
+            4180900.536214286,
+            3691208.7266428573,
+            4566604.316500001,
+            6418423.659071429,
+            4810097.856678572,
+            6786776.086392857,
+            4053327.5588928577
+          ],
+          "monthly_future_wins": [
+            0.0,
+            0.0,
+            0.0,
+            170970.71828571428,
+            566297.3532857144,
+            1137860.536214286,
+            1406408.7266428575,
+            1544524.3165000002,
+            1656823.6590714287,
+            1744097.8566785716,
+            1856776.0863928576,
+            1941327.5588928577
+          ],
+          "monthly_inventory_wins": [
+            4088000.0,
+            3360000.0,
+            595000.0,
+            2681280.0,
+            4078160.0,
+            3043040.0,
+            2284800.0,
+            3022080.0,
+            4761600.0,
+            3066000.0,
+            4930000.0,
+            2112000.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            0.0,
+            0.0,
+            1327035.5999999999,
+            6991908.000000001,
+            6991908.000000001,
+            4924735.2,
+            4924735.2,
+            4924735.2,
+            6079920.000000001,
+            6079920.000000001,
+            6079920.000000001
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            24457.353285714053,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            18823000.0,
+            12612000.0,
+            2106000.0,
+            1368395.5999999999,
+            7043608.000000001,
+            7033268.000000001,
+            4958236.8,
+            4966612.2,
+            4958236.8,
+            6121280.000000001,
+            6131620.000000001,
+            6121280.000000001
+          ],
+          "months": [
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01",
+            "2026-07-01",
+            "2026-08-01",
+            "2026-09-01",
+            "2026-10-01",
+            "2026-11-01",
+            "2026-12-01",
+            "2027-01-01"
+          ]
+        }
+      },
+      "id": "persona-sapling-industries-committed-snapshot",
+      "input": {
+        "overrides": {
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              18,
+              19,
+              20
+            ],
+            "avgDealSize": 978025.4237288135,
+            "mqlChangePct": 0.15,
+            "mqlToS0": 0.12,
+            "s0ToS1": 0.55,
+            "s1ToS2": 0.47
+          },
+          "Q3FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              23,
+              27,
+              30
+            ],
+            "avgDealSize": 978025.4237288135,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.12,
+            "s0ToS1": 0.49500000000000005,
+            "s1ToS2": 0.423
+          },
+          "Q4FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              34,
+              42,
+              44
+            ],
+            "avgDealSize": 978025.4237288135,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.12,
+            "s0ToS1": 0.55,
+            "s1ToS2": 0.47
+          }
+        },
+        "snapshot": {
+          "engine_version": "unknown",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "ae_override_contract": null,
+                "ae_productivity_source": "unavailable",
+                "ae_ramp_curve": {},
+                "ae_ramp_curve_reason": "warehouse_s0_detail_unavailable",
+                "ae_ramp_curve_sample_sizes": {},
+                "ae_ramp_curve_source": "config",
+                "ae_stream_source": "config_fallback",
+                "annual_attrition_rate": 0.14400000000000002,
+                "as_of": "2026-04-06",
+                "avg_deal_size": 40000.0,
+                "capacity_treatment": "push",
+                "decay_curve_sample": 0,
+                "decay_curve_source": "config",
+                "ewma_alpha": 0.3,
+                "extrapolate_hiring": false,
+                "fallback_from": null,
+                "fallback_reason": null,
+                "fallback_used": true,
+                "future_generation_basis": [
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created"
+                ],
+                "future_generation_method": "monthly_pipeline_created x monthly_future_generation_win_rate x close_timing_curve",
+                "future_generation_win_rates": [
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143,
+                  0.3392857142857143
+                ],
+                "hiring_velocity_per_month": 0.16666666666666666,
+                "include_planned": false,
+                "incoming_hires": 0,
+                "inventory_by_stage": {
+                  "S2": 20511500.0,
+                  "S3": 30512000.0,
+                  "S4": 56945000.0,
+                  "S5": 7438500.0
+                },
+                "inventory_count_by_stage": {
+                  "S2": 22,
+                  "S3": 33,
+                  "S4": 41,
+                  "S5": 22
+                },
+                "inventory_is_live": true,
+                "inventory_metric_selection": "ARR__c else Amount",
+                "inventory_opportunity_count": 118,
+                "inventory_source": "ProfileBackend",
+                "mql_actuals_count": 3,
+                "mql_ewma_level": 232.88859999999997,
+                "mql_growth_cap_applied": false,
+                "mql_growth_rate": 0.0,
+                "mql_month_sources": [
+                  "actual",
+                  "actual",
+                  "partial_actual",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected"
+                ],
+                "mql_signal_source": "csv:mqls.csv",
+                "mql_trend_horizon": 0,
+                "observed_ae_productivity": 0.0,
+                "pipeline_source": "trajectory",
+                "planned_slots_excluded": 0,
+                "plg_source": "no_observed_data",
+                "projected_hires_added": 0,
+                "quarterly_overrides": null,
+                "resolution_method_counts": {
+                  "close_date": 118,
+                  "out_of_range": 0,
+                  "velocity": 0
+                },
+                "roster_snapshot_size": 45,
+                "roster_source": "warehouse + roster.yaml",
+                "s2_to_won_lookback_days": 0,
+                "s2_to_won_sample": 112,
+                "s2_to_won_source": "ProfileBackend",
+                "starting_inventory": 115407000.0,
+                "trailing_ae_sourced_s0s": 0,
+                "trailing_ramped_ae_months": 0.0,
+                "trajectory_fallback_reason": "config_ae_selfgen_fallback",
+                "wins_by_stage_month": {
+                  "S2": [
+                    0.0,
+                    0.0,
+                    56000.0,
+                    203680.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1080000.0,
+                    4240000.0,
+                    984000.0
+                  ],
+                  "S3": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    592800.0,
+                    0.0,
+                    472320.0,
+                    940800.0,
+                    1512960.0,
+                    1986000.0,
+                    690000.0,
+                    1128000.0
+                  ],
+                  "S4": [
+                    0.0,
+                    0.0,
+                    17136000.0,
+                    456000.0,
+                    1372560.0,
+                    1226640.0,
+                    1812480.0,
+                    2081280.0,
+                    3248640.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "S5": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    2021600.0,
+                    2112800.0,
+                    1816400.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ]
+                }
+              }
+            }
+          },
+          "profile_id": "sapling-industries",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.12,
+              "plg_pql_to_s1": 0.11000000000000001,
+              "plg_signup_to_pql": 0.05,
+              "s0_to_s1": 0.55,
+              "s1_to_s2": 0.47
+            },
+            "overall_win_rate": 0.3392857142857143,
+            "stage_conversion": {
+              "S0": 0.08272,
+              "S1": 0.1504,
+              "S2": 0.32,
+              "S3": 0.24,
+              "S4": 0.48,
+              "S5": 0.8
+            },
+            "stage_velocity_days": {
+              "S0": 14,
+              "S1": 9.555102040816326,
+              "S2": 13.92039800995025,
+              "S3": 20.611464968152866,
+              "S4": 28.79310344827586,
+              "S5": 6.588235294117647
+            }
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment": null,
+              "reason": "warehouse_s0_detail_unavailable",
+              "sample_sizes": {},
+              "source": "config"
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.16,
+              0.26,
+              0.17,
+              0.15,
+              0.11,
+              0.06,
+              0.04,
+              0.03,
+              0.02
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.12,
+              "plg_pql_to_s1": 0.11000000000000001,
+              "plg_signup_to_pql": 0.05,
+              "s0_to_s1": 0.55,
+              "s1_to_s2": 0.47
+            },
+            "monthly_ae_capacity": [
+              4590833.333333333,
+              4620000.0,
+              4620000.0,
+              4620000.0,
+              4620000.0,
+              4924166.666666668,
+              5943333.333333338,
+              7893333.333333338,
+              10652499.999999996,
+              14144999.999999994,
+              18009166.66666668,
+              22499583.333333354
+            ],
+            "monthly_ae_count": [
+              18.0,
+              18.0,
+              18.0,
+              18.0,
+              19.0,
+              20.0,
+              23.0,
+              27.0,
+              30.0,
+              34.0,
+              42.0,
+              44.0
+            ],
+            "monthly_ae_creation": [
+              18823000.0,
+              12612000.0,
+              2106000.0,
+              41360.0,
+              51700.0,
+              41360.0,
+              41360.0,
+              51700.0,
+              41360.0,
+              41360.0,
+              51700.0,
+              41360.0
+            ],
+            "monthly_ae_ramped": [
+              17.0,
+              18.0,
+              18.0,
+              18.0,
+              18.0,
+              18.0,
+              18.0,
+              19.0,
+              21.0,
+              24.0,
+              27.0,
+              31.0
+            ],
+            "monthly_blended_ramp": [
+              0.9444444444444444,
+              1.0,
+              1.0,
+              1.0,
+              0.9473684210526315,
+              0.9,
+              0.782608695652174,
+              0.7037037037037037,
+              0.7,
+              0.7058823529411765,
+              0.6428571428571429,
+              0.7045454545454546
+            ],
+            "monthly_capped": [
+              4088000.0,
+              3360000.0,
+              595000.0,
+              4620000.0,
+              4620000.0,
+              4924166.666666668,
+              5943333.333333338,
+              7893333.333333338,
+              10652499.999999996,
+              5232681.066666662,
+              6923851.490714286,
+              4156839.8771428578
+            ],
+            "monthly_future_wins": [
+              0.0,
+              0.0,
+              0.0,
+              161574.31714285715,
+              501520.28142857156,
+              997918.5700000002,
+              1327683.6964285718,
+              1604888.756428572,
+              1805839.270714286,
+              1918130.193571429,
+              1993851.4907142865,
+              2044839.8771428578
+            ],
+            "monthly_inventory_losses": [
+              6874000.0,
+              14175000.0,
+              2380000.0,
+              1432220.0,
+              3892340.0,
+              1782960.0,
+              3459200.0,
+              5233920.0,
+              8310400.0,
+              8584000.0,
+              11195000.0,
+              5663000.0
+            ],
+            "monthly_inventory_remaining": [
+              115407000.0,
+              115407000.0,
+              115407000.0,
+              79532000.0,
+              75418500.0,
+              67448000.0,
+              62622000.0,
+              56878000.0,
+              48622000.0,
+              35550000.0,
+              23900000.0,
+              7775000.0
+            ],
+            "monthly_inventory_wins": [
+              4088000.0,
+              3360000.0,
+              595000.0,
+              2681280.0,
+              4078160.0,
+              3043040.0,
+              2284800.0,
+              3022080.0,
+              4761600.0,
+              3066000.0,
+              4930000.0,
+              2112000.0
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0.0,
+              0.0,
+              0.0,
+              1153944.0,
+              6079920.000000001,
+              6079920.000000001,
+              6079920.000000001,
+              6079920.000000001,
+              6079920.000000001,
+              6079920.000000001,
+              6079920.000000001,
+              6079920.000000001
+            ],
+            "monthly_total_expected": [
+              4088000.0,
+              3360000.0,
+              595000.0,
+              2842854.3171428572,
+              4579680.281428572,
+              4040958.5700000003,
+              3612483.696428572,
+              4626968.756428571,
+              6567439.270714286,
+              4984130.193571429,
+              6923851.490714286,
+              4156839.8771428578
+            ],
+            "months": [
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01",
+              "2026-07-01",
+              "2026-08-01",
+              "2026-09-01",
+              "2026-10-01",
+              "2026-11-01",
+              "2026-12-01",
+              "2027-01-01"
+            ],
+            "observed_values": {
+              "avg_cycle_days": 69.91320172049663,
+              "avg_deal_size": 978025.4237288135,
+              "productivity_per_ae_per_month": 0.0,
+              "ramp_months": 6.0,
+              "win_rate": 0.3392857142857143
+            },
+            "overridable_quarters": [
+              "Q2FY26",
+              "Q3FY26",
+              "Q4FY26"
+            ],
+            "quarter_by_month": [
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q3FY26",
+              "Q3FY26",
+              "Q3FY26",
+              "Q4FY26",
+              "Q4FY26",
+              "Q4FY26"
+            ],
+            "stage_win_rates": {
+              "S0": 0.08272,
+              "S1": 0.1504,
+              "S2": 0.32,
+              "S3": 0.24,
+              "S4": 0.48,
+              "S5": 0.8
+            }
+          },
+          "schema_version": "1.0.0"
+        }
+      },
+      "rationale": "sapling-industries real committed scenario_building_blocks with representative override."
+    },
+    {
+      "category": "public persona committed scenario_building_blocks",
+      "expected": {
+        "result": {
+          "cumulative_capped": [
+            5483000.0,
+            10512000.0,
+            16026000.0,
+            20904944.207567565,
+            26508453.042162158,
+            30580455.29513513,
+            37054785.35351351,
+            43786224.28972973,
+            48331747.54810811,
+            54176693.480000004,
+            60627503.22378379,
+            69161855.97297297
+          ],
+          "cumulative_expected": [
+            5483000.0,
+            10512000.0,
+            16026000.0,
+            20904944.207567565,
+            26508453.042162158,
+            30580455.29513513,
+            37054785.35351351,
+            43786224.28972973,
+            48331747.54810811,
+            54176693.480000004,
+            60627503.22378379,
+            69161855.97297297
+          ],
+          "fy_capped": 69161855.97297297,
+          "fy_expected": 69161855.97297297,
+          "monthly_ae_count": [
+            125.0,
+            129.0,
+            133.0,
+            136.0,
+            136.0,
+            136.0,
+            136.0,
+            136.0,
+            136.0,
+            136.0,
+            136.0,
+            136.0
+          ],
+          "monthly_ae_creation": [
+            31058000.0,
+            44060000.0,
+            4669000.0,
+            334400.00000000006,
+            418000.00000000006,
+            334400.00000000006,
+            270864.0000000001,
+            338580.0000000002,
+            270864.0000000001,
+            334400.00000000006,
+            418000.00000000006,
+            334400.00000000006
+          ],
+          "monthly_capacity": [
+            11632999.999999985,
+            11988999.999999983,
+            12398833.333333319,
+            12853999.99999999,
+            13256666.666666664,
+            13476666.666666666,
+            13564166.666666668,
+            13593333.333333336,
+            13593333.333333336,
+            13593333.333333336,
+            13593333.333333336,
+            13593333.333333336
+          ],
+          "monthly_capped": [
+            5483000.0,
+            5029000.0,
+            5514000.0,
+            4878944.207567567,
+            5603508.834594594,
+            4072002.2529729726,
+            6474330.058378378,
+            6731438.936216217,
+            4545523.258378378,
+            5844945.931891892,
+            6450809.743783784,
+            8534352.749189189
+          ],
+          "monthly_expected": [
+            5483000.0,
+            5029000.0,
+            5514000.0,
+            4878944.207567567,
+            5603508.834594594,
+            4072002.2529729726,
+            6474330.058378378,
+            6731438.936216217,
+            4545523.258378378,
+            5844945.931891892,
+            6450809.743783784,
+            8534352.749189189
+          ],
+          "monthly_future_wins": [
+            0.0,
+            0.0,
+            0.0,
+            1862944.2075675675,
+            1960308.8345945943,
+            1512002.2529729728,
+            1266530.0583783782,
+            888198.9362162162,
+            588283.2583783783,
+            458905.93189189205,
+            386809.74378378387,
+            265232.7491891892
+          ],
+          "monthly_inventory_wins": [
+            5483000.0,
+            5029000.0,
+            5514000.0,
+            3016000.0,
+            3643200.0,
+            2560000.0,
+            5207800.0,
+            5843240.0,
+            3957240.0,
+            5386040.0,
+            6064000.0,
+            8269120.0
+          ],
+          "monthly_mql_creation": [
+            0.0,
+            0.0,
+            0.0,
+            8537231.999999998,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_overflow": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "monthly_pipeline_created": [
+            31058000.0,
+            44060000.0,
+            4669000.0,
+            8871631.999999998,
+            418000.00000000006,
+            334400.00000000006,
+            270864.0000000001,
+            338580.0000000002,
+            270864.0000000001,
+            334400.00000000006,
+            418000.00000000006,
+            334400.00000000006
+          ],
+          "months": [
+            "2026-02-01",
+            "2026-03-01",
+            "2026-04-01",
+            "2026-05-01",
+            "2026-06-01",
+            "2026-07-01",
+            "2026-08-01",
+            "2026-09-01",
+            "2026-10-01",
+            "2026-11-01",
+            "2026-12-01",
+            "2027-01-01"
+          ]
+        }
+      },
+      "id": "persona-mighty-oak-holdings-committed-snapshot",
+      "input": {
+        "overrides": {
+          "Q2FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              136,
+              136,
+              136
+            ],
+            "avgDealSize": 459564.51612903224,
+            "mqlChangePct": 0.15,
+            "mqlToS0": 0.08,
+            "s0ToS1": 0.44,
+            "s1ToS2": 0.38
+          },
+          "Q3FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              136,
+              136,
+              136
+            ],
+            "avgDealSize": 459564.51612903224,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.08,
+            "s0ToS1": 0.396,
+            "s1ToS2": 0.342
+          },
+          "Q4FY26": {
+            "addAes": 0,
+            "aeMonthTargets": [
+              136,
+              136,
+              136
+            ],
+            "avgDealSize": 459564.51612903224,
+            "mqlChangePct": 0.0,
+            "mqlToS0": 0.08,
+            "s0ToS1": 0.44,
+            "s1ToS2": 0.38
+          }
+        },
+        "snapshot": {
+          "engine_version": "unknown",
+          "model_output": {
+            "bookings_bridge": {
+              "provenance": {
+                "ae_override_contract": null,
+                "ae_productivity_source": "unavailable",
+                "ae_ramp_curve": {},
+                "ae_ramp_curve_reason": "warehouse_s0_detail_unavailable",
+                "ae_ramp_curve_sample_sizes": {},
+                "ae_ramp_curve_source": "config",
+                "ae_stream_source": "config_fallback",
+                "annual_attrition_rate": 0.14400000000000002,
+                "as_of": "2026-04-06",
+                "avg_deal_size": 500000.0,
+                "capacity_treatment": "push",
+                "decay_curve_sample": 0,
+                "decay_curve_source": "config",
+                "ewma_alpha": 0.3,
+                "extrapolate_hiring": false,
+                "fallback_from": null,
+                "fallback_reason": null,
+                "fallback_used": true,
+                "future_generation_basis": [
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created",
+                  "raw_s2_pipeline_created"
+                ],
+                "future_generation_method": "monthly_pipeline_created x monthly_future_generation_win_rate x close_timing_curve",
+                "future_generation_win_rates": [
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135,
+                  0.5135135135135135
+                ],
+                "hiring_velocity_per_month": 3.6666666666666665,
+                "include_planned": false,
+                "incoming_hires": 0,
+                "inventory_by_stage": {
+                  "S2": 18988000.0,
+                  "S3": 34741000.0,
+                  "S4": 32410000.0,
+                  "S5": 20318000.0
+                },
+                "inventory_count_by_stage": {
+                  "S2": 48,
+                  "S3": 69,
+                  "S4": 63,
+                  "S5": 47
+                },
+                "inventory_is_live": true,
+                "inventory_metric_selection": "ARR__c else Amount",
+                "inventory_opportunity_count": 310,
+                "inventory_source": "ProfileBackend",
+                "mql_actuals_count": 3,
+                "mql_ewma_level": 284.10275,
+                "mql_growth_cap_applied": false,
+                "mql_growth_rate": 0.0,
+                "mql_month_sources": [
+                  "actual",
+                  "actual",
+                  "partial_actual",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected",
+                  "projected"
+                ],
+                "mql_signal_source": "csv:mqls.csv",
+                "mql_trend_horizon": 0,
+                "observed_ae_productivity": 0.0,
+                "pipeline_source": "trajectory",
+                "planned_slots_excluded": 0,
+                "plg_source": "no_observed_data",
+                "projected_hires_added": 0,
+                "quarterly_overrides": null,
+                "resolution_method_counts": {
+                  "close_date": 227,
+                  "out_of_range": 0,
+                  "velocity": 0
+                },
+                "roster_snapshot_size": 136,
+                "roster_source": "warehouse + roster.yaml",
+                "s2_to_won_lookback_days": 0,
+                "s2_to_won_sample": 259,
+                "s2_to_won_source": "ProfileBackend",
+                "starting_inventory": 106457000.0,
+                "trailing_ae_sourced_s0s": 0,
+                "trailing_ramped_ae_months": 0.0,
+                "trajectory_fallback_reason": "config_ae_selfgen_fallback",
+                "wins_by_stage_month": {
+                  "S2": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    110400.0,
+                    0.0,
+                    998200.0,
+                    485000.0,
+                    531000.0,
+                    434600.0,
+                    798400.0,
+                    440000.0
+                  ],
+                  "S3": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1595040.0,
+                    2422080.0,
+                    1241760.0,
+                    1029360.0,
+                    1278240.0,
+                    771360.0
+                  ],
+                  "S4": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    3532800.0,
+                    0.0,
+                    2614560.0,
+                    2936160.0,
+                    2184480.0,
+                    1430880.0,
+                    416160.0,
+                    2441760.0
+                  ],
+                  "S5": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    3016000.0,
+                    0.0,
+                    2560000.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    2491200.0,
+                    3571200.0,
+                    4616000.0
+                  ]
+                }
+              }
+            }
+          },
+          "profile_id": "mighty-oak-holdings",
+          "rates": {
+            "funnel_rates": {
+              "mql_to_s0": 0.08,
+              "plg_pql_to_s1": 0.08800000000000001,
+              "plg_signup_to_pql": 0.05,
+              "s0_to_s1": 0.44,
+              "s1_to_s2": 0.38
+            },
+            "overall_win_rate": 0.5135135135135135,
+            "stage_conversion": {
+              "S0": 0.033440000000000004,
+              "S1": 0.07600000000000001,
+              "S2": 0.2,
+              "S3": 0.24,
+              "S4": 0.48,
+              "S5": 0.8
+            },
+            "stage_velocity_days": {
+              "S0": 14,
+              "S1": 15.508333333333333,
+              "S2": 28.127882599580712,
+              "S3": 34.21739130434783,
+              "S4": 39.183673469387756,
+              "S5": 24.39864864864865
+            }
+          },
+          "roster": {
+            "observed_ramp_curve": {
+              "curve_by_segment": null,
+              "reason": "warehouse_s0_detail_unavailable",
+              "sample_sizes": {},
+              "source": "config"
+            }
+          },
+          "scenario_building_blocks": {
+            "decay_curve": [
+              0.16,
+              0.26,
+              0.17,
+              0.15,
+              0.11,
+              0.06,
+              0.04,
+              0.03,
+              0.02
+            ],
+            "funnel_rates": {
+              "mql_to_s0": 0.08,
+              "plg_pql_to_s1": 0.08800000000000001,
+              "plg_signup_to_pql": 0.05,
+              "s0_to_s1": 0.44,
+              "s1_to_s2": 0.38
+            },
+            "monthly_ae_capacity": [
+              11632999.999999985,
+              11988999.999999983,
+              12398833.333333319,
+              12853999.99999999,
+              13256666.666666664,
+              13476666.666666666,
+              13564166.666666668,
+              13593333.333333336,
+              13593333.333333336,
+              13593333.333333336,
+              13593333.333333336,
+              13593333.333333336
+            ],
+            "monthly_ae_count": [
+              125.0,
+              129.0,
+              133.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0
+            ],
+            "monthly_ae_creation": [
+              31058000.0,
+              44060000.0,
+              4669000.0,
+              334400.00000000006,
+              418000.00000000006,
+              334400.00000000006,
+              334400.00000000006,
+              418000.00000000006,
+              334400.00000000006,
+              334400.00000000006,
+              418000.00000000006,
+              334400.00000000006
+            ],
+            "monthly_ae_ramped": [
+              111.0,
+              114.0,
+              118.0,
+              122.0,
+              129.0,
+              133.0,
+              135.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0,
+              136.0
+            ],
+            "monthly_blended_ramp": [
+              0.888,
+              0.8837209302325582,
+              0.8872180451127819,
+              0.8970588235294118,
+              0.9485294117647058,
+              0.9779411764705882,
+              0.9926470588235294,
+              1.0,
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "monthly_capped": [
+              5483000.0,
+              5029000.0,
+              5514000.0,
+              4787452.367567567,
+              5454834.594594594,
+              3974792.172972973,
+              6393776.713513513,
+              6683546.5297297295,
+              4532584.237837838,
+              5842383.027027027,
+              6448907.956756757,
+              8534254.010810811
+            ],
+            "monthly_future_wins": [
+              0.0,
+              0.0,
+              0.0,
+              1771452.3675675676,
+              1811634.5945945946,
+              1414792.172972973,
+              1185976.7135135133,
+              840306.5297297298,
+              575344.2378378378,
+              456343.02702702716,
+              384907.9567567568,
+              265134.01081081084
+            ],
+            "monthly_inventory_losses": [
+              46811000.0,
+              45218000.0,
+              5501000.0,
+              753999.9999999999,
+              4268800.0,
+              639999.9999999999,
+              11876200.0,
+              12790760.0,
+              8422760.0,
+              7170960.0,
+              8585000.0,
+              8001880.0
+            ],
+            "monthly_inventory_remaining": [
+              106457000.0,
+              106457000.0,
+              106457000.0,
+              106457000.0,
+              102687000.0,
+              94775000.0,
+              91575000.0,
+              74491000.0,
+              55857000.0,
+              43477000.0,
+              30920000.0,
+              16271000.0
+            ],
+            "monthly_inventory_wins": [
+              5483000.0,
+              5029000.0,
+              5514000.0,
+              3016000.0,
+              3643200.0,
+              2560000.0,
+              5207800.0,
+              5843240.0,
+              3957240.0,
+              5386040.0,
+              6064000.0,
+              8269120.0
+            ],
+            "monthly_is_actual": [
+              true,
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "monthly_mql_creation": [
+              0.0,
+              0.0,
+              0.0,
+              7423679.999999999,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "monthly_total_expected": [
+              5483000.0,
+              5029000.0,
+              5514000.0,
+              4787452.367567567,
+              5454834.594594594,
+              3974792.172972973,
+              6393776.713513513,
+              6683546.5297297295,
+              4532584.237837838,
+              5842383.027027027,
+              6448907.956756757,
+              8534254.010810811
+            ],
+            "months": [
+              "2026-02-01",
+              "2026-03-01",
+              "2026-04-01",
+              "2026-05-01",
+              "2026-06-01",
+              "2026-07-01",
+              "2026-08-01",
+              "2026-09-01",
+              "2026-10-01",
+              "2026-11-01",
+              "2026-12-01",
+              "2027-01-01"
+            ],
+            "observed_values": {
+              "avg_cycle_days": 125.92759602196494,
+              "avg_deal_size": 459564.51612903224,
+              "productivity_per_ae_per_month": 0.0,
+              "ramp_months": 6.0,
+              "win_rate": 0.5135135135135135
+            },
+            "overridable_quarters": [
+              "Q2FY26",
+              "Q3FY26",
+              "Q4FY26"
+            ],
+            "quarter_by_month": [
+              "Q1FY26",
+              "Q1FY26",
+              "Q1FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q2FY26",
+              "Q3FY26",
+              "Q3FY26",
+              "Q3FY26",
+              "Q4FY26",
+              "Q4FY26",
+              "Q4FY26"
+            ],
+            "stage_win_rates": {
+              "S0": 0.033440000000000004,
+              "S1": 0.07600000000000001,
+              "S2": 0.2,
+              "S3": 0.24,
+              "S4": 0.48,
+              "S5": 0.8
+            }
+          },
+          "schema_version": "1.0.0"
+        }
+      },
+      "rationale": "mighty-oak-holdings real committed scenario_building_blocks with representative override."
+    }
+  ],
+  "contract": {
+    "doc": "docs/scenario-formulas.md",
+    "summary": "Shared golden vectors for Python and TypeScript snapshot scenario engines."
+  },
+  "schemaVersion": 1,
+  "tolerancePolicy": {
+    "countFields": [
+      "monthly_ae_count"
+    ],
+    "floats": {
+      "absoluteEpsilon": 1e-06,
+      "mode": "max(absoluteEpsilon, relativeEpsilon * max(1, abs(expected)))",
+      "relativeEpsilon": 1e-09
+    },
+    "integers": "exact"
+  }
+}

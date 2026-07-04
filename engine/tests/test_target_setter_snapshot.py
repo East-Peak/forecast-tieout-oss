@@ -2,8 +2,6 @@
 import json
 import subprocess
 
-import pytest
-
 
 def _run(tmp_path):
     output = tmp_path / "snapshot.json"
@@ -63,14 +61,21 @@ def test_emits_scenarios(tmp_path):
     assert "secondary" in s["description"]
 
 
-@pytest.mark.skip(
-    reason="All shipped demo profiles now ship a scenarios.yaml + target_setter_defaults "
-    "(per the FY26 data redesign). The absent-case behavior is still covered at unit "
-    "level by test_observed_scenario_omitted_when_funnel_rates_missing below."
-)
-def test_target_setter_absent_when_no_config(tmp_path):
+def test_target_setter_absent_when_no_config(monkeypatch):
     """Profiles without scenarios.yaml + target_setter_defaults emit no target_setter block."""
-    pass
+    from datetime import date
+
+    import engine.scripts.generate_snapshot as generate_snapshot
+
+    monkeypatch.setattr(generate_snapshot, "_load_scenarios_yaml", lambda _profile_id: [])
+    monkeypatch.setattr(generate_snapshot, "_load_raw_assumptions", lambda _profile_id: {})
+
+    snap = generate_snapshot.build_snapshot(
+        profile_id="acme-saas",
+        as_of=date.fromisoformat("2026-04-06"),
+    )
+
+    assert "target_setter" not in snap
 
 
 def test_observed_scenario_omitted_when_funnel_rates_missing():
