@@ -91,7 +91,13 @@ export function FunnelSankey({ quarters, rateByEdge }: FunnelSankeyProps) {
   const scopeLabel = `${quarters[0].quarter}–${quarters[quarters.length - 1].quarter}`;
 
   return (
-    <Card className="p-5">
+    <Card
+      className="p-5"
+      data-testid="chart-container"
+      data-chart-title="Funnel flow"
+      data-primary-series="Total S2 SQOs"
+      data-primary-values={JSON.stringify([totalS2])}
+    >
       <div className="mb-3">
         <Text className="text-sm font-semibold text-slate-800">
           Funnel flow — {scopeLabel} combined

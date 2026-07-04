@@ -7,8 +7,8 @@
     "has_contacts": true,
     "has_companies": true
   },
-  "generated_at": "2026-07-04T15:52:37.284341Z",
-  "git_sha": "persona-phase2",
+  "generated_at": "2026-07-04T16:47:17.714469Z",
+  "git_sha": "613af2e94cecd481d8b0378edfeb6657ce45ffed",
   "as_of": "2026-04-06",
   "actuals": {
     "bookings_by_month": [
@@ -981,7 +981,7 @@
           "period_end": "2026-04-30",
           "td_bookings": 1600000,
           "bu_sales_led_arr": 1450000.0,
-          "actual_bookings": 0.0,
+          "actual_bookings": 1450000.0,
           "top_down": {
             "bookings": 1600000,
             "plg": 0,
@@ -1001,7 +1001,7 @@
             "total_aes": 11
           },
           "actuals": {
-            "bookings": 0.0,
+            "bookings": 1450000.0,
             "pipeline": 0.0,
             "mqls_weekly": 0,
             "s0_weekly": 0,
@@ -1207,8 +1207,8 @@
             "plan_to_date_bookings": 1600000.0,
             "pace_gap": -1600000.0,
             "pace_gap_pct": -1.0,
-            "remaining_plan_bookings": 1600000.0,
-            "remaining_bu_bookings": 1450000.0,
+            "remaining_plan_bookings": 150000.0,
+            "remaining_bu_bookings": 0.0,
             "reforecast_bookings": 1450000.0,
             "reforecast_gap": -150000.0,
             "reforecast_gap_pct": -0.09375,
@@ -3957,7 +3957,7 @@
           "period_end": "2026-04-30",
           "td_bookings": 1600000,
           "bu_sales_led_arr": 1450000.0,
-          "actual_bookings": 0.0,
+          "actual_bookings": 1450000.0,
           "top_down": {
             "bookings": 1600000,
             "plg": 0,
@@ -3977,7 +3977,7 @@
             "total_aes": 11
           },
           "actuals": {
-            "bookings": 0.0,
+            "bookings": 1450000.0,
             "pipeline": 0.0,
             "mqls_weekly": 0,
             "s0_weekly": 0,
@@ -4183,8 +4183,8 @@
             "plan_to_date_bookings": 1600000.0,
             "pace_gap": -1600000.0,
             "pace_gap_pct": -1.0,
-            "remaining_plan_bookings": 1600000.0,
-            "remaining_bu_bookings": 1450000.0,
+            "remaining_plan_bookings": 150000.0,
+            "remaining_bu_bookings": 0.0,
             "reforecast_bookings": 1450000.0,
             "reforecast_gap": -150000.0,
             "reforecast_gap_pct": -0.09375,
@@ -5899,7 +5899,7 @@
           "period_end": "2026-04-30",
           "td_bookings": 1600000,
           "bu_sales_led_arr": 1450000.0,
-          "actual_bookings": 0.0,
+          "actual_bookings": 1450000.0,
           "top_down": {
             "bookings": 1600000,
             "plg": 0,
@@ -5919,7 +5919,7 @@
             "total_aes": 11
           },
           "actuals": {
-            "bookings": 0.0,
+            "bookings": 1450000.0,
             "pipeline": 0.0,
             "mqls_weekly": 0,
             "s0_weekly": 0,
@@ -6125,8 +6125,8 @@
             "plan_to_date_bookings": 1600000.0,
             "pace_gap": -1600000.0,
             "pace_gap_pct": -1.0,
-            "remaining_plan_bookings": 1600000.0,
-            "remaining_bu_bookings": 1450000.0,
+            "remaining_plan_bookings": 150000.0,
+            "remaining_bu_bookings": 0.0,
             "reforecast_bookings": 1450000.0,
             "reforecast_gap": -150000.0,
             "reforecast_gap_pct": -0.09375,

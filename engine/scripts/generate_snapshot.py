@@ -880,6 +880,7 @@ def build_snapshot(
             )
             reconciled_sales_led = spliced_total + projected_total
             q_dict["bu_sales_led_arr"] = reconciled_sales_led
+            q_dict["actual_bookings"] = spliced_total
 
             bottoms_up = q_dict.get("bottoms_up")
             if isinstance(bottoms_up, dict):
@@ -887,6 +888,12 @@ def build_snapshot(
                 plg_arr = _safe_float(bottoms_up.get("plg_arr"))
                 expansion_arr = _safe_float(bottoms_up.get("expansion_arr"))
                 bottoms_up["total_arr"] = reconciled_sales_led + plg_arr + expansion_arr
+
+            actuals = q_dict.get("actuals")
+            if not isinstance(actuals, dict):
+                actuals = {}
+                q_dict["actuals"] = actuals
+            actuals["bookings"] = spliced_total
 
             top_down = q_dict.get("top_down") or {}
             target_bookings = _safe_float(top_down.get("bookings"))
@@ -904,7 +911,6 @@ def build_snapshot(
                 gap_dict["total_pct"] = (total_gap / target_total) if target_total else 0.0
 
             reforecast = q_dict.get("reforecast")
-            actuals = q_dict.get("actuals") or {}
             actual_bookings = _safe_float(actuals.get("bookings"))
             if isinstance(reforecast, dict):
                 reforecast["remaining_plan_bookings"] = max(target_bookings - actual_bookings, 0.0)

@@ -89,6 +89,32 @@ def persona_snapshots(tmp_path_factory: pytest.TempPathFactory) -> dict[str, dic
     return snapshots
 
 
+@pytest.fixture(scope="module")
+def acme_snapshot(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
+    """Generate Acme through the canonical CSV-backed snapshot path."""
+
+    root = tmp_path_factory.mktemp("acme-canonical-snapshot")
+    output = root / "snapshot.json"
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "engine.scripts.generate_snapshot",
+            "--profile-id",
+            "acme-saas",
+            "--as-of",
+            AS_OF,
+            "--output",
+            str(output),
+            "--profiles-output-dir",
+            str(root / "profiles"),
+        ],
+        cwd=REPO_ROOT,
+        check=True,
+    )
+    return json.loads(output.read_text())
+
+
 def _trajectory_quarters(snapshot: dict[str, Any], section: str = "bookings_bridge") -> dict[str, dict[str, Any]]:
     return {
         row["quarter"]: row
@@ -307,6 +333,32 @@ def _quarter_metrics(snapshot: dict[str, Any]) -> dict[str, dict[str, float]]:
         metrics[quarter]["plan"] += plan_values[idx] if idx < len(plan_values) else 0.0
         metrics[quarter]["capacity"] += capacity_by_month.get(month[:10], 0.0)
     return metrics
+
+
+def _actual_month_keys(snapshot: dict[str, Any]) -> set[str]:
+    months = snapshot["scenario_building_blocks"].get("months") or []
+    flags = snapshot["scenario_building_blocks"].get("monthly_is_actual") or []
+    return {
+        str(month)[:7]
+        for month, is_actual in zip(months, flags)
+        if bool(is_actual)
+    }
+
+
+def _bookings_actuals_in_actual_window(snapshot: dict[str, Any]) -> float:
+    actual_month_keys = _actual_month_keys(snapshot)
+    return sum(
+        float(row.get("total") or 0)
+        for row in snapshot["actuals"].get("bookings_by_month", [])
+        if str(row.get("month") or "")[:7] in actual_month_keys
+    )
+
+
+def _snapshot_cases(
+    persona_snapshots: dict[str, dict[str, Any]],
+    acme_snapshot: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    return {**persona_snapshots, "acme-saas": acme_snapshot}
 
 
 def _rendered_totals(snapshot: dict[str, Any]) -> dict[str, Any]:
@@ -535,3 +587,110 @@ def test_trajectory_quarter_blocks_reconcile_to_rendered_series(
                 rendered_quarter["expected"],
                 rel_tol=0.15,
             ), f"{profile_id} {quarter} bottoms_up does not match rendered expected"
+
+
+def test_actual_bookings_reconcile_to_trajectory_quarters(
+    persona_snapshots: dict[str, dict[str, Any]],
+    acme_snapshot: dict[str, Any],
+) -> None:
+    """Actual bookings are carried in actuals and every page's quarter blocks."""
+
+    for profile_id, snapshot in _snapshot_cases(persona_snapshots, acme_snapshot).items():
+        actuals_total = _bookings_actuals_in_actual_window(snapshot)
+        assert actuals_total > 0, f"{profile_id} fixture should carry booking actuals"
+
+        for section in ("bookings_bridge", "capacity_headcount", "funnel_health"):
+            quarter_rows = snapshot["model_output"][section]["trajectory_quarters"]
+            quarter_total = sum(float(row.get("actual_bookings") or 0) for row in quarter_rows)
+            nested_total = sum(
+                float((row.get("actuals") or {}).get("bookings") or 0)
+                for row in quarter_rows
+            )
+
+            assert math.isclose(
+                quarter_total,
+                actuals_total,
+                abs_tol=1.0,
+            ), f"{profile_id} {section} flat actual_bookings do not reconcile"
+            assert math.isclose(
+                nested_total,
+                actuals_total,
+                abs_tol=1.0,
+            ), f"{profile_id} {section} nested actuals.bookings do not reconcile"
+
+
+def test_quarter_blocks_match_across_page_payloads(
+    persona_snapshots: dict[str, dict[str, Any]],
+    acme_snapshot: dict[str, Any],
+) -> None:
+    """The three page payloads carry the same quarter-level core facts."""
+
+    fields = ("td_bookings", "bu_sales_led_arr", "actual_bookings")
+    for profile_id, snapshot in _snapshot_cases(persona_snapshots, acme_snapshot).items():
+        bridge_rows = _trajectory_quarters(snapshot, "bookings_bridge")
+        for section in ("capacity_headcount", "funnel_health"):
+            section_rows = _trajectory_quarters(snapshot, section)
+            assert set(section_rows) == set(bridge_rows), f"{profile_id} {section} quarter set drifted"
+            for quarter, bridge_row in bridge_rows.items():
+                section_row = section_rows[quarter]
+                for field in fields:
+                    assert math.isclose(
+                        float(section_row.get(field) or 0),
+                        float(bridge_row.get(field) or 0),
+                        abs_tol=1.0,
+                    ), f"{profile_id} {section} {quarter} {field} drifted from bookings_bridge"
+
+
+def test_roster_effective_capacity_reconciles_to_capacity_payloads(
+    persona_snapshots: dict[str, dict[str, Any]],
+    acme_snapshot: dict[str, Any],
+) -> None:
+    """Capacity is duplicated in roster, Capacity page payload, and scenario blocks."""
+
+    fields = (
+        "ae_total",
+        "ae_ramped",
+        "ae_ramping",
+        "se_total",
+        "sdr_total",
+        "ae_capacity",
+        "ae_capacity_ramped",
+        "ae_capacity_ramping",
+        "blended_ramp_pct",
+    )
+
+    for profile_id, snapshot in _snapshot_cases(persona_snapshots, acme_snapshot).items():
+        roster_rows = {
+            row["month"][:10]: row for row in snapshot["roster"]["effective_capacity"]
+        }
+        capacity_rows = {
+            row["month"][:10]: row
+            for row in snapshot["model_output"]["capacity_headcount"]["trajectory_capacity"]
+        }
+        assert capacity_rows.keys() == roster_rows.keys(), f"{profile_id} capacity month set drifted"
+
+        for month, roster_row in roster_rows.items():
+            capacity_row = capacity_rows[month]
+            for field in fields:
+                assert math.isclose(
+                    float(capacity_row.get(field) or 0),
+                    float(roster_row.get(field) or 0),
+                    abs_tol=1e-6,
+                ), f"{profile_id} {month} {field} drifted between roster and capacity page"
+
+        building_blocks = snapshot["scenario_building_blocks"]
+        for idx, month in enumerate(building_blocks["months"]):
+            month_key = month[:10]
+            if month_key not in roster_rows:
+                continue
+            roster_row = roster_rows[month_key]
+            assert math.isclose(
+                float(building_blocks["monthly_ae_capacity"][idx] or 0),
+                float(roster_row.get("ae_capacity") or 0),
+                abs_tol=1e-6,
+            ), f"{profile_id} {month_key} scenario capacity drifted"
+            assert math.isclose(
+                float(building_blocks["monthly_ae_count"][idx] or 0),
+                float(roster_row.get("ae_total") or 0),
+                abs_tol=1e-6,
+            ), f"{profile_id} {month_key} scenario AE count drifted"

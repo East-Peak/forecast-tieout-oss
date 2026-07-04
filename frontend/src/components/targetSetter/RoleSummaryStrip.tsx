@@ -17,12 +17,17 @@ export function RoleSummaryStrip({ scopeLabel, cards, total }: RoleSummaryStripP
     <div className="space-y-3">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {cards.map((c) => (
-          <Card key={c.role} className="p-4">
+          <Card key={c.role} className="p-4" data-testid="metric-card">
             <Text className="text-[11px] uppercase tracking-wide text-slate-500 font-semibold">
               {c.role.toUpperCase()}
             </Text>
-            <div className="mt-1 text-xs text-slate-500">{c.metricLabel}</div>
-            <div className="mt-1 text-2xl font-semibold text-slate-900 tabular-nums">
+            <div className="mt-1 text-xs text-slate-500" data-testid="metric-label">
+              {c.metricLabel}
+            </div>
+            <div
+              className="mt-1 text-2xl font-semibold text-slate-900 tabular-nums"
+              data-testid="metric-value"
+            >
               {fmt(c.totalValue, c.integer)}
             </div>
             <div className="text-xs text-slate-500">{scopeLabel} total</div>
@@ -65,11 +70,11 @@ export function RoleSummaryStrip({ scopeLabel, cards, total }: RoleSummaryStripP
         ))}
       </div>
       {total && (
-        <Card className="p-3 bg-slate-50 border-slate-200">
+        <Card className="p-3 bg-slate-50 border-slate-200" data-testid="metric-card">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <div>
               <Text className="text-[11px] uppercase tracking-wide text-slate-500 font-semibold">
-                {total.label}
+                <span data-testid="metric-label">{total.label}</span>
               </Text>
               {total.components && (
                 <div className="text-xs text-slate-500 mt-0.5 tabular-nums">
@@ -80,7 +85,10 @@ export function RoleSummaryStrip({ scopeLabel, cards, total }: RoleSummaryStripP
               )}
             </div>
             <div className="text-right">
-              <div className="text-xl font-semibold text-slate-900 tabular-nums">
+              <div
+                className="text-xl font-semibold text-slate-900 tabular-nums"
+                data-testid="metric-value"
+              >
                 {fmt(total.totalValue, total.integer)}
               </div>
               <div className="text-xs text-slate-500">

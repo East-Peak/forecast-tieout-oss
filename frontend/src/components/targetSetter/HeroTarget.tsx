@@ -56,8 +56,16 @@ export function HeroTarget({
           )}
         </div>
       </div>
-      <div className="mt-3 text-3xl font-semibold text-slate-900 tabular-nums">
-        {formatDollars(newPipeMustYield)} new pipe must yield
+      <div
+        className="mt-3 text-3xl font-semibold text-slate-900 tabular-nums"
+        data-testid="metric-card"
+      >
+        <span className="sr-only" data-testid="metric-label">
+          New Pipe Must Yield
+        </span>
+        <span data-testid="metric-value">
+          {formatDollars(newPipeMustYield)} new pipe must yield
+        </span>
       </div>
       <div className="mt-2 text-sm text-slate-600">
         <span>{formatDollars(planTotal)} plan</span>

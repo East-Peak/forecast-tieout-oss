@@ -141,7 +141,15 @@ export default function CapacityHeadcount() {
       ) : null}
 
       {/* AE Headcount Chart */}
-      <Card className="p-5">
+      <Card
+        className="p-5"
+        data-testid="chart-container"
+        data-chart-title="AE Headcount"
+        data-primary-series="Total AEs"
+        data-primary-values={JSON.stringify(
+          headcountData.map((row) => row.Ramped + row.Ramping),
+        )}
+      >
         <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">AE Headcount</h3>
         <p className="text-xs text-slate-500 mb-4">Confirmed roster only (active + incoming hires with signed agreements). Does not include planned-but-unfilled positions.</p>
         <ResponsiveContainer width="100%" height={288}>
@@ -158,7 +166,13 @@ export default function CapacityHeadcount() {
       </Card>
 
       {/* Close Capacity vs Targets */}
-      <Card className="p-5">
+      <Card
+        className="p-5"
+        data-testid="chart-container"
+        data-chart-title="Close Capacity vs Targets"
+        data-primary-series="Capacity"
+        data-primary-values={JSON.stringify(capacityData.map((row) => row.Capacity))}
+      >
         <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Close Capacity vs Targets</h3>
         <p className="text-xs text-slate-500 mb-4">Monthly close capacity (amber) against plan targets (red).</p>
         <ResponsiveContainer width="100%" height={288}>
@@ -231,23 +245,23 @@ export default function CapacityHeadcount() {
         <>
           {/* SE Metrics Strip */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Card className="p-4">
-              <p className="text-xs text-slate-500 mb-1">SEs at Snapshot</p>
-              <p className="text-2xl font-semibold text-slate-800">{currentSECount}</p>
+            <Card className="p-4" data-testid="metric-card">
+              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">SEs at Snapshot</p>
+              <p className="text-2xl font-semibold text-slate-800" data-testid="metric-value">{currentSECount}</p>
             </Card>
-            <Card className="p-4">
-              <p className="text-xs text-slate-500 mb-1">S2+ Open Opps (SE-supported)</p>
-              <p className="text-2xl font-semibold text-slate-800">{seSupportedS2PlusDeals.length}</p>
+            <Card className="p-4" data-testid="metric-card">
+              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">S2+ Open Opps (SE-supported)</p>
+              <p className="text-2xl font-semibold text-slate-800" data-testid="metric-value">{seSupportedS2PlusDeals.length}</p>
             </Card>
-            <Card className="p-4">
-              <p className="text-xs text-slate-500 mb-1">S2+ Opps/SE at Snapshot</p>
-              <p className={`text-2xl font-semibold ${dealsPerSE !== null && dealsPerSE > SE_DEAL_THRESHOLD ? "text-red-600" : "text-slate-800"}`}>
+            <Card className="p-4" data-testid="metric-card">
+              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">S2+ Opps/SE at Snapshot</p>
+              <p className={`text-2xl font-semibold ${dealsPerSE !== null && dealsPerSE > SE_DEAL_THRESHOLD ? "text-red-600" : "text-slate-800"}`} data-testid="metric-value">
                 {dealsPerSE !== null ? dealsPerSE.toFixed(1) : "\u2014"}
               </p>
             </Card>
-            <Card className="p-4">
-              <p className="text-xs text-slate-500 mb-1">AE:SE at Snapshot</p>
-              <p className="text-2xl font-semibold text-slate-800">
+            <Card className="p-4" data-testid="metric-card">
+              <p className="text-xs text-slate-500 mb-1" data-testid="metric-label">AE:SE at Snapshot</p>
+              <p className="text-2xl font-semibold text-slate-800" data-testid="metric-value">
                 {aeSeRatioCurrent !== null ? `${aeSeRatioCurrent.toFixed(1)}:1` : "\u2014"}
               </p>
             </Card>

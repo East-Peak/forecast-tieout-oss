@@ -365,6 +365,10 @@ export default function FunnelHealth() {
     const planS1 = comparablePlanActive && comparableQuarterly ? (planFunnel?.s1_weekly?.plan as number) ?? null : null;
     const planS2 = comparablePlanActive && comparableQuarterly ? (planFunnel?.s2_weekly?.plan as number) ?? null : null;
 
+    const hasTrajectoryData = [trajMqls, trajS0, trajS1, trajS2].some(
+      (value) => typeof value === "number" && Math.abs(value) > 1e-9,
+    );
+
     return {
       quarter: tq.quarter,
       data: [
@@ -373,13 +377,7 @@ export default function FunnelHealth() {
         { stage: "S1/wk", plan: planS1, trajectory: trajS1 },
         { stage: "S2/wk", plan: planS2, trajectory: trajS2 },
       ],
-      hasData:
-        trajMqls !== null ||
-        trajS0 !== null ||
-        trajS2 !== null ||
-        planMqls !== null ||
-        planS0 !== null ||
-        planS2 !== null,
+      hasData: hasTrajectoryData,
     };
   });
 
@@ -822,30 +820,30 @@ export default function FunnelHealth() {
             subtitle="Expansion ARR breakdown by source: renewal upsell, usage-based, PLG, and consumption."
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            <div className="rounded-lg bg-slate-50 p-3">
-              <Text className="text-xs text-slate-500">Opening ARR</Text>
-              <Metric className="text-lg">
+            <div className="rounded-lg bg-slate-50 p-3" data-testid="metric-card">
+              <Text className="text-xs text-slate-500" data-testid="metric-label">Opening ARR</Text>
+              <Metric className="text-lg" data-testid="metric-value">
                 {formatMoney((expansionBreakdown as Record<string, unknown>).opening_arr as number)}
               </Metric>
             </div>
-            <div className="rounded-lg bg-emerald-50 p-3">
-              <Text className="text-xs text-slate-500">Total Expansion</Text>
-              <Metric className="text-lg text-emerald-700">
+            <div className="rounded-lg bg-emerald-50 p-3" data-testid="metric-card">
+              <Text className="text-xs text-slate-500" data-testid="metric-label">Total Expansion</Text>
+              <Metric className="text-lg text-emerald-700" data-testid="metric-value">
                 {formatMoney((expansionBreakdown as Record<string, unknown>).total_expansion_arr as number)}
               </Metric>
             </div>
-            <div className="rounded-lg bg-slate-50 p-3">
-              <Text className="text-xs text-slate-500">Program Maturity</Text>
-              <Metric className="text-lg">
+            <div className="rounded-lg bg-slate-50 p-3" data-testid="metric-card">
+              <Text className="text-xs text-slate-500" data-testid="metric-label">Program Maturity</Text>
+              <Metric className="text-lg" data-testid="metric-value">
                 {pct((expansionBreakdown as Record<string, unknown>).program_maturity_factor as number)}
               </Metric>
               <Text className="text-[10px] text-slate-400 mt-1 leading-tight">
                 Fraction of expansion program that's operational and producing results.
               </Text>
             </div>
-            <div className="rounded-lg bg-slate-50 p-3">
-              <Text className="text-xs text-slate-500">Renewable Sales-Led</Text>
-              <Metric className="text-lg">
+            <div className="rounded-lg bg-slate-50 p-3" data-testid="metric-card">
+              <Text className="text-xs text-slate-500" data-testid="metric-label">Renewable Sales-Led</Text>
+              <Metric className="text-lg" data-testid="metric-value">
                 {formatMoney((expansionBreakdown as Record<string, unknown>).renewable_sales_led_arr as number)}
               </Metric>
             </div>
@@ -970,7 +968,14 @@ export default function FunnelHealth() {
           {waterfallByQuarter
             .filter((q) => q.hasData)
             .map((q) => (
-              <Card key={q.quarter} className="p-5">
+              <Card
+                key={q.quarter}
+                className="p-5"
+                data-testid="chart-container"
+                data-chart-title={`Funnel Waterfall ${q.quarter}`}
+                data-primary-series="trajectory"
+                data-primary-values={JSON.stringify(q.data.map((row) => row.trajectory))}
+              >
                 <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-3">
                   {q.quarter}
                 </h3>

@@ -185,7 +185,13 @@ export default function PipelineInventory() {
       </ProseNote>
 
       {/* Chart 1: Monthly Pipeline Activity */}
-      <Card className="p-5">
+      <Card
+        className="p-5"
+        data-testid="chart-container"
+        data-chart-title="Monthly Pipeline Activity"
+        data-primary-series="Won"
+        data-primary-values={JSON.stringify(activityData.map((row) => row.Won))}
+      >
         <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Monthly Pipeline Activity</h3>
         <p className="text-xs text-slate-500 mb-4">Won (green) is grouped by contractual CloseDate month. New S2+ pipeline (blue) is grouped by the month a deal first entered S2. Losses (red) are grouped by actual Closed At month. Solid line marks where projections begin — left is observed through {actualsThroughLabel}, right is model projections. Note: losses include all closed-lost opps, not filtered to S2+ stage history.</p>
         <ResponsiveContainer width="100%" height={320}>
@@ -212,7 +218,17 @@ export default function PipelineInventory() {
       </Card>
 
       {/* Chart 2: Pipeline Roll-Forward */}
-      <Card className="p-5">
+      <Card
+        className="p-5"
+        data-testid="chart-container"
+        data-chart-title="Pipeline Roll-Forward"
+        data-primary-series="Existing + Future Pipeline"
+        data-primary-values={JSON.stringify(
+          rollForwardData.map(
+            (row) => row["Existing Pipeline"] + row["Future Pipeline"],
+          ),
+        )}
+      >
         <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Pipeline Roll-Forward</h3>
         <p className="text-xs text-slate-500 mb-4">Projected monthly wins from existing pipeline (blue) and future S2+ pipeline creation (green). Plan Target (red dashed) and AE Capacity (amber dashed) show the monthly demand vs close-capacity envelope.</p>
         <ResponsiveContainer width="100%" height={320}>

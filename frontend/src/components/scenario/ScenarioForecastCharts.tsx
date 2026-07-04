@@ -39,7 +39,15 @@ export function ScenarioForecastCharts({
 }: Props) {
   return (
     <>
-      <Card className="mb-6 p-5">
+      <Card
+        className="mb-6 p-5"
+        data-testid="chart-container"
+        data-chart-title="Monthly Scenario vs Plan"
+        data-primary-series="Scenario Forecast"
+        data-primary-values={JSON.stringify(
+          monthlyChartData.map((row) => row["Scenario Forecast"]),
+        )}
+      >
         <h3 className="text-sm font-semibold text-slate-900">Monthly Scenario vs Plan</h3>
         <p className="mt-1 text-xs text-slate-500">
           Existing inventory and future generation stay stacked, while the active scenario, modeled
@@ -127,7 +135,15 @@ export function ScenarioForecastCharts({
         </div>
       </Card>
 
-      <Card className="mb-6 p-5">
+      <Card
+        className="mb-6 p-5"
+        data-testid="chart-container"
+        data-chart-title="Cumulative Gap Closure"
+        data-primary-series="Scenario Forecast"
+        data-primary-values={JSON.stringify(
+          cumulativeChartData.map((row) => row["Scenario Forecast"]),
+        )}
+      >
         <h3 className="text-sm font-semibold text-slate-900">Cumulative Gap Closure</h3>
         <p className="mt-1 text-xs text-slate-500">
           Compare the active scenario against the saved trajectory and the selected plan reference.

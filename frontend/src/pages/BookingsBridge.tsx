@@ -267,10 +267,6 @@ export default function BookingsBridge() {
       label: "YTD Closed-Won",
       value: formatMoney(ytdClosedWon),
     },
-    {
-      label: "YTD Recurring (~85%)",
-      value: ytdClosedWon > 0 ? formatMoney(ytdClosedWon * 0.85) : "--",
-    },
   ];
 
   return (
@@ -324,7 +320,15 @@ export default function BookingsBridge() {
       </ProseNote>
 
       {/* Monthly Bookings Sources */}
-      <Card className="p-5">
+      <Card
+        className="p-5"
+        data-testid="chart-container"
+        data-chart-title="Monthly Bookings Sources"
+        data-primary-series={MONTHLY_SERIES.total}
+        data-primary-values={JSON.stringify(
+          monthlyChartData.map((row) => row[MONTHLY_SERIES.total]),
+        )}
+      >
         <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Monthly Bookings Sources</h3>
         <p className="text-xs text-slate-500 mb-4">
           Monthly wins from existing pipeline and future pipeline, with total expected wins,
@@ -359,7 +363,15 @@ export default function BookingsBridge() {
       </ProseNote>
 
       {/* Cumulative Bookings Path */}
-      <Card className="p-5">
+      <Card
+        className="p-5"
+        data-testid="chart-container"
+        data-chart-title="Cumulative Bookings Path"
+        data-primary-series={CUMULATIVE_SERIES.total}
+        data-primary-values={JSON.stringify(
+          cumulativeData.map((row) => row[CUMULATIVE_SERIES.total]),
+        )}
+      >
         <h3 className="text-sm font-semibold text-slate-800 tracking-tight mb-1">Cumulative Bookings Path</h3>
         <p className="text-xs text-slate-500 mb-4">
           Running totals of existing wins, future wins, and cumulative total expected against
@@ -556,4 +568,3 @@ function getNestedNumber(
   }
   return typeof current === "number" ? current : 0;
 }
-

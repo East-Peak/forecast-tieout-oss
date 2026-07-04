@@ -16,9 +16,11 @@ export function MetricStrip({ metrics }: Props) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
       {metrics.map((m, i) => (
-        <Card key={i} className="p-4">
-          <Text>{m.label}</Text>
-          <Metric className="mt-1">{m.value}</Metric>
+        <Card key={i} className="p-4" data-testid="metric-card">
+          <Text data-testid="metric-label">{m.label}</Text>
+          <Metric className="mt-1" data-testid="metric-value">
+            {m.value}
+          </Metric>
           {m.delta && (
             <BadgeDelta
               deltaType={m.deltaType ?? "unchanged"}
