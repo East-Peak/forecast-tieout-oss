@@ -15,6 +15,7 @@
     "verify": "knip && vitest run"
   },
   "dependencies": {
+    "@fontsource/space-grotesk": "^5.2.10",
     "@supabase/supabase-js": "^2.57.4",
     "@vercel/analytics": "^2.0.1",
     "react": "^18.3.1",

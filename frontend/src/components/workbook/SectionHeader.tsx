@@ -9,7 +9,7 @@ interface Props {
 export function SectionHeader({ title, subtitle, caption }: Props) {
   return (
     <div className="mb-4">
-      <Title className="text-sm font-semibold text-slate-800" style={{ letterSpacing: "-0.01em" }}>
+      <Title as="h2" className="font-display text-base font-semibold text-ft-brand">
         {title}
       </Title>
       {subtitle && <Text className="mt-1 text-xs text-slate-500">{subtitle}</Text>}

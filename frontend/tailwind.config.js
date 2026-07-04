@@ -7,6 +7,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        ft: {
+          brand: 'var(--ft-brand)',
+          accent: 'var(--ft-accent)',
+          accentSoft: 'var(--ft-accent-soft)',
+          capacity: 'var(--ft-capacity)',
+        },
         surface: {
           DEFAULT: '#ffffff',
           raised: '#f6f8fa',
@@ -27,6 +33,18 @@ export default {
           red: '#cf222e',
           purple: '#8250df',
         },
+      },
+      borderRadius: {
+        ft: 'var(--ft-card-radius)',
+      },
+      boxShadow: {
+        ft: 'var(--ft-card-shadow)',
+      },
+      fontFamily: {
+        display: ['"Space Grotesk"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      spacing: {
+        ft: 'var(--ft-card-padding)',
       },
     },
   },
