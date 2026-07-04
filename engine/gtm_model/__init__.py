@@ -164,23 +164,7 @@ from .forecast import (
     AGE_MULTIPLIERS,
 )
 
-# v3.2: Monte Carlo Simulation
-from .monte_carlo import (
-    Deal,
-    SimulationRun,
-    MonteCarloResult,
-    VarianceAttribution,
-    run_monte_carlo_forecast,
-    calculate_variance_attribution,
-    deals_from_sf_pipeline,
-    run_scenario,
-    compare_scenarios,
-    DEFAULT_TRANSITION_MATRIX,
-    DEFAULT_STAGE_WIN_RATES,
-    DEFAULT_BETA_PRIORS,
-)
-
-__version__ = "0.3.2"  # v3.2 with Prediction & Forecasting + Monte Carlo
+__version__ = "0.3.2"  # v3.2 with Prediction & Forecasting; Monte Carlo is archived in engine/legacy.
 
 __all__ = [
     # Stages
@@ -332,17 +316,4 @@ __all__ = [
     "format_currency",
     "DEFAULT_STAGE_CONVERSION",
     "AGE_MULTIPLIERS",
-    # Monte Carlo Simulation (v3.2)
-    "Deal",
-    "SimulationRun",
-    "MonteCarloResult",
-    "VarianceAttribution",
-    "run_monte_carlo_forecast",
-    "calculate_variance_attribution",
-    "deals_from_sf_pipeline",
-    "run_scenario",
-    "compare_scenarios",
-    "DEFAULT_TRANSITION_MATRIX",
-    "DEFAULT_STAGE_WIN_RATES",
-    "DEFAULT_BETA_PRIORS",
 ]

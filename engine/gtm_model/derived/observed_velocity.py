@@ -138,8 +138,10 @@ def compute_observed_velocity(
                 stage_won_counts[stage] / stage_seen_counts[stage]
             )
 
-    # ── Decay curve (left as TODO — legacy uses pipeline
-    # rollforward simulation; pure port needs the full simulation) ──
+    # Decision 2026-07-04: the pure observed-velocity fallback does not
+    # synthesize a decay curve. The authoritative tieout runtime still resolves
+    # decay from backend/rollforward simulation; returning [] is the explicit
+    # "insufficient contract" sentinel for backends without that capability.
     profile.decay_curve = []
 
     return profile

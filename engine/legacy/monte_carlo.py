@@ -13,7 +13,7 @@ Key features:
 - Bimodal sales cycle modeling (v3.3) - fast movers vs long haulers
 
 Usage:
-    from gtm_model.monte_carlo import (
+    from legacy.monte_carlo import (
         run_monte_carlo_forecast,
         calculate_variance_attribution,
         MonteCarloResult,
@@ -43,8 +43,8 @@ from typing import Optional
 import random
 import math
 
-from .rate_defaults import get_default_stage_win_rates
-from .tieout.runtime.env import load_yaml_resource
+from gtm_model.rate_defaults import get_default_stage_win_rates
+from gtm_model.tieout.runtime.env import load_yaml_resource
 
 
 # =============================================================================

@@ -37,6 +37,7 @@ def test_empty_inputs_returns_empty_profile():
     assert profile.rolling_s2_to_won_rate is None
     assert profile.stage_velocity_days == {}
     assert profile.stage_win_rates == {}
+    assert profile.decay_curve == []
 
 
 def test_s2_to_won_rate_computed_from_history():
