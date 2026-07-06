@@ -29,6 +29,7 @@ export interface RawOrgProfile {
   name?: string;
   description?: string;
   version?: number;
+  demo?: boolean;
   data?: RawOrgProfileData;
   connectors?: RawOrgProfileConnectors;
   metadata?: Record<string, unknown>;
@@ -42,6 +43,7 @@ export interface OrgProfile {
   description: string;
   version: number;
   isDefault: boolean;
+  demo: boolean;
   data: {
     snapshotUrl: string;
     planManifestUrl: string;
@@ -95,6 +97,7 @@ export function createFallbackOrgProfile(dataRoot: string): OrgProfile {
     description: "Default Forecast Tieout org profile.",
     version: 1,
     isDefault: false,
+    demo: false,
     data: {
       snapshotUrl: `${dataRoot}/profiles/default/snapshot.json`,
       planManifestUrl: `${dataRoot}/profiles/default/plans/index.json`,
@@ -142,6 +145,7 @@ export function normalizeOrgProfile(
     description: String(raw.description || fallback.description),
     version: Number(raw.version || fallback.version),
     isDefault,
+    demo: raw.demo === true,
     data: {
       snapshotUrl: resolveRelativeUrl(
         baseUrl,

@@ -1,7 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const VISUAL_ENABLED = process.env.VISUAL === "1";
-const FIXED_BROWSER_TIME = new Date("2026-07-04T19:00:00-07:00");
 
 const PERSONAS = [
   { id: "sprout-labs", label: "Sprout Labs" },
@@ -82,7 +81,10 @@ async function openForecastPage(
   route: RouteCase,
   persona: PersonaCase,
 ): Promise<void> {
-  await page.clock.setFixedTime(FIXED_BROWSER_TIME);
+  // No fake clock: Playwright's clock API stalls RAF/timers the app needs to
+  // paint (empirically: 27/27 metric-card timeouts with setFixedTime). Nothing
+  // time-dependent remains — the staleness banner is suppressed via the demo
+  // flag and the freshness chip is masked in visual comparisons.
   const response = await page.goto(`${route.path}?profile=${persona.id}`, {
     waitUntil: "networkidle",
   });
@@ -95,6 +97,7 @@ async function openForecastPage(
     await expect(page.locator('[data-testid="metric-card"]').first()).toBeVisible();
   }
   await expect(page.locator("#org-profile-selector")).toHaveValue(persona.id);
+  await expect(page.getByTestId("staleness-banner")).toHaveCount(0);
 }
 
 function collectBrowserIssues(page: Page): BrowserIssue[] {

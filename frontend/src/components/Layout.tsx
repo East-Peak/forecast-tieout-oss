@@ -60,7 +60,7 @@ export default function Layout() {
   const staleDays = generatedAt
     ? Math.floor((Date.now() - new Date(generatedAt).getTime()) / (1000 * 60 * 60 * 24))
     : 0;
-  const showStaleBanner = staleDays > 1;
+  const showStaleBanner = staleDays > 1 && selectedOrgProfile?.demo !== true;
 
   function withCurrentSearch(pathname: string) {
     return {

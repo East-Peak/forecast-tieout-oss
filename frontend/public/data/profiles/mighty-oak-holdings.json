@@ -4,6 +4,7 @@
   "name": "Mighty Oak Holdings",
   "description": "Mighty Oak Holdings \u2014 $800M enterprise plan, expansion bridge at risk",
   "version": 1,
+  "demo": true,
   "data": {
     "snapshot": "./mighty-oak-holdings/snapshot.json",
     "plan_manifest": "./mighty-oak-holdings/plans/index.json"

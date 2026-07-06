@@ -70,5 +70,13 @@ describe("data catalog", () => {
       "sapling-industries",
       "mighty-oak-holdings",
     ]);
+
+    for (const id of manifest.profiles?.map((profile) => profile.id) ?? []) {
+      const profilePath = fileURLToPath(
+        new URL(`../../../public/data/profiles/${id}.json`, import.meta.url),
+      );
+      const profile = JSON.parse(readFileSync(profilePath, "utf-8")) as { demo?: boolean };
+      expect(profile.demo, `${id} profile is marked as a committed demo fixture`).toBe(true);
+    }
   });
 });

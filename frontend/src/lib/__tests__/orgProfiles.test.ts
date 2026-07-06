@@ -38,6 +38,25 @@ describe("org profile helpers", () => {
     expect(profile.connectors.warehouse).toBe("Warehouse");
   });
 
+  it("preserves whether the profile is a committed demo fixture", () => {
+    const profile = normalizeOrgProfile(
+      {
+        id: "demo-org",
+        slug: "demo-org",
+        name: "Demo Org",
+        demo: true,
+      } as RawOrgProfile & { demo: boolean },
+      {
+        manifestId: "demo-org",
+        profileUrl: "http://localhost:3000/data/profiles/demo-org.json",
+        dataRoot: "http://localhost:3000/data",
+      },
+    );
+
+    expect(profile.demo).toBe(true);
+    expect(createFallbackOrgProfile("/data").demo).toBe(false);
+  });
+
   it("builds connector priority notes from the profile contract", () => {
     const profile = createFallbackOrgProfile("/data");
     const notes = buildConnectorPolicyNotes(profile);

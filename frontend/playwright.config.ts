@@ -1,6 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 4173;
+// Dedicated port — NOT vite's default 4173. The webServer healthcheck is
+// identity-blind (any 2xx passes) and other apps' previews commonly squat 4173
+// (empirically: agent-observatory, which the smoke suite then dutifully tested).
+const PORT = 4179;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 const visualEnabled = process.env.VISUAL === "1";
 

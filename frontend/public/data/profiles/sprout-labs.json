@@ -4,6 +4,7 @@
   "name": "Sprout Labs",
   "description": "Sprout Labs \u2014 $10M early-PMF plan, repeatability not proven",
   "version": 1,
+  "demo": true,
   "data": {
     "snapshot": "./sprout-labs/snapshot.json",
     "plan_manifest": "./sprout-labs/plans/index.json"

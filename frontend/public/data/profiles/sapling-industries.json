@@ -4,6 +4,7 @@
   "name": "Sapling Industries",
   "description": "Sapling Industries \u2014 $100M scale-up, headcount on plan but capacity short",
   "version": 1,
+  "demo": true,
   "data": {
     "snapshot": "./sapling-industries/snapshot.json",
     "plan_manifest": "./sapling-industries/plans/index.json"

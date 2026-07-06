@@ -6,6 +6,7 @@ export function StalenessBanner({ staleDays }: Props) {
   const isVeryStale = staleDays > 3;
   return (
     <div
+      data-testid="staleness-banner"
       className={`px-4 py-2 text-sm text-center ${
         isVeryStale ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"
       }`}
