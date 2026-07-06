@@ -14,6 +14,7 @@
     "test:e2e": "npm run build && playwright test --grep @smoke",
     "test:visual": "npm run build && VISUAL=1 playwright test --grep @visual",
     "test:visual:update": "npm run build && VISUAL=1 playwright test --grep @visual --update-snapshots",
+    "screenshots": "node ./scripts/capture-screenshots.mjs",
     "knip": "knip",
     "verify": "knip && vitest run"
   },
