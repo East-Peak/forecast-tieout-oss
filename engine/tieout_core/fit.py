@@ -1,22 +1,35 @@
 """The fitted model: pooled win rates by stage and age, empirical close timing,
 and the parameters of pipeline not yet created.
 
-``fit`` must be given data already cut to its cutoff (``history.as_known_at``),
-and it only learns from snapshots whose whole horizon lies before the cutoff.
+``fit`` must be given data already cut to its cutoff (``history.as_known_at``).
+Two estimators of the same quantity (won within the horizon of a snapshot):
+
+- ``MATURED`` (Goal 1): the share won, from snapshots whose whole horizon lies
+  before the cutoff, so the newest evidence is a year old.
+- ``RECENCY`` (Goal 2A candidate): the cumulative incidence of a win over days
+  since the snapshot, with loss competing and still-open deals counted only for
+  the days they were observed (Aalen-Johansen), from the trailing months'
+  snapshots including young ones. Close timing is the same curve's increments.
 """
 
 from __future__ import annotations
 
-from bisect import bisect_right
+from bisect import bisect_left, bisect_right
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import Decimal
+from fractions import Fraction
+from itertools import accumulate
 
 from .fiscal import add_months
 from .history import CREATION_AMOUNT_BASIS, UNKNOWN_STAGE, creation_amounts
-from .rates import DEFAULT, FITTED, Rate, RateBook, wilson
+from .rates import DEFAULT, FITTED, Rate, RateBook, wilson, wilson_interval
 from .records import LOST, WON, Dataset, Deal, Profile
+
+MATURED = "matured snapshots"
+RECENCY = "cumulative incidence"
+WIN, LOSS, OPEN = "won", "lost", "still open"
 
 
 @dataclass(frozen=True)
@@ -25,6 +38,8 @@ class FitParams:
     smoothing: int = 20  # pseudo-observations pulling a cell toward its stage
     min_timing_samples: int = 20
     trailing_days: int = 365
+    estimator: str = MATURED
+    recency_months: int = 24  # RECENCY: snapshots from this many trailing months
 
 
 DEFAULT_PARAMS = FitParams()
@@ -42,18 +57,99 @@ def age_group(age_days: int) -> str:
 
 @dataclass(frozen=True)
 class Timing:
-    """Empirical distribution of whole days from a starting point to a win."""
+    """Distribution of whole days from a starting point to a win: sorted
+    samples, each counting once, or with ``weights`` (one per distinct day)."""
 
     samples: tuple[int, ...]
     source: str
+    weights: tuple[Decimal, ...] | None = None
+    _cum: tuple[Decimal, ...] = field(default=(), init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        if self.weights is not None:
+            object.__setattr__(self, "_cum", tuple(accumulate(self.weights)))
+
+    @property
+    def total(self) -> int | Decimal:
+        if self.weights is None:
+            return len(self.samples)
+        return self._cum[-1] if self._cum else Decimal(0)
+
+    def count_through(self, days: int) -> int | Decimal:
+        """Samples (or weight) on or before ``days``."""
+        k = 0 if days < 0 else bisect_right(self.samples, days)
+        if self.weights is None:
+            return k
+        return self._cum[k - 1] if k else Decimal(0)
 
     def cdf(self, days: int) -> Decimal:
         if days < 0 or not self.samples:
             return Decimal(0)
-        return Decimal(bisect_right(self.samples, days)) / Decimal(len(self.samples))
+        return Decimal(self.count_through(days)) / Decimal(self.total)
 
-    def count_through(self, days: int) -> int:
-        return 0 if days < 0 else bisect_right(self.samples, days)
+
+@dataclass(frozen=True)
+class Incidence:
+    """A cumulative incidence of a win within a horizon, with its sample."""
+
+    value: Decimal
+    variance: float
+    n: int
+    wins: int  # wins observed within the horizon
+    still_open: int  # observations censored while open
+    timing: Timing  # the curve's increments: when, within the horizon, wins land
+
+    @property
+    def effective_n(self) -> float:
+        """The binomial sample size with the same variance (n without censoring)."""
+        p = float(self.value)
+        if self.variance <= 0 or p in (0.0, 1.0):
+            return float(self.n)
+        return min(float(self.n), p * (1 - p) / self.variance)
+
+
+def cumulative_incidence(
+    obs: list[tuple[int, str]], horizon: int, source: str = "cumulative incidence"
+) -> Incidence:
+    """Aalen-Johansen estimate of P(won within ``horizon`` days), from
+    (days observed, outcome) pairs: WIN or LOSS on that day, or OPEN (censored
+    after that day). An observation is at risk on every day up to its own.
+    Computed in exact fractions; the variance is the delta-method estimate,
+    which reduces to p(1 - p)/n without censoring."""
+    n = len(obs)
+    events: dict[int, list[int]] = defaultdict(lambda: [0, 0])
+    for days, outcome in obs:
+        if outcome != OPEN and days <= horizon:
+            events[days][outcome == LOSS] += 1
+    ordered = sorted(days for days, _ in obs)
+    surv, cum = Fraction(1), Fraction(0)
+    steps = []  # (at risk, wins, events, survival before, cumulative incidence after)
+    for t in sorted(events):
+        at_risk = n - bisect_left(ordered, t)
+        wins, losses = events[t]
+        cum += surv * Fraction(wins, at_risk)
+        steps.append((t, at_risk, wins, wins + losses, surv, cum))
+        surv *= 1 - Fraction(wins + losses, at_risk)
+    final = float(cum)
+    variance = 0.0
+    for _, r, w, d, s_prev, f_j in steps:
+        s_prev, gap = float(s_prev), final - float(f_j)
+        if r > d:
+            variance += gap * gap * d / (r * (r - d))
+        variance += s_prev * s_prev * w * (r - w) / r**3
+        variance -= 2 * gap * s_prev * w / r**2
+    days = tuple(t for t, _, w, *_ in steps if w)
+    weights = tuple(
+        _dec(s_prev * Fraction(w, r)) for _, r, w, _, s_prev, _ in steps if w
+    )
+    return Incidence(
+        _dec(cum), max(0.0, variance), n, sum(w for _, _, w, *_ in steps),
+        sum(1 for _, o in obs if o == OPEN), Timing(days, source, weights),
+    )  # fmt: skip
+
+
+def _dec(x: Fraction) -> Decimal:
+    return Decimal(x.numerator) / Decimal(x.denominator)
 
 
 @dataclass(frozen=True)
@@ -92,34 +188,19 @@ class Model:
 def fit(
     data: Dataset, cutoff: date, profile: Profile, params: FitParams = DEFAULT_PARAMS
 ) -> Model:
+    if params.estimator == RECENCY:
+        return _fit_recency(data, cutoff, profile, params)
     horizon = params.horizon_days
     snapshots = matured_snapshots(data, cutoff, horizon)
     first = f"{snapshots[-1]} to {snapshots[0]}" if snapshots else "none"
     cohort_text = f"monthly snapshots {first}"
-    history = defaultdict(list)
-    for t in data.transitions:
-        history[t.deal_id].append(t)
-
-    stage_obs: dict[str, list[int | None]] = defaultdict(list)  # days to win, or None
-    cell_obs: dict[tuple[str, str], list[int | None]] = defaultdict(list)
-    seen_stage, seen_cell = set(), set()
-    unknown = 0
-    for s in reversed(snapshots):  # oldest first, so "first" means first in time
-        for d in data.deals:
-            if d.created > s or (d.is_closed and d.close <= s):
-                continue
-            stage = _stage_on(history[d.id], s)
-            if stage == UNKNOWN_STAGE:
-                unknown += 1
-                continue
-            days = _days_to_win(d, s, horizon)
-            if (d.id, stage) not in seen_stage:
-                seen_stage.add((d.id, stage))
-                stage_obs[stage].append(days)
-            cell = (stage, age_group((s - d.created).days))
-            if (d.id, cell) not in seen_cell:
-                seen_cell.add((d.id, cell))
-                cell_obs[cell].append(days)
+    stage_seen, cell_seen, unknown = _observe(data, snapshots)
+    stage_obs = {
+        k: [_days_to_win(d, s, horizon) for d, s in v] for k, v in stage_seen.items()
+    }
+    cell_obs = {
+        k: [_days_to_win(d, s, horizon) for d, s in v] for k, v in cell_seen.items()
+    }
 
     book = RateBook()
     stage_rates: dict[str, Decimal] = {}
@@ -199,6 +280,216 @@ def fit(
         cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots),
         cell_timings,
     )  # fmt: skip
+
+
+def _observe(data: Dataset, snapshots: list[date]):
+    """Each deal open at a snapshot, at the first (oldest) snapshot where it is
+    in a given stage, and in a given stage-and-age cell: (deal, snapshot) pairs."""
+    history = defaultdict(list)
+    for t in data.transitions:
+        history[t.deal_id].append(t)
+    by_stage: dict[str, list] = defaultdict(list)
+    by_cell: dict[tuple[str, str], list] = defaultdict(list)
+    seen_stage, seen_cell = set(), set()
+    unknown = 0
+    for s in reversed(snapshots):  # oldest first, so "first" means first in time
+        for d in data.deals:
+            if d.created > s or (d.is_closed and d.close <= s):
+                continue
+            stage = _stage_on(history[d.id], s)
+            if stage == UNKNOWN_STAGE:
+                unknown += 1
+                continue
+            if (d.id, stage) not in seen_stage:
+                seen_stage.add((d.id, stage))
+                by_stage[stage].append((d, s))
+            cell = (stage, age_group((s - d.created).days))
+            if (d.id, cell) not in seen_cell:
+                seen_cell.add((d.id, cell))
+                by_cell[cell].append((d, s))
+    return by_stage, by_cell, unknown
+
+
+def _outcome(d: Deal, start: date, cutoff: date) -> tuple[int, str]:
+    """Days from ``start`` to the deal's outcome, or to the cutoff if it is
+    still open there (the data is already cut, so a closed deal closed by then)."""
+    if d.is_closed:
+        return (d.close - start).days, WIN if d.is_won else LOSS
+    return (cutoff - start).days, OPEN
+
+
+def recent_snapshots(data: Dataset, cutoff: date, months: int) -> list[date]:
+    """Monthly snapshot dates in the trailing ``months``, newest first, young
+    ones included, none before the first deal."""
+    if not data.deals:
+        return []
+    earliest = min(d.created for d in data.deals)
+    snaps = [add_months(cutoff, -k) for k in range(1, months + 1)]
+    return [s for s in snaps if s >= earliest]
+
+
+def _fit_recency(
+    data: Dataset, cutoff: date, profile: Profile, params: FitParams
+) -> Model:
+    horizon, months = params.horizon_days, params.recency_months
+    snapshots = recent_snapshots(data, cutoff, months)
+    first = f"{snapshots[-1]} to {snapshots[0]}" if snapshots else "none"
+    cohort_text = f"monthly snapshots {first}"
+    stage_seen, cell_seen, unknown = _observe(data, snapshots)
+
+    def incidence(pairs, source):
+        return cumulative_incidence(
+            [_outcome(d, s, cutoff) for d, s in pairs], horizon, source
+        )
+
+    stage_ci = {k: incidence(v, f"stage {k}") for k, v in stage_seen.items()}
+    book = RateBook()
+    stage_rates: dict[str, Decimal] = {}
+    for code in profile.open_codes:
+        ci = stage_ci.get(code)
+        if ci is not None:
+            low, high = wilson_interval(float(ci.value), ci.effective_n)
+            value, source = ci.value, FITTED
+        else:
+            low = high = None
+            value, source = profile.probability(code), DEFAULT
+        stage_rates[code] = value
+        book.add(
+            Rate(
+                name=f"win_within_horizon:{code}",
+                value=value,
+                definition=f"cumulative incidence of a win within {horizon} days of a snapshot for "
+                f"deals open in {profile.stage_name(code)} (losses compete; deals still open are "
+                "counted for the days observed)",
+                numerator=f"{ci.wins if ci else 0} wins observed within {horizon} days",
+                denominator=f"{ci.n if ci else 0} deals open in {code} at their first snapshot in "
+                f"the trailing {months} months ({ci.still_open if ci else 0} still open at the cutoff)",
+                cohort=cohort_text,
+                horizon=f"{horizon} days",
+                sample_size=ci.n if ci else 0,
+                source=source,
+                low95=low,
+                high95=high,
+            )
+        )
+
+    m = Decimal(params.smoothing)
+    cells: dict[tuple[str, str], Decimal] = {}
+    cell_timings = {}
+    for (code, group), pairs in sorted(cell_seen.items()):
+        if code not in stage_rates:
+            continue
+        ci = incidence(pairs, f"stage {code}, aged {group}")
+        n_eff = Decimal(f"{ci.effective_n:.6f}")
+        cells[(code, group)] = (n_eff * ci.value + m * stage_rates[code]) / (n_eff + m)
+        if ci.wins >= params.min_timing_samples:
+            cell_timings[(code, group)] = ci.timing
+        book.add(
+            Rate(
+                name=f"win_within_horizon:{code}:{group}",
+                value=cells[(code, group)],
+                definition=f"stage {code} cumulative incidence for deals aged {group}, shrunk toward "
+                f"the stage rate with {params.smoothing} pseudo-observations",
+                numerator=f"{ci.wins} wins observed within {horizon} days (+{params.smoothing} x stage rate)",
+                denominator=f"{ci.n} deals open in {code} aged {group} ({n_eff:.1f} effective after "
+                f"censoring, +{params.smoothing})",
+                cohort=cohort_text,
+                horizon=f"{horizon} days",
+                sample_size=ci.n,
+                source=FITTED,
+            )
+        )
+
+    pooled = incidence(
+        [p for pairs in stage_seen.values() for p in pairs],
+        "pooled across stages",
+    ).timing
+    timings = {}
+    for code in profile.open_codes:
+        ci = stage_ci.get(code)
+        if ci is not None and ci.wins >= params.min_timing_samples:
+            timings[code] = ci.timing
+        else:
+            timings[code] = Timing(
+                pooled.samples,
+                f"pooled across stages (fewer than {params.min_timing_samples} wins in {code})",
+                pooled.weights,
+            )
+    new = _new_pipeline_recency(data, cutoff, params, book)
+    return Model(
+        cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots),
+        cell_timings,
+    )  # fmt: skip
+
+
+def _new_pipeline_recency(
+    data: Dataset, cutoff: date, params: FitParams, book: RateBook
+) -> NewPipeline:
+    """The creation cohort under RECENCY: deals created in the trailing months,
+    each observed from its creation date, young ones included."""
+    horizon, months = params.horizon_days, params.recency_months
+    start = add_months(cutoff, -months)
+    cohort = [d for d in data.deals if start < d.created <= cutoff]
+    outcomes = [_outcome(d, d.created, cutoff) for d in cohort]
+    ci = cumulative_incidence(outcomes, horizon, "days from creation to win")
+    wins = [d for d, (days, o) in zip(cohort, outcomes) if o == WIN and days <= horizon]
+    first_amount = creation_amounts(data)
+    created_amounts = [
+        first_amount[d.id] for d in cohort if first_amount.get(d.id) is not None
+    ]
+    trailing_start = cutoff - timedelta(days=params.trailing_days)
+    created_recent = sum(1 for d in data.deals if trailing_start < d.created <= cutoff)
+    per_day = Decimal(created_recent) / Decimal(params.trailing_days)
+    cohort_text = f"new-business deals created {start + timedelta(days=1)} to {cutoff}"
+    n = len(cohort)
+    low, high = wilson_interval(float(ci.value), ci.effective_n) if n else (None, None)
+    mean_won, mean_created = _mean([d.arr for d in wins]), _mean(created_amounts)
+    for name, value, (definition, source), num, den, horizon_text, size, rng in (
+        (
+            "new_pipeline_win_rate", ci.value,
+            _evidence(n, f"cumulative incidence of a win within {horizon} days of creation "
+                         "(losses compete; deals still open are counted for the days observed)"),
+            f"{ci.wins} wins observed within {horizon} days",
+            f"{n} deals created ({ci.still_open} still open at the cutoff)",
+            f"{horizon} days", n, (low, high),
+        ),
+        (
+            "mean_won_arr", mean_won,
+            _evidence(len(wins), "mean booked ARR of a created deal that is won"),
+            "booked ARR of those wins", f"{len(wins)} wins observed", f"{horizon} days",
+            len(wins), (None, None),
+        ),
+        (
+            "mean_created_arr", mean_created,
+            _evidence(len(created_amounts), f"mean ARR of a created deal ({CREATION_AMOUNT_BASIS})"),
+            "ARR of created deals", f"{len(created_amounts)} deals with a known amount",
+            "at creation", len(created_amounts), (None, None),
+        ),
+    ):  # fmt: skip
+        book.add(
+            Rate(
+                name=name, value=value, definition=definition, numerator=num,
+                denominator=den, cohort=cohort_text, horizon=horizon_text,
+                sample_size=size, source=source, low95=rng[0], high95=rng[1],
+            )
+        )  # fmt: skip
+    book.add(
+        Rate(
+            "created_deals_per_day", per_day, "new-business deals created per day",
+            f"{created_recent} deals created", f"{params.trailing_days} days",
+            f"created {trailing_start + timedelta(days=1)} to {cutoff}",
+            "trailing", created_recent, FITTED,
+        )
+    )  # fmt: skip
+    return NewPipeline(
+        ci.value,
+        ci.timing,
+        mean_won,
+        mean_created,
+        per_day,
+        tuple(d.arr for d in wins),
+        n,
+    )
 
 
 def matured_snapshots(data: Dataset, cutoff: date, horizon: int) -> list[date]:

@@ -16,7 +16,7 @@ from statistics import median
 import numpy as np
 
 from .fiscal import Window
-from .fit import Model
+from .fit import Model, Timing
 from .history import CREATION_AMOUNT_BASIS, UNKNOWN_STAGE, creation_amounts
 from .rates import ENTERED, FITTED, Rate
 from .records import Check, Dataset, Profile
@@ -239,10 +239,12 @@ def model_forecast(
     new = model.new_pipeline
     future = _zeros(windows)
     added = _zeros(windows)
-    n = len(new.timing.samples)
+    n = new.timing.total
     if n and windows:
         horizon_end = offsets[-1][1]
-        per_created_deal = new.win_rate * new.mean_won_arr / Decimal(n)
+        per_created_deal = (
+            new.win_rate * new.mean_won_arr / Decimal(n)
+        )  # per unit of timing mass
         for w, (a, b) in zip(windows, offsets):
             hits = sum(
                 new.timing.count_through(b - t) - new.timing.count_through(a - t)
@@ -342,6 +344,16 @@ class Simulation:
     by_group: dict[str, Spread] = field(default_factory=dict)
 
 
+def _draw_days(rng: np.random.Generator, timing: Timing, size: int) -> np.ndarray:
+    """Days to a win drawn from ``timing``: uniformly over its samples, or by
+    their weights."""
+    samples = np.asarray(timing.samples)
+    if timing.weights is None:
+        return samples[rng.integers(0, len(samples), size)]
+    p = np.asarray([float(w) for w in timing.weights])
+    return samples[rng.choice(len(samples), size=size, p=p / p.sum())]
+
+
 def _spread(values: np.ndarray) -> Spread:
     q = np.percentile(values, [2.5, 10, 50, 90, 97.5])
     return Spread(float(values.mean()), *(float(x) for x in q))
@@ -382,12 +394,12 @@ def simulate(
     for d in data.deals:
         if d.is_closed or d.stage == UNKNOWN_STAGE or d.arr is None:
             continue
-        samples = model.timing(d.stage, (cutoff - d.created).days).samples
-        if not samples:
+        timing = model.timing(d.stage, (cutoff - d.created).days)
+        if not timing.samples:
             continue
         p = float(model.win_rate(d.stage, (cutoff - d.created).days))
         won = rng.random(draws) < p
-        days = np.asarray(samples)[rng.integers(0, len(samples), draws)]
+        days = _draw_days(rng, timing, draws)
         book(draw_index[won], days[won], np.full(int(won.sum()), float(d.arr)))
 
     new = model.new_pipeline
@@ -398,9 +410,7 @@ def simulate(
         total = int(counts.sum())
         rows = np.repeat(draw_index, counts)
         created = rng.integers(1, span + 1, total)
-        days = np.asarray(new.timing.samples)[
-            rng.integers(0, len(new.timing.samples), total)
-        ]
+        days = _draw_days(rng, new.timing, total)
         sizes = np.asarray([float(x) for x in new.won_arr_samples])[
             rng.integers(0, len(new.won_arr_samples), total)
         ]

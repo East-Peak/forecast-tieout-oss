@@ -1,7 +1,17 @@
 """Fixture recovery (design doc, builder check 8): the true rate lies inside the
-fitted 95% range in at least 90% of 200 fixed-seed replicates."""
+fitted 95% range in at least 90% of 200 fixed-seed replicates.
+
+Goal 2A adds a point check so a wide range cannot pass alone: across the 200
+seeds the median absolute error of the point estimate is at most
+POINT_TOLERANCE. It was stated before the recency fit was written, from the
+sampling error of these fixtures (largest standard error 0.049, at S3 with
+about 100 deals; an unbiased estimator's median absolute error is then about
+0.033). Both estimators are held to it: the report uses whichever one the
+back-test adopts for a company.
+"""
 
 import math
+import statistics
 from dataclasses import replace
 from datetime import date
 
@@ -9,8 +19,11 @@ import pytest
 
 from engine.scripts.synth_history import Company, generate, true_win_rates
 from engine.tests.tieout_core.builders import write_profile
-from engine.tieout_core.fit import fit
+from engine.tieout_core.fit import MATURED, RECENCY, FitParams, fit
 from engine.tieout_core.load import load_profile
+
+POINT_TOLERANCE = 0.04
+ESTIMATORS = (MATURED, RECENCY)
 
 REPLICATES = 200
 SEEDS = range(1000, 1000 + REPLICATES)
@@ -20,40 +33,43 @@ TRUTH_CO = Company(
 )  # fmt: skip
 
 
-@pytest.fixture(scope="module")
-def fits(tmp_path_factory):
+def _recovered(fits, name, truth):
+    """(replicates whose 95% range holds the truth, median absolute error)."""
+    rates = [m.rates[name] for m in fits]
+    inside = sum(r.low95 <= truth <= r.high95 for r in rates)
+    error = statistics.median(abs(float(r.value) - truth) for r in rates)
+    return inside, error
+
+
+def _assert_recovered(fits, name, truth):
+    inside, error = _recovered(fits, name, truth)
+    assert inside >= 0.9 * REPLICATES, (
+        f"{name}: true {truth:.3f} inside {inside}/{REPLICATES}"
+    )
+    assert error <= POINT_TOLERANCE, f"{name}: median absolute error {error:.4f}"
+
+
+@pytest.fixture(scope="module", params=ESTIMATORS)
+def fits(request, tmp_path_factory):
     profile = load_profile(write_profile(tmp_path_factory.mktemp("p")))
+    params = FitParams(estimator=request.param)
     return [
-        fit(generate(replace(TRUTH_CO, seed=s)).dataset, TRUTH_CO.as_of, profile)
+        fit(
+            generate(replace(TRUTH_CO, seed=s)).dataset, TRUTH_CO.as_of, profile, params
+        )
         for s in SEEDS
     ]
 
 
 @pytest.mark.parametrize("stage", ["S1", "S2", "S3", "S4", "S5"])
 def test_stage_win_rates_are_recovered(fits, stage):
-    truth = true_win_rates(TRUTH_CO)[stage]
-    inside = sum(
-        m.rates[f"win_within_horizon:{stage}"].low95
-        <= truth
-        <= m.rates[f"win_within_horizon:{stage}"].high95
-        for m in fits
-    )
-    assert inside >= 0.9 * REPLICATES, (
-        f"{stage}: true {truth:.3f} inside the range {inside}/{REPLICATES}"
+    _assert_recovered(
+        fits, f"win_within_horizon:{stage}", true_win_rates(TRUTH_CO)[stage]
     )
 
 
 def test_new_pipeline_win_rate_is_recovered(fits):
-    truth = math.prod(TRUTH_CO.advance)
-    inside = sum(
-        m.rates["new_pipeline_win_rate"].low95
-        <= truth
-        <= m.rates["new_pipeline_win_rate"].high95
-        for m in fits
-    )
-    assert inside >= 0.9 * REPLICATES, (
-        f"true {truth:.3f} inside the range {inside}/{REPLICATES}"
-    )
+    _assert_recovered(fits, "new_pipeline_win_rate", math.prod(TRUTH_CO.advance))
 
 
 def test_every_replicate_had_evidence(fits):
@@ -62,6 +78,26 @@ def test_every_replicate_had_evidence(fits):
         for m in fits
         for s in ("S1", "S5")
     )
+
+
+def test_the_point_check_rejects_a_biased_estimate_with_a_wide_range(fits):
+    """Mutation check: shift every estimate by 0.06 and widen its range to
+    [0, 1]. Coverage still passes; the point check must not."""
+    from dataclasses import replace as swap
+
+    name, truth = "win_within_horizon:S3", true_win_rates(TRUTH_CO)["S3"]
+
+    class Biased:
+        def __init__(self, m):
+            r = m.rates[name]
+            self.rates = {
+                name: swap(
+                    r, value=r.value + type(r.value)("0.06"), low95=0.0, high95=1.0
+                )
+            }
+
+    inside, error = _recovered([Biased(m) for m in fits], name, truth)
+    assert inside == REPLICATES and error > POINT_TOLERANCE
 
 
 # Slow stages: many wins land beyond the 365-day horizon, so the finite-horizon
@@ -93,27 +129,19 @@ def finite_horizon_truth(company, stage_index, horizon=365, walks=200_000, seed=
     return wins / walks
 
 
-@pytest.fixture(scope="module")
-def slow_fits(tmp_path_factory):
+@pytest.fixture(scope="module", params=ESTIMATORS)
+def slow_fits(request, tmp_path_factory):
     profile = load_profile(write_profile(tmp_path_factory.mktemp("p")))
+    params = FitParams(estimator=request.param)
     return [
-        fit(generate(replace(SLOW_CO, seed=s)).dataset, SLOW_CO.as_of, profile)
+        fit(generate(replace(SLOW_CO, seed=s)).dataset, SLOW_CO.as_of, profile, params)
         for s in SEEDS
     ]
 
 
 @pytest.mark.parametrize("index", range(5))
 def test_finite_horizon_win_rates_are_recovered(slow_fits, index):
-    stage = f"S{index + 1}"
     truth = finite_horizon_truth(SLOW_CO, index)
     if index == 0:
         assert truth < 0.8 * math.prod(SLOW_CO.advance)  # the case discriminates
-    inside = sum(
-        m.rates[f"win_within_horizon:{stage}"].low95
-        <= truth
-        <= m.rates[f"win_within_horizon:{stage}"].high95
-        for m in slow_fits
-    )
-    assert inside >= 0.9 * REPLICATES, (
-        f"{stage}: truth {truth:.3f} inside {inside}/{REPLICATES}"
-    )
+    _assert_recovered(slow_fits, f"win_within_horizon:S{index + 1}", truth)

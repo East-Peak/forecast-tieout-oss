@@ -203,3 +203,60 @@ def verdict(scores) -> tuple[str, str]:
         YES,
         "the model's mean absolute error is lower than both baselines at 1 and 3 months",
     )
+
+
+@dataclass(frozen=True)
+class Comparison:
+    """A candidate estimator against the incumbent, on the same folds."""
+
+    adopted: bool
+    reason: str
+    mae: dict[
+        int, tuple[Decimal | None, Decimal | None]
+    ]  # horizon: (incumbent, candidate)
+    folds: dict[int, int]
+
+
+def compare_estimators(incumbent: Backtest, candidate: Backtest) -> Comparison:
+    """Declared rule (design doc, Goal 2A step 2.1): the candidate is adopted
+    only if the fitted model's mean absolute error is lower at both 1 and 3
+    months. Fewer than MIN_FOLDS folds, or a model that cannot be scored in
+    dollars, keeps the incumbent."""
+
+    def keys(b: Backtest):
+        return sorted((f.cutoff, f.horizon) for f in b.folds)
+
+    if keys(incumbent) != keys(candidate):
+        raise ValueError("the estimators must be scored on the same folds")
+    a = {s.horizon: s for s in incumbent.scores}
+    b = {s.horizon: s for s in candidate.scores}
+    mae = {h: (a[h].mae.get(MODEL), b[h].mae.get(MODEL)) for h in VERDICT_HORIZONS}
+    folds = {h: a[h].folds for h in VERDICT_HORIZONS}
+    for h in VERDICT_HORIZONS:
+        if folds[h] < MIN_FOLDS:
+            return Comparison(
+                False,
+                f"{folds[h]} folds at {h} month(s); at least {MIN_FOLDS} are needed to compare",
+                mae,
+                folds,
+            )
+        if None in mae[h]:
+            return Comparison(
+                False,
+                f"not both fits could be scored in dollars at {h} month(s)",
+                mae,
+                folds,
+            )
+    text = "; ".join(
+        f"{h}m: {mae[h][1]:,.0f} vs {mae[h][0]:,.0f}" for h in VERDICT_HORIZONS
+    )
+    if all(mae[h][1] < mae[h][0] for h in VERDICT_HORIZONS):
+        return Comparison(
+            True, f"lower mean absolute error at 1 and 3 months ({text})", mae, folds
+        )
+    return Comparison(
+        False,
+        f"mean absolute error not lower at both 1 and 3 months ({text})",
+        mae,
+        folds,
+    )

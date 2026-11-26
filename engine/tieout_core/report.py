@@ -8,13 +8,14 @@ from __future__ import annotations
 
 import json
 import math
+from dataclasses import replace
 from datetime import date, timedelta
 from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 
-from .backtest import MIN_FOLDS, VERDICT_HORIZONS, backtest
+from .backtest import MIN_FOLDS, VERDICT_HORIZONS, backtest, compare_estimators
 from .fiscal import Window, add_months, month_windows
-from .fit import DEFAULT_PARAMS, FitParams, fit
+from .fit import DEFAULT_PARAMS, RECENCY, FitParams, fit
 from .forecast import (
     Forecast,
     existing_pipeline_conservation,
@@ -70,6 +71,18 @@ def build_report(
     }
     targets = _targets(profile, horizon_end)
 
+    # Goal 2A step 2.1: the recency candidate is scored against the incumbent fit
+    # on the same folds, and adopted for this company only by the declared rule.
+    bt_draws = min(draws, 1000)
+    candidate = replace(params, estimator=RECENCY)
+    bt_incumbent = backtest(pop, as_of, profile, params, draws=bt_draws, seed=seed)
+    bt_candidate = backtest(pop, as_of, profile, candidate, draws=bt_draws, seed=seed)
+    recency = compare_estimators(bt_incumbent, bt_candidate)
+    incumbent_name = params.estimator
+    params, bt = (
+        (candidate, bt_candidate) if recency.adopted else (params, bt_incumbent)
+    )
+
     model = fit(pop, as_of, profile, params)
     forecasts = [
         run_rate(pop, as_of, windows, params.trailing_days),
@@ -102,7 +115,6 @@ def build_report(
     for r in _parameters(params, draws, seed):
         book.add(r)
 
-    bt = backtest(pop, as_of, profile, params, draws=min(draws, 1000), seed=seed)
     gap, lever_checks = _gap(
         rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter_labels,
         horizons,
@@ -135,14 +147,20 @@ def build_report(
             "fiscal_year_start": fy.start.isoformat(),
             "fiscal_year_end": fy.end.isoformat(),
             "measure": MEASURE,
+            "fit": params.estimator,
             "simulation": {"draws": draws, "seed": seed},
         },
         "reconciliation": _reconciliation(rec),
-        "history": _history(loaded, rec, model, bt, as_of),
+        "history": _history(loaded, rec, model, bt, as_of, recency),
         "forecasts": _forecasts(forecasts, labels, horizons, sim, bt),
         "rates": [_rate(r) for r in book],
         "gap": gap,
-        "backtest": _backtest(bt),
+        "backtest": {
+            **_backtest(bt),
+            "candidates": {
+                "recency": _candidate(recency, incumbent_name, params.estimator)
+            },
+        },
         "verdicts": {
             "software_correct": {
                 "verdict": "no" if failed else "yes",
@@ -217,7 +235,7 @@ def _reconciliation(rec) -> dict:
     }
 
 
-def _history(loaded, rec, model, bt, as_of) -> dict:
+def _history(loaded, rec, model, bt, as_of, recency) -> dict:
     pop = rec.population
     deals = pop.deals
     first = min((d.created for d in deals), default=None)
@@ -279,6 +297,18 @@ def _history(loaded, rec, model, bt, as_of) -> dict:
             limits.append(
                 f"{h}-month back-test: {n} folds, fewer than the {MIN_FOLDS} a verdict needs"
             )
+    if model.params.estimator == RECENCY:
+        limits.append(
+            f"win rates use snapshots from the trailing {model.params.recency_months} months, young "
+            "ones counted only for the days observed (the recency fit was adopted: "
+            f"{recency.reason})"
+        )
+    else:
+        limits.append(
+            f"win rates learn only from snapshots at least {model.params.horizon_days} days old, so "
+            f"a change in conversion shows up a year late (the recency fit was not adopted: "
+            f"{recency.reason})"
+        )
     if model.snapshot_count == 0:
         limits.append(
             f"no snapshot is {model.params.horizon_days} days old yet, so every win rate falls back to "
@@ -682,6 +712,24 @@ def _backtest(bt) -> dict:
     }
 
 
+def _candidate(cmp, incumbent: str, in_use: str) -> dict:
+    names = (incumbent, RECENCY)
+    return {
+        "rule": "adopted only if the fitted model's mean absolute error is lower than the Goal 1 "
+        f"fit's at both 1 and 3 months, on the same folds (at least {MIN_FOLDS} at each)",
+        "incumbent": names[0],
+        "candidate": names[1],
+        "mean_absolute_error": {
+            f"{h}m": {names[0]: _opt_money(pair[0]), names[1]: _opt_money(pair[1])}
+            for h, pair in cmp.mae.items()
+        },
+        "folds": {f"{h}m": n for h, n in cmp.folds.items()},
+        "adopted": cmp.adopted,
+        "reason": cmp.reason,
+        "fit_in_use": in_use,
+    }
+
+
 # ---------------------------------------------------------------- checks
 
 
@@ -754,6 +802,11 @@ def _parameters(params: FitParams, draws: int, seed: int) -> list[Rate]:
             "wins a stage needs for its own close timing",
         ),
         p("trailing_days", params.trailing_days, "window for trailing rates"),
+        p(
+            "recency_months",
+            params.recency_months,
+            "trailing months of snapshots for the cumulative-incidence fit",
+        ),
         p(
             "lever_cap_multiple",
             LEVER_CAP_MULTIPLE,

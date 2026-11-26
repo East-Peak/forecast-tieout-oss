@@ -340,6 +340,28 @@ def _backtest(s: dict) -> list[str]:
         rows,
     )
     out += [f"- {n}" for n in s["notes"]] + ([""] if s["notes"] else [])
+    c = s["candidates"]["recency"]
+    out += [
+        (
+            f"Recency candidate ({c['candidate']}) against the Goal 1 fit ({c['incumbent']}), "
+            f"same folds. Rule: {c['rule']}."
+        ),
+        "",
+    ]
+    out += _table(
+        ["Horizon", "Folds", c["incumbent"], c["candidate"]],
+        [
+            (h, c["folds"][h], _usd(v[c["incumbent"]]), _usd(v[c["candidate"]]))
+            for h, v in c["mean_absolute_error"].items()
+        ],
+    )
+    out += [
+        (
+            f"**{'Adopted' if c['adopted'] else 'Not adopted'}**: {c['reason']}. "
+            f"The forecast, rates, ranges and verdict use the {c['fit_in_use']} fit."
+        ),
+        "",
+    ]
     return out
 
 
