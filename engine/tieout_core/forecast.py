@@ -8,6 +8,7 @@ Expectations are exact decimals; the ranges come from a seeded simulation.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import Decimal
@@ -43,6 +44,30 @@ class Forecast:
         return sum(
             (sum(c.values(), Decimal(0)) for c in self.components.values()), Decimal(0)
         )
+
+
+@dataclass(frozen=True)
+class Creation:
+    """Pipeline not yet created, by day: the deals created on each day after the
+    cutoff (offsets 1..H). ``draws``, when given, returns a (draws, H) matrix of
+    the same quantity with future departures drawn at random, centred on
+    ``per_day``; the headline uses ``per_day`` and the ranges use the draws."""
+
+    per_day: tuple[Decimal, ...]
+    text: str
+    ramped_ae_months: tuple[Decimal, ...] = ()  # expected ramped AE-months on each day
+    draws: Callable[[np.random.Generator, int], np.ndarray] | None = field(
+        default=None, compare=False, repr=False
+    )
+
+
+@dataclass(frozen=True)
+class Inflow:
+    """Dollars of pipeline created evenly over the days (start, end] after the cutoff."""
+
+    start: int
+    end: int
+    dollars: Decimal
 
 
 def _unavailable(method: str, reason: str) -> Forecast:
@@ -192,9 +217,14 @@ def model_forecast(
     windows: list[Window],
     added_pipeline: Decimal = Decimal(0),
     added_through: date | None = None,
+    creation: Creation | None = None,
+    inflows: Sequence[Inflow] = (),
 ) -> Forecast:
     """``added_pipeline`` is created in equal parts in each window that ends by
-    ``added_through`` (every window by default) and books in any window."""
+    ``added_through`` (every window by default) and books in any window.
+    ``inflows`` are further dollars created over given day ranges (programmes,
+    quarterly requirements). ``creation``, when given, replaces the flat
+    trailing creation rate of pipeline not yet created."""
     method = "fitted model"
     all_open = [d for d in data.deals if not d.is_closed]
     if any(d.arr is None for d in all_open):
@@ -246,38 +276,61 @@ def model_forecast(
             new.win_rate * new.mean_won_arr / Decimal(n)
         )  # per unit of timing mass
         for w, (a, b) in zip(windows, offsets):
-            hits = sum(
-                new.timing.count_through(b - t) - new.timing.count_through(a - t)
-                for t in range(1, horizon_end + 1)
-            )
-            future[w.label] = new.created_per_day * per_created_deal * hits
+            if creation is None:
+                hits = sum(
+                    new.timing.count_through(b - t) - new.timing.count_through(a - t)
+                    for t in range(1, horizon_end + 1)
+                )
+                future[w.label] = new.created_per_day * per_created_deal * hits
+            else:
+                future[w.label] = per_created_deal * sum(
+                    (
+                        creation.per_day[t - 1]
+                        * (
+                            new.timing.count_through(b - t)
+                            - new.timing.count_through(a - t)
+                        )
+                        for t in range(1, horizon_end + 1)
+                    ),
+                    Decimal(0),
+                )
         spread = [
             o
             for w, o in zip(windows, offsets)
             if added_through is None or w.end <= added_through
         ]
-        if added_pipeline and new.mean_created_arr and spread:
+        flows = list(inflows)
+        if added_pipeline and spread:
             per_window = added_pipeline / Decimal(len(spread))
-            for sa, sb in spread:
-                deals_per_day = per_window / Decimal(sb - sa) / new.mean_created_arr
+            flows += [Inflow(sa, sb, per_window) for sa, sb in spread]
+        if new.mean_created_arr:
+            for flow in flows:
+                deals_per_day = (
+                    flow.dollars / Decimal(flow.end - flow.start) / new.mean_created_arr
+                )
                 for w, (a, b) in zip(windows, offsets):
                     hits = sum(
                         new.timing.count_through(b - t)
                         - new.timing.count_through(a - t)
-                        for t in range(sa + 1, sb + 1)
+                        for t in range(flow.start + 1, flow.end + 1)
                     )
                     added[w.label] += deals_per_day * per_created_deal * hits
 
     components = {EXISTING: existing, FUTURE: future}
-    if added_pipeline:
+    if added_pipeline or inflows:
         components[ADDED] = added
+    creation_text = (
+        f"new pipeline is created at {new.created_per_day:.4f} deals per day"
+        if creation is None
+        else creation.text
+    )
     assumptions = (
         (
             "open deals book at their current amount times the fitted win rate for their stage and age, "
             "on the fitted close-timing distribution"
         ),
         (
-            f"new pipeline is created at {new.created_per_day:.4f} deals per day and wins at the fitted "
+            f"{creation_text} and wins at the fitted "
             f"creation-cohort rate {new.win_rate:.4f}, averaging {new.mean_won_arr:.2f} ARR per win"
         ),
     )
@@ -376,6 +429,7 @@ def simulate(
     seed: int = 0,
     groups: dict[str, list[str]] | None = None,
     parameter_uncertainty: bool = False,
+    creation: Creation | None = None,
 ) -> Simulation:
     """Draw outcomes from the fitted model: each open deal wins or not and, if
     it wins, closes after a day count drawn from its timing; future wins arrive
@@ -386,7 +440,9 @@ def simulate(
     (shared by every deal using that rate in the draw), the creation rate from
     a gamma on its count, and the mean win size by bootstrap. All keep their
     means, so the simulation stays centred on the expectation. Close timing is
-    not drawn."""
+    not drawn. With ``creation`` the creation rate is the given day-by-day one
+    (departures drawn at random when it can) instead of the flat trailing rate,
+    and its own count-based uncertainty is not drawn."""
     rng = np.random.default_rng(seed)
     if not windows:
         empty = _spread(np.zeros(draws))
@@ -428,20 +484,39 @@ def simulate(
     new = model.new_pipeline
     if new.timing.samples and new.won_arr_samples:
         span = int(ends[-1])
-        lam = float(new.created_per_day * new.win_rate) * span
-        if parameter_uncertainty:
-            per_day = (
-                rng.gamma(new.created_count, 1 / new.created_days, draws)
-                if new.created_count and new.created_days
-                else np.full(draws, float(new.created_per_day))
+        if creation is None:
+            lam = float(new.created_per_day * new.win_rate) * span
+            if parameter_uncertainty:
+                per_day = (
+                    rng.gamma(new.created_count, 1 / new.created_days, draws)
+                    if new.created_count and new.created_days
+                    else np.full(draws, float(new.created_per_day))
+                )
+                lam = (
+                    per_day
+                    * _beta(rng, float(new.win_rate), new.win_rate_n, draws)
+                    * span
+                )
+            counts = rng.poisson(lam, draws)
+            total = int(counts.sum())
+            rows = np.repeat(draw_index, counts)
+            created = rng.integers(1, span + 1, total)
+        else:
+            per_day = np.asarray([float(x) for x in creation.per_day[:span]])
+            deals = (
+                creation.draws(rng, draws)[:, :span]
+                if creation.draws is not None
+                else np.tile(per_day, (draws, 1))
             )
-            lam = (
-                per_day * _beta(rng, float(new.win_rate), new.win_rate_n, draws) * span
-            )
-        counts = rng.poisson(lam, draws)
-        total = int(counts.sum())
-        rows = np.repeat(draw_index, counts)
-        created = rng.integers(1, span + 1, total)
+            win_rate = float(new.win_rate)
+            if parameter_uncertainty:
+                win_rate = _beta(rng, win_rate, new.win_rate_n, draws)[:, None]
+            cell = rng.poisson(deals * win_rate)
+            row_of, day_of = np.nonzero(cell)
+            repeats = cell[row_of, day_of]
+            rows = np.repeat(row_of, repeats)
+            created = np.repeat(day_of + 1, repeats)
+            total = len(rows)
         days = _draw_days(rng, new.timing, total)
         pool = np.asarray([float(x) for x in new.won_arr_samples])
         if new.won_arr_weights is None:
