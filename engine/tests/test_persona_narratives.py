@@ -47,6 +47,12 @@ def persona_snapshots(tmp_path_factory: pytest.TempPathFactory) -> dict[str, dic
 
     env = os.environ.copy()
     env["GTM_TIEOUT_CONFIG_DIR"] = str(temp_config)
+    # The old engine reads date.today() where it should honour --as-of; pin it
+    # to AS_OF so these narratives do not age out (see _pinned_clock).
+    env["GTM_TIEOUT_PINNED_TODAY"] = AS_OF
+    env["PYTHONPATH"] = os.pathsep.join(
+        p for p in (str(REPO_ROOT / "engine" / "tests" / "_pinned_clock"), env.get("PYTHONPATH")) if p
+    )
     env.setdefault("GTM_TIEOUT_GIT_SHA", "persona-narrative-test")
 
     snapshots: dict[str, dict[str, Any]] = {}
