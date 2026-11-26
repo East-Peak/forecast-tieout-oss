@@ -1,3 +1,4 @@
+import math
 from collections import defaultdict
 from dataclasses import replace
 from datetime import date
@@ -5,7 +6,7 @@ from decimal import Decimal
 
 import pytest
 
-from engine.scripts.synth_history import Company, generate, true_win_rates
+from engine.scripts.synth_history import Company, Staffing, generate, true_win_rates
 
 BASE = Company(
     slug="test-co", prefix="T", start=date(2023, 12, 1), as_of=date(2026, 6, 30), seed=11,
@@ -108,3 +109,107 @@ def test_other_motions_are_won_rows_of_their_type():
 
 def test_amounts_are_decimals(company):
     assert all(isinstance(x.arr, Decimal) for x in company.dataset.deals)
+
+
+# ---------------------------------------------------------------- staffing
+# Goal 2A step 1: pipeline creation depends on people. Created deals come
+# partly from ramped AEs and partly from demand that ignores headcount.
+
+STAFFED = replace(
+    BASE,
+    staffing=Staffing(
+        headcount=((date(2023, 12, 1), 4), (date(2025, 1, 1), 8), (date(2026, 1, 1), 12)),
+        monthly_attrition=0.03,
+        deals_per_ramped_ae_month=3.0,
+        ramp_months=4,
+        demand_deals_per_month=10.0,
+        annual_quota=(("mid_market", 900_000),),
+        other_roles=(("manager", 1), ("sdr", 2)),
+    ),
+)  # fmt: skip
+
+
+@pytest.fixture(scope="module")
+def staffed():
+    return generate(STAFFED)
+
+
+def _employed(rep, on):
+    return rep.start <= on and (rep.end is None or on <= rep.end)
+
+
+def test_every_deal_is_owned_by_an_ae_employed_on_its_creation_date(staffed):
+    reps = {r.id: r for r in staffed.roster}
+    assert len(staffed.owners) == len(staffed.dataset.deals)
+    for d in staffed.dataset.deals:
+        rep = reps[staffed.owners[d.id]]
+        assert rep.role == "ae"
+        assert _employed(rep, d.created), (d.id, d.created, rep)
+
+
+def test_reps_start_and_leave_across_the_history(staffed):
+    aes = [r for r in staffed.roster if r.role == "ae"]
+    assert sum(1 for r in aes if STAFFED.start <= r.start <= STAFFED.as_of) >= 8
+    assert any(r.end is not None for r in aes)
+    assert all(r.end is None or r.start <= r.end <= STAFFED.as_of for r in aes)
+    assert all(r.start <= STAFFED.as_of for r in staffed.roster)
+    roles = {r.role for r in staffed.roster}
+    assert roles == {"ae", "manager", "sdr"}
+
+
+def test_heads_track_the_headcount_plan(staffed):
+    aes = [r for r in staffed.roster if r.role == "ae"]
+    for on, planned in ((date(2024, 6, 15), 4), (date(2025, 6, 15), 8), (date(2026, 6, 15), 12)):  # fmt: skip
+        heads = sum(_employed(r, on) for r in aes)
+        assert planned - 2 <= heads <= planned, (on, heads)
+
+
+def test_creation_is_split_between_reps_and_demand(staffed):
+    origins = staffed.origins
+    assert set(origins.values()) == {"rep", "demand"}
+    rep_made = [d for d in staffed.dataset.deals if origins[d.id] == "rep"]
+    # A rep-made deal belongs to the rep who made it, in that rep's segment.
+    reps = {r.id: r for r in staffed.roster}
+    assert all(d.segment == reps[staffed.owners[d.id]].segment for d in rep_made)
+
+
+def test_more_ramped_reps_create_more_deals_and_demand_alone_does_not_respond():
+    def created(staffing):
+        g = generate(replace(BASE, staffing=staffing))
+        return sum(1 for d in g.dataset.deals if d.created >= date(2026, 1, 1))
+
+    s = STAFFED.staffing
+    bigger = replace(s, headcount=s.headcount[:-1] + ((date(2026, 1, 1), 24),))
+    assert created(bigger) > 1.3 * created(s)
+    demand_only = replace(s, deals_per_ramped_ae_month=0.0)
+    demand_bigger = replace(bigger, deals_per_ramped_ae_month=0.0)
+    a, b = created(demand_only), created(demand_bigger)
+    assert abs(a - b) <= 4 * math.sqrt(a)  # same demand process, headcount ignored
+
+
+def test_ramp_lowers_a_new_hire_s_output():
+    s = replace(STAFFED.staffing, demand_deals_per_month=0.0, monthly_attrition=0.0)
+    g = generate(replace(BASE, staffing=s, seed=5))
+    reps = {r.id: r for r in g.roster}
+    first, later = 0, 0
+    for d in g.dataset.deals:
+        tenure = (d.created - reps[g.owners[d.id]].start).days
+        if 0 <= tenure < 30:
+            first += 1
+        elif 180 <= tenure < 210:
+            later += 1
+    assert first < 0.5 * later
+
+
+def test_quotas_are_full_ramp_figures_for_aes_only(staffed):
+    for r in staffed.roster:
+        if r.role == "ae":
+            assert r.annual_quota == Decimal(900_000)
+        else:
+            assert r.annual_quota is None
+
+
+def test_staffed_generation_is_deterministic_and_dated_by_the_as_of(staffed):
+    assert generate(STAFFED) == staffed
+    assert max(x.created for x in staffed.dataset.deals) <= STAFFED.as_of
+    assert max(t.on for t in staffed.dataset.transitions) <= STAFFED.as_of
