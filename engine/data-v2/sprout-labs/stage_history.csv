@@ -1,0 +1,3620 @@
+deal_id,from_stage,to_stage,transition_date
+SPR-00001,,Discovery,2024-02-01
+SPR-00001,Discovery,Closed Lost,2024-04-03
+SPR-00002,,Discovery,2024-02-02
+SPR-00002,Discovery,Closed Lost,2024-02-12
+SPR-00003,,Discovery,2024-02-03
+SPR-00003,Discovery,Closed Lost,2024-02-26
+SPR-00004,,Discovery,2024-02-04
+SPR-00004,Discovery,Closed Lost,2024-02-20
+SPR-00005,,Discovery,2024-02-06
+SPR-00005,Discovery,Closed Lost,2024-03-05
+SPR-00006,,Discovery,2024-02-12
+SPR-00006,Discovery,Qualification,2024-02-17
+SPR-00006,Qualification,Technical Evaluation,2024-04-09
+SPR-00006,Technical Evaluation,Business Case,2024-05-30
+SPR-00006,Business Case,Negotiation,2024-07-27
+SPR-00006,Negotiation,Closed Won,2024-07-28
+SPR-00007,,Discovery,2024-02-13
+SPR-00007,Discovery,Qualification,2024-04-14
+SPR-00007,Qualification,Technical Evaluation,2024-05-24
+SPR-00007,Technical Evaluation,Closed Lost,2024-07-29
+SPR-00008,,Discovery,2024-02-17
+SPR-00008,Discovery,Qualification,2024-02-21
+SPR-00008,Qualification,Technical Evaluation,2024-03-10
+SPR-00008,Technical Evaluation,Business Case,2024-03-11
+SPR-00008,Business Case,Negotiation,2024-04-29
+SPR-00008,Negotiation,Closed Won,2024-05-02
+SPR-00009,,Discovery,2024-02-18
+SPR-00009,Discovery,Qualification,2024-02-28
+SPR-00009,Qualification,Closed Lost,2024-04-04
+SPR-00010,,Discovery,2024-02-18
+SPR-00010,Discovery,Qualification,2024-03-10
+SPR-00010,Qualification,Technical Evaluation,2024-04-18
+SPR-00010,Technical Evaluation,Closed Lost,2024-05-04
+SPR-00011,,Discovery,2024-02-21
+SPR-00011,Discovery,Qualification,2024-02-27
+SPR-00011,Qualification,Technical Evaluation,2024-03-07
+SPR-00011,Technical Evaluation,Closed Lost,2024-04-21
+SPR-00012,,Discovery,2024-02-22
+SPR-00012,Discovery,Qualification,2024-03-09
+SPR-00012,Qualification,Technical Evaluation,2024-03-25
+SPR-00012,Technical Evaluation,Business Case,2024-04-06
+SPR-00012,Business Case,Negotiation,2024-04-09
+SPR-00012,Negotiation,Closed Lost,2024-04-18
+SPR-00013,,Discovery,2024-02-27
+SPR-00013,Discovery,Closed Lost,2024-03-27
+SPR-00014,,Discovery,2024-02-28
+SPR-00014,Discovery,Closed Lost,2024-03-04
+SPR-00015,,Discovery,2024-02-29
+SPR-00015,Discovery,Qualification,2024-04-06
+SPR-00015,Qualification,Closed Lost,2024-06-03
+SPR-00016,,Discovery,2024-02-29
+SPR-00016,Discovery,Closed Lost,2024-03-12
+SPR-00017,,Discovery,2024-03-04
+SPR-00017,Discovery,Closed Lost,2024-03-07
+SPR-00018,,Discovery,2024-03-06
+SPR-00018,Discovery,Closed Lost,2024-03-21
+SPR-00019,,Discovery,2024-03-07
+SPR-00019,Discovery,Qualification,2024-04-26
+SPR-00019,Qualification,Technical Evaluation,2024-10-21
+SPR-00019,Technical Evaluation,Closed Lost,2025-03-30
+SPR-00020,,Discovery,2024-03-07
+SPR-00020,Discovery,Closed Lost,2024-03-23
+SPR-00021,,Discovery,2024-03-11
+SPR-00021,Discovery,Qualification,2024-03-21
+SPR-00021,Qualification,Closed Lost,2024-05-11
+SPR-00022,,Discovery,2024-03-12
+SPR-00022,Discovery,Qualification,2024-06-11
+SPR-00022,Qualification,Technical Evaluation,2024-08-10
+SPR-00022,Technical Evaluation,Business Case,2024-09-07
+SPR-00022,Business Case,Negotiation,2024-09-30
+SPR-00022,Negotiation,Closed Won,2024-11-13
+SPR-00023,,Discovery,2024-03-15
+SPR-00023,Discovery,Qualification,2025-04-12
+SPR-00023,Qualification,Closed Lost,2025-05-03
+SPR-00025,,Discovery,2024-03-18
+SPR-00025,Discovery,Qualification,2024-04-27
+SPR-00025,Qualification,Technical Evaluation,2024-05-02
+SPR-00025,Technical Evaluation,Closed Lost,2024-07-16
+SPR-00026,,Discovery,2024-03-19
+SPR-00026,Discovery,Qualification,2024-03-26
+SPR-00026,Qualification,Technical Evaluation,2024-04-01
+SPR-00026,Technical Evaluation,Business Case,2024-04-04
+SPR-00026,Business Case,Closed Lost,2024-04-24
+SPR-00027,,Discovery,2024-03-22
+SPR-00027,Discovery,Closed Lost,2024-04-16
+SPR-00028,,Discovery,2024-03-22
+SPR-00028,Discovery,Closed Lost,2024-06-24
+SPR-00029,,Discovery,2024-03-22
+SPR-00029,Discovery,Qualification,2024-05-15
+SPR-00029,Qualification,Technical Evaluation,2024-05-23
+SPR-00029,Technical Evaluation,Business Case,2024-06-04
+SPR-00029,Business Case,Negotiation,2024-06-12
+SPR-00029,Negotiation,Closed Won,2024-06-30
+SPR-00030,,Discovery,2024-03-23
+SPR-00030,Discovery,Qualification,2024-04-06
+SPR-00030,Qualification,Closed Lost,2024-05-16
+SPR-00031,,Discovery,2024-03-24
+SPR-00031,Discovery,Qualification,2024-03-25
+SPR-00031,Qualification,Technical Evaluation,2024-03-26
+SPR-00031,Technical Evaluation,Business Case,2024-04-18
+SPR-00031,Business Case,Negotiation,2024-05-24
+SPR-00031,Negotiation,Closed Won,2024-06-01
+SPR-00032,,Discovery,2024-03-24
+SPR-00032,Discovery,Qualification,2024-04-06
+SPR-00032,Qualification,Technical Evaluation,2024-04-10
+SPR-00032,Technical Evaluation,Business Case,2024-06-11
+SPR-00032,Business Case,Closed Lost,2024-08-04
+SPR-00033,,Discovery,2024-03-26
+SPR-00033,Discovery,Closed Lost,2024-04-08
+SPR-00034,,Discovery,2024-03-26
+SPR-00034,Discovery,Closed Lost,2024-03-29
+SPR-00035,,Discovery,2024-03-27
+SPR-00035,Discovery,Qualification,2024-04-14
+SPR-00035,Qualification,Closed Lost,2024-05-03
+SPR-00036,,Discovery,2024-03-30
+SPR-00036,Discovery,Closed Lost,2024-04-20
+SPR-00037,,Discovery,2024-03-31
+SPR-00037,Discovery,Qualification,2024-04-04
+SPR-00037,Qualification,Closed Lost,2024-05-12
+SPR-00038,,Discovery,2024-04-08
+SPR-00038,Discovery,Qualification,2024-05-02
+SPR-00038,Qualification,Technical Evaluation,2024-05-23
+SPR-00038,Technical Evaluation,Business Case,2024-07-03
+SPR-00038,Business Case,Negotiation,2024-08-06
+SPR-00038,Negotiation,Closed Won,2024-09-09
+SPR-00039,,Discovery,2024-04-08
+SPR-00039,Discovery,Qualification,2024-04-27
+SPR-00039,Qualification,Technical Evaluation,2024-05-17
+SPR-00039,Technical Evaluation,Business Case,2024-07-16
+SPR-00039,Business Case,Negotiation,2024-09-10
+SPR-00039,Negotiation,Closed Won,2024-10-14
+SPR-00040,,Discovery,2024-04-08
+SPR-00040,Discovery,Closed Lost,2024-04-24
+SPR-00041,,Discovery,2024-04-09
+SPR-00041,Discovery,Closed Lost,2024-05-17
+SPR-00042,,Discovery,2024-04-10
+SPR-00042,Discovery,Qualification,2024-05-17
+SPR-00042,Qualification,Technical Evaluation,2024-06-07
+SPR-00042,Technical Evaluation,Business Case,2024-06-27
+SPR-00042,Business Case,Negotiation,2024-07-10
+SPR-00042,Negotiation,Closed Won,2024-07-22
+SPR-00043,,Discovery,2024-04-13
+SPR-00043,Discovery,Qualification,2024-05-03
+SPR-00043,Qualification,Closed Lost,2024-05-07
+SPR-00044,,Discovery,2024-04-13
+SPR-00044,Discovery,Qualification,2024-05-23
+SPR-00044,Qualification,Technical Evaluation,2024-05-27
+SPR-00044,Technical Evaluation,Business Case,2024-06-20
+SPR-00044,Business Case,Negotiation,2024-07-04
+SPR-00044,Negotiation,Closed Won,2024-07-06
+SPR-00045,,Discovery,2024-04-14
+SPR-00045,Discovery,Qualification,2024-04-21
+SPR-00045,Qualification,Technical Evaluation,2024-06-25
+SPR-00045,Technical Evaluation,Business Case,2024-08-07
+SPR-00045,Business Case,Negotiation,2024-08-18
+SPR-00045,Negotiation,Closed Lost,2024-09-14
+SPR-00046,,Discovery,2024-04-14
+SPR-00046,Discovery,Closed Lost,2024-05-12
+SPR-00047,,Discovery,2024-04-14
+SPR-00047,Discovery,Qualification,2024-04-19
+SPR-00047,Qualification,Closed Lost,2024-05-23
+SPR-00048,,Discovery,2024-04-16
+SPR-00048,Discovery,Closed Lost,2024-04-19
+SPR-00049,,Discovery,2024-04-18
+SPR-00049,Discovery,Closed Lost,2024-04-19
+SPR-00050,,Discovery,2024-04-18
+SPR-00050,Discovery,Qualification,2024-05-18
+SPR-00050,Qualification,Technical Evaluation,2024-05-25
+SPR-00050,Technical Evaluation,Business Case,2024-07-03
+SPR-00050,Business Case,Negotiation,2024-07-21
+SPR-00050,Negotiation,Closed Won,2024-08-12
+SPR-00051,,Discovery,2024-04-20
+SPR-00051,Discovery,Closed Lost,2024-04-27
+SPR-00052,,Discovery,2024-04-22
+SPR-00052,Discovery,Closed Lost,2024-04-25
+SPR-00053,,Discovery,2024-04-24
+SPR-00053,Discovery,Qualification,2024-06-02
+SPR-00053,Qualification,Technical Evaluation,2024-06-19
+SPR-00053,Technical Evaluation,Business Case,2024-07-15
+SPR-00053,Business Case,Negotiation,2024-07-19
+SPR-00053,Negotiation,Closed Lost,2024-11-11
+SPR-00054,,Discovery,2024-04-25
+SPR-00054,Discovery,Closed Lost,2024-05-14
+SPR-00055,,Discovery,2024-04-26
+SPR-00055,Discovery,Qualification,2024-05-08
+SPR-00055,Qualification,Technical Evaluation,2024-05-24
+SPR-00055,Technical Evaluation,Business Case,2024-05-28
+SPR-00055,Business Case,Negotiation,2024-08-04
+SPR-00055,Negotiation,Closed Won,2024-09-21
+SPR-00056,,Discovery,2024-04-26
+SPR-00056,Discovery,Qualification,2024-05-16
+SPR-00056,Qualification,Closed Lost,2024-05-20
+SPR-00057,,Discovery,2024-04-27
+SPR-00057,Discovery,Closed Lost,2024-05-04
+SPR-00058,,Discovery,2024-04-29
+SPR-00058,Discovery,Qualification,2024-04-30
+SPR-00058,Qualification,Technical Evaluation,2024-06-05
+SPR-00058,Technical Evaluation,Closed Lost,2024-07-21
+SPR-00059,,Discovery,2024-04-30
+SPR-00059,Discovery,Qualification,2024-05-10
+SPR-00059,Qualification,Closed Lost,2024-05-22
+SPR-00060,,Discovery,2024-04-30
+SPR-00060,Discovery,Qualification,2024-06-07
+SPR-00060,Qualification,Technical Evaluation,2024-06-28
+SPR-00060,Technical Evaluation,Business Case,2024-07-08
+SPR-00060,Business Case,Closed Lost,2024-07-13
+SPR-00061,,Discovery,2024-05-03
+SPR-00061,Discovery,Qualification,2024-05-28
+SPR-00061,Qualification,Technical Evaluation,2024-10-11
+SPR-00061,Technical Evaluation,Business Case,2024-11-08
+SPR-00061,Business Case,Negotiation,2024-11-09
+SPR-00061,Negotiation,Closed Won,2024-11-10
+SPR-00062,,Discovery,2024-05-04
+SPR-00062,Discovery,Qualification,2024-05-11
+SPR-00062,Qualification,Technical Evaluation,2024-05-17
+SPR-00062,Technical Evaluation,Business Case,2024-05-21
+SPR-00062,Business Case,Negotiation,2024-05-26
+SPR-00062,Negotiation,Closed Won,2024-06-08
+SPR-00063,,Discovery,2024-05-06
+SPR-00063,Discovery,Qualification,2024-05-16
+SPR-00063,Qualification,Closed Lost,2024-05-22
+SPR-00064,,Discovery,2024-05-06
+SPR-00064,Discovery,Closed Lost,2024-05-27
+SPR-00065,,Discovery,2024-05-07
+SPR-00065,Discovery,Qualification,2024-05-24
+SPR-00065,Qualification,Technical Evaluation,2024-05-30
+SPR-00065,Technical Evaluation,Business Case,2024-06-28
+SPR-00065,Business Case,Negotiation,2024-07-21
+SPR-00065,Negotiation,Closed Won,2024-07-27
+SPR-00066,,Discovery,2024-05-09
+SPR-00066,Discovery,Qualification,2025-09-02
+SPR-00066,Qualification,Technical Evaluation,2025-09-03
+SPR-00066,Technical Evaluation,Closed Lost,2025-11-16
+SPR-00067,,Discovery,2024-05-10
+SPR-00067,Discovery,Qualification,2024-05-11
+SPR-00067,Qualification,Technical Evaluation,2024-07-14
+SPR-00067,Technical Evaluation,Business Case,2024-08-05
+SPR-00067,Business Case,Negotiation,2024-08-08
+SPR-00067,Negotiation,Closed Won,2024-08-28
+SPR-00068,,Discovery,2024-05-10
+SPR-00068,Discovery,Closed Lost,2024-05-17
+SPR-00069,,Discovery,2024-05-12
+SPR-00069,Discovery,Closed Lost,2024-05-14
+SPR-00070,,Discovery,2024-05-13
+SPR-00070,Discovery,Closed Lost,2024-05-31
+SPR-00071,,Discovery,2024-05-17
+SPR-00071,Discovery,Closed Lost,2024-05-20
+SPR-00072,,Discovery,2024-05-18
+SPR-00072,Discovery,Closed Lost,2025-10-17
+SPR-00073,,Discovery,2024-05-19
+SPR-00073,Discovery,Qualification,2024-06-05
+SPR-00073,Qualification,Technical Evaluation,2024-06-25
+SPR-00073,Technical Evaluation,Closed Lost,2024-06-26
+SPR-00074,,Discovery,2024-05-21
+SPR-00074,Discovery,Qualification,2024-07-11
+SPR-00074,Qualification,Technical Evaluation,2024-08-08
+SPR-00074,Technical Evaluation,Closed Lost,2024-09-25
+SPR-00075,,Discovery,2024-05-23
+SPR-00075,Discovery,Qualification,2024-05-31
+SPR-00075,Qualification,Technical Evaluation,2024-06-05
+SPR-00075,Technical Evaluation,Closed Lost,2024-06-10
+SPR-00076,,Discovery,2024-05-25
+SPR-00076,Discovery,Qualification,2024-06-15
+SPR-00076,Qualification,Technical Evaluation,2024-06-16
+SPR-00076,Technical Evaluation,Closed Lost,2024-06-24
+SPR-00077,,Discovery,2024-05-25
+SPR-00077,Discovery,Qualification,2024-07-05
+SPR-00077,Qualification,Closed Lost,2024-07-26
+SPR-00078,,Discovery,2024-05-26
+SPR-00078,Discovery,Qualification,2024-06-09
+SPR-00078,Qualification,Closed Lost,2024-08-17
+SPR-00080,,Discovery,2024-05-27
+SPR-00080,Discovery,Qualification,2024-05-29
+SPR-00080,Qualification,Closed Lost,2024-06-15
+SPR-00081,,Discovery,2024-05-27
+SPR-00081,Discovery,Closed Lost,2024-06-17
+SPR-00082,,Discovery,2024-05-28
+SPR-00082,Discovery,Closed Lost,2024-07-19
+SPR-00083,,Discovery,2024-05-28
+SPR-00083,Discovery,Closed Lost,2024-06-02
+SPR-00084,,Discovery,2024-05-30
+SPR-00084,Discovery,Qualification,2024-07-11
+SPR-00084,Qualification,Technical Evaluation,2024-09-19
+SPR-00084,Technical Evaluation,Business Case,2024-09-27
+SPR-00084,Business Case,Negotiation,2024-11-30
+SPR-00084,Negotiation,Closed Won,2024-12-30
+SPR-00085,,Discovery,2024-05-30
+SPR-00085,Discovery,Qualification,2024-06-15
+SPR-00085,Qualification,Closed Lost,2024-07-13
+SPR-00086,,Discovery,2024-06-01
+SPR-00086,Discovery,Qualification,2024-08-03
+SPR-00086,Qualification,Technical Evaluation,2025-10-30
+SPR-00086,Technical Evaluation,Business Case,2025-11-17
+SPR-00086,Business Case,Closed Lost,2025-12-13
+SPR-00087,,Discovery,2024-06-02
+SPR-00087,Discovery,Qualification,2024-06-09
+SPR-00087,Qualification,Closed Lost,2024-09-07
+SPR-00088,,Discovery,2024-06-04
+SPR-00088,Discovery,Qualification,2024-06-05
+SPR-00088,Qualification,Closed Lost,2024-06-27
+SPR-00089,,Discovery,2024-06-06
+SPR-00089,Discovery,Closed Lost,2024-06-12
+SPR-00090,,Discovery,2024-06-06
+SPR-00090,Discovery,Closed Lost,2024-07-09
+SPR-00091,,Discovery,2024-06-09
+SPR-00091,Discovery,Closed Lost,2024-06-19
+SPR-00092,,Discovery,2024-06-09
+SPR-00092,Discovery,Closed Lost,2024-06-30
+SPR-00093,,Discovery,2024-06-10
+SPR-00093,Discovery,Qualification,2024-06-12
+SPR-00093,Qualification,Technical Evaluation,2024-06-19
+SPR-00093,Technical Evaluation,Closed Lost,2024-07-02
+SPR-00094,,Discovery,2024-06-13
+SPR-00094,Discovery,Qualification,2024-07-22
+SPR-00094,Qualification,Technical Evaluation,2024-09-29
+SPR-00094,Technical Evaluation,Closed Lost,2024-10-14
+SPR-00095,,Discovery,2024-06-13
+SPR-00095,Discovery,Closed Lost,2024-07-13
+SPR-00096,,Discovery,2024-06-14
+SPR-00096,Discovery,Qualification,2024-08-09
+SPR-00096,Qualification,Closed Lost,2024-08-11
+SPR-00097,,Discovery,2024-06-14
+SPR-00097,Discovery,Qualification,2024-06-25
+SPR-00097,Qualification,Technical Evaluation,2024-07-30
+SPR-00097,Technical Evaluation,Business Case,2024-09-18
+SPR-00097,Business Case,Closed Lost,2024-09-24
+SPR-00098,,Discovery,2024-06-15
+SPR-00098,Discovery,Closed Lost,2024-07-13
+SPR-00099,,Discovery,2024-06-16
+SPR-00099,Discovery,Qualification,2024-07-12
+SPR-00099,Qualification,Technical Evaluation,2024-07-18
+SPR-00099,Technical Evaluation,Business Case,2024-07-27
+SPR-00099,Business Case,Closed Lost,2024-08-03
+SPR-00100,,Discovery,2024-06-17
+SPR-00100,Discovery,Qualification,2024-06-21
+SPR-00100,Qualification,Technical Evaluation,2024-07-10
+SPR-00100,Technical Evaluation,Business Case,2024-08-07
+SPR-00100,Business Case,Negotiation,2024-08-20
+SPR-00100,Negotiation,Closed Won,2024-09-04
+SPR-00101,,Discovery,2024-06-17
+SPR-00101,Discovery,Qualification,2024-07-24
+SPR-00101,Qualification,Technical Evaluation,2024-08-17
+SPR-00101,Technical Evaluation,Business Case,2024-09-03
+SPR-00101,Business Case,Closed Lost,2024-09-13
+SPR-00102,,Discovery,2024-06-18
+SPR-00102,Discovery,Qualification,2024-06-26
+SPR-00102,Qualification,Closed Lost,2024-07-16
+SPR-00103,,Discovery,2024-06-18
+SPR-00103,Discovery,Qualification,2024-07-14
+SPR-00103,Qualification,Closed Lost,2024-08-14
+SPR-00104,,Discovery,2024-06-19
+SPR-00104,Discovery,Qualification,2024-06-21
+SPR-00104,Qualification,Closed Lost,2024-06-25
+SPR-00105,,Discovery,2024-06-21
+SPR-00105,Discovery,Closed Lost,2024-06-29
+SPR-00106,,Discovery,2024-06-24
+SPR-00106,Discovery,Closed Lost,2024-07-10
+SPR-00107,,Discovery,2024-06-25
+SPR-00107,Discovery,Qualification,2024-08-15
+SPR-00107,Qualification,Technical Evaluation,2024-09-19
+SPR-00107,Technical Evaluation,Business Case,2024-11-05
+SPR-00107,Business Case,Negotiation,2024-11-13
+SPR-00107,Negotiation,Closed Won,2024-11-28
+SPR-00108,,Discovery,2024-06-27
+SPR-00108,Discovery,Closed Lost,2024-07-01
+SPR-00109,,Discovery,2024-06-27
+SPR-00109,Discovery,Qualification,2024-07-02
+SPR-00109,Qualification,Technical Evaluation,2024-07-11
+SPR-00109,Technical Evaluation,Business Case,2024-07-30
+SPR-00109,Business Case,Negotiation,2024-07-31
+SPR-00109,Negotiation,Closed Won,2024-08-07
+SPR-00110,,Discovery,2024-06-29
+SPR-00110,Discovery,Closed Lost,2024-07-24
+SPR-00111,,Discovery,2024-06-29
+SPR-00111,Discovery,Qualification,2024-08-11
+SPR-00111,Qualification,Closed Lost,2024-10-10
+SPR-00112,,Discovery,2024-06-30
+SPR-00112,Discovery,Qualification,2024-07-14
+SPR-00112,Qualification,Technical Evaluation,2024-07-21
+SPR-00112,Technical Evaluation,Business Case,2024-07-27
+SPR-00112,Business Case,Negotiation,2024-08-02
+SPR-00112,Negotiation,Closed Won,2024-08-07
+SPR-00113,,Discovery,2024-07-01
+SPR-00113,Discovery,Qualification,2024-07-29
+SPR-00113,Qualification,Technical Evaluation,2024-08-01
+SPR-00113,Technical Evaluation,Business Case,2024-08-05
+SPR-00113,Business Case,Closed Lost,2024-10-06
+SPR-00114,,Discovery,2024-07-02
+SPR-00114,Discovery,Closed Lost,2024-07-15
+SPR-00115,,Discovery,2024-07-02
+SPR-00115,Discovery,Qualification,2024-07-19
+SPR-00115,Qualification,Technical Evaluation,2024-08-12
+SPR-00115,Technical Evaluation,Business Case,2024-09-11
+SPR-00115,Business Case,Negotiation,2024-09-12
+SPR-00115,Negotiation,Closed Won,2024-09-18
+SPR-00116,,Discovery,2024-07-03
+SPR-00116,Discovery,Closed Lost,2024-08-10
+SPR-00118,,Discovery,2024-07-06
+SPR-00118,Discovery,Closed Lost,2024-10-05
+SPR-00119,,Discovery,2024-07-07
+SPR-00119,Discovery,Qualification,2024-07-17
+SPR-00119,Qualification,Technical Evaluation,2024-07-30
+SPR-00119,Technical Evaluation,Business Case,2024-08-21
+SPR-00119,Business Case,Negotiation,2024-10-18
+SPR-00119,Negotiation,Closed Won,2024-10-21
+SPR-00120,,Discovery,2024-07-08
+SPR-00120,Discovery,Closed Lost,2024-07-15
+SPR-00121,,Discovery,2024-07-08
+SPR-00121,Discovery,Qualification,2024-08-01
+SPR-00121,Qualification,Closed Lost,2024-08-23
+SPR-00122,,Discovery,2024-07-08
+SPR-00122,Discovery,Closed Lost,2024-07-18
+SPR-00123,,Discovery,2024-07-10
+SPR-00123,Discovery,Closed Lost,2024-10-25
+SPR-00124,,Discovery,2024-07-11
+SPR-00124,Discovery,Qualification,2024-07-13
+SPR-00124,Qualification,Technical Evaluation,2024-08-02
+SPR-00124,Technical Evaluation,Business Case,2024-08-23
+SPR-00124,Business Case,Closed Lost,2024-09-11
+SPR-00125,,Discovery,2024-07-11
+SPR-00125,Discovery,Qualification,2024-07-15
+SPR-00125,Qualification,Technical Evaluation,2024-07-17
+SPR-00125,Technical Evaluation,Closed Lost,2024-08-06
+SPR-00126,,Discovery,2024-07-13
+SPR-00126,Discovery,Closed Lost,2024-07-19
+SPR-00127,,Discovery,2024-07-13
+SPR-00127,Discovery,Qualification,2024-07-21
+SPR-00127,Qualification,Closed Lost,2024-08-12
+SPR-00128,,Discovery,2024-07-13
+SPR-00128,Discovery,Qualification,2024-08-15
+SPR-00128,Qualification,Closed Lost,2024-08-24
+SPR-00129,,Discovery,2024-07-13
+SPR-00129,Discovery,Qualification,2024-10-21
+SPR-00129,Qualification,Technical Evaluation,2026-07-28
+SPR-00129,Technical Evaluation,Business Case,2026-08-04
+SPR-00129,Business Case,Negotiation,2026-08-13
+SPR-00129,Negotiation,Closed Won,2026-08-25
+SPR-00130,,Discovery,2024-07-14
+SPR-00130,Discovery,Qualification,2024-08-02
+SPR-00130,Qualification,Closed Lost,2024-08-08
+SPR-00131,,Discovery,2024-07-15
+SPR-00131,Discovery,Closed Lost,2024-07-24
+SPR-00132,,Discovery,2024-07-17
+SPR-00132,Discovery,Qualification,2024-07-24
+SPR-00132,Qualification,Technical Evaluation,2024-08-24
+SPR-00132,Technical Evaluation,Closed Lost,2024-10-08
+SPR-00133,,Discovery,2024-07-17
+SPR-00133,Discovery,Closed Lost,2024-08-23
+SPR-00134,,Discovery,2024-07-18
+SPR-00134,Discovery,Qualification,2024-07-30
+SPR-00134,Qualification,Closed Lost,2025-01-03
+SPR-00135,,Discovery,2024-07-19
+SPR-00135,Discovery,Qualification,2024-07-22
+SPR-00135,Qualification,Closed Lost,2024-08-04
+SPR-00136,,Discovery,2024-07-19
+SPR-00136,Discovery,Closed Lost,2024-07-25
+SPR-00137,,Discovery,2024-07-20
+SPR-00137,Discovery,Closed Lost,2024-08-01
+SPR-00138,,Discovery,2024-07-21
+SPR-00138,Discovery,Closed Lost,2024-08-09
+SPR-00139,,Discovery,2024-07-22
+SPR-00139,Discovery,Closed Lost,2024-08-18
+SPR-00140,,Discovery,2024-07-23
+SPR-00140,Discovery,Qualification,2024-07-27
+SPR-00140,Qualification,Technical Evaluation,2024-09-07
+SPR-00140,Technical Evaluation,Closed Lost,2024-09-22
+SPR-00141,,Discovery,2024-07-24
+SPR-00141,Discovery,Closed Lost,2024-08-06
+SPR-00142,,Discovery,2024-07-24
+SPR-00142,Discovery,Closed Lost,2024-08-19
+SPR-00144,,Discovery,2024-07-26
+SPR-00144,Discovery,Qualification,2024-08-13
+SPR-00144,Qualification,Closed Lost,2024-09-09
+SPR-00145,,Discovery,2024-07-26
+SPR-00145,Discovery,Qualification,2024-07-30
+SPR-00145,Qualification,Closed Lost,2024-11-05
+SPR-00146,,Discovery,2024-07-29
+SPR-00146,Discovery,Closed Lost,2024-08-11
+SPR-00147,,Discovery,2024-07-30
+SPR-00147,Discovery,Closed Lost,2024-08-03
+SPR-00148,,Discovery,2024-07-31
+SPR-00148,Discovery,Qualification,2024-08-11
+SPR-00148,Qualification,Closed Lost,2024-08-14
+SPR-00149,,Discovery,2024-07-31
+SPR-00149,Discovery,Qualification,2024-08-07
+SPR-00149,Qualification,Closed Lost,2024-08-16
+SPR-00150,,Discovery,2024-08-01
+SPR-00150,Discovery,Closed Lost,2024-08-22
+SPR-00151,,Discovery,2024-08-01
+SPR-00151,Discovery,Qualification,2024-08-03
+SPR-00151,Qualification,Technical Evaluation,2024-08-07
+SPR-00151,Technical Evaluation,Closed Lost,2024-08-13
+SPR-00152,,Discovery,2024-08-01
+SPR-00152,Discovery,Qualification,2024-08-29
+SPR-00152,Qualification,Technical Evaluation,2024-09-05
+SPR-00152,Technical Evaluation,Business Case,2024-10-06
+SPR-00152,Business Case,Negotiation,2024-11-20
+SPR-00152,Negotiation,Closed Won,2024-12-08
+SPR-00153,,Discovery,2024-08-01
+SPR-00153,Discovery,Qualification,2024-08-18
+SPR-00153,Qualification,Closed Lost,2024-08-20
+SPR-00154,,Discovery,2024-08-02
+SPR-00154,Discovery,Qualification,2024-08-16
+SPR-00154,Qualification,Closed Lost,2024-08-21
+SPR-00155,,Discovery,2024-08-02
+SPR-00155,Discovery,Qualification,2024-08-26
+SPR-00155,Qualification,Technical Evaluation,2024-12-04
+SPR-00155,Technical Evaluation,Business Case,2025-04-06
+SPR-00155,Business Case,Negotiation,2025-04-08
+SPR-00155,Negotiation,Closed Lost,2025-04-13
+SPR-00156,,Discovery,2024-08-07
+SPR-00156,Discovery,Qualification,2024-08-14
+SPR-00156,Qualification,Technical Evaluation,2024-09-07
+SPR-00156,Technical Evaluation,Closed Lost,2024-09-17
+SPR-00157,,Discovery,2024-08-09
+SPR-00157,Discovery,Qualification,2024-09-05
+SPR-00157,Qualification,Closed Lost,2024-10-17
+SPR-00158,,Discovery,2024-08-09
+SPR-00158,Discovery,Qualification,2024-10-16
+SPR-00158,Qualification,Closed Lost,2024-11-17
+SPR-00159,,Discovery,2024-08-11
+SPR-00159,Discovery,Qualification,2024-10-09
+SPR-00159,Qualification,Technical Evaluation,2024-11-04
+SPR-00159,Technical Evaluation,Business Case,2025-05-24
+SPR-00159,Business Case,Closed Lost,2025-05-26
+SPR-00160,,Discovery,2024-08-11
+SPR-00160,Discovery,Qualification,2024-09-24
+SPR-00160,Qualification,Technical Evaluation,2024-10-28
+SPR-00160,Technical Evaluation,Closed Lost,2024-11-09
+SPR-00161,,Discovery,2024-08-13
+SPR-00161,Discovery,Closed Lost,2024-08-16
+SPR-00162,,Discovery,2024-08-15
+SPR-00162,Discovery,Qualification,2024-08-18
+SPR-00162,Qualification,Closed Lost,2024-09-01
+SPR-00163,,Discovery,2024-08-16
+SPR-00163,Discovery,Qualification,2024-09-10
+SPR-00163,Qualification,Closed Lost,2024-09-16
+SPR-00164,,Discovery,2024-08-17
+SPR-00164,Discovery,Closed Lost,2024-09-01
+SPR-00165,,Discovery,2024-08-18
+SPR-00165,Discovery,Closed Lost,2024-09-01
+SPR-00166,,Discovery,2024-08-20
+SPR-00166,Discovery,Qualification,2024-08-23
+SPR-00166,Qualification,Closed Lost,2024-09-22
+SPR-00167,,Discovery,2024-08-23
+SPR-00167,Discovery,Closed Lost,2025-03-16
+SPR-00168,,Discovery,2024-08-23
+SPR-00168,Discovery,Closed Lost,2024-09-16
+SPR-00169,,Discovery,2024-08-23
+SPR-00169,Discovery,Closed Lost,2024-08-24
+SPR-00170,,Discovery,2024-08-24
+SPR-00170,Discovery,Closed Lost,2024-09-16
+SPR-00171,,Discovery,2024-08-25
+SPR-00171,Discovery,Closed Lost,2024-09-17
+SPR-00172,,Discovery,2024-08-25
+SPR-00172,Discovery,Qualification,2024-08-29
+SPR-00172,Qualification,Technical Evaluation,2024-09-13
+SPR-00172,Technical Evaluation,Business Case,2024-09-29
+SPR-00172,Business Case,Negotiation,2024-10-01
+SPR-00172,Negotiation,Closed Lost,2024-10-03
+SPR-00173,,Discovery,2024-08-25
+SPR-00173,Discovery,Closed Lost,2024-08-27
+SPR-00174,,Discovery,2024-08-26
+SPR-00174,Discovery,Closed Lost,2024-09-11
+SPR-00175,,Discovery,2024-08-26
+SPR-00175,Discovery,Qualification,2024-09-08
+SPR-00175,Qualification,Technical Evaluation,2024-09-20
+SPR-00175,Technical Evaluation,Business Case,2024-10-10
+SPR-00175,Business Case,Negotiation,2024-11-03
+SPR-00175,Negotiation,Closed Won,2024-11-18
+SPR-00176,,Discovery,2024-08-26
+SPR-00176,Discovery,Qualification,2024-09-09
+SPR-00176,Qualification,Technical Evaluation,2025-01-22
+SPR-00176,Technical Evaluation,Business Case,2025-02-28
+SPR-00176,Business Case,Negotiation,2025-03-28
+SPR-00176,Negotiation,Closed Won,2025-04-20
+SPR-00177,,Discovery,2024-08-27
+SPR-00177,Discovery,Qualification,2024-09-05
+SPR-00177,Qualification,Technical Evaluation,2024-10-31
+SPR-00177,Technical Evaluation,Business Case,2024-11-05
+SPR-00177,Business Case,Negotiation,2024-12-04
+SPR-00177,Negotiation,Closed Won,2024-12-24
+SPR-00178,,Discovery,2024-08-28
+SPR-00178,Discovery,Qualification,2024-09-03
+SPR-00178,Qualification,Technical Evaluation,2024-11-05
+SPR-00178,Technical Evaluation,Business Case,2025-01-07
+SPR-00178,Business Case,Closed Lost,2025-01-08
+SPR-00179,,Discovery,2024-08-30
+SPR-00179,Discovery,Qualification,2024-09-08
+SPR-00179,Qualification,Technical Evaluation,2024-09-16
+SPR-00179,Technical Evaluation,Business Case,2024-12-08
+SPR-00179,Business Case,Closed Lost,2025-01-08
+SPR-00180,,Discovery,2024-08-30
+SPR-00180,Discovery,Qualification,2024-09-09
+SPR-00180,Qualification,Technical Evaluation,2024-09-14
+SPR-00180,Technical Evaluation,Business Case,2024-09-27
+SPR-00180,Business Case,Closed Lost,2024-10-06
+SPR-00181,,Discovery,2024-08-30
+SPR-00181,Discovery,Closed Lost,2024-10-01
+SPR-00182,,Discovery,2024-08-31
+SPR-00182,Discovery,Closed Lost,2024-09-03
+SPR-00183,,Discovery,2024-09-02
+SPR-00183,Discovery,Qualification,2024-09-13
+SPR-00183,Qualification,Closed Lost,2024-10-21
+SPR-00184,,Discovery,2024-09-02
+SPR-00184,Discovery,Qualification,2024-09-12
+SPR-00184,Qualification,Technical Evaluation,2024-09-21
+SPR-00184,Technical Evaluation,Closed Lost,2024-11-05
+SPR-00185,,Discovery,2024-09-04
+SPR-00185,Discovery,Closed Lost,2024-09-05
+SPR-00186,,Discovery,2024-09-05
+SPR-00186,Discovery,Closed Lost,2024-09-28
+SPR-00187,,Discovery,2024-09-07
+SPR-00187,Discovery,Qualification,2024-09-22
+SPR-00187,Qualification,Closed Lost,2024-11-11
+SPR-00188,,Discovery,2024-09-09
+SPR-00188,Discovery,Closed Lost,2024-10-08
+SPR-00189,,Discovery,2024-09-10
+SPR-00189,Discovery,Qualification,2024-10-15
+SPR-00189,Qualification,Technical Evaluation,2024-10-16
+SPR-00189,Technical Evaluation,Business Case,2024-10-18
+SPR-00189,Business Case,Negotiation,2024-11-09
+SPR-00189,Negotiation,Closed Won,2024-11-18
+SPR-00190,,Discovery,2024-09-10
+SPR-00190,Discovery,Closed Lost,2024-09-11
+SPR-00191,,Discovery,2024-09-10
+SPR-00191,Discovery,Qualification,2024-09-15
+SPR-00191,Qualification,Technical Evaluation,2024-09-20
+SPR-00191,Technical Evaluation,Closed Lost,2024-09-22
+SPR-00192,,Discovery,2024-09-10
+SPR-00192,Discovery,Qualification,2024-11-18
+SPR-00192,Qualification,Technical Evaluation,2024-11-25
+SPR-00192,Technical Evaluation,Business Case,2025-01-02
+SPR-00192,Business Case,Negotiation,2025-01-30
+SPR-00192,Negotiation,Closed Won,2025-02-07
+SPR-00193,,Discovery,2024-09-12
+SPR-00193,Discovery,Qualification,2024-11-06
+SPR-00193,Qualification,Technical Evaluation,2024-12-06
+SPR-00193,Technical Evaluation,Closed Lost,2025-01-07
+SPR-00194,,Discovery,2024-09-12
+SPR-00194,Discovery,Closed Lost,2024-09-23
+SPR-00195,,Discovery,2024-09-12
+SPR-00195,Discovery,Closed Lost,2024-10-06
+SPR-00196,,Discovery,2024-09-12
+SPR-00196,Discovery,Closed Lost,2024-09-30
+SPR-00197,,Discovery,2024-09-12
+SPR-00197,Discovery,Closed Lost,2024-09-15
+SPR-00198,,Discovery,2024-09-14
+SPR-00198,Discovery,Qualification,2024-09-24
+SPR-00198,Qualification,Technical Evaluation,2024-10-18
+SPR-00198,Technical Evaluation,Closed Lost,2024-12-31
+SPR-00199,,Discovery,2024-09-14
+SPR-00199,Discovery,Qualification,2024-11-04
+SPR-00199,Qualification,Closed Lost,2024-11-19
+SPR-00200,,Discovery,2024-09-14
+SPR-00200,Discovery,Qualification,2024-09-24
+SPR-00200,Qualification,Technical Evaluation,2024-10-12
+SPR-00200,Technical Evaluation,Business Case,2024-10-26
+SPR-00200,Business Case,Negotiation,2024-11-29
+SPR-00200,Negotiation,Closed Won,2024-12-09
+SPR-00201,,Discovery,2024-09-16
+SPR-00201,Discovery,Qualification,2024-10-07
+SPR-00201,Qualification,Closed Lost,2024-11-22
+SPR-00202,,Discovery,2024-09-16
+SPR-00202,Discovery,Qualification,2024-09-20
+SPR-00202,Qualification,Closed Lost,2024-10-18
+SPR-00203,,Discovery,2024-09-16
+SPR-00203,Discovery,Closed Lost,2024-10-09
+SPR-00204,,Discovery,2024-09-18
+SPR-00204,Discovery,Closed Lost,2024-09-28
+SPR-00205,,Discovery,2024-09-18
+SPR-00205,Discovery,Closed Lost,2024-10-06
+SPR-00207,,Discovery,2024-09-19
+SPR-00207,Discovery,Closed Lost,2024-10-06
+SPR-00208,,Discovery,2024-09-22
+SPR-00208,Discovery,Closed Lost,2024-10-09
+SPR-00209,,Discovery,2024-09-25
+SPR-00209,Discovery,Qualification,2024-10-01
+SPR-00209,Qualification,Technical Evaluation,2024-11-29
+SPR-00209,Technical Evaluation,Closed Lost,2024-12-05
+SPR-00210,,Discovery,2024-09-25
+SPR-00210,Discovery,Qualification,2024-10-15
+SPR-00210,Qualification,Closed Lost,2024-11-09
+SPR-00211,,Discovery,2024-09-26
+SPR-00211,Discovery,Qualification,2024-10-06
+SPR-00211,Qualification,Technical Evaluation,2024-10-15
+SPR-00211,Technical Evaluation,Business Case,2024-10-18
+SPR-00211,Business Case,Closed Lost,2024-11-10
+SPR-00212,,Discovery,2024-09-26
+SPR-00212,Discovery,Qualification,2024-10-01
+SPR-00212,Qualification,Closed Lost,2024-10-17
+SPR-00213,,Discovery,2024-09-29
+SPR-00213,Discovery,Closed Lost,2024-10-14
+SPR-00214,,Discovery,2024-09-29
+SPR-00214,Discovery,Qualification,2024-10-14
+SPR-00214,Qualification,Technical Evaluation,2024-11-05
+SPR-00214,Technical Evaluation,Closed Lost,2024-11-26
+SPR-00215,,Discovery,2024-10-01
+SPR-00215,Discovery,Qualification,2024-10-22
+SPR-00215,Qualification,Technical Evaluation,2024-11-13
+SPR-00215,Technical Evaluation,Business Case,2025-01-06
+SPR-00215,Business Case,Negotiation,2025-01-16
+SPR-00215,Negotiation,Closed Lost,2025-03-28
+SPR-00216,,Discovery,2024-10-03
+SPR-00216,Discovery,Qualification,2024-10-08
+SPR-00216,Qualification,Closed Lost,2024-11-03
+SPR-00217,,Discovery,2024-10-04
+SPR-00217,Discovery,Closed Lost,2024-11-02
+SPR-00218,,Discovery,2024-10-05
+SPR-00218,Discovery,Closed Lost,2024-10-27
+SPR-00219,,Discovery,2024-10-05
+SPR-00219,Discovery,Closed Lost,2024-10-27
+SPR-00220,,Discovery,2024-10-05
+SPR-00220,Discovery,Qualification,2024-10-22
+SPR-00220,Qualification,Closed Lost,2024-10-31
+SPR-00221,,Discovery,2024-10-06
+SPR-00221,Discovery,Closed Lost,2024-11-27
+SPR-00222,,Discovery,2024-10-06
+SPR-00222,Discovery,Closed Lost,2024-11-04
+SPR-00223,,Discovery,2024-10-07
+SPR-00223,Discovery,Closed Lost,2024-11-26
+SPR-00224,,Discovery,2024-10-07
+SPR-00224,Discovery,Closed Lost,2024-10-15
+SPR-00225,,Discovery,2024-10-09
+SPR-00225,Discovery,Closed Lost,2024-10-18
+SPR-00226,,Discovery,2024-10-13
+SPR-00226,Discovery,Qualification,2024-11-29
+SPR-00226,Qualification,Technical Evaluation,2024-12-10
+SPR-00226,Technical Evaluation,Closed Lost,2024-12-18
+SPR-00227,,Discovery,2024-10-13
+SPR-00227,Discovery,Qualification,2024-10-15
+SPR-00227,Qualification,Technical Evaluation,2024-12-14
+SPR-00227,Technical Evaluation,Business Case,2024-12-29
+SPR-00227,Business Case,Negotiation,2025-02-08
+SPR-00227,Negotiation,Closed Won,2025-03-12
+SPR-00228,,Discovery,2024-10-14
+SPR-00228,Discovery,Closed Lost,2024-10-19
+SPR-00229,,Discovery,2024-10-15
+SPR-00229,Discovery,Closed Lost,2025-01-11
+SPR-00230,,Discovery,2024-10-15
+SPR-00230,Discovery,Qualification,2024-11-13
+SPR-00230,Qualification,Technical Evaluation,2025-02-10
+SPR-00230,Technical Evaluation,Business Case,2025-02-28
+SPR-00230,Business Case,Negotiation,2025-03-05
+SPR-00230,Negotiation,Closed Won,2025-03-09
+SPR-00231,,Discovery,2024-10-16
+SPR-00231,Discovery,Qualification,2024-11-22
+SPR-00231,Qualification,Closed Lost,2025-01-28
+SPR-00232,,Discovery,2024-10-17
+SPR-00232,Discovery,Closed Lost,2024-11-22
+SPR-00233,,Discovery,2024-10-17
+SPR-00233,Discovery,Qualification,2024-11-09
+SPR-00233,Qualification,Technical Evaluation,2024-11-23
+SPR-00233,Technical Evaluation,Business Case,2025-02-21
+SPR-00233,Business Case,Closed Lost,2025-06-28
+SPR-00234,,Discovery,2024-10-17
+SPR-00234,Discovery,Qualification,2024-11-17
+SPR-00234,Qualification,Closed Lost,2024-12-01
+SPR-00235,,Discovery,2024-10-18
+SPR-00235,Discovery,Closed Lost,2024-10-28
+SPR-00236,,Discovery,2024-10-19
+SPR-00236,Discovery,Qualification,2024-10-31
+SPR-00236,Qualification,Technical Evaluation,2024-11-18
+SPR-00236,Technical Evaluation,Business Case,2024-12-04
+SPR-00236,Business Case,Negotiation,2024-12-17
+SPR-00236,Negotiation,Closed Lost,2025-01-06
+SPR-00237,,Discovery,2024-10-19
+SPR-00237,Discovery,Closed Lost,2024-10-25
+SPR-00238,,Discovery,2024-10-19
+SPR-00238,Discovery,Qualification,2024-11-12
+SPR-00238,Qualification,Technical Evaluation,2025-03-14
+SPR-00238,Technical Evaluation,Business Case,2025-04-01
+SPR-00238,Business Case,Negotiation,2025-04-13
+SPR-00238,Negotiation,Closed Won,2025-04-29
+SPR-00239,,Discovery,2024-10-20
+SPR-00239,Discovery,Qualification,2024-11-08
+SPR-00239,Qualification,Technical Evaluation,2024-12-03
+SPR-00239,Technical Evaluation,Business Case,2024-12-17
+SPR-00239,Business Case,Negotiation,2025-01-04
+SPR-00239,Negotiation,Closed Won,2025-01-17
+SPR-00240,,Discovery,2024-10-22
+SPR-00240,Discovery,Qualification,2024-10-27
+SPR-00240,Qualification,Technical Evaluation,2024-12-25
+SPR-00240,Technical Evaluation,Closed Lost,2025-02-01
+SPR-00241,,Discovery,2024-10-23
+SPR-00241,Discovery,Qualification,2024-12-15
+SPR-00241,Qualification,Closed Lost,2025-01-11
+SPR-00242,,Discovery,2024-10-23
+SPR-00242,Discovery,Closed Lost,2024-12-05
+SPR-00243,,Discovery,2024-10-25
+SPR-00243,Discovery,Closed Lost,2024-11-04
+SPR-00244,,Discovery,2024-10-25
+SPR-00244,Discovery,Closed Lost,2024-11-07
+SPR-00245,,Discovery,2024-10-26
+SPR-00245,Discovery,Qualification,2024-12-03
+SPR-00245,Qualification,Technical Evaluation,2025-01-07
+SPR-00245,Technical Evaluation,Closed Lost,2025-01-12
+SPR-00246,,Discovery,2024-10-26
+SPR-00246,Discovery,Closed Lost,2024-11-13
+SPR-00247,,Discovery,2024-10-27
+SPR-00247,Discovery,Qualification,2024-11-28
+SPR-00247,Qualification,Technical Evaluation,2024-12-31
+SPR-00247,Technical Evaluation,Business Case,2025-01-03
+SPR-00247,Business Case,Closed Lost,2025-02-21
+SPR-00248,,Discovery,2024-10-27
+SPR-00248,Discovery,Qualification,2024-11-20
+SPR-00248,Qualification,Closed Lost,2024-12-24
+SPR-00249,,Discovery,2024-10-28
+SPR-00249,Discovery,Qualification,2024-11-30
+SPR-00249,Qualification,Technical Evaluation,2024-12-16
+SPR-00249,Technical Evaluation,Business Case,2025-01-08
+SPR-00249,Business Case,Negotiation,2025-02-01
+SPR-00249,Negotiation,Closed Lost,2025-03-26
+SPR-00250,,Discovery,2024-10-28
+SPR-00250,Discovery,Qualification,2024-11-03
+SPR-00250,Qualification,Closed Lost,2024-11-05
+SPR-00251,,Discovery,2024-10-28
+SPR-00251,Discovery,Closed Lost,2024-12-10
+SPR-00252,,Discovery,2024-10-30
+SPR-00252,Discovery,Closed Lost,2024-11-05
+SPR-00253,,Discovery,2024-11-03
+SPR-00253,Discovery,Qualification,2024-12-09
+SPR-00253,Qualification,Technical Evaluation,2025-01-28
+SPR-00253,Technical Evaluation,Closed Lost,2025-01-30
+SPR-00254,,Discovery,2024-11-04
+SPR-00254,Discovery,Qualification,2024-11-11
+SPR-00254,Qualification,Closed Lost,2024-11-18
+SPR-00255,,Discovery,2024-11-04
+SPR-00255,Discovery,Closed Lost,2024-12-23
+SPR-00256,,Discovery,2024-11-06
+SPR-00256,Discovery,Qualification,2024-11-09
+SPR-00256,Qualification,Technical Evaluation,2024-12-17
+SPR-00256,Technical Evaluation,Business Case,2025-04-18
+SPR-00256,Business Case,Negotiation,2025-06-10
+SPR-00256,Negotiation,Closed Won,2025-06-29
+SPR-00257,,Discovery,2024-11-07
+SPR-00257,Discovery,Qualification,2024-12-04
+SPR-00257,Qualification,Technical Evaluation,2025-01-08
+SPR-00257,Technical Evaluation,Business Case,2025-01-12
+SPR-00257,Business Case,Closed Lost,2025-01-16
+SPR-00258,,Discovery,2024-11-08
+SPR-00258,Discovery,Qualification,2024-11-22
+SPR-00258,Qualification,Technical Evaluation,2024-11-30
+SPR-00258,Technical Evaluation,Business Case,2025-01-03
+SPR-00258,Business Case,Closed Lost,2025-01-08
+SPR-00259,,Discovery,2024-11-08
+SPR-00259,Discovery,Qualification,2025-01-17
+SPR-00259,Qualification,Closed Lost,2025-01-20
+SPR-00260,,Discovery,2024-11-09
+SPR-00260,Discovery,Qualification,2024-11-16
+SPR-00260,Qualification,Closed Lost,2024-11-19
+SPR-00261,,Discovery,2024-11-09
+SPR-00261,Discovery,Closed Lost,2024-11-14
+SPR-00262,,Discovery,2024-11-10
+SPR-00262,Discovery,Closed Lost,2024-12-04
+SPR-00263,,Discovery,2024-11-12
+SPR-00263,Discovery,Qualification,2024-12-13
+SPR-00263,Qualification,Closed Lost,2024-12-19
+SPR-00264,,Discovery,2024-11-12
+SPR-00264,Discovery,Closed Lost,2024-12-23
+SPR-00265,,Discovery,2024-11-13
+SPR-00265,Discovery,Qualification,2024-12-09
+SPR-00265,Qualification,Technical Evaluation,2025-03-06
+SPR-00265,Technical Evaluation,Business Case,2025-03-09
+SPR-00265,Business Case,Negotiation,2025-03-12
+SPR-00265,Negotiation,Closed Won,2025-03-16
+SPR-00266,,Discovery,2024-11-15
+SPR-00266,Discovery,Closed Lost,2025-01-18
+SPR-00267,,Discovery,2024-11-16
+SPR-00267,Discovery,Qualification,2024-12-05
+SPR-00267,Qualification,Technical Evaluation,2024-12-15
+SPR-00267,Technical Evaluation,Closed Lost,2025-01-06
+SPR-00268,,Discovery,2024-11-17
+SPR-00268,Discovery,Qualification,2024-12-13
+SPR-00268,Qualification,Technical Evaluation,2025-01-08
+SPR-00268,Technical Evaluation,Business Case,2025-01-12
+SPR-00268,Business Case,Negotiation,2025-01-31
+SPR-00268,Negotiation,Closed Won,2025-02-14
+SPR-00269,,Discovery,2024-11-18
+SPR-00269,Discovery,Closed Lost,2024-12-03
+SPR-00270,,Discovery,2024-11-19
+SPR-00270,Discovery,Qualification,2024-12-13
+SPR-00270,Qualification,Closed Lost,2025-01-22
+SPR-00271,,Discovery,2024-11-20
+SPR-00271,Discovery,Qualification,2024-12-03
+SPR-00271,Qualification,Technical Evaluation,2024-12-09
+SPR-00271,Technical Evaluation,Business Case,2024-12-11
+SPR-00271,Business Case,Negotiation,2024-12-16
+SPR-00271,Negotiation,Closed Won,2025-02-27
+SPR-00272,,Discovery,2024-11-21
+SPR-00272,Discovery,Closed Lost,2024-11-23
+SPR-00273,,Discovery,2024-11-21
+SPR-00273,Discovery,Qualification,2024-12-28
+SPR-00273,Qualification,Technical Evaluation,2025-03-17
+SPR-00273,Technical Evaluation,Closed Lost,2025-03-27
+SPR-00274,,Discovery,2024-11-21
+SPR-00274,Discovery,Closed Lost,2025-01-26
+SPR-00275,,Discovery,2024-11-22
+SPR-00275,Discovery,Qualification,2024-11-23
+SPR-00275,Qualification,Closed Lost,2024-12-19
+SPR-00276,,Discovery,2024-11-23
+SPR-00276,Discovery,Closed Lost,2025-01-07
+SPR-00277,,Discovery,2024-11-23
+SPR-00277,Discovery,Closed Lost,2024-12-27
+SPR-00278,,Discovery,2024-11-23
+SPR-00278,Discovery,Qualification,2024-11-25
+SPR-00278,Qualification,Technical Evaluation,2024-12-17
+SPR-00278,Technical Evaluation,Business Case,2025-01-15
+SPR-00278,Business Case,Negotiation,2025-02-06
+SPR-00278,Negotiation,Closed Won,2025-02-20
+SPR-00279,,Discovery,2024-11-24
+SPR-00279,Discovery,Qualification,2024-12-01
+SPR-00279,Qualification,Technical Evaluation,2024-12-20
+SPR-00279,Technical Evaluation,Business Case,2025-01-07
+SPR-00279,Business Case,Negotiation,2025-01-16
+SPR-00279,Negotiation,Closed Won,2025-01-17
+SPR-00280,,Discovery,2024-11-27
+SPR-00280,Discovery,Closed Lost,2024-12-04
+SPR-00281,,Discovery,2024-11-27
+SPR-00281,Discovery,Closed Lost,2024-12-13
+SPR-00282,,Discovery,2024-11-29
+SPR-00282,Discovery,Qualification,2024-12-04
+SPR-00282,Qualification,Technical Evaluation,2024-12-13
+SPR-00282,Technical Evaluation,Closed Lost,2025-01-06
+SPR-00283,,Discovery,2024-11-30
+SPR-00283,Discovery,Qualification,2024-12-29
+SPR-00283,Qualification,Technical Evaluation,2025-01-04
+SPR-00283,Technical Evaluation,Business Case,2025-02-17
+SPR-00283,Business Case,Negotiation,2025-02-19
+SPR-00283,Negotiation,Closed Won,2025-02-26
+SPR-00284,,Discovery,2024-11-30
+SPR-00284,Discovery,Closed Lost,2024-12-28
+SPR-00285,,Discovery,2024-11-30
+SPR-00285,Discovery,Closed Lost,2025-01-01
+SPR-00286,,Discovery,2024-12-01
+SPR-00286,Discovery,Qualification,2024-12-07
+SPR-00286,Qualification,Technical Evaluation,2024-12-29
+SPR-00286,Technical Evaluation,Business Case,2025-01-16
+SPR-00286,Business Case,Closed Lost,2025-02-04
+SPR-00287,,Discovery,2024-12-01
+SPR-00287,Discovery,Closed Lost,2024-12-21
+SPR-00288,,Discovery,2024-12-03
+SPR-00288,Discovery,Qualification,2024-12-10
+SPR-00288,Qualification,Technical Evaluation,2025-04-20
+SPR-00288,Technical Evaluation,Business Case,2025-05-11
+SPR-00288,Business Case,Negotiation,2025-06-13
+SPR-00288,Negotiation,Closed Won,2025-06-21
+SPR-00289,,Discovery,2024-12-03
+SPR-00289,Discovery,Qualification,2024-12-19
+SPR-00289,Qualification,Closed Lost,2024-12-23
+SPR-00290,,Discovery,2024-12-04
+SPR-00290,Discovery,Qualification,2024-12-31
+SPR-00290,Qualification,Technical Evaluation,2025-01-14
+SPR-00290,Technical Evaluation,Business Case,2025-01-16
+SPR-00290,Business Case,Closed Lost,2025-01-23
+SPR-00291,,Discovery,2024-12-05
+SPR-00291,Discovery,Closed Lost,2024-12-13
+SPR-00292,,Discovery,2024-12-05
+SPR-00292,Discovery,Closed Lost,2024-12-17
+SPR-00293,,Discovery,2024-12-05
+SPR-00293,Discovery,Qualification,2025-02-23
+SPR-00293,Qualification,Technical Evaluation,2025-03-10
+SPR-00293,Technical Evaluation,Closed Lost,2025-04-13
+SPR-00294,,Discovery,2024-12-06
+SPR-00294,Discovery,Closed Lost,2024-12-20
+SPR-00295,,Discovery,2024-12-06
+SPR-00295,Discovery,Closed Lost,2024-12-17
+SPR-00296,,Discovery,2024-12-07
+SPR-00296,Discovery,Qualification,2025-01-02
+SPR-00296,Qualification,Technical Evaluation,2025-01-19
+SPR-00296,Technical Evaluation,Business Case,2025-02-04
+SPR-00296,Business Case,Negotiation,2025-02-05
+SPR-00296,Negotiation,Closed Won,2025-02-15
+SPR-00297,,Discovery,2024-12-07
+SPR-00297,Discovery,Closed Lost,2025-02-01
+SPR-00298,,Discovery,2024-12-09
+SPR-00298,Discovery,Closed Lost,2024-12-25
+SPR-00299,,Discovery,2024-12-10
+SPR-00299,Discovery,Closed Lost,2024-12-13
+SPR-00300,,Discovery,2024-12-10
+SPR-00300,Discovery,Qualification,2024-12-24
+SPR-00300,Qualification,Technical Evaluation,2025-01-04
+SPR-00300,Technical Evaluation,Closed Lost,2025-01-06
+SPR-00301,,Discovery,2024-12-11
+SPR-00301,Discovery,Qualification,2024-12-15
+SPR-00301,Qualification,Technical Evaluation,2025-04-05
+SPR-00301,Technical Evaluation,Closed Lost,2025-04-08
+SPR-00302,,Discovery,2024-12-11
+SPR-00302,Discovery,Closed Lost,2024-12-18
+SPR-00303,,Discovery,2024-12-12
+SPR-00303,Discovery,Qualification,2025-01-11
+SPR-00303,Qualification,Closed Lost,2025-01-12
+SPR-00304,,Discovery,2024-12-13
+SPR-00304,Discovery,Closed Lost,2024-12-29
+SPR-00305,,Discovery,2024-12-13
+SPR-00305,Discovery,Qualification,2025-01-12
+SPR-00305,Qualification,Closed Lost,2025-01-25
+SPR-00306,,Discovery,2024-12-13
+SPR-00306,Discovery,Qualification,2024-12-26
+SPR-00306,Qualification,Closed Lost,2025-01-07
+SPR-00307,,Discovery,2024-12-13
+SPR-00307,Discovery,Qualification,2025-01-05
+SPR-00307,Qualification,Technical Evaluation,2025-02-08
+SPR-00307,Technical Evaluation,Business Case,2025-02-22
+SPR-00307,Business Case,Negotiation,2025-03-02
+SPR-00307,Negotiation,Closed Won,2025-03-11
+SPR-00308,,Discovery,2024-12-14
+SPR-00308,Discovery,Closed Lost,2024-12-18
+SPR-00309,,Discovery,2024-12-17
+SPR-00309,Discovery,Qualification,2024-12-22
+SPR-00309,Qualification,Technical Evaluation,2024-12-26
+SPR-00309,Technical Evaluation,Business Case,2025-02-04
+SPR-00309,Business Case,Negotiation,2025-02-05
+SPR-00309,Negotiation,Closed Lost,2025-02-25
+SPR-00310,,Discovery,2024-12-19
+SPR-00310,Discovery,Qualification,2025-01-20
+SPR-00310,Qualification,Technical Evaluation,2025-01-24
+SPR-00310,Technical Evaluation,Closed Lost,2025-02-13
+SPR-00311,,Discovery,2024-12-19
+SPR-00311,Discovery,Qualification,2024-12-26
+SPR-00311,Qualification,Closed Lost,2025-02-04
+SPR-00312,,Discovery,2024-12-22
+SPR-00312,Discovery,Qualification,2025-01-21
+SPR-00312,Qualification,Technical Evaluation,2025-02-03
+SPR-00312,Technical Evaluation,Business Case,2025-02-17
+SPR-00312,Business Case,Negotiation,2025-02-21
+SPR-00312,Negotiation,Closed Won,2025-03-14
+SPR-00313,,Discovery,2024-12-23
+SPR-00313,Discovery,Qualification,2024-12-29
+SPR-00313,Qualification,Technical Evaluation,2025-01-17
+SPR-00313,Technical Evaluation,Business Case,2025-01-18
+SPR-00313,Business Case,Negotiation,2025-01-19
+SPR-00313,Negotiation,Closed Won,2025-01-26
+SPR-00314,,Discovery,2024-12-23
+SPR-00314,Discovery,Closed Lost,2024-12-26
+SPR-00315,,Discovery,2024-12-25
+SPR-00315,Discovery,Closed Lost,2025-01-08
+SPR-00316,,Discovery,2024-12-26
+SPR-00316,Discovery,Closed Lost,2025-01-02
+SPR-00317,,Discovery,2024-12-27
+SPR-00317,Discovery,Closed Lost,2025-01-06
+SPR-00318,,Discovery,2025-01-01
+SPR-00318,Discovery,Closed Lost,2025-01-09
+SPR-00319,,Discovery,2025-01-01
+SPR-00319,Discovery,Qualification,2025-02-16
+SPR-00319,Qualification,Technical Evaluation,2025-05-01
+SPR-00319,Technical Evaluation,Business Case,2025-05-06
+SPR-00319,Business Case,Closed Lost,2025-05-08
+SPR-00320,,Discovery,2025-01-01
+SPR-00320,Discovery,Closed Lost,2025-01-09
+SPR-00321,,Discovery,2025-01-02
+SPR-00321,Discovery,Qualification,2025-01-27
+SPR-00321,Qualification,Closed Lost,2025-02-20
+SPR-00322,,Discovery,2025-01-03
+SPR-00322,Discovery,Closed Lost,2025-01-09
+SPR-00323,,Discovery,2025-01-03
+SPR-00323,Discovery,Closed Lost,2025-01-12
+SPR-00324,,Discovery,2025-01-04
+SPR-00324,Discovery,Closed Lost,2025-01-11
+SPR-00325,,Discovery,2025-01-08
+SPR-00326,,Discovery,2025-01-08
+SPR-00326,Discovery,Qualification,2025-01-26
+SPR-00326,Qualification,Technical Evaluation,2025-02-05
+SPR-00326,Technical Evaluation,Business Case,2025-02-06
+SPR-00326,Business Case,Negotiation,2025-03-09
+SPR-00326,Negotiation,Closed Lost,2025-03-12
+SPR-00327,,Discovery,2025-01-09
+SPR-00327,Discovery,Closed Lost,2025-01-29
+SPR-00328,,Discovery,2025-01-09
+SPR-00328,Discovery,Qualification,2025-01-12
+SPR-00328,Qualification,Technical Evaluation,2025-01-21
+SPR-00328,Technical Evaluation,Business Case,2025-02-10
+SPR-00328,Business Case,Negotiation,2025-02-22
+SPR-00328,Negotiation,Closed Won,2025-02-26
+SPR-00329,,Discovery,2025-01-10
+SPR-00329,Discovery,Qualification,2025-01-29
+SPR-00329,Qualification,Closed Lost,2025-01-31
+SPR-00330,,Discovery,2025-01-11
+SPR-00330,Discovery,Qualification,2025-01-15
+SPR-00330,Qualification,Technical Evaluation,2025-02-09
+SPR-00330,Technical Evaluation,Closed Lost,2025-02-15
+SPR-00331,,Discovery,2025-01-11
+SPR-00331,Discovery,Qualification,2025-01-12
+SPR-00331,Qualification,Technical Evaluation,2025-01-21
+SPR-00331,Technical Evaluation,Business Case,2025-01-23
+SPR-00331,Business Case,Negotiation,2025-01-31
+SPR-00331,Negotiation,Closed Won,2025-02-18
+SPR-00332,,Discovery,2025-01-12
+SPR-00332,Discovery,Closed Lost,2025-02-06
+SPR-00333,,Discovery,2025-01-13
+SPR-00333,Discovery,Closed Lost,2025-02-11
+SPR-00334,,Discovery,2025-01-14
+SPR-00334,Discovery,Closed Lost,2025-01-28
+SPR-00335,,Discovery,2025-01-14
+SPR-00335,Discovery,Closed Lost,2025-01-23
+SPR-00336,,Discovery,2025-01-15
+SPR-00336,Discovery,Qualification,2025-02-17
+SPR-00336,Qualification,Technical Evaluation,2025-02-23
+SPR-00336,Technical Evaluation,Business Case,2025-06-11
+SPR-00336,Business Case,Negotiation,2025-06-13
+SPR-00336,Negotiation,Closed Won,2025-07-10
+SPR-00337,,Discovery,2025-01-15
+SPR-00337,Discovery,Qualification,2025-03-26
+SPR-00337,Qualification,Technical Evaluation,2025-04-05
+SPR-00337,Technical Evaluation,Business Case,2025-05-16
+SPR-00337,Business Case,Negotiation,2025-05-25
+SPR-00337,Negotiation,Closed Won,2025-06-21
+SPR-00338,,Discovery,2025-01-15
+SPR-00338,Discovery,Closed Lost,2025-02-02
+SPR-00339,,Discovery,2025-01-16
+SPR-00339,Discovery,Qualification,2025-01-17
+SPR-00339,Qualification,Closed Lost,2025-02-07
+SPR-00340,,Discovery,2025-01-17
+SPR-00340,Discovery,Closed Lost,2025-01-28
+SPR-00341,,Discovery,2025-01-18
+SPR-00341,Discovery,Qualification,2025-02-14
+SPR-00342,,Discovery,2025-01-18
+SPR-00342,Discovery,Closed Lost,2025-02-15
+SPR-00343,,Discovery,2025-01-19
+SPR-00343,Discovery,Closed Lost,2025-02-28
+SPR-00344,,Discovery,2025-01-21
+SPR-00344,Discovery,Closed Lost,2025-02-26
+SPR-00345,,Discovery,2025-01-22
+SPR-00345,Discovery,Qualification,2025-03-17
+SPR-00345,Qualification,Technical Evaluation,2025-05-17
+SPR-00345,Technical Evaluation,Business Case,2025-06-02
+SPR-00345,Business Case,Closed Lost,2025-07-17
+SPR-00346,,Discovery,2025-01-23
+SPR-00346,Discovery,Qualification,2025-03-02
+SPR-00346,Qualification,Closed Lost,2025-03-04
+SPR-00347,,Discovery,2025-01-24
+SPR-00347,Discovery,Qualification,2025-02-25
+SPR-00347,Qualification,Closed Lost,2025-03-08
+SPR-00348,,Discovery,2025-01-24
+SPR-00348,Discovery,Closed Lost,2025-02-09
+SPR-00349,,Discovery,2025-01-25
+SPR-00349,Discovery,Qualification,2025-02-24
+SPR-00349,Qualification,Technical Evaluation,2025-03-22
+SPR-00349,Technical Evaluation,Business Case,2025-03-30
+SPR-00349,Business Case,Negotiation,2025-04-11
+SPR-00349,Negotiation,Closed Won,2025-04-18
+SPR-00350,,Discovery,2025-01-25
+SPR-00350,Discovery,Qualification,2025-02-01
+SPR-00350,Qualification,Technical Evaluation,2025-02-06
+SPR-00350,Technical Evaluation,Business Case,2025-02-10
+SPR-00350,Business Case,Closed Lost,2025-02-15
+SPR-00351,,Discovery,2025-01-27
+SPR-00351,Discovery,Closed Lost,2025-01-29
+SPR-00352,,Discovery,2025-01-29
+SPR-00352,Discovery,Qualification,2025-02-14
+SPR-00352,Qualification,Technical Evaluation,2025-03-06
+SPR-00352,Technical Evaluation,Closed Lost,2025-03-08
+SPR-00353,,Discovery,2025-01-29
+SPR-00353,Discovery,Closed Lost,2025-02-08
+SPR-00354,,Discovery,2025-01-30
+SPR-00354,Discovery,Qualification,2025-03-21
+SPR-00354,Qualification,Technical Evaluation,2025-03-27
+SPR-00354,Technical Evaluation,Closed Lost,2025-04-17
+SPR-00355,,Discovery,2025-01-30
+SPR-00355,Discovery,Qualification,2025-02-07
+SPR-00355,Qualification,Technical Evaluation,2025-04-02
+SPR-00355,Technical Evaluation,Business Case,2025-04-09
+SPR-00355,Business Case,Negotiation,2025-05-18
+SPR-00355,Negotiation,Closed Won,2025-07-21
+SPR-00356,,Discovery,2025-01-30
+SPR-00356,Discovery,Qualification,2025-04-02
+SPR-00356,Qualification,Closed Lost,2025-04-14
+SPR-00357,,Discovery,2025-02-01
+SPR-00357,Discovery,Qualification,2025-02-11
+SPR-00357,Qualification,Closed Lost,2025-03-17
+SPR-00358,,Discovery,2025-02-01
+SPR-00358,Discovery,Closed Lost,2025-02-05
+SPR-00359,,Discovery,2025-02-03
+SPR-00359,Discovery,Closed Lost,2025-02-08
+SPR-00360,,Discovery,2025-02-03
+SPR-00360,Discovery,Closed Lost,2025-02-11
+SPR-00361,,Discovery,2025-02-03
+SPR-00361,Discovery,Qualification,2025-02-15
+SPR-00361,Qualification,Closed Lost,2025-03-07
+SPR-00362,,Discovery,2025-02-04
+SPR-00362,Discovery,Qualification,2025-02-28
+SPR-00362,Qualification,Technical Evaluation,2025-05-15
+SPR-00362,Technical Evaluation,Business Case,2025-05-18
+SPR-00362,Business Case,Closed Lost,2025-06-01
+SPR-00363,,Discovery,2025-02-04
+SPR-00363,Discovery,Qualification,2025-02-06
+SPR-00363,Qualification,Closed Lost,2025-02-13
+SPR-00364,,Discovery,2025-02-05
+SPR-00364,Discovery,Qualification,2025-02-14
+SPR-00364,Qualification,Technical Evaluation,2025-03-07
+SPR-00364,Technical Evaluation,Business Case,2025-05-04
+SPR-00364,Business Case,Negotiation,2025-05-06
+SPR-00364,Negotiation,Closed Won,2025-05-23
+SPR-00365,,Discovery,2025-02-05
+SPR-00365,Discovery,Qualification,2025-03-15
+SPR-00365,Qualification,Technical Evaluation,2025-03-19
+SPR-00365,Technical Evaluation,Business Case,2025-04-18
+SPR-00365,Business Case,Closed Lost,2025-05-01
+SPR-00366,,Discovery,2025-02-05
+SPR-00366,Discovery,Qualification,2025-02-24
+SPR-00366,Qualification,Closed Lost,2025-03-22
+SPR-00367,,Discovery,2025-02-06
+SPR-00367,Discovery,Closed Lost,2025-03-10
+SPR-00368,,Discovery,2025-02-06
+SPR-00368,Discovery,Closed Lost,2025-02-11
+SPR-00369,,Discovery,2025-02-07
+SPR-00369,Discovery,Qualification,2025-02-09
+SPR-00369,Qualification,Technical Evaluation,2025-03-06
+SPR-00369,Technical Evaluation,Business Case,2025-03-11
+SPR-00369,Business Case,Negotiation,2025-04-25
+SPR-00369,Negotiation,Closed Won,2025-06-17
+SPR-00370,,Discovery,2025-02-07
+SPR-00370,Discovery,Closed Lost,2026-03-04
+SPR-00371,,Discovery,2025-02-09
+SPR-00371,Discovery,Closed Lost,2025-03-15
+SPR-00372,,Discovery,2025-02-10
+SPR-00372,Discovery,Qualification,2025-02-17
+SPR-00372,Qualification,Technical Evaluation,2025-03-31
+SPR-00372,Technical Evaluation,Business Case,2025-05-28
+SPR-00372,Business Case,Negotiation,2025-06-02
+SPR-00372,Negotiation,Closed Won,2025-06-21
+SPR-00373,,Discovery,2025-02-10
+SPR-00373,Discovery,Closed Lost,2025-03-06
+SPR-00374,,Discovery,2025-02-11
+SPR-00374,Discovery,Closed Lost,2025-02-22
+SPR-00375,,Discovery,2025-02-12
+SPR-00375,Discovery,Closed Lost,2025-03-27
+SPR-00376,,Discovery,2025-02-13
+SPR-00376,Discovery,Qualification,2025-03-16
+SPR-00376,Qualification,Closed Lost,2025-04-13
+SPR-00377,,Discovery,2025-02-13
+SPR-00377,Discovery,Qualification,2025-02-17
+SPR-00377,Qualification,Closed Lost,2025-04-22
+SPR-00378,,Discovery,2025-02-14
+SPR-00378,Discovery,Qualification,2025-03-08
+SPR-00378,Qualification,Closed Lost,2025-05-27
+SPR-00379,,Discovery,2025-02-14
+SPR-00379,Discovery,Closed Lost,2025-02-27
+SPR-00380,,Discovery,2025-02-15
+SPR-00380,Discovery,Closed Lost,2026-05-21
+SPR-00381,,Discovery,2025-02-16
+SPR-00381,Discovery,Closed Lost,2025-04-19
+SPR-00382,,Discovery,2025-02-17
+SPR-00382,Discovery,Closed Lost,2025-03-03
+SPR-00383,,Discovery,2025-02-18
+SPR-00383,Discovery,Closed Lost,2025-04-11
+SPR-00384,,Discovery,2025-02-19
+SPR-00384,Discovery,Qualification,2025-03-17
+SPR-00384,Qualification,Technical Evaluation,2025-04-03
+SPR-00384,Technical Evaluation,Closed Lost,2025-04-19
+SPR-00385,,Discovery,2025-02-19
+SPR-00385,Discovery,Qualification,2025-02-24
+SPR-00385,Qualification,Technical Evaluation,2025-04-07
+SPR-00385,Technical Evaluation,Closed Lost,2025-04-08
+SPR-00386,,Discovery,2025-02-24
+SPR-00386,Discovery,Qualification,2025-03-06
+SPR-00386,Qualification,Technical Evaluation,2025-03-18
+SPR-00386,Technical Evaluation,Business Case,2025-04-01
+SPR-00386,Business Case,Closed Lost,2025-05-15
+SPR-00387,,Discovery,2025-02-24
+SPR-00387,Discovery,Closed Lost,2025-02-27
+SPR-00388,,Discovery,2025-02-24
+SPR-00388,Discovery,Closed Lost,2025-04-23
+SPR-00389,,Discovery,2025-02-24
+SPR-00389,Discovery,Closed Lost,2025-02-26
+SPR-00390,,Discovery,2025-02-24
+SPR-00390,Discovery,Qualification,2025-03-14
+SPR-00390,Qualification,Technical Evaluation,2025-07-06
+SPR-00390,Technical Evaluation,Business Case,2025-09-14
+SPR-00390,Business Case,Closed Lost,2025-09-22
+SPR-00391,,Discovery,2025-02-24
+SPR-00391,Discovery,Qualification,2025-04-02
+SPR-00391,Qualification,Closed Lost,2025-04-06
+SPR-00393,,Discovery,2025-02-25
+SPR-00393,Discovery,Qualification,2025-04-02
+SPR-00393,Qualification,Closed Lost,2025-04-23
+SPR-00394,,Discovery,2025-02-26
+SPR-00394,Discovery,Qualification,2025-03-01
+SPR-00394,Qualification,Closed Lost,2025-03-07
+SPR-00395,,Discovery,2025-02-27
+SPR-00395,Discovery,Qualification,2025-03-09
+SPR-00395,Qualification,Technical Evaluation,2025-04-12
+SPR-00395,Technical Evaluation,Business Case,2025-04-22
+SPR-00395,Business Case,Negotiation,2025-05-16
+SPR-00395,Negotiation,Closed Won,2025-06-17
+SPR-00396,,Discovery,2025-02-27
+SPR-00396,Discovery,Closed Lost,2025-05-17
+SPR-00397,,Discovery,2025-02-27
+SPR-00397,Discovery,Qualification,2025-03-01
+SPR-00397,Qualification,Closed Lost,2025-03-07
+SPR-00398,,Discovery,2025-02-27
+SPR-00398,Discovery,Qualification,2025-03-13
+SPR-00398,Qualification,Closed Lost,2025-03-30
+SPR-00399,,Discovery,2025-02-28
+SPR-00399,Discovery,Closed Lost,2025-03-03
+SPR-00400,,Discovery,2025-03-02
+SPR-00400,Discovery,Closed Lost,2025-03-12
+SPR-00401,,Discovery,2025-03-05
+SPR-00401,Discovery,Qualification,2025-03-26
+SPR-00401,Qualification,Technical Evaluation,2025-04-28
+SPR-00401,Technical Evaluation,Business Case,2025-05-15
+SPR-00401,Business Case,Negotiation,2025-08-14
+SPR-00401,Negotiation,Closed Won,2025-08-25
+SPR-00402,,Discovery,2025-03-06
+SPR-00402,Discovery,Qualification,2025-03-17
+SPR-00402,Qualification,Technical Evaluation,2025-03-26
+SPR-00402,Technical Evaluation,Business Case,2025-04-10
+SPR-00402,Business Case,Negotiation,2025-05-16
+SPR-00402,Negotiation,Closed Won,2025-05-29
+SPR-00403,,Discovery,2025-03-09
+SPR-00403,Discovery,Qualification,2025-04-03
+SPR-00403,Qualification,Technical Evaluation,2025-05-11
+SPR-00403,Technical Evaluation,Business Case,2025-05-15
+SPR-00403,Business Case,Closed Lost,2025-06-21
+SPR-00404,,Discovery,2025-03-11
+SPR-00404,Discovery,Closed Lost,2025-03-14
+SPR-00405,,Discovery,2025-03-13
+SPR-00405,Discovery,Closed Lost,2025-03-30
+SPR-00406,,Discovery,2025-03-13
+SPR-00406,Discovery,Qualification,2025-03-15
+SPR-00406,Qualification,Technical Evaluation,2025-04-06
+SPR-00406,Technical Evaluation,Business Case,2025-05-09
+SPR-00406,Business Case,Negotiation,2025-05-12
+SPR-00406,Negotiation,Closed Lost,2025-05-29
+SPR-00407,,Discovery,2025-03-13
+SPR-00407,Discovery,Closed Lost,2025-03-26
+SPR-00408,,Discovery,2025-03-14
+SPR-00408,Discovery,Closed Lost,2025-04-28
+SPR-00409,,Discovery,2025-03-15
+SPR-00409,Discovery,Qualification,2025-06-07
+SPR-00409,Qualification,Technical Evaluation,2025-06-17
+SPR-00409,Technical Evaluation,Business Case,2025-07-07
+SPR-00409,Business Case,Negotiation,2025-07-19
+SPR-00409,Negotiation,Closed Won,2025-08-01
+SPR-00410,,Discovery,2025-03-15
+SPR-00410,Discovery,Closed Lost,2025-04-14
+SPR-00411,,Discovery,2025-03-16
+SPR-00411,Discovery,Closed Lost,2025-03-30
+SPR-00412,,Discovery,2025-03-18
+SPR-00412,Discovery,Closed Lost,2025-06-14
+SPR-00413,,Discovery,2025-03-19
+SPR-00413,Discovery,Closed Lost,2025-04-01
+SPR-00414,,Discovery,2025-03-19
+SPR-00414,Discovery,Qualification,2025-05-04
+SPR-00414,Qualification,Technical Evaluation,2025-06-15
+SPR-00414,Technical Evaluation,Business Case,2025-06-20
+SPR-00414,Business Case,Negotiation,2025-07-13
+SPR-00414,Negotiation,Closed Won,2025-07-27
+SPR-00415,,Discovery,2025-03-20
+SPR-00415,Discovery,Qualification,2025-04-17
+SPR-00415,Qualification,Closed Lost,2025-04-28
+SPR-00416,,Discovery,2025-03-21
+SPR-00416,Discovery,Closed Lost,2025-04-03
+SPR-00417,,Discovery,2025-03-25
+SPR-00417,Discovery,Closed Lost,2025-05-14
+SPR-00418,,Discovery,2025-03-25
+SPR-00418,Discovery,Qualification,2025-04-30
+SPR-00418,Qualification,Technical Evaluation,2025-05-04
+SPR-00418,Technical Evaluation,Business Case,2025-05-26
+SPR-00418,Business Case,Closed Lost,2025-05-31
+SPR-00419,,Discovery,2025-03-26
+SPR-00419,Discovery,Closed Lost,2025-03-29
+SPR-00420,,Discovery,2025-03-27
+SPR-00420,Discovery,Closed Lost,2025-05-07
+SPR-00421,,Discovery,2025-03-28
+SPR-00421,Discovery,Qualification,2025-04-17
+SPR-00421,Qualification,Technical Evaluation,2025-04-25
+SPR-00421,Technical Evaluation,Closed Lost,2025-05-02
+SPR-00422,,Discovery,2025-03-30
+SPR-00422,Discovery,Closed Lost,2025-05-31
+SPR-00423,,Discovery,2025-03-30
+SPR-00423,Discovery,Qualification,2025-04-08
+SPR-00423,Qualification,Technical Evaluation,2025-04-25
+SPR-00423,Technical Evaluation,Business Case,2025-04-30
+SPR-00423,Business Case,Negotiation,2025-05-17
+SPR-00423,Negotiation,Closed Won,2025-05-21
+SPR-00424,,Discovery,2025-04-02
+SPR-00424,Discovery,Closed Lost,2025-04-29
+SPR-00425,,Discovery,2025-04-02
+SPR-00425,Discovery,Qualification,2025-04-13
+SPR-00425,Qualification,Technical Evaluation,2025-04-23
+SPR-00425,Technical Evaluation,Business Case,2025-04-27
+SPR-00425,Business Case,Negotiation,2025-04-29
+SPR-00425,Negotiation,Closed Won,2025-06-10
+SPR-00426,,Discovery,2025-04-02
+SPR-00426,Discovery,Qualification,2025-04-16
+SPR-00426,Qualification,Closed Lost,2025-06-06
+SPR-00427,,Discovery,2025-04-04
+SPR-00427,Discovery,Qualification,2025-04-28
+SPR-00427,Qualification,Technical Evaluation,2025-05-20
+SPR-00427,Technical Evaluation,Business Case,2025-06-16
+SPR-00427,Business Case,Negotiation,2025-06-22
+SPR-00427,Negotiation,Closed Won,2025-07-05
+SPR-00428,,Discovery,2025-04-05
+SPR-00428,Discovery,Qualification,2025-04-15
+SPR-00428,Qualification,Technical Evaluation,2025-04-30
+SPR-00428,Technical Evaluation,Business Case,2025-08-08
+SPR-00428,Business Case,Negotiation,2025-08-12
+SPR-00428,Negotiation,Closed Won,2025-08-22
+SPR-00429,,Discovery,2025-04-06
+SPR-00429,Discovery,Qualification,2025-04-30
+SPR-00429,Qualification,Technical Evaluation,2025-05-26
+SPR-00429,Technical Evaluation,Business Case,2025-05-29
+SPR-00429,Business Case,Closed Lost,2025-06-30
+SPR-00430,,Discovery,2025-04-06
+SPR-00430,Discovery,Qualification,2025-04-09
+SPR-00430,Qualification,Technical Evaluation,2025-04-29
+SPR-00430,Technical Evaluation,Closed Lost,2025-06-26
+SPR-00431,,Discovery,2025-04-06
+SPR-00431,Discovery,Closed Lost,2025-04-16
+SPR-00432,,Discovery,2025-04-08
+SPR-00432,Discovery,Qualification,2025-04-30
+SPR-00432,Qualification,Technical Evaluation,2025-05-17
+SPR-00432,Technical Evaluation,Business Case,2025-05-28
+SPR-00432,Business Case,Negotiation,2025-07-04
+SPR-00432,Negotiation,Closed Won,2025-07-14
+SPR-00433,,Discovery,2025-04-08
+SPR-00433,Discovery,Qualification,2025-04-10
+SPR-00433,Qualification,Closed Lost,2025-04-21
+SPR-00434,,Discovery,2025-04-08
+SPR-00434,Discovery,Qualification,2025-04-24
+SPR-00434,Qualification,Technical Evaluation,2025-05-04
+SPR-00434,Technical Evaluation,Business Case,2025-05-10
+SPR-00434,Business Case,Negotiation,2025-05-18
+SPR-00434,Negotiation,Closed Won,2025-06-15
+SPR-00435,,Discovery,2025-04-08
+SPR-00435,Discovery,Qualification,2025-04-13
+SPR-00435,Qualification,Technical Evaluation,2025-07-25
+SPR-00435,Technical Evaluation,Business Case,2025-08-01
+SPR-00435,Business Case,Closed Lost,2025-08-20
+SPR-00436,,Discovery,2025-04-08
+SPR-00436,Discovery,Closed Lost,2025-04-19
+SPR-00437,,Discovery,2025-04-09
+SPR-00437,Discovery,Closed Lost,2025-04-19
+SPR-00438,,Discovery,2025-04-10
+SPR-00438,Discovery,Qualification,2025-04-22
+SPR-00438,Qualification,Closed Lost,2025-06-01
+SPR-00439,,Discovery,2025-04-10
+SPR-00439,Discovery,Closed Lost,2025-04-30
+SPR-00440,,Discovery,2025-04-11
+SPR-00440,Discovery,Closed Lost,2025-04-23
+SPR-00441,,Discovery,2025-04-13
+SPR-00441,Discovery,Qualification,2025-04-15
+SPR-00441,Qualification,Closed Lost,2025-05-03
+SPR-00442,,Discovery,2025-04-13
+SPR-00442,Discovery,Qualification,2025-05-08
+SPR-00442,Qualification,Technical Evaluation,2025-07-11
+SPR-00442,Technical Evaluation,Business Case,2025-09-24
+SPR-00442,Business Case,Negotiation,2025-11-29
+SPR-00442,Negotiation,Closed Won,2025-12-10
+SPR-00444,,Discovery,2025-04-17
+SPR-00444,Discovery,Qualification,2025-05-07
+SPR-00444,Qualification,Technical Evaluation,2025-05-08
+SPR-00444,Technical Evaluation,Business Case,2025-05-31
+SPR-00444,Business Case,Negotiation,2025-07-25
+SPR-00444,Negotiation,Closed Lost,2025-07-26
+SPR-00445,,Discovery,2025-04-18
+SPR-00445,Discovery,Closed Lost,2025-05-20
+SPR-00446,,Discovery,2025-04-19
+SPR-00446,Discovery,Qualification,2025-04-24
+SPR-00446,Qualification,Technical Evaluation,2025-04-25
+SPR-00446,Technical Evaluation,Closed Lost,2025-05-10
+SPR-00447,,Discovery,2025-04-20
+SPR-00447,Discovery,Qualification,2025-04-26
+SPR-00447,Qualification,Technical Evaluation,2025-05-07
+SPR-00447,Technical Evaluation,Closed Lost,2025-06-27
+SPR-00448,,Discovery,2025-04-20
+SPR-00448,Discovery,Closed Lost,2025-05-21
+SPR-00449,,Discovery,2025-04-22
+SPR-00449,Discovery,Qualification,2025-05-17
+SPR-00449,Qualification,Closed Lost,2025-05-20
+SPR-00450,,Discovery,2025-04-23
+SPR-00450,Discovery,Closed Lost,2025-04-30
+SPR-00451,,Discovery,2025-04-24
+SPR-00451,Discovery,Qualification,2025-05-22
+SPR-00451,Qualification,Technical Evaluation,2025-07-05
+SPR-00451,Technical Evaluation,Closed Lost,2025-08-09
+SPR-00452,,Discovery,2025-04-25
+SPR-00452,Discovery,Closed Lost,2025-12-16
+SPR-00453,,Discovery,2025-04-28
+SPR-00453,Discovery,Qualification,2025-04-29
+SPR-00453,Qualification,Technical Evaluation,2025-06-09
+SPR-00453,Technical Evaluation,Business Case,2025-08-31
+SPR-00453,Business Case,Negotiation,2025-09-17
+SPR-00453,Negotiation,Closed Won,2025-10-05
+SPR-00454,,Discovery,2025-05-01
+SPR-00454,Discovery,Closed Lost,2025-05-28
+SPR-00455,,Discovery,2025-05-01
+SPR-00455,Discovery,Closed Lost,2025-05-12
+SPR-00456,,Discovery,2025-05-01
+SPR-00456,Discovery,Closed Lost,2025-05-17
+SPR-00457,,Discovery,2025-05-02
+SPR-00457,Discovery,Qualification,2025-05-16
+SPR-00457,Qualification,Technical Evaluation,2025-07-19
+SPR-00457,Technical Evaluation,Business Case,2025-09-17
+SPR-00457,Business Case,Negotiation,2025-10-01
+SPR-00457,Negotiation,Closed Won,2025-10-21
+SPR-00458,,Discovery,2025-05-04
+SPR-00458,Discovery,Qualification,2025-05-14
+SPR-00458,Qualification,Technical Evaluation,2025-06-10
+SPR-00458,Technical Evaluation,Closed Lost,2025-06-29
+SPR-00459,,Discovery,2025-05-05
+SPR-00459,Discovery,Qualification,2025-05-07
+SPR-00459,Qualification,Technical Evaluation,2025-05-26
+SPR-00459,Technical Evaluation,Business Case,2025-05-29
+SPR-00459,Business Case,Negotiation,2025-06-07
+SPR-00459,Negotiation,Closed Won,2025-07-29
+SPR-00460,,Discovery,2025-05-05
+SPR-00460,Discovery,Qualification,2025-05-07
+SPR-00460,Qualification,Closed Lost,2025-05-12
+SPR-00461,,Discovery,2025-05-06
+SPR-00461,Discovery,Qualification,2025-06-18
+SPR-00461,Qualification,Technical Evaluation,2025-09-13
+SPR-00461,Technical Evaluation,Business Case,2025-09-16
+SPR-00461,Business Case,Closed Lost,2025-10-09
+SPR-00462,,Discovery,2025-05-07
+SPR-00462,Discovery,Closed Lost,2025-07-06
+SPR-00463,,Discovery,2025-05-08
+SPR-00463,Discovery,Qualification,2025-05-24
+SPR-00463,Qualification,Closed Lost,2025-05-26
+SPR-00464,,Discovery,2025-05-10
+SPR-00464,Discovery,Closed Lost,2025-05-23
+SPR-00465,,Discovery,2025-05-10
+SPR-00465,Discovery,Qualification,2025-05-29
+SPR-00465,Qualification,Technical Evaluation,2025-06-12
+SPR-00465,Technical Evaluation,Business Case,2025-07-17
+SPR-00465,Business Case,Closed Lost,2025-07-24
+SPR-00466,,Discovery,2025-05-12
+SPR-00466,Discovery,Closed Lost,2025-05-26
+SPR-00467,,Discovery,2025-05-12
+SPR-00467,Discovery,Closed Lost,2025-05-16
+SPR-00468,,Discovery,2025-05-13
+SPR-00468,Discovery,Qualification,2025-05-30
+SPR-00468,Qualification,Technical Evaluation,2025-06-01
+SPR-00468,Technical Evaluation,Business Case,2025-06-13
+SPR-00468,Business Case,Negotiation,2025-06-25
+SPR-00468,Negotiation,Closed Won,2025-07-02
+SPR-00469,,Discovery,2025-05-14
+SPR-00469,Discovery,Closed Lost,2025-07-05
+SPR-00470,,Discovery,2025-05-15
+SPR-00470,Discovery,Closed Lost,2025-06-17
+SPR-00471,,Discovery,2025-05-16
+SPR-00471,Discovery,Closed Lost,2025-06-02
+SPR-00472,,Discovery,2025-05-17
+SPR-00472,Discovery,Closed Lost,2025-06-02
+SPR-00473,,Discovery,2025-05-18
+SPR-00473,Discovery,Closed Lost,2025-06-10
+SPR-00474,,Discovery,2025-05-18
+SPR-00474,Discovery,Qualification,2025-06-15
+SPR-00474,Qualification,Technical Evaluation,2025-07-23
+SPR-00474,Technical Evaluation,Business Case,2025-07-28
+SPR-00474,Business Case,Negotiation,2025-08-10
+SPR-00474,Negotiation,Closed Lost,2025-08-23
+SPR-00475,,Discovery,2025-05-19
+SPR-00475,Discovery,Closed Lost,2025-06-03
+SPR-00476,,Discovery,2025-05-19
+SPR-00476,Discovery,Closed Lost,2025-05-23
+SPR-00477,,Discovery,2025-05-20
+SPR-00477,Discovery,Qualification,2025-07-13
+SPR-00477,Qualification,Technical Evaluation,2025-07-25
+SPR-00477,Technical Evaluation,Closed Lost,2025-08-29
+SPR-00478,,Discovery,2025-05-20
+SPR-00478,Discovery,Qualification,2025-08-14
+SPR-00478,Qualification,Technical Evaluation,2025-08-23
+SPR-00478,Technical Evaluation,Business Case,2025-10-11
+SPR-00478,Business Case,Closed Lost,2025-10-31
+SPR-00479,,Discovery,2025-05-21
+SPR-00479,Discovery,Closed Lost,2025-05-22
+SPR-00480,,Discovery,2025-05-23
+SPR-00480,Discovery,Closed Lost,2025-06-01
+SPR-00481,,Discovery,2025-05-24
+SPR-00481,Discovery,Qualification,2025-08-01
+SPR-00481,Qualification,Closed Lost,2025-08-24
+SPR-00482,,Discovery,2025-05-24
+SPR-00482,Discovery,Closed Lost,2025-07-22
+SPR-00483,,Discovery,2025-05-24
+SPR-00483,Discovery,Closed Lost,2025-08-10
+SPR-00484,,Discovery,2025-05-26
+SPR-00484,Discovery,Closed Lost,2025-05-29
+SPR-00485,,Discovery,2025-05-26
+SPR-00485,Discovery,Qualification,2025-06-05
+SPR-00485,Qualification,Technical Evaluation,2025-07-18
+SPR-00485,Technical Evaluation,Business Case,2025-07-26
+SPR-00485,Business Case,Negotiation,2025-07-28
+SPR-00485,Negotiation,Closed Lost,2025-08-06
+SPR-00486,,Discovery,2025-05-26
+SPR-00486,Discovery,Qualification,2025-05-29
+SPR-00486,Qualification,Technical Evaluation,2025-06-30
+SPR-00486,Technical Evaluation,Business Case,2025-07-15
+SPR-00486,Business Case,Negotiation,2025-08-10
+SPR-00486,Negotiation,Closed Won,2025-09-10
+SPR-00487,,Discovery,2025-05-27
+SPR-00487,Discovery,Qualification,2025-05-30
+SPR-00487,Qualification,Closed Lost,2025-06-08
+SPR-00488,,Discovery,2025-05-27
+SPR-00488,Discovery,Closed Lost,2025-06-20
+SPR-00489,,Discovery,2025-05-28
+SPR-00489,Discovery,Closed Lost,2025-06-16
+SPR-00490,,Discovery,2025-05-30
+SPR-00490,Discovery,Qualification,2025-06-26
+SPR-00490,Qualification,Technical Evaluation,2025-09-24
+SPR-00490,Technical Evaluation,Business Case,2025-12-28
+SPR-00490,Business Case,Negotiation,2026-01-08
+SPR-00490,Negotiation,Closed Won,2026-01-19
+SPR-00491,,Discovery,2025-05-30
+SPR-00491,Discovery,Qualification,2025-06-12
+SPR-00491,Qualification,Closed Lost,2025-09-03
+SPR-00492,,Discovery,2025-05-30
+SPR-00492,Discovery,Closed Lost,2025-05-31
+SPR-00493,,Discovery,2025-05-30
+SPR-00493,Discovery,Closed Lost,2025-06-15
+SPR-00494,,Discovery,2025-05-31
+SPR-00494,Discovery,Qualification,2025-07-12
+SPR-00494,Qualification,Technical Evaluation,2025-08-08
+SPR-00494,Technical Evaluation,Business Case,2025-08-15
+SPR-00494,Business Case,Negotiation,2025-09-21
+SPR-00494,Negotiation,Closed Won,2025-10-03
+SPR-00495,,Discovery,2025-05-31
+SPR-00495,Discovery,Closed Lost,2025-06-23
+SPR-00496,,Discovery,2025-06-01
+SPR-00496,Discovery,Qualification,2025-06-07
+SPR-00496,Qualification,Technical Evaluation,2025-09-15
+SPR-00496,Technical Evaluation,Business Case,2025-09-17
+SPR-00496,Business Case,Negotiation,2025-09-23
+SPR-00496,Negotiation,Closed Won,2025-09-27
+SPR-00497,,Discovery,2025-06-01
+SPR-00497,Discovery,Closed Lost,2025-06-15
+SPR-00498,,Discovery,2025-06-02
+SPR-00498,Discovery,Closed Lost,2025-06-11
+SPR-00499,,Discovery,2025-06-03
+SPR-00499,Discovery,Closed Lost,2025-06-27
+SPR-00500,,Discovery,2025-06-03
+SPR-00500,Discovery,Qualification,2025-06-06
+SPR-00500,Qualification,Technical Evaluation,2025-06-07
+SPR-00500,Technical Evaluation,Business Case,2025-06-12
+SPR-00500,Business Case,Negotiation,2025-06-16
+SPR-00500,Negotiation,Closed Won,2025-07-23
+SPR-00501,,Discovery,2025-06-03
+SPR-00501,Discovery,Closed Lost,2025-06-14
+SPR-00502,,Discovery,2025-06-05
+SPR-00502,Discovery,Closed Lost,2026-01-23
+SPR-00503,,Discovery,2025-06-06
+SPR-00503,Discovery,Qualification,2025-07-03
+SPR-00503,Qualification,Closed Lost,2025-07-21
+SPR-00504,,Discovery,2025-06-06
+SPR-00504,Discovery,Closed Lost,2025-08-16
+SPR-00505,,Discovery,2025-06-08
+SPR-00505,Discovery,Qualification,2025-09-01
+SPR-00505,Qualification,Technical Evaluation,2025-10-06
+SPR-00505,Technical Evaluation,Business Case,2025-10-08
+SPR-00505,Business Case,Negotiation,2025-10-09
+SPR-00505,Negotiation,Closed Won,2025-10-19
+SPR-00506,,Discovery,2025-06-09
+SPR-00506,Discovery,Qualification,2025-06-17
+SPR-00506,Qualification,Technical Evaluation,2025-06-20
+SPR-00506,Technical Evaluation,Business Case,2025-07-08
+SPR-00506,Business Case,Negotiation,2025-07-29
+SPR-00506,Negotiation,Closed Won,2025-08-06
+SPR-00507,,Discovery,2025-06-09
+SPR-00507,Discovery,Qualification,2025-06-11
+SPR-00507,Qualification,Technical Evaluation,2025-08-15
+SPR-00507,Technical Evaluation,Business Case,2025-11-06
+SPR-00507,Business Case,Negotiation,2025-11-15
+SPR-00507,Negotiation,Closed Won,2025-12-22
+SPR-00508,,Discovery,2025-06-09
+SPR-00508,Discovery,Qualification,2025-06-30
+SPR-00508,Qualification,Closed Lost,2025-08-04
+SPR-00509,,Discovery,2025-06-11
+SPR-00509,Discovery,Closed Lost,2025-06-14
+SPR-00510,,Discovery,2025-06-14
+SPR-00510,Discovery,Qualification,2025-07-20
+SPR-00510,Qualification,Technical Evaluation,2025-09-06
+SPR-00510,Technical Evaluation,Closed Lost,2025-11-03
+SPR-00511,,Discovery,2025-06-15
+SPR-00511,Discovery,Closed Lost,2025-06-29
+SPR-00512,,Discovery,2025-06-17
+SPR-00512,Discovery,Closed Lost,2025-07-16
+SPR-00513,,Discovery,2025-06-18
+SPR-00513,Discovery,Qualification,2025-06-23
+SPR-00513,Qualification,Technical Evaluation,2025-09-08
+SPR-00513,Technical Evaluation,Business Case,2025-10-03
+SPR-00513,Business Case,Closed Lost,2025-10-20
+SPR-00514,,Discovery,2025-06-18
+SPR-00514,Discovery,Closed Lost,2025-06-26
+SPR-00515,,Discovery,2025-06-20
+SPR-00515,Discovery,Closed Lost,2025-06-23
+SPR-00517,,Discovery,2025-06-23
+SPR-00517,Discovery,Closed Lost,2025-06-29
+SPR-00518,,Discovery,2025-06-24
+SPR-00518,Discovery,Qualification,2025-08-17
+SPR-00518,Qualification,Technical Evaluation,2025-08-29
+SPR-00518,Technical Evaluation,Business Case,2026-02-17
+SPR-00518,Business Case,Negotiation,2026-02-19
+SPR-00518,Negotiation,Closed Won,2026-03-11
+SPR-00519,,Discovery,2025-06-24
+SPR-00519,Discovery,Qualification,2025-09-26
+SPR-00519,Qualification,Technical Evaluation,2025-09-30
+SPR-00519,Technical Evaluation,Business Case,2025-10-15
+SPR-00519,Business Case,Negotiation,2025-10-17
+SPR-00519,Negotiation,Closed Won,2025-11-05
+SPR-00520,,Discovery,2025-06-28
+SPR-00520,Discovery,Qualification,2025-07-20
+SPR-00520,Qualification,Technical Evaluation,2025-07-30
+SPR-00520,Technical Evaluation,Closed Lost,2025-09-19
+SPR-00521,,Discovery,2025-06-30
+SPR-00521,Discovery,Qualification,2025-07-07
+SPR-00521,Qualification,Technical Evaluation,2025-07-13
+SPR-00521,Technical Evaluation,Closed Lost,2025-09-05
+SPR-00522,,Discovery,2025-07-01
+SPR-00522,Discovery,Qualification,2025-07-11
+SPR-00522,Qualification,Technical Evaluation,2025-07-22
+SPR-00522,Technical Evaluation,Closed Lost,2025-08-13
+SPR-00523,,Discovery,2025-07-02
+SPR-00523,Discovery,Qualification,2025-07-14
+SPR-00523,Qualification,Technical Evaluation,2025-08-16
+SPR-00523,Technical Evaluation,Business Case,2025-11-12
+SPR-00523,Business Case,Negotiation,2025-11-19
+SPR-00523,Negotiation,Closed Won,2025-11-20
+SPR-00524,,Discovery,2025-07-03
+SPR-00524,Discovery,Qualification,2025-08-18
+SPR-00524,Qualification,Technical Evaluation,2025-09-21
+SPR-00524,Technical Evaluation,Business Case,2025-09-30
+SPR-00524,Business Case,Negotiation,2025-10-12
+SPR-00524,Negotiation,Closed Won,2025-10-30
+SPR-00525,,Discovery,2025-07-03
+SPR-00525,Discovery,Qualification,2025-07-12
+SPR-00525,Qualification,Technical Evaluation,2025-08-19
+SPR-00525,Technical Evaluation,Business Case,2025-09-10
+SPR-00525,Business Case,Negotiation,2025-10-01
+SPR-00525,Negotiation,Closed Lost,2025-10-13
+SPR-00526,,Discovery,2025-07-05
+SPR-00526,Discovery,Qualification,2025-07-06
+SPR-00526,Qualification,Technical Evaluation,2025-07-10
+SPR-00526,Technical Evaluation,Business Case,2025-07-16
+SPR-00526,Business Case,Closed Lost,2025-08-25
+SPR-00527,,Discovery,2025-07-10
+SPR-00527,Discovery,Qualification,2025-07-21
+SPR-00527,Qualification,Technical Evaluation,2025-07-28
+SPR-00527,Technical Evaluation,Closed Lost,2025-09-01
+SPR-00528,,Discovery,2025-07-10
+SPR-00528,Discovery,Qualification,2025-08-07
+SPR-00528,Qualification,Technical Evaluation,2025-08-19
+SPR-00529,,Discovery,2025-07-11
+SPR-00529,Discovery,Closed Lost,2025-07-18
+SPR-00530,,Discovery,2025-07-14
+SPR-00530,Discovery,Closed Lost,2025-08-08
+SPR-00531,,Discovery,2025-07-17
+SPR-00531,Discovery,Qualification,2025-09-26
+SPR-00531,Qualification,Technical Evaluation,2025-10-18
+SPR-00531,Technical Evaluation,Business Case,2025-10-22
+SPR-00531,Business Case,Negotiation,2025-11-07
+SPR-00531,Negotiation,Closed Won,2025-11-24
+SPR-00532,,Discovery,2025-07-17
+SPR-00532,Discovery,Closed Lost,2025-08-10
+SPR-00533,,Discovery,2025-07-17
+SPR-00533,Discovery,Qualification,2025-07-18
+SPR-00533,Qualification,Technical Evaluation,2025-08-07
+SPR-00533,Technical Evaluation,Business Case,2025-08-11
+SPR-00533,Business Case,Closed Lost,2025-08-21
+SPR-00534,,Discovery,2025-07-19
+SPR-00534,Discovery,Qualification,2025-07-24
+SPR-00534,Qualification,Closed Lost,2025-07-26
+SPR-00535,,Discovery,2025-07-20
+SPR-00535,Discovery,Qualification,2025-07-28
+SPR-00535,Qualification,Technical Evaluation,2025-08-05
+SPR-00535,Technical Evaluation,Business Case,2025-10-18
+SPR-00535,Business Case,Negotiation,2025-11-16
+SPR-00535,Negotiation,Closed Won,2025-11-17
+SPR-00536,,Discovery,2025-07-22
+SPR-00536,Discovery,Qualification,2025-09-09
+SPR-00536,Qualification,Technical Evaluation,2025-10-29
+SPR-00536,Technical Evaluation,Business Case,2025-11-08
+SPR-00536,Business Case,Closed Lost,2025-11-20
+SPR-00537,,Discovery,2025-07-23
+SPR-00537,Discovery,Closed Lost,2025-07-27
+SPR-00538,,Discovery,2025-07-24
+SPR-00538,Discovery,Closed Lost,2025-07-27
+SPR-00539,,Discovery,2025-07-27
+SPR-00539,Discovery,Closed Lost,2025-09-03
+SPR-00540,,Discovery,2025-07-27
+SPR-00540,Discovery,Qualification,2025-08-07
+SPR-00540,Qualification,Technical Evaluation,2025-09-26
+SPR-00540,Technical Evaluation,Business Case,2025-10-31
+SPR-00540,Business Case,Negotiation,2025-11-04
+SPR-00540,Negotiation,Closed Won,2025-11-06
+SPR-00541,,Discovery,2025-07-28
+SPR-00541,Discovery,Qualification,2025-08-26
+SPR-00541,Qualification,Closed Lost,2025-09-16
+SPR-00542,,Discovery,2025-07-28
+SPR-00542,Discovery,Qualification,2025-08-04
+SPR-00542,Qualification,Closed Lost,2025-08-31
+SPR-00543,,Discovery,2025-07-29
+SPR-00543,Discovery,Closed Lost,2025-09-22
+SPR-00544,,Discovery,2025-07-31
+SPR-00544,Discovery,Closed Lost,2025-08-31
+SPR-00545,,Discovery,2025-07-31
+SPR-00545,Discovery,Qualification,2025-08-03
+SPR-00545,Qualification,Closed Lost,2025-08-07
+SPR-00546,,Discovery,2025-08-02
+SPR-00546,Discovery,Qualification,2025-08-08
+SPR-00546,Qualification,Closed Lost,2025-08-20
+SPR-00547,,Discovery,2025-08-02
+SPR-00547,Discovery,Qualification,2025-08-09
+SPR-00547,Qualification,Closed Lost,2025-09-04
+SPR-00548,,Discovery,2025-08-02
+SPR-00548,Discovery,Qualification,2025-08-25
+SPR-00548,Qualification,Closed Lost,2025-09-15
+SPR-00549,,Discovery,2025-08-03
+SPR-00549,Discovery,Qualification,2025-08-08
+SPR-00549,Qualification,Closed Lost,2025-10-15
+SPR-00550,,Discovery,2025-08-03
+SPR-00550,Discovery,Qualification,2025-08-25
+SPR-00550,Qualification,Closed Lost,2025-09-04
+SPR-00551,,Discovery,2025-08-03
+SPR-00551,Discovery,Closed Lost,2025-09-05
+SPR-00552,,Discovery,2025-08-04
+SPR-00552,Discovery,Closed Lost,2025-08-16
+SPR-00553,,Discovery,2025-08-06
+SPR-00553,Discovery,Qualification,2025-08-10
+SPR-00553,Qualification,Closed Lost,2025-11-24
+SPR-00554,,Discovery,2025-08-07
+SPR-00554,Discovery,Closed Lost,2025-08-09
+SPR-00555,,Discovery,2025-08-08
+SPR-00555,Discovery,Qualification,2025-11-07
+SPR-00555,Qualification,Technical Evaluation,2025-11-08
+SPR-00555,Technical Evaluation,Business Case,2025-12-08
+SPR-00555,Business Case,Negotiation,2026-01-15
+SPR-00555,Negotiation,Closed Won,2026-04-05
+SPR-00556,,Discovery,2025-08-09
+SPR-00556,Discovery,Closed Lost,2025-10-03
+SPR-00557,,Discovery,2025-08-09
+SPR-00557,Discovery,Closed Lost,2025-09-08
+SPR-00558,,Discovery,2025-08-10
+SPR-00558,Discovery,Closed Lost,2025-09-10
+SPR-00559,,Discovery,2025-08-10
+SPR-00559,Discovery,Closed Lost,2025-10-07
+SPR-00560,,Discovery,2025-08-13
+SPR-00560,Discovery,Qualification,2025-08-28
+SPR-00561,,Discovery,2025-08-13
+SPR-00561,Discovery,Qualification,2025-09-21
+SPR-00561,Qualification,Technical Evaluation,2025-10-03
+SPR-00561,Technical Evaluation,Business Case,2025-10-04
+SPR-00561,Business Case,Negotiation,2025-10-05
+SPR-00561,Negotiation,Closed Lost,2025-10-09
+SPR-00562,,Discovery,2025-08-14
+SPR-00562,Discovery,Closed Lost,2025-08-15
+SPR-00563,,Discovery,2025-08-15
+SPR-00563,Discovery,Qualification,2025-08-27
+SPR-00563,Qualification,Closed Lost,2025-09-26
+SPR-00564,,Discovery,2025-08-15
+SPR-00564,Discovery,Closed Lost,2025-08-19
+SPR-00565,,Discovery,2025-08-15
+SPR-00565,Discovery,Closed Lost,2025-08-30
+SPR-00566,,Discovery,2025-08-15
+SPR-00566,Discovery,Qualification,2025-08-27
+SPR-00566,Qualification,Technical Evaluation,2025-09-23
+SPR-00566,Technical Evaluation,Closed Lost,2025-12-09
+SPR-00567,,Discovery,2025-08-16
+SPR-00567,Discovery,Closed Lost,2025-08-17
+SPR-00568,,Discovery,2025-08-17
+SPR-00568,Discovery,Qualification,2025-09-24
+SPR-00568,Qualification,Technical Evaluation,2025-09-29
+SPR-00568,Technical Evaluation,Business Case,2025-10-03
+SPR-00568,Business Case,Negotiation,2025-10-05
+SPR-00568,Negotiation,Closed Won,2025-10-18
+SPR-00569,,Discovery,2025-08-18
+SPR-00569,Discovery,Closed Lost,2025-08-21
+SPR-00570,,Discovery,2025-08-19
+SPR-00570,Discovery,Qualification,2025-10-10
+SPR-00570,Qualification,Technical Evaluation,2025-11-23
+SPR-00570,Technical Evaluation,Business Case,2025-12-29
+SPR-00570,Business Case,Negotiation,2026-01-11
+SPR-00570,Negotiation,Closed Won,2026-01-20
+SPR-00571,,Discovery,2025-08-19
+SPR-00571,Discovery,Qualification,2025-08-24
+SPR-00571,Qualification,Closed Lost,2025-08-31
+SPR-00572,,Discovery,2025-08-20
+SPR-00572,Discovery,Qualification,2025-08-24
+SPR-00572,Qualification,Closed Lost,2025-09-23
+SPR-00573,,Discovery,2025-08-20
+SPR-00573,Discovery,Qualification,2025-08-23
+SPR-00573,Qualification,Technical Evaluation,2025-09-27
+SPR-00573,Technical Evaluation,Business Case,2025-10-04
+SPR-00573,Business Case,Negotiation,2025-11-17
+SPR-00573,Negotiation,Closed Lost,2025-11-29
+SPR-00574,,Discovery,2025-08-22
+SPR-00574,Discovery,Qualification,2025-11-11
+SPR-00574,Qualification,Closed Lost,2026-01-12
+SPR-00575,,Discovery,2025-08-22
+SPR-00575,Discovery,Closed Lost,2025-08-26
+SPR-00576,,Discovery,2025-08-22
+SPR-00576,Discovery,Qualification,2025-08-25
+SPR-00576,Qualification,Technical Evaluation,2025-09-20
+SPR-00576,Technical Evaluation,Business Case,2025-09-22
+SPR-00576,Business Case,Negotiation,2025-12-02
+SPR-00576,Negotiation,Closed Won,2025-12-23
+SPR-00577,,Discovery,2025-08-22
+SPR-00577,Discovery,Closed Lost,2025-08-23
+SPR-00578,,Discovery,2025-08-23
+SPR-00578,Discovery,Closed Lost,2025-09-04
+SPR-00579,,Discovery,2025-08-23
+SPR-00579,Discovery,Closed Lost,2025-09-26
+SPR-00580,,Discovery,2025-08-24
+SPR-00580,Discovery,Closed Lost,2025-08-31
+SPR-00581,,Discovery,2025-08-24
+SPR-00581,Discovery,Closed Lost,2025-08-27
+SPR-00582,,Discovery,2025-08-25
+SPR-00582,Discovery,Qualification,2025-09-14
+SPR-00582,Qualification,Technical Evaluation,2025-10-18
+SPR-00582,Technical Evaluation,Business Case,2025-11-06
+SPR-00582,Business Case,Closed Lost,2025-11-26
+SPR-00583,,Discovery,2025-08-26
+SPR-00583,Discovery,Qualification,2025-08-27
+SPR-00583,Qualification,Technical Evaluation,2025-08-29
+SPR-00583,Technical Evaluation,Closed Lost,2025-09-03
+SPR-00584,,Discovery,2025-08-27
+SPR-00584,Discovery,Qualification,2025-08-30
+SPR-00585,,Discovery,2025-08-27
+SPR-00585,Discovery,Closed Lost,2025-09-01
+SPR-00586,,Discovery,2025-08-31
+SPR-00586,Discovery,Closed Lost,2025-09-12
+SPR-00587,,Discovery,2025-08-31
+SPR-00587,Discovery,Qualification,2025-09-11
+SPR-00587,Qualification,Technical Evaluation,2025-10-10
+SPR-00587,Technical Evaluation,Closed Lost,2026-02-23
+SPR-00588,,Discovery,2025-08-31
+SPR-00588,Discovery,Closed Lost,2025-09-13
+SPR-00589,,Discovery,2025-09-01
+SPR-00589,Discovery,Closed Lost,2025-09-11
+SPR-00590,,Discovery,2025-09-01
+SPR-00590,Discovery,Qualification,2026-01-01
+SPR-00590,Qualification,Technical Evaluation,2026-02-06
+SPR-00590,Technical Evaluation,Closed Lost,2026-02-14
+SPR-00591,,Discovery,2025-09-02
+SPR-00591,Discovery,Closed Lost,2025-10-05
+SPR-00592,,Discovery,2025-09-02
+SPR-00592,Discovery,Closed Lost,2025-10-07
+SPR-00593,,Discovery,2025-09-02
+SPR-00593,Discovery,Qualification,2025-09-11
+SPR-00593,Qualification,Technical Evaluation,2025-09-18
+SPR-00593,Technical Evaluation,Business Case,2025-10-22
+SPR-00593,Business Case,Negotiation,2026-05-13
+SPR-00593,Negotiation,Closed Won,2026-06-11
+SPR-00594,,Discovery,2025-09-02
+SPR-00594,Discovery,Closed Lost,2025-09-10
+SPR-00595,,Discovery,2025-09-02
+SPR-00595,Discovery,Qualification,2025-10-02
+SPR-00595,Qualification,Technical Evaluation,2025-10-29
+SPR-00595,Technical Evaluation,Business Case,2026-07-08
+SPR-00595,Business Case,Negotiation,2026-07-14
+SPR-00595,Negotiation,Closed Won,2026-07-15
+SPR-00596,,Discovery,2025-09-03
+SPR-00596,Discovery,Closed Lost,2025-09-12
+SPR-00597,,Discovery,2025-09-05
+SPR-00597,Discovery,Qualification,2025-09-11
+SPR-00597,Qualification,Closed Lost,2025-09-15
+SPR-00599,,Discovery,2025-09-06
+SPR-00599,Discovery,Qualification,2025-09-11
+SPR-00599,Qualification,Technical Evaluation,2025-10-11
+SPR-00599,Technical Evaluation,Closed Lost,2025-10-18
+SPR-00600,,Discovery,2025-09-06
+SPR-00600,Discovery,Qualification,2025-09-22
+SPR-00600,Qualification,Closed Lost,2025-10-02
+SPR-00601,,Discovery,2025-09-06
+SPR-00601,Discovery,Qualification,2025-09-12
+SPR-00601,Qualification,Closed Lost,2025-09-28
+SPR-00602,,Discovery,2025-09-06
+SPR-00602,Discovery,Qualification,2025-09-20
+SPR-00602,Qualification,Technical Evaluation,2025-10-01
+SPR-00602,Technical Evaluation,Business Case,2025-10-11
+SPR-00602,Business Case,Negotiation,2025-10-12
+SPR-00602,Negotiation,Closed Won,2025-10-22
+SPR-00603,,Discovery,2025-09-06
+SPR-00603,Discovery,Closed Lost,2025-11-05
+SPR-00604,,Discovery,2025-09-07
+SPR-00604,Discovery,Qualification,2025-09-10
+SPR-00604,Qualification,Technical Evaluation,2025-09-18
+SPR-00604,Technical Evaluation,Business Case,2025-10-28
+SPR-00604,Business Case,Negotiation,2025-11-23
+SPR-00604,Negotiation,Closed Won,2025-11-30
+SPR-00605,,Discovery,2025-09-08
+SPR-00605,Discovery,Closed Lost,2025-10-02
+SPR-00606,,Discovery,2025-09-09
+SPR-00606,Discovery,Qualification,2025-09-16
+SPR-00606,Qualification,Technical Evaluation,2025-10-05
+SPR-00606,Technical Evaluation,Business Case,2025-10-28
+SPR-00606,Business Case,Negotiation,2025-10-30
+SPR-00606,Negotiation,Closed Won,2025-10-31
+SPR-00607,,Discovery,2025-09-09
+SPR-00607,Discovery,Qualification,2025-09-15
+SPR-00607,Qualification,Technical Evaluation,2025-09-21
+SPR-00607,Technical Evaluation,Closed Lost,2025-12-24
+SPR-00608,,Discovery,2025-09-09
+SPR-00608,Discovery,Closed Lost,2025-10-24
+SPR-00609,,Discovery,2025-09-09
+SPR-00609,Discovery,Qualification,2025-09-30
+SPR-00609,Qualification,Closed Lost,2025-10-26
+SPR-00610,,Discovery,2025-09-10
+SPR-00610,Discovery,Closed Lost,2025-09-23
+SPR-00611,,Discovery,2025-09-11
+SPR-00611,Discovery,Qualification,2025-10-03
+SPR-00611,Qualification,Technical Evaluation,2025-12-27
+SPR-00611,Technical Evaluation,Business Case,2026-01-16
+SPR-00611,Business Case,Negotiation,2026-02-09
+SPR-00611,Negotiation,Closed Won,2026-02-10
+SPR-00612,,Discovery,2025-09-14
+SPR-00612,Discovery,Qualification,2025-09-28
+SPR-00612,Qualification,Technical Evaluation,2025-10-02
+SPR-00612,Technical Evaluation,Business Case,2025-10-18
+SPR-00612,Business Case,Negotiation,2025-11-15
+SPR-00612,Negotiation,Closed Won,2025-11-19
+SPR-00613,,Discovery,2025-09-15
+SPR-00613,Discovery,Qualification,2025-12-01
+SPR-00613,Qualification,Technical Evaluation,2026-01-01
+SPR-00613,Technical Evaluation,Closed Lost,2026-02-25
+SPR-00614,,Discovery,2025-09-15
+SPR-00614,Discovery,Closed Lost,2025-09-21
+SPR-00615,,Discovery,2025-09-16
+SPR-00615,Discovery,Closed Lost,2025-09-29
+SPR-00616,,Discovery,2025-09-17
+SPR-00616,Discovery,Closed Lost,2025-10-29
+SPR-00617,,Discovery,2025-09-18
+SPR-00617,Discovery,Qualification,2025-09-25
+SPR-00617,Qualification,Technical Evaluation,2025-09-29
+SPR-00617,Technical Evaluation,Closed Lost,2025-10-22
+SPR-00618,,Discovery,2025-09-20
+SPR-00618,Discovery,Qualification,2025-10-05
+SPR-00618,Qualification,Closed Lost,2025-10-30
+SPR-00619,,Discovery,2025-09-21
+SPR-00619,Discovery,Qualification,2025-11-12
+SPR-00619,Qualification,Closed Lost,2025-11-15
+SPR-00620,,Discovery,2025-09-21
+SPR-00620,Discovery,Qualification,2025-10-05
+SPR-00620,Qualification,Technical Evaluation,2025-10-17
+SPR-00620,Technical Evaluation,Business Case,2025-11-05
+SPR-00620,Business Case,Negotiation,2025-12-11
+SPR-00620,Negotiation,Closed Won,2025-12-18
+SPR-00621,,Discovery,2025-09-21
+SPR-00621,Discovery,Qualification,2025-10-15
+SPR-00621,Qualification,Technical Evaluation,2025-10-16
+SPR-00621,Technical Evaluation,Closed Lost,2025-10-25
+SPR-00622,,Discovery,2025-09-24
+SPR-00622,Discovery,Closed Lost,2025-10-08
+SPR-00623,,Discovery,2025-09-26
+SPR-00623,Discovery,Qualification,2025-10-07
+SPR-00623,Qualification,Technical Evaluation,2025-11-20
+SPR-00623,Technical Evaluation,Closed Lost,2025-11-29
+SPR-00624,,Discovery,2025-09-26
+SPR-00624,Discovery,Qualification,2025-11-12
+SPR-00624,Qualification,Technical Evaluation,2025-11-25
+SPR-00624,Technical Evaluation,Business Case,2025-11-30
+SPR-00624,Business Case,Negotiation,2025-12-31
+SPR-00624,Negotiation,Closed Won,2026-01-06
+SPR-00625,,Discovery,2025-09-27
+SPR-00625,Discovery,Closed Lost,2025-10-29
+SPR-00626,,Discovery,2025-09-27
+SPR-00626,Discovery,Closed Lost,2025-11-07
+SPR-00627,,Discovery,2025-09-28
+SPR-00627,Discovery,Closed Lost,2025-10-15
+SPR-00628,,Discovery,2025-09-28
+SPR-00628,Discovery,Qualification,2026-02-14
+SPR-00628,Qualification,Technical Evaluation,2026-05-02
+SPR-00628,Technical Evaluation,Business Case,2026-05-18
+SPR-00628,Business Case,Closed Lost,2026-05-20
+SPR-00629,,Discovery,2025-09-30
+SPR-00629,Discovery,Closed Lost,2025-10-20
+SPR-00630,,Discovery,2025-10-02
+SPR-00630,Discovery,Closed Lost,2025-10-17
+SPR-00631,,Discovery,2025-10-03
+SPR-00631,Discovery,Qualification,2025-10-10
+SPR-00631,Qualification,Technical Evaluation,2025-10-29
+SPR-00631,Technical Evaluation,Business Case,2025-11-22
+SPR-00631,Business Case,Negotiation,2025-12-16
+SPR-00631,Negotiation,Closed Won,2025-12-22
+SPR-00632,,Discovery,2025-10-03
+SPR-00632,Discovery,Qualification,2025-10-22
+SPR-00632,Qualification,Technical Evaluation,2025-10-25
+SPR-00632,Technical Evaluation,Business Case,2025-11-15
+SPR-00632,Business Case,Negotiation,2026-01-10
+SPR-00632,Negotiation,Closed Won,2026-01-11
+SPR-00633,,Discovery,2025-10-04
+SPR-00633,Discovery,Closed Lost,2025-10-21
+SPR-00634,,Discovery,2025-10-05
+SPR-00634,Discovery,Closed Lost,2025-10-12
+SPR-00635,,Discovery,2025-10-06
+SPR-00635,Discovery,Qualification,2025-10-21
+SPR-00635,Qualification,Technical Evaluation,2025-10-25
+SPR-00635,Technical Evaluation,Closed Lost,2025-11-02
+SPR-00636,,Discovery,2025-10-06
+SPR-00636,Discovery,Qualification,2025-10-11
+SPR-00636,Qualification,Closed Lost,2025-10-14
+SPR-00637,,Discovery,2025-10-07
+SPR-00637,Discovery,Qualification,2026-08-05
+SPR-00638,,Discovery,2025-10-08
+SPR-00638,Discovery,Qualification,2025-10-09
+SPR-00638,Qualification,Technical Evaluation,2025-11-07
+SPR-00638,Technical Evaluation,Business Case,2025-11-14
+SPR-00638,Business Case,Negotiation,2025-11-18
+SPR-00638,Negotiation,Closed Won,2025-11-19
+SPR-00639,,Discovery,2025-10-09
+SPR-00639,Discovery,Qualification,2025-11-03
+SPR-00639,Qualification,Technical Evaluation,2025-11-07
+SPR-00639,Technical Evaluation,Business Case,2025-11-20
+SPR-00639,Business Case,Negotiation,2025-11-21
+SPR-00639,Negotiation,Closed Won,2025-11-23
+SPR-00640,,Discovery,2025-10-11
+SPR-00640,Discovery,Closed Lost,2025-10-15
+SPR-00641,,Discovery,2025-10-11
+SPR-00641,Discovery,Qualification,2025-11-01
+SPR-00641,Qualification,Technical Evaluation,2025-11-02
+SPR-00641,Technical Evaluation,Business Case,2025-11-18
+SPR-00641,Business Case,Negotiation,2025-11-30
+SPR-00641,Negotiation,Closed Won,2025-12-08
+SPR-00642,,Discovery,2025-10-13
+SPR-00642,Discovery,Qualification,2025-11-28
+SPR-00642,Qualification,Technical Evaluation,2025-12-18
+SPR-00642,Technical Evaluation,Business Case,2025-12-30
+SPR-00642,Business Case,Negotiation,2026-02-24
+SPR-00642,Negotiation,Closed Lost,2026-03-20
+SPR-00643,,Discovery,2025-10-14
+SPR-00643,Discovery,Closed Lost,2025-10-17
+SPR-00644,,Discovery,2025-10-14
+SPR-00644,Discovery,Qualification,2025-11-17
+SPR-00644,Qualification,Closed Lost,2025-12-20
+SPR-00645,,Discovery,2025-10-16
+SPR-00645,Discovery,Closed Lost,2025-10-21
+SPR-00646,,Discovery,2025-10-16
+SPR-00646,Discovery,Qualification,2025-12-06
+SPR-00646,Qualification,Closed Lost,2026-01-14
+SPR-00647,,Discovery,2025-10-17
+SPR-00647,Discovery,Qualification,2025-11-06
+SPR-00647,Qualification,Closed Lost,2026-02-09
+SPR-00648,,Discovery,2025-10-17
+SPR-00648,Discovery,Closed Lost,2025-10-22
+SPR-00649,,Discovery,2025-10-18
+SPR-00649,Discovery,Closed Lost,2025-11-05
+SPR-00650,,Discovery,2025-10-18
+SPR-00650,Discovery,Closed Lost,2025-10-21
+SPR-00651,,Discovery,2025-10-19
+SPR-00651,Discovery,Qualification,2025-10-21
+SPR-00651,Qualification,Technical Evaluation,2025-12-07
+SPR-00651,Technical Evaluation,Business Case,2025-12-14
+SPR-00651,Business Case,Closed Lost,2026-05-24
+SPR-00652,,Discovery,2025-10-19
+SPR-00652,Discovery,Closed Lost,2025-11-12
+SPR-00653,,Discovery,2025-10-19
+SPR-00653,Discovery,Qualification,2025-11-15
+SPR-00653,Qualification,Closed Lost,2025-11-16
+SPR-00654,,Discovery,2025-10-19
+SPR-00654,Discovery,Closed Lost,2025-11-29
+SPR-00656,,Discovery,2025-10-22
+SPR-00656,Discovery,Qualification,2025-10-28
+SPR-00656,Qualification,Technical Evaluation,2025-11-25
+SPR-00656,Technical Evaluation,Business Case,2025-12-28
+SPR-00656,Business Case,Closed Lost,2025-12-30
+SPR-00657,,Discovery,2025-10-22
+SPR-00657,Discovery,Closed Lost,2025-12-16
+SPR-00658,,Discovery,2025-10-23
+SPR-00658,Discovery,Qualification,2025-11-17
+SPR-00658,Qualification,Technical Evaluation,2026-06-25
+SPR-00658,Technical Evaluation,Business Case,2026-07-29
+SPR-00658,Business Case,Negotiation,2026-08-26
+SPR-00659,,Discovery,2025-10-24
+SPR-00659,Discovery,Qualification,2026-01-27
+SPR-00659,Qualification,Closed Lost,2026-02-14
+SPR-00660,,Discovery,2025-10-24
+SPR-00660,Discovery,Closed Lost,2025-10-26
+SPR-00661,,Discovery,2025-10-24
+SPR-00661,Discovery,Closed Lost,2025-11-26
+SPR-00662,,Discovery,2025-10-25
+SPR-00662,Discovery,Qualification,2025-11-27
+SPR-00662,Qualification,Technical Evaluation,2025-11-29
+SPR-00662,Technical Evaluation,Business Case,2026-01-04
+SPR-00662,Business Case,Negotiation,2026-01-20
+SPR-00662,Negotiation,Closed Won,2026-01-30
+SPR-00663,,Discovery,2025-10-25
+SPR-00663,Discovery,Closed Lost,2025-11-11
+SPR-00664,,Discovery,2025-10-25
+SPR-00664,Discovery,Qualification,2025-11-06
+SPR-00664,Qualification,Closed Lost,2025-11-17
+SPR-00665,,Discovery,2025-10-25
+SPR-00665,Discovery,Closed Lost,2025-11-06
+SPR-00666,,Discovery,2025-10-27
+SPR-00666,Discovery,Closed Lost,2025-10-29
+SPR-00667,,Discovery,2025-10-28
+SPR-00667,Discovery,Qualification,2025-11-05
+SPR-00667,Qualification,Technical Evaluation,2025-11-22
+SPR-00667,Technical Evaluation,Closed Lost,2026-01-27
+SPR-00668,,Discovery,2025-10-28
+SPR-00668,Discovery,Qualification,2025-11-12
+SPR-00668,Qualification,Technical Evaluation,2025-12-15
+SPR-00668,Technical Evaluation,Business Case,2026-01-12
+SPR-00668,Business Case,Negotiation,2026-02-17
+SPR-00668,Negotiation,Closed Won,2026-03-27
+SPR-00669,,Discovery,2025-10-29
+SPR-00669,Discovery,Closed Lost,2025-11-01
+SPR-00670,,Discovery,2025-10-30
+SPR-00670,Discovery,Closed Lost,2025-11-24
+SPR-00671,,Discovery,2025-11-01
+SPR-00671,Discovery,Qualification,2025-11-03
+SPR-00671,Qualification,Technical Evaluation,2025-12-21
+SPR-00671,Technical Evaluation,Business Case,2026-01-08
+SPR-00671,Business Case,Negotiation,2026-02-07
+SPR-00671,Negotiation,Closed Won,2026-03-16
+SPR-00673,,Discovery,2025-11-01
+SPR-00673,Discovery,Qualification,2026-01-03
+SPR-00673,Qualification,Technical Evaluation,2026-02-15
+SPR-00673,Technical Evaluation,Business Case,2026-02-16
+SPR-00673,Business Case,Negotiation,2026-02-21
+SPR-00673,Negotiation,Closed Won,2026-03-04
+SPR-00674,,Discovery,2025-11-02
+SPR-00674,Discovery,Closed Lost,2025-11-07
+SPR-00675,,Discovery,2025-11-03
+SPR-00675,Discovery,Qualification,2025-12-22
+SPR-00675,Qualification,Technical Evaluation,2026-01-09
+SPR-00675,Technical Evaluation,Closed Lost,2026-02-04
+SPR-00676,,Discovery,2025-11-04
+SPR-00676,Discovery,Closed Lost,2026-01-30
+SPR-00677,,Discovery,2025-11-05
+SPR-00677,Discovery,Closed Lost,2025-11-14
+SPR-00678,,Discovery,2025-11-06
+SPR-00678,Discovery,Qualification,2025-11-08
+SPR-00678,Qualification,Closed Lost,2025-11-27
+SPR-00679,,Discovery,2025-11-09
+SPR-00679,Discovery,Closed Lost,2026-02-03
+SPR-00680,,Discovery,2025-11-11
+SPR-00680,Discovery,Qualification,2025-11-23
+SPR-00680,Qualification,Technical Evaluation,2025-12-23
+SPR-00680,Technical Evaluation,Closed Lost,2026-01-11
+SPR-00681,,Discovery,2025-11-12
+SPR-00681,Discovery,Closed Lost,2025-11-22
+SPR-00682,,Discovery,2025-11-12
+SPR-00682,Discovery,Closed Lost,2025-11-20
+SPR-00683,,Discovery,2025-11-12
+SPR-00683,Discovery,Qualification,2025-11-30
+SPR-00683,Qualification,Technical Evaluation,2025-12-08
+SPR-00683,Technical Evaluation,Business Case,2025-12-30
+SPR-00683,Business Case,Negotiation,2026-01-20
+SPR-00683,Negotiation,Closed Won,2026-01-25
+SPR-00684,,Discovery,2025-11-12
+SPR-00684,Discovery,Qualification,2025-11-17
+SPR-00684,Qualification,Closed Lost,2026-02-21
+SPR-00685,,Discovery,2025-11-13
+SPR-00685,Discovery,Qualification,2026-01-30
+SPR-00685,Qualification,Technical Evaluation,2026-04-09
+SPR-00685,Technical Evaluation,Business Case,2026-04-24
+SPR-00685,Business Case,Negotiation,2026-05-13
+SPR-00685,Negotiation,Closed Won,2026-05-16
+SPR-00686,,Discovery,2025-11-13
+SPR-00686,Discovery,Closed Lost,2025-11-19
+SPR-00687,,Discovery,2025-11-14
+SPR-00687,Discovery,Qualification,2026-03-03
+SPR-00687,Qualification,Technical Evaluation,2026-05-22
+SPR-00687,Technical Evaluation,Business Case,2026-05-26
+SPR-00687,Business Case,Negotiation,2026-06-05
+SPR-00687,Negotiation,Closed Won,2026-06-15
+SPR-00688,,Discovery,2025-11-15
+SPR-00688,Discovery,Closed Lost,2025-11-22
+SPR-00689,,Discovery,2025-11-16
+SPR-00689,Discovery,Closed Lost,2025-11-18
+SPR-00690,,Discovery,2025-11-16
+SPR-00690,Discovery,Qualification,2026-01-05
+SPR-00690,Qualification,Technical Evaluation,2026-01-22
+SPR-00690,Technical Evaluation,Business Case,2026-01-24
+SPR-00690,Business Case,Negotiation,2026-01-31
+SPR-00690,Negotiation,Closed Won,2026-02-23
+SPR-00691,,Discovery,2025-11-18
+SPR-00691,Discovery,Closed Lost,2025-11-20
+SPR-00692,,Discovery,2025-11-19
+SPR-00692,Discovery,Closed Lost,2025-11-22
+SPR-00693,,Discovery,2025-11-19
+SPR-00693,Discovery,Qualification,2025-11-26
+SPR-00693,Qualification,Closed Lost,2025-11-27
+SPR-00694,,Discovery,2025-11-20
+SPR-00694,Discovery,Closed Lost,2025-12-21
+SPR-00695,,Discovery,2025-11-20
+SPR-00695,Discovery,Closed Lost,2026-01-02
+SPR-00696,,Discovery,2025-11-21
+SPR-00696,Discovery,Qualification,2025-12-07
+SPR-00696,Qualification,Technical Evaluation,2025-12-24
+SPR-00696,Technical Evaluation,Business Case,2026-01-24
+SPR-00696,Business Case,Negotiation,2026-01-27
+SPR-00696,Negotiation,Closed Won,2026-02-01
+SPR-00697,,Discovery,2025-11-21
+SPR-00697,Discovery,Closed Lost,2025-12-18
+SPR-00698,,Discovery,2025-11-23
+SPR-00698,Discovery,Qualification,2025-11-25
+SPR-00698,Qualification,Closed Lost,2026-01-01
+SPR-00699,,Discovery,2025-11-23
+SPR-00699,Discovery,Qualification,2025-12-15
+SPR-00699,Qualification,Closed Lost,2025-12-17
+SPR-00700,,Discovery,2025-11-27
+SPR-00700,Discovery,Closed Lost,2025-12-09
+SPR-00701,,Discovery,2025-11-27
+SPR-00701,Discovery,Closed Lost,2026-01-07
+SPR-00702,,Discovery,2025-11-28
+SPR-00702,Discovery,Qualification,2025-11-29
+SPR-00702,Qualification,Technical Evaluation,2025-12-02
+SPR-00702,Technical Evaluation,Closed Lost,2025-12-29
+SPR-00703,,Discovery,2025-11-30
+SPR-00703,Discovery,Closed Lost,2025-12-13
+SPR-00704,,Discovery,2025-11-30
+SPR-00704,Discovery,Qualification,2026-02-08
+SPR-00704,Qualification,Technical Evaluation,2026-03-14
+SPR-00704,Technical Evaluation,Closed Lost,2026-03-18
+SPR-00706,,Discovery,2025-12-01
+SPR-00706,Discovery,Closed Lost,2025-12-07
+SPR-00707,,Discovery,2025-12-02
+SPR-00707,Discovery,Qualification,2026-03-16
+SPR-00707,Qualification,Technical Evaluation,2026-03-20
+SPR-00707,Technical Evaluation,Business Case,2026-03-21
+SPR-00707,Business Case,Negotiation,2026-03-26
+SPR-00707,Negotiation,Closed Lost,2026-04-05
+SPR-00708,,Discovery,2025-12-02
+SPR-00708,Discovery,Qualification,2025-12-05
+SPR-00708,Qualification,Technical Evaluation,2025-12-16
+SPR-00708,Technical Evaluation,Business Case,2026-02-07
+SPR-00708,Business Case,Closed Lost,2026-03-16
+SPR-00709,,Discovery,2025-12-02
+SPR-00709,Discovery,Qualification,2025-12-18
+SPR-00709,Qualification,Technical Evaluation,2026-01-09
+SPR-00709,Technical Evaluation,Business Case,2026-01-24
+SPR-00709,Business Case,Closed Lost,2026-01-30
+SPR-00710,,Discovery,2025-12-03
+SPR-00710,Discovery,Closed Lost,2026-01-21
+SPR-00711,,Discovery,2025-12-04
+SPR-00711,Discovery,Qualification,2026-01-05
+SPR-00711,Qualification,Technical Evaluation,2026-03-18
+SPR-00711,Technical Evaluation,Closed Lost,2026-04-02
+SPR-00712,,Discovery,2025-12-05
+SPR-00712,Discovery,Qualification,2025-12-27
+SPR-00712,Qualification,Closed Lost,2026-01-06
+SPR-00713,,Discovery,2025-12-05
+SPR-00713,Discovery,Closed Lost,2025-12-14
+SPR-00714,,Discovery,2025-12-05
+SPR-00714,Discovery,Closed Lost,2025-12-12
+SPR-00715,,Discovery,2025-12-06
+SPR-00715,Discovery,Closed Lost,2025-12-15
+SPR-00716,,Discovery,2025-12-06
+SPR-00716,Discovery,Qualification,2025-12-07
+SPR-00716,Qualification,Technical Evaluation,2025-12-28
+SPR-00716,Technical Evaluation,Business Case,2026-01-20
+SPR-00716,Business Case,Negotiation,2026-02-24
+SPR-00716,Negotiation,Closed Lost,2026-08-31
+SPR-00717,,Discovery,2025-12-07
+SPR-00717,Discovery,Qualification,2026-01-14
+SPR-00717,Qualification,Closed Lost,2026-03-07
+SPR-00718,,Discovery,2025-12-08
+SPR-00718,Discovery,Qualification,2025-12-11
+SPR-00718,Qualification,Technical Evaluation,2025-12-20
+SPR-00718,Technical Evaluation,Closed Lost,2026-02-16
+SPR-00719,,Discovery,2025-12-08
+SPR-00719,Discovery,Qualification,2025-12-11
+SPR-00719,Qualification,Closed Lost,2026-02-13
+SPR-00720,,Discovery,2025-12-08
+SPR-00720,Discovery,Qualification,2026-06-27
+SPR-00720,Qualification,Closed Lost,2026-07-09
+SPR-00721,,Discovery,2025-12-09
+SPR-00721,Discovery,Closed Lost,2026-02-28
+SPR-00722,,Discovery,2025-12-10
+SPR-00722,Discovery,Closed Lost,2025-12-17
+SPR-00723,,Discovery,2025-12-11
+SPR-00723,Discovery,Qualification,2025-12-31
+SPR-00723,Qualification,Closed Lost,2026-02-13
+SPR-00724,,Discovery,2025-12-12
+SPR-00724,Discovery,Closed Lost,2025-12-30
+SPR-00725,,Discovery,2025-12-12
+SPR-00725,Discovery,Qualification,2025-12-18
+SPR-00725,Qualification,Technical Evaluation,2025-12-28
+SPR-00725,Technical Evaluation,Business Case,2026-01-02
+SPR-00725,Business Case,Negotiation,2026-01-16
+SPR-00725,Negotiation,Closed Lost,2026-02-02
+SPR-00726,,Discovery,2025-12-12
+SPR-00726,Discovery,Qualification,2026-02-18
+SPR-00726,Qualification,Technical Evaluation,2026-03-20
+SPR-00726,Technical Evaluation,Closed Lost,2026-04-29
+SPR-00727,,Discovery,2025-12-12
+SPR-00727,Discovery,Closed Lost,2025-12-27
+SPR-00728,,Discovery,2025-12-13
+SPR-00728,Discovery,Qualification,2025-12-22
+SPR-00728,Qualification,Technical Evaluation,2026-02-03
+SPR-00728,Technical Evaluation,Business Case,2026-04-20
+SPR-00728,Business Case,Negotiation,2026-04-21
+SPR-00728,Negotiation,Closed Won,2026-04-27
+SPR-00729,,Discovery,2025-12-14
+SPR-00729,Discovery,Qualification,2025-12-30
+SPR-00729,Qualification,Closed Lost,2026-01-23
+SPR-00730,,Discovery,2025-12-14
+SPR-00730,Discovery,Qualification,2025-12-23
+SPR-00730,Qualification,Closed Lost,2026-01-09
+SPR-00731,,Discovery,2025-12-14
+SPR-00731,Discovery,Closed Lost,2026-01-06
+SPR-00732,,Discovery,2025-12-14
+SPR-00732,Discovery,Qualification,2025-12-22
+SPR-00732,Qualification,Technical Evaluation,2026-02-18
+SPR-00732,Technical Evaluation,Business Case,2026-03-18
+SPR-00732,Business Case,Negotiation,2026-05-20
+SPR-00732,Negotiation,Closed Won,2026-06-04
+SPR-00733,,Discovery,2025-12-15
+SPR-00733,Discovery,Qualification,2026-01-05
+SPR-00733,Qualification,Technical Evaluation,2026-01-31
+SPR-00733,Technical Evaluation,Business Case,2026-02-02
+SPR-00733,Business Case,Closed Lost,2026-02-08
+SPR-00734,,Discovery,2025-12-15
+SPR-00734,Discovery,Qualification,2026-01-08
+SPR-00734,Qualification,Technical Evaluation,2026-02-01
+SPR-00734,Technical Evaluation,Business Case,2026-02-25
+SPR-00734,Business Case,Negotiation,2026-03-17
+SPR-00734,Negotiation,Closed Won,2026-04-07
+SPR-00735,,Discovery,2025-12-16
+SPR-00735,Discovery,Qualification,2025-12-20
+SPR-00735,Qualification,Technical Evaluation,2026-01-28
+SPR-00735,Technical Evaluation,Closed Lost,2026-02-01
+SPR-00736,,Discovery,2025-12-16
+SPR-00736,Discovery,Qualification,2025-12-30
+SPR-00736,Qualification,Closed Lost,2026-01-24
+SPR-00737,,Discovery,2025-12-19
+SPR-00737,Discovery,Qualification,2026-01-01
+SPR-00737,Qualification,Technical Evaluation,2026-01-10
+SPR-00737,Technical Evaluation,Business Case,2026-01-14
+SPR-00737,Business Case,Negotiation,2026-01-23
+SPR-00737,Negotiation,Closed Won,2026-01-28
+SPR-00738,,Discovery,2025-12-19
+SPR-00738,Discovery,Closed Lost,2026-01-13
+SPR-00739,,Discovery,2025-12-20
+SPR-00739,Discovery,Qualification,2025-12-27
+SPR-00739,Qualification,Technical Evaluation,2025-12-28
+SPR-00739,Technical Evaluation,Business Case,2026-01-05
+SPR-00739,Business Case,Negotiation,2026-01-20
+SPR-00739,Negotiation,Closed Won,2026-01-25
+SPR-00740,,Discovery,2025-12-20
+SPR-00740,Discovery,Qualification,2025-12-29
+SPR-00740,Qualification,Technical Evaluation,2026-01-25
+SPR-00740,Technical Evaluation,Business Case,2026-02-12
+SPR-00740,Business Case,Closed Lost,2026-02-14
+SPR-00741,,Discovery,2025-12-23
+SPR-00741,Discovery,Qualification,2026-01-09
+SPR-00741,Qualification,Technical Evaluation,2026-01-12
+SPR-00741,Technical Evaluation,Business Case,2026-01-19
+SPR-00741,Business Case,Negotiation,2026-01-24
+SPR-00741,Negotiation,Closed Lost,2026-02-01
+SPR-00742,,Discovery,2025-12-29
+SPR-00742,Discovery,Qualification,2026-02-08
+SPR-00742,Qualification,Technical Evaluation,2026-02-16
+SPR-00742,Technical Evaluation,Business Case,2026-02-23
+SPR-00742,Business Case,Negotiation,2026-03-29
+SPR-00742,Negotiation,Closed Lost,2026-03-30
+SPR-00743,,Discovery,2025-12-30
+SPR-00743,Discovery,Qualification,2026-01-01
+SPR-00743,Qualification,Technical Evaluation,2026-01-26
+SPR-00743,Technical Evaluation,Business Case,2026-03-13
+SPR-00743,Business Case,Closed Lost,2026-04-28
+SPR-00744,,Discovery,2025-12-31
+SPR-00744,Discovery,Closed Lost,2026-01-11
+SPR-00745,,Discovery,2026-01-01
+SPR-00745,Discovery,Qualification,2026-01-11
+SPR-00745,Qualification,Closed Lost,2026-01-21
+SPR-00746,,Discovery,2026-01-01
+SPR-00746,Discovery,Qualification,2026-01-25
+SPR-00746,Qualification,Technical Evaluation,2026-02-13
+SPR-00746,Technical Evaluation,Business Case,2026-02-20
+SPR-00746,Business Case,Negotiation,2026-02-27
+SPR-00746,Negotiation,Closed Won,2026-03-14
+SPR-00747,,Discovery,2026-01-04
+SPR-00747,Discovery,Closed Lost,2026-01-05
+SPR-00748,,Discovery,2026-01-05
+SPR-00748,Discovery,Closed Lost,2026-01-15
+SPR-00749,,Discovery,2026-01-05
+SPR-00749,Discovery,Qualification,2026-02-10
+SPR-00749,Qualification,Technical Evaluation,2026-03-06
+SPR-00749,Technical Evaluation,Business Case,2026-04-29
+SPR-00749,Business Case,Negotiation,2026-06-27
+SPR-00749,Negotiation,Closed Won,2026-06-29
+SPR-00750,,Discovery,2026-01-05
+SPR-00750,Discovery,Qualification,2026-01-20
+SPR-00750,Qualification,Closed Lost,2026-03-01
+SPR-00751,,Discovery,2026-01-06
+SPR-00751,Discovery,Qualification,2026-02-12
+SPR-00751,Qualification,Technical Evaluation,2026-03-13
+SPR-00751,Technical Evaluation,Business Case,2026-03-22
+SPR-00751,Business Case,Negotiation,2026-03-24
+SPR-00751,Negotiation,Closed Won,2026-04-02
+SPR-00752,,Discovery,2026-01-07
+SPR-00752,Discovery,Qualification,2026-01-23
+SPR-00752,Qualification,Technical Evaluation,2026-01-29
+SPR-00752,Technical Evaluation,Business Case,2026-03-20
+SPR-00752,Business Case,Closed Lost,2026-06-20
+SPR-00753,,Discovery,2026-01-08
+SPR-00753,Discovery,Closed Lost,2026-06-01
+SPR-00754,,Discovery,2026-01-08
+SPR-00754,Discovery,Closed Lost,2026-01-10
+SPR-00755,,Discovery,2026-01-08
+SPR-00755,Discovery,Qualification,2026-01-10
+SPR-00755,Qualification,Technical Evaluation,2026-03-28
+SPR-00755,Technical Evaluation,Closed Lost,2026-04-08
+SPR-00756,,Discovery,2026-01-09
+SPR-00756,Discovery,Qualification,2026-02-07
+SPR-00756,Qualification,Closed Lost,2026-02-10
+SPR-00757,,Discovery,2026-01-09
+SPR-00757,Discovery,Closed Lost,2026-03-04
+SPR-00758,,Discovery,2026-01-09
+SPR-00758,Discovery,Qualification,2026-02-06
+SPR-00758,Qualification,Closed Lost,2026-02-23
+SPR-00759,,Discovery,2026-01-10
+SPR-00759,Discovery,Closed Lost,2026-03-13
+SPR-00760,,Discovery,2026-01-11
+SPR-00760,Discovery,Qualification,2026-02-10
+SPR-00760,Qualification,Closed Lost,2026-02-22
+SPR-00761,,Discovery,2026-01-12
+SPR-00761,Discovery,Closed Lost,2026-01-20
+SPR-00762,,Discovery,2026-01-13
+SPR-00762,Discovery,Qualification,2026-01-21
+SPR-00762,Qualification,Technical Evaluation,2026-02-01
+SPR-00762,Technical Evaluation,Business Case,2026-02-17
+SPR-00762,Business Case,Closed Lost,2026-02-19
+SPR-00763,,Discovery,2026-01-14
+SPR-00763,Discovery,Qualification,2026-01-26
+SPR-00763,Qualification,Technical Evaluation,2026-01-28
+SPR-00763,Technical Evaluation,Business Case,2026-02-03
+SPR-00763,Business Case,Negotiation,2026-02-25
+SPR-00763,Negotiation,Closed Won,2026-02-28
+SPR-00764,,Discovery,2026-01-15
+SPR-00764,Discovery,Qualification,2026-03-15
+SPR-00764,Qualification,Closed Lost,2026-04-02
+SPR-00765,,Discovery,2026-01-16
+SPR-00765,Discovery,Closed Lost,2026-01-19
+SPR-00766,,Discovery,2026-01-19
+SPR-00766,Discovery,Closed Lost,2026-01-22
+SPR-00767,,Discovery,2026-01-20
+SPR-00767,Discovery,Qualification,2026-02-10
+SPR-00767,Qualification,Technical Evaluation,2026-03-22
+SPR-00767,Technical Evaluation,Closed Lost,2026-04-20
+SPR-00768,,Discovery,2026-01-20
+SPR-00768,Discovery,Qualification,2026-03-02
+SPR-00768,Qualification,Technical Evaluation,2026-03-05
+SPR-00768,Technical Evaluation,Closed Lost,2026-03-12
+SPR-00769,,Discovery,2026-01-20
+SPR-00769,Discovery,Qualification,2026-02-01
+SPR-00769,Qualification,Closed Lost,2026-03-08
+SPR-00770,,Discovery,2026-01-21
+SPR-00770,Discovery,Closed Lost,2026-02-07
+SPR-00771,,Discovery,2026-01-21
+SPR-00771,Discovery,Qualification,2026-02-07
+SPR-00771,Qualification,Closed Lost,2026-03-06
+SPR-00772,,Discovery,2026-01-22
+SPR-00772,Discovery,Qualification,2026-03-07
+SPR-00772,Qualification,Closed Lost,2026-04-29
+SPR-00773,,Discovery,2026-01-22
+SPR-00773,Discovery,Closed Lost,2026-02-01
+SPR-00774,,Discovery,2026-01-23
+SPR-00774,Discovery,Closed Lost,2026-02-25
+SPR-00775,,Discovery,2026-01-23
+SPR-00775,Discovery,Qualification,2026-01-30
+SPR-00775,Qualification,Technical Evaluation,2026-01-31
+SPR-00775,Technical Evaluation,Business Case,2026-03-21
+SPR-00775,Business Case,Negotiation,2026-03-25
+SPR-00775,Negotiation,Closed Won,2026-04-15
+SPR-00776,,Discovery,2026-01-23
+SPR-00776,Discovery,Qualification,2026-01-31
+SPR-00776,Qualification,Technical Evaluation,2026-02-01
+SPR-00776,Technical Evaluation,Business Case,2026-03-27
+SPR-00776,Business Case,Negotiation,2026-04-17
+SPR-00776,Negotiation,Closed Won,2026-04-23
+SPR-00777,,Discovery,2026-01-23
+SPR-00777,Discovery,Qualification,2026-02-06
+SPR-00777,Qualification,Technical Evaluation,2026-02-12
+SPR-00777,Technical Evaluation,Closed Lost,2026-02-16
+SPR-00778,,Discovery,2026-01-23
+SPR-00778,Discovery,Qualification,2026-05-03
+SPR-00778,Qualification,Closed Lost,2026-06-13
+SPR-00780,,Discovery,2026-01-24
+SPR-00780,Discovery,Closed Lost,2026-01-27
+SPR-00781,,Discovery,2026-01-24
+SPR-00781,Discovery,Qualification,2026-02-09
+SPR-00781,Qualification,Closed Lost,2026-02-12
+SPR-00782,,Discovery,2026-01-25
+SPR-00782,Discovery,Closed Lost,2026-02-13
+SPR-00783,,Discovery,2026-01-26
+SPR-00783,Discovery,Qualification,2026-02-02
+SPR-00783,Qualification,Closed Lost,2026-02-22
+SPR-00784,,Discovery,2026-01-26
+SPR-00784,Discovery,Closed Lost,2026-02-04
+SPR-00785,,Discovery,2026-01-26
+SPR-00785,Discovery,Qualification,2026-03-13
+SPR-00785,Qualification,Technical Evaluation,2026-07-30
+SPR-00785,Technical Evaluation,Business Case,2026-08-24
+SPR-00786,,Discovery,2026-01-26
+SPR-00786,Discovery,Qualification,2026-05-11
+SPR-00786,Qualification,Technical Evaluation,2026-05-28
+SPR-00786,Technical Evaluation,Closed Lost,2026-06-11
+SPR-00787,,Discovery,2026-01-27
+SPR-00787,Discovery,Qualification,2026-02-22
+SPR-00787,Qualification,Closed Lost,2026-03-04
+SPR-00788,,Discovery,2026-01-27
+SPR-00788,Discovery,Qualification,2026-04-08
+SPR-00788,Qualification,Technical Evaluation,2026-06-17
+SPR-00788,Technical Evaluation,Business Case,2026-06-22
+SPR-00789,,Discovery,2026-01-31
+SPR-00789,Discovery,Qualification,2026-02-24
+SPR-00789,Qualification,Technical Evaluation,2026-03-07
+SPR-00789,Technical Evaluation,Closed Lost,2026-05-23
+SPR-00790,,Discovery,2026-02-01
+SPR-00790,Discovery,Closed Lost,2026-07-04
+SPR-00791,,Discovery,2026-02-01
+SPR-00791,Discovery,Qualification,2026-02-03
+SPR-00791,Qualification,Technical Evaluation,2026-02-21
+SPR-00791,Technical Evaluation,Business Case,2026-03-06
+SPR-00791,Business Case,Negotiation,2026-03-18
+SPR-00791,Negotiation,Closed Won,2026-03-25
+SPR-00792,,Discovery,2026-02-02
+SPR-00792,Discovery,Qualification,2026-02-08
+SPR-00792,Qualification,Technical Evaluation,2026-02-10
+SPR-00792,Technical Evaluation,Business Case,2026-03-08
+SPR-00792,Business Case,Negotiation,2026-03-17
+SPR-00792,Negotiation,Closed Won,2026-03-20
+SPR-00793,,Discovery,2026-02-03
+SPR-00793,Discovery,Closed Lost,2026-03-02
+SPR-00794,,Discovery,2026-02-04
+SPR-00794,Discovery,Closed Lost,2026-02-08
+SPR-00795,,Discovery,2026-02-04
+SPR-00795,Discovery,Qualification,2026-03-06
+SPR-00795,Qualification,Technical Evaluation,2026-04-06
+SPR-00795,Technical Evaluation,Closed Lost,2026-04-08
+SPR-00796,,Discovery,2026-02-05
+SPR-00796,Discovery,Qualification,2026-03-05
+SPR-00796,Qualification,Technical Evaluation,2026-03-17
+SPR-00796,Technical Evaluation,Business Case,2026-04-03
+SPR-00796,Business Case,Closed Lost,2026-05-17
+SPR-00797,,Discovery,2026-02-07
+SPR-00797,Discovery,Closed Lost,2026-02-19
+SPR-00798,,Discovery,2026-02-07
+SPR-00798,Discovery,Qualification,2026-04-05
+SPR-00798,Qualification,Technical Evaluation,2026-04-06
+SPR-00798,Technical Evaluation,Business Case,2026-04-30
+SPR-00798,Business Case,Negotiation,2026-06-22
+SPR-00799,,Discovery,2026-02-08
+SPR-00799,Discovery,Closed Lost,2026-02-13
+SPR-00800,,Discovery,2026-02-08
+SPR-00800,Discovery,Qualification,2026-03-08
+SPR-00800,Qualification,Closed Lost,2026-03-27
+SPR-00801,,Discovery,2026-02-08
+SPR-00801,Discovery,Qualification,2026-02-14
+SPR-00801,Qualification,Closed Lost,2026-03-17
+SPR-00802,,Discovery,2026-02-11
+SPR-00802,Discovery,Qualification,2026-02-27
+SPR-00802,Qualification,Technical Evaluation,2026-03-22
+SPR-00802,Technical Evaluation,Business Case,2026-04-10
+SPR-00802,Business Case,Negotiation,2026-05-26
+SPR-00802,Negotiation,Closed Won,2026-06-01
+SPR-00803,,Discovery,2026-02-11
+SPR-00803,Discovery,Qualification,2026-03-17
+SPR-00803,Qualification,Technical Evaluation,2026-04-22
+SPR-00803,Technical Evaluation,Business Case,2026-04-24
+SPR-00803,Business Case,Negotiation,2026-06-10
+SPR-00803,Negotiation,Closed Won,2026-06-12
+SPR-00804,,Discovery,2026-02-12
+SPR-00804,Discovery,Qualification,2026-02-15
+SPR-00804,Qualification,Technical Evaluation,2026-02-17
+SPR-00804,Technical Evaluation,Business Case,2026-03-20
+SPR-00804,Business Case,Negotiation,2026-05-05
+SPR-00804,Negotiation,Closed Lost,2026-05-08
+SPR-00805,,Discovery,2026-02-12
+SPR-00805,Discovery,Closed Lost,2026-02-19
+SPR-00806,,Discovery,2026-02-13
+SPR-00806,Discovery,Qualification,2026-02-15
+SPR-00806,Qualification,Closed Lost,2026-03-21
+SPR-00807,,Discovery,2026-02-16
+SPR-00807,Discovery,Qualification,2026-02-25
+SPR-00807,Qualification,Closed Lost,2026-05-03
+SPR-00808,,Discovery,2026-02-17
+SPR-00808,Discovery,Closed Lost,2026-02-22
+SPR-00809,,Discovery,2026-02-17
+SPR-00809,Discovery,Qualification,2026-04-05
+SPR-00809,Qualification,Technical Evaluation,2026-05-09
+SPR-00809,Technical Evaluation,Business Case,2026-05-12
+SPR-00809,Business Case,Negotiation,2026-05-17
+SPR-00809,Negotiation,Closed Won,2026-05-25
+SPR-00810,,Discovery,2026-02-18
+SPR-00810,Discovery,Qualification,2026-02-25
+SPR-00810,Qualification,Technical Evaluation,2026-03-27
+SPR-00810,Technical Evaluation,Business Case,2026-05-26
+SPR-00810,Business Case,Negotiation,2026-07-18
+SPR-00810,Negotiation,Closed Won,2026-08-16
+SPR-00811,,Discovery,2026-02-19
+SPR-00811,Discovery,Qualification,2026-03-11
+SPR-00811,Qualification,Closed Lost,2026-03-13
+SPR-00812,,Discovery,2026-02-19
+SPR-00812,Discovery,Qualification,2026-02-21
+SPR-00812,Qualification,Technical Evaluation,2026-04-04
+SPR-00812,Technical Evaluation,Business Case,2026-07-23
+SPR-00813,,Discovery,2026-02-20
+SPR-00813,Discovery,Qualification,2026-02-22
+SPR-00813,Qualification,Closed Lost,2026-03-02
+SPR-00814,,Discovery,2026-02-20
+SPR-00814,Discovery,Qualification,2026-04-03
+SPR-00814,Qualification,Technical Evaluation,2026-05-05
+SPR-00814,Technical Evaluation,Business Case,2026-05-22
+SPR-00814,Business Case,Negotiation,2026-07-03
+SPR-00814,Negotiation,Closed Won,2026-07-06
+SPR-00815,,Discovery,2026-02-20
+SPR-00815,Discovery,Qualification,2026-02-23
+SPR-00815,Qualification,Technical Evaluation,2026-03-19
+SPR-00815,Technical Evaluation,Business Case,2026-04-30
+SPR-00815,Business Case,Negotiation,2026-05-07
+SPR-00815,Negotiation,Closed Won,2026-05-10
+SPR-00816,,Discovery,2026-02-21
+SPR-00816,Discovery,Qualification,2026-03-01
+SPR-00816,Qualification,Closed Lost,2026-05-16
+SPR-00817,,Discovery,2026-02-21
+SPR-00817,Discovery,Closed Lost,2026-02-26
+SPR-00818,,Discovery,2026-02-23
+SPR-00818,Discovery,Qualification,2026-03-26
+SPR-00818,Qualification,Closed Lost,2026-04-28
+SPR-00819,,Discovery,2026-02-23
+SPR-00819,Discovery,Closed Lost,2026-03-14
+SPR-00820,,Discovery,2026-02-23
+SPR-00820,Discovery,Closed Lost,2026-02-28
+SPR-00821,,Discovery,2026-02-24
+SPR-00821,Discovery,Closed Lost,2026-04-12
+SPR-00822,,Discovery,2026-02-25
+SPR-00822,Discovery,Closed Lost,2026-02-28
+SPR-00823,,Discovery,2026-02-26
+SPR-00823,Discovery,Qualification,2026-02-27
+SPR-00823,Qualification,Closed Lost,2026-03-02
+SPR-00824,,Discovery,2026-02-28
+SPR-00824,Discovery,Qualification,2026-03-07
+SPR-00824,Qualification,Closed Lost,2026-03-31
+SPR-00825,,Discovery,2026-02-28
+SPR-00825,Discovery,Closed Lost,2026-03-14
+SPR-00826,,Discovery,2026-02-28
+SPR-00826,Discovery,Closed Lost,2026-04-09
+SPR-00827,,Discovery,2026-03-02
+SPR-00827,Discovery,Qualification,2026-07-24
+SPR-00827,Qualification,Technical Evaluation,2026-07-30
+SPR-00827,Technical Evaluation,Closed Lost,2026-08-06
+SPR-00828,,Discovery,2026-03-03
+SPR-00828,Discovery,Qualification,2026-03-19
+SPR-00828,Qualification,Closed Lost,2026-04-05
+SPR-00829,,Discovery,2026-03-03
+SPR-00829,Discovery,Qualification,2026-04-01
+SPR-00829,Qualification,Closed Lost,2026-06-01
+SPR-00830,,Discovery,2026-03-03
+SPR-00830,Discovery,Closed Lost,2026-03-08
+SPR-00831,,Discovery,2026-03-03
+SPR-00831,Discovery,Closed Lost,2026-03-05
+SPR-00832,,Discovery,2026-03-05
+SPR-00832,Discovery,Qualification,2026-03-21
+SPR-00832,Qualification,Technical Evaluation,2026-04-24
+SPR-00832,Technical Evaluation,Business Case,2026-04-25
+SPR-00832,Business Case,Closed Lost,2026-05-03
+SPR-00833,,Discovery,2026-03-05
+SPR-00833,Discovery,Qualification,2026-05-09
+SPR-00833,Qualification,Technical Evaluation,2026-05-29
+SPR-00833,Technical Evaluation,Business Case,2026-05-31
+SPR-00834,,Discovery,2026-03-05
+SPR-00834,Discovery,Qualification,2026-03-09
+SPR-00834,Qualification,Technical Evaluation,2026-03-14
+SPR-00834,Technical Evaluation,Business Case,2026-03-16
+SPR-00834,Business Case,Negotiation,2026-04-12
+SPR-00834,Negotiation,Closed Won,2026-05-13
+SPR-00835,,Discovery,2026-03-07
+SPR-00835,Discovery,Closed Lost,2026-03-17
+SPR-00836,,Discovery,2026-03-08
+SPR-00836,Discovery,Qualification,2026-03-17
+SPR-00836,Qualification,Closed Lost,2026-03-22
+SPR-00837,,Discovery,2026-03-08
+SPR-00837,Discovery,Closed Lost,2026-03-14
+SPR-00838,,Discovery,2026-03-08
+SPR-00838,Discovery,Qualification,2026-03-16
+SPR-00838,Qualification,Technical Evaluation,2026-06-12
+SPR-00838,Technical Evaluation,Business Case,2026-06-19
+SPR-00838,Business Case,Negotiation,2026-07-16
+SPR-00838,Negotiation,Closed Lost,2026-07-28
+SPR-00839,,Discovery,2026-03-08
+SPR-00839,Discovery,Closed Lost,2026-04-02
+SPR-00840,,Discovery,2026-03-10
+SPR-00840,Discovery,Closed Lost,2026-04-18
+SPR-00841,,Discovery,2026-03-10
+SPR-00841,Discovery,Qualification,2026-03-19
+SPR-00841,Qualification,Closed Lost,2026-04-09
+SPR-00842,,Discovery,2026-03-12
+SPR-00842,Discovery,Qualification,2026-03-13
+SPR-00842,Qualification,Technical Evaluation,2026-08-09
+SPR-00842,Technical Evaluation,Business Case,2026-08-16
+SPR-00842,Business Case,Negotiation,2026-08-17
+SPR-00842,Negotiation,Closed Won,2026-08-20
+SPR-00843,,Discovery,2026-03-13
+SPR-00843,Discovery,Closed Lost,2026-04-15
+SPR-00844,,Discovery,2026-03-13
+SPR-00844,Discovery,Closed Lost,2026-07-03
+SPR-00845,,Discovery,2026-03-15
+SPR-00845,Discovery,Qualification,2026-03-19
+SPR-00845,Qualification,Technical Evaluation,2026-04-17
+SPR-00845,Technical Evaluation,Business Case,2026-05-18
+SPR-00845,Business Case,Negotiation,2026-05-23
+SPR-00845,Negotiation,Closed Won,2026-05-29
+SPR-00846,,Discovery,2026-03-15
+SPR-00846,Discovery,Closed Lost,2026-04-04
+SPR-00847,,Discovery,2026-03-16
+SPR-00847,Discovery,Qualification,2026-05-04
+SPR-00847,Qualification,Closed Lost,2026-05-07
+SPR-00848,,Discovery,2026-03-16
+SPR-00848,Discovery,Closed Lost,2026-03-17
+SPR-00850,,Discovery,2026-03-18
+SPR-00850,Discovery,Qualification,2026-03-20
+SPR-00850,Qualification,Technical Evaluation,2026-03-23
+SPR-00850,Technical Evaluation,Closed Lost,2026-04-22
+SPR-00851,,Discovery,2026-03-18
+SPR-00851,Discovery,Qualification,2026-03-25
+SPR-00851,Qualification,Technical Evaluation,2026-04-25
+SPR-00851,Technical Evaluation,Closed Lost,2026-05-14
+SPR-00852,,Discovery,2026-03-19
+SPR-00852,Discovery,Qualification,2026-03-24
+SPR-00852,Qualification,Technical Evaluation,2026-04-03
+SPR-00852,Technical Evaluation,Business Case,2026-06-01
+SPR-00852,Business Case,Negotiation,2026-06-11
+SPR-00852,Negotiation,Closed Won,2026-07-12
+SPR-00853,,Discovery,2026-03-20
+SPR-00853,Discovery,Closed Lost,2026-04-03
+SPR-00854,,Discovery,2026-03-20
+SPR-00854,Discovery,Qualification,2026-03-25
+SPR-00854,Qualification,Technical Evaluation,2026-03-30
+SPR-00854,Technical Evaluation,Business Case,2026-07-06
+SPR-00854,Business Case,Negotiation,2026-07-25
+SPR-00854,Negotiation,Closed Won,2026-08-12
+SPR-00855,,Discovery,2026-03-20
+SPR-00855,Discovery,Qualification,2026-03-21
+SPR-00855,Qualification,Technical Evaluation,2026-06-20
+SPR-00855,Technical Evaluation,Closed Lost,2026-06-24
+SPR-00856,,Discovery,2026-03-21
+SPR-00856,Discovery,Qualification,2026-04-08
+SPR-00856,Qualification,Technical Evaluation,2026-06-24
+SPR-00856,Technical Evaluation,Business Case,2026-07-18
+SPR-00856,Business Case,Negotiation,2026-08-28
+SPR-00857,,Discovery,2026-03-21
+SPR-00857,Discovery,Qualification,2026-04-10
+SPR-00857,Qualification,Technical Evaluation,2026-04-15
+SPR-00857,Technical Evaluation,Business Case,2026-06-04
+SPR-00857,Business Case,Closed Lost,2026-07-10
+SPR-00858,,Discovery,2026-03-22
+SPR-00858,Discovery,Qualification,2026-03-24
+SPR-00858,Qualification,Technical Evaluation,2026-04-05
+SPR-00858,Technical Evaluation,Business Case,2026-06-01
+SPR-00858,Business Case,Negotiation,2026-06-06
+SPR-00858,Negotiation,Closed Won,2026-06-16
+SPR-00859,,Discovery,2026-03-22
+SPR-00859,Discovery,Qualification,2026-04-17
+SPR-00859,Qualification,Technical Evaluation,2026-04-21
+SPR-00859,Technical Evaluation,Closed Lost,2026-04-24
+SPR-00860,,Discovery,2026-03-23
+SPR-00860,Discovery,Qualification,2026-04-07
+SPR-00860,Qualification,Technical Evaluation,2026-04-08
+SPR-00860,Technical Evaluation,Business Case,2026-04-27
+SPR-00860,Business Case,Closed Lost,2026-05-11
+SPR-00861,,Discovery,2026-03-23
+SPR-00861,Discovery,Qualification,2026-03-30
+SPR-00861,Qualification,Technical Evaluation,2026-04-28
+SPR-00861,Technical Evaluation,Business Case,2026-05-21
+SPR-00861,Business Case,Negotiation,2026-05-27
+SPR-00861,Negotiation,Closed Won,2026-06-08
+SPR-00862,,Discovery,2026-03-24
+SPR-00862,Discovery,Closed Lost,2026-05-31
+SPR-00863,,Discovery,2026-03-25
+SPR-00863,Discovery,Closed Lost,2026-04-23
+SPR-00864,,Discovery,2026-03-26
+SPR-00864,Discovery,Closed Lost,2026-04-03
+SPR-00865,,Discovery,2026-03-26
+SPR-00865,Discovery,Closed Lost,2026-04-26
+SPR-00866,,Discovery,2026-03-27
+SPR-00866,Discovery,Closed Lost,2026-05-23
+SPR-00867,,Discovery,2026-03-27
+SPR-00867,Discovery,Qualification,2026-04-10
+SPR-00867,Qualification,Technical Evaluation,2026-05-11
+SPR-00867,Technical Evaluation,Business Case,2026-05-16
+SPR-00867,Business Case,Negotiation,2026-06-26
+SPR-00867,Negotiation,Closed Won,2026-06-29
+SPR-00868,,Discovery,2026-03-28
+SPR-00868,Discovery,Closed Lost,2026-04-06
+SPR-00869,,Discovery,2026-03-28
+SPR-00869,Discovery,Qualification,2026-04-24
+SPR-00870,,Discovery,2026-03-30
+SPR-00870,Discovery,Qualification,2026-05-02
+SPR-00870,Qualification,Technical Evaluation,2026-05-28
+SPR-00870,Technical Evaluation,Business Case,2026-06-30
+SPR-00870,Business Case,Negotiation,2026-08-11
+SPR-00871,,Discovery,2026-03-30
+SPR-00871,Discovery,Closed Lost,2026-04-18
+SPR-00872,,Discovery,2026-03-31
+SPR-00872,Discovery,Qualification,2026-05-04
+SPR-00872,Qualification,Technical Evaluation,2026-05-13
+SPR-00872,Technical Evaluation,Business Case,2026-05-27
+SPR-00872,Business Case,Closed Lost,2026-06-02
+SPR-00873,,Discovery,2026-04-01
+SPR-00873,Discovery,Closed Lost,2026-04-06
+SPR-00874,,Discovery,2026-04-01
+SPR-00874,Discovery,Closed Lost,2026-04-10
+SPR-00875,,Discovery,2026-04-01
+SPR-00875,Discovery,Closed Lost,2026-04-07
+SPR-00876,,Discovery,2026-04-02
+SPR-00876,Discovery,Closed Lost,2026-05-05
+SPR-00877,,Discovery,2026-04-02
+SPR-00877,Discovery,Qualification,2026-05-25
+SPR-00877,Qualification,Technical Evaluation,2026-05-26
+SPR-00877,Technical Evaluation,Closed Lost,2026-07-04
+SPR-00878,,Discovery,2026-04-04
+SPR-00878,Discovery,Closed Lost,2026-05-28
+SPR-00879,,Discovery,2026-04-05
+SPR-00879,Discovery,Qualification,2026-04-20
+SPR-00879,Qualification,Technical Evaluation,2026-05-03
+SPR-00879,Technical Evaluation,Business Case,2026-05-09
+SPR-00879,Business Case,Negotiation,2026-05-24
+SPR-00879,Negotiation,Closed Won,2026-06-18
+SPR-00880,,Discovery,2026-04-05
+SPR-00880,Discovery,Qualification,2026-04-24
+SPR-00880,Qualification,Technical Evaluation,2026-05-01
+SPR-00880,Technical Evaluation,Closed Lost,2026-05-23
+SPR-00881,,Discovery,2026-04-06
+SPR-00881,Discovery,Closed Lost,2026-04-10
+SPR-00882,,Discovery,2026-04-06
+SPR-00882,Discovery,Qualification,2026-04-30
+SPR-00882,Qualification,Technical Evaluation,2026-05-16
+SPR-00882,Technical Evaluation,Business Case,2026-05-17
+SPR-00882,Business Case,Negotiation,2026-05-29
+SPR-00882,Negotiation,Closed Won,2026-07-04
+SPR-00883,,Discovery,2026-04-07
+SPR-00883,Discovery,Qualification,2026-04-08
+SPR-00883,Qualification,Technical Evaluation,2026-05-09
+SPR-00883,Technical Evaluation,Business Case,2026-05-21
+SPR-00883,Business Case,Negotiation,2026-05-24
+SPR-00883,Negotiation,Closed Won,2026-05-27
+SPR-00884,,Discovery,2026-04-08
+SPR-00884,Discovery,Qualification,2026-05-11
+SPR-00884,Qualification,Technical Evaluation,2026-05-21
+SPR-00884,Technical Evaluation,Business Case,2026-05-24
+SPR-00884,Business Case,Negotiation,2026-05-29
+SPR-00884,Negotiation,Closed Won,2026-06-18
+SPR-00885,,Discovery,2026-04-08
+SPR-00885,Discovery,Qualification,2026-04-18
+SPR-00885,Qualification,Closed Lost,2026-04-25
+SPR-00886,,Discovery,2026-04-08
+SPR-00886,Discovery,Closed Lost,2026-04-17
+SPR-00887,,Discovery,2026-04-09
+SPR-00888,,Discovery,2026-04-09
+SPR-00889,,Discovery,2026-04-10
+SPR-00889,Discovery,Qualification,2026-04-12
+SPR-00889,Qualification,Technical Evaluation,2026-04-13
+SPR-00889,Technical Evaluation,Business Case,2026-04-16
+SPR-00889,Business Case,Closed Lost,2026-06-13
+SPR-00890,,Discovery,2026-04-10
+SPR-00890,Discovery,Qualification,2026-06-13
+SPR-00890,Qualification,Closed Lost,2026-07-08
+SPR-00891,,Discovery,2026-04-10
+SPR-00891,Discovery,Qualification,2026-04-28
+SPR-00891,Qualification,Closed Lost,2026-05-12
+SPR-00892,,Discovery,2026-04-10
+SPR-00892,Discovery,Qualification,2026-04-18
+SPR-00892,Qualification,Technical Evaluation,2026-05-01
+SPR-00893,,Discovery,2026-04-11
+SPR-00893,Discovery,Closed Lost,2026-04-14
+SPR-00894,,Discovery,2026-04-11
+SPR-00894,Discovery,Closed Lost,2026-06-16
+SPR-00895,,Discovery,2026-04-12
+SPR-00895,Discovery,Qualification,2026-04-19
+SPR-00895,Qualification,Closed Lost,2026-05-03
+SPR-00896,,Discovery,2026-04-13
+SPR-00896,Discovery,Qualification,2026-04-15
+SPR-00896,Qualification,Technical Evaluation,2026-04-21
+SPR-00896,Technical Evaluation,Closed Lost,2026-04-30
+SPR-00897,,Discovery,2026-04-13
+SPR-00897,Discovery,Closed Lost,2026-04-29
+SPR-00898,,Discovery,2026-04-13
+SPR-00898,Discovery,Qualification,2026-04-14
+SPR-00898,Qualification,Closed Lost,2026-05-24
+SPR-00899,,Discovery,2026-04-14
+SPR-00899,Discovery,Qualification,2026-04-20
+SPR-00899,Qualification,Technical Evaluation,2026-04-30
+SPR-00899,Technical Evaluation,Business Case,2026-05-06
+SPR-00899,Business Case,Negotiation,2026-05-26
+SPR-00899,Negotiation,Closed Won,2026-06-21
+SPR-00900,,Discovery,2026-04-15
+SPR-00900,Discovery,Closed Lost,2026-06-12
+SPR-00901,,Discovery,2026-04-15
+SPR-00901,Discovery,Closed Lost,2026-05-01
+SPR-00902,,Discovery,2026-04-16
+SPR-00902,Discovery,Closed Lost,2026-04-26
+SPR-00903,,Discovery,2026-04-17
+SPR-00903,Discovery,Qualification,2026-05-15
+SPR-00903,Qualification,Technical Evaluation,2026-06-05
+SPR-00903,Technical Evaluation,Business Case,2026-08-02
+SPR-00903,Business Case,Negotiation,2026-08-11
+SPR-00903,Negotiation,Closed Won,2026-08-13
+SPR-00904,,Discovery,2026-04-18
+SPR-00904,Discovery,Closed Lost,2026-05-07
+SPR-00905,,Discovery,2026-04-19
+SPR-00905,Discovery,Closed Lost,2026-05-10
+SPR-00906,,Discovery,2026-04-19
+SPR-00906,Discovery,Qualification,2026-05-19
+SPR-00906,Qualification,Closed Lost,2026-06-15
+SPR-00907,,Discovery,2026-04-20
+SPR-00907,Discovery,Qualification,2026-04-29
+SPR-00907,Qualification,Closed Lost,2026-04-30
+SPR-00908,,Discovery,2026-04-20
+SPR-00909,,Discovery,2026-04-20
+SPR-00909,Discovery,Closed Lost,2026-04-25
+SPR-00910,,Discovery,2026-04-21
+SPR-00910,Discovery,Qualification,2026-04-22
+SPR-00910,Qualification,Technical Evaluation,2026-04-29
+SPR-00910,Technical Evaluation,Business Case,2026-05-07
+SPR-00910,Business Case,Closed Lost,2026-06-09
+SPR-00911,,Discovery,2026-04-21
+SPR-00911,Discovery,Qualification,2026-04-23
+SPR-00911,Qualification,Technical Evaluation,2026-04-24
+SPR-00911,Technical Evaluation,Business Case,2026-05-20
+SPR-00911,Business Case,Closed Lost,2026-06-21
+SPR-00912,,Discovery,2026-04-22
+SPR-00912,Discovery,Qualification,2026-04-28
+SPR-00912,Qualification,Closed Lost,2026-05-12
+SPR-00913,,Discovery,2026-04-22
+SPR-00913,Discovery,Closed Lost,2026-05-31
+SPR-00914,,Discovery,2026-04-23
+SPR-00914,Discovery,Closed Lost,2026-05-17
+SPR-00915,,Discovery,2026-04-23
+SPR-00915,Discovery,Closed Lost,2026-04-26
+SPR-00916,,Discovery,2026-04-23
+SPR-00916,Discovery,Qualification,2026-06-16
+SPR-00916,Qualification,Technical Evaluation,2026-07-07
+SPR-00916,Technical Evaluation,Business Case,2026-08-04
+SPR-00917,,Discovery,2026-04-24
+SPR-00917,Discovery,Qualification,2026-05-19
+SPR-00917,Qualification,Technical Evaluation,2026-06-10
+SPR-00917,Technical Evaluation,Business Case,2026-06-30
+SPR-00917,Business Case,Closed Lost,2026-07-30
+SPR-00918,,Discovery,2026-04-25
+SPR-00918,Discovery,Closed Lost,2026-05-29
+SPR-00919,,Discovery,2026-04-26
+SPR-00919,Discovery,Qualification,2026-05-19
+SPR-00919,Qualification,Closed Lost,2026-06-23
+SPR-00920,,Discovery,2026-04-27
+SPR-00920,Discovery,Closed Lost,2026-05-18
+SPR-00921,,Discovery,2026-04-27
+SPR-00921,Discovery,Qualification,2026-05-06
+SPR-00921,Qualification,Closed Lost,2026-05-07
+SPR-00922,,Discovery,2026-04-28
+SPR-00922,Discovery,Closed Lost,2026-08-23
+SPR-00923,,Discovery,2026-04-29
+SPR-00923,Discovery,Qualification,2026-05-20
+SPR-00924,,Discovery,2026-04-29
+SPR-00924,Discovery,Closed Lost,2026-05-20
+SPR-00925,,Discovery,2026-04-30
+SPR-00925,Discovery,Qualification,2026-05-09
+SPR-00925,Qualification,Closed Lost,2026-05-12
+SPR-00926,,Discovery,2026-05-01
+SPR-00926,Discovery,Closed Lost,2026-05-16
+SPR-00927,,Discovery,2026-05-01
+SPR-00927,Discovery,Closed Lost,2026-05-09
+SPR-00928,,Discovery,2026-05-01
+SPR-00928,Discovery,Qualification,2026-05-10
+SPR-00928,Qualification,Closed Lost,2026-06-03
+SPR-00929,,Discovery,2026-05-03
+SPR-00929,Discovery,Qualification,2026-06-03
+SPR-00929,Qualification,Technical Evaluation,2026-06-27
+SPR-00929,Technical Evaluation,Business Case,2026-07-01
+SPR-00930,,Discovery,2026-05-03
+SPR-00930,Discovery,Qualification,2026-05-13
+SPR-00930,Qualification,Technical Evaluation,2026-06-10
+SPR-00930,Technical Evaluation,Closed Lost,2026-07-11
+SPR-00931,,Discovery,2026-05-03
+SPR-00931,Discovery,Qualification,2026-05-21
+SPR-00931,Qualification,Technical Evaluation,2026-05-24
+SPR-00931,Technical Evaluation,Closed Lost,2026-07-07
+SPR-00932,,Discovery,2026-05-03
+SPR-00932,Discovery,Closed Lost,2026-05-13
+SPR-00933,,Discovery,2026-05-03
+SPR-00933,Discovery,Closed Lost,2026-05-11
+SPR-00934,,Discovery,2026-05-04
+SPR-00934,Discovery,Closed Lost,2026-05-18
+SPR-00935,,Discovery,2026-05-04
+SPR-00935,Discovery,Closed Lost,2026-05-19
+SPR-00936,,Discovery,2026-05-05
+SPR-00936,Discovery,Closed Lost,2026-06-04
+SPR-00937,,Discovery,2026-05-05
+SPR-00937,Discovery,Closed Lost,2026-05-06
+SPR-00938,,Discovery,2026-05-05
+SPR-00938,Discovery,Closed Lost,2026-05-19
+SPR-00939,,Discovery,2026-05-05
+SPR-00939,Discovery,Closed Lost,2026-05-23
+SPR-00940,,Discovery,2026-05-06
+SPR-00940,Discovery,Closed Lost,2026-05-09
+SPR-00941,,Discovery,2026-05-07
+SPR-00941,Discovery,Qualification,2026-05-16
+SPR-00941,Qualification,Closed Lost,2026-06-04
+SPR-00942,,Discovery,2026-05-07
+SPR-00942,Discovery,Qualification,2026-06-10
+SPR-00942,Qualification,Technical Evaluation,2026-06-20
+SPR-00942,Technical Evaluation,Business Case,2026-06-25
+SPR-00942,Business Case,Negotiation,2026-07-25
+SPR-00942,Negotiation,Closed Won,2026-08-04
+SPR-00943,,Discovery,2026-05-07
+SPR-00944,,Discovery,2026-05-09
+SPR-00944,Discovery,Closed Lost,2026-06-06
+SPR-00945,,Discovery,2026-05-09
+SPR-00945,Discovery,Qualification,2026-06-17
+SPR-00945,Qualification,Technical Evaluation,2026-07-03
+SPR-00945,Technical Evaluation,Business Case,2026-07-30
+SPR-00945,Business Case,Negotiation,2026-08-31
+SPR-00946,,Discovery,2026-05-10
+SPR-00946,Discovery,Qualification,2026-05-24
+SPR-00946,Qualification,Technical Evaluation,2026-05-30
+SPR-00946,Technical Evaluation,Closed Lost,2026-06-20
+SPR-00947,,Discovery,2026-05-10
+SPR-00947,Discovery,Qualification,2026-05-21
+SPR-00947,Qualification,Technical Evaluation,2026-08-08
+SPR-00947,Technical Evaluation,Business Case,2026-08-11
+SPR-00947,Business Case,Closed Lost,2026-08-17
+SPR-00948,,Discovery,2026-05-13
+SPR-00948,Discovery,Closed Lost,2026-07-24
+SPR-00949,,Discovery,2026-05-14
+SPR-00949,Discovery,Qualification,2026-05-26
+SPR-00949,Qualification,Technical Evaluation,2026-06-13
+SPR-00949,Technical Evaluation,Business Case,2026-06-19
+SPR-00949,Business Case,Negotiation,2026-06-23
+SPR-00949,Negotiation,Closed Lost,2026-07-03
+SPR-00950,,Discovery,2026-05-14
+SPR-00950,Discovery,Closed Lost,2026-05-23
+SPR-00951,,Discovery,2026-05-14
+SPR-00951,Discovery,Closed Lost,2026-06-05
+SPR-00952,,Discovery,2026-05-15
+SPR-00952,Discovery,Closed Lost,2026-05-28
+SPR-00953,,Discovery,2026-05-15
+SPR-00953,Discovery,Qualification,2026-05-17
+SPR-00953,Qualification,Technical Evaluation,2026-05-24
+SPR-00953,Technical Evaluation,Business Case,2026-08-23
+SPR-00954,,Discovery,2026-05-17
+SPR-00954,Discovery,Closed Lost,2026-07-08
+SPR-00955,,Discovery,2026-05-17
+SPR-00955,Discovery,Qualification,2026-05-24
+SPR-00955,Qualification,Technical Evaluation,2026-05-26
+SPR-00955,Technical Evaluation,Business Case,2026-06-18
+SPR-00955,Business Case,Closed Lost,2026-07-07
+SPR-00956,,Discovery,2026-05-17
+SPR-00956,Discovery,Qualification,2026-06-11
+SPR-00956,Qualification,Technical Evaluation,2026-06-18
+SPR-00956,Technical Evaluation,Business Case,2026-08-19
+SPR-00956,Business Case,Closed Lost,2026-08-28
+SPR-00957,,Discovery,2026-05-17
+SPR-00957,Discovery,Qualification,2026-06-02
+SPR-00957,Qualification,Closed Lost,2026-06-27
+SPR-00958,,Discovery,2026-05-18
+SPR-00958,Discovery,Qualification,2026-05-27
+SPR-00958,Qualification,Technical Evaluation,2026-06-02
+SPR-00958,Technical Evaluation,Closed Lost,2026-06-06
+SPR-00959,,Discovery,2026-05-18
+SPR-00959,Discovery,Qualification,2026-05-21
+SPR-00959,Qualification,Technical Evaluation,2026-06-28
+SPR-00959,Technical Evaluation,Closed Lost,2026-07-27
+SPR-00960,,Discovery,2026-05-19
+SPR-00960,Discovery,Closed Lost,2026-06-02
+SPR-00961,,Discovery,2026-05-20
+SPR-00961,Discovery,Closed Lost,2026-05-23
+SPR-00962,,Discovery,2026-05-20
+SPR-00962,Discovery,Closed Lost,2026-06-04
+SPR-00963,,Discovery,2026-05-20
+SPR-00963,Discovery,Closed Lost,2026-05-28
+SPR-00964,,Discovery,2026-05-21
+SPR-00964,Discovery,Closed Lost,2026-05-25
+SPR-00965,,Discovery,2026-05-21
+SPR-00965,Discovery,Qualification,2026-06-13
+SPR-00965,Qualification,Closed Lost,2026-08-16
+SPR-00966,,Discovery,2026-05-21
+SPR-00966,Discovery,Closed Lost,2026-06-27
+SPR-00967,,Discovery,2026-05-21
+SPR-00967,Discovery,Qualification,2026-06-23
+SPR-00967,Qualification,Closed Lost,2026-07-18
+SPR-00968,,Discovery,2026-05-22
+SPR-00968,Discovery,Qualification,2026-06-15
+SPR-00968,Qualification,Technical Evaluation,2026-08-04
+SPR-00968,Technical Evaluation,Business Case,2026-08-20
+SPR-00968,Business Case,Negotiation,2026-08-31
+SPR-00969,,Discovery,2026-05-22
+SPR-00969,Discovery,Qualification,2026-05-29
+SPR-00969,Qualification,Technical Evaluation,2026-06-27
+SPR-00969,Technical Evaluation,Closed Lost,2026-07-29
+SPR-00970,,Discovery,2026-05-22
+SPR-00970,Discovery,Qualification,2026-06-16
+SPR-00970,Qualification,Technical Evaluation,2026-07-13
+SPR-00970,Technical Evaluation,Business Case,2026-07-18
+SPR-00970,Business Case,Closed Lost,2026-08-21
+SPR-00971,,Discovery,2026-05-22
+SPR-00971,Discovery,Closed Lost,2026-07-09
+SPR-00972,,Discovery,2026-05-23
+SPR-00972,Discovery,Closed Lost,2026-05-25
+SPR-00973,,Discovery,2026-05-25
+SPR-00973,Discovery,Qualification,2026-06-01
+SPR-00973,Qualification,Technical Evaluation,2026-06-17
+SPR-00973,Technical Evaluation,Business Case,2026-06-23
+SPR-00973,Business Case,Negotiation,2026-07-03
+SPR-00973,Negotiation,Closed Won,2026-08-27
+SPR-00974,,Discovery,2026-05-26
+SPR-00974,Discovery,Qualification,2026-07-01
+SPR-00974,Qualification,Technical Evaluation,2026-07-04
+SPR-00974,Technical Evaluation,Closed Lost,2026-07-28
+SPR-00975,,Discovery,2026-05-26
+SPR-00975,Discovery,Closed Lost,2026-06-24
+SPR-00976,,Discovery,2026-05-27
+SPR-00976,Discovery,Qualification,2026-06-14
+SPR-00976,Qualification,Closed Lost,2026-06-17
+SPR-00977,,Discovery,2026-05-27
+SPR-00977,Discovery,Closed Lost,2026-06-19
+SPR-00978,,Discovery,2026-05-27
+SPR-00978,Discovery,Closed Lost,2026-05-30
+SPR-00979,,Discovery,2026-05-28
+SPR-00979,Discovery,Qualification,2026-06-12
+SPR-00979,Qualification,Technical Evaluation,2026-07-03
+SPR-00979,Technical Evaluation,Business Case,2026-08-18
+SPR-00980,,Discovery,2026-05-28
+SPR-00980,Discovery,Closed Lost,2026-06-17
+SPR-00981,,Discovery,2026-05-29
+SPR-00981,Discovery,Closed Lost,2026-06-01
+SPR-00982,,Discovery,2026-05-30
+SPR-00982,Discovery,Qualification,2026-06-19
+SPR-00982,Qualification,Technical Evaluation,2026-07-07
+SPR-00982,Technical Evaluation,Closed Lost,2026-07-15
+SPR-00983,,Discovery,2026-05-30
+SPR-00983,Discovery,Closed Lost,2026-07-02
+SPR-00984,,Discovery,2026-05-30
+SPR-00984,Discovery,Closed Lost,2026-07-10
+SPR-00985,,Discovery,2026-05-30
+SPR-00985,Discovery,Qualification,2026-06-12
+SPR-00985,Qualification,Closed Lost,2026-06-14
+SPR-00986,,Discovery,2026-05-30
+SPR-00987,,Discovery,2026-05-30
+SPR-00987,Discovery,Qualification,2026-06-06
+SPR-00987,Qualification,Technical Evaluation,2026-06-29
+SPR-00987,Technical Evaluation,Closed Lost,2026-07-17
+SPR-00988,,Discovery,2026-05-30
+SPR-00988,Discovery,Closed Lost,2026-06-05
+SPR-00989,,Discovery,2026-05-31
+SPR-00989,Discovery,Qualification,2026-06-02
+SPR-00989,Qualification,Technical Evaluation,2026-07-15
+SPR-00989,Technical Evaluation,Business Case,2026-07-26
+SPR-00989,Business Case,Closed Lost,2026-08-23
+SPR-00990,,Discovery,2026-06-02
+SPR-00990,Discovery,Closed Lost,2026-08-20
+SPR-00991,,Discovery,2026-06-02
+SPR-00991,Discovery,Qualification,2026-07-22
+SPR-00991,Qualification,Technical Evaluation,2026-08-06
+SPR-00991,Technical Evaluation,Business Case,2026-08-14
+SPR-00992,,Discovery,2026-06-04
+SPR-00992,Discovery,Qualification,2026-06-10
+SPR-00992,Qualification,Technical Evaluation,2026-07-13
+SPR-00992,Technical Evaluation,Business Case,2026-07-29
+SPR-00992,Business Case,Closed Lost,2026-08-29
+SPR-00993,,Discovery,2026-06-04
+SPR-00993,Discovery,Closed Lost,2026-06-07
+SPR-00994,,Discovery,2026-06-04
+SPR-00994,Discovery,Qualification,2026-06-12
+SPR-00994,Qualification,Closed Lost,2026-06-26
+SPR-00995,,Discovery,2026-06-05
+SPR-00995,Discovery,Qualification,2026-07-05
+SPR-00995,Qualification,Technical Evaluation,2026-07-27
+SPR-00995,Technical Evaluation,Closed Lost,2026-08-12
+SPR-00996,,Discovery,2026-06-05
+SPR-00996,Discovery,Qualification,2026-06-10
+SPR-00996,Qualification,Technical Evaluation,2026-08-22
+SPR-00997,,Discovery,2026-06-06
+SPR-00998,,Discovery,2026-06-06
+SPR-00998,Discovery,Qualification,2026-06-28
+SPR-00998,Qualification,Technical Evaluation,2026-07-21
+SPR-00998,Technical Evaluation,Business Case,2026-08-05
+SPR-00998,Business Case,Closed Lost,2026-08-11
+SPR-00999,,Discovery,2026-06-07
+SPR-00999,Discovery,Qualification,2026-07-15
+SPR-00999,Qualification,Closed Lost,2026-07-22
+SPR-01000,,Discovery,2026-06-07
+SPR-01000,Discovery,Closed Lost,2026-06-21
+SPR-01001,,Discovery,2026-06-08
+SPR-01001,Discovery,Closed Lost,2026-06-13
+SPR-01002,,Discovery,2026-06-08
+SPR-01002,Discovery,Qualification,2026-06-12
+SPR-01002,Qualification,Technical Evaluation,2026-06-21
+SPR-01002,Technical Evaluation,Business Case,2026-07-28
+SPR-01002,Business Case,Closed Lost,2026-08-02
+SPR-01003,,Discovery,2026-06-08
+SPR-01003,Discovery,Qualification,2026-07-22
+SPR-01003,Qualification,Closed Lost,2026-08-11
+SPR-01004,,Discovery,2026-06-08
+SPR-01004,Discovery,Qualification,2026-07-14
+SPR-01005,,Discovery,2026-06-09
+SPR-01005,Discovery,Qualification,2026-07-20
+SPR-01006,,Discovery,2026-06-09
+SPR-01006,Discovery,Qualification,2026-08-14
+SPR-01007,,Discovery,2026-06-11
+SPR-01007,Discovery,Closed Lost,2026-06-29
+SPR-01008,,Discovery,2026-06-11
+SPR-01008,Discovery,Closed Lost,2026-07-01
+SPR-01009,,Discovery,2026-06-11
+SPR-01009,Discovery,Qualification,2026-06-28
+SPR-01009,Qualification,Closed Lost,2026-07-04
+SPR-01010,,Discovery,2026-06-12
+SPR-01010,Discovery,Qualification,2026-06-14
+SPR-01010,Qualification,Technical Evaluation,2026-06-22
+SPR-01011,,Discovery,2026-06-14
+SPR-01011,Discovery,Qualification,2026-07-10
+SPR-01011,Qualification,Technical Evaluation,2026-07-12
+SPR-01011,Technical Evaluation,Business Case,2026-07-19
+SPR-01011,Business Case,Negotiation,2026-07-24
+SPR-01011,Negotiation,Closed Won,2026-08-10
+SPR-01012,,Discovery,2026-06-15
+SPR-01012,Discovery,Qualification,2026-07-01
+SPR-01012,Qualification,Technical Evaluation,2026-07-14
+SPR-01012,Technical Evaluation,Business Case,2026-07-22
+SPR-01012,Business Case,Negotiation,2026-07-27
+SPR-01012,Negotiation,Closed Won,2026-08-11
+SPR-01013,,Discovery,2026-06-15
+SPR-01013,Discovery,Qualification,2026-07-01
+SPR-01013,Qualification,Technical Evaluation,2026-08-07
+SPR-01013,Technical Evaluation,Business Case,2026-08-26
+SPR-01013,Business Case,Negotiation,2026-08-28
+SPR-01014,,Discovery,2026-06-16
+SPR-01014,Discovery,Qualification,2026-07-02
+SPR-01014,Qualification,Closed Lost,2026-07-05
+SPR-01015,,Discovery,2026-06-16
+SPR-01015,Discovery,Closed Lost,2026-06-21
+SPR-01016,,Discovery,2026-06-16
+SPR-01016,Discovery,Closed Lost,2026-07-22
+SPR-01017,,Discovery,2026-06-16
+SPR-01017,Discovery,Closed Lost,2026-06-28
+SPR-01018,,Discovery,2026-06-17
+SPR-01018,Discovery,Qualification,2026-06-19
+SPR-01018,Qualification,Technical Evaluation,2026-07-12
+SPR-01018,Technical Evaluation,Business Case,2026-07-24
+SPR-01018,Business Case,Negotiation,2026-08-30
+SPR-01019,,Discovery,2026-06-17
+SPR-01019,Discovery,Qualification,2026-07-14
+SPR-01020,,Discovery,2026-06-18
+SPR-01020,Discovery,Qualification,2026-06-23
+SPR-01021,,Discovery,2026-06-19
+SPR-01021,Discovery,Qualification,2026-06-30
+SPR-01021,Qualification,Technical Evaluation,2026-07-17
+SPR-01021,Technical Evaluation,Business Case,2026-08-26
+SPR-01022,,Discovery,2026-06-20
+SPR-01022,Discovery,Qualification,2026-06-25
+SPR-01022,Qualification,Technical Evaluation,2026-06-28
+SPR-01022,Technical Evaluation,Business Case,2026-08-03
+SPR-01022,Business Case,Closed Lost,2026-08-10
+SPR-01023,,Discovery,2026-06-20
+SPR-01023,Discovery,Qualification,2026-07-03
+SPR-01023,Qualification,Technical Evaluation,2026-08-07
+SPR-01024,,Discovery,2026-06-21
+SPR-01024,Discovery,Closed Lost,2026-06-25
+SPR-01025,,Discovery,2026-06-21
+SPR-01025,Discovery,Qualification,2026-07-06
+SPR-01025,Qualification,Technical Evaluation,2026-07-20
+SPR-01025,Technical Evaluation,Business Case,2026-08-11
+SPR-01026,,Discovery,2026-06-21
+SPR-01026,Discovery,Closed Lost,2026-06-22
+SPR-01027,,Discovery,2026-06-22
+SPR-01027,Discovery,Qualification,2026-07-07
+SPR-01027,Qualification,Technical Evaluation,2026-07-24
+SPR-01027,Technical Evaluation,Business Case,2026-08-30
+SPR-01028,,Discovery,2026-06-22
+SPR-01029,,Discovery,2026-06-22
+SPR-01029,Discovery,Qualification,2026-06-29
+SPR-01029,Qualification,Technical Evaluation,2026-07-02
+SPR-01029,Technical Evaluation,Closed Lost,2026-07-03
+SPR-01030,,Discovery,2026-06-24
+SPR-01030,Discovery,Closed Lost,2026-06-27
+SPR-01031,,Discovery,2026-06-24
+SPR-01031,Discovery,Closed Lost,2026-07-05
+SPR-01032,,Discovery,2026-06-24
+SPR-01033,,Discovery,2026-06-24
+SPR-01033,Discovery,Closed Lost,2026-07-29
+SPR-01034,,Discovery,2026-06-26
+SPR-01034,Discovery,Qualification,2026-07-01
+SPR-01035,,Discovery,2026-06-26
+SPR-01035,Discovery,Closed Lost,2026-06-29
+SPR-01036,,Discovery,2026-06-27
+SPR-01036,Discovery,Closed Lost,2026-07-27
+SPR-01037,,Discovery,2026-06-28
+SPR-01037,Discovery,Closed Lost,2026-08-06
+SPR-01038,,Discovery,2026-06-28
+SPR-01038,Discovery,Closed Lost,2026-07-05
+SPR-01039,,Discovery,2026-06-29
+SPR-01039,Discovery,Closed Lost,2026-06-30
+SPR-01040,,Discovery,2026-07-02
+SPR-01040,Discovery,Closed Lost,2026-07-22
+SPR-01041,,Discovery,2026-07-05
+SPR-01041,Discovery,Qualification,2026-08-07
+SPR-01042,,Discovery,2026-07-07
+SPR-01042,Discovery,Qualification,2026-07-14
+SPR-01042,Qualification,Technical Evaluation,2026-07-21
+SPR-01042,Technical Evaluation,Business Case,2026-07-24
+SPR-01042,Business Case,Negotiation,2026-07-30
+SPR-01043,,Discovery,2026-07-08
+SPR-01043,Discovery,Closed Lost,2026-07-22
+SPR-01044,,Discovery,2026-07-08
+SPR-01044,Discovery,Qualification,2026-07-09
+SPR-01044,Qualification,Technical Evaluation,2026-07-14
+SPR-01044,Technical Evaluation,Business Case,2026-07-29
+SPR-01044,Business Case,Negotiation,2026-08-09
+SPR-01044,Negotiation,Closed Won,2026-08-10
+SPR-01045,,Discovery,2026-07-08
+SPR-01045,Discovery,Closed Lost,2026-07-19
+SPR-01046,,Discovery,2026-07-09
+SPR-01046,Discovery,Closed Lost,2026-07-18
+SPR-01047,,Discovery,2026-07-09
+SPR-01047,Discovery,Closed Lost,2026-07-15
+SPR-01048,,Discovery,2026-07-09
+SPR-01048,Discovery,Closed Lost,2026-07-21
+SPR-01049,,Discovery,2026-07-10
+SPR-01049,Discovery,Closed Lost,2026-08-26
+SPR-01050,,Discovery,2026-07-10
+SPR-01050,Discovery,Qualification,2026-07-17
+SPR-01050,Qualification,Closed Lost,2026-08-21
+SPR-01051,,Discovery,2026-07-10
+SPR-01051,Discovery,Closed Lost,2026-07-15
+SPR-01052,,Discovery,2026-07-10
+SPR-01052,Discovery,Qualification,2026-08-08
+SPR-01053,,Discovery,2026-07-11
+SPR-01053,Discovery,Qualification,2026-07-18
+SPR-01053,Qualification,Technical Evaluation,2026-07-30
+SPR-01054,,Discovery,2026-07-11
+SPR-01054,Discovery,Qualification,2026-07-31
+SPR-01054,Qualification,Closed Lost,2026-08-06
+SPR-01055,,Discovery,2026-07-11
+SPR-01055,Discovery,Closed Lost,2026-08-30
+SPR-01056,,Discovery,2026-07-11
+SPR-01056,Discovery,Closed Lost,2026-08-01
+SPR-01057,,Discovery,2026-07-11
+SPR-01057,Discovery,Qualification,2026-07-17
+SPR-01057,Qualification,Technical Evaluation,2026-07-26
+SPR-01057,Technical Evaluation,Business Case,2026-08-03
+SPR-01057,Business Case,Negotiation,2026-08-11
+SPR-01058,,Discovery,2026-07-12
+SPR-01058,Discovery,Qualification,2026-07-25
+SPR-01058,Qualification,Closed Lost,2026-08-06
+SPR-01059,,Discovery,2026-07-13
+SPR-01059,Discovery,Qualification,2026-07-27
+SPR-01059,Qualification,Closed Lost,2026-08-06
+SPR-01060,,Discovery,2026-07-13
+SPR-01060,Discovery,Qualification,2026-08-09
+SPR-01060,Qualification,Technical Evaluation,2026-08-13
+SPR-01060,Technical Evaluation,Closed Lost,2026-08-20
+SPR-01061,,Discovery,2026-07-13
+SPR-01061,Discovery,Qualification,2026-07-27
+SPR-01061,Qualification,Closed Lost,2026-08-08
+SPR-01062,,Discovery,2026-07-14
+SPR-01062,Discovery,Qualification,2026-08-11
+SPR-01062,Qualification,Closed Lost,2026-08-21
+SPR-01063,,Discovery,2026-07-14
+SPR-01063,Discovery,Qualification,2026-08-02
+SPR-01063,Qualification,Closed Lost,2026-08-15
+SPR-01064,,Discovery,2026-07-14
+SPR-01064,Discovery,Closed Lost,2026-08-09
+SPR-01065,,Discovery,2026-07-14
+SPR-01065,Discovery,Closed Lost,2026-07-15
+SPR-01066,,Discovery,2026-07-14
+SPR-01066,Discovery,Closed Lost,2026-08-14
+SPR-01067,,Discovery,2026-07-15
+SPR-01067,Discovery,Closed Lost,2026-07-16
+SPR-01068,,Discovery,2026-07-15
+SPR-01068,Discovery,Qualification,2026-08-11
+SPR-01068,Qualification,Technical Evaluation,2026-08-25
+SPR-01069,,Discovery,2026-07-16
+SPR-01069,Discovery,Closed Lost,2026-07-17
+SPR-01070,,Discovery,2026-07-17
+SPR-01071,,Discovery,2026-07-17
+SPR-01071,Discovery,Closed Lost,2026-07-27
+SPR-01072,,Discovery,2026-07-17
+SPR-01072,Discovery,Closed Lost,2026-07-31
+SPR-01073,,Discovery,2026-07-17
+SPR-01073,Discovery,Qualification,2026-07-22
+SPR-01073,Qualification,Closed Lost,2026-07-29
+SPR-01074,,Discovery,2026-07-17
+SPR-01074,Discovery,Qualification,2026-07-29
+SPR-01074,Qualification,Closed Lost,2026-08-30
+SPR-01075,,Discovery,2026-07-18
+SPR-01075,Discovery,Qualification,2026-08-10
+SPR-01075,Qualification,Technical Evaluation,2026-08-14
+SPR-01075,Technical Evaluation,Closed Lost,2026-08-16
+SPR-01076,,Discovery,2026-07-18
+SPR-01076,Discovery,Qualification,2026-08-09
+SPR-01076,Qualification,Closed Lost,2026-08-22
+SPR-01077,,Discovery,2026-07-18
+SPR-01077,Discovery,Closed Lost,2026-08-02
+SPR-01078,,Discovery,2026-07-19
+SPR-01078,Discovery,Closed Lost,2026-08-09
+SPR-01079,,Discovery,2026-07-21
+SPR-01079,Discovery,Qualification,2026-08-04
+SPR-01079,Qualification,Technical Evaluation,2026-08-12
+SPR-01079,Technical Evaluation,Business Case,2026-08-18
+SPR-01079,Business Case,Negotiation,2026-08-19
+SPR-01080,,Discovery,2026-07-21
+SPR-01080,Discovery,Closed Lost,2026-08-02
+SPR-01081,,Discovery,2026-07-22
+SPR-01081,Discovery,Qualification,2026-08-12
+SPR-01082,,Discovery,2026-07-23
+SPR-01082,Discovery,Qualification,2026-07-31
+SPR-01082,Qualification,Closed Lost,2026-08-21
+SPR-01083,,Discovery,2026-07-23
+SPR-01083,Discovery,Closed Lost,2026-08-04
+SPR-01084,,Discovery,2026-07-24
+SPR-01084,Discovery,Qualification,2026-07-27
+SPR-01084,Qualification,Technical Evaluation,2026-07-30
+SPR-01085,,Discovery,2026-07-24
+SPR-01085,Discovery,Qualification,2026-07-29
+SPR-01085,Qualification,Technical Evaluation,2026-08-12
+SPR-01085,Technical Evaluation,Business Case,2026-08-16
+SPR-01086,,Discovery,2026-07-24
+SPR-01086,Discovery,Qualification,2026-08-07
+SPR-01086,Qualification,Technical Evaluation,2026-08-08
+SPR-01087,,Discovery,2026-07-25
+SPR-01087,Discovery,Qualification,2026-08-01
+SPR-01087,Qualification,Closed Lost,2026-08-12
+SPR-01088,,Discovery,2026-07-25
+SPR-01088,Discovery,Qualification,2026-08-04
+SPR-01088,Qualification,Closed Lost,2026-08-10
+SPR-01089,,Discovery,2026-07-26
+SPR-01089,Discovery,Qualification,2026-08-01
+SPR-01090,,Discovery,2026-07-26
+SPR-01090,Discovery,Qualification,2026-08-09
+SPR-01091,,Discovery,2026-07-27
+SPR-01091,Discovery,Closed Lost,2026-07-30
+SPR-01092,,Discovery,2026-07-27
+SPR-01092,Discovery,Closed Lost,2026-08-01
+SPR-01093,,Discovery,2026-07-27
+SPR-01094,,Discovery,2026-07-27
+SPR-01095,,Discovery,2026-07-27
+SPR-01095,Discovery,Closed Lost,2026-08-06
+SPR-01096,,Discovery,2026-07-27
+SPR-01096,Discovery,Qualification,2026-08-07
+SPR-01097,,Discovery,2026-07-29
+SPR-01097,Discovery,Closed Lost,2026-08-30
+SPR-01098,,Discovery,2026-07-29
+SPR-01098,Discovery,Closed Lost,2026-08-12
+SPR-01099,,Discovery,2026-08-01
+SPR-01099,Discovery,Qualification,2026-08-03
+SPR-01099,Qualification,Closed Lost,2026-08-26
+SPR-01100,,Discovery,2026-08-01
+SPR-01101,,Discovery,2026-08-01
+SPR-01101,Discovery,Qualification,2026-08-31
+SPR-01102,,Discovery,2026-08-01
+SPR-01102,Discovery,Closed Lost,2026-08-13
+SPR-01103,,Discovery,2026-08-01
+SPR-01103,Discovery,Qualification,2026-08-04
+SPR-01103,Qualification,Technical Evaluation,2026-08-30
+SPR-01103,Technical Evaluation,Business Case,2026-08-31
+SPR-01104,,Discovery,2026-08-02
+SPR-01104,Discovery,Qualification,2026-08-17
+SPR-01104,Qualification,Technical Evaluation,2026-08-29
+SPR-01105,,Discovery,2026-08-03
+SPR-01106,,Discovery,2026-08-03
+SPR-01106,Discovery,Closed Lost,2026-08-04
+SPR-01107,,Discovery,2026-08-03
+SPR-01107,Discovery,Closed Lost,2026-08-06
+SPR-01108,,Discovery,2026-08-04
+SPR-01108,Discovery,Qualification,2026-08-13
+SPR-01108,Qualification,Technical Evaluation,2026-08-24
+SPR-01109,,Discovery,2026-08-04
+SPR-01109,Discovery,Closed Lost,2026-08-06
+SPR-01110,,Discovery,2026-08-05
+SPR-01111,,Discovery,2026-08-06
+SPR-01111,Discovery,Qualification,2026-08-31
+SPR-01112,,Discovery,2026-08-07
+SPR-01112,Discovery,Qualification,2026-08-16
+SPR-01112,Qualification,Technical Evaluation,2026-08-22
+SPR-01113,,Discovery,2026-08-07
+SPR-01113,Discovery,Qualification,2026-08-13
+SPR-01114,,Discovery,2026-08-07
+SPR-01115,,Discovery,2026-08-08
+SPR-01116,,Discovery,2026-08-08
+SPR-01116,Discovery,Qualification,2026-08-14
+SPR-01117,,Discovery,2026-08-08
+SPR-01117,Discovery,Qualification,2026-08-26
+SPR-01117,Qualification,Technical Evaluation,2026-08-28
+SPR-01118,,Discovery,2026-08-09
+SPR-01118,Discovery,Qualification,2026-08-10
+SPR-01119,,Discovery,2026-08-09
+SPR-01120,,Discovery,2026-08-10
+SPR-01120,Discovery,Qualification,2026-08-12
+SPR-01121,,Discovery,2026-08-13
+SPR-01122,,Discovery,2026-08-15
+SPR-01122,Discovery,Qualification,2026-08-19
+SPR-01124,,Discovery,2026-08-17
+SPR-01124,Discovery,Closed Lost,2026-08-29
+SPR-01125,,Discovery,2026-08-17
+SPR-01126,,Discovery,2026-08-18
+SPR-01126,Discovery,Qualification,2026-08-31
+SPR-01127,,Discovery,2026-08-19
+SPR-01127,Discovery,Closed Lost,2026-08-29
+SPR-01128,,Discovery,2026-08-19
+SPR-01128,Discovery,Qualification,2026-08-21
+SPR-01129,,Discovery,2026-08-20
+SPR-01129,Discovery,Closed Lost,2026-08-25
+SPR-01130,,Discovery,2026-08-20
+SPR-01130,Discovery,Qualification,2026-08-25
+SPR-01132,,Discovery,2026-08-22
+SPR-01132,Discovery,Closed Lost,2026-08-27
+SPR-01133,,Discovery,2026-08-22
+SPR-01134,,Discovery,2026-08-24
+SPR-01134,Discovery,Closed Lost,2026-08-25
+SPR-01135,,Discovery,2026-08-24
+SPR-01136,,Discovery,2026-08-24
+SPR-01136,Discovery,Qualification,2026-08-29
+SPR-01137,,Discovery,2026-08-25
+SPR-01138,,Discovery,2026-08-25
+SPR-01139,,Discovery,2026-08-25
+SPR-01139,Discovery,Qualification,2026-08-27
+SPR-01140,,Discovery,2026-08-25
+SPR-01141,,Discovery,2026-08-26
+SPR-01142,,Discovery,2026-08-27
+SPR-01143,,Discovery,2026-08-27
+SPR-01144,,Discovery,2026-08-28
+SPR-01145,,Discovery,2026-08-28
+SPR-01146,,Discovery,2026-08-28
+SPR-01147,,Discovery,2026-08-29
+SPR-01148,,Discovery,2026-08-29
+SPR-01149,,Discovery,2026-08-30
+SPR-01150,,Discovery,2026-08-31
