@@ -14,7 +14,7 @@ from datetime import date
 from decimal import Decimal
 
 from .fiscal import Window, add_months
-from .fit import FitParams, fit, matured_snapshots
+from .fit import DEFAULT_PARAMS, FitParams, fit, matured_snapshots
 from .forecast import model_forecast, run_rate, simulate, stage_weighted
 from .history import as_known_at, latest_known_date
 from .records import Dataset, Profile
@@ -65,7 +65,7 @@ def fold(
     cutoff: date,
     horizons: tuple[int, ...],
     profile: Profile,
-    params: FitParams = FitParams(),
+    params: FitParams = DEFAULT_PARAMS,
     draws: int = 1000,
     seed: int = 0,
 ) -> list[Fold]:
@@ -105,7 +105,7 @@ def backtest(
     population: Dataset,
     as_of: date,
     profile: Profile,
-    params: FitParams = FitParams(),
+    params: FitParams = DEFAULT_PARAMS,
     draws: int = 1000,
     seed: int = 0,
 ) -> Backtest:

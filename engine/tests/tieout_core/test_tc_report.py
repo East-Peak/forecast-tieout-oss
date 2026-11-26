@@ -199,7 +199,7 @@ def test_command_writes_both_files(tmp_path):
             str(out),
             "--draws",
             "50",
-        ],  # fmt: skip
+        ],
         check=True,
     )
     assert (

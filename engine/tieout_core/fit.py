@@ -27,6 +27,8 @@ class FitParams:
     trailing_days: int = 365
 
 
+DEFAULT_PARAMS = FitParams()
+
 AGE_GROUPS = ((90, "0-90d"), (180, "91-180d"))
 OLDEST_AGE_GROUP = "181d+"
 
@@ -88,7 +90,7 @@ class Model:
 
 
 def fit(
-    data: Dataset, cutoff: date, profile: Profile, params: FitParams = FitParams()
+    data: Dataset, cutoff: date, profile: Profile, params: FitParams = DEFAULT_PARAMS
 ) -> Model:
     horizon = params.horizon_days
     snapshots = matured_snapshots(data, cutoff, horizon)

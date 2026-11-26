@@ -109,8 +109,8 @@ def test_new_pipeline_parameters_come_from_the_matured_creation_cohort(model):
     # Won within 365 days of creation: A (89 days) and F (165 days); D took 393.
     assert new.win_rate == Decimal(2) / Decimal(6)
     assert new.timing.samples == (89, 165)
-    assert new.mean_won_arr == Decimal("300")
-    assert new.mean_created_arr == Decimal("350")
+    assert new.mean_won_arr == Decimal(300)
+    assert new.mean_created_arr == Decimal(350)
     assert new.created_per_day == Decimal(1) / Decimal(365)  # only E in the last year
     assert model.rates["new_pipeline_win_rate"].sample_size == 6
 

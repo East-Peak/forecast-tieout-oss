@@ -41,7 +41,7 @@ def regular_history(start=START, end=AS_OF, observations=True) -> Dataset:
                 close,
                 won,
                 won,
-            )  # fmt: skip
+            )
         )
         transitions.append(Transition(f"D{n}", "S1", created))
         if won:
@@ -117,7 +117,7 @@ def test_a_fold_cannot_see_data_after_its_cutoff(profile):
             cutoff + timedelta(days=i + 5),
             True,
             True,
-        )  # fmt: skip
+        )
         for i in range(1, 40)
     ]
     poisoned = Dataset(tuple(rewritten + extra), clean.transitions, clean.observations)

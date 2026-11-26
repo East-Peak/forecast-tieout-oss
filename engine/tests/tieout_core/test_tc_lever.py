@@ -38,7 +38,7 @@ def test_beyond_the_cap_is_unreachable():
     r = solve_added_pipeline(linear(100, "0.25"), Decimal(200), cap=Decimal(300))
     assert r.outcome == UNREACHABLE
     assert r.required == Decimal("400.00")  # what it would take, shown for context
-    assert r.achieved == Decimal("175")  # what the cap reaches
+    assert r.achieved == Decimal(175)  # what the cap reaches
 
 
 def test_no_time_left_is_unreachable():

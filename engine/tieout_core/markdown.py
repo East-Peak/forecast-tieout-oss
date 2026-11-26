@@ -10,10 +10,14 @@ def render(r: dict) -> str:
     out = [
         f"# Forecast tieout: {i['data']}",
         "",
-        f"As of **{i['as_of']}**, fiscal year {i['fiscal_year']} ({i['fiscal_year_start']} to "
-        f"{i['fiscal_year_end']}). One money measure throughout: {i['measure']}.",
-        f"Profile `{i['profile']}`. Ranges from {i['simulation']['draws']} simulated draws, seed "
-        f"{i['simulation']['seed']}.",
+        (
+            f"As of **{i['as_of']}**, fiscal year {i['fiscal_year']} ({i['fiscal_year_start']} to "
+            f"{i['fiscal_year_end']}). One money measure throughout: {i['measure']}."
+        ),
+        (
+            f"Profile `{i['profile']}`. Ranges from {i['simulation']['draws']} simulated draws, seed "
+            f"{i['simulation']['seed']}."
+        ),
         "",
     ]
     out += _reconciliation(r["reconciliation"])
@@ -49,8 +53,10 @@ def _table(headers, rows) -> list[str]:
 def _reconciliation(s: dict) -> list[str]:
     out = ["## 1. Reconciliation", ""]
     out += [
-        f"{s['source_rows']} rows in `deals.csv` (ARR {_usd(s['source_arr_total'], True)}); "
-        f"{s['included_rows']} new-business rows included, {len(s['exclusions'])} excluded.",
+        (
+            f"{s['source_rows']} rows in `deals.csv` (ARR {_usd(s['source_arr_total'], True)}); "
+            f"{s['included_rows']} new-business rows included, {len(s['exclusions'])} excluded."
+        ),
         "",
         f"New-business bookings fiscal year to date: **{_usd(s['bookings_fytd'], True)}**.",
         "",
@@ -106,9 +112,11 @@ def _history(s: dict) -> list[str]:
     f = s["facts"]
     out = ["## 2. What the history can support", ""]
     out += [
-        f"{f['new_business_deals']} new-business deals, first created {f['first_deal_created']} "
-        f"({f['months_of_history']} months before the as-of date); {f['closed_outcomes']} closed outcomes; "
-        f"{f['matured_snapshots']} monthly snapshots old enough to score a full horizon.",
+        (
+            f"{f['new_business_deals']} new-business deals, first created {f['first_deal_created']} "
+            f"({f['months_of_history']} months before the as-of date); {f['closed_outcomes']} closed outcomes; "
+            f"{f['matured_snapshots']} monthly snapshots old enough to score a full horizon."
+        ),
         "",
         "What cannot be reconstructed or relied on:",
         "",
@@ -240,15 +248,17 @@ def _gap(s: dict) -> list[str]:
                 _usd(q["expected"]),
                 _usd(q["gap"]),
                 _rng(q["expected_range80"]),
-            )  # fmt: skip
+            )
             for q in s["quarters"]
         ],
     )
     fy = s["fiscal_year"]
     out += [
-        f"Fiscal year: target {_usd(fy['target'])}, actual to date {_usd(fy['actual_to_date'])}, "
-        f"forecast rest of year {_usd(fy['forecast_rest_of_year'])}, expected **{_usd(fy['expected'])}** "
-        f"(80%: {_rng(fy['expected_range80'])}; 95%: {_rng(fy['expected_range95'])}), gap **{_usd(fy['gap'])}**.",
+        (
+            f"Fiscal year: target {_usd(fy['target'])}, actual to date {_usd(fy['actual_to_date'])}, "
+            f"forecast rest of year {_usd(fy['forecast_rest_of_year'])}, expected **{_usd(fy['expected'])}** "
+            f"(80%: {_rng(fy['expected_range80'])}; 95%: {_rng(fy['expected_range95'])}), gap **{_usd(fy['gap'])}**."
+        ),
         "",
     ]
     lv = s["lever"]
@@ -289,7 +299,7 @@ def _backtest(s: dict) -> list[str]:
                     _usd(h["signed_bias"][method]),
                     _pct(cov["80%"]),
                     _pct(cov["95%"]),
-                )  # fmt: skip
+                )
             )
     out += _table(
         [

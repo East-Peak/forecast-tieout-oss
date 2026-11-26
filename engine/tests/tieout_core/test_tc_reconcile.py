@@ -38,7 +38,7 @@ def test_fytd_bookings_by_month_to_the_cent(tmp_path, profile):
     r = _run(tmp_path, profile, ROWS)
     assert r.bookings_by_month == {
         "2026-02": Decimal("200.10"),
-        "2026-03": Decimal("0"),
+        "2026-03": Decimal(0),
         "2026-04": Decimal("300.25"),
     }
     assert r.bookings_fytd == Decimal("500.35")
@@ -56,7 +56,7 @@ def test_every_excluded_row_has_a_reason(tmp_path, profile):
 def test_excluded_motions_are_reconciled_separately(tmp_path, profile):
     r = _run(tmp_path, profile, ROWS)
     exp = r.excluded_motions["expansion"]
-    assert (exp.rows, exp.arr, exp.won_fytd_arr) == (1, Decimal("999"), Decimal("999"))
+    assert (exp.rows, exp.arr, exp.won_fytd_arr) == (1, Decimal(999), Decimal(999))
 
 
 def test_source_ties_out(tmp_path, profile):
@@ -90,8 +90,8 @@ def test_pipeline_flow_conserves_count_and_dollars(tmp_path, profile):
     assert (flow.open_at_start.count, flow.open_at_start.arr) == (2, Decimal("250.10"))
     assert (flow.created.count, flow.created.arr) == (2, Decimal("375.25"))
     assert (flow.won.count, flow.won.arr) == (2, Decimal("500.35"))
-    assert (flow.lost.count, flow.lost.arr) == (1, Decimal("50"))
-    assert (flow.open_at_end.count, flow.open_at_end.arr) == (1, Decimal("75"))
+    assert (flow.lost.count, flow.lost.arr) == (1, Decimal(50))
+    assert (flow.open_at_end.count, flow.open_at_end.arr) == (1, Decimal(75))
 
 
 def test_as_of_outside_the_fiscal_year_is_refused(tmp_path, profile):

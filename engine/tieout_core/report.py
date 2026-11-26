@@ -14,7 +14,7 @@ from pathlib import Path
 
 from .backtest import MIN_FOLDS, VERDICT_HORIZONS, backtest
 from .fiscal import month_windows
-from .fit import FitParams, fit
+from .fit import DEFAULT_PARAMS, FitParams, fit
 from .forecast import (
     Forecast,
     existing_pipeline_conservation,
@@ -28,8 +28,8 @@ from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .load import load_company, load_profile
 from .markdown import render as render_markdown
 from .rates import DEFAULT, Rate, RateBook
-from .records import Check
 from .reconcile import reconcile
+from .records import Check
 
 SECTIONS = (
     "reconciliation",
@@ -51,7 +51,7 @@ def build_report(
     as_of: date,
     draws: int = 2000,
     seed: int = 0,
-    params: FitParams = FitParams(),
+    params: FitParams = DEFAULT_PARAMS,
 ) -> dict:
     profile = load_profile(Path(profile_dir))
     loaded = load_company(Path(data_dir), profile)
@@ -222,8 +222,10 @@ def _history(loaded, rec, model, bt, as_of) -> dict:
     folds = {s.horizon: s.folds for s in bt.scores}
 
     limits = [
-        "stage_history.csv records stage changes only: it holds no past deal amounts and no past "
-        "expected close dates",
+        (
+            "stage_history.csv records stage changes only: it holds no past deal amounts and no past "
+            "expected close dates"
+        ),
     ]
     if pop.observations is None:
         limits.append(

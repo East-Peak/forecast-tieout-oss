@@ -28,9 +28,9 @@ DATA = Dataset(
         Transition("OPEN", "S4", date(2025, 7, 1)),
     ),
     observations=(
-        Observation("WON_LATE", date(2025, 1, 1), Decimal("650"), date(2025, 5, 1)),
-        Observation("WON_LATE", date(2025, 5, 2), Decimal("680"), date(2025, 7, 1)),
-        Observation("WON_LATE", date(2025, 9, 1), Decimal("700"), date(2025, 9, 1)),
+        Observation("WON_LATE", date(2025, 1, 1), Decimal(650), date(2025, 5, 1)),
+        Observation("WON_LATE", date(2025, 5, 2), Decimal(680), date(2025, 7, 1)),
+        Observation("WON_LATE", date(2025, 9, 1), Decimal(700), date(2025, 9, 1)),
     ),
 )
 
@@ -56,7 +56,7 @@ def test_later_outcomes_are_reopened_at_their_stage_then():
 
 def test_open_amount_and_expected_close_come_from_the_latest_observation():
     late = _by_id(as_known_at(DATA, CUT))["WON_LATE"]
-    assert (late.arr, late.close) == (Decimal("680"), date(2025, 7, 1))
+    assert (late.arr, late.close) == (Decimal(680), date(2025, 7, 1))
 
 
 def test_without_an_observation_amount_and_expected_close_are_unknown():

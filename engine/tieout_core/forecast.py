@@ -148,10 +148,14 @@ def stage_weighted(
             "no trailing wins, so no cycle length: future pipeline contributes nothing"
         )
     assumptions = (
-        "open deals book at their amount times the profile's stage probability (stages.yaml), "
-        "in the month of their expected close; past-due deals count in the first month",
-        f"new pipeline is created at {created_per_day:.2f} ARR per day (trailing {trailing_days} days) "
-        f"and converts at the {profile.stage_name(first_stage)} probability {p_first}, {cycle_text}",
+        (
+            "open deals book at their amount times the profile's stage probability (stages.yaml), "
+            "in the month of their expected close; past-due deals count in the first month"
+        ),
+        (
+            f"new pipeline is created at {created_per_day:.2f} ARR per day (trailing {trailing_days} days) "
+            f"and converts at the {profile.stage_name(first_stage)} probability {p_first}, {cycle_text}"
+        ),
     )
     if unknown:
         assumptions += (f"{unknown} open deals with no stage on record are left out",)
@@ -258,10 +262,14 @@ def model_forecast(
     if added_pipeline:
         components[ADDED] = added
     assumptions = (
-        "open deals book at their current amount times the fitted win rate for their stage and age, "
-        "on the fitted close-timing distribution",
-        f"new pipeline is created at {new.created_per_day:.4f} deals per day and wins at the fitted "
-        f"creation-cohort rate {new.win_rate:.4f}, averaging {new.mean_won_arr:.2f} ARR per win",
+        (
+            "open deals book at their current amount times the fitted win rate for their stage and age, "
+            "on the fitted close-timing distribution"
+        ),
+        (
+            f"new pipeline is created at {new.created_per_day:.4f} deals per day and wins at the fitted "
+            f"creation-cohort rate {new.win_rate:.4f}, averaging {new.mean_won_arr:.2f} ARR per win"
+        ),
     )
     if unknown:
         assumptions += (f"{unknown} open deals with no stage on record are left out",)

@@ -186,11 +186,11 @@ def main(argv=None) -> int:
     )
     args = parser.parse_args(argv)
     stale = []
-    for slug in COMPANIES:
+    for slug, company in COMPANIES.items():
         if args.verify:
             stale += [f"{slug}/{n}" for n in verify(slug)]
         else:
-            write_company_files(generate(COMPANIES[slug]), target_dir(slug))
+            write_company_files(generate(company), target_dir(slug))
             print(f"wrote engine/{DATA_V2}/{slug}")
     if stale:
         print("stale data-v2 files: " + ", ".join(stale), file=sys.stderr)

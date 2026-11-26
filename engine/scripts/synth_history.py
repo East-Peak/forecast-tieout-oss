@@ -96,7 +96,7 @@ def generate(company: Company) -> Generated:
                             close,
                             True,
                             True,
-                        )  # fmt: skip
+                        )
                     )
         day += timedelta(days=1)
     transitions.sort(key=lambda t: (t.deal_id, t.on))

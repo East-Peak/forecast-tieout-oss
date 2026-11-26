@@ -6,8 +6,8 @@ import pytest
 from engine.scripts.generate_data_v2 import (
     COMPANIES,
     DATA_V2,
-    write_company_files,
     verify,
+    write_company_files,
 )
 from engine.scripts.synth_history import generate
 from engine.tieout_core.load import load_company, load_profile
