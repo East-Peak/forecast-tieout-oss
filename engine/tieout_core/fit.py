@@ -30,6 +30,8 @@ from .records import LOST, WON, Dataset, Deal, Profile
 MATURED = "matured snapshots"
 RECENCY = "cumulative incidence"
 WIN, LOSS, OPEN = "won", "lost", "still open"
+OUTCOME_RANGES = "deal outcomes only"
+PARAMETER_RANGES = "deal outcomes and rate uncertainty"
 
 
 @dataclass(frozen=True)
@@ -40,6 +42,7 @@ class FitParams:
     trailing_days: int = 365
     estimator: str = MATURED
     recency_months: int = 24  # RECENCY: snapshots from this many trailing months
+    ranges: str = OUTCOME_RANGES  # what the simulation draws
 
 
 DEFAULT_PARAMS = FitParams()
@@ -160,7 +163,10 @@ class NewPipeline:
     mean_created_arr: Decimal
     created_per_day: Decimal
     won_arr_samples: tuple[Decimal, ...]
-    cohort_size: int  # matured created deals behind win_rate; 0 means no evidence
+    cohort_size: int  # created deals behind win_rate; 0 means no evidence
+    win_rate_n: float = 0.0  # effective sample behind win_rate (its uncertainty)
+    created_count: int = 0  # deals behind created_per_day
+    created_days: int = 0  # ... over this many days
 
 
 @dataclass(frozen=True)
@@ -175,6 +181,13 @@ class Model:
     unknown_stage_observations: int
     snapshot_count: int = 0
     cell_timings: dict[tuple[str, str], Timing] = field(default_factory=dict)
+    # Effective sample behind each rate, keyed as rate_key returns; a rate with
+    # none (a profile default) is held fixed when ranges draw rate uncertainty.
+    rate_n: dict[tuple[str, str | None], float] = field(default_factory=dict)
+
+    def rate_key(self, stage: str, age_days: int) -> tuple[str, str | None]:
+        cell = (stage, age_group(age_days))
+        return cell if cell in self.cells else (stage, None)
 
     def win_rate(self, stage: str, age_days: int) -> Decimal:
         return self.cells.get((stage, age_group(age_days)), self.stage_rates[stage])
@@ -204,12 +217,14 @@ def fit(
 
     book = RateBook()
     stage_rates: dict[str, Decimal] = {}
+    rate_n: dict[tuple[str, str | None], float] = {}
     for code in profile.open_codes:
         obs = stage_obs.get(code, [])
         wins = sum(1 for x in obs if x is not None)
         if obs:
             low, high = wilson(wins, len(obs))
             value, source = Decimal(wins) / Decimal(len(obs)), FITTED
+            rate_n[(code, None)] = float(len(obs))
         else:
             low = high = None
             value, source = profile.probability(code), DEFAULT
@@ -239,6 +254,7 @@ def fit(
         cells[(code, group)] = (Decimal(wins) + m * stage_rates[code]) / (
             Decimal(n) + m
         )
+        rate_n[(code, group)] = float(n + params.smoothing)
         book.add(
             Rate(
                 name=f"win_within_horizon:{code}:{group}",
@@ -278,7 +294,7 @@ def fit(
     new = _new_pipeline(data, cutoff, params, book)
     return Model(
         cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots),
-        cell_timings,
+        cell_timings, rate_n,
     )  # fmt: skip
 
 
@@ -345,11 +361,13 @@ def _fit_recency(
     stage_ci = {k: incidence(v, f"stage {k}") for k, v in stage_seen.items()}
     book = RateBook()
     stage_rates: dict[str, Decimal] = {}
+    rate_n: dict[tuple[str, str | None], float] = {}
     for code in profile.open_codes:
         ci = stage_ci.get(code)
         if ci is not None:
             low, high = wilson_interval(float(ci.value), ci.effective_n)
             value, source = ci.value, FITTED
+            rate_n[(code, None)] = ci.effective_n
         else:
             low = high = None
             value, source = profile.probability(code), DEFAULT
@@ -382,6 +400,7 @@ def _fit_recency(
         ci = incidence(pairs, f"stage {code}, aged {group}")
         n_eff = Decimal(f"{ci.effective_n:.6f}")
         cells[(code, group)] = (n_eff * ci.value + m * stage_rates[code]) / (n_eff + m)
+        rate_n[(code, group)] = ci.effective_n + params.smoothing
         if ci.wins >= params.min_timing_samples:
             cell_timings[(code, group)] = ci.timing
         book.add(
@@ -418,7 +437,7 @@ def _fit_recency(
     new = _new_pipeline_recency(data, cutoff, params, book)
     return Model(
         cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots),
-        cell_timings,
+        cell_timings, rate_n,
     )  # fmt: skip
 
 
@@ -588,8 +607,9 @@ def _new_pipeline(
         "days from creation to win",
     )
     return NewPipeline(
-        win_rate, timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins), n
-    )
+        win_rate, timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins), n,
+        float(n), created_recent, params.trailing_days,
+    )  # fmt: skip
 
 
 def _evidence(n: int, definition: str) -> tuple[str, str]:

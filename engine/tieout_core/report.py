@@ -8,14 +8,19 @@ from __future__ import annotations
 
 import json
 import math
-from dataclasses import replace
 from datetime import date, timedelta
 from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 
-from .backtest import MIN_FOLDS, VERDICT_HORIZONS, backtest, compare_estimators
+from .backtest import (
+    HORIZONS,
+    MIN_FOLDS,
+    UNVALIDATED,
+    choose_fit,
+    coverage_label,
+)
 from .fiscal import Window, add_months, month_windows
-from .fit import DEFAULT_PARAMS, RECENCY, FitParams, fit
+from .fit import DEFAULT_PARAMS, PARAMETER_RANGES, RECENCY, FitParams, fit
 from .forecast import (
     Forecast,
     existing_pipeline_conservation,
@@ -73,14 +78,9 @@ def build_report(
 
     # Goal 2A step 2.1: the recency candidate is scored against the incumbent fit
     # on the same folds, and adopted for this company only by the declared rule.
-    bt_draws = min(draws, 1000)
-    candidate = replace(params, estimator=RECENCY)
-    bt_incumbent = backtest(pop, as_of, profile, params, draws=bt_draws, seed=seed)
-    bt_candidate = backtest(pop, as_of, profile, candidate, draws=bt_draws, seed=seed)
-    recency = compare_estimators(bt_incumbent, bt_candidate)
     incumbent_name = params.estimator
-    params, bt = (
-        (candidate, bt_candidate) if recency.adopted else (params, bt_incumbent)
+    params, bt, recency = choose_fit(
+        pop, as_of, profile, params, min(draws, 1000), seed
     )
 
     model = fit(pop, as_of, profile, params)
@@ -104,6 +104,7 @@ def build_report(
             draws=draws,
             seed=seed,
             groups={**quarter_labels, **horizons},
+            parameter_uncertainty=params.ranges == PARAMETER_RANGES,
         )
 
     book = RateBook()
@@ -148,6 +149,7 @@ def build_report(
             "fiscal_year_end": fy.end.isoformat(),
             "measure": MEASURE,
             "fit": params.estimator,
+            "ranges": params.ranges,
             "simulation": {"draws": draws, "seed": seed},
         },
         "reconciliation": _reconciliation(rec),
@@ -339,23 +341,33 @@ def _history(loaded, rec, model, bt, as_of, recency) -> dict:
 
 
 def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
-    by_h = {s.horizon: s for s in bt.scores}
-    tested = all(by_h[h].range_folds >= MIN_FOLDS for h in VERDICT_HORIZONS)
-    if tested:
-        status = "back-tested: " + "; ".join(
-            f"{h}-month 80% range held the actual in {by_h[h].coverage80:.0%} and the 95% range in "
-            f"{by_h[h].coverage95:.0%} of {by_h[h].range_folds} folds"
-            for h in VERDICT_HORIZONS
+    cells = [
+        {
+            "horizon_months": s.horizon,
+            "folds_with_a_range": s.range_folds,
+            "coverage80": None if s.coverage80 is None else round(s.coverage80, 4),
+            "coverage95": None if s.coverage95 is None else round(s.coverage95, 4),
+            "median_width80": None
+            if s.median_width80 is None
+            else _float(s.median_width80),
+            "label": coverage_label(s.inside80, s.range_folds),
+        }
+        for s in bt.scores
+    ]
+    status = "; ".join(
+        f"{c['horizon_months']}-month {c['label']} ("
+        + (
+            f"80% range held {c['coverage80']:.0%} of {c['folds_with_a_range']} folds"
+            if c["folds_with_a_range"]
+            else "no folds with a range"
         )
-    else:
-        status = (
-            f"unvalidated: coverage needs at least {MIN_FOLDS} folds with a fitted range at 1 and "
-            f"3 months (had {by_h[1].range_folds} and {by_h[3].range_folds})"
-        )
+        + ")"
+        for c in cells
+    )
     statuses = {
-        REST_OF_FY: status,
-        NEXT_12: "unvalidated: twelve-month ranges are not back-tested (the back-test scores "
-        "1, 3 and 6 months)",
+        REST_OF_FY: _window_status(len(horizons[REST_OF_FY]), cells),
+        NEXT_12: f"{UNVALIDATED}: twelve-month ranges are not back-tested (the back-test scores "
+        f"{', '.join(str(h) for h in HORIZONS)} months)",
     }
 
     def totals(f: Forecast) -> dict:
@@ -386,6 +398,7 @@ def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
         ],
         "fitted_ranges": {
             "status": status,
+            "cells": cells,
             "by_window": {lbl: _spread(s) for lbl, s in sim.by_window.items()},
             "horizons": {
                 h: {"status": statuses[h], **_spread(sim.by_group[h])} for h in horizons
@@ -394,10 +407,22 @@ def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
         if sim is not None
         else {
             "status": f"unavailable: {forecasts[2].unavailable_reason}",
+            "cells": cells,
             "by_window": {},
             "horizons": {},
         },
     }
+
+
+def _window_status(months: int, cells: list[dict]) -> str:
+    """A window's range is judged by the shortest back-tested horizon that
+    covers it; past the longest one it is unvalidated."""
+    if months == 0:
+        return "no months in this window"
+    for c in cells:
+        if c["horizon_months"] >= months:
+            return f"{c['label']}: judged by the {c['horizon_months']}-month back-test cell"
+    return f"{UNVALIDATED}: longer than the longest back-tested horizon ({HORIZONS[-1]} months)"
 
 
 def _targets(profile, horizon_end: date) -> dict[str, tuple[Window, Decimal]]:

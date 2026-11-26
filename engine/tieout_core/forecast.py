@@ -344,6 +344,14 @@ class Simulation:
     by_group: dict[str, Spread] = field(default_factory=dict)
 
 
+def _beta(rng: np.random.Generator, p: float, n: float, draws: int) -> np.ndarray:
+    """A rate with mean ``p`` resting on ``n`` effective observations; fixed when
+    it rests on none or sits at 0 or 1."""
+    if n <= 0 or p <= 0 or p >= 1:
+        return np.full(draws, p)
+    return rng.beta(p * n, (1 - p) * n, draws)
+
+
 def _draw_days(rng: np.random.Generator, timing: Timing, size: int) -> np.ndarray:
     """Days to a win drawn from ``timing``: uniformly over its samples, or by
     their weights."""
@@ -367,10 +375,18 @@ def simulate(
     draws: int = 4000,
     seed: int = 0,
     groups: dict[str, list[str]] | None = None,
+    parameter_uncertainty: bool = False,
 ) -> Simulation:
     """Draw outcomes from the fitted model: each open deal wins or not and, if
     it wins, closes after a day count drawn from its timing; future wins arrive
-    as a Poisson process with sizes drawn from past wins."""
+    as a Poisson process with sizes drawn from past wins.
+
+    With ``parameter_uncertainty`` each draw first draws the rates themselves:
+    each win rate from a beta with the fitted mean and its effective sample
+    (shared by every deal using that rate in the draw), the creation rate from
+    a gamma on its count, and the mean win size by bootstrap. All keep their
+    means, so the simulation stays centred on the expectation. Close timing is
+    not drawn."""
     rng = np.random.default_rng(seed)
     if not windows:
         empty = _spread(np.zeros(draws))
@@ -391,13 +407,20 @@ def simulate(
         keep = (offsets >= 1) & (idx < len(windows))
         np.add.at(out, (rows[keep], idx[keep]), amounts[keep])
 
+    rate_draws: dict = {}
     for d in data.deals:
         if d.is_closed or d.stage == UNKNOWN_STAGE or d.arr is None:
             continue
-        timing = model.timing(d.stage, (cutoff - d.created).days)
+        age = (cutoff - d.created).days
+        timing = model.timing(d.stage, age)
         if not timing.samples:
             continue
-        p = float(model.win_rate(d.stage, (cutoff - d.created).days))
+        p = float(model.win_rate(d.stage, age))
+        if parameter_uncertainty:
+            key = model.rate_key(d.stage, age)
+            if key not in rate_draws:
+                rate_draws[key] = _beta(rng, p, model.rate_n.get(key, 0.0), draws)
+            p = rate_draws[key]
         won = rng.random(draws) < p
         days = _draw_days(rng, timing, draws)
         book(draw_index[won], days[won], np.full(int(won.sum()), float(d.arr)))
@@ -406,14 +429,25 @@ def simulate(
     if new.timing.samples and new.won_arr_samples:
         span = int(ends[-1])
         lam = float(new.created_per_day * new.win_rate) * span
+        if parameter_uncertainty:
+            per_day = (
+                rng.gamma(new.created_count, 1 / new.created_days, draws)
+                if new.created_count and new.created_days
+                else np.full(draws, float(new.created_per_day))
+            )
+            lam = (
+                per_day * _beta(rng, float(new.win_rate), new.win_rate_n, draws) * span
+            )
         counts = rng.poisson(lam, draws)
         total = int(counts.sum())
         rows = np.repeat(draw_index, counts)
         created = rng.integers(1, span + 1, total)
         days = _draw_days(rng, new.timing, total)
-        sizes = np.asarray([float(x) for x in new.won_arr_samples])[
-            rng.integers(0, len(new.won_arr_samples), total)
-        ]
+        pool = np.asarray([float(x) for x in new.won_arr_samples])
+        sizes = pool[rng.integers(0, len(pool), total)]
+        if parameter_uncertainty:  # each draw's mean win size, by bootstrap
+            boot = pool[rng.integers(0, len(pool), (draws, len(pool)))].mean(axis=1)
+            sizes = sizes * (boot / pool.mean())[rows]
         book(rows, created + days, sizes)
 
     totals = out.sum(axis=1)

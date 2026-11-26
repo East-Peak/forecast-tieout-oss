@@ -15,8 +15,8 @@ def render(r: dict) -> str:
             f"{i['fiscal_year_end']}). One money measure throughout: {i['measure']}."
         ),
         (
-            f"Profile `{i['profile']}`. Ranges from {i['simulation']['draws']} simulated draws, seed "
-            f"{i['simulation']['seed']}."
+            f"Profile `{i['profile']}`. Fit: {i['fit']}. Ranges from {i['simulation']['draws']} "
+            f"simulated draws, seed {i['simulation']['seed']}, drawing {i['ranges']}."
         ),
         "",
     ]

@@ -9,14 +9,23 @@ not, and "not enough history to say" under six folds at either horizon.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from decimal import Decimal
+from statistics import median
 
 from .fiscal import Window, add_months
-from .fit import DEFAULT_PARAMS, FitParams, fit, matured_snapshots
+from .fit import (
+    DEFAULT_PARAMS,
+    PARAMETER_RANGES,
+    RECENCY,
+    FitParams,
+    fit,
+    matured_snapshots,
+)
 from .forecast import model_forecast, run_rate, simulate, stage_weighted
 from .history import as_known_at, latest_known_date
+from .rates import wilson
 from .records import Dataset, Profile
 
 HORIZONS = (1, 3, 6)
@@ -28,6 +37,10 @@ STAGE_WEIGHTED = "stage-weighted pipeline"
 MODEL = "fitted model"
 METHODS = (RUN_RATE, STAGE_WEIGHTED, MODEL)
 YES, NO, TOO_SHORT = "yes", "no", "not enough history to say"
+BACK_TESTED, TOO_NARROW, TOO_WIDE, UNVALIDATED = (
+    "back-tested", "too narrow", "too wide", "unvalidated",
+)  # fmt: skip
+NOMINAL80 = 0.8
 
 
 @dataclass(frozen=True)
@@ -49,6 +62,8 @@ class HorizonScore:
     coverage80: float | None
     coverage95: float | None
     range_folds: int = 0  # folds that had a fitted range: the coverage denominator
+    inside80: int = 0  # of those, folds whose actual lay inside the 80% range
+    median_width80: float | None = None
 
 
 @dataclass(frozen=True)
@@ -94,8 +109,9 @@ def fold(
         range80 = range95 = None
         if results[MODEL].available:
             spread = simulate(
-                model, known, cutoff, [window], draws=draws, seed=seed
-            ).total
+                model, known, cutoff, [window], draws=draws, seed=seed,
+                parameter_uncertainty=params.ranges == PARAMETER_RANGES,
+            ).total  # fmt: skip
             range80, range95 = (spread.p10, spread.p90), (spread.p2_5, spread.p97_5)
         folds.append(Fold(cutoff, h, actual, forecasts, range80, range95))
     return folds
@@ -132,7 +148,9 @@ def backtest(
                 fold(population, cutoff, horizons, profile, params, draws, seed)
             )
         k += 1
-    scores = tuple(_score(h, [f for f in folds if f.horizon == h]) for h in HORIZONS)
+    scores = tuple(
+        score_horizon(h, [f for f in folds if f.horizon == h]) for h in HORIZONS
+    )
     notes = []
     if population.observations is None:
         notes.append(
@@ -149,7 +167,7 @@ def fit_snapshots(known: Dataset, cutoff: date, params: FitParams) -> int:
     return len(matured_snapshots(known, cutoff, params.horizon_days))
 
 
-def _score(horizon: int, folds: list[Fold]) -> HorizonScore:
+def score_horizon(horizon: int, folds: list[Fold]) -> HorizonScore:
     mae: dict[str, Decimal | None] = {}
     bias: dict[str, Decimal | None] = {}
     for m in METHODS:
@@ -161,15 +179,29 @@ def _score(horizon: int, folds: list[Fold]) -> HorizonScore:
         mae[m] = sum((abs(p - a) for p, a in pairs), Decimal(0)) / n
         bias[m] = sum((p - a for p, a in pairs), Decimal(0)) / n
     ranged = [f for f in folds if f.range80 is not None]
-    cov80 = cov95 = None
+    cov80 = cov95 = width = None
+    inside = sum(f.range80[0] <= f.actual <= f.range80[1] for f in ranged)
     if ranged:
-        cov80 = sum(f.range80[0] <= f.actual <= f.range80[1] for f in ranged) / len(
-            ranged
-        )
+        cov80 = inside / len(ranged)
         cov95 = sum(f.range95[0] <= f.actual <= f.range95[1] for f in ranged) / len(
             ranged
         )
-    return HorizonScore(horizon, len(folds), mae, bias, cov80, cov95, len(ranged))
+        width = median(f.range80[1] - f.range80[0] for f in ranged)
+    return HorizonScore(
+        horizon, len(folds), mae, bias, cov80, cov95, len(ranged), inside, width
+    )
+
+
+def coverage_label(inside: int, folds: int) -> str:
+    """A company-and-horizon cell: 'back-tested' when the 80% range's coverage
+    is consistent with 80% (its 95% Wilson interval contains 0.8), otherwise
+    too narrow or too wide; under MIN_FOLDS folds it is unvalidated."""
+    if folds < MIN_FOLDS:
+        return UNVALIDATED
+    low, high = wilson(inside, folds)
+    if low <= NOMINAL80 <= high:
+        return BACK_TESTED
+    return TOO_NARROW if high < NOMINAL80 else TOO_WIDE
 
 
 def verdict(scores) -> tuple[str, str]:
@@ -260,3 +292,77 @@ def compare_estimators(incumbent: Backtest, candidate: Backtest) -> Comparison:
         mae,
         folds,
     )
+
+
+def choose_fit(
+    population: Dataset,
+    as_of: date,
+    profile: Profile,
+    params: FitParams = DEFAULT_PARAMS,
+    draws: int = 1000,
+    seed: int = 0,
+) -> tuple[FitParams, Backtest, Comparison]:
+    """Score the recency candidate against ``params`` on the same folds and
+    return the fit in use with its back-test, by the declared rule."""
+    candidate = replace(params, estimator=RECENCY)
+    incumbent_bt = backtest(population, as_of, profile, params, draws, seed)
+    candidate_bt = backtest(population, as_of, profile, candidate, draws, seed)
+    cmp = compare_estimators(incumbent_bt, candidate_bt)
+    if cmp.adopted:
+        return candidate, candidate_bt, cmp
+    return params, incumbent_bt, cmp
+
+
+@dataclass(frozen=True)
+class RangesDecision:
+    adopted: bool
+    reason: str
+    pooled: dict[int, tuple[float, float]]  # horizon: (before, after)
+    worst_cell: (
+        tuple[object, int, float] | None
+    )  # (company, horizon, points further from 80%)
+
+
+def ranges_decision(before: dict, after: dict) -> RangesDecision:
+    """Declared rule (design doc, Goal 2A step 2.2). ``before`` and ``after``
+    map (company, horizon) to (folds inside the 80% range, folds with a range).
+    Adopted if pooled 80% coverage at 1 and 3 months moves closer to 80% and no
+    company-and-horizon cell moves more than 10 points further from it."""
+
+    def pooled(cells, h):
+        inside = sum(v[0] for (c, hh), v in cells.items() if hh == h)
+        n = sum(v[1] for (c, hh), v in cells.items() if hh == h)
+        return inside / n if n else None
+
+    pooled_by_h = {h: (pooled(before, h), pooled(after, h)) for h in VERDICT_HORIZONS}
+    worst = None
+    for key in sorted(before, key=str):
+        if key not in after or not before[key][1] or not after[key][1]:
+            continue
+        b, a = before[key][0] / before[key][1], after[key][0] / after[key][1]
+        further = abs(a - NOMINAL80) - abs(b - NOMINAL80)
+        if worst is None or further > worst[2]:
+            worst = (key[0], key[1], further)
+    text = "; ".join(
+        f"{h}m pooled {b:.0%} -> {a:.0%}" for h, (b, a) in pooled_by_h.items()
+        if b is not None and a is not None
+    )  # fmt: skip
+    for h, (b, a) in pooled_by_h.items():
+        if b is None or a is None:
+            return RangesDecision(
+                False, f"no ranged folds at {h} month(s)", pooled_by_h, worst
+            )
+        if not abs(a - NOMINAL80) < abs(b - NOMINAL80):
+            return RangesDecision(
+                False, f"pooled 80% coverage at {h} month(s) does not move closer to 80% ({text})",
+                pooled_by_h, worst,
+            )  # fmt: skip
+    if worst is not None and worst[2] > 0.10 + 1e-12:
+        return RangesDecision(
+            False,
+            f"{worst[0]} at {worst[1]} month(s) moves {worst[2] * 100:.0f} points further from 80% "
+            f"({text})",
+            pooled_by_h, worst,
+        )  # fmt: skip
+    return RangesDecision(True, f"pooled coverage moves closer to 80% and no cell moves more than "
+                                f"10 points further ({text})", pooled_by_h, worst)  # fmt: skip
