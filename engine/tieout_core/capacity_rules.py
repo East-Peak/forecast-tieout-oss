@@ -30,9 +30,11 @@ Builder calls (the spec's "left to the builder"), each with its reason:
 2. Tenure months are anniversary months: tenure month k of a rep who started
    on s is [s + (k-1) months, s + k months). Ramp weights are given for tenure
    months 1..n and are 1 after n. The reference for "ramped" is a rep with
-   ``TENURED_AFTER_MONTHS`` or more months' tenure; months between the end of
-   the fitted curve and that reference are taken as fully ramped, and the
-   report says so.
+   ``TENURED_AFTER_MONTHS`` or more months' tenure. A fit needs
+   ``RAMP_MIN_REPS`` reps observed from hire through their sixth month
+   (``RAMP_ELIGIBLE_MONTHS``, the spec's gate) and then estimates every tenure
+   month before the reference (``RAMP_FITTED_MONTHS`` = 11), so a ramp longer
+   than six months is not forced to one at month seven.
 3. At a past cutoff a departure dated on or before the cutoff is known (it
    happened); one dated after is hidden and the person is treated as still
    employed. A start after the cutoff is hidden. At the as-of date itself a
@@ -56,11 +58,11 @@ on generated fixtures; 200 seeds, the true value inside the 95% range in at
 least ``RECOVERY_MIN_COVERAGE`` of them, and a point-error bound so a wide
 range cannot pass alone). The fixtures are in ``test_tc_ramp.py``:
 
-- ramp: 30 hired reps, 6 reps already tenured, 6 deals per full-ramp rep-month,
-  linear ramp over six months. Expected standard error of one tenure month's
-  weight is about 0.08 at month 6 and smaller earlier, so the median absolute
-  error of the mean across the six months is about 0.03; the tolerance 0.06
-  is twice that.
+- ramp: 40 hired reps, 8 reps already tenured, 8 deals per full-ramp rep-month,
+  linear ramp over six months, a fit of tenure months 1 to 11. Expected
+  relative standard error of one month's weight is about 0.07 at full ramp and
+  smaller before it, so the median absolute error of the mean across the
+  eleven months is about 0.035; the tolerance 0.06 is 1.7 times that.
 - attrition: 40 reps over 30 months, 2% a month: about 24 departures over about
   1,200 AE-months, standard error 0.004; the median absolute error of an
   unbiased estimate is about 0.0028; the tolerance 0.004 is one standard
@@ -81,10 +83,11 @@ MIN_STAFFING_VARIATION = Decimal("0.20")
 MIN_IMPROVEMENT = Decimal("0.10")
 
 # Fitting ramp and attrition.
-RAMP_FITTED_MONTHS = 6
+TENURED_AFTER_MONTHS = 12
+RAMP_ELIGIBLE_MONTHS = 6
+RAMP_FITTED_MONTHS = TENURED_AFTER_MONTHS - 1
 RAMP_MIN_REPS = 8
 RAMP_MIN_TENURED = 3
-TENURED_AFTER_MONTHS = 12
 MIN_DEPARTURES = 5
 
 # Defaults, labelled as such wherever used.

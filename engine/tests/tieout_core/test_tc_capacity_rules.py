@@ -18,7 +18,8 @@ def test_the_adoption_thresholds_are_the_specs():
 
 
 def test_the_ramp_and_attrition_cohort_minimums_are_the_specs():
-    assert r.RAMP_FITTED_MONTHS == 6
+    assert r.RAMP_ELIGIBLE_MONTHS == 6
+    assert r.RAMP_FITTED_MONTHS == 11
     assert r.RAMP_MIN_REPS == 8
     assert r.RAMP_MIN_TENURED == 3
     assert r.TENURED_AFTER_MONTHS == 12
