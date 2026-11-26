@@ -38,7 +38,8 @@ def main(argv=None) -> int:
     print(f"wrote {md} and {js}")
     print(f"software correct: {v['software_correct']['verdict']}; "
           f"better than baselines: {v['forecast_better_than_baselines']['verdict']}")  # fmt: skip
-    return 0
+    # An honest "not better than the baselines" is a result; a failed self-check is a fault.
+    return 0 if v["software_correct"]["verdict"] == "yes" else 1
 
 
 if __name__ == "__main__":

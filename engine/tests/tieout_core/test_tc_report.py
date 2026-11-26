@@ -222,3 +222,62 @@ def test_every_demo_company_gets_a_complete_self_consistent_report(company):
     assert failed == []
     md = render_markdown(r)
     assert all(f"## {i}. " in md for i in range(1, 8))
+
+
+def test_command_fails_when_a_self_check_fails(tmp_path, monkeypatch):
+    from engine.tieout_core import __main__ as cli
+
+    def broken(*args, **kwargs):
+        r = build_report(PROFILE, DATA, AS_OF, draws=20)
+        r["verdicts"]["software_correct"]["verdict"] = "no"
+        return r
+
+    monkeypatch.setattr(cli, "build_report", broken)
+    argv = [
+        "report",
+        "--profile",
+        str(PROFILE),
+        "--data",
+        str(DATA),
+        "--as-of",
+        "2026-08-31",
+        "--out",
+        str(tmp_path),
+    ]
+    assert cli.main(argv) == 1
+    assert (tmp_path / "report.md").exists()  # the diagnostic report is still written
+
+
+def test_an_as_of_well_after_the_last_entry_is_stated():
+    r = build_report(PROFILE, DATA, date(2027, 1, 31), draws=20)
+    assert any(
+        "latest dated entry" in x and "2026-08-31" in x
+        for x in r["history"]["limitations"]
+    )
+
+
+def test_deals_without_stage_history_are_described_accurately(report):
+    text = " ".join(report["history"]["limitations"])
+    assert "no stage history" in text
+    assert "deals.csv" in text  # the current forecast uses their current stage
+    assert "left out of the pipeline forecasts" not in text
+
+
+def test_short_history_makes_the_fitted_model_unavailable_not_zero(tmp_path):
+    from engine.tests.tieout_core.builders import deal, write_company, write_profile
+
+    rows = [
+        deal(f"D{i}", "Closed Won", "1000", f"2026-0{m}-01", f"2026-0{m}-20")
+        for i, m in enumerate(range(3, 8))
+    ]
+    rows.append(deal("OPEN", "Negotiation", "5000", "2026-07-01", "2026-10-15"))
+    data = write_company(tmp_path / "c", rows)
+    r = build_report(write_profile(tmp_path / "p"), data, AS_OF, draws=20)
+    fitted = next(m for m in r["forecasts"]["methods"] if m["method"] == "fitted model")
+    assert fitted["available"] is False
+    assert r["gap"]["lever"]["outcome"] == "unavailable"
+    assert all(
+        q["forecast"] is None for q in r["gap"]["quarters"] if q["status"] != "closed"
+    )
+    assert r["verdicts"]["software_correct"]["verdict"] == "yes"
+    assert "## 5. The gap" in render_markdown(r)

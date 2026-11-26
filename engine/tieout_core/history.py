@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import date
+from decimal import Decimal
 
 from .records import LOST, WON, Dataset
 
@@ -61,3 +62,18 @@ def latest_known_date(data: Dataset) -> date:
     dates += [t.on for t in data.transitions]
     dates += [o.on for o in data.observations or ()]
     return max(dates)
+
+
+CREATION_AMOUNT_BASIS = "first recorded amount"
+
+
+def creation_amounts(data: Dataset) -> dict[str, Decimal | None]:
+    """The one rule for a deal's created-pipeline amount: its first observation
+    when the files include deal_observations.csv (None if the deal has none),
+    otherwise the amount on its deals.csv row, the only amount recorded."""
+    if data.observations is None:
+        return {d.id: d.arr for d in data.deals}
+    first: dict[str, Decimal] = {}
+    for o in data.observations:
+        first.setdefault(o.deal_id, o.amount)
+    return {d.id: first.get(d.id) for d in data.deals}

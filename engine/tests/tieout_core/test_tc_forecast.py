@@ -60,6 +60,7 @@ MODEL = Model(
         mean_created_arr=Decimal(2000),
         created_per_day=Decimal("0.1"),
         won_arr_samples=(Decimal(1000),),
+        cohort_size=10,
     ),
     unknown_stage_observations=0,
 )
@@ -166,3 +167,48 @@ def test_no_windows_means_nothing_to_forecast(profile):
     ):
         assert f.available and f.total() == 0
     assert simulate(MODEL, ONLY_X, CUT, [], draws=10).total.mean == 0
+
+
+def test_an_unknown_amount_makes_the_model_unavailable_even_for_unknown_stages():
+    from engine.tieout_core.history import UNKNOWN_STAGE
+
+    lost = replace(
+        _deal("Q", date(2026, 1, 1), "S1", "1"), stage=UNKNOWN_STAGE, arr=None
+    )
+    f = model_forecast(MODEL, Dataset((lost,), (), None), CUT, WINDOWS)
+    assert f.available is False
+
+
+def test_created_pipeline_has_one_amount_rule_everywhere(profile):
+    from engine.tieout_core.fit import fit
+    from engine.tieout_core.history import creation_amounts
+    from engine.tieout_core.records import Observation
+
+    # X was recorded at $40 when created; it is $100 now. Y, Z, W never changed.
+    obs = tuple(
+        Observation(
+            d.id, d.created, Decimal(40) if d.id == "X" else d.arr, date(2026, 6, 1)
+        )
+        for d in DATA.deals
+    )
+    data = Dataset(DATA.deals, (), obs)
+    assert creation_amounts(data)["X"] == Decimal(40)
+    sw = {r.name: r for r in stage_weighted(data, CUT, profile, WINDOWS).rates}
+    assert sw["created_arr_per_day"].value == Decimal(40 + 50 + 180 + 400) / 365
+    model = fit(data, CUT, profile)
+    assert "(first recorded amount)" in model.rates["mean_created_arr"].definition
+    # With an observation missing, the baseline says so rather than undercount.
+    partial = Dataset(DATA.deals, (), obs[:1])
+    assert stage_weighted(partial, CUT, profile, WINDOWS).available is False
+
+
+def test_missing_close_timing_is_unavailable_not_zero():
+    no_timing = replace(MODEL, timings={"S1": Timing((), "t"), "S2": Timing((), "t")})
+    f = model_forecast(no_timing, ONLY_X, CUT, WINDOWS)
+    assert f.available is False and "close-timing" in f.unavailable_reason
+
+
+def test_no_matured_creation_cohort_is_unavailable_not_zero():
+    empty = replace(MODEL, new_pipeline=replace(MODEL.new_pipeline, cohort_size=0))
+    f = model_forecast(empty, ONLY_X, CUT, WINDOWS)
+    assert f.available is False and "creation cohort" in f.unavailable_reason

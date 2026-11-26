@@ -106,3 +106,22 @@ def test_roster_is_counted_by_role(tmp_path, profile):
         write_company(tmp_path / "c", [deal("D1")], team=team), profile
     )
     assert loaded.roster_roles == {"ae": 2, "sdr": 1}
+
+
+def test_duplicate_and_blank_deal_ids_are_excluded(tmp_path, profile):
+    rows = [deal("D1", arr="100"), deal("D1", arr="100"), deal("", arr="5")]
+    loaded = load_company(write_company(tmp_path / "c", rows), profile)
+    assert [d.id for d in loaded.dataset.deals] == ["D1"]
+    assert [(e.row, e.reason) for e in loaded.exclusions] == [
+        (3, "duplicate deal id (first seen on row 2)"),
+        (4, "deal id is blank"),
+    ]
+
+
+def test_same_day_transitions_are_ordered_by_time_not_row_order(tmp_path, profile):
+    path = write_company(
+        tmp_path / "c", [deal("D1")],
+        history=[("D1", "Negotiation", "2026-01-05T17:00:00"), ("D1", "Discovery", "2026-01-05T09:00:00")],
+    )  # fmt: skip
+    stages = [t.stage for t in load_company(path, profile).dataset.transitions]
+    assert stages == ["S1", "S5"]

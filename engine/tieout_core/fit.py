@@ -9,12 +9,12 @@ from __future__ import annotations
 
 from bisect import bisect_right
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import Decimal
 
 from .fiscal import add_months
-from .history import UNKNOWN_STAGE
+from .history import CREATION_AMOUNT_BASIS, UNKNOWN_STAGE, creation_amounts
 from .rates import DEFAULT, FITTED, Rate, RateBook, wilson
 from .records import LOST, WON, Dataset, Deal, Profile
 
@@ -62,6 +62,7 @@ class NewPipeline:
     mean_created_arr: Decimal
     created_per_day: Decimal
     won_arr_samples: tuple[Decimal, ...]
+    cohort_size: int  # matured created deals behind win_rate; 0 means no evidence
 
 
 @dataclass(frozen=True)
@@ -75,12 +76,15 @@ class Model:
     new_pipeline: NewPipeline
     unknown_stage_observations: int
     snapshot_count: int = 0
+    cell_timings: dict[tuple[str, str], Timing] = field(default_factory=dict)
 
     def win_rate(self, stage: str, age_days: int) -> Decimal:
         return self.cells.get((stage, age_group(age_days)), self.stage_rates[stage])
 
-    def timing(self, stage: str) -> Timing:
-        return self.timings[stage]
+    def timing(self, stage: str, age_days: int) -> Timing:
+        """Close timing for a deal in ``stage`` aged ``age_days``: its stage-and-age
+        cell when that has enough wins, else the stage's (itself pooled when thin)."""
+        return self.cell_timings.get((stage, age_group(age_days)), self.timings[stage])
 
 
 def fit(
@@ -95,7 +99,7 @@ def fit(
         history[t.deal_id].append(t)
 
     stage_obs: dict[str, list[int | None]] = defaultdict(list)  # days to win, or None
-    cell_obs: dict[tuple[str, str], list[bool]] = defaultdict(list)
+    cell_obs: dict[tuple[str, str], list[int | None]] = defaultdict(list)
     seen_stage, seen_cell = set(), set()
     unknown = 0
     for s in reversed(snapshots):  # oldest first, so "first" means first in time
@@ -113,7 +117,7 @@ def fit(
             cell = (stage, age_group((s - d.created).days))
             if (d.id, cell) not in seen_cell:
                 seen_cell.add((d.id, cell))
-                cell_obs[cell].append(days is not None)
+                cell_obs[cell].append(days)
 
     book = RateBook()
     stage_rates: dict[str, Decimal] = {}
@@ -148,7 +152,7 @@ def fit(
     for (code, group), outcomes in sorted(cell_obs.items()):
         if code not in stage_rates:
             continue
-        wins, n = sum(outcomes), len(outcomes)
+        wins, n = sum(1 for x in outcomes if x is not None), len(outcomes)
         cells[(code, group)] = (Decimal(wins) + m * stage_rates[code]) / (
             Decimal(n) + m
         )
@@ -180,10 +184,19 @@ def fit(
                 f"pooled across stages (fewer than {params.min_timing_samples} wins in {code})",
             )
 
+    # Timing is measured from the same snapshots as the win rate it goes with,
+    # so a deal already old in its stage does not restart the clock.
+    cell_timings = {}
+    for cell, outcomes in cell_obs.items():
+        own = tuple(sorted(x for x in outcomes if x is not None))
+        if len(own) >= params.min_timing_samples:
+            cell_timings[cell] = Timing(own, f"stage {cell[0]}, aged {cell[1]}")
+
     new = _new_pipeline(data, cutoff, params, book)
     return Model(
-        cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots)
-    )
+        cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots),
+        cell_timings,
+    )  # fmt: skip
 
 
 def matured_snapshots(data: Dataset, cutoff: date, horizon: int) -> list[date]:
@@ -224,7 +237,7 @@ def _new_pipeline(
     cohort_start = cohort_end - timedelta(days=params.trailing_days)
     cohort = [d for d in data.deals if cohort_start < d.created <= cohort_end]
     wins = [d for d in cohort if _days_to_win(d, d.created, horizon) is not None]
-    first_amount = _creation_amounts(data)
+    first_amount = creation_amounts(data)
     created_amounts = [
         first_amount[d.id] for d in cohort if first_amount.get(d.id) is not None
     ]
@@ -239,35 +252,36 @@ def _new_pipeline(
     cohort_text = (
         f"new-business deals created {cohort_start + timedelta(days=1)} to {cohort_end}"
     )
-    amount_basis = (
-        "amount at the first observation"
-        if data.observations is not None
-        else "current amount (amount at creation is not recorded)"
-    )
+    amount_basis = CREATION_AMOUNT_BASIS
 
     low, high = wilson(len(wins), n)
-    book.add(
-        Rate(
+    for name, value, (definition, source), num, den, horizon_text, size, rng in (
+        (
             "new_pipeline_win_rate", win_rate,
-            f"share of created deals won within {horizon} days of creation",
-            f"{len(wins)} won within {horizon} days", f"{n} deals created", cohort_text,
-            f"{horizon} days", n, FITTED, low, high,
-        )
-    )  # fmt: skip
-    book.add(
-        Rate(
-            "mean_won_arr", mean_won, "mean booked ARR of a created deal that is won",
-            "booked ARR of those wins", f"{len(wins)} wins", cohort_text,
-            f"{horizon} days", len(wins), FITTED,
-        )
-    )  # fmt: skip
-    book.add(
-        Rate(
-            "mean_created_arr", mean_created, f"mean ARR of a created deal ({amount_basis})",
+            _evidence(n, f"share of created deals won within {horizon} days of creation"),
+            f"{len(wins)} won within {horizon} days", f"{n} deals created",
+            f"{horizon} days", n, (low, high) if n else (None, None),
+        ),
+        (
+            "mean_won_arr", mean_won,
+            _evidence(len(wins), "mean booked ARR of a created deal that is won"),
+            "booked ARR of those wins", f"{len(wins)} wins", f"{horizon} days", len(wins),
+            (None, None),
+        ),
+        (
+            "mean_created_arr", mean_created,
+            _evidence(len(created_amounts), f"mean ARR of a created deal ({amount_basis})"),
             "ARR of created deals", f"{len(created_amounts)} deals with a known amount",
-            cohort_text, "at creation", len(created_amounts), FITTED,
-        )
-    )  # fmt: skip
+            "at creation", len(created_amounts), (None, None),
+        ),
+    ):  # fmt: skip
+        book.add(
+            Rate(
+                name=name, value=value, definition=definition, numerator=num,
+                denominator=den, cohort=cohort_text, horizon=horizon_text,
+                sample_size=size, source=source, low95=rng[0], high95=rng[1],
+            )
+        )  # fmt: skip
     book.add(
         Rate(
             "created_deals_per_day", per_day, "new-business deals created per day",
@@ -281,17 +295,16 @@ def _new_pipeline(
         "days from creation to win",
     )
     return NewPipeline(
-        win_rate, timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins)
+        win_rate, timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins), n
     )
 
 
-def _creation_amounts(data: Dataset) -> dict[str, Decimal | None]:
-    if data.observations is None:
-        return {d.id: d.arr for d in data.deals}
-    first: dict[str, Decimal] = {}
-    for o in data.observations:
-        first.setdefault(o.deal_id, o.amount)
-    return {d.id: first.get(d.id) for d in data.deals}
+def _evidence(n: int, definition: str) -> tuple[str, str]:
+    """(definition, source) for a rate that is undefined without evidence: with
+    no sample it is a default of 0, never presented as fitted."""
+    if n:
+        return definition, FITTED
+    return f"{definition} (no evidence: set to 0)", DEFAULT
 
 
 def _mean(values) -> Decimal:

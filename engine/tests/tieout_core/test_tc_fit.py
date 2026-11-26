@@ -93,7 +93,7 @@ def test_a_stage_with_no_history_uses_the_profile_probability(model):
 def test_close_timing_is_the_empirical_days_to_win(model):
     # S3 has two wins (60 and 364 days after the snapshot), fewer than the
     # 20-sample minimum, so it is pooled with S2's one win (136 days).
-    timing = model.timing("S3")
+    timing = model.timing("S3", 29)
     assert timing.samples == (60, 136, 364)
     assert timing.source == "pooled across stages (fewer than 20 wins in S3)"
     assert (
@@ -118,3 +118,28 @@ def test_new_pipeline_parameters_come_from_the_matured_creation_cohort(model):
 def test_no_rate_is_defined_twice(model):
     names = [r.name for r in model.rates]
     assert len(names) == len(set(names))
+
+
+def test_close_timing_follows_the_same_stage_and_age_as_the_win_rate(tmp_path):
+    # From F's first S2 snapshot (age 29 days) the win came 136 days later; from
+    # its first snapshot aged 91-180 days it came 46 days later. An older deal
+    # must not restart the clock.
+    from engine.tieout_core.fit import FitParams
+
+    profile = load_profile(write_profile(tmp_path / "p"))
+    m = fit(DATA, CUT, profile, FitParams(min_timing_samples=1))
+    assert m.timing("S2", 120).samples == (46,)
+    assert m.timing("S2", 30).samples == (136,)
+    assert m.timing("S2", 400).samples == (
+        136,
+    )  # no evidence for that age: the stage's timing
+
+
+def test_rates_without_evidence_are_labelled_default_not_fitted(tmp_path):
+    profile = load_profile(write_profile(tmp_path / "p"))
+    # Every deal is younger than the 365-day horizon: no matured creation cohort.
+    m = fit(DATA, date(2025, 9, 1), profile)
+    assert m.new_pipeline.cohort_size == 0
+    for name in ("new_pipeline_win_rate", "mean_won_arr", "mean_created_arr"):
+        assert m.rates[name].source == "default", name
+        assert "no evidence" in m.rates[name].definition

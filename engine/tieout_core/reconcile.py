@@ -75,8 +75,6 @@ def reconcile(
             reason = f"excluded motion: {d.type or '(blank)'}"
         elif d.created > as_of:
             reason = "created after the as-of date"
-        elif d.is_closed and d.close > as_of:
-            reason = "closed after the as-of date"
         if reason:
             exclusions.append(Exclusion(d.row, d.id, reason, d.arr))
         else:
@@ -84,7 +82,8 @@ def reconcile(
     exclusions.sort(key=lambda e: e.row)
 
     ids = {d.id for d in kept}
-    later = [
+    later = [d.close for d in kept if d.is_closed and d.close > as_of]
+    later += [
         t.on for t in loaded.dataset.transitions if t.deal_id in ids and t.on > as_of
     ]
     later += [
@@ -94,7 +93,7 @@ def reconcile(
     ]
     if later:
         raise ValueError(
-            f"the files have stage-history or observation entries dated up to {max(later)}, "
+            f"the files have close dates, stage history or observations dated up to {max(later)}, "
             f"after the as-of date {as_of}; the as-of date must be the export date or later "
             "(past dates are rebuilt only inside the back-test)"
         )

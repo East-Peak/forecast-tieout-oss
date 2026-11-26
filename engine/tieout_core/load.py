@@ -82,20 +82,28 @@ def load_company(path: Path, profile: Profile) -> LoadedCompany:
     exclusions: list[Exclusion] = []
     total = Decimal(0)
     unparseable = 0
+    first_row: dict[str, int] = {}
     for row_number, raw in enumerate(rows, start=2):
         arr = parse_money(raw.get("arr", ""))
         if arr is None:
             unparseable += 1
         else:
             total += arr
-        parsed = _parse_deal(row_number, raw, arr, profile)
+        deal_id = (raw.get("id") or "").strip()
+        if not deal_id:
+            parsed = "deal id is blank"
+        elif deal_id in first_row:
+            parsed = f"duplicate deal id (first seen on row {first_row[deal_id]})"
+        else:
+            first_row[deal_id] = row_number
+            parsed = _parse_deal(row_number, raw, arr, profile)
         if isinstance(parsed, Deal):
             deals.append(parsed)
         else:
             exclusions.append(Exclusion(row_number, raw.get("id", ""), parsed, arr))
 
     known = {d.id for d in deals}
-    transitions: list[Transition] = []
+    timed: list[tuple[str, datetime, Transition]] = []
     unmapped = 0
     for raw in _csv(path / "stage_history.csv"):
         if raw["deal_id"] not in known:
@@ -104,10 +112,11 @@ def load_company(path: Path, profile: Profile) -> LoadedCompany:
         if code is None:
             unmapped += 1
             continue
-        transitions.append(
-            Transition(raw["deal_id"], code, parse_date(raw["transition_date"]))
-        )
-    transitions.sort(key=lambda t: (t.deal_id, t.on))
+        # Order by the full timestamp so same-day changes resolve by time, not row order.
+        at = datetime.fromisoformat(raw["transition_date"].strip())
+        timed.append((raw["deal_id"], at, Transition(raw["deal_id"], code, at.date())))
+    timed.sort(key=lambda x: (x[0], x[1]))
+    transitions = [t for _, _, t in timed]
 
     observations = None
     obs_path = path / "deal_observations.csv"

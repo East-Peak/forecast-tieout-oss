@@ -29,7 +29,6 @@ ROWS = [
     deal("LOST", "Closed Lost", "50", "2026-01-05", "2026-03-03"),
     deal("OPEN", "Negotiation", "75", "2026-03-01", "2026-06-30"),
     deal("EXP", "Closed Won", "999", "2026-01-01", "2026-03-01", type="expansion"),
-    deal("TOMORROW", "Closed Won", "40", "2026-01-01", "2026-04-16"),
     deal("UNBORN", "Discovery", "60", "2026-04-16"),
     deal("BROKEN", "Closed Won", "nope", "2026-01-01", "2026-03-01"),
 ]
@@ -49,7 +48,6 @@ def test_every_excluded_row_has_a_reason(tmp_path, profile):
     r = _run(tmp_path, profile, ROWS)
     assert {e.deal_id: e.reason for e in r.exclusions} == {
         "EXP": "excluded motion: expansion",
-        "TOMORROW": "closed after the as-of date",
         "UNBORN": "created after the as-of date",
         "BROKEN": "arr is missing or not a number",
     }
@@ -107,5 +105,14 @@ def test_stage_history_after_the_as_of_is_refused(tmp_path, profile):
         tmp_path / "c", [deal("OPEN", "Negotiation", "75", "2026-03-01", "2026-06-30")],
         history=[("OPEN", "Discovery", "2026-03-01"), ("OPEN", "Negotiation", "2026-04-20")],
     )  # fmt: skip
+    with pytest.raises(ValueError, match="after the as-of date"):
+        reconcile(path, load_company(path, profile), profile, AS_OF)
+
+
+def test_a_deal_closed_after_the_as_of_is_refused_not_dropped(tmp_path, profile):
+    # It was open on the as-of date; dropping it would select the population
+    # by an outcome that had not happened yet.
+    rows = ROWS + [deal("TOMORROW", "Closed Won", "40", "2026-01-01", "2026-04-16")]
+    path = write_company(tmp_path / "c", rows)
     with pytest.raises(ValueError, match="after the as-of date"):
         reconcile(path, load_company(path, profile), profile, AS_OF)

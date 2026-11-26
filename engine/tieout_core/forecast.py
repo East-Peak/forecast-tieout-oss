@@ -17,7 +17,7 @@ import numpy as np
 
 from .fiscal import Window
 from .fit import Model
-from .history import UNKNOWN_STAGE
+from .history import CREATION_AMOUNT_BASIS, UNKNOWN_STAGE, creation_amounts
 from .rates import ENTERED, FITTED, Rate
 from .records import Check, Dataset, Profile
 
@@ -121,11 +121,13 @@ def stage_weighted(
 
     start = cutoff - timedelta(days=trailing_days)
     created = [d for d in data.deals if start < d.created <= cutoff]
-    if any(d.arr is None for d in created):
+    amounts = creation_amounts(data)
+    if any(amounts[d.id] is None for d in created):
         return _unavailable(
-            method, "amounts of recently created deals at this date are not recorded"
+            method, "amounts of recently created deals at creation are not recorded"
         )
-    created_per_day = sum((d.arr for d in created), Decimal(0)) / Decimal(trailing_days)
+    created_arr = sum((amounts[d.id] for d in created), Decimal(0))
+    created_per_day = created_arr / Decimal(trailing_days)
     cycles = [
         (d.close - d.created).days
         for d in data.deals
@@ -164,7 +166,7 @@ def stage_weighted(
     ) + (
         Rate(
             "created_arr_per_day", created_per_day, "new-business ARR created per day",
-            f"{sum((d.arr for d in created), Decimal(0)):.2f} ARR created", f"{trailing_days} days",
+            f"{created_arr:.2f} ARR created ({CREATION_AMOUNT_BASIS})", f"{trailing_days} days",
             f"created {window_text}", "trailing", len(created), FITTED,
         ),
         Rate(
@@ -187,10 +189,31 @@ def model_forecast(
     added_pipeline: Decimal = Decimal(0),
 ) -> Forecast:
     method = "fitted model"
-    open_deals = [d for d in data.deals if not d.is_closed and d.stage != UNKNOWN_STAGE]
-    if any(d.arr is None for d in open_deals):
+    all_open = [d for d in data.deals if not d.is_closed]
+    if any(d.arr is None for d in all_open):
         return _unavailable(method, "open-deal amounts at this date are not recorded")
-    unknown = sum(1 for d in data.deals if not d.is_closed and d.stage == UNKNOWN_STAGE)
+    open_deals = [d for d in all_open if d.stage != UNKNOWN_STAGE]
+    unknown = len(all_open) - len(open_deals)
+    if windows:
+        # Missing evidence is not an observed zero: say so instead of forecasting $0.
+        no_timing = sorted(
+            {
+                d.stage
+                for d in open_deals
+                if not model.timing(d.stage, (cutoff - d.created).days).samples
+            }
+        )
+        if no_timing:
+            return _unavailable(
+                method,
+                f"no close-timing evidence for open deals in {', '.join(no_timing)}",
+            )
+        if model.new_pipeline.cohort_size == 0:
+            return _unavailable(
+                method,
+                f"no matured creation cohort (deals created at least {model.params.horizon_days} "
+                "days before the cutoff), so future pipeline cannot be fitted",
+            )
     offsets = [
         (
             w.start.toordinal() - cutoff.toordinal(),
@@ -202,7 +225,7 @@ def model_forecast(
     existing = _zeros(windows)
     for d in open_deals:
         p = model.win_rate(d.stage, (cutoff - d.created).days)
-        timing = model.timing(d.stage)
+        timing = model.timing(d.stage, (cutoff - d.created).days)
         for w, (a, b) in zip(windows, offsets):
             existing[w.label] += d.arr * p * (timing.cdf(b) - timing.cdf(a))
 
@@ -255,14 +278,23 @@ def existing_pipeline_conservation(
         for d in data.deals
         if not d.is_closed and d.stage != UNKNOWN_STAGE and d.arr is not None
     ]
-    inside = model_forecast(
+    forecast = model_forecast(
         model, Dataset(tuple(open_deals), (), None), cutoff, windows
-    ).components[EXISTING]
+    )
+    if not forecast.available:
+        return Check(
+            "existing pipeline conserved",
+            True,
+            f"not applicable: {forecast.unavailable_reason}",
+        )
+    inside = forecast.components[EXISTING]
     end = windows[-1].end.toordinal() - cutoff.toordinal()
     later = not_won = Decimal(0)
     for d in open_deals:
         p = model.win_rate(d.stage, (cutoff - d.created).days)
-        later += d.arr * p * (1 - model.timing(d.stage).cdf(end))
+        later += (
+            d.arr * p * (1 - model.timing(d.stage, (cutoff - d.created).days).cdf(end))
+        )
         not_won += d.arr * (1 - p)
     total_open = sum((d.arr for d in open_deals), Decimal(0))
     accounted = sum(inside.values(), Decimal(0)) + later + not_won
@@ -334,7 +366,7 @@ def simulate(
     for d in data.deals:
         if d.is_closed or d.stage == UNKNOWN_STAGE or d.arr is None:
             continue
-        samples = model.timing(d.stage).samples
+        samples = model.timing(d.stage, (cutoff - d.created).days).samples
         if not samples:
             continue
         p = float(model.win_rate(d.stage, (cutoff - d.created).days))

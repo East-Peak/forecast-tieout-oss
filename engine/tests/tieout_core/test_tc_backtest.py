@@ -161,3 +161,24 @@ def test_verdict_yes_only_if_the_model_beats_both_baselines_at_both_horizons():
         verdict([_score(1, 6, 1, 2, 2), _score(3, 6, 2, 3, 2)])[0] == "no"
     )  # ties a baseline
     assert verdict([_score(1, 9, 3, 2, 4), _score(3, 9, 1, 2, 2)])[0] == "no"
+
+
+def test_coverage_counts_only_folds_that_had_a_range():
+    from engine.tieout_core.backtest import Fold, _score
+
+    def f(range80):
+        forecasts = {RUN_RATE: Decimal(1), STAGE_WEIGHTED: None, MODEL: None}
+        return Fold(AS_OF, 1, Decimal(5), forecasts, range80, range80)
+
+    s = _score(1, [f((0.0, 10.0))] + [f(None)] * 7)
+    assert (s.folds, s.range_folds, s.coverage80) == (8, 1, 1.0)
+
+
+def test_folds_are_never_scored_past_the_last_observed_date(profile):
+    # An as-of months after the export would otherwise score folds against
+    # bookings nobody observed (zeros).
+    from engine.tieout_core.fiscal import add_months
+
+    r = backtest(regular_history(), date(2026, 12, 31), profile, draws=20)
+    assert r.folds
+    assert max(add_months(f.cutoff, f.horizon) for f in r.folds) <= AS_OF

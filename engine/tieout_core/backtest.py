@@ -48,6 +48,7 @@ class HorizonScore:
     bias: dict[str, Decimal | None]
     coverage80: float | None
     coverage95: float | None
+    range_folds: int = 0  # folds that had a fitted range: the coverage denominator
 
 
 @dataclass(frozen=True)
@@ -109,6 +110,11 @@ def backtest(
     seed: int = 0,
 ) -> Backtest:
     folds: list[Fold] = []
+    # Outcomes are only observed up to the latest dated fact in the files, which
+    # can be earlier than the as-of date; no window may be scored past it.
+    observed_through = (
+        min(as_of, latest_known_date(population)) if population.deals else as_of
+    )
     k = 1
     while True:
         cutoff = add_months(as_of, -k)
@@ -118,8 +124,13 @@ def backtest(
             or fit_snapshots(known, cutoff, params) < MIN_TRAINING_SNAPSHOTS
         ):
             break
-        horizons = tuple(h for h in HORIZONS if add_months(cutoff, h) <= as_of)
-        folds.extend(fold(population, cutoff, horizons, profile, params, draws, seed))
+        horizons = tuple(
+            h for h in HORIZONS if add_months(cutoff, h) <= observed_through
+        )
+        if horizons:
+            folds.extend(
+                fold(population, cutoff, horizons, profile, params, draws, seed)
+            )
         k += 1
     scores = tuple(_score(h, [f for f in folds if f.horizon == h]) for h in HORIZONS)
     notes = []
@@ -158,7 +169,7 @@ def _score(horizon: int, folds: list[Fold]) -> HorizonScore:
         cov95 = sum(f.range95[0] <= f.actual <= f.range95[1] for f in ranged) / len(
             ranged
         )
-    return HorizonScore(horizon, len(folds), mae, bias, cov80, cov95)
+    return HorizonScore(horizon, len(folds), mae, bias, cov80, cov95, len(ranged))
 
 
 def verdict(scores) -> tuple[str, str]:

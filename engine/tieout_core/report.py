@@ -23,7 +23,7 @@ from .forecast import (
     simulate,
     stage_weighted,
 )
-from .history import UNKNOWN_STAGE
+from .history import creation_amounts, latest_known_date
 from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .load import load_company, load_profile
 from .markdown import render as render_markdown
@@ -72,15 +72,17 @@ def build_report(
         q: [w.label for w in windows if fy.quarter_window(q).contains(w.end)]
         for q in fy.quarter_keys
     }
-    sim = simulate(
-        model,
-        pop,
-        as_of,
-        windows,
-        draws=draws,
-        seed=seed,
-        groups={**quarter_labels, "rest of year": labels},
-    )
+    sim = None
+    if fitted.available:
+        sim = simulate(
+            model,
+            pop,
+            as_of,
+            windows,
+            draws=draws,
+            seed=seed,
+            groups={**quarter_labels, "rest of year": labels},
+        )
 
     book = RateBook()
     for r in model.rates:
@@ -216,11 +218,7 @@ def _history(loaded, rec, model, bt, as_of) -> dict:
     for t in pop.transitions:
         last[t.deal_id] = t
     mismatched = sum(1 for d in closed if d.id in last and last[d.id].on != d.close)
-    open_unknown = sum(
-        1
-        for d in deals
-        if not d.is_closed and (d.id not in with_history or d.stage == UNKNOWN_STAGE)
-    )
+    open_unknown = sum(1 for d in deals if not d.is_closed and d.id not in with_history)
     folds = {s.horizon: s.folds for s in bt.scores}
 
     limits = [
@@ -247,7 +245,14 @@ def _history(loaded, rec, model, bt, as_of) -> dict:
     if no_history:
         limits.append(
             f"{no_history} deals have no stage history, so they never appear in a win-rate snapshot; "
-            f"{open_unknown} of them are open and are left out of the pipeline forecasts"
+            f"{open_unknown} of them are open: today's forecasts use their current stage from "
+            "deals.csv, but at past cutoffs their stage is unknown and back-test folds leave them out"
+        )
+    latest = latest_known_date(pop) if deals else None
+    if latest is not None and (as_of - latest).days > 31:
+        limits.append(
+            f"the files' latest dated entry is {latest}, {(as_of - latest).days} days before the "
+            "as-of date: nothing after it was observed, and back-test folds stop there"
         )
     if loaded.unmapped_transitions:
         limits.append(
@@ -293,18 +298,18 @@ def _history(loaded, rec, model, bt, as_of) -> dict:
 
 def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
     by_h = {s.horizon: s for s in bt.scores}
-    tested = all(
-        by_h[h].folds >= MIN_FOLDS and by_h[h].coverage80 is not None
-        for h in VERDICT_HORIZONS
-    )
+    tested = all(by_h[h].range_folds >= MIN_FOLDS for h in VERDICT_HORIZONS)
     if tested:
         status = "back-tested: " + "; ".join(
             f"{h}-month 80% range held the actual in {by_h[h].coverage80:.0%} and the 95% range in "
-            f"{by_h[h].coverage95:.0%} of {by_h[h].folds} folds"
+            f"{by_h[h].coverage95:.0%} of {by_h[h].range_folds} folds"
             for h in VERDICT_HORIZONS
         )
     else:
-        status = "unvalidated: coverage has not been tested on enough folds"
+        status = (
+            f"unvalidated: coverage needs at least {MIN_FOLDS} folds with a fitted range at 1 and "
+            f"3 months (had {by_h[1].range_folds} and {by_h[3].range_folds})"
+        )
     return {
         "windows": labels,
         "methods": [
@@ -328,11 +333,19 @@ def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
             "status": status,
             "by_window": {lbl: _spread(s) for lbl, s in sim.by_window.items()},
             "rest_of_year": _spread(sim.by_group["rest of year"]),
+        }
+        if sim is not None
+        else {
+            "status": f"unavailable: {forecasts[2].unavailable_reason}",
+            "by_window": {},
+            "rest_of_year": None,
         },
     }
 
 
 def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels):
+    if not fitted.available:
+        return _gap_unavailable(rec, profile, as_of, fitted.unavailable_reason)
     fy = profile.fiscal_year
     quarters = []
     for q in fy.quarter_keys:
@@ -432,6 +445,71 @@ def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels):
     return gap, lever, Check("lever agrees with forward function", ok, detail)
 
 
+def _quarter_actuals(rec, profile, as_of):
+    fy = profile.fiscal_year
+    for q in fy.quarter_keys:
+        qw = fy.quarter_window(q)
+        actual = sum(
+            (v for m, v in rec.bookings_by_month.items() if qw.contains(_month_end(m))),
+            Decimal(0),
+        )
+        closed = qw.end <= as_of
+        status = (
+            "closed"
+            if closed
+            else ("not started" if qw.start >= as_of else "in progress")
+        )
+        yield q, status, actual
+
+
+def _gap_unavailable(rec, profile, as_of, reason):
+    """Without a fitted forecast only closed quarters have a gap; open ones and
+    the lever say why rather than show a number."""
+    quarters = []
+    for q, status, actual in _quarter_actuals(rec, profile, as_of):
+        target = profile.quarterly_targets[q]
+        closed = status == "closed"
+        quarters.append(
+            {
+                "quarter": q,
+                "status": status,
+                "target": _exact(target),
+                "actual": _exact(actual),
+                "forecast": "0.00" if closed else None,
+                "expected": _money(actual) if closed else None,
+                "gap": _money(target - actual) if closed else None,
+                "expected_range80": None,
+            }
+        )
+    target = sum(profile.quarterly_targets.values(), Decimal(0))
+    lever = {
+        "lever": "new-business pipeline added",
+        "outcome": "unavailable",
+        "headline": "unavailable",
+        "reason": reason,
+        "target": _exact(target),
+        "meaning": "the lever is solved through the fitted model, which is unavailable here",
+    }
+    gap = {
+        "measure": MEASURE,
+        "forecast_method": f"fitted model: unavailable ({reason})",
+        "quarters": quarters,
+        "fiscal_year": {
+            "target": _exact(target),
+            "actual_to_date": _exact(rec.bookings_fytd),
+            "forecast_rest_of_year": None,
+            "expected": None,
+            "gap": None,
+            "expected_range80": None,
+            "expected_range95": None,
+        },
+    }
+    check = Check(
+        "lever agrees with forward function", True, f"not applicable: {reason}"
+    )
+    return gap, lever, check
+
+
 def _backtest(bt) -> dict:
     return {
         "scoring": "per horizon, mean absolute dollar error over all folds; 'yes' only if the fitted "
@@ -444,6 +522,7 @@ def _backtest(bt) -> dict:
                 "mean_absolute_error": {k: _opt_money(v) for k, v in s.mae.items()},
                 "signed_bias": {k: _opt_money(v) for k, v in s.bias.items()},
                 "range_coverage": {
+                    "folds_with_a_range": s.range_folds,
                     "80%": None if s.coverage80 is None else round(s.coverage80, 4),
                     "95%": None if s.coverage95 is None else round(s.coverage95, 4),
                 },
@@ -475,6 +554,11 @@ def _no_windows_check() -> Check:
 
 
 def _simulation_check(fitted: Forecast, sim) -> Check:
+    if sim is None:
+        return Check(
+            "simulation centred on the expectation", True,
+            f"not applicable: {fitted.unavailable_reason}",
+        )  # fmt: skip
     expected = float(fitted.total())
     samples = sim.samples_total
     n = len(samples)
@@ -542,12 +626,16 @@ def _parameters(params: FitParams, draws: int, seed: int) -> list[Rate]:
 
 
 def _trailing_created_arr(pop, as_of: date, trailing_days: int) -> Decimal:
+    """Pipeline created in the trailing window at each deal's first recorded
+    amount (deals with no recorded amount add nothing, so the cap is lower)."""
     start = as_of - timedelta(days=trailing_days)
-    first = {}
-    for o in pop.observations or ():
-        first.setdefault(o.deal_id, o.amount)
+    amounts = creation_amounts(pop)
     return sum(
-        (first.get(d.id, d.arr) for d in pop.deals if start < d.created <= as_of),
+        (
+            amounts[d.id]
+            for d in pop.deals
+            if start < d.created <= as_of and amounts[d.id] is not None
+        ),
         Decimal(0),
     )
 
