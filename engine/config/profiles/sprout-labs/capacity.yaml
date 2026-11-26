@@ -1,0 +1,17 @@
+# Capacity inputs for Sprout Labs (synthetic demo company).
+# Read by `python -m engine.tieout_core report`; see engine/tieout_core/capacity_rules.py.
+# Entered values are used only where the company's own history cannot supply them,
+# and the report labels each one fitted, entered or default.
+roles:
+  quota_carrying: [ae]          # the only roles that carry capacity
+  other: [founder, sdr, se]  # counted, carry none; any other role is excluded with a reason
+ramp:
+  # Share of a fully ramped rep's creation, by tenure month 1, 2, ... (1 after the last).
+  months: [0.1667, 0.5, 0.8333]
+attrition:
+  monthly_per_ae: 0.02          # departures per AE-month
+costs:
+  loaded_cost_per_ae_month: 12000              # cash cost of one AE for one month
+  programme_cost_per_dollar_of_pipeline: 0.08  # cash cost per dollar of programme pipeline created
+programme:
+  ramp_months: 3                       # a programme reaches its full monthly run-rate after this many months
