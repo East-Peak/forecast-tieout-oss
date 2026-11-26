@@ -18,6 +18,7 @@ import numpy as np
 from .fiscal import Window
 from .fit import Model
 from .history import UNKNOWN_STAGE
+from .rates import ENTERED, FITTED, Rate
 from .records import Check, Dataset, Profile
 
 EXISTING = "existing pipeline"
@@ -33,6 +34,7 @@ class Forecast:
     assumptions: tuple[str, ...] = ()
     available: bool = True
     unavailable_reason: str = ""
+    rates: tuple[Rate, ...] = ()
 
     def window_total(self, label: str) -> Decimal:
         return sum((c[label] for c in self.components.values()), Decimal(0))
@@ -45,6 +47,10 @@ class Forecast:
 
 def _unavailable(method: str, reason: str) -> Forecast:
     return Forecast(method, {}, (), False, reason)
+
+
+def _trailing_text(cutoff: date, trailing_days: int) -> str:
+    return f"{cutoff - timedelta(days=trailing_days - 1)} to {cutoff}"
 
 
 def _zeros(windows: list[Window]) -> dict[str, Decimal]:
@@ -62,14 +68,22 @@ def _trailing_bookings(data: Dataset, cutoff: date, trailing_days: int) -> Decim
 def run_rate(
     data: Dataset, cutoff: date, windows: list[Window], trailing_days: int = 365
 ) -> Forecast:
-    won = _trailing_bookings(data, cutoff, trailing_days)
+    start = cutoff - timedelta(days=trailing_days)
+    wins = [d for d in data.deals if d.is_won and start < d.close <= cutoff]
+    won = sum((d.arr for d in wins), Decimal(0))
     per_day = won / Decimal(trailing_days)
+    rate = Rate(
+        "trailing_bookings_per_day", per_day, "new-business ARR booked per day",
+        f"{won:.2f} ARR booked", f"{trailing_days} days", f"closed {_trailing_text(cutoff, trailing_days)}",
+        "trailing", len(wins), FITTED,
+    )  # fmt: skip
     return Forecast(
         "trailing run-rate",
         {RUN_RATE: {w.label: won * w.days / Decimal(trailing_days) for w in windows}},
         (
             f"new-business bookings continue at the trailing {trailing_days}-day rate of {per_day:.2f} per day",
         ),
+        rates=(rate,),
     )
 
 
@@ -102,7 +116,7 @@ def stage_weighted(
             unknown += 1
             continue
         i = 0 if d.close <= cutoff else _window_index(windows, d.close)
-        if i is not None:
+        if i is not None and windows:
             existing[windows[i].label] += d.arr * profile.probability(d.stage)
 
     start = cutoff - timedelta(days=trailing_days)
@@ -120,7 +134,7 @@ def stage_weighted(
     first_stage = profile.open_codes[0]
     p_first = profile.probability(first_stage)
     future = _zeros(windows)
-    if cycles:
+    if cycles and windows:
         cycle = int(median(cycles))
         for t in range(1, windows[-1].end.toordinal() - cutoff.toordinal() + 1):
             i = _window_index(windows, cutoff + timedelta(days=t + cycle))
@@ -139,7 +153,30 @@ def stage_weighted(
     )
     if unknown:
         assumptions += (f"{unknown} open deals with no stage on record are left out",)
-    return Forecast(method, {EXISTING: existing, FUTURE: future}, assumptions)
+    window_text = _trailing_text(cutoff, trailing_days)
+    rates = tuple(
+        Rate(
+            f"stage_probability:{code}", profile.probability(code),
+            f"probability that a deal in {profile.stage_name(code)} is won (stages.yaml)",
+            "", "", "stages.yaml", "unstated", 0, ENTERED,
+        )
+        for code in profile.open_codes
+    ) + (
+        Rate(
+            "created_arr_per_day", created_per_day, "new-business ARR created per day",
+            f"{sum((d.arr for d in created), Decimal(0)):.2f} ARR created", f"{trailing_days} days",
+            f"created {window_text}", "trailing", len(created), FITTED,
+        ),
+        Rate(
+            "median_won_cycle_days", Decimal(int(median(cycles))) if cycles else Decimal(0),
+            "median days from creation to close of a won deal",
+            "median of days to close", f"{len(cycles)} wins", f"closed {window_text}",
+            "trailing", len(cycles), FITTED,
+        ),
+    )  # fmt: skip
+    return Forecast(
+        method, {EXISTING: existing, FUTURE: future}, assumptions, rates=rates
+    )
 
 
 def model_forecast(
@@ -173,7 +210,7 @@ def model_forecast(
     future = _zeros(windows)
     added = _zeros(windows)
     n = len(new.timing.samples)
-    if n:
+    if n and windows:
         horizon_end = offsets[-1][1]
         per_created_deal = new.win_rate * new.mean_won_arr / Decimal(n)
         for w, (a, b) in zip(windows, offsets):
@@ -254,6 +291,7 @@ class Simulation:
     by_window: dict[str, Spread] = field(compare=True)
     total: Spread = field(compare=True)
     samples_total: tuple[float, ...] = field(compare=True, repr=False)
+    by_group: dict[str, Spread] = field(default_factory=dict)
 
 
 def _spread(values: np.ndarray) -> Spread:
@@ -268,11 +306,22 @@ def simulate(
     windows: list[Window],
     draws: int = 4000,
     seed: int = 0,
+    groups: dict[str, list[str]] | None = None,
 ) -> Simulation:
     """Draw outcomes from the fitted model: each open deal wins or not and, if
     it wins, closes after a day count drawn from its timing; future wins arrive
     as a Poisson process with sizes drawn from past wins."""
     rng = np.random.default_rng(seed)
+    if not windows:
+        empty = _spread(np.zeros(draws))
+        return Simulation(
+            draws,
+            seed,
+            {},
+            empty,
+            tuple(0.0 for _ in range(draws)),
+            {g: empty for g in groups or {}},
+        )
     ends = np.array([w.end.toordinal() - cutoff.toordinal() for w in windows])
     out = np.zeros((draws, len(windows)))
     draw_index = np.arange(draws)
@@ -316,4 +365,12 @@ def simulate(
         {w.label: _spread(out[:, i]) for i, w in enumerate(windows)},
         _spread(totals),
         tuple(float(x) for x in totals),
+        {
+            name: _spread(
+                out[:, [i for i, w in enumerate(windows) if w.label in labels]].sum(
+                    axis=1
+                )
+            )
+            for name, labels in (groups or {}).items()
+        },
     )

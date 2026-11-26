@@ -123,3 +123,26 @@ def test_simulation_is_seeded_and_centred_on_the_expectation():
     expected_total = 50 + 2250  # existing 25 + 25, future 700 + 1550
     assert a.total.mean == pytest.approx(expected_total, rel=0.03)
     assert a.total.p2_5 <= a.total.p10 <= a.total.p50 <= a.total.p90 <= a.total.p97_5
+
+
+def test_simulation_reports_spreads_for_groups_of_windows():
+    groups = {"Q": ["2026-02", "2026-03"], "all": [w.label for w in WINDOWS]}
+    s = simulate(MODEL, ONLY_X, CUT, WINDOWS, draws=5000, seed=3, groups=groups)
+    assert s.by_group["all"] == s.total
+    assert s.by_group["Q"].mean == pytest.approx(25 + 700 + 1550, rel=0.04)
+
+
+def test_baselines_declare_their_rates(profile):
+    (rr,) = run_rate(DATA, CUT, WINDOWS).rates
+    assert (rr.name, rr.value, rr.sample_size) == ("trailing_bookings_per_day", Decimal(400) / 365, 1)
+    sw = {r.name: r for r in stage_weighted(DATA, CUT, profile, WINDOWS).rates}
+    assert sw["stage_probability:S1"].value == Decimal("0.1")
+    assert sw["stage_probability:S1"].source == "entered"
+    assert sw["created_arr_per_day"].value == Decimal(2)
+    assert sw["median_won_cycle_days"].value == Decimal(61)
+
+
+def test_no_windows_means_nothing_to_forecast(profile):
+    for f in (run_rate(DATA, CUT, []), stage_weighted(DATA, CUT, profile, []), model_forecast(MODEL, DATA, CUT, [])):
+        assert f.available and f.total() == 0
+    assert simulate(MODEL, ONLY_X, CUT, [], draws=10).total.mean == 0

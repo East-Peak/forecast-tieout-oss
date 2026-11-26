@@ -84,16 +84,26 @@ def reconcile(
     exclusions.sort(key=lambda e: e.row)
 
     ids = {d.id for d in kept}
+    later = [
+        t.on for t in loaded.dataset.transitions if t.deal_id in ids and t.on > as_of
+    ]
+    later += [
+        o.on
+        for o in loaded.dataset.observations or ()
+        if o.deal_id in ids and o.on > as_of
+    ]
+    if later:
+        raise ValueError(
+            f"the files have stage-history or observation entries dated up to {max(later)}, "
+            f"after the as-of date {as_of}; the as-of date must be the export date or later "
+            "(past dates are rebuilt only inside the back-test)"
+        )
     population = Dataset(
         tuple(kept),
-        tuple(
-            t for t in loaded.dataset.transitions if t.deal_id in ids and t.on <= as_of
-        ),
+        tuple(t for t in loaded.dataset.transitions if t.deal_id in ids),
         None
         if loaded.dataset.observations is None
-        else tuple(
-            o for o in loaded.dataset.observations if o.deal_id in ids and o.on <= as_of
-        ),
+        else tuple(o for o in loaded.dataset.observations if o.deal_id in ids),
     )
 
     months = month_windows(fy.start - timedelta(days=1), as_of)

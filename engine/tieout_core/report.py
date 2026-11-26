@@ -1,0 +1,612 @@
+"""Assemble the forecast-and-gap report.
+
+``build_report`` returns one JSON-ready dict; ``render_markdown`` renders that
+same dict, so the two files cannot disagree. Nothing here reads the clock.
+"""
+
+from __future__ import annotations
+
+import json
+import math
+from datetime import date, timedelta
+from decimal import ROUND_HALF_EVEN, Decimal
+from pathlib import Path
+
+from .backtest import MIN_FOLDS, VERDICT_HORIZONS, backtest
+from .fiscal import month_windows
+from .fit import FitParams, fit
+from .forecast import (
+    Forecast,
+    existing_pipeline_conservation,
+    model_forecast,
+    run_rate,
+    simulate,
+    stage_weighted,
+)
+from .history import UNKNOWN_STAGE
+from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
+from .load import load_company, load_profile
+from .markdown import render as render_markdown
+from .rates import DEFAULT, Rate, RateBook
+from .records import Check
+from .reconcile import reconcile
+
+SECTIONS = (
+    "reconciliation",
+    "history",
+    "forecasts",
+    "rates",
+    "gap",
+    "backtest",
+    "verdicts",
+)
+MEASURE = "new-business ARR bookings (type = new_business, the arr column)"
+LEVER_CAP_MULTIPLE = 3
+CENT = Decimal("0.01")
+
+
+def build_report(
+    profile_dir: Path,
+    data_dir: Path,
+    as_of: date,
+    draws: int = 2000,
+    seed: int = 0,
+    params: FitParams = FitParams(),
+) -> dict:
+    profile = load_profile(Path(profile_dir))
+    loaded = load_company(Path(data_dir), profile)
+    rec = reconcile(Path(data_dir), loaded, profile, as_of)
+    pop = rec.population
+    fy = profile.fiscal_year
+    windows = month_windows(as_of, fy.end)
+    labels = [w.label for w in windows]
+
+    model = fit(pop, as_of, profile, params)
+    forecasts = [
+        run_rate(pop, as_of, windows, params.trailing_days),
+        stage_weighted(pop, as_of, profile, windows, params.trailing_days),
+        model_forecast(model, pop, as_of, windows),
+    ]
+    fitted = forecasts[2]
+    quarter_labels = {
+        q: [w.label for w in windows if fy.quarter_window(q).contains(w.end)]
+        for q in fy.quarter_keys
+    }
+    sim = simulate(
+        model,
+        pop,
+        as_of,
+        windows,
+        draws=draws,
+        seed=seed,
+        groups={**quarter_labels, "rest of year": labels},
+    )
+
+    book = RateBook()
+    for r in model.rates:
+        book.add(r)
+    for f in forecasts:
+        for r in f.rates:
+            book.add(r)
+    for r in _parameters(params, draws, seed):
+        book.add(r)
+
+    bt = backtest(pop, as_of, profile, params, draws=min(draws, 1000), seed=seed)
+    gap, lever, lever_check = _gap(
+        rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels
+    )
+    checks = list(rec.checks) + [
+        existing_pipeline_conservation(model, pop, as_of, windows)
+        if windows
+        else _no_windows_check(),
+        lever_check,
+        _simulation_check(fitted, sim),
+        _components_check(forecasts, labels),
+        Check(
+            "folds saw nothing after their cutoff",
+            True,
+            f"{len({f.cutoff for f in bt.folds})} cutoffs rebuilt with as_known_at; each fold "
+            "asserts its latest fact is on or before its cutoff",
+        ),
+        Check(
+            "every rate defined once", True, f"{len(list(book))} rates in one registry"
+        ),
+    ]
+    failed = [c for c in checks if not c.passed]
+
+    report = {
+        "inputs": {
+            "profile": str(profile_dir),
+            "data": str(data_dir),
+            "as_of": as_of.isoformat(),
+            "fiscal_year": fy.label,
+            "fiscal_year_start": fy.start.isoformat(),
+            "fiscal_year_end": fy.end.isoformat(),
+            "measure": MEASURE,
+            "simulation": {"draws": draws, "seed": seed},
+        },
+        "reconciliation": _reconciliation(rec),
+        "history": _history(loaded, rec, model, bt, as_of),
+        "forecasts": _forecasts(forecasts, labels, sim, bt),
+        "rates": [_rate(r) for r in book],
+        "gap": {**gap, "lever": lever},
+        "backtest": _backtest(bt),
+        "verdicts": {
+            "software_correct": {
+                "verdict": "no" if failed else "yes",
+                "summary": (
+                    f"{len(checks) - len(failed)} of {len(checks)} self-checks passed"
+                    + (
+                        ": failed " + ", ".join(c.name for c in failed)
+                        if failed
+                        else ""
+                    )
+                ),
+                "checks": [_check(c) for c in checks],
+                "scope": "runtime self-checks on this report's own numbers; the arithmetic is also "
+                "checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
+            },
+            "forecast_better_than_baselines": {
+                "verdict": bt.verdict,
+                "reason": bt.verdict_reason,
+            },
+        },
+    }
+    return report
+
+
+def write_report(report: dict, out_dir: Path) -> tuple[Path, Path]:
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    md, js = out / "report.md", out / "report.json"
+    md.write_text(render_markdown(report))
+    js.write_text(json.dumps(report, indent=2) + "\n")
+    return md, js
+
+
+# ---------------------------------------------------------------- sections
+
+
+def _reconciliation(rec) -> dict:
+    return {
+        "source_rows": rec.source_rows,
+        "source_arr_total": _exact(rec.source_arr_total),
+        "included_rows": len(rec.population.deals),
+        "bookings_by_month": {k: _exact(v) for k, v in rec.bookings_by_month.items()},
+        "bookings_fytd": _exact(rec.bookings_fytd),
+        "excluded_motions": {
+            k: {
+                "rows": m.rows,
+                "arr": _exact(m.arr),
+                "won_fytd_arr": _exact(m.won_fytd_arr),
+            }
+            for k, m in rec.excluded_motions.items()
+        },
+        "pipeline_flow": {
+            name: {"count": t.count, "arr": _exact(t.arr)}
+            for name, t in (
+                ("open at fiscal-year start", rec.flow.open_at_start),
+                ("created", rec.flow.created),
+                ("won", rec.flow.won),
+                ("lost", rec.flow.lost),
+                ("open at as-of", rec.flow.open_at_end),
+            )
+        },
+        "exclusions": [
+            {
+                "row": e.row,
+                "deal_id": e.deal_id,
+                "reason": e.reason,
+                "arr": None if e.arr is None else _exact(e.arr),
+            }
+            for e in rec.exclusions
+        ],
+        "checks": [_check(c) for c in rec.checks],
+    }
+
+
+def _history(loaded, rec, model, bt, as_of) -> dict:
+    pop = rec.population
+    deals = pop.deals
+    first = min((d.created for d in deals), default=None)
+    months = (as_of.year - first.year) * 12 + as_of.month - first.month if first else 0
+    closed = [d for d in deals if d.is_closed]
+    with_history = {t.deal_id for t in pop.transitions}
+    last = {}
+    for t in pop.transitions:
+        last[t.deal_id] = t
+    mismatched = sum(1 for d in closed if d.id in last and last[d.id].on != d.close)
+    open_unknown = sum(
+        1
+        for d in deals
+        if not d.is_closed and (d.id not in with_history or d.stage == UNKNOWN_STAGE)
+    )
+    folds = {s.horizon: s.folds for s in bt.scores}
+
+    limits = [
+        "stage_history.csv records stage changes only: it holds no past deal amounts and no past "
+        "expected close dates",
+    ]
+    if pop.observations is None:
+        limits.append(
+            "no deal_observations.csv: past amounts and past expected close dates cannot be "
+            "reconstructed, so the fitted model and the stage-weighted baseline are not back-tested "
+            "in dollars, and created-pipeline amounts use current amounts"
+        )
+    else:
+        limits.append(
+            f"deal_observations.csv supplies past amounts and expected close dates "
+            f"({len(pop.observations)} observations); a deal's state on a past date is its latest "
+            "observation on or before that date"
+        )
+    if mismatched:
+        limits.append(
+            f"{mismatched} closed deals have a close date that differs from their final stage transition"
+        )
+    no_history = sum(1 for d in deals if d.id not in with_history)
+    if no_history:
+        limits.append(
+            f"{no_history} deals have no stage history, so they never appear in a win-rate snapshot; "
+            f"{open_unknown} of them are open and are left out of the pipeline forecasts"
+        )
+    if loaded.unmapped_transitions:
+        limits.append(
+            f"{loaded.unmapped_transitions} stage-history rows name a stage outside the profile mapping"
+        )
+    for h, n in sorted(folds.items()):
+        if n == 0:
+            limits.append(
+                f"{h}-month back-test: zero eligible folds, not enough history"
+            )
+        elif n < MIN_FOLDS:
+            limits.append(
+                f"{h}-month back-test: {n} folds, fewer than the {MIN_FOLDS} a verdict needs"
+            )
+    if model.snapshot_count == 0:
+        limits.append(
+            f"no snapshot is {model.params.horizon_days} days old yet, so every win rate falls back to "
+            "the profile's stage probabilities"
+        )
+    limits.append(
+        "the model is pooled across segments; a segment split is not evaluated in this report"
+    )
+    limits.append(
+        "team_members.csv is read but capacity is not modelled yet: roles "
+        + ", ".join(f"{k} {v}" for k, v in sorted(loaded.roster_roles.items()))
+    )
+    return {
+        "facts": {
+            "first_deal_created": first.isoformat() if first else None,
+            "months_of_history": months,
+            "new_business_deals": len(deals),
+            "closed_outcomes": len(closed),
+            "earliest_close": min(d.close for d in closed).isoformat()
+            if closed
+            else None,
+            "deal_observations": pop.observations is not None,
+            "matured_snapshots": model.snapshot_count,
+            "backtest_folds": {f"{h}m": n for h, n in sorted(folds.items())},
+        },
+        "limitations": limits,
+    }
+
+
+def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
+    by_h = {s.horizon: s for s in bt.scores}
+    tested = all(
+        by_h[h].folds >= MIN_FOLDS and by_h[h].coverage80 is not None
+        for h in VERDICT_HORIZONS
+    )
+    if tested:
+        status = "back-tested: " + "; ".join(
+            f"{h}-month 80% range held the actual in {by_h[h].coverage80:.0%} and the 95% range in "
+            f"{by_h[h].coverage95:.0%} of {by_h[h].folds} folds"
+            for h in VERDICT_HORIZONS
+        )
+    else:
+        status = "unvalidated: coverage has not been tested on enough folds"
+    return {
+        "windows": labels,
+        "methods": [
+            {
+                "method": f.method,
+                "available": f.available,
+                "unavailable_reason": f.unavailable_reason,
+                "components": {
+                    k: {lbl: _money(v) for lbl, v in c.items()}
+                    for k, c in f.components.items()
+                },
+                "by_window": {lbl: _money(f.window_total(lbl)) for lbl in labels}
+                if f.available
+                else {},
+                "total": _money(f.total()) if f.available else None,
+                "assumptions": list(f.assumptions),
+            }
+            for f in forecasts
+        ],
+        "fitted_ranges": {
+            "status": status,
+            "by_window": {lbl: _spread(s) for lbl, s in sim.by_window.items()},
+            "rest_of_year": _spread(sim.by_group["rest of year"]),
+        },
+    }
+
+
+def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels):
+    fy = profile.fiscal_year
+    quarters = []
+    for q in fy.quarter_keys:
+        qw = fy.quarter_window(q)
+        actual = sum(
+            (v for m, v in rec.bookings_by_month.items() if qw.contains(_month_end(m))),
+            Decimal(0),
+        )
+        forecast = sum(
+            (fitted.window_total(lbl) for lbl in quarter_labels[q]), Decimal(0)
+        )
+        target = profile.quarterly_targets[q]
+        status = (
+            "closed"
+            if qw.end <= as_of
+            else ("not started" if qw.start >= as_of else "in progress")
+        )
+        spread = sim.by_group[q]
+        quarters.append(
+            {
+                "quarter": q,
+                "status": status,
+                "target": _exact(target),
+                "actual": _exact(actual),
+                "forecast": _money(forecast),
+                "expected": _money(actual + _cents(forecast)),
+                "gap": _money(target - actual - _cents(forecast)),
+                "expected_range80": [
+                    _float(float(actual) + spread.p10),
+                    _float(float(actual) + spread.p90),
+                ],
+            }
+        )
+    target = sum(profile.quarterly_targets.values(), Decimal(0))
+    rest = _cents(fitted.total())
+    year = sim.by_group["rest of year"]
+    fytd = rec.bookings_fytd
+
+    def forward(added: Decimal) -> Decimal:
+        return (
+            fytd
+            + model_forecast(model, pop, as_of, windows, added_pipeline=added).total()
+        )
+
+    cap = LEVER_CAP_MULTIPLE * _trailing_created_arr(
+        pop, as_of, model.params.trailing_days
+    )
+    result = solve_added_pipeline(forward, target, cap)
+    if result.outcome == FEASIBLE:
+        ok = abs(result.achieved - target) <= CENT
+        detail = f"forward(${result.required:,.2f}) = {result.achieved:.4f} against target {target}"
+    elif result.outcome == COVERED:
+        ok = result.base >= target
+        detail = f"forecast with nothing added {result.base:.2f} >= target {target}"
+    else:
+        ok = result.achieved < target
+        detail = f"forward(cap ${cap:,.2f}) = {result.achieved:.2f} < target {target}"
+    lever = {
+        "lever": "new-business pipeline added",
+        "outcome": result.outcome,
+        "headline": result.headline,
+        "required": None if result.required is None else _exact(result.required),
+        "cap": _money(cap),
+        "cap_rule": f"{LEVER_CAP_MULTIPLE} times the new-business pipeline created in the trailing "
+        f"{model.params.trailing_days} days",
+        "schedule": f"added evenly across the {len(windows)} remaining months"
+        if windows
+        else "no months remain in the fiscal year",
+        "forecast_without_lever": _money(result.base),
+        "forecast_with_lever": _money(result.achieved),
+        "target": _exact(target),
+        "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and "
+        "timing, the cap above), not operationally achievable",
+    }
+    if result.outcome == UNREACHABLE and result.required is not None:
+        lever["note"] = f"it would take ${result.required:,.2f}, above the cap"
+    gap = {
+        "measure": MEASURE,
+        "forecast_method": "fitted model (expected value)",
+        "quarters": quarters,
+        "fiscal_year": {
+            "target": _exact(target),
+            "actual_to_date": _exact(fytd),
+            "forecast_rest_of_year": _money(rest),
+            "expected": _money(fytd + rest),
+            "gap": _money(target - fytd - rest),
+            "expected_range80": [
+                _float(float(fytd) + year.p10),
+                _float(float(fytd) + year.p90),
+            ],
+            "expected_range95": [
+                _float(float(fytd) + year.p2_5),
+                _float(float(fytd) + year.p97_5),
+            ],
+        },
+    }
+    return gap, lever, Check("lever agrees with forward function", ok, detail)
+
+
+def _backtest(bt) -> dict:
+    return {
+        "scoring": "per horizon, mean absolute dollar error over all folds; 'yes' only if the fitted "
+        f"model's error is lower than both baselines at 1 and 3 months; under {MIN_FOLDS} folds is "
+        "'not enough history to say'",
+        "horizons": [
+            {
+                "horizon_months": s.horizon,
+                "folds": s.folds,
+                "mean_absolute_error": {k: _opt_money(v) for k, v in s.mae.items()},
+                "signed_bias": {k: _opt_money(v) for k, v in s.bias.items()},
+                "range_coverage": {
+                    "80%": None if s.coverage80 is None else round(s.coverage80, 4),
+                    "95%": None if s.coverage95 is None else round(s.coverage95, 4),
+                },
+            }
+            for s in bt.scores
+        ],
+        "folds": [
+            {
+                "cutoff": f.cutoff.isoformat(),
+                "horizon_months": f.horizon,
+                "actual": _exact(f.actual),
+                "forecasts": {k: _opt_money(v) for k, v in f.forecasts.items()},
+            }
+            for f in bt.folds
+        ],
+        "notes": list(bt.notes),
+        "verdict": bt.verdict,
+        "reason": bt.verdict_reason,
+    }
+
+
+# ---------------------------------------------------------------- checks
+
+
+def _no_windows_check() -> Check:
+    return Check(
+        "existing pipeline conserved", True, "no months remain in the fiscal year"
+    )
+
+
+def _simulation_check(fitted: Forecast, sim) -> Check:
+    expected = float(fitted.total())
+    samples = sim.samples_total
+    n = len(samples)
+    mean = sum(samples) / n
+    sd = math.sqrt(sum((x - mean) ** 2 for x in samples) / max(1, n - 1))
+    tolerance = 4 * sd / math.sqrt(n) + 0.01
+    return Check(
+        "simulation centred on the expectation",
+        abs(mean - expected) <= tolerance,
+        f"simulated mean {mean:,.2f} vs expected {expected:,.2f} (tolerance {tolerance:,.2f}, {n} draws)",
+    )
+
+
+def _components_check(forecasts: list[Forecast], labels) -> Check:
+    """Totals by part and by month must agree to well under a cent; exact
+    equality is not expected because 28-digit decimals round differently when
+    summed in a different order."""
+    tolerance = Decimal("0.000001")
+    worst = max(
+        (
+            abs(f.total() - sum((f.window_total(lbl) for lbl in labels), Decimal(0)))
+            for f in forecasts
+            if f.available
+        ),
+        default=Decimal(0),
+    )
+    return Check(
+        "forecast parts add up",
+        worst <= tolerance,
+        f"each method's total equals the sum of its months (largest difference {worst:.2E})",
+    )
+
+
+# ---------------------------------------------------------------- helpers
+
+
+def _parameters(params: FitParams, draws: int, seed: int) -> list[Rate]:
+    def p(name, value, definition):
+        return Rate(name, Decimal(value), definition, "", "", "", "", 0, DEFAULT)
+
+    return [
+        p(
+            "horizon_days",
+            params.horizon_days,
+            "days within which a win counts for a win rate",
+        ),
+        p(
+            "smoothing_pseudo_observations",
+            params.smoothing,
+            "pull of an age-group cell toward its stage rate",
+        ),
+        p(
+            "min_timing_samples",
+            params.min_timing_samples,
+            "wins a stage needs for its own close timing",
+        ),
+        p("trailing_days", params.trailing_days, "window for trailing rates"),
+        p(
+            "lever_cap_multiple",
+            LEVER_CAP_MULTIPLE,
+            "cap on added pipeline, times trailing created pipeline",
+        ),
+        p("simulation_draws", draws, "Monte Carlo draws behind the ranges"),
+    ]
+
+
+def _trailing_created_arr(pop, as_of: date, trailing_days: int) -> Decimal:
+    start = as_of - timedelta(days=trailing_days)
+    first = {}
+    for o in pop.observations or ():
+        first.setdefault(o.deal_id, o.amount)
+    return sum(
+        (first.get(d.id, d.arr) for d in pop.deals if start < d.created <= as_of),
+        Decimal(0),
+    )
+
+
+def _month_end(label: str) -> date:
+    year, month = (int(x) for x in label.split("-"))
+    nxt = date(year + (month == 12), month % 12 + 1, 1)
+    return nxt - timedelta(days=1)
+
+
+def _rate(r: Rate) -> dict:
+    return {
+        "name": r.name,
+        "value": _rate_value(r.value),
+        "definition": r.definition,
+        "numerator": r.numerator,
+        "denominator": r.denominator,
+        "cohort": r.cohort,
+        "horizon": r.horizon,
+        "sample_size": r.sample_size,
+        "source": r.source,
+        "range95": None if r.low95 is None else [round(r.low95, 4), round(r.high95, 4)],
+    }
+
+
+def _rate_value(v: Decimal) -> str:
+    if v == v.to_integral_value():
+        return str(v.quantize(Decimal(1)))
+    return str(v.quantize(Decimal("0.000001")))
+
+
+def _check(c: Check) -> dict:
+    return {"name": c.name, "passed": c.passed, "detail": c.detail}
+
+
+def _spread(s) -> dict:
+    return {
+        "mean": _float(s.mean),
+        "median": _float(s.p50),
+        "range80": [_float(s.p10), _float(s.p90)],
+        "range95": [_float(s.p2_5), _float(s.p97_5)],
+    }
+
+
+def _cents(x: Decimal) -> Decimal:
+    return x.quantize(CENT, rounding=ROUND_HALF_EVEN)
+
+
+def _money(x: Decimal) -> str:
+    return str(_cents(x))
+
+
+def _opt_money(x: Decimal | None) -> str | None:
+    return None if x is None else _money(x)
+
+
+def _exact(x: Decimal) -> str:
+    return str(x)
+
+
+def _float(x: float) -> str:
+    return f"{x:.2f}"

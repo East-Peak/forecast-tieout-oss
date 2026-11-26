@@ -90,3 +90,12 @@ def test_as_of_outside_the_fiscal_year_is_refused(tmp_path, profile):
     path = write_company(tmp_path / "c", ROWS)
     with pytest.raises(ValueError, match="outside"):
         reconcile(path, load_company(path, profile), profile, date(2027, 2, 1))
+
+
+def test_stage_history_after_the_as_of_is_refused(tmp_path, profile):
+    path = write_company(
+        tmp_path / "c", [deal("OPEN", "Negotiation", "75", "2026-03-01", "2026-06-30")],
+        history=[("OPEN", "Discovery", "2026-03-01"), ("OPEN", "Negotiation", "2026-04-20")],
+    )  # fmt: skip
+    with pytest.raises(ValueError, match="after the as-of date"):
+        reconcile(path, load_company(path, profile), profile, AS_OF)
