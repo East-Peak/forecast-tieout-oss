@@ -128,7 +128,7 @@ def _history(s: dict) -> list[str]:
 def _forecasts(s: dict) -> list[str]:
     out = ["## 3. Three forecasts, side by side", ""]
     if not s["windows"]:
-        return out + ["No months remain in the fiscal year after the as-of date.", ""]
+        return out + ["No months follow the as-of date.", ""]
     methods = s["methods"]
     rows = []
     for m in methods:
@@ -146,6 +146,16 @@ def _forecasts(s: dict) -> list[str]:
                 + [_usd(sum(Decimal(v) for v in values.values()))]
             )
     out += _table(["Method", "Part", *s["windows"], "Total"], rows)
+    spans = s["horizon_windows"]
+    out += ["Two windows:", ""]
+    out += _table(
+        ["Method"] + [f"{h} ({' to '.join(spans[h]) or 'no months'})" for h in spans],
+        [
+            [m["method"]]
+            + [_usd(m["horizons"][h]) if m["available"] else "n/a" for h in spans]
+            for m in methods
+        ],
+    )
     fr = s["fitted_ranges"]
     out += [f"Fitted-model ranges ({fr['status']}):", ""]
     out += _table(
@@ -154,19 +164,12 @@ def _forecasts(s: dict) -> list[str]:
             (w, _usd(v["median"]), _rng(v["range80"]), _rng(v["range95"]))
             for w, v in fr["by_window"].items()
         ]
-        + (
-            [
-                (
-                    "rest of year",
-                    _usd(fr["rest_of_year"]["median"]),
-                    _rng(fr["rest_of_year"]["range80"]),
-                    _rng(fr["rest_of_year"]["range95"]),
-                )
-            ]
-            if fr["rest_of_year"]
-            else []
-        ),
-    )
+        + [
+            (f"{h} ({v['status'].split(':')[0]})", _usd(v["median"]), _rng(v["range80"]),
+             _rng(v["range95"]))
+            for h, v in fr["horizons"].items()
+        ],
+    )  # fmt: skip
     out += ["Assumptions:", ""]
     for m in methods:
         out += [
@@ -261,18 +264,41 @@ def _gap(s: dict) -> list[str]:
         ),
         "",
     ]
-    lv = s["lever"]
-    if lv["outcome"] == "unavailable":
-        return out + [f"**Lever, {lv['lever']}: unavailable.** {lv['reason']}.", ""]
-    out += [
-        f"**Lever, {lv['lever']}: {lv['headline']}.** Schedule: {lv['schedule']}; cap {_usd(lv['cap'])} "
+    t = s["next_twelve_months"]
+    window = " to ".join(t["window"])
+    if t["targets_through"]:
+        out += [
+            (
+                f"Next twelve months ({window}): quarters with a target ending in the window "
+                f"({', '.join(t['quarters'])}, through {t['targets_through']}): target {_usd(t['target'])}, "
+                f"actual to date {_usd(t['actual'])}, forecast {_usd(t['forecast'])}, gap **{_usd(t['gap'])}**."
+            ),
+            "",
+        ]
+    u = t["untargeted"]
+    if u["months"]:
+        out += [
+            f"{' to '.join([u['months'][0], u['months'][-1]])}: forecast {_usd(u['forecast'])} ({u['note']}).",
+            "",
+        ]
+    out += _lever("Lever (fiscal year)", s["lever"])
+    out += _lever("Lever (next twelve months)", s["lever_next_twelve_months"])
+    return out
+
+
+def _lever(title: str, lv: dict) -> list[str]:
+    if lv["outcome"] in ("unavailable", "no target in this window"):
+        return [f"**{title}, {lv['lever']}: {lv['outcome']}.** {lv['reason']}.", ""]
+    gained = "; ".join(f"{h} {_usd(v)}" for h, v in lv["bookings_gained"].items())
+    return [
+        f"**{title}, {lv['lever']}: {lv['headline']}.** Schedule: {lv['schedule']}; cap {_usd(lv['cap'])} "
         f"({lv['cap_rule']}). Forecast without it {_usd(lv['forecast_without_lever'])}, with it "
-        f"{_usd(lv['forecast_with_lever'])}, against {_usd(lv['target'])}."
+        f"{_usd(lv['forecast_with_lever'])}, against {_usd(lv['target'])}. "
+        f"Bookings gained at {lv['bookings_gained_at']}: {gained}."
         + (f" Note: {lv['note']}." if lv.get("note") else ""),
         f"_{lv['meaning'].capitalize()}._",
         "",
     ]
-    return out
 
 
 def _backtest(s: dict) -> list[str]:

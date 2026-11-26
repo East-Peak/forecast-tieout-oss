@@ -56,11 +56,13 @@ def load_profile(path: Path) -> Profile:
             f"(fiscal year starting {fy.start})"
         )
     targets = {k: _target(quarterly[k]) for k in fy.quarter_keys}
+    later = {k: _target(quarterly[k]) for k in fy.next.quarter_keys if k in quarterly}
     return Profile(
         stages=stages,
         fiscal_year=fy,
         quarterly_targets=targets,
         raw_to_code=dict(mapping),
+        later_targets=later,
     )
 
 

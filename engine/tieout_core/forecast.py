@@ -191,7 +191,10 @@ def model_forecast(
     cutoff: date,
     windows: list[Window],
     added_pipeline: Decimal = Decimal(0),
+    added_through: date | None = None,
 ) -> Forecast:
+    """``added_pipeline`` is created in equal parts in each window that ends by
+    ``added_through`` (every window by default) and books in any window."""
     method = "fitted model"
     all_open = [d for d in data.deals if not d.is_closed]
     if any(d.arr is None for d in all_open):
@@ -246,9 +249,14 @@ def model_forecast(
                 for t in range(1, horizon_end + 1)
             )
             future[w.label] = new.created_per_day * per_created_deal * hits
-        if added_pipeline and new.mean_created_arr:
-            per_window = added_pipeline / Decimal(len(windows))
-            for sa, sb in offsets:
+        spread = [
+            o
+            for w, o in zip(windows, offsets)
+            if added_through is None or w.end <= added_through
+        ]
+        if added_pipeline and new.mean_created_arr and spread:
+            per_window = added_pipeline / Decimal(len(spread))
+            for sa, sb in spread:
                 deals_per_day = per_window / Decimal(sb - sa) / new.mean_created_arr
                 for w, (a, b) in zip(windows, offsets):
                     hits = sum(

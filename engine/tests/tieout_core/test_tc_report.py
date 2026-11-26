@@ -49,7 +49,7 @@ def test_reconciliation_ties(report):
 
 def test_three_forecasts_monthly_to_year_end_with_parts_apart(report):
     f = report["forecasts"]
-    assert f["windows"] == ["2026-09", "2026-10", "2026-11", "2026-12", "2027-01"]
+    assert f["windows"][:5] == ["2026-09", "2026-10", "2026-11", "2026-12", "2027-01"]
     methods = {m["method"]: m for m in f["methods"]}
     assert set(methods) == {
         "trailing run-rate",
@@ -169,7 +169,11 @@ def test_without_observations_the_report_says_what_it_cannot_do(tmp_path):
 
 def test_as_of_on_the_last_day_of_the_year_leaves_nothing_to_forecast():
     r = build_report(PROFILE, DATA, date(2027, 1, 31), draws=50)
-    assert r["forecasts"]["windows"] == []
+    fitted = next(m for m in r["forecasts"]["methods"] if m["method"] == "fitted model")
+    assert (
+        not fitted["available"]
+        or Decimal(fitted["horizons"]["rest of fiscal year"]) == 0
+    )
     assert r["gap"]["lever"]["outcome"] in (
         "already covered",
         "unreachable within bounds",

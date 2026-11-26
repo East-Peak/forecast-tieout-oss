@@ -13,7 +13,7 @@ from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 
 from .backtest import MIN_FOLDS, VERDICT_HORIZONS, backtest
-from .fiscal import month_windows
+from .fiscal import Window, add_months, month_windows
 from .fit import DEFAULT_PARAMS, FitParams, fit
 from .forecast import (
     Forecast,
@@ -41,6 +41,9 @@ SECTIONS = (
     "verdicts",
 )
 MEASURE = "new-business ARR bookings (type = new_business, the arr column)"
+REST_OF_FY = "rest of fiscal year"
+NEXT_12 = "next twelve months"
+NO_TARGET = "no target in this window"
 LEVER_CAP_MULTIPLE = 3
 CENT = Decimal("0.01")
 
@@ -58,8 +61,14 @@ def build_report(
     rec = reconcile(Path(data_dir), loaded, profile, as_of)
     pop = rec.population
     fy = profile.fiscal_year
-    windows = month_windows(as_of, fy.end)
+    horizon_end = add_months(as_of, 12)
+    windows = month_windows(as_of, horizon_end)
     labels = [w.label for w in windows]
+    horizons = {
+        REST_OF_FY: [w.label for w in windows if w.end <= fy.end],
+        NEXT_12: labels,
+    }
+    targets = _targets(profile, horizon_end)
 
     model = fit(pop, as_of, profile, params)
     forecasts = [
@@ -69,8 +78,8 @@ def build_report(
     ]
     fitted = forecasts[2]
     quarter_labels = {
-        q: [w.label for w in windows if fy.quarter_window(q).contains(w.end)]
-        for q in fy.quarter_keys
+        q: [w.label for w in windows if qw.contains(w.end)]
+        for q, (qw, _) in targets.items()
     }
     sim = None
     if fitted.available:
@@ -81,7 +90,7 @@ def build_report(
             windows,
             draws=draws,
             seed=seed,
-            groups={**quarter_labels, "rest of year": labels},
+            groups={**quarter_labels, **horizons},
         )
 
     book = RateBook()
@@ -94,14 +103,15 @@ def build_report(
         book.add(r)
 
     bt = backtest(pop, as_of, profile, params, draws=min(draws, 1000), seed=seed)
-    gap, lever, lever_check = _gap(
-        rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels
-    )
+    gap, lever_checks = _gap(
+        rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter_labels,
+        horizons,
+    )  # fmt: skip
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
         else _no_windows_check(),
-        lever_check,
+        *lever_checks,
         _simulation_check(fitted, sim),
         _components_check(forecasts, labels),
         Check(
@@ -129,9 +139,9 @@ def build_report(
         },
         "reconciliation": _reconciliation(rec),
         "history": _history(loaded, rec, model, bt, as_of),
-        "forecasts": _forecasts(forecasts, labels, sim, bt),
+        "forecasts": _forecasts(forecasts, labels, horizons, sim, bt),
         "rates": [_rate(r) for r in book],
-        "gap": {**gap, "lever": lever},
+        "gap": gap,
         "backtest": _backtest(bt),
         "verdicts": {
             "software_correct": {
@@ -298,7 +308,7 @@ def _history(loaded, rec, model, bt, as_of) -> dict:
     }
 
 
-def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
+def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
     by_h = {s.horizon: s for s in bt.scores}
     tested = all(by_h[h].range_folds >= MIN_FOLDS for h in VERDICT_HORIZONS)
     if tested:
@@ -312,8 +322,21 @@ def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
             f"unvalidated: coverage needs at least {MIN_FOLDS} folds with a fitted range at 1 and "
             f"3 months (had {by_h[1].range_folds} and {by_h[3].range_folds})"
         )
+    statuses = {
+        REST_OF_FY: status,
+        NEXT_12: "unvalidated: twelve-month ranges are not back-tested (the back-test scores "
+        "1, 3 and 6 months)",
+    }
+
+    def totals(f: Forecast) -> dict:
+        # The sum of the rounded months, so a shown total adds up to the months shown.
+        return {h: _money(_shown(f, ls)) for h, ls in horizons.items()}
+
     return {
         "windows": labels,
+        "horizon_windows": {
+            h: [ls[0], ls[-1]] if ls else [] for h, ls in horizons.items()
+        },
         "methods": [
             {
                 "method": f.method,
@@ -326,7 +349,7 @@ def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
                 "by_window": {lbl: _money(f.window_total(lbl)) for lbl in labels}
                 if f.available
                 else {},
-                "total": _money(f.total()) if f.available else None,
+                "horizons": totals(f) if f.available else {},
                 "assumptions": list(f.assumptions),
             }
             for f in forecasts
@@ -334,42 +357,72 @@ def _forecasts(forecasts: list[Forecast], labels, sim, bt) -> dict:
         "fitted_ranges": {
             "status": status,
             "by_window": {lbl: _spread(s) for lbl, s in sim.by_window.items()},
-            "rest_of_year": _spread(sim.by_group["rest of year"]),
+            "horizons": {
+                h: {"status": statuses[h], **_spread(sim.by_group[h])} for h in horizons
+            },
         }
         if sim is not None
         else {
             "status": f"unavailable: {forecasts[2].unavailable_reason}",
             "by_window": {},
-            "rest_of_year": None,
+            "horizons": {},
         },
     }
 
 
-def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels):
+def _targets(profile, horizon_end: date) -> dict[str, tuple[Window, Decimal]]:
+    """Quarters that have a target: the fiscal year's, then any of the next
+    year's that end inside the twelve-month window."""
+    fy = profile.fiscal_year
+    out = {
+        q: (fy.quarter_window(q), profile.quarterly_targets[q]) for q in fy.quarter_keys
+    }
+    for q, target in profile.later_targets.items():
+        window = fy.next.quarter_window(q)
+        if window.end <= horizon_end:
+            out[q] = (window, target)
+    return out
+
+
+def _quarter_actual(rec, window: Window) -> Decimal:
+    return sum(
+        (v for m, v in rec.bookings_by_month.items() if window.contains(_month_end(m))),
+        Decimal(0),
+    )
+
+
+def _status(window: Window, as_of: date) -> str:
+    if window.end <= as_of:
+        return "closed"
+    return "not started" if window.start >= as_of else "in progress"
+
+
+def _sum(f: Forecast, labels) -> Decimal:
+    return sum((f.window_total(lbl) for lbl in labels), Decimal(0))
+
+
+def _shown(f: Forecast, labels) -> Decimal:
+    """A displayed total: the sum of the months as shown (each to the cent), so
+    every total in the report adds up to the months beside it."""
+    return sum((_cents(f.window_total(lbl)) for lbl in labels), Decimal(0))
+
+
+def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter_labels,
+         horizons):  # fmt: skip
     if not fitted.available:
-        return _gap_unavailable(rec, profile, as_of, fitted.unavailable_reason)
+        return _gap_unavailable(
+            rec, profile, as_of, windows, targets, fitted.unavailable_reason
+        )
     fy = profile.fiscal_year
     quarters = []
-    for q in fy.quarter_keys:
-        qw = fy.quarter_window(q)
-        actual = sum(
-            (v for m, v in rec.bookings_by_month.items() if qw.contains(_month_end(m))),
-            Decimal(0),
-        )
-        forecast = sum(
-            (fitted.window_total(lbl) for lbl in quarter_labels[q]), Decimal(0)
-        )
-        target = profile.quarterly_targets[q]
-        status = (
-            "closed"
-            if qw.end <= as_of
-            else ("not started" if qw.start >= as_of else "in progress")
-        )
+    for q, (qw, target) in targets.items():
+        actual = _quarter_actual(rec, qw)
+        forecast = _shown(fitted, quarter_labels[q])
         spread = sim.by_group[q]
         quarters.append(
             {
                 "quarter": q,
-                "status": status,
+                "status": _status(qw, as_of),
                 "target": _exact(target),
                 "actual": _exact(actual),
                 "forecast": _money(forecast),
@@ -382,48 +435,28 @@ def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels):
             }
         )
     target = sum(profile.quarterly_targets.values(), Decimal(0))
-    rest = _cents(fitted.total())
-    year = sim.by_group["rest of year"]
+    rest = _shown(fitted, horizons[REST_OF_FY])
+    year = sim.by_group[REST_OF_FY]
     fytd = rec.bookings_fytd
-
-    def forward(added: Decimal) -> Decimal:
-        return (
-            fytd
-            + model_forecast(model, pop, as_of, windows, added_pipeline=added).total()
-        )
-
     cap = LEVER_CAP_MULTIPLE * _trailing_created_arr(
         pop, as_of, model.params.trailing_days
     )
-    result = solve_added_pipeline(forward, target, cap)
-    if result.outcome == FEASIBLE:
-        ok = abs(result.achieved - target) <= CENT
-        detail = f"forward(${result.required:,.2f}) = {result.achieved:.4f} against target {target}"
-    elif result.outcome == COVERED:
-        ok = result.base >= target
-        detail = f"forecast with nothing added {result.base:.2f} >= target {target}"
-    else:
-        ok = result.achieved < target
-        detail = f"forward(cap ${cap:,.2f}) = {result.achieved:.2f} < target {target}"
-    lever = {
-        "lever": "new-business pipeline added",
-        "outcome": result.outcome,
-        "headline": result.headline,
-        "required": None if result.required is None else _exact(result.required),
-        "cap": _money(cap),
-        "cap_rule": f"{LEVER_CAP_MULTIPLE} times the new-business pipeline created in the trailing "
-        f"{model.params.trailing_days} days",
-        "schedule": f"added evenly across the {len(windows)} remaining months"
-        if windows
-        else "no months remain in the fiscal year",
-        "forecast_without_lever": _money(result.base),
-        "forecast_with_lever": _money(result.achieved),
-        "target": _exact(target),
-        "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and "
-        "timing, the cap above), not operationally achievable",
-    }
-    if result.outcome == UNREACHABLE and result.required is not None:
-        lever["note"] = f"it would take ${result.required:,.2f}, above the cap"
+
+    def lever(check_name, actual, goal, months, through):
+        def run(added: Decimal) -> Forecast:
+            return model_forecast(
+                model, pop, as_of, windows, added_pipeline=added, added_through=through
+            )
+
+        return _lever(check_name, lambda a: actual + _sum(run(a), months), run, goal,
+                      cap, len(months), model.params.trailing_days, horizons)  # fmt: skip
+
+    fy_lever, fy_check = lever(
+        "lever agrees with forward function", fytd, target, horizons[REST_OF_FY], fy.end
+    )
+    next12, lever12, check12 = _next_twelve_months(
+        rec, as_of, windows, fitted, targets, lever
+    )
     gap = {
         "measure": MEASURE,
         "forecast_method": "fitted model (expected value)",
@@ -443,33 +476,121 @@ def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, quarter_labels):
                 _float(float(fytd) + year.p97_5),
             ],
         },
+        "next_twelve_months": next12,
+        "lever": fy_lever,
+        "lever_next_twelve_months": lever12,
     }
-    return gap, lever, Check("lever agrees with forward function", ok, detail)
+    return gap, [fy_check, check12]
 
 
-def _quarter_actuals(rec, profile, as_of):
-    fy = profile.fiscal_year
-    for q in fy.quarter_keys:
-        qw = fy.quarter_window(q)
-        actual = sum(
-            (v for m, v in rec.bookings_by_month.items() if qw.contains(_month_end(m))),
-            Decimal(0),
+def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
+    """The twelve months after the as-of: a gap against the quarters with a
+    target that end inside it, and bookings alone after the last of them."""
+    check_name = "twelve-month lever agrees with forward function"
+    open_q = [q for q, (qw, _) in targets.items() if qw.end > as_of]
+    through = max((targets[q][0].end for q in open_q), default=None)
+    targeted = [w.label for w in windows if through is not None and w.end <= through]
+    untargeted = [w.label for w in windows if w.label not in targeted]
+    note = (
+        f"no target after {through}: bookings alone"
+        if through is not None
+        else "no quarter with a target ends in this window: bookings alone"
+    )
+    block = {
+        "window": [windows[0].label, windows[-1].label] if windows else [],
+        "targets_through": through.isoformat() if through else None,
+        "quarters": open_q,
+        "target": None,
+        "actual": None,
+        "forecast": None,
+        "gap": None,
+        "untargeted": {
+            "months": untargeted,
+            "forecast": None if fitted is None else _money(_shown(fitted, untargeted)),
+            "note": note,
+        },
+    }
+    if through is None:
+        return (
+            block,
+            _no_target_lever(),
+            Check(check_name, True, f"not applicable: {note}"),
         )
-        closed = qw.end <= as_of
-        status = (
-            "closed"
-            if closed
-            else ("not started" if qw.start >= as_of else "in progress")
-        )
-        yield q, status, actual
+    goal = sum((targets[q][1] for q in open_q), Decimal(0))
+    actual = sum((_quarter_actual(rec, targets[q][0]) for q in open_q), Decimal(0))
+    block["target"], block["actual"] = _exact(goal), _exact(actual)
+    if fitted is None:
+        return block, None, None
+    forecast = _shown(fitted, targeted)
+    block["forecast"] = _money(forecast)
+    block["gap"] = _money(goal - actual - forecast)
+    result, check = lever(check_name, actual, goal, targeted, through)
+    return block, result, check
 
 
-def _gap_unavailable(rec, profile, as_of, reason):
+def _no_target_lever() -> dict:
+    return {
+        "lever": "new-business pipeline added",
+        "outcome": NO_TARGET,
+        "headline": NO_TARGET,
+        "reason": "no quarter with a target ends in the next twelve months",
+    }
+
+
+def _lever(check_name, forward, run, target, cap, months, trailing_days, horizons):
+    """Solve the pipeline lever through ``forward`` and report what the amount
+    books in each window (pipeline added late keeps booking after year end)."""
+    result = solve_added_pipeline(forward, target, cap)
+    if result.outcome == FEASIBLE:
+        ok = abs(result.achieved - target) <= CENT
+        detail = f"forward(${result.required:,.2f}) = {result.achieved:.4f} against target {target}"
+    elif result.outcome == COVERED:
+        ok = result.base >= target
+        detail = f"forecast with nothing added {result.base:.2f} >= target {target}"
+    else:
+        ok = result.achieved < target
+        detail = f"forward(cap ${cap:,.2f}) = {result.achieved:.2f} < target {target}"
+    amount = {FEASIBLE: result.required, UNREACHABLE: cap}.get(
+        result.outcome, Decimal(0)
+    )
+    without, with_lever = run(Decimal(0)), run(amount)
+    lever = {
+        "lever": "new-business pipeline added",
+        "outcome": result.outcome,
+        "headline": result.headline,
+        "required": None if result.required is None else _exact(result.required),
+        "cap": _money(cap),
+        "cap_rule": f"{LEVER_CAP_MULTIPLE} times the new-business pipeline created in the trailing "
+        f"{trailing_days} days",
+        "schedule": f"added evenly across the {months} months to the target's end"
+        if months
+        else "no months remain before the target's end",
+        "forecast_without_lever": _money(result.base),
+        "forecast_with_lever": _money(result.achieved),
+        "target": _exact(target),
+        "bookings_gained": {
+            h: _money(_sum(with_lever, ls) - _sum(without, ls))
+            for h, ls in horizons.items()
+        },
+        "bookings_gained_at": {
+            FEASIBLE: "the required amount",
+            UNREACHABLE: "the cap",
+        }.get(result.outcome, "nothing added"),
+        "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and "
+        "timing, the cap above), not operationally achievable",
+    }
+    if result.outcome == UNREACHABLE and result.required is not None:
+        lever["note"] = f"it would take ${result.required:,.2f}, above the cap"
+    return lever, Check(check_name, ok, detail)
+
+
+def _gap_unavailable(rec, profile, as_of, windows, targets, reason):
     """Without a fitted forecast only closed quarters have a gap; open ones and
     the lever say why rather than show a number."""
     quarters = []
-    for q, status, actual in _quarter_actuals(rec, profile, as_of):
-        target = profile.quarterly_targets[q]
+    for q, (qw, target) in targets.items():
+        actual = _quarter_actual(rec, qw)
+        status = _status(qw, as_of)
         closed = status == "closed"
         quarters.append(
             {
@@ -484,14 +605,18 @@ def _gap_unavailable(rec, profile, as_of, reason):
             }
         )
     target = sum(profile.quarterly_targets.values(), Decimal(0))
-    lever = {
-        "lever": "new-business pipeline added",
-        "outcome": "unavailable",
-        "headline": "unavailable",
-        "reason": reason,
-        "target": _exact(target),
-        "meaning": "the lever is solved through the fitted model, which is unavailable here",
-    }
+
+    def unavailable(goal):
+        return {
+            "lever": "new-business pipeline added",
+            "outcome": "unavailable",
+            "headline": "unavailable",
+            "reason": reason,
+            "target": None if goal is None else _exact(goal),
+            "meaning": "the lever is solved through the fitted model, which is unavailable here",
+        }
+
+    next12, _, _ = _next_twelve_months(rec, as_of, windows, None, targets, None)
     gap = {
         "measure": MEASURE,
         "forecast_method": f"fitted model: unavailable ({reason})",
@@ -505,11 +630,22 @@ def _gap_unavailable(rec, profile, as_of, reason):
             "expected_range80": None,
             "expected_range95": None,
         },
+        "next_twelve_months": next12,
+        "lever": unavailable(target),
+        "lever_next_twelve_months": unavailable(
+            None if next12["target"] is None else Decimal(next12["target"])
+        )
+        if next12["targets_through"]
+        else _no_target_lever(),
     }
-    check = Check(
-        "lever agrees with forward function", True, f"not applicable: {reason}"
-    )
-    return gap, lever, check
+    checks = [
+        Check("lever agrees with forward function", True, f"not applicable: {reason}"),
+        Check(
+            "twelve-month lever agrees with forward function", True,
+            f"not applicable: {reason}",
+        ),
+    ]  # fmt: skip
+    return gap, checks
 
 
 def _backtest(bt) -> dict:

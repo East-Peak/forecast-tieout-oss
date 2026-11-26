@@ -65,6 +65,10 @@ class FiscalYear:
         return add_months(self.start, 12) - _ONE_DAY
 
     @property
+    def next(self) -> FiscalYear:
+        return FiscalYear(add_months(self.start, 12))
+
+    @property
     def label(self) -> str:
         # Repository convention: the fiscal year is named for its start year
         # (FY26 runs February 2026 to January 2027).

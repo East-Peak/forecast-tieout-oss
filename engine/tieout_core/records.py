@@ -26,6 +26,8 @@ class Profile:
     fiscal_year: FiscalYear
     quarterly_targets: dict[str, Decimal]
     raw_to_code: dict[str, str] = field(repr=False)
+    # Targets for quarters of the next fiscal year, where targets.yaml has them.
+    later_targets: dict[str, Decimal] = field(default_factory=dict)
 
     @property
     def open_codes(self) -> tuple[str, ...]:
