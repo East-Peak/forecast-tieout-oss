@@ -60,6 +60,9 @@ class Deal:
     close: date | None
     is_closed: bool
     is_won: bool
+    owner_id: str = (
+        ""  # the deal's owner on the file: today's, not necessarily its creator's
+    )
 
 
 @dataclass(frozen=True)

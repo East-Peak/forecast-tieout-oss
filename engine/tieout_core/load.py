@@ -195,6 +195,7 @@ def _parse_deal(
         close=close,
         is_closed=is_closed,
         is_won=is_won,
+        owner_id=(raw.get("owner_id") or "").strip(),
     )
 
 
