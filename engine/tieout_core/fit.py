@@ -101,13 +101,17 @@ class Incidence:
     wins: int  # wins observed within the horizon
     still_open: int  # observations censored while open
     timing: Timing  # the curve's increments: when, within the horizon, wins land
+    known: int = 0  # observations whose outcome by the horizon is known
 
     @property
     def effective_n(self) -> float:
-        """The binomial sample size with the same variance (n without censoring)."""
+        """The binomial sample size with the same variance (n without censoring).
+        At 0 or 1 the variance is zero and says nothing, so only observations
+        whose outcome by the horizon is known count: a deal censored early
+        carries no information about the horizon."""
         p = float(self.value)
         if self.variance <= 0 or p in (0.0, 1.0):
-            return float(self.n)
+            return float(self.known)
         return min(float(self.n), p * (1 - p) / self.variance)
 
 
@@ -145,9 +149,10 @@ def cumulative_incidence(
     weights = tuple(
         _dec(s_prev * Fraction(w, r)) for _, r, w, _, s_prev, _ in steps if w
     )
+    known = sum(1 for d, o in obs if d >= horizon or (o != OPEN and d <= horizon))
     return Incidence(
         _dec(cum), max(0.0, variance), n, sum(w for _, _, w, *_ in steps),
-        sum(1 for _, o in obs if o == OPEN), Timing(days, source, weights),
+        sum(1 for _, o in obs if o == OPEN), Timing(days, source, weights), known,
     )  # fmt: skip
 
 
@@ -167,6 +172,9 @@ class NewPipeline:
     win_rate_n: float = 0.0  # effective sample behind win_rate (its uncertainty)
     created_count: int = 0  # deals behind created_per_day
     created_days: int = 0  # ... over this many days
+    # Weight of each won_arr_sample (None: equal). Recency weights each win by
+    # its day's incidence increment, so censoring does not favour quick wins.
+    won_arr_weights: tuple[Decimal, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -462,7 +470,22 @@ def _new_pipeline_recency(
     cohort_text = f"new-business deals created {start + timedelta(days=1)} to {cutoff}"
     n = len(cohort)
     low, high = wilson_interval(float(ci.value), ci.effective_n) if n else (None, None)
-    mean_won, mean_created = _mean([d.arr for d in wins]), _mean(created_amounts)
+    day_weight = dict(zip(ci.timing.samples, ci.timing.weights or ()))
+    per_day_wins: dict[int, int] = defaultdict(int)
+    for d in wins:
+        per_day_wins[(d.close - d.created).days] += 1
+    won_weights = tuple(
+        day_weight[(d.close - d.created).days]
+        / per_day_wins[(d.close - d.created).days]
+        for d in wins
+    )
+    total_weight = sum(won_weights, Decimal(0))
+    mean_won = (
+        sum((w * d.arr for w, d in zip(won_weights, wins)), Decimal(0)) / total_weight
+        if total_weight
+        else Decimal(0)
+    )
+    mean_created = _mean(created_amounts)
     for name, value, (definition, source), num, den, horizon_text, size, rng in (
         (
             "new_pipeline_win_rate", ci.value,
@@ -474,7 +497,8 @@ def _new_pipeline_recency(
         ),
         (
             "mean_won_arr", mean_won,
-            _evidence(len(wins), "mean booked ARR of a created deal that is won"),
+            _evidence(len(wins), "mean booked ARR of a created deal that is won, each win "
+                                 "weighted by its day's incidence increment"),
             "booked ARR of those wins", f"{len(wins)} wins observed", f"{horizon} days",
             len(wins), (None, None),
         ),
@@ -501,14 +525,9 @@ def _new_pipeline_recency(
         )
     )  # fmt: skip
     return NewPipeline(
-        ci.value,
-        ci.timing,
-        mean_won,
-        mean_created,
-        per_day,
-        tuple(d.arr for d in wins),
-        n,
-    )
+        ci.value, ci.timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins), n,
+        ci.effective_n if n else 0.0, created_recent, params.trailing_days, won_weights,
+    )  # fmt: skip
 
 
 def matured_snapshots(data: Dataset, cutoff: date, horizon: int) -> list[date]:

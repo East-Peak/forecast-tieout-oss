@@ -251,3 +251,46 @@ def test_the_fit_in_use_drives_rates_backtest_and_verdict(sprout_report):
         sprout_report["verdicts"]["forecast_better_than_baselines"]["verdict"]
         == (sprout_report["backtest"]["verdict"])
     )
+
+
+# ---------------------------------------------------------------- Codex review fixes
+
+
+def test_fitted_models_carry_the_samples_behind_their_creation_rates(profile):
+    """Codex 1: the recency creation cohort must carry its uncertainty inputs,
+    or parameter-uncertainty ranges silently hold it fixed."""
+    data = regular_history()
+    for params in (FitParams(), RECENT):
+        new = fit(data, date(2026, 6, 30), profile, params).new_pipeline
+        assert new.win_rate_n > 0 and new.created_count > 0 and new.created_days == 365
+
+
+def test_a_boundary_estimate_counts_only_outcomes_known_by_the_horizon():
+    """Codex 2: deals censored early carry no information about the horizon."""
+    blind = cumulative_incidence([(1, OPEN)] * 1000, horizon=365)
+    assert blind.value == 0 and blind.effective_n == 0
+    some = cumulative_incidence(
+        [(5, LOSS)] * 10 + [(1, OPEN)] * 1000 + [(400, OPEN)] * 3, 365
+    )
+    assert (
+        some.value == 0 and some.effective_n == 13
+    )  # ten losses, three followed past the horizon
+
+
+def test_recency_mean_win_size_carries_the_incidence_weights(profile):
+    """Codex 4: a $100 win on day 10 and a $1,000 win on day 100, with eight
+    deals censored on day 20. Incidence weights are 0.1 and 0.9, so the mean
+    win is 0.1 x 100 + 0.9 x 1000 = 910, not the unweighted 550."""
+    cut = date(2026, 6, 30)
+    old = cut - timedelta(days=200)
+    young = cut - timedelta(days=20)
+    deals = [
+        Deal(0, "A", "new_business", "mm", "Won", Decimal(100), old, old + timedelta(days=10), True, True),
+        Deal(0, "B", "new_business", "mm", "Won", Decimal(1000), old, old + timedelta(days=100), True, True),
+    ] + [
+        Deal(0, f"Y{i}", "new_business", "mm", "S1", Decimal(500), young, None, False, False)
+        for i in range(8)
+    ]  # fmt: skip
+    new = fit(Dataset(tuple(deals), (), None), cut, profile, RECENT).new_pipeline
+    assert new.mean_won_arr == Decimal(910)
+    assert new.won_arr_weights == (Decimal("0.1"), Decimal("0.9"))

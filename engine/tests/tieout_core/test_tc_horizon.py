@@ -124,3 +124,23 @@ def test_year_end_as_of_still_forecasts_the_next_twelve_months():
     t = r["gap"]["next_twelve_months"]
     assert t["targets_through"] is None
     assert r["gap"]["lever_next_twelve_months"]["outcome"] == "no target in this window"
+
+
+def test_months_of_a_quarter_without_a_target_are_not_counted_against_one(tmp_path):
+    """Codex 3: with Q2FY27 targeted and Q1FY27 not, February to April 2027 are
+    bookings alone; only months inside targeted quarters meet a target."""
+    path = tmp_path / "profile"
+    shutil.copytree(PROFILE, path)
+    doc = yaml.safe_load((path / "targets.yaml").read_text())
+    doc["quarterly_targets"]["Q2FY27"] = {"bookings_target": 2_600_000}
+    (path / "targets.yaml").write_text(yaml.safe_dump(doc))
+    r = build_report(path, DATA, AS_OF, draws=50)
+    t = r["gap"]["next_twelve_months"]
+    assert t["targets_through"] == "2027-07-31"
+    assert t["untargeted"]["months"] == ["2027-02", "2027-03", "2027-04", "2027-08"]
+    fitted = next(m for m in r["forecasts"]["methods"] if m["method"] == "fitted model")
+    targeted = FY_MONTHS + ["2027-05", "2027-06", "2027-07"]
+    assert Decimal(t["forecast"]) == sum(
+        Decimal(fitted["by_window"][w]) for w in targeted
+    )
+    assert r["verdicts"]["software_correct"]["verdict"] == "yes"

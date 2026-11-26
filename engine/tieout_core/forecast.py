@@ -444,10 +444,16 @@ def simulate(
         created = rng.integers(1, span + 1, total)
         days = _draw_days(rng, new.timing, total)
         pool = np.asarray([float(x) for x in new.won_arr_samples])
-        sizes = pool[rng.integers(0, len(pool), total)]
-        if parameter_uncertainty:  # each draw's mean win size, by bootstrap
-            boot = pool[rng.integers(0, len(pool), (draws, len(pool)))].mean(axis=1)
-            sizes = sizes * (boot / pool.mean())[rows]
+        if new.won_arr_weights is None:
+            sizes = pool[rng.integers(0, len(pool), total)]
+            weights = np.full(len(pool), 1 / len(pool))
+        else:
+            weights = np.asarray([float(w) for w in new.won_arr_weights])
+            weights = weights / weights.sum()
+            sizes = pool[rng.choice(len(pool), size=total, p=weights)]
+        if parameter_uncertainty:  # each draw's mean win size, by (weighted) bootstrap
+            picks = rng.choice(len(pool), size=(draws, len(pool)), p=weights)
+            sizes = sizes * (pool[picks].mean(axis=1) / float(pool @ weights))[rows]
         book(rows, created + days, sizes)
 
     totals = out.sum(axis=1)

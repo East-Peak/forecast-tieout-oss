@@ -544,10 +544,14 @@ def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
     check_name = "twelve-month lever agrees with forward function"
     open_q = [q for q, (qw, _) in targets.items() if qw.end > as_of]
     through = max((targets[q][0].end for q in open_q), default=None)
-    targeted = [w.label for w in windows if through is not None and w.end <= through]
+    # Only months inside a quarter that has a target meet one; a quarter without
+    # a target before the last targeted one is bookings alone.
+    targeted = [
+        w.label for w in windows if any(targets[q][0].contains(w.end) for q in open_q)
+    ]
     untargeted = [w.label for w in windows if w.label not in targeted]
     note = (
-        f"no target after {through}: bookings alone"
+        f"months outside a targeted quarter (targets end {through}): bookings alone"
         if through is not None
         else "no quarter with a target ends in this window: bookings alone"
     )
