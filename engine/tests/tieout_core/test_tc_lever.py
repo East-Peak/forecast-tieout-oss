@@ -2,7 +2,12 @@ from decimal import Decimal
 
 from engine.tests.tieout_core.test_tc_forecast import CUT, MODEL, ONLY_X, WINDOWS
 from engine.tieout_core.forecast import model_forecast
-from engine.tieout_core.lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
+from engine.tieout_core.lever import (
+    COVERED,
+    FEASIBLE,
+    UNREACHABLE,
+    solve_added_pipeline,
+)
 
 
 def linear(base, slope):
@@ -16,7 +21,11 @@ def test_target_already_covered():
 
 def test_feasible_target_is_hit_to_the_cent():
     r = solve_added_pipeline(linear(100, "0.25"), Decimal(200), cap=Decimal(1000))
-    assert (r.outcome, r.required, r.achieved) == (FEASIBLE, Decimal("400.00"), Decimal(200))
+    assert (r.outcome, r.required, r.achieved) == (
+        FEASIBLE,
+        Decimal("400.00"),
+        Decimal(200),
+    )
 
 
 def test_required_pipeline_rounds_up_to_the_next_cent():

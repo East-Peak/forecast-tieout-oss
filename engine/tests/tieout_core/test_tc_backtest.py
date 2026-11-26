@@ -30,8 +30,18 @@ def regular_history(start=START, end=AS_OF, observations=True) -> Dataset:
         close = created + timedelta(days=45)
         won = close <= end
         deals.append(
-            Deal(0, f"D{n}", "new_business", "mm", "Won" if won else "S1", Decimal(100),
-                 created, close, won, won)  # fmt: skip
+            Deal(
+                0,
+                f"D{n}",
+                "new_business",
+                "mm",
+                "Won" if won else "S1",
+                Decimal(100),
+                created,
+                close,
+                won,
+                won,
+            )  # fmt: skip
         )
         transitions.append(Transition(f"D{n}", "S1", created))
         if won:
@@ -39,7 +49,9 @@ def regular_history(start=START, end=AS_OF, observations=True) -> Dataset:
         obs.append(Observation(f"D{n}", created, Decimal(100), close))
         created += timedelta(days=10)
     transitions.sort(key=lambda t: (t.deal_id, t.on))
-    return Dataset(tuple(deals), tuple(transitions), tuple(obs) if observations else None)
+    return Dataset(
+        tuple(deals), tuple(transitions), tuple(obs) if observations else None
+    )
 
 
 @pytest.fixture(scope="module")
@@ -59,10 +71,16 @@ def test_folds_need_three_matured_snapshots_and_a_complete_horizon(result):
 
 
 def test_actuals_are_bookings_inside_the_fold_window(result):
-    f = next(f for f in result.folds if f.horizon == 1 and f.cutoff == date(2026, 5, 30))
+    f = next(
+        f for f in result.folds if f.horizon == 1 and f.cutoff == date(2026, 5, 30)
+    )
     population = regular_history()
     expected = sum(
-        (d.arr for d in population.deals if d.is_won and date(2026, 5, 30) < d.close <= date(2026, 6, 30)),
+        (
+            d.arr
+            for d in population.deals
+            if d.is_won and date(2026, 5, 30) < d.close <= date(2026, 6, 30)
+        ),
         Decimal(0),
     )
     assert f.actual == expected
@@ -83,17 +101,31 @@ def test_a_fold_cannot_see_data_after_its_cutoff(profile):
     rewritten = []
     for d in clean.deals:
         if d.close > cutoff or d.created > cutoff:
-            d = replace(d, arr=Decimal(1000), stage="Lost", is_won=False, is_closed=True)
+            d = replace(
+                d, arr=Decimal(1000), stage="Lost", is_won=False, is_closed=True
+            )
         rewritten.append(d)
     extra = [
-        Deal(0, f"X{i}", "new_business", "mm", "Won", Decimal(5000), cutoff + timedelta(days=i),
-             cutoff + timedelta(days=i + 5), True, True)  # fmt: skip
+        Deal(
+            0,
+            f"X{i}",
+            "new_business",
+            "mm",
+            "Won",
+            Decimal(5000),
+            cutoff + timedelta(days=i),
+            cutoff + timedelta(days=i + 5),
+            True,
+            True,
+        )  # fmt: skip
         for i in range(1, 40)
     ]
     poisoned = Dataset(tuple(rewritten + extra), clean.transitions, clean.observations)
     a = fold(clean, cutoff, (1, 3), profile, draws=100)
     b = fold(poisoned, cutoff, (1, 3), profile, draws=100)
-    assert [(x.horizon, x.forecasts, x.range80) for x in a] == [(x.horizon, x.forecasts, x.range80) for x in b]
+    assert [(x.horizon, x.forecasts, x.range80) for x in a] == [
+        (x.horizon, x.forecasts, x.range80) for x in b
+    ]
     assert [x.actual for x in a] != [x.actual for x in b]
 
 
@@ -117,10 +149,15 @@ def _score(h, folds, model, rr, sw):
 
 
 def test_verdict_needs_six_folds_at_one_and_three_months():
-    assert verdict([_score(1, 6, 1, 2, 2), _score(3, 5, 1, 2, 2)])[0] == "not enough history to say"
+    assert (
+        verdict([_score(1, 6, 1, 2, 2), _score(3, 5, 1, 2, 2)])[0]
+        == "not enough history to say"
+    )
 
 
 def test_verdict_yes_only_if_the_model_beats_both_baselines_at_both_horizons():
     assert verdict([_score(1, 6, 1, 2, 2), _score(3, 6, 1, 2, 2)])[0] == "yes"
-    assert verdict([_score(1, 6, 1, 2, 2), _score(3, 6, 2, 3, 2)])[0] == "no"  # ties a baseline
+    assert (
+        verdict([_score(1, 6, 1, 2, 2), _score(3, 6, 2, 3, 2)])[0] == "no"
+    )  # ties a baseline
     assert verdict([_score(1, 9, 3, 2, 4), _score(3, 9, 1, 2, 2)])[0] == "no"

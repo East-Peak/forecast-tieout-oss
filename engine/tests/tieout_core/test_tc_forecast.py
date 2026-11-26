@@ -19,20 +19,28 @@ from engine.tieout_core.rates import RateBook
 from engine.tieout_core.records import Dataset, Deal
 
 CUT = date(2026, 1, 15)
-WINDOWS = month_windows(CUT, date(2026, 3, 31))  # 16, 28 and 31 days; ends at day 16, 44, 75
+WINDOWS = month_windows(
+    CUT, date(2026, 3, 31)
+)  # 16, 28 and 31 days; ends at day 16, 44, 75
 
 
 def _deal(id, created, stage, arr, close=None, won=False):
     closed = stage in ("Won", "Lost")
-    return Deal(0, id, "new_business", "mm", stage, Decimal(arr), created, close, closed, won)
+    return Deal(
+        0, id, "new_business", "mm", stage, Decimal(arr), created, close, closed, won
+    )
 
 
 DATA = Dataset(
     deals=(
         _deal("X", date(2026, 1, 1), "S1", "100", date(2026, 2, 10)),
         _deal("Y", date(2025, 12, 1), "S2", "50", date(2026, 1, 5)),  # past due
-        _deal("Z", date(2025, 11, 1), "S1", "180", date(2026, 5, 1)),  # beyond the windows
-        _deal("W", date(2025, 10, 1), "Won", "400", date(2025, 12, 1), True),  # 61-day cycle
+        _deal(
+            "Z", date(2025, 11, 1), "S1", "180", date(2026, 5, 1)
+        ),  # beyond the windows
+        _deal(
+            "W", date(2025, 10, 1), "Won", "400", date(2025, 12, 1), True
+        ),  # 61-day cycle
     ),
     transitions=(),
     observations=None,
@@ -84,7 +92,9 @@ def test_stage_weighted_uses_profile_probabilities_and_expected_close(profile):
 
 
 def test_stage_weighted_is_unavailable_without_amounts(profile):
-    unknown = Dataset((replace(_deal("X", date(2026, 1, 1), "S1", "1"), arr=None),), (), None)
+    unknown = Dataset(
+        (replace(_deal("X", date(2026, 1, 1), "S1", "1"), arr=None),), (), None
+    )
     f = stage_weighted(unknown, CUT, profile, WINDOWS)
     assert f.available is False
     assert "amount" in f.unavailable_reason
@@ -107,7 +117,9 @@ def test_added_pipeline_is_spread_evenly_across_windows():
     added = f.components["added pipeline"]
     assert added["2026-01"] == 0
     assert added["2026-02"] == Decimal("0.25") * Decimal(1000) / 16 * 14
-    expected_march = Decimal("0.25") * (Decimal(1000) / 16 * 2 + Decimal(1000) + Decimal(1000) / 31)
+    expected_march = Decimal("0.25") * (
+        Decimal(1000) / 16 * 2 + Decimal(1000) + Decimal(1000) / 31
+    )
     assert abs(added["2026-03"] - expected_march) < Decimal("1e-20")
 
 
@@ -134,7 +146,11 @@ def test_simulation_reports_spreads_for_groups_of_windows():
 
 def test_baselines_declare_their_rates(profile):
     (rr,) = run_rate(DATA, CUT, WINDOWS).rates
-    assert (rr.name, rr.value, rr.sample_size) == ("trailing_bookings_per_day", Decimal(400) / 365, 1)
+    assert (rr.name, rr.value, rr.sample_size) == (
+        "trailing_bookings_per_day",
+        Decimal(400) / 365,
+        1,
+    )
     sw = {r.name: r for r in stage_weighted(DATA, CUT, profile, WINDOWS).rates}
     assert sw["stage_probability:S1"].value == Decimal("0.1")
     assert sw["stage_probability:S1"].source == "entered"
@@ -143,6 +159,10 @@ def test_baselines_declare_their_rates(profile):
 
 
 def test_no_windows_means_nothing_to_forecast(profile):
-    for f in (run_rate(DATA, CUT, []), stage_weighted(DATA, CUT, profile, []), model_forecast(MODEL, DATA, CUT, [])):
+    for f in (
+        run_rate(DATA, CUT, []),
+        stage_weighted(DATA, CUT, profile, []),
+        model_forecast(MODEL, DATA, CUT, []),
+    ):
         assert f.available and f.total() == 0
     assert simulate(MODEL, ONLY_X, CUT, [], draws=10).total.mean == 0

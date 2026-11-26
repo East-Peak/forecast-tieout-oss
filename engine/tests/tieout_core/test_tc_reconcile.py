@@ -23,7 +23,9 @@ def _run(tmp_path, profile, rows):
 ROWS = [
     deal("PRIOR", "Closed Won", "1000.00", "2025-06-01", "2026-01-31"),  # before FY26
     deal("FEB", "Closed Won", "200.10", "2025-12-01", "2026-02-01"),  # first day of FY
-    deal("APR", "Closed Won", "300.25", "2026-02-10", "2026-04-15"),  # on the as-of date
+    deal(
+        "APR", "Closed Won", "300.25", "2026-02-10", "2026-04-15"
+    ),  # on the as-of date
     deal("LOST", "Closed Lost", "50", "2026-01-05", "2026-03-03"),
     deal("OPEN", "Negotiation", "75", "2026-03-01", "2026-06-30"),
     deal("EXP", "Closed Won", "999", "2026-01-01", "2026-03-01", type="expansion"),
@@ -63,13 +65,21 @@ def test_source_ties_out(tmp_path, profile):
     r = _run(tmp_path, profile, ROWS)
     assert all(c.passed for c in r.checks), [c for c in r.checks if not c.passed]
     names = {c.name for c in r.checks}
-    assert {"rows partition", "arr partition", "bookings tie to source", "pipeline flow"} <= names
+    assert {
+        "rows partition",
+        "arr partition",
+        "bookings tie to source",
+        "pipeline flow",
+    } <= names
 
 
 def test_bookings_tie_counts_won_rows_that_were_excluded(tmp_path, profile):
     # The flag-mismatch row is new-business won FYTD in the raw file; the tie
     # must account for it rather than silently differ.
-    bad = {**deal("FLAG", "Closed Won", "7", "2026-01-01", "2026-03-01"), "is_closed": "false"}
+    bad = {
+        **deal("FLAG", "Closed Won", "7", "2026-01-01", "2026-03-01"),
+        "is_closed": "false",
+    }
     r = _run(tmp_path, profile, ROWS + [bad])
     tie = next(c for c in r.checks if c.name == "bookings tie to source")
     assert tie.passed

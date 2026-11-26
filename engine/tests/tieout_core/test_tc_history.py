@@ -8,7 +8,9 @@ from engine.tieout_core.records import Dataset, Deal, Observation, Transition
 
 def _deal(id, created, close=None, stage="S1", won=False, arr="100"):
     closed = stage in ("Won", "Lost")
-    return Deal(0, id, "new_business", "mm", stage, Decimal(arr), created, close, closed, won)
+    return Deal(
+        0, id, "new_business", "mm", stage, Decimal(arr), created, close, closed, won
+    )
 
 
 DATA = Dataset(

@@ -54,7 +54,13 @@ def test_structurally_broken_rows_are_excluded_with_reasons(tmp_path, profile):
         "BACKWARDS": "close date is before created date",
         "FLAGS": "is_closed/is_won flags disagree with the stage",
     }
-    assert {e.row for e in loaded.exclusions} == {3, 4, 5, 6, 7}  # 1-based, header is row 1
+    assert {e.row for e in loaded.exclusions} == {
+        3,
+        4,
+        5,
+        6,
+        7,
+    }  # 1-based, header is row 1
     assert loaded.source_rows == 6
 
 
@@ -62,7 +68,10 @@ def test_stage_history_maps_to_codes_and_dates(tmp_path, profile):
     path = write_company(
         tmp_path / "c",
         [deal("D1")],
-        history=[("D1", "Discovery", "2026-01-01T10:00:00"), ("D1", "Business Case", "2026-01-05")],
+        history=[
+            ("D1", "Discovery", "2026-01-01T10:00:00"),
+            ("D1", "Business Case", "2026-01-05"),
+        ],
     )
     transitions = load_company(path, profile).dataset.transitions
     assert [(t.deal_id, t.stage, t.on) for t in transitions] == [
@@ -75,7 +84,11 @@ def test_observations_are_optional(tmp_path, profile):
     bare = load_company(write_company(tmp_path / "a", [deal("D1")]), profile)
     assert bare.dataset.observations is None
     with_obs = load_company(
-        write_company(tmp_path / "b", [deal("D1")], observations=[("D1", "2026-01-01", "90.10", "2026-04-01")]),
+        write_company(
+            tmp_path / "b",
+            [deal("D1")],
+            observations=[("D1", "2026-01-01", "90.10", "2026-04-01")],
+        ),
         profile,
     )
     (obs,) = with_obs.dataset.observations
@@ -84,6 +97,12 @@ def test_observations_are_optional(tmp_path, profile):
 
 
 def test_roster_is_counted_by_role(tmp_path, profile):
-    team = [{"id": "1", "role": "ae"}, {"id": "2", "role": "AE"}, {"id": "3", "role": "sdr"}]
-    loaded = load_company(write_company(tmp_path / "c", [deal("D1")], team=team), profile)
+    team = [
+        {"id": "1", "role": "ae"},
+        {"id": "2", "role": "AE"},
+        {"id": "3", "role": "sdr"},
+    ]
+    loaded = load_company(
+        write_company(tmp_path / "c", [deal("D1")], team=team), profile
+    )
     assert loaded.roster_roles == {"ae": 2, "sdr": 1}

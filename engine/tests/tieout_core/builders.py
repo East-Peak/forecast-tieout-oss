@@ -82,7 +82,12 @@ def write_company(root: Path, deals, history=(), observations=None, team=None) -
             root / "deal_observations.csv",
             ["deal_id", "observed_date", "amount", "expected_close_date"],
             [
-                {"deal_id": d, "observed_date": o, "amount": a, "expected_close_date": e}
+                {
+                    "deal_id": d,
+                    "observed_date": o,
+                    "amount": a,
+                    "expected_close_date": e,
+                }
                 for d, o, a, e in observations
             ],
         )

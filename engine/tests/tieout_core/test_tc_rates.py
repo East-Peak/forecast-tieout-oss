@@ -6,7 +6,9 @@ from engine.tieout_core.rates import Rate, RateBook, wilson
 
 
 def _rate(name, value="0.5"):
-    return Rate(name, Decimal(value), "def", "num", "den", "cohort", "365 days", 4, "fitted")
+    return Rate(
+        name, Decimal(value), "def", "num", "den", "cohort", "365 days", 4, "fitted"
+    )
 
 
 def test_a_rate_has_one_definition():

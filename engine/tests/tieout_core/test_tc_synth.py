@@ -48,14 +48,19 @@ def test_open_deals_carry_their_latest_observation(company):
         latest[o.deal_id] = o
     for x in company.dataset.deals:
         if not x.is_closed:
-            assert (x.arr, x.close) == (latest[x.id].amount, latest[x.id].expected_close)
+            assert (x.arr, x.close) == (
+                latest[x.id].amount,
+                latest[x.id].expected_close,
+            )
 
 
 def test_closed_deals_book_their_last_observed_amount(company):
     latest = {}
     for o in company.dataset.observations:
         latest[o.deal_id] = o
-    assert all(x.arr == latest[x.id].amount for x in company.dataset.deals if x.is_closed)
+    assert all(
+        x.arr == latest[x.id].amount for x in company.dataset.deals if x.is_closed
+    )
 
 
 def test_history_spans_at_least_thirty_months(company):
@@ -76,8 +81,13 @@ def test_true_win_rates_are_products_of_advance_probabilities():
 
 def test_awkward_knobs_show_up_in_the_data():
     awkward = generate(
-        replace(BASE, big_deal_share=0.03, slip_share=0.5, missing_history_share=0.1,
-                conversion_change=(date(2025, 8, 1), 0.6))  # fmt: skip
+        replace(
+            BASE,
+            big_deal_share=0.03,
+            slip_share=0.5,
+            missing_history_share=0.1,
+            conversion_change=(date(2025, 8, 1), 0.6),
+        )  # fmt: skip
     )
     with_history = {t.deal_id for t in awkward.dataset.transitions}
     assert sum(1 for x in awkward.dataset.deals if x.id not in with_history) > 0

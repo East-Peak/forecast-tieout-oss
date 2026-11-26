@@ -24,7 +24,8 @@ TRUTH_CO = Company(
 def fits(tmp_path_factory):
     profile = load_profile(write_profile(tmp_path_factory.mktemp("p")))
     return [
-        fit(generate(replace(TRUTH_CO, seed=s)).dataset, TRUTH_CO.as_of, profile) for s in SEEDS
+        fit(generate(replace(TRUTH_CO, seed=s)).dataset, TRUTH_CO.as_of, profile)
+        for s in SEEDS
     ]
 
 
@@ -32,20 +33,32 @@ def fits(tmp_path_factory):
 def test_stage_win_rates_are_recovered(fits, stage):
     truth = true_win_rates(TRUTH_CO)[stage]
     inside = sum(
-        m.rates[f"win_within_horizon:{stage}"].low95 <= truth <= m.rates[f"win_within_horizon:{stage}"].high95
+        m.rates[f"win_within_horizon:{stage}"].low95
+        <= truth
+        <= m.rates[f"win_within_horizon:{stage}"].high95
         for m in fits
     )
-    assert inside >= 0.9 * REPLICATES, f"{stage}: true {truth:.3f} inside the range {inside}/{REPLICATES}"
+    assert inside >= 0.9 * REPLICATES, (
+        f"{stage}: true {truth:.3f} inside the range {inside}/{REPLICATES}"
+    )
 
 
 def test_new_pipeline_win_rate_is_recovered(fits):
     truth = math.prod(TRUTH_CO.advance)
     inside = sum(
-        m.rates["new_pipeline_win_rate"].low95 <= truth <= m.rates["new_pipeline_win_rate"].high95
+        m.rates["new_pipeline_win_rate"].low95
+        <= truth
+        <= m.rates["new_pipeline_win_rate"].high95
         for m in fits
     )
-    assert inside >= 0.9 * REPLICATES, f"true {truth:.3f} inside the range {inside}/{REPLICATES}"
+    assert inside >= 0.9 * REPLICATES, (
+        f"true {truth:.3f} inside the range {inside}/{REPLICATES}"
+    )
 
 
 def test_every_replicate_had_evidence(fits):
-    assert all(m.rates[f"win_within_horizon:{s}"].source == "fitted" for m in fits for s in ("S1", "S5"))
+    assert all(
+        m.rates[f"win_within_horizon:{s}"].source == "fitted"
+        for m in fits
+        for s in ("S1", "S5")
+    )

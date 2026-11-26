@@ -43,6 +43,22 @@ jobs:
       - name: Engine tests
         run: python -m pytest engine/tests/ -v
 
+      - name: Tieout core lint and format (new package only)
+        run: |
+          ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py
+          ruff format --check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py
+
+      - name: Data-v2 determinism check
+        run: python -m engine.scripts.generate_data_v2 --verify
+
+      - name: Tieout core report for the demo companies
+        run: |
+          for c in sprout-labs sapling-industries mighty-oak-holdings; do
+            python -m engine.tieout_core report \
+              --profile engine/config/profiles/$c --data engine/data-v2/$c \
+              --as-of 2026-08-31 --out /tmp/tieout-report/$c
+          done
+
       - name: Scenario golden vectors are current
         run: python -m tests.parity.generate_scenario_golden_vectors --verify
 

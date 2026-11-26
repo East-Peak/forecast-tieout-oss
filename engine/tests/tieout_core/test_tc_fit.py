@@ -13,7 +13,9 @@ CUT = date(2026, 6, 30)  # matured snapshots: 2025-06-30 and earlier
 
 def _deal(id, created, stage, arr, close=None, won=False):
     closed = stage in ("Won", "Lost")
-    return Deal(0, id, "new_business", "mm", stage, Decimal(arr), created, close, closed, won)
+    return Deal(
+        0, id, "new_business", "mm", stage, Decimal(arr), created, close, closed, won
+    )
 
 
 JUN1 = date(2025, 6, 1)
@@ -23,7 +25,9 @@ DATA = Dataset(
         # Open in S3 at the 2025-06-30 snapshot.
         _deal("A", JUN1, "Won", "100", date(2025, 8, 29), True),
         _deal("B", JUN1, "Lost", "200", date(2025, 7, 15)),
-        _deal("C", JUN1, "S3", "300"),  # still open a year later: not won within horizon
+        _deal(
+            "C", JUN1, "S3", "300"
+        ),  # still open a year later: not won within horizon
         _deal("D", JUN1, "Won", "400", date(2026, 6, 29), True),
         # Open in S2 across several snapshots.
         _deal("F", JAN1, "Won", "500", date(2025, 6, 15), True),
@@ -34,11 +38,20 @@ DATA = Dataset(
     transitions=tuple(
         sorted(
             [Transition(i, "S3", JUN1) for i in "ABCD"]
-            + [Transition("A", "Won", date(2025, 8, 29)), Transition("B", "Lost", date(2025, 7, 15))]
+            + [
+                Transition("A", "Won", date(2025, 8, 29)),
+                Transition("B", "Lost", date(2025, 7, 15)),
+            ]
             + [Transition("D", "Won", date(2026, 6, 29))]
             + [Transition(i, "S2", JAN1) for i in "FG"]
-            + [Transition("F", "Won", date(2025, 6, 15)), Transition("G", "Lost", date(2025, 3, 1))]
-            + [Transition("E", "S1", date(2025, 7, 15)), Transition("E", "Won", date(2025, 9, 1))],
+            + [
+                Transition("F", "Won", date(2025, 6, 15)),
+                Transition("G", "Lost", date(2025, 3, 1)),
+            ]
+            + [
+                Transition("E", "S1", date(2025, 7, 15)),
+                Transition("E", "Won", date(2025, 9, 1)),
+            ],
             key=lambda t: (t.deal_id, t.on),
         )
     ),
@@ -83,7 +96,11 @@ def test_close_timing_is_the_empirical_days_to_win(model):
     timing = model.timing("S3")
     assert timing.samples == (60, 136, 364)
     assert timing.source == "pooled across stages (fewer than 20 wins in S3)"
-    assert timing.cdf(59) == 0 and timing.cdf(60) == Decimal(1) / 3 and timing.cdf(364) == 1
+    assert (
+        timing.cdf(59) == 0
+        and timing.cdf(60) == Decimal(1) / 3
+        and timing.cdf(364) == 1
+    )
 
 
 def test_new_pipeline_parameters_come_from_the_matured_creation_cohort(model):
