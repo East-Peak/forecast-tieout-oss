@@ -74,6 +74,7 @@ class Model:
     timings: dict[str, Timing]
     new_pipeline: NewPipeline
     unknown_stage_observations: int
+    snapshot_count: int = 0
 
     def win_rate(self, stage: str, age_days: int) -> Decimal:
         return self.cells.get((stage, age_group(age_days)), self.stage_rates[stage])
@@ -86,7 +87,7 @@ def fit(
     data: Dataset, cutoff: date, profile: Profile, params: FitParams = FitParams()
 ) -> Model:
     horizon = params.horizon_days
-    snapshots = _matured_snapshots(data, cutoff, horizon)
+    snapshots = matured_snapshots(data, cutoff, horizon)
     first = f"{snapshots[-1]} to {snapshots[0]}" if snapshots else "none"
     cohort_text = f"monthly snapshots {first}"
     history = defaultdict(list)
@@ -180,10 +181,12 @@ def fit(
             )
 
     new = _new_pipeline(data, cutoff, params, book)
-    return Model(cutoff, params, book, cells, stage_rates, timings, new, unknown)
+    return Model(
+        cutoff, params, book, cells, stage_rates, timings, new, unknown, len(snapshots)
+    )
 
 
-def _matured_snapshots(data: Dataset, cutoff: date, horizon: int) -> list[date]:
+def matured_snapshots(data: Dataset, cutoff: date, horizon: int) -> list[date]:
     """Monthly snapshot dates, newest first, whose horizon ends by the cutoff."""
     if not data.deals:
         return []
