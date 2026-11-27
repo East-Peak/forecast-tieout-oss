@@ -32,7 +32,10 @@ function deferred<T>(): Deferred<T> {
   });
   return { promise, resolve, reject };
 }
-const report = (tag: string) => ({ schema_version: "1.0.0", tag }) as unknown as TieoutReport;
+const report = (tag: string, identity?: { company: string; scenario: string }) =>
+  ({ schema_version: "1.0.0", tag, ...(identity ? { inputs: { identity } } : {}) }) as unknown as TieoutReport;
+/** The identity a report file's path says it has: "a/demo-plan.json" is company a, scenario demo-plan. */
+const named = (path: string) => ({ company: path.split("/")[0], scenario: (path.split("/")[1] ?? "").replace(".json", "") });
 
 function harness() {
   const pending = new Map<string, Deferred<TieoutReport>>();
@@ -43,9 +46,10 @@ function harness() {
       const d = deferred<TieoutReport>();
       pending.set(path, d);
       calls.push({ path, d });
-      return d.promise;
+      // a fake that names no identity is taken to be the file asked for; one that names its own is believed
+      return d.promise.then((r) => ("inputs" in r ? r : ({ ...(r as object), inputs: { identity: named(path) } } as TieoutReport)));
     },
-    comparison: () => Promise.resolve({ rows: [] } as unknown as ScenarioComparison),
+    comparison: (path) => Promise.resolve({ company: path.split("/")[0], rows: [] } as unknown as ScenarioComparison),
   };
   return { pending, calls, loaders };
 }
@@ -215,5 +219,42 @@ describe("the report-backed session", () => {
     await waitFor(() => expect(text("url")).toBe("?company=b&scenario=as-signed"));
     expect(text("notice")).toMatch(/zzz/);
     expect(text("status")).toBe("ready");
+  });
+
+  it("a report that names another scenario than the one asked for is refused, not shown", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a&scenario=demo-plan");
+    await waitFor(() => expect(pending.has("a/demo-plan.json")).toBe(true));
+    await act(async () => pending.get("a/demo-plan.json")!.resolve(report("wrong file", { company: "a", scenario: "as-signed" })));
+    await waitFor(() => expect(screen.getByTestId("status").textContent).toBe("error"));
+    expect(screen.getByTestId("error").textContent).toMatch(/a\/as-signed/);
+    expect(screen.getByTestId("error").textContent).toMatch(/a\/demo-plan/);
+    expect(screen.getByTestId("shown").textContent).toBe("-");
+  });
+
+  it("a report that names another company than the one asked for is refused", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a&scenario=as-signed");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => pending.get("a/as-signed.json")!.resolve(report("wrong file", { company: "b", scenario: "as-signed" })));
+    await waitFor(() => expect(screen.getByTestId("status").textContent).toBe("error"));
+    expect(screen.getByTestId("shown").textContent).toBe("-");
+  });
+
+  it("a report with no identity at all is refused", async () => {
+    const { loaders } = harness();
+    const bare: Loaders = { ...loaders, report: () => Promise.resolve(report("no identity") as TieoutReport) };
+    mount(bare, "/forecast?company=a&scenario=as-signed");
+    await waitFor(() => expect(screen.getByTestId("status").textContent).toBe("error"));
+  });
+
+  it("a comparison file for another company is refused", async () => {
+    const { pending, loaders } = harness();
+    const wrong: Loaders = { ...loaders, comparison: () => Promise.resolve({ company: "b", rows: [] } as unknown as ScenarioComparison) };
+    mount(wrong, "/forecast?company=a&scenario=as-signed");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => pending.get("a/as-signed.json")!.resolve(report("A")));
+    await waitFor(() => expect(screen.getByTestId("status").textContent).toBe("error"));
+    expect(screen.getByTestId("error").textContent).toMatch(/comparison/);
   });
 });

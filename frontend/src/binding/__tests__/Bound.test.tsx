@@ -92,6 +92,21 @@ describe("Bound", () => {
     expect(el.textContent).not.toMatch(/\$0/);
   });
 
+  it("a reason that is a whole sentence is shown as it is, without the word unavailable in front", () => {
+    show(
+      <Bound
+        binding={bind({
+          id: "s",
+          path: "/gap/fiscal_year/target",
+          unit: "usd",
+          format: "usd-short",
+          unavailable: { reason: "/gap/fiscal_year/why", sentence: true },
+        })}
+      />,
+    );
+    expect(screen.getByText("no target in this window")).toHaveAttribute("data-unavailable", "true");
+  });
+
   it("a reason that is itself null falls back to the stated words, not an error", () => {
     show(
       <Bound

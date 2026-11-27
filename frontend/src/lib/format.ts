@@ -12,6 +12,7 @@
  *   percent1   a fraction as a percent to one decimal:  83.3%
  *   count      a whole number, grouped
  *   quantity   a count or a decimal at the report's own places, grouped:  93.60  1,234
+ *   decimal2   a decimal to two places, half away from zero:  2.07  1,234.50
  *   multiple   a quantity and "x":  1.31x
  *   cents      a quantity and the cent sign:  13.98¢
  *   passed     a true or false check result:  passed  failed
@@ -20,7 +21,7 @@
  *   month      ISO month as  Sep 2026
  *   text       verbatim
  */
-export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "quantity" | "multiple" | "cents" | "passed" | "yesno" | "date" | "month" | "text";
+export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "quantity" | "decimal2" | "multiple" | "cents" | "passed" | "yesno" | "date" | "month" | "text";
 
 const DECIMAL = /^(-?)(\d+)(?:\.(\d+))?$/;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -116,6 +117,12 @@ function quantity(raw: unknown): string {
   return signed(d.negative, d.units, `${whole}${fraction}`);
 }
 
+function decimal2(raw: unknown): string {
+  const d = parseDecimal(raw);
+  const hundredths = roundedAbs(d, -2);
+  return signed(d.negative, hundredths, `${group(hundredths / 100n)}.${(hundredths % 100n).toString().padStart(2, "0")}`);
+}
+
 function parseDate(raw: unknown): [string, string, string] {
   const match = typeof raw === "string" ? /^(\d{4})-(0[1-9]|1[0-2])-(\d{2})$/.exec(raw) : null;
   if (!match) throw new Error(`not an ISO date: ${JSON.stringify(raw)}`);
@@ -153,6 +160,8 @@ export function formatValue(format: FormatName, raw: unknown): string {
       return count(raw);
     case "quantity":
       return quantity(raw);
+    case "decimal2":
+      return decimal2(raw);
     case "multiple":
       return `${quantity(raw)}x`;
     case "cents":

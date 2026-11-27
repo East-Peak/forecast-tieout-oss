@@ -18,7 +18,7 @@ const FORMATS: Record<Unit, FormatName[]> = {
   usd: ["usd-full", "usd-short"],
   fraction: ["percent1"],
   count: ["count"],
-  quantity: ["quantity", "multiple", "cents"],
+  quantity: ["quantity", "decimal2", "multiple", "cents"],
   flag: ["passed", "yesno"],
   date: ["date"],
   month: ["month"],
@@ -37,7 +37,7 @@ export interface Binding {
    * If the file may hold null here, how it is said in words: the pointer to the sentence that
    * gives the reason (relative to the row unless ``absolute``), or the words themselves.
    */
-  unavailable?: { reason?: string; words?: string; absolute?: boolean };
+  unavailable?: { reason?: string; words?: string; absolute?: boolean; sentence?: boolean };
   /** "shortfall": a positive figure is a shortfall (red), a negative one is ahead (green) */
   tint?: "shortfall";
 }
@@ -128,7 +128,7 @@ export function Bound({
     if (say.reason) {
       const reasonPath = expandPath((say.absolute ? "" : row) + say.reason, ctx);
       const reason = resolvePointer(ctx.files[binding.source], reasonPath);
-      shown = reason === null ? shown : `unavailable: ${formatValue("text", reason)}`;
+      if (reason !== null) shown = say.sentence ? formatValue("text", reason) : `unavailable: ${formatValue("text", reason)}`;
     }
     return (
       <span {...attrs} data-unavailable="true" className={className}>

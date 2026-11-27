@@ -147,3 +147,20 @@ describe("passed and yesno: a true or false in words", () => {
     expect(() => formatValue("yesno", null)).toThrow();
   });
 });
+
+describe("decimal2: a decimal to two places, half away from zero", () => {
+  const cases: Array<[string, string]> = [
+    ["2.066174", "2.07"],
+    ["8.183581", "8.18"],
+    ["0.005", "0.01"],
+    ["0.004999", "0.00"],
+    ["1234.5", "1,234.50"],
+    ["54.13", "54.13"],
+    ["-0.004", "0.00"],
+    ["-2.066", "-2.07"],
+    ["113", "113.00"],
+  ];
+  it.each(cases)("%s -> %s", (raw, shown) => {
+    expect(formatValue("decimal2", raw)).toBe(shown);
+  });
+});

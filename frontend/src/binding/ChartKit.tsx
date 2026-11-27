@@ -56,12 +56,14 @@ interface TooltipProps {
   label?: string | number;
   payload?: ReadonlyArray<{ dataKey?: string | number | ((o: unknown) => unknown) | undefined; value?: unknown }>;
   periodFormat: (period: string) => string;
+  /** more under the rows for the hovered period (bound values, like the rows) */
+  extra?: (period: string) => ReactNode;
 }
 
 const unitOf = (spec: SeriesSpec) => (spec.format === "quantity" ? "quantity" : "usd");
 
 /** The hover card. Its figures are read from the file at each series' declared path, not taken from the plotted numbers. */
-export function ChartTooltip({ chartId, specs, active, label, payload, periodFormat }: TooltipProps) {
+export function ChartTooltip({ chartId, specs, active, label, payload, periodFormat, extra }: TooltipProps) {
   if (!active || !payload || label === undefined) return null;
   const period = String(label);
   const shown = payload.filter((p) => typeof p.dataKey === "string" && p.value !== null && p.value !== undefined);
@@ -100,6 +102,7 @@ export function ChartTooltip({ chartId, specs, active, label, payload, periodFor
         {periodFormat(period)}
       </div>
       <div className="space-y-0.5">{lines}</div>
+      {extra ? <div className="mt-1 border-t border-slate-100 pt-1 text-slate-500" data-testid="tooltip-extra">{extra(period)}</div> : null}
     </div>
   );
 }

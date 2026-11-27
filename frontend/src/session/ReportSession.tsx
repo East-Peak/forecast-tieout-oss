@@ -94,7 +94,16 @@ export function ReportSessionProvider({ loaders, children }: { loaders: Loaders;
             error: `${chosen.report} is schema ${String(report.schema_version)}; this app reads ${index.schema_version}`,
           });
         } else {
-          dispatch({ type: "loaded", requestId, report, comparison });
+          const asked = `${waiting.company}/${waiting.scenario}`;
+          const identity = report.inputs?.identity;
+          const got = identity ? `${identity.company}/${identity.scenario}` : "no company or scenario";
+          if (got !== asked) {
+            dispatch({ type: "failed", requestId, error: `${chosen.report} is the report for ${got}, not ${asked}` });
+          } else if (comparison.company !== waiting.company) {
+            dispatch({ type: "failed", requestId, error: `${entry.comparison} is the comparison for ${String(comparison.company)}, not ${waiting.company}` });
+          } else {
+            dispatch({ type: "loaded", requestId, report, comparison });
+          }
         }
       },
       (e: unknown) => dispatch({ type: "failed", requestId, error: messageOf(e) }),
