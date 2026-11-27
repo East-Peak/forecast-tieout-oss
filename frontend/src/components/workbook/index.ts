@@ -4,3 +4,4 @@ export { DataBasisBadge } from "./DataBasisBadge";
 export { MetricStrip } from "./MetricStrip";
 export type { MetricItem } from "./MetricStrip";
 export { ProseNote } from "./ProseNote";
+export { Disclosure } from "./Disclosure";

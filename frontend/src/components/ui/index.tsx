@@ -4,6 +4,7 @@ import type {
   HTMLAttributes,
   OptionHTMLAttributes,
   SelectHTMLAttributes,
+  TdHTMLAttributes,
 } from "react";
 
 function cx(...classes: Array<string | false | null | undefined>): string {
@@ -184,7 +185,7 @@ export function TableHeaderCell({
   );
 }
 
-export interface TableCellProps extends HTMLAttributes<HTMLTableCellElement> {}
+export interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {}
 
 export function TableCell({ className, ...props }: TableCellProps) {
   return (

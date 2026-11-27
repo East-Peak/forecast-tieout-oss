@@ -4,7 +4,7 @@ import { MetricCard } from "./MetricCard";
 
 export interface MetricItem {
   label: string;
-  value: string;
+  value: React.ReactNode;
   delta?: string;
   deltaType?: DeltaType;
   note?: string;

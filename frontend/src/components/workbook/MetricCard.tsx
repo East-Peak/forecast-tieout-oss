@@ -3,7 +3,7 @@ import type { DeltaType } from "../ui";
 
 export interface MetricCardProps {
   label: string;
-  value: string;
+  value: React.ReactNode;
   delta?: string;
   deltaType?: DeltaType;
   note?: string;
