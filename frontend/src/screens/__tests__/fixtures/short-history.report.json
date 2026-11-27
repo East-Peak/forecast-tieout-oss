@@ -1,0 +1,921 @@
+{
+  "actions": {
+    "unavailable": "no close-timing evidence for open deals in S5"
+  },
+  "backtest": {
+    "candidates": {
+      "recency": {
+        "adopted": false,
+        "candidate": "cumulative incidence",
+        "fit_in_use": "matured snapshots",
+        "folds": {
+          "1m": 0,
+          "3m": 0
+        },
+        "incumbent": "matured snapshots",
+        "mean_absolute_error": {
+          "1m": {
+            "cumulative incidence": null,
+            "matured snapshots": null
+          },
+          "3m": {
+            "cumulative incidence": null,
+            "matured snapshots": null
+          }
+        },
+        "reason": "0 folds at 1 month(s); at least 6 are needed to compare",
+        "rule": "adopted only if the fitted model's mean absolute error is lower than the Goal 1 fit's at both 1 and 3 months, on the same folds (at least 6 at each)"
+      }
+    },
+    "folds": [],
+    "horizons": [
+      {
+        "folds": 0,
+        "horizon_months": 1,
+        "mean_absolute_error": {
+          "fitted model": null,
+          "stage-weighted pipeline": null,
+          "trailing run-rate": null
+        },
+        "range_coverage": {
+          "80%": null,
+          "95%": null,
+          "folds_with_a_range": 0
+        },
+        "signed_bias": {
+          "fitted model": null,
+          "stage-weighted pipeline": null,
+          "trailing run-rate": null
+        }
+      },
+      {
+        "folds": 0,
+        "horizon_months": 3,
+        "mean_absolute_error": {
+          "fitted model": null,
+          "stage-weighted pipeline": null,
+          "trailing run-rate": null
+        },
+        "range_coverage": {
+          "80%": null,
+          "95%": null,
+          "folds_with_a_range": 0
+        },
+        "signed_bias": {
+          "fitted model": null,
+          "stage-weighted pipeline": null,
+          "trailing run-rate": null
+        }
+      },
+      {
+        "folds": 0,
+        "horizon_months": 6,
+        "mean_absolute_error": {
+          "fitted model": null,
+          "stage-weighted pipeline": null,
+          "trailing run-rate": null
+        },
+        "range_coverage": {
+          "80%": null,
+          "95%": null,
+          "folds_with_a_range": 0
+        },
+        "signed_bias": {
+          "fitted model": null,
+          "stage-weighted pipeline": null,
+          "trailing run-rate": null
+        }
+      }
+    ],
+    "notes": [
+      "no deal_observations.csv: past open-deal amounts and expected close dates are not recorded, so the fitted model and the stage-weighted baseline cannot be scored in dollars"
+    ],
+    "reason": "no deal_observations.csv: past open-deal amounts and expected close dates are not recorded, so the fitted model and the stage-weighted baseline cannot be scored in dollars",
+    "scoring": "per horizon, mean absolute dollar error over all folds; 'yes' only if the fitted model's error is lower than both baselines at 1 and 3 months; under 6 folds is 'not enough history to say'",
+    "verdict": "not enough history to say"
+  },
+  "forecasts": {
+    "fitted_ranges": {
+      "by_window": {},
+      "cells": [
+        {
+          "coverage80": null,
+          "coverage95": null,
+          "coverage_judgement": "unvalidated",
+          "folds_with_a_range": 0,
+          "horizon_months": 1,
+          "label": "unvalidated",
+          "median_width80": null
+        },
+        {
+          "coverage80": null,
+          "coverage95": null,
+          "coverage_judgement": "unvalidated",
+          "folds_with_a_range": 0,
+          "horizon_months": 3,
+          "label": "unvalidated",
+          "median_width80": null
+        },
+        {
+          "coverage80": null,
+          "coverage95": null,
+          "coverage_judgement": "unvalidated",
+          "folds_with_a_range": 0,
+          "horizon_months": 6,
+          "label": "unvalidated",
+          "median_width80": null
+        }
+      ],
+      "horizons": {},
+      "status": "unavailable: no close-timing evidence for open deals in S5"
+    },
+    "horizon_windows": {
+      "next twelve months": [
+        "2026-09",
+        "2027-08"
+      ],
+      "rest of fiscal year": [
+        "2026-09",
+        "2027-01"
+      ]
+    },
+    "methods": [
+      {
+        "assumptions": [
+          "new-business bookings continue at the trailing 365-day rate of 13.70 per day"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "410.96",
+          "2026-10": "424.66",
+          "2026-11": "410.96",
+          "2026-12": "424.66",
+          "2027-01": "424.66",
+          "2027-02": "383.56",
+          "2027-03": "424.66",
+          "2027-04": "410.96",
+          "2027-05": "424.66",
+          "2027-06": "410.96",
+          "2027-07": "424.66",
+          "2027-08": "424.66"
+        },
+        "components": {
+          "run-rate": {
+            "2026-09": "410.96",
+            "2026-10": "424.66",
+            "2026-11": "410.96",
+            "2026-12": "424.66",
+            "2027-01": "424.66",
+            "2027-02": "383.56",
+            "2027-03": "424.66",
+            "2027-04": "410.96",
+            "2027-05": "424.66",
+            "2027-06": "410.96",
+            "2027-07": "424.66",
+            "2027-08": "424.66"
+          }
+        },
+        "horizons": {
+          "next twelve months": "5000.02",
+          "rest of fiscal year": "2095.90"
+        },
+        "method": "trailing run-rate",
+        "unavailable_reason": ""
+      },
+      {
+        "assumptions": [
+          "open deals book at their amount times the profile's stage probability (stages.yaml), in the month of their expected close; past-due deals count in the first month",
+          "new pipeline is created at 27.40 ARR per day (trailing 365 days) and converts at the Discovery probability 0.1, closing 19 days after creation (median cycle of 5 trailing wins)"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "30.14",
+          "2026-10": "4084.93",
+          "2026-11": "82.19",
+          "2026-12": "84.93",
+          "2027-01": "84.93",
+          "2027-02": "76.71",
+          "2027-03": "84.93",
+          "2027-04": "82.19",
+          "2027-05": "84.93",
+          "2027-06": "82.19",
+          "2027-07": "84.93",
+          "2027-08": "84.93"
+        },
+        "components": {
+          "existing pipeline": {
+            "2026-09": "0.00",
+            "2026-10": "4000.00",
+            "2026-11": "0.00",
+            "2026-12": "0.00",
+            "2027-01": "0.00",
+            "2027-02": "0.00",
+            "2027-03": "0.00",
+            "2027-04": "0.00",
+            "2027-05": "0.00",
+            "2027-06": "0.00",
+            "2027-07": "0.00",
+            "2027-08": "0.00"
+          },
+          "future pipeline": {
+            "2026-09": "30.14",
+            "2026-10": "84.93",
+            "2026-11": "82.19",
+            "2026-12": "84.93",
+            "2027-01": "84.93",
+            "2027-02": "76.71",
+            "2027-03": "84.93",
+            "2027-04": "82.19",
+            "2027-05": "84.93",
+            "2027-06": "82.19",
+            "2027-07": "84.93",
+            "2027-08": "84.93"
+          }
+        },
+        "horizons": {
+          "next twelve months": "4947.93",
+          "rest of fiscal year": "4367.12"
+        },
+        "method": "stage-weighted pipeline",
+        "unavailable_reason": ""
+      },
+      {
+        "assumptions": [],
+        "available": false,
+        "by_window": {},
+        "components": {},
+        "horizons": {},
+        "method": "fitted model",
+        "unavailable_reason": "no close-timing evidence for open deals in S5"
+      }
+    ],
+    "windows": [
+      "2026-09",
+      "2026-10",
+      "2026-11",
+      "2026-12",
+      "2027-01",
+      "2027-02",
+      "2027-03",
+      "2027-04",
+      "2027-05",
+      "2027-06",
+      "2027-07",
+      "2027-08"
+    ]
+  },
+  "gap": {
+    "fiscal_year": {
+      "actual_to_date": "5000",
+      "expected": null,
+      "expected_range80": null,
+      "expected_range95": null,
+      "forecast_rest_of_year": null,
+      "gap": null,
+      "target": "4000"
+    },
+    "forecast_method": "fitted model: unavailable (no close-timing evidence for open deals in S5)",
+    "lever": {
+      "headline": "unavailable",
+      "lever": "new-business pipeline added",
+      "meaning": "the lever is solved through the fitted model, which is unavailable here",
+      "outcome": "unavailable",
+      "reason": "no close-timing evidence for open deals in S5",
+      "target": "4000"
+    },
+    "lever_next_twelve_months": {
+      "headline": "unavailable",
+      "lever": "new-business pipeline added",
+      "meaning": "the lever is solved through the fitted model, which is unavailable here",
+      "outcome": "unavailable",
+      "reason": "no close-timing evidence for open deals in S5",
+      "target": "2000"
+    },
+    "measure": "new-business ARR bookings (type = new_business, the arr column)",
+    "next_twelve_months": {
+      "actual": "0",
+      "forecast": null,
+      "gap": null,
+      "quarters": [
+        "Q3FY26",
+        "Q4FY26"
+      ],
+      "target": "2000",
+      "targets_through": "2027-01-31",
+      "untargeted": {
+        "forecast": null,
+        "months": [
+          "2027-02",
+          "2027-03",
+          "2027-04",
+          "2027-05",
+          "2027-06",
+          "2027-07",
+          "2027-08"
+        ],
+        "note": "months outside a targeted quarter (targets end 2027-01-31): bookings alone"
+      },
+      "window": [
+        "2026-09",
+        "2027-08"
+      ]
+    },
+    "quarters": [
+      {
+        "actual": "2000",
+        "expected": "2000.00",
+        "expected_range80": null,
+        "forecast": "0.00",
+        "gap": "-1000.00",
+        "quarter": "Q1FY26",
+        "status": "closed",
+        "target": "1000"
+      },
+      {
+        "actual": "3000",
+        "expected": "3000.00",
+        "expected_range80": null,
+        "forecast": "0.00",
+        "gap": "-2000.00",
+        "quarter": "Q2FY26",
+        "status": "closed",
+        "target": "1000"
+      },
+      {
+        "actual": "0",
+        "expected": null,
+        "expected_range80": null,
+        "forecast": null,
+        "gap": null,
+        "quarter": "Q3FY26",
+        "status": "in progress",
+        "target": "1000"
+      },
+      {
+        "actual": "0",
+        "expected": null,
+        "expected_range80": null,
+        "forecast": null,
+        "gap": null,
+        "quarter": "Q4FY26",
+        "status": "not started",
+        "target": "1000"
+      }
+    ]
+  },
+  "history": {
+    "facts": {
+      "backtest_folds": {
+        "1m": 0,
+        "3m": 0,
+        "6m": 0
+      },
+      "closed_outcomes": 5,
+      "deal_observations": false,
+      "earliest_close": "2026-03-20",
+      "first_deal_created": "2026-03-01",
+      "matured_snapshots": 0,
+      "months_of_history": 5,
+      "new_business_deals": 6
+    },
+    "limitations": [
+      "stage_history.csv records stage changes only: it holds no past deal amounts and no past expected close dates",
+      "no deal_observations.csv: past amounts and past expected close dates cannot be reconstructed, so the fitted model and the stage-weighted baseline are not back-tested in dollars, and created-pipeline amounts use current amounts",
+      "6 deals have no stage history, so they never appear in a win-rate snapshot; 1 of them are open: today's forecasts use their current stage from deals.csv, but at past cutoffs their stage is unknown and back-test folds leave them out",
+      "the files' latest dated entry is 2026-07-20, 42 days before the as-of date: nothing after it was observed, and back-test folds stop there",
+      "1-month back-test: zero eligible folds, not enough history",
+      "3-month back-test: zero eligible folds, not enough history",
+      "6-month back-test: zero eligible folds, not enough history",
+      "win rates learn only from snapshots at least 365 days old, so a change in conversion shows up a year late (the recency fit was not adopted: 0 folds at 1 month(s); at least 6 are needed to compare)",
+      "no snapshot is 365 days old yet, so every win rate falls back to the profile's stage probabilities",
+      "the model is pooled across segments; a segment split is not evaluated in this report",
+      "roles on team_members.csv: ae 1; the capacity term is unavailable (no capacity.yaml in the profile)",
+      "team_members.csv holds no history of role, segment, quota or deal ownership: today's values stand in for every past date, and a deal's owner is its current owner"
+    ]
+  },
+  "inputs": {
+    "as_of": "2026-08-31",
+    "capacity": {
+      "decision": "unavailable",
+      "forecast_uses": "flat trailing creation rate"
+    },
+    "data": "fixture/data",
+    "fiscal_year": "FY26",
+    "fiscal_year_end": "2027-01-31",
+    "fiscal_year_start": "2026-02-01",
+    "fit": "matured snapshots",
+    "measure": "new-business ARR bookings (type = new_business, the arr column)",
+    "profile": "fixture/profile",
+    "ranges": "deal outcomes only",
+    "simulation": {
+      "draws": 200,
+      "seed": 0
+    }
+  },
+  "quota_productivity": {
+    "limits": [
+      "the owner is the deal's current owner and the quota is today's annual quota, standing in for their history",
+      "quota is a full-ramp annual figure; ramp is not prorated out of it"
+    ],
+    "unavailable": "no capacity.yaml in the profile"
+  },
+  "rates": [
+    {
+      "cohort": "monthly snapshots none",
+      "definition": "share of deals open in Discovery at a snapshot that are won within 365 days",
+      "denominator": "0 deals open in S1 at their first matured snapshot",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1",
+      "numerator": "0 won within 365 days",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.100000"
+    },
+    {
+      "cohort": "monthly snapshots none",
+      "definition": "share of deals open in Qualification at a snapshot that are won within 365 days",
+      "denominator": "0 deals open in S2 at their first matured snapshot",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2",
+      "numerator": "0 won within 365 days",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.200000"
+    },
+    {
+      "cohort": "monthly snapshots none",
+      "definition": "share of deals open in Technical Evaluation at a snapshot that are won within 365 days",
+      "denominator": "0 deals open in S3 at their first matured snapshot",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3",
+      "numerator": "0 won within 365 days",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.300000"
+    },
+    {
+      "cohort": "monthly snapshots none",
+      "definition": "share of deals open in Business Case at a snapshot that are won within 365 days",
+      "denominator": "0 deals open in S4 at their first matured snapshot",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4",
+      "numerator": "0 won within 365 days",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.500000"
+    },
+    {
+      "cohort": "monthly snapshots none",
+      "definition": "share of deals open in Negotiation at a snapshot that are won within 365 days",
+      "denominator": "0 deals open in S5 at their first matured snapshot",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5",
+      "numerator": "0 won within 365 days",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.800000"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2025-08-31",
+      "definition": "share of created deals won within 365 days of creation (no evidence: set to 0)",
+      "denominator": "0 deals created",
+      "horizon": "365 days",
+      "name": "new_pipeline_win_rate",
+      "numerator": "0 won within 365 days",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2025-08-31",
+      "definition": "mean booked ARR of a created deal that is won (no evidence: set to 0)",
+      "denominator": "0 wins",
+      "horizon": "365 days",
+      "name": "mean_won_arr",
+      "numerator": "booked ARR of those wins",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2025-08-31",
+      "definition": "mean ARR of a created deal (first recorded amount) (no evidence: set to 0)",
+      "denominator": "0 deals with a known amount",
+      "horizon": "at creation",
+      "name": "mean_created_arr",
+      "numerator": "ARR of created deals",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0"
+    },
+    {
+      "cohort": "created 2025-09-01 to 2026-08-31",
+      "definition": "new-business deals created per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "created_deals_per_day",
+      "numerator": "6 deals created",
+      "range95": null,
+      "sample_size": 6,
+      "source": "fitted",
+      "value": "0.016438"
+    },
+    {
+      "cohort": "closed 2025-09-01 to 2026-08-31",
+      "definition": "new-business ARR booked per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "trailing_bookings_per_day",
+      "numerator": "5000.00 ARR booked",
+      "range95": null,
+      "sample_size": 5,
+      "source": "fitted",
+      "value": "13.698630"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Discovery is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S1",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.100000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Qualification is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S2",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.200000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Technical Evaluation is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S3",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.300000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Business Case is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S4",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.500000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Negotiation is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S5",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.800000"
+    },
+    {
+      "cohort": "created 2025-09-01 to 2026-08-31",
+      "definition": "new-business ARR created per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "created_arr_per_day",
+      "numerator": "10000.00 ARR created (first recorded amount)",
+      "range95": null,
+      "sample_size": 6,
+      "source": "fitted",
+      "value": "27.397260"
+    },
+    {
+      "cohort": "closed 2025-09-01 to 2026-08-31",
+      "definition": "median days from creation to close of a won deal",
+      "denominator": "5 wins",
+      "horizon": "trailing",
+      "name": "median_won_cycle_days",
+      "numerator": "median of days to close",
+      "range95": null,
+      "sample_size": 5,
+      "source": "fitted",
+      "value": "19"
+    },
+    {
+      "cohort": "",
+      "definition": "days within which a win counts for a win rate",
+      "denominator": "",
+      "horizon": "",
+      "name": "horizon_days",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "365"
+    },
+    {
+      "cohort": "",
+      "definition": "pull of an age-group cell toward its stage rate",
+      "denominator": "",
+      "horizon": "",
+      "name": "smoothing_pseudo_observations",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "20"
+    },
+    {
+      "cohort": "",
+      "definition": "wins a stage needs for its own close timing",
+      "denominator": "",
+      "horizon": "",
+      "name": "min_timing_samples",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "20"
+    },
+    {
+      "cohort": "",
+      "definition": "window for trailing rates",
+      "denominator": "",
+      "horizon": "",
+      "name": "trailing_days",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "365"
+    },
+    {
+      "cohort": "",
+      "definition": "trailing months of snapshots for the cumulative-incidence fit",
+      "denominator": "",
+      "horizon": "",
+      "name": "recency_months",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "24"
+    },
+    {
+      "cohort": "",
+      "definition": "cap on added pipeline, times trailing created pipeline",
+      "denominator": "",
+      "horizon": "",
+      "name": "lever_cap_multiple",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "3"
+    },
+    {
+      "cohort": "",
+      "definition": "Monte Carlo draws behind the ranges",
+      "denominator": "",
+      "horizon": "",
+      "name": "simulation_draws",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "200"
+    },
+    {
+      "cohort": "",
+      "definition": "ramped AE-months must vary by this much across the scored period for capacity to be testable",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_staffing_variation",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.200000"
+    },
+    {
+      "cohort": "",
+      "definition": "capacity's created-pipeline error must be this much lower than the flat rate's at both horizons",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_improvement",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.100000"
+    },
+    {
+      "cohort": "",
+      "definition": "folds needed at each scored horizon",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_folds",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "6"
+    },
+    {
+      "cohort": "",
+      "definition": "days in one AE-month",
+      "denominator": "",
+      "horizon": "",
+      "name": "days_per_ae_month",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "30.437500"
+    }
+  ],
+  "reconciliation": {
+    "bookings_by_month": {
+      "2026-02": "0",
+      "2026-03": "1000",
+      "2026-04": "1000",
+      "2026-05": "1000",
+      "2026-06": "1000",
+      "2026-07": "1000",
+      "2026-08": "0"
+    },
+    "bookings_fytd": "5000",
+    "checks": [
+      {
+        "detail": "6 included + 0 excluded = 6 of 6 source rows",
+        "name": "rows partition",
+        "passed": true
+      },
+      {
+        "detail": "included + excluded arr = 10000 against source total 10000 (0 rows had no readable arr)",
+        "name": "arr partition",
+        "passed": true
+      },
+      {
+        "detail": "source file new-business won FYTD 5000 = included 5000 + excluded rows 0",
+        "name": "bookings tie to source",
+        "passed": true
+      },
+      {
+        "detail": "open at FY start 0 + created 10000 = won 5000 + lost 0 + open now 5000",
+        "name": "pipeline flow",
+        "passed": true
+      }
+    ],
+    "excluded_motions": {},
+    "exclusions": [],
+    "included_rows": 6,
+    "pipeline_flow": {
+      "created": {
+        "arr": "10000",
+        "count": 6
+      },
+      "lost": {
+        "arr": "0",
+        "count": 0
+      },
+      "open at as-of": {
+        "arr": "5000",
+        "count": 1
+      },
+      "open at fiscal-year start": {
+        "arr": "0",
+        "count": 0
+      },
+      "won": {
+        "arr": "5000",
+        "count": 5
+      }
+    },
+    "source_arr_total": "10000",
+    "source_rows": 6
+  },
+  "required_pipeline": {
+    "unavailable": "no close-timing evidence for open deals in S5"
+  },
+  "roster_capacity": {
+    "decision": {
+      "association": "An association in the history, not a promise: that a new hire adds pipeline at this rate is an assumption.",
+      "declared_rule": "adopted only if ramped AE-months varied by at least 20% across the scored period, the capacity rate's mean absolute error is at least 10% lower than the flat trailing rate's at both 3 and 6 months, and there are at least 6 folds at each",
+      "forecast_uses": "the flat trailing creation rate",
+      "horizons": [],
+      "label": "conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts",
+      "outcome": "unavailable",
+      "reason": "no capacity.yaml in the profile",
+      "scored_on": "created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred",
+      "scored_period": null,
+      "staffing_variation": null
+    },
+    "limitations": [
+      "team_members.csv records no history of role, segment, quota or deal ownership: today's values stand in for every past date",
+      "a deal's owner is its current owner, not necessarily the person who created it",
+      "people who left the company before the first deal in the files are not on the roster"
+    ],
+    "roster": {
+      "rows": 0,
+      "unavailable": "no capacity.yaml in the profile"
+    }
+  },
+  "schema_version": "1.0.0",
+  "verdicts": {
+    "forecast_better_than_baselines": {
+      "reason": "no deal_observations.csv: past open-deal amounts and expected close dates are not recorded, so the fitted model and the stage-weighted baseline cannot be scored in dollars",
+      "verdict": "not enough history to say"
+    },
+    "software_correct": {
+      "checks": [
+        {
+          "detail": "6 included + 0 excluded = 6 of 6 source rows",
+          "name": "rows partition",
+          "passed": true
+        },
+        {
+          "detail": "included + excluded arr = 10000 against source total 10000 (0 rows had no readable arr)",
+          "name": "arr partition",
+          "passed": true
+        },
+        {
+          "detail": "source file new-business won FYTD 5000 = included 5000 + excluded rows 0",
+          "name": "bookings tie to source",
+          "passed": true
+        },
+        {
+          "detail": "open at FY start 0 + created 10000 = won 5000 + lost 0 + open now 5000",
+          "name": "pipeline flow",
+          "passed": true
+        },
+        {
+          "detail": "not applicable: no close-timing evidence for open deals in S5",
+          "name": "existing pipeline conserved",
+          "passed": true
+        },
+        {
+          "detail": "not applicable: no close-timing evidence for open deals in S5",
+          "name": "lever agrees with forward function",
+          "passed": true
+        },
+        {
+          "detail": "not applicable: no close-timing evidence for open deals in S5",
+          "name": "twelve-month lever agrees with forward function",
+          "passed": true
+        },
+        {
+          "detail": "not applicable: no close-timing evidence for open deals in S5",
+          "name": "simulation centred on the expectation",
+          "passed": true
+        },
+        {
+          "detail": "each method's total equals the sum of its months (largest difference 0.00E-22)",
+          "name": "forecast parts add up",
+          "passed": true
+        },
+        {
+          "detail": "0 cutoffs rebuilt with as_known_at; each fold asserts its latest fact is on or before its cutoff",
+          "name": "folds saw nothing after their cutoff",
+          "passed": true
+        },
+        {
+          "detail": "28 rates in one registry",
+          "name": "every rate defined once",
+          "passed": true
+        },
+        {
+          "detail": "not applicable: no capacity.yaml in the profile",
+          "name": "roster rows partition",
+          "passed": true
+        }
+      ],
+      "scope": "runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
+      "summary": "12 of 12 self-checks passed",
+      "verdict": "yes"
+    }
+  }
+}
