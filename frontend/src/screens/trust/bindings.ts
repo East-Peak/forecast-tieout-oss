@@ -1,6 +1,6 @@
 import { bind } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
-import { B as FORECAST } from "../forecast/bindings";
+import { B as FORECAST, STRETCH } from "../forecast/bindings";
 
 /**
  * The Trust screen's committed binding list: every business value the screen shows, with the file,
@@ -131,4 +131,4 @@ export const ROWS = {
 /** The back-test's three horizons are named in the report as "1m", "3m" and "6m"; the screen says them in words. */
 export const HORIZON_WORDS: Record<string, string> = { "1m": "One month ahead", "3m": "Three months ahead", "6m": "Six months ahead" };
 
-export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(VERDICTS), ...Object.values(B)];
+export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(VERDICTS), ...Object.values(STRETCH), ...Object.values(B)];

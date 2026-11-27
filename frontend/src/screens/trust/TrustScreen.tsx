@@ -4,6 +4,7 @@ import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHead
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
 import { STACK, STACK_LG } from "../../components/workbook/stack";
+import { StretchEvidence } from "../forecast/StretchEvidence";
 import { Verdicts } from "../forecast/Verdicts";
 import { B, HORIZON_WORDS, ROWS } from "./bindings";
 
@@ -183,6 +184,14 @@ export default function TrustScreen() {
           <Bound binding={B.recencyCandidate} /> against <Bound binding={B.recencyInUse} />; adopted: <Bound binding={B.recencyAdopted} />.{" "}
           <Bound binding={B.recencyReason} />
         </p>
+      </Card>
+
+      <Card>
+        <SectionHeader
+          title="Are the ranges stretched by past misses?"
+          subtitle="Each past forecast date, stretched with only what had been learned by then: did the stretched range hold the actual more often than the simulated one?"
+        />
+        <StretchEvidence />
       </Card>
 
       <Card>

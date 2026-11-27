@@ -1,5 +1,6 @@
 import { cleanup } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { STRETCH } from "../forecast/bindings";
 import { B, LISTED_BINDINGS } from "../trust/bindings";
 import TrustScreen from "../trust/TrustScreen";
 import * as files from "./files";
@@ -48,6 +49,52 @@ runScreenChecks({
         const container = mountScreen(TrustScreen, c, c.company, c.scenario);
         expect(container.querySelector("[data-binding='verdict.better']")!.textContent).toBe("no");
         expect(container.querySelector("[data-binding='verdict.better.reason']")!.textContent).toMatch(/not smaller than both simple yardsticks/);
+      });
+
+      it("the decision on the ranges is shown with its evidence, as the report words it, whichever way it went", () => {
+        const decisions = new Map<string, string>();
+        for (const company of files.COMPANIES) {
+          const c = caseOf(company, "as-signed");
+          const container = mountScreen(TrustScreen, c, c.company, c.scenario);
+          const ranges = c.report.backtest.candidates.ranges;
+          decisions.set(company, ranges.decision);
+          expect(container.querySelector("[data-testid='stretch-decision']")!.textContent).toBe(ranges.decision);
+          expect(container.querySelector("[data-binding='stretch.reason']")!.textContent).toBe(ranges.reason);
+          expect(container.querySelectorAll("[data-testid='stretch-row']").length).toBe(3);
+          expect(container.querySelector("[data-binding='stretch.rule']")!.textContent).toBe(ranges.rule);
+          cleanup();
+        }
+        // the demo history holds both outcomes, so neither branch of the screen goes untested
+        expect(new Set(decisions.values())).toEqual(new Set(["adopted", "not adopted"]));
+      });
+
+      it("a stretch figure read from the wrong place on this screen is caught", () => {
+        const c = caseOf("mighty-oak-holdings", "as-signed");
+        const original = STRETCH.lower.path;
+        (STRETCH.lower as { path: string }).path = STRETCH.upper.path;
+        try {
+          const container = mountScreen(TrustScreen, c, c.company, c.scenario);
+          const shown = [...container.querySelectorAll("[data-binding='stretch.factor.lower']")].map((el) => el.textContent);
+          const want = c.report.backtest.candidates.ranges.horizons.map((h) => `${h.lower_factor}x`);
+          expect(shown).not.toEqual(want);
+        } finally {
+          (STRETCH.lower as { path: string }).path = original;
+        }
+      });
+
+      it("a report that cannot be compared says so in words, never as a zero", () => {
+        for (const name of ["short-history.report.json", "short-history-plan.report.json"]) {
+          const c = caseOf("sprout-labs", "as-signed");
+          const container = mountScreen(TrustScreen, { ...c, report: files.fixture(name) }, c.company, c.scenario);
+          expect(container.querySelector("[data-testid='stretch-decision']")!.textContent).toBe("not enough history");
+          for (const id of ["stretch.pooled.scored", "stretch.pooled.simulated", "stretch.pooled.stretched"]) {
+            const el = container.querySelector(`[data-binding='${id}']`)!;
+            expect(el.textContent).toBe("not compared");
+            expect(el.getAttribute("data-unavailable")).toBe("true");
+          }
+          for (const el of container.querySelectorAll("[data-binding='stretch.coverage.stretched']")) expect(el.textContent).toBe("not scored");
+          cleanup();
+        }
       });
 
       it("every rate in the report is shown once, each with its definition, sample and source", () => {

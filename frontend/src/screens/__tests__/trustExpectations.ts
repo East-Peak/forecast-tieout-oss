@@ -2,6 +2,7 @@
  * Test-only. What the Trust screen must show for a company and scenario, written by hand as typed
  * accessors on the generated report types. Texts come from independent.ts, not from src/lib/format.ts.
  */
+import { STRETCH } from "../forecast/bindings";
 import { B, VERDICTS } from "../trust/bindings";
 import { betterVerdictExpectations, kit, orWords } from "./expectKit";
 import * as fmt from "./independent";
@@ -82,6 +83,25 @@ export function build({ report: r, index, company, scenario }: Case): Built {
   one(B.recencyInUse.id, rc.fit_in_use);
   one(B.recencyAdopted.id, yesno(rc.adopted));
   one(B.recencyReason.id, rc.reason);
+
+  // whether the ranges are stretched by past misses, with the evidence per tested horizon
+  const st = r.backtest.candidates.ranges;
+  const sRows = rows("/backtest/candidates/ranges/horizons", st.horizons.length);
+  one(STRETCH.decision.id, st.decision);
+  one(STRETCH.reason.id, st.reason);
+  one(STRETCH.rule.id, st.rule);
+  one(STRETCH.pooledScored.id, st.pooled === null ? "not compared" : fmt.count(st.pooled.scored_folds));
+  one(STRETCH.pooledSimulated.id, st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_simulated));
+  one(STRETCH.pooledStretched.id, st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_stretched));
+  many(STRETCH.months.id, st.horizons.map((h) => fmt.count(h.horizon_months)), sRows);
+  many(STRETCH.eligible.id, st.horizons.map((h) => fmt.count(h.eligible_folds)), sRows);
+  many(STRETCH.scored.id, st.horizons.map((h) => fmt.count(h.scored_folds)), sRows);
+  many(STRETCH.coverageSimulated.id, st.horizons.map((h) => (h.coverage_simulated === null ? "not scored" : fmt.percent1(h.coverage_simulated))), sRows);
+  many(STRETCH.coverageStretched.id, st.horizons.map((h) => (h.coverage_stretched === null ? "not scored" : fmt.percent1(h.coverage_stretched))), sRows);
+  many(STRETCH.widthSimulated.id, st.horizons.map((h) => orWords(h.median_width80_simulated, fmt.usdShort, "not scored")), sRows);
+  many(STRETCH.widthStretched.id, st.horizons.map((h) => orWords(h.median_width80_stretched, fmt.usdShort, "not scored")), sRows);
+  many(STRETCH.lower.id, st.horizons.map((h) => orWords(h.lower_factor, fmt.multiple, "no width to stretch")), sRows);
+  many(STRETCH.upper.id, st.horizons.map((h) => orWords(h.upper_factor, fmt.multiple, "no width to stretch")), sRows);
 
   // every rate, once, with its definition, sample and source; the value as its own unit says
   const rates = r.rates;
