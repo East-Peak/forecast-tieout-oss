@@ -168,6 +168,7 @@ def _forecasts(s: dict) -> list[str]:
     )
     fr = s["fitted_ranges"]
     out += [f"Fitted-model ranges ({fr['status']}):", ""]
+    out += [f"Months: {fr['by_window_label']}.", ""]
     out += _table(
         ["Month", "Median", "80% range", "95% range"],
         [
@@ -175,8 +176,8 @@ def _forecasts(s: dict) -> list[str]:
             for w, v in fr["by_window"].items()
         ]
         + [
-            (f"{h} ({v['status'].split(':')[0]})", _usd(v["median"]), _rng(v["range80"]),
-             _rng(v["range95"]))
+            (f"{h} ({v['label80']}; 95%: {v['label95']})", _usd(v["median"]),
+             _rng(v["range80"]), _rng(v["range95"]))
             for h, v in fr["horizons"].items()
         ],
     )  # fmt: skip
@@ -187,6 +188,10 @@ def _forecasts(s: dict) -> list[str]:
             + "; ".join(m["assumptions"] or [m["unavailable_reason"]])
         ]
     return out + [""]
+
+
+def _labeled(label) -> str:
+    return "" if label is None else f", {label}"
 
 
 def _rng(pair) -> str:
@@ -270,7 +275,9 @@ def _gap(s: dict) -> list[str]:
         (
             f"Fiscal year: target {_usd(fy['target'])}, actual to date {_usd(fy['actual_to_date'])}, "
             f"forecast rest of year {_usd(fy['forecast_rest_of_year'])}, expected **{_usd(fy['expected'])}** "
-            f"(80%: {_rng(fy['expected_range80'])}; 95%: {_rng(fy['expected_range95'])}), gap **{_usd(fy['gap'])}**."
+            f"(80%: {_rng(fy['expected_range80'])}{_labeled(fy.get('range80_label'))}; "
+            f"95%: {_rng(fy['expected_range95'])}{_labeled(fy.get('range95_label'))}), "
+            f"gap **{_usd(fy['gap'])}**."
         ),
         "",
     ]
@@ -375,7 +382,43 @@ def _backtest(s: dict) -> list[str]:
         ),
         "",
     ]
-    return out
+    return out + _stretch(s["candidates"]["ranges"])
+
+
+def _stretch(c: dict) -> list[str]:
+    """Ranges stretched by past misses: the rule, the decision and, per horizon, the evidence."""
+    out = [
+        f"Ranges stretched by the model's own past misses. Rule: {c['rule']}.",
+        "",
+    ]
+    out += _table(
+        [
+            "Horizon",
+            "Eligible folds",
+            "Scored folds",
+            "Simulated 80% coverage",
+            "Stretched 80% coverage",
+            "Median 80% width, simulated",
+            "Median 80% width, stretched",
+            "Lower factor",
+            "Upper factor",
+        ],
+        [
+            (
+                f"{h['horizon_months']} mo",
+                h["eligible_folds"],
+                h["scored_folds"],
+                f"{h['inside_simulated']} of {h['scored_folds']} ({_pct(h['coverage_simulated'])})",
+                f"{h['inside_stretched']} of {h['scored_folds']} ({_pct(h['coverage_stretched'])})",
+                _usd(h["median_width80_simulated"]),
+                _usd(h["median_width80_stretched"]),
+                "n/a" if h["lower_factor"] is None else h["lower_factor"],
+                "n/a" if h["upper_factor"] is None else h["upper_factor"],
+            )
+            for h in c["horizons"]
+        ],
+    )
+    return out + [f"**{c['decision'].capitalize()}**: {c['reason']}.", ""]
 
 
 def _pct(x) -> str:

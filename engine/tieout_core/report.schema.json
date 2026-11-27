@@ -125,7 +125,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.1.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.2.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -675,6 +675,174 @@
         "candidates": {
           "additionalProperties": false,
           "properties": {
+            "ranges": {
+              "additionalProperties": false,
+              "properties": {
+                "decision": {
+                  "enum": [
+                    "adopted",
+                    "not adopted",
+                    "not enough history"
+                  ]
+                },
+                "horizons": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "coverage_simulated": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "coverage_stretched": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "eligible_folds": {
+                        "type": "integer"
+                      },
+                      "factors_learned": {
+                        "type": "boolean"
+                      },
+                      "horizon_months": {
+                        "enum": [
+                          1,
+                          3,
+                          6
+                        ]
+                      },
+                      "inside_simulated": {
+                        "type": "integer"
+                      },
+                      "inside_stretched": {
+                        "type": "integer"
+                      },
+                      "lower_factor": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "median_width80_simulated": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "median_width80_stretched": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "scored_folds": {
+                        "type": "integer"
+                      },
+                      "upper_factor": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "horizon_months",
+                      "eligible_folds",
+                      "factors_learned",
+                      "scored_folds",
+                      "inside_simulated",
+                      "inside_stretched",
+                      "coverage_simulated",
+                      "coverage_stretched",
+                      "median_width80_simulated",
+                      "median_width80_stretched",
+                      "lower_factor",
+                      "upper_factor"
+                    ],
+                    "type": "object"
+                  },
+                  "maxItems": 3,
+                  "minItems": 3,
+                  "type": "array"
+                },
+                "pooled": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "coverage_simulated": {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "coverage_stretched": {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        },
+                        "scored_folds": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "scored_folds",
+                        "coverage_simulated",
+                        "coverage_stretched"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "reason": {
+                  "$ref": "#/$defs/Text"
+                },
+                "rule": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "rule",
+                "decision",
+                "reason",
+                "pooled",
+                "horizons"
+              ],
+              "type": "object"
+            },
             "recency": {
               "additionalProperties": false,
               "properties": {
@@ -733,7 +901,8 @@
             }
           },
           "required": [
-            "recency"
+            "recency",
+            "ranges"
           ],
           "type": "object"
         },
@@ -925,6 +1094,9 @@
                   },
                   "type": "object"
                 },
+                "by_window_label": {
+                  "$ref": "#/$defs/Text"
+                },
                 "cells": {
                   "items": {
                     "additionalProperties": false,
@@ -995,6 +1167,12 @@
                     "next twelve months": {
                       "additionalProperties": false,
                       "properties": {
+                        "label80": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "label95": {
+                          "$ref": "#/$defs/Text"
+                        },
                         "mean": {
                           "$ref": "#/$defs/Money"
                         },
@@ -1013,6 +1191,8 @@
                       },
                       "required": [
                         "status",
+                        "label80",
+                        "label95",
                         "mean",
                         "median",
                         "range80",
@@ -1023,6 +1203,12 @@
                     "rest of fiscal year": {
                       "additionalProperties": false,
                       "properties": {
+                        "label80": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "label95": {
+                          "$ref": "#/$defs/Text"
+                        },
                         "mean": {
                           "$ref": "#/$defs/Money"
                         },
@@ -1041,6 +1227,8 @@
                       },
                       "required": [
                         "status",
+                        "label80",
+                        "label95",
                         "mean",
                         "median",
                         "range80",
@@ -1063,6 +1251,7 @@
               "required": [
                 "status",
                 "cells",
+                "by_window_label",
                 "by_window",
                 "horizons"
               ],
@@ -1074,6 +1263,9 @@
                 "by_window": {
                   "maxProperties": 0,
                   "type": "object"
+                },
+                "by_window_label": {
+                  "$ref": "#/$defs/Text"
                 },
                 "cells": {
                   "items": {
@@ -1151,6 +1343,7 @@
               "required": [
                 "status",
                 "cells",
+                "by_window_label",
                 "by_window",
                 "horizons"
               ],
@@ -1356,6 +1549,12 @@
                 "gap": {
                   "$ref": "#/$defs/Money"
                 },
+                "range80_label": {
+                  "$ref": "#/$defs/Text"
+                },
+                "range95_label": {
+                  "$ref": "#/$defs/Text"
+                },
                 "target": {
                   "$ref": "#/$defs/Decimal"
                 }
@@ -1367,7 +1566,9 @@
                 "expected",
                 "gap",
                 "expected_range80",
-                "expected_range95"
+                "expected_range95",
+                "range80_label",
+                "range95_label"
               ],
               "type": "object"
             },
@@ -1913,6 +2114,9 @@
                   "quarter": {
                     "$ref": "#/$defs/Quarter"
                   },
+                  "range80_label": {
+                    "$ref": "#/$defs/Text"
+                  },
                   "status": {
                     "enum": [
                       "closed",
@@ -1932,7 +2136,8 @@
                   "forecast",
                   "expected",
                   "gap",
-                  "expected_range80"
+                  "expected_range80",
+                  "range80_label"
                 ],
                 "type": "object"
               },
@@ -4540,7 +4745,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.1.0"
+      "const": "2.2.0"
     },
     "verdicts": {
       "additionalProperties": false,

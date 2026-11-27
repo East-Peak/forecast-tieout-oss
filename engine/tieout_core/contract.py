@@ -21,13 +21,15 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from . import stretch_rules as sr
 from .adoption import ADOPTED, NOT_SHOWN, UNAVAILABLE
 from .backtest import BASELINE_LOWER, BASELINES, MODEL_LOWER, TIE, VERDICT_HORIZONS
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
 from .rates import rate_unit
+from .stretch_rules import HORIZONS
 
-SCHEMA_VERSION = "2.1.0"
+SCHEMA_VERSION = "2.2.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -239,11 +241,16 @@ def _forecasts() -> dict:
             "coverage_judgment": TEXT,
         }
     )
-    horizon_spread = obj({"status": TEXT, **SPREAD["properties"]})
+    # the label beside each range: stretched by past misses (adopted) or simulated with its
+    # back-test label; the 95% range is "not separately tested" either way
+    horizon_spread = obj(
+        {"status": TEXT, "label80": TEXT, "label95": TEXT, **SPREAD["properties"]}
+    )
     ranged = obj(
         {
             "status": {"type": "string", "pattern": r"^(?!unavailable: )"},
             "cells": arr(cell),
+            "by_window_label": TEXT,
             "by_window": record(SPREAD, DEFS_MONTH_KEY),
             "horizons": obj({REST_OF_FY: horizon_spread, NEXT_12: horizon_spread}),
         }
@@ -252,6 +259,7 @@ def _forecasts() -> dict:
         {
             "status": {"type": "string", "pattern": r"^unavailable: "},
             "cells": arr(cell),
+            "by_window_label": TEXT,
             "by_window": {"type": "object", "maxProperties": 0},
             "horizons": {"type": "object", "maxProperties": 0},
         }
@@ -341,6 +349,7 @@ def _gap() -> dict:
             "expected": MONEY,
             "gap": MONEY,
             "expected_range80": ref("MoneyRange"),
+            "range80_label": TEXT,
         }
     )
     quarter_unavailable = obj(
@@ -364,6 +373,8 @@ def _gap() -> dict:
             "gap": MONEY,
             "expected_range80": ref("MoneyRange"),
             "expected_range95": ref("MoneyRange"),
+            "range80_label": TEXT,
+            "range95_label": TEXT,
         }
     )
     year_unavailable = obj(
@@ -416,6 +427,45 @@ def _gap() -> dict:
     )
 
 
+def _stretch_decision() -> dict:
+    """Goal 2D: whether the simulated ranges are stretched by past misses, with the
+    back-test evidence behind it, one row per tested horizon."""
+    horizon = obj(
+        {
+            "horizon_months": enum(*HORIZONS),
+            "eligible_folds": INT,
+            "factors_learned": BOOL,
+            "scored_folds": INT,
+            "inside_simulated": INT,
+            "inside_stretched": INT,
+            "coverage_simulated": maybe(FRACTION),
+            "coverage_stretched": maybe(FRACTION),
+            "median_width80_simulated": MONEY_OR_NULL,
+            "median_width80_stretched": MONEY_OR_NULL,
+            # null when a side has no width to stretch
+            "lower_factor": DECIMAL_OR_NULL,
+            "upper_factor": DECIMAL_OR_NULL,
+        }
+    )
+    return obj(
+        {
+            "rule": TEXT,
+            "decision": enum(sr.ADOPTED, sr.NOT_ADOPTED, sr.NOT_ENOUGH_HISTORY),
+            "reason": TEXT,
+            "pooled": maybe(
+                obj(
+                    {
+                        "scored_folds": INT,
+                        "coverage_simulated": FRACTION,
+                        "coverage_stretched": FRACTION,
+                    }
+                )
+            ),
+            "horizons": arr(horizon, minItems=len(HORIZONS), maxItems=len(HORIZONS)),
+        }
+    )
+
+
 def _backtest() -> dict:
     by_method = record(MONEY_OR_NULL)
     horizon = obj(
@@ -461,7 +511,7 @@ def _backtest() -> dict:
             "notes": arr(TEXT),
             "verdict": ref("BetterVerdict"),
             "reason": TEXT,
-            "candidates": obj({"recency": recency}),
+            "candidates": obj({"recency": recency, "ranges": _stretch_decision()}),
         }
     )
 
@@ -1158,6 +1208,130 @@ def _better_than_baselines_rules(r: dict, rule) -> None:
         )
 
 
+def _stretch_rules(r: dict, rule) -> None:
+    """The stretch's evidence agrees with the back-test, its decision with the declared rule
+    run on that evidence, and every label with the decision."""
+    c = r["backtest"]["candidates"]["ranges"]
+    cells = {x["horizon_months"]: x for x in r["forecasts"]["fitted_ranges"]["cells"]}
+    rows = c["horizons"]
+    rule(
+        [h["horizon_months"] for h in rows] == list(HORIZONS),
+        "the stretch evidence has one row per tested horizon, in order",
+    )
+    for h in rows:
+        m, where = h["horizon_months"], f"stretch evidence at {h['horizon_months']}m"
+        scored = h["scored_folds"]
+        for side in ("lower_factor", "upper_factor"):
+            rule(
+                h[side] is None or Decimal(h[side]) >= 1,
+                f"{where}: the {side.replace('_', ' ')} is below 1",
+            )
+        rule(
+            h["factors_learned"] == (h["eligible_folds"] >= sr.MIN_ELIGIBLE_FOLDS),
+            f"{where}: the factors are learned exactly from {sr.MIN_ELIGIBLE_FOLDS} eligible folds",
+        )
+        rule(
+            h["factors_learned"]
+            or (h["lower_factor"], h["upper_factor"]) == ("1.0000", "1.0000"),
+            f"{where}: factors that were not learned must stay at 1",
+        )
+        rule(
+            h["inside_simulated"] <= scored and h["inside_stretched"] <= scored,
+            f"{where}: more folds inside than were scored",
+        )
+        for which in ("simulated", "stretched"):
+            expected = round(h[f"inside_{which}"] / scored, 4) if scored else None
+            rule(
+                h[f"coverage_{which}"] == expected,
+                f"{where}: the {which} coverage is not the folds inside over the folds scored",
+            )
+        rule(
+            (h["median_width80_simulated"] is not None) == (scored > 0)
+            and (h["median_width80_stretched"] is not None) == (scored > 0),
+            f"{where}: the median widths are present exactly when folds were scored",
+        )
+        if scored:
+            rule(
+                Decimal(h["median_width80_stretched"])
+                >= Decimal(h["median_width80_simulated"]),
+                f"{where}: stretching by factors of at least 1 cannot narrow the median range",
+            )
+        cell = cells.get(m)
+        if cell is not None:
+            rule(
+                h["eligible_folds"] == cell["folds_with_a_range"],
+                f"{where}: the eligible folds are not the back-test's folds with a range",
+            )
+            rule(
+                scored <= cell["folds_with_a_range"],
+                f"{where}: more folds scored than the back-test has",
+            )
+            if scored and scored == cell["folds_with_a_range"]:
+                rule(
+                    h["coverage_simulated"] == cell["coverage80"],
+                    f"{where}: the simulated coverage is not the back-test's",
+                )
+    counts = [
+        sr.Counts(
+            h["horizon_months"],
+            h["scored_folds"],
+            h["inside_simulated"],
+            h["inside_stretched"],
+        )
+        for h in rows
+    ]
+    decided = sr.decide(counts)
+    rule(
+        c["decision"] == decided.outcome,
+        "the stretch decision is not what the declared rule gives on its own evidence",
+    )
+    rule(c["reason"] == decided.reason, "the stretch reason is not the declared rule's")
+    rule(
+        (c["pooled"] is None) == (decided.pooled is None),
+        "the pooled coverage is present exactly when there is enough history to compare",
+    )
+    if c["pooled"] is not None and decided.pooled is not None:
+        rule(
+            c["pooled"]["scored_folds"]
+            == sum(
+                h["scored_folds"]
+                for h in rows
+                if h["horizon_months"] in sr.SCORED_HORIZONS
+            )
+            and c["pooled"]["coverage_simulated"] == round(float(decided.pooled[0]), 4)
+            and c["pooled"]["coverage_stretched"] == round(float(decided.pooled[1]), 4),
+            "the pooled coverage is not the sum of the horizons' folds",
+        )
+    ranges = r["forecasts"]["fitted_ranges"]
+    if not ranges["by_window"]:
+        return
+    adopted = decided.outcome == sr.ADOPTED
+    learned = all(h["factors_learned"] for h in rows)
+    labels = [
+        ranges["by_window_label"],
+        *(v[k] for v in ranges["horizons"].values() for k in ("label80", "label95")),
+        *(
+            q["range80_label"]
+            for q in r["gap"]["quarters"]
+            if "range80_label" in q and q["status"] != "closed"
+        ),
+        r["gap"]["fiscal_year"]["range80_label"],
+        r["gap"]["fiscal_year"]["range95_label"],
+    ]
+    labels = [
+        t for t in labels if not t.startswith("closed")
+    ]  # nothing left to range over
+    stretched = [text.startswith("stretched") for text in labels]
+    rule(
+        not any(stretched) or adopted,
+        "a range is labeled stretched but the stretch was not adopted",
+    )
+    rule(
+        not (adopted and learned) or all(stretched),
+        "the stretch was adopted but a range is not labeled stretched",
+    )
+
+
 def _cross_rules(r: dict) -> list[str]:
     found: list[str] = []
 
@@ -1197,6 +1371,7 @@ def _cross_rules(r: dict) -> list[str]:
         )
 
     _better_than_baselines_rules(r, rule)
+    _stretch_rules(r, rule)
 
     gap = r["gap"]
     for q in gap["quarters"]:

@@ -12,7 +12,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 
-from . import actions, capacity_report, pipeline_report
+from . import actions, capacity_report, pipeline_report, stretch_report
 from .backtest import (
     HORIZONS,
     MIN_FOLDS,
@@ -131,6 +131,22 @@ def build_report(
             creation=creation,
         )
 
+    # Goal 2D: whether the simulated ranges are stretched by the model's own past misses is
+    # decided by the declared rule on the back-test just run; what the report shows for the
+    # year, the quarters and the months is the stretched simulation when it is adopted. The
+    # checks and the with-plan figures keep the simulation as drawn.
+    by_label = {w.label: w for w in windows}
+    ranged_groups = {**quarter_labels, **horizons}
+    ev = stretch_report.evaluate(bt, as_of)
+    shown = sim
+    if sim is not None:
+        shown = stretch_report.stretched(sim, windows, ranged_groups, as_of, ev)
+    group_ends = {
+        name: max(by_label[m].end for m in months)
+        for name, months in ranged_groups.items()
+        if months
+    }
+
     book = RateBook()
     for r in model.rates:
         book.add(r)
@@ -143,9 +159,11 @@ def build_report(
         book.add(r)
 
     gap, lever_checks = _gap(
-        rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter_labels,
+        rec, profile, model, pop, as_of, windows, fitted, shown, targets, quarter_labels,
         horizons, creation,
     )  # fmt: skip
+    if shown is not None:
+        _label_gap_ranges(gap, ev, as_of, group_ends)
     fy_target = sum(profile.quarterly_targets.values(), Decimal(0))
     diagnostic = (
         _diagnostic(cap, model, pop, as_of, windows, horizons, fitted)
@@ -239,13 +257,16 @@ def build_report(
         },
         "reconciliation": _reconciliation(rec),
         "history": _history(loaded, rec, model, bt, as_of, recency, cap),
-        "forecasts": _forecasts(forecasts, labels, horizons, sim, bt, cap.adopted),
+        "forecasts": _forecasts(
+            forecasts, labels, horizons, shown, bt, cap.adopted, ev, as_of, group_ends
+        ),
         "rates": [_rate(r) for r in book],
         "gap": gap,
         "backtest": {
             **_backtest(bt),
             "candidates": {
-                "recency": _candidate(recency, incumbent_name, params.estimator)
+                "recency": _candidate(recency, incumbent_name, params.estimator),
+                "ranges": stretch_report.evidence(ev),
             },
         },
         "verdicts": {
@@ -458,7 +479,15 @@ def _history(loaded, rec, model, bt, as_of, recency, cap=None) -> dict:
 
 
 def _forecasts(
-    forecasts: list[Forecast], labels, horizons, sim, bt, capacity: bool = False
+    forecasts: list[Forecast],
+    labels,
+    horizons,
+    sim,
+    bt,
+    capacity: bool,
+    ev,
+    as_of,
+    ends,
 ) -> dict:
     cells = [
         {
@@ -502,6 +531,21 @@ def _forecasts(
         NEXT_12: f"{UNVALIDATED}: twelve-month ranges are not back-tested (the back-test scores "
         f"{', '.join(str(h) for h in HORIZONS)} months)",
     }
+    # when the stretch is adopted each range's label is the stretch's, with what the simulated
+    # range alone held; otherwise the range keeps its back-test label and is called simulated
+    range_labels = {}
+    for h in horizons:
+        got = stretch_report.labels(ev, as_of, ends[h]) if h in ends else None
+        if h not in ends:
+            range_labels[h] = (_NOTHING_LEFT, _NOTHING_LEFT)
+        elif got is None:
+            range_labels[h] = (statuses[h].split(":")[0], _SIMULATED_95)
+        else:
+            range_labels[h] = got
+            said = stretch_report.status(ev, as_of, ends[h]) or statuses[h]
+            # a range that includes the capacity term stays unvalidated; what the stretch held is
+            # a statistic beside that, not a validation of it
+            statuses[h] = f"{statuses[h]}; {said}" if capacity else said
 
     def totals(f: Forecast) -> dict:
         # The sum of the rounded months, so a shown total adds up to the months shown.
@@ -532,19 +576,57 @@ def _forecasts(
         "fitted_ranges": {
             "status": status,
             "cells": cells,
+            "by_window_label": stretch_report.by_window_label(ev) or _SIMULATED_MONTHS,
             "by_window": {lbl: _spread(s) for lbl, s in sim.by_window.items()},
             "horizons": {
-                h: {"status": statuses[h], **_spread(sim.by_group[h])} for h in horizons
+                h: {
+                    "status": statuses[h],
+                    "label80": range_labels[h][0],
+                    "label95": range_labels[h][1],
+                    **_spread(sim.by_group[h]),
+                }
+                for h in horizons
             },
         }
         if sim is not None
         else {
             "status": f"unavailable: {forecasts[2].unavailable_reason}",
             "cells": cells,
+            "by_window_label": "unavailable",
             "by_window": {},
             "horizons": {},
         },
     }
+
+
+_SIMULATED_95 = "simulated, not separately tested"
+_SIMULATED_MONTHS = "simulated; see how the ranges were checked"
+_NOTHING_LEFT = "closed: nothing left to range over"
+
+
+def _label_gap_ranges(gap: dict, ev, as_of: date, ends: dict[str, date]) -> None:
+    """The label beside each of the gap's ranges: the stretch's when it is adopted, else the
+    simulated range's. A closed quarter has nothing left to range over."""
+    for q in gap["quarters"]:
+        if q["expected_range80"] is None:
+            continue
+        got = (
+            stretch_report.labels(ev, as_of, ends[q["quarter"]])
+            if q["quarter"] in ends
+            else None
+        )
+        q["range80_label"] = (
+            got[0] if got else _NOTHING_LEFT if q["status"] == "closed" else "simulated"
+        )
+    year = gap["fiscal_year"]
+    if year["expected_range80"] is None:
+        return
+    if REST_OF_FY not in ends:
+        year["range80_label"] = year["range95_label"] = _NOTHING_LEFT
+        return
+    got = stretch_report.labels(ev, as_of, ends[REST_OF_FY])
+    year["range80_label"] = got[0] if got else "simulated"
+    year["range95_label"] = got[1] if got else _SIMULATED_95
 
 
 def _window_status(months: int, cells: list[dict]) -> str:
