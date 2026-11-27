@@ -27,6 +27,9 @@ def render(r: dict) -> str:
     out += _gap(r["gap"])
     out += _backtest(r["backtest"])
     out += _verdicts(r["verdicts"])
+    if "roster_capacity" in r:
+        out += _roster_capacity(r["roster_capacity"])
+        out += _productivity(r["quota_productivity"])
     return "\n".join(out).rstrip() + "\n"
 
 
@@ -382,3 +385,187 @@ def _verdicts(s: dict) -> list[str]:
         "",
     ]
     return out
+
+
+def _roster_capacity(s: dict) -> list[str]:
+    d, ro = s["decision"], s["roster"]
+    out = ["## 8. Roster and capacity", ""]
+    out += [
+        f"**Capacity term: {d['outcome']}.** {d['reason']}.",
+        "",
+        f"Scored on {d['scored_on']}. {d['label'].capitalize()}.",
+        f"Declared rule: {d['declared_rule']}.",
+        f"The forecast, gap, plan and actions use the {d['forecast_uses']}. {d['association']}",
+        "",
+    ]
+    if d["horizons"]:
+        out += _table(
+            ["Horizon", "Folds", "Flat trailing rate, mean abs. error", "Capacity rate, mean abs. error", "Improvement"],
+            [
+                (f"{h['horizon_months']} mo", h["folds"], _usd(h["mean_absolute_error_flat"]),
+                 _usd(h["mean_absolute_error_capacity"]), f"{float(h['improvement']):.1%}")
+                for h in d["horizons"]
+            ],
+        )  # fmt: skip
+    if d["staffing_variation"] is not None:
+        out += [
+            (
+                f"Ramped AE-months varied {float(d['staffing_variation']):.0%} across the scored "
+                f"period ({' to '.join(d['scored_period'] or [])})."
+            ),
+            "",
+        ]
+    if "unavailable" in ro:
+        out += [f"Roster unavailable: {ro['unavailable']}.", ""]
+    else:
+        out += [
+            (
+                f"Roster: {ro['rows']} rows; {ro['quota_carrying_rows']} quota-carrying people on file, "
+                f"{ro['heads_at_as_of']} employed at the as-of date, "
+                f"{ro['ramped_equivalents_at_as_of']} ramped equivalents, against a headcount target of "
+                f"{ro['headcount_target_this_month']} this month ({ro['headcount_target_note']}). "
+                f"{ro['departed_to_date']} have left to date; {len(ro['signed_hires'])} signed hires."
+            ),
+            "",
+        ]
+        if ro["other_roles_counted_no_capacity"]:
+            counts = ", ".join(
+                f"{k} {v}" for k, v in ro["other_roles_counted_no_capacity"].items()
+            )
+            out += [f"Counted, carrying no capacity: {counts}.", ""]
+        if ro["excluded"]:
+            out += ["Excluded rows:", ""]
+            out += _table(
+                ["Id", "Role", "Reason"],
+                [(e["id"], e["role"], e["reason"]) for e in ro["excluded"]],
+            )
+    if "ramp" in s:
+        rp, at, cr = s["ramp"], s["attrition"], s["creation_rate"]
+        out += [
+            f"**Ramp ({rp['source']}):** {rp['sample']}. {rp['definition']}; {rp['after']}."
+            + (
+                f" Not fitted because {rp['why_not_fitted']}."
+                if rp["why_not_fitted"]
+                else ""
+            ),
+            "",
+        ]
+        out += _table(
+            ["Tenure month", "Weight", "95% range"],
+            [
+                (
+                    w["tenure_month"],
+                    w["weight"],
+                    " to ".join(w["range95"]) if w["range95"] else "",
+                )
+                for w in rp["weights"]
+            ],
+        )
+        out += [
+            f"**Attrition ({at['source']}):** {at['monthly_rate']} per AE-month, {at['sample']}"
+            + (f" (95%: {' to '.join(at['range95'])})" if at["range95"] else "")
+            + (
+                f"; not fitted because {at['why_not_fitted']}"
+                if at["why_not_fitted"]
+                else ""
+            )
+            + f". Forward: {at['forward']}.",
+            "",
+            (
+                f"**Created deals per ramped AE-month:** {cr['deals_per_ramped_ae_month']} "
+                f"({cr['trailing_deals']} deals over {cr['trailing_ramped_ae_months']} ramped AE-months, "
+                f"{cr['window']})."
+            ),
+            "",
+        ]
+    if "months" in s:
+        with_plan = any(m["heads_with_plan"] is not None for m in s["months"])
+        out += [
+            "Heads, ramped equivalents and departures by month (forward months are expectations):",
+            "",
+        ]
+        out += _table(
+            ["Month", "", "Heads", "Ramped", "Departures", "Headcount target"]
+            + (["Heads with plan"] if with_plan else []),
+            [
+                [m["month"], m["kind"], m["heads"], m["ramped"], m["departures"],
+                 "" if m["headcount_target"] is None else m["headcount_target"]]
+                + ([m["heads_with_plan"] or ""] if with_plan else [])
+                for m in s["months"]
+            ],
+        )  # fmt: skip
+    if "diagnostic" in s:
+        g = s["diagnostic"]
+        out += [
+            f"**Capacity projection, a diagnostic ({g['label']}):** bookings if capacity drove the "
+            + "forecast: "
+            + "; ".join(
+                f"{h} {_usd(v)}"
+                for h, v in g["bookings_with_capacity_projection"].items()
+            )
+            + "; the forecast actually shown, at the flat rate: "
+            + "; ".join(
+                f"{h} {_usd(v)}" for h, v in g["bookings_with_flat_rate"].items()
+            )
+            + f". Hiring action: {g['hiring_action']}.",
+            "",
+        ]
+    out += ["Limits:", ""] + [f"- {x}" for x in s["limitations"]] + [""]
+    return out
+
+
+def _productivity(s: dict) -> list[str]:
+    out = ["## 9. Quota against observed productivity", ""]
+    if "unavailable" in s:
+        return out + [f"Unavailable: {s['unavailable']}.", ""]
+    out += [
+        f"{s['definition'].capitalize()} ({s['window']}). Observed, never model output.",
+        "",
+    ]
+    rows = [
+        (name, b["reps"], _usd(b["prorated_quota"]), _usd(b["wins_credited"]),
+         _pct_str(b["attainment"]), _spread(b["spread_across_reps"]))
+        for name, b in [*s["by_segment"].items(), ("all reps", s["all_reps"])]
+    ]  # fmt: skip
+    out += _table(
+        [
+            "Segment",
+            "Reps",
+            "Prorated quota",
+            "Wins credited",
+            "Attainment",
+            f"Across reps employed {s['spread_min_days']}+ days (min / p25 / median / p75 / max)",
+        ],
+        rows,
+    )
+    t = s["total_quota"]
+    out += [
+        (
+            f"Wins in the window {_usd(s['wins_in_window'])}: credited {_usd(s['wins_credited'])}, "
+            f"unattributed {_usd(s['wins_unattributed'])} ({s['unattributed_note']})."
+        ),
+        "",
+        (
+            f"Total quota {_usd(t['annual_quota_of_people_employed_at_as_of'])} for {t['people']} people "
+            f"over a target of {_usd(t['fiscal_year_target'])}: **{t['quota_over_target']}x** ({t['note']})."
+        ),
+        "",
+        "Limits:",
+        "",
+    ]
+    out += [f"- {x}" for x in s["limits"]] + [""]
+    return out
+
+
+def _pct_str(x) -> str:
+    return "n/a" if x is None else f"{float(x):.0%}"
+
+
+def _spread(x) -> str:
+    return (
+        "n/a"
+        if x is None
+        else " / ".join(
+            f"{float(x[k]):.0%}" for k in ("min", "p25", "median", "p75", "max")
+        )
+    )

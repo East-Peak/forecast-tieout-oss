@@ -30,7 +30,7 @@ class CapacityConfig:
     attrition: Decimal | None = None  # entered, per AE-month
     loaded_cost_per_ae_month: Decimal | None = None
     programme_cost_per_dollar: Decimal | None = None
-    programme_ramp_months: int = DEFAULT_PROGRAMME_RAMP_MONTHS
+    programme_ramp_months: int | None = None  # entered; None means the default
     hires_bound: int | None = None
 
 
@@ -54,11 +54,7 @@ def load_capacity(profile_dir: Path) -> CapacityConfig | None:
         programme_cost_per_dollar=_opt(
             costs.get("programme_cost_per_dollar_of_pipeline")
         ),
-        programme_ramp_months=int(
-            (doc.get("programme") or {}).get(
-                "ramp_months", DEFAULT_PROGRAMME_RAMP_MONTHS
-            )
-        ),
+        programme_ramp_months=_opt_int((doc.get("programme") or {}).get("ramp_months")),
         hires_bound=_opt_int((doc.get("hires") or {}).get("max_in_one_quarter")),
     )
 
@@ -146,3 +142,13 @@ def _opt(x) -> Decimal | None:
 
 def _opt_int(x) -> int | None:
     return None if x is None else int(x)
+
+
+def load_headcount_targets(profile_dir: Path) -> dict[str, int]:
+    """``monthly_ae_targets`` from targets.yaml, by 'YYYY-MM'. A comparison
+    line only: it never creates a hire."""
+    path = Path(profile_dir) / "targets.yaml"
+    doc = yaml.safe_load(path.read_text()) or {}
+    return {
+        str(day)[:7]: int(n) for day, n in (doc.get("monthly_ae_targets") or {}).items()
+    }

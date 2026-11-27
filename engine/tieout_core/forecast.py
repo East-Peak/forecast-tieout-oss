@@ -56,6 +56,8 @@ class Creation:
     per_day: tuple[Decimal, ...]
     text: str
     ramped_ae_months: tuple[Decimal, ...] = ()  # expected ramped AE-months on each day
+    heads: tuple[Decimal, ...] = ()  # expected people employed on each day
+    departures: tuple[Decimal, ...] = ()  # expected last days of employment on each day
     draws: Callable[[np.random.Generator, int], np.ndarray] | None = field(
         default=None, compare=False, repr=False
     )

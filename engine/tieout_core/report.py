@@ -9,9 +9,10 @@ from __future__ import annotations
 import json
 import math
 from datetime import date, timedelta
-from decimal import ROUND_HALF_EVEN, Decimal
+from decimal import Decimal
 from pathlib import Path
 
+from . import capacity_report
 from .backtest import (
     HORIZONS,
     MIN_FOLDS,
@@ -19,6 +20,11 @@ from .backtest import (
     choose_fit,
     coverage_label,
 )
+from .figures import CENT
+from .figures import cents as _cents
+from .figures import exact as _exact
+from .figures import money as _money
+from .figures import opt_money as _opt_money
 from .fiscal import Window, add_months, month_windows
 from .fit import DEFAULT_PARAMS, PARAMETER_RANGES, RECENCY, FitParams, fit
 from .forecast import (
@@ -51,7 +57,6 @@ REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
 NO_TARGET = "no target in this window"
 LEVER_CAP_MULTIPLE = 3
-CENT = Decimal("0.01")
 
 
 def build_report(
@@ -61,6 +66,7 @@ def build_report(
     draws: int = 2000,
     seed: int = 0,
     params: FitParams = DEFAULT_PARAMS,
+    plan_path: Path | None = None,
 ) -> dict:
     profile = load_profile(Path(profile_dir))
     loaded = load_company(Path(data_dir), profile)
@@ -76,18 +82,26 @@ def build_report(
     }
     targets = _targets(profile, horizon_end)
 
+    # Goal 2B: whether the capacity term replaces the flat creation rate is decided
+    # once, here, and then every forecast, range, gap and lever uses that one choice.
+    cap = capacity_report.prepare(
+        profile_dir, data_dir, pop, as_of, (horizon_end - as_of).days, params
+    )
+    creation = cap.creation
+
     # Goal 2A step 2.1: the recency candidate is scored against the incumbent fit
     # on the same folds, and adopted for this company only by the declared rule.
     incumbent_name = params.estimator
     params, bt, recency = choose_fit(
-        pop, as_of, profile, params, min(draws, 1000), seed
-    )
+        pop, as_of, profile, params, min(draws, 1000), seed,
+        creation_for=capacity_report.creation_for(cap),
+    )  # fmt: skip
 
     model = fit(pop, as_of, profile, params)
     forecasts = [
         run_rate(pop, as_of, windows, params.trailing_days),
         stage_weighted(pop, as_of, profile, windows, params.trailing_days),
-        model_forecast(model, pop, as_of, windows),
+        model_forecast(model, pop, as_of, windows, creation=creation),
     ]
     fitted = forecasts[2]
     quarter_labels = {
@@ -105,6 +119,7 @@ def build_report(
             seed=seed,
             groups={**quarter_labels, **horizons},
             parameter_uncertainty=params.ranges == PARAMETER_RANGES,
+            creation=creation,
         )
 
     book = RateBook()
@@ -115,11 +130,23 @@ def build_report(
             book.add(r)
     for r in _parameters(params, draws, seed):
         book.add(r)
+    for r in capacity_report.rates(cap):
+        book.add(r)
 
     gap, lever_checks = _gap(
         rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter_labels,
-        horizons,
+        horizons, creation,
     )  # fmt: skip
+    fy_target = sum(profile.quarterly_targets.values(), Decimal(0))
+    diagnostic = (
+        _diagnostic(cap, model, pop, as_of, windows, horizons, fitted)
+        if not cap.adopted and cap.projection is not None and fitted.available
+        else None
+    )
+    roster_section = capacity_report.roster_capacity(
+        cap, as_of, windows, Path(profile_dir), diagnostic
+    )
+    productivity = capacity_report.quota_productivity(cap, pop, as_of, fy_target)
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
@@ -136,6 +163,7 @@ def build_report(
         Check(
             "every rate defined once", True, f"{len(list(book))} rates in one registry"
         ),
+        *capacity_report.checks(cap, productivity, fitted),
     ]
     failed = [c for c in checks if not c.passed]
 
@@ -151,9 +179,15 @@ def build_report(
             "fit": params.estimator,
             "ranges": params.ranges,
             "simulation": {"draws": draws, "seed": seed},
+            "capacity": {
+                "decision": cap.adoption.outcome,
+                "forecast_uses": "capacity term"
+                if cap.adopted
+                else "flat trailing creation rate",
+            },
         },
         "reconciliation": _reconciliation(rec),
-        "history": _history(loaded, rec, model, bt, as_of, recency),
+        "history": _history(loaded, rec, model, bt, as_of, recency, cap),
         "forecasts": _forecasts(forecasts, labels, horizons, sim, bt),
         "rates": [_rate(r) for r in book],
         "gap": gap,
@@ -183,6 +217,8 @@ def build_report(
                 "reason": bt.verdict_reason,
             },
         },
+        "roster_capacity": roster_section,
+        "quota_productivity": productivity,
     }
     return report
 
@@ -237,7 +273,7 @@ def _reconciliation(rec) -> dict:
     }
 
 
-def _history(loaded, rec, model, bt, as_of, recency) -> dict:
+def _history(loaded, rec, model, bt, as_of, recency, cap=None) -> dict:
     pop = rec.population
     deals = pop.deals
     first = min((d.created for d in deals), default=None)
@@ -320,8 +356,18 @@ def _history(loaded, rec, model, bt, as_of, recency) -> dict:
         "the model is pooled across segments; a segment split is not evaluated in this report"
     )
     limits.append(
-        "team_members.csv is read but capacity is not modelled yet: roles "
+        "roles on team_members.csv: "
         + ", ".join(f"{k} {v}" for k, v in sorted(loaded.roster_roles.items()))
+        + "; "
+        + (
+            f"the capacity term is {cap.adoption.outcome} ({cap.adoption.reason})"
+            if cap is not None
+            else "capacity is not assessed"
+        )
+    )
+    limits.append(
+        "team_members.csv holds no history of role, segment, quota or deal ownership: today's "
+        "values stand in for every past date, and a deal's owner is its current owner"
     )
     return {
         "facts": {
@@ -463,7 +509,7 @@ def _shown(f: Forecast, labels) -> Decimal:
 
 
 def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter_labels,
-         horizons):  # fmt: skip
+         horizons, creation=None):  # fmt: skip
     if not fitted.available:
         return _gap_unavailable(
             rec, profile, as_of, windows, targets, fitted.unavailable_reason
@@ -500,8 +546,9 @@ def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter
     def lever(check_name, actual, goal, months, through):
         def run(added: Decimal) -> Forecast:
             return model_forecast(
-                model, pop, as_of, windows, added_pipeline=added, added_through=through
-            )
+                model, pop, as_of, windows, added_pipeline=added, added_through=through,
+                creation=creation,
+            )  # fmt: skip
 
         return _lever(check_name, lambda a: actual + _sum(run(a), months), run, goal,
                       cap, len(months), model.params.trailing_days, horizons)  # fmt: skip
@@ -585,6 +632,25 @@ def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
     block["gap"] = _money(goal - actual - forecast)
     result, check = lever(check_name, actual, goal, targeted, through)
     return block, result, check
+
+
+def _diagnostic(
+    cap, model, pop, as_of, windows, horizons, flat: Forecast
+) -> dict | None:
+    """The capacity projection when it was not adopted: shown once, labelled."""
+    projected = model_forecast(model, pop, as_of, windows, creation=cap.projection)
+    if not projected.available:
+        return None
+    return {
+        "label": "diagnostic only: capacity was not adopted, so nothing in this report uses it",
+        "bookings_with_capacity_projection": {
+            h: _money(_shown(projected, ls)) for h, ls in horizons.items()
+        },
+        "bookings_with_flat_rate": {
+            h: _money(_shown(flat, ls)) for h, ls in horizons.items()
+        },
+        "hiring_action": "unsupported by this history",
+    }
 
 
 def _no_target_lever() -> dict:
@@ -898,22 +964,6 @@ def _spread(s) -> dict:
         "range80": [_float(s.p10), _float(s.p90)],
         "range95": [_float(s.p2_5), _float(s.p97_5)],
     }
-
-
-def _cents(x: Decimal) -> Decimal:
-    return x.quantize(CENT, rounding=ROUND_HALF_EVEN)
-
-
-def _money(x: Decimal) -> str:
-    return str(_cents(x))
-
-
-def _opt_money(x: Decimal | None) -> str | None:
-    return None if x is None else _money(x)
-
-
-def _exact(x: Decimal) -> str:
-    return str(x)
 
 
 def _float(x: float) -> str:

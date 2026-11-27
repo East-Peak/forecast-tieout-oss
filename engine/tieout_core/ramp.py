@@ -167,7 +167,7 @@ def _fit_curve(exposure, made, observed: int) -> RampCurve:
         else:
             low, high = 0.0, float(3 / expected)
         weights.append(Decimal(point.numerator) / Decimal(point.denominator))
-        ranges.append((max(0.0, low), min(1.0, high)))
+        ranges.append((max(0.0, min(low, 1.0)), min(1.0, high)))
     return RampCurve(tuple(weights), FITTED, observed, tuple(ranges))
 
 

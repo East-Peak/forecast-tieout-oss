@@ -118,3 +118,10 @@ def ramped_ae_months(members, ramp: RampCurve, after: date, through: date) -> De
         for lo, hi, w in segments(m, ramp, first, last):
             total += w * ((hi - lo).days + 1)
     return total / DAYS_PER_AE_MONTH
+
+
+def ramped_heads_on(members, ramp: RampCurve, on: date) -> Decimal:
+    """Ramped equivalents on a day: the sum of ramp weights of people employed."""
+    return sum(
+        (ramp.weight(tenure_month(m, on)) for m in members if employed(m, on)), ZERO
+    )
