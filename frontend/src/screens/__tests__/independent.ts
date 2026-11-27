@@ -69,3 +69,4 @@ export function quantity(raw: string | number): string {
 }
 
 export const multiple = (raw: string): string => `${quantity(raw)}x`;
+export const cents = (raw: string): string => `${quantity(raw)}¢`;

@@ -9,7 +9,7 @@ import { month, usdShort } from "../src/screens/__tests__/independent";
  */
 const COMPANIES = ["sprout-labs", "sapling-industries", "mighty-oak-holdings"] as const;
 const SCENARIOS = ["as-signed", "demo-plan", "hires-only", "programme-only"] as const;
-const PLACEHOLDERS = ["pipeline", "plan", "trust"] as const;
+const PLACEHOLDERS = ["plan", "trust"] as const;
 const BAD_TEXT = /\bNaN\b|\bundefined\b|\[object|\bInfinity\b|\bnull\b/;
 
 function collectBrowserIssues(page: Page): string[] {

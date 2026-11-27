@@ -63,7 +63,7 @@ describe("the shell", () => {
   });
 
   it("the four screens not built yet say so, with no numbers", async () => {
-    for (const path of ["pipeline", "plan", "trust"]) {
+    for (const path of ["plan", "trust"]) {
       const { unmount } = open(`/${path}?company=sprout-labs&scenario=as-signed`);
       await waitFor(() => expect(screen.getByTestId("not-built")).toBeInTheDocument());
       expect(screen.getByTestId("not-built").textContent).toMatch(/Not built yet/);
