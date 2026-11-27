@@ -14,6 +14,6 @@ data_access:
   params:
     path: engine/data/mighty-oak-holdings
 
-# Story: mature enterprise approaching $1B ARR. The bridge closes on paper
-# because expansion assumptions do more work than the observed expansion engine supports.
-description: "Mighty Oak Holdings — $800M enterprise plan, expansion bridge at risk"
+# Shown under the company's name in the app (index.json). Every figure in it must be in the
+# as-signed report: engine/tests/tieout_core/test_tc_descriptions.py.
+description: "FY26 target $84,000,000; the fitted forecast expects $60,639,661, a gap of $23,360,339. Staffing varied only 14%, so the history cannot say whether headcount explains pipeline; 99 heads against a target of 100."

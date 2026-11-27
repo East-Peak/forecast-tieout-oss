@@ -13,7 +13,6 @@ data_access:
   params:
     path: engine/data/sprout-labs
 
-# Story: early-PMF startup pushing for $10M ARR. H1 coverage looks plausible,
-# but H2 assumes repeatable funnel motion before MQL volume or pipeline depth
-# proves it.
-description: "Sprout Labs — $10M early-PMF plan, repeatability not proven"
+# Shown under the company's name in the app (index.json). Every figure in it must be in the
+# as-signed report: engine/tests/tieout_core/test_tc_descriptions.py.
+description: "FY26 target $8,000,000; the fitted forecast expects $6,119,925, a gap of $1,880,075. Headcount explains pipeline in the back-test; 6 heads against a target of 6."
