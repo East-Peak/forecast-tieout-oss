@@ -22,7 +22,12 @@ def test_the_fixture_tolerances_are_declared():
     assert r.FIXTURE_SEEDS == 3
     assert r.NO_SHIFT_MAX_FACTOR == 1.35
     assert r.NO_SHIFT_MEDIAN_FACTOR == 1.10
-    assert r.NO_SHIFT_MAX_FACTOR_SIX == 1.75  # amended after the first fixture run
+    assert (
+        r.EXPLORATORY_SIX_MONTH_MAX_FACTOR == 1.75
+    )  # chosen after the first run: exploratory
+    assert r.FRESH_SEEDS == (101, 102, 103)  # declared before they were run
+    assert r.FRESH_SIX_MONTH_MAX_FACTOR == 1.35
+    assert r.FRESH_SIX_MONTH_MEDIAN_FACTOR == 1.10
     assert r.SHIFT_FACTOR == 0.5
     assert r.SHIFT_MAX_SIMULATED == 0.60
     assert r.SHIFT_MIN_GAIN == 0.15

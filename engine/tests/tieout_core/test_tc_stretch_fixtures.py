@@ -61,11 +61,30 @@ def test_with_no_shift_the_factors_stay_near_one(steady):
     assert median(near) <= rules.NO_SHIFT_MEDIAN_FACTOR
 
 
-def test_with_no_shift_the_six_month_factors_do_not_run_away(steady):
-    # amended after the first run (see stretch_rules): six-month folds overlap too much for
-    # the declared bound
+def test_the_declared_bound_does_not_hold_at_six_months_on_the_first_three_seeds(
+    steady,
+):
+    """A recorded fact, not a pass: the criterion declared before the fixtures were run (every
+    factor at most 1.35, the median of all at most 1.10) fails once six months is included.
+    Observed on seeds 0, 1 and 2: largest six-month factor 1.594, median of all eighteen 1.1145."""
+    every = [
+        v
+        for run in steady
+        for h in rules.HORIZONS
+        for v in (run[h].factors.lower, run[h].factors.upper)
+    ]
     six = [v for run in steady for v in (run[6].factors.lower, run[6].factors.upper)]
-    assert 1.0 <= min(six) and max(six) <= rules.NO_SHIFT_MAX_FACTOR_SIX
+    assert max(six) == pytest.approx(1.594, abs=0.001)
+    assert median(every) == pytest.approx(1.1145, abs=0.001)
+    assert max(six) > rules.NO_SHIFT_MAX_FACTOR
+    assert median(every) > rules.NO_SHIFT_MEDIAN_FACTOR
+
+
+def test_with_no_shift_the_six_month_factors_stay_under_the_exploratory_bound(steady):
+    # EXPLORATORY: this bound was chosen after seeing the run above; it only says the factor
+    # does not run away, and is not the criterion the stretch was declared against
+    six = [v for run in steady for v in (run[6].factors.lower, run[6].factors.upper)]
+    assert 1.0 <= min(six) and max(six) <= rules.EXPLORATORY_SIX_MONTH_MAX_FACTOR
 
 
 def pooled(runs, which):
