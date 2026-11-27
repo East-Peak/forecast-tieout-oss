@@ -41,7 +41,8 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   when(plan !== null, B.cmpMoreNext.id, () => orWords(me.bookings_change?.[TWELVE] ?? null, fmt.usdShort, "not valued"));
   when(plan !== null, B.cmpCost.id, () => orWords(me.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
   when(plan !== null, B.planDefinition.id, () => plan!.baseline_definition);
-  when(plan !== null, B.planFile.id, () => plan!.file);
+  // the visitor's own plan is a form, not a file: the line names no file
+  when(plan !== null && scenario !== "your-plan", B.planFile.id, () => plan!.file);
 
   // both windows, each with its ranges (the 95% ones in the opened row)
   const horizons = r.forecasts.fitted_ranges.horizons as Record<string, Ranged>;
