@@ -1,134 +1,47 @@
 import { lazy, Suspense } from "react";
-import type { ReactNode } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { AuthGate } from "./components/auth/AuthGate";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
-import { AuthProvider } from "./context/AuthContext";
-import { PlanningSessionProvider } from "./context/PlanningSessionContext";
-import { usePlanningSession } from "./hooks/usePlanningSession";
-import { normalizeToplineHealthStatus } from "./lib/healthStatus";
-import { isProtectedDataModeEnabled } from "./lib/runtimeConfig";
+import { fileLoaders } from "./data/reportFiles";
+import { ReportSessionProvider } from "./session/ReportSession";
+import type { Loaders } from "./session/ReportSession";
+import { NotBuilt } from "./shell/NotBuilt";
+import { SCREENS } from "./shell/screens";
 
-const ScenarioPlanner = lazy(() => import("./pages/ScenarioPlanner"));
-const BookingsBridge = lazy(() => import("./pages/BookingsBridge"));
-const CapacityHeadcount = lazy(() => import("./pages/CapacityHeadcount"));
-const FunnelHealth = lazy(() => import("./pages/FunnelHealth"));
-const PipelineInventory = lazy(() => import("./pages/PipelineInventory"));
-const ExportPack = lazy(() => import("./pages/ExportPack"));
-const Methodology = lazy(() => import("./pages/Methodology"));
-const AuditReadiness = lazy(() => import("./pages/AuditReadiness"));
-const TargetSetter = lazy(() => import("./pages/TargetSetter"));
+const ForecastScreen = lazy(() => import("./screens/forecast/ForecastScreen"));
 
 function RouteLoading() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center">
-      <p className="text-sm text-text-secondary">Loading page...</p>
+      <p className="text-sm text-text-secondary">Loading the screen...</p>
     </div>
   );
 }
 
-function ProtectedApp() {
-  const {
-    snapshot,
-    orgProfiles,
-    selectedOrgProfile,
-    plans,
-    selectedPlan,
-    requestedPlanId,
-    activeRenderedPlanId,
-    planSelectionNotice,
-    planCatalogDiagnostics,
-    loading,
-    error,
-    selectOrgProfile,
-    selectPlan,
-  } = usePlanningSession();
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-surface">
-        <p className="text-sm text-text-secondary">Loading snapshot...</p>
-      </div>
-    );
-  }
-
-  if (error || !snapshot) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-surface">
-        <div className="text-center">
-          <p className="mb-1 text-sm font-medium text-red-400">
-            Failed to load snapshot
-          </p>
-          <p className="text-xs text-text-muted">{error ?? "Unknown error"}</p>
-        </div>
-      </div>
-    );
-  }
-
-  const capacityWarnings = snapshot.model_output.bookings_bridge.capacity_warnings ?? [];
-  const healthStatusRaw =
-    (snapshot.health_status?.overall_status as string | undefined) ??
-    (snapshot.health_status?.status as string | undefined);
-  const healthStatus = normalizeToplineHealthStatus(
-    healthStatusRaw,
-    capacityWarnings.length,
-  );
-
-  function renderRoute(element: ReactNode) {
-    return <Suspense fallback={<RouteLoading />}>{element}</Suspense>;
-  }
-
-  return (
-    <PlanningSessionProvider
-      value={{
-        snapshot,
-        orgProfiles,
-        selectedOrgProfile,
-        selectOrgProfile,
-        plans,
-        selectedPlan,
-        requestedPlanId,
-        activeRenderedPlanId,
-        planSelectionNotice,
-        planCatalogDiagnostics,
-        selectPlan,
-        healthStatus,
-        snapshotMeta: {
-          as_of: snapshot.as_of,
-          generated_at: snapshot.generated_at,
-          git_sha: snapshot.git_sha,
-        },
-      }}
-    >
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<Navigate to="/bookings" replace />} />
-          <Route path="/" element={<Navigate to="/bookings" replace />} />
-          <Route path="/scenario" element={renderRoute(<ScenarioPlanner />)} />
-          <Route path="/bookings" element={renderRoute(<BookingsBridge />)} />
-          <Route path="/capacity" element={renderRoute(<CapacityHeadcount />)} />
-          <Route path="/funnel" element={renderRoute(<FunnelHealth />)} />
-          <Route path="/inventory" element={renderRoute(<PipelineInventory />)} />
-          <Route path="/audit" element={renderRoute(<AuditReadiness />)} />
-          <Route path="/export" element={renderRoute(<ExportPack />)} />
-          <Route path="/methodology" element={renderRoute(<Methodology />)} />
-          <Route path="/targets" element={renderRoute(<TargetSetter />)} />
-        </Route>
-      </Routes>
-    </PlanningSessionProvider>
-  );
+/** Any other address goes to Forecast, keeping the company and scenario in the query string. */
+function ToForecast() {
+  const { search } = useLocation();
+  return <Navigate to={{ pathname: "/forecast", search }} replace />;
 }
 
-export default function App() {
-  if (!isProtectedDataModeEnabled()) {
-    return <ProtectedApp />;
-  }
-
+export default function App({ loaders = fileLoaders }: { loaders?: Loaders }) {
   return (
-    <AuthProvider>
-      <AuthGate>
-        <ProtectedApp />
-      </AuthGate>
-    </AuthProvider>
+    <ReportSessionProvider loaders={loaders}>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route
+            path="/forecast"
+            element={
+              <Suspense fallback={<RouteLoading />}>
+                <ForecastScreen />
+              </Suspense>
+            }
+          />
+          {SCREENS.filter((s) => s.path !== "/forecast").map((screen) => (
+            <Route key={screen.path} path={screen.path} element={<NotBuilt screen={screen} />} />
+          ))}
+          <Route path="*" element={<ToForecast />} />
+        </Route>
+      </Routes>
+    </ReportSessionProvider>
   );
 }
