@@ -1,29 +1,25 @@
-# Frontend Developer Notes
+# Frontend developer notes
 
-## Playwright Browser Gates
+The app reads only `public/data/reports/`, which `python -m engine.scripts.generate_app_reports`
+writes (see the repository README). `npm run dev`, `build` and `preview` first check that
+`index.json` is there (`scripts/sync-data.mjs`).
 
-Smoke runs against the built Vite app through `vite preview`:
+## Browser smoke
+
+Runs against the built app through `vite preview`:
 
 ```bash
 npm run test:e2e
 ```
 
-The smoke suite covers all 9 routes across the 3 public personas. It fails on
-browser console errors or warnings, visible degenerate render text, missing
-headline metrics, missing chart containers, all-zero chart series, or chart
-containers that do not draw SVG path/rect geometry.
+It covers all five screens for the three companies and four scenarios, the old app's
+addresses, hover tooltips, scenario switching on Plan and phone-width overflow. It fails on
+console errors, visible `NaN` or `undefined`, digits outside a bound element and charts that
+draw no geometry.
 
-Visual comparison is gated behind `VISUAL=1` so local macOS runs do not create
-or compare against non-Linux snapshots:
+## Other commands
 
 ```bash
-npm run test:visual
+npm run verify        # knip dead-code check, then vitest
+npm run screenshots   # rewrites docs/screenshots and public/docs/screenshots from the built app
 ```
-
-Baselines must be generated on Linux after an approved UI. Use the GitHub
-Actions `workflow_dispatch` input `generate_visual_baselines=true`; that job
-runs `npm run test:visual:update` on `ubuntu-latest` and uploads the generated
-`frontend/e2e/*-snapshots/` PNGs as an artifact. Download the artifact, place
-the snapshot folders under `frontend/e2e/`, then commit them. Once those PNGs
-exist in the repo, the normal browser CI job runs visual comparison on every
-commit.
