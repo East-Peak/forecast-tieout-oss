@@ -221,12 +221,15 @@ def model_forecast(
     added_through: date | None = None,
     creation: Creation | None = None,
     inflows: Sequence[Inflow] = (),
+    existing: dict[str, Decimal] | None = None,
 ) -> Forecast:
     """``added_pipeline`` is created in equal parts in each window that ends by
     ``added_through`` (every window by default) and books in any window.
     ``inflows`` are further dollars created over given day ranges (programs,
     quarterly requirements). ``creation``, when given, replaces the flat
-    trailing creation rate of pipeline not yet created."""
+    trailing creation rate of pipeline not yet created. ``existing``, when given, is the
+    existing-pipeline component of an earlier forecast from the same model, deals and windows
+    (it does not depend on anything a caller varies here), so it is not computed again."""
     method = "fitted model"
     all_open = [d for d in data.deals if not d.is_closed]
     if any(d.arr is None for d in all_open):
@@ -261,12 +264,13 @@ def model_forecast(
         for w in windows
     ]
 
-    existing = _zeros(windows)
-    for d in open_deals:
-        p = model.win_rate(d.stage, (cutoff - d.created).days)
-        timing = model.timing(d.stage, (cutoff - d.created).days)
-        for w, (a, b) in zip(windows, offsets):
-            existing[w.label] += d.arr * p * (timing.cdf(b) - timing.cdf(a))
+    if existing is None:
+        existing = _zeros(windows)
+        for d in open_deals:
+            p = model.win_rate(d.stage, (cutoff - d.created).days)
+            timing = model.timing(d.stage, (cutoff - d.created).days)
+            for w, (a, b) in zip(windows, offsets):
+                existing[w.label] += d.arr * p * (timing.cdf(b) - timing.cdf(a))
 
     new = model.new_pipeline
     future = _zeros(windows)

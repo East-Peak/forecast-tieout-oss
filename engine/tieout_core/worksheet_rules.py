@@ -133,11 +133,21 @@ def scaled_days(samples: tuple[int, ...], scale: Fraction) -> tuple[int, ...]:
     return tuple(-(-(d * scale.numerator) // scale.denominator) for d in samples)
 
 
-def scale_steps(samples: tuple[int, ...]) -> list[Fraction]:
-    """Every scale in [0, 1] at which ``scaled_days`` of some sample changes, sorted. Between
-    two neighbors the scaled samples are identical, so these are all the distinct timings a
-    scale can give, and the largest scale that reaches a target is one of them."""
-    return sorted(
-        {Fraction(k, d) for d in samples if d > 0 for k in range(d + 1)}
-        | {Fraction(0), Fraction(1)}
+def boundary_at_or_after(samples: tuple[int, ...], scale: Fraction) -> Fraction:
+    """The smallest scale of at least ``scale`` at which a rounded win time changes. A sample of
+    ``d`` days rounds to ``k`` days for every scale in ((k - 1) / d, k / d], so the changes are
+    at the scales ``k / d``, and at each the faster timing still holds."""
+    return min(
+        Fraction(-(-(scale.numerator * d) // scale.denominator), d)
+        for d in set(samples)
+        if d > 0
+    )
+
+
+def boundary_at_or_before(samples: tuple[int, ...], scale: Fraction) -> Fraction:
+    """The largest scale of at most ``scale`` at which a rounded win time changes."""
+    return max(
+        Fraction((scale.numerator * d) // scale.denominator, d)
+        for d in set(samples)
+        if d > 0
     )

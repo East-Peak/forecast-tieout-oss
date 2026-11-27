@@ -258,7 +258,11 @@ def test_the_linear_solve_on_the_real_forward_function_lands_on_the_target():
 
 
 def steps_for(samples):
-    return rules.scale_steps(samples)
+    """Every scale at which a rounded day changes, found the long way: all k / d."""
+    return sorted(
+        {Fraction(k, d) for d in samples for k in range(d + 1)}
+        | {Fraction(0), Fraction(1)}
+    )
 
 
 def fy_by_scale(g, scale):
@@ -275,7 +279,7 @@ def test_the_cycle_solve_returns_the_largest_scale_that_reaches_the_target_and_i
     target = values[Fraction(1, 2)] - D("0.01")
     best = max(s for s, v in values.items() if v >= target)
     r = wd.solve_cycle(
-        lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))), steps, target
+        lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))), SAMPLES, target
     )
     assert (r.outcome, r.scale) == (wd.SOLVES, best)
     assert r.achieved == values[best] and r.overshoot == values[best] - target
@@ -286,10 +290,9 @@ def test_the_cycle_solve_returns_the_largest_scale_that_reaches_the_target_and_i
 def test_a_target_met_at_zero_days_only_is_still_a_solve_at_scale_zero():
     g = ground(timing=(30, 60))
     p = wd.Probe(g)
-    steps = steps_for(SAMPLES)
     target = fy_by_scale(g, Fraction(0))
     r = wd.solve_cycle(
-        lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))), steps, target
+        lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))), SAMPLES, target
     )
     assert r.outcome == wd.SOLVES and r.scale == Fraction(0)
 
@@ -297,10 +300,11 @@ def test_a_target_met_at_zero_days_only_is_still_a_solve_at_scale_zero():
 def test_a_company_that_cannot_close_on_cycle_even_at_zero_days_says_so():
     g = ground(timing=(30, 60))
     p = wd.Probe(g)
-    steps = steps_for(SAMPLES)
     zero = fy_by_scale(g, Fraction(0))
     r = wd.solve_cycle(
-        lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))), steps, zero + 1
+        lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))),
+        SAMPLES,
+        zero + 1,
     )
     assert (r.outcome, r.reason, r.scale, r.achieved) == (
         wd.CANNOT,
@@ -316,7 +320,7 @@ def test_cycle_already_ahead_needs_nothing():
     base = p.fiscal_year(p.base)
     r = wd.solve_cycle(
         lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))),
-        steps_for(SAMPLES),
+        SAMPLES,
         base - 1,
     )
     assert (r.outcome, r.scale) == (wd.COVERED, Fraction(1))
@@ -326,3 +330,31 @@ def test_model_forecast_is_what_the_probe_runs():
     g = ground()
     assert Scenario(g).forecast() == model_forecast(g.model, g.pop, g.as_of, g.windows)
     assert replace(g).model is g.model
+
+
+def test_a_probe_gives_what_the_whole_forward_function_gives_for_every_driver():
+    g = ground()
+    flows = (Inflow(10, 100, D(400_000)),)
+    p = wd.Probe(g, inflows=flows)
+    for driver in rules.DRIVERS:
+        adjusted = wd.with_setting(g, driver, wd.current_value(g, driver) * D("0.7"))
+        assert p.forecast(adjusted) == Scenario(adjusted).forecast(inflows=flows)
+
+
+def test_the_cycle_solve_agrees_with_a_search_of_every_step_for_many_targets():
+    g = ground(timing=(30, 45, 60, 90))
+    samples = (30, 45, 60, 90)
+    p = wd.Probe(g)
+    steps = steps_for(samples)
+    values = {s: fy_by_scale(g, s) for s in steps}
+    low, high = min(values.values()), max(values.values())
+    for k in range(1, 12):
+        target = low + (high - low) * k / 12
+        best = max(s for s, v in values.items() if v >= target)
+        r = wd.solve_cycle(
+            lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))),
+            samples,
+            target,
+        )
+        assert r.outcome in (wd.SOLVES, wd.COVERED)
+        assert r.scale == best

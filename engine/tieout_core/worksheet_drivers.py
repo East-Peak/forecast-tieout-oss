@@ -16,10 +16,18 @@ from fractions import Fraction
 
 from .actions import Ground, Scenario
 from .fit import Timing
-from .forecast import Forecast, Inflow
+from .forecast import EXISTING, Forecast, Inflow, model_forecast
 from .plan import NEXT_12, REST_OF_FY
 from .roster import Member
-from .worksheet_rules import CYCLE_DAYS, PRODUCTIVITY, WIN_RATE, WON_ARR, scaled_days
+from .worksheet_rules import (
+    CYCLE_DAYS,
+    PRODUCTIVITY,
+    WIN_RATE,
+    WON_ARR,
+    boundary_at_or_after,
+    boundary_at_or_before,
+    scaled_days,
+)
 
 ZERO = Decimal(0)
 ONE = Decimal(1)
@@ -117,11 +125,29 @@ class Probe:
         self.g = g
         self.hires, self.inflows = tuple(hires), tuple(inflows)
         self.scenario = Scenario(g)
-        self.base = self.scenario.forecast(self.hires, self.inflows)
+        self._creation = self.scenario.creation(self.hires)
+        self.base = self._run(g.model, self._creation)
         self._shown_base = self.shown(self.base)
 
+    def _run(self, model, creation, existing=None) -> Forecast:
+        g = self.g
+        return model_forecast(
+            model, g.pop, g.as_of, g.windows,
+            creation=creation, inflows=self.inflows, existing=existing,
+        )  # fmt: skip
+
     def forecast(self, adjusted: Ground) -> Forecast:
-        return Scenario(adjusted).forecast(self.hires, self.inflows)
+        """The forecast for ``adjusted`` (a ground made by the overrides above) with this probe's
+        hires and program pipeline. What a driver cannot touch is reused, not recomputed: open
+        deals are the baseline's, and the roster's ramped AE-months are projected once, with
+        creation per day being the fitted rate times them (the very product ``project`` forms)."""
+        creation = self._creation
+        if creation is not None and adjusted.cap.fit.rate != self.g.cap.fit.rate:
+            rate = adjusted.cap.fit.rate
+            creation = replace(
+                creation, per_day=tuple(rate * x for x in creation.ramped_ae_months)
+            )
+        return self._run(adjusted.model, creation, self.base.components[EXISTING])
 
     def shown(self, f: Forecast) -> dict[str, Decimal]:
         return self.scenario.bookings(f)
@@ -177,24 +203,33 @@ def solve_linear(
 
 
 def solve_cycle(
-    fy_at_scale: Callable[[Fraction], Decimal], steps: list[Fraction], target: Decimal
+    fy_at_scale: Callable[[Fraction], Decimal],
+    samples: tuple[int, ...],
+    target: Decimal,
 ) -> Needed:
-    """The largest scale of the win-time samples that takes fiscal-year bookings to ``target``.
-    Rounding up to whole days makes bookings a step function of the scale, so there is no exact
-    root: the answer is the largest step that reaches the target, with what it overshoots by.
-    ``steps`` are every scale at which a rounded day changes, ascending from zero to one."""
+    """The largest scale of the win-time ``samples`` that takes fiscal-year bookings to
+    ``target``. Rounding up to whole days makes bookings a step function of the scale, so there
+    is no exact root: the answer is the largest step that reaches the target, with what it
+    overshoots by. Bookings never rise as the scale does, so the search narrows a scale that
+    reaches the target and one that does not until no step lies between them."""
     base = fy_at_scale(Fraction(1))
     if base >= target:
         return Needed(COVERED, None, base, scale=Fraction(1))
     zero = fy_at_scale(Fraction(0))
     if zero < target:
         return Needed(CANNOT, None, zero, ZERO_DAYS_SHORT, scale=Fraction(0))
-    lo, hi = 0, len(steps) - 1  # steps[lo] reaches the target; steps[hi] does not
-    while lo + 1 < hi:
-        mid = (lo + hi) // 2
-        if fy_at_scale(steps[mid]) >= target:
-            lo = mid
+    lo, hi = Fraction(0), Fraction(1)  # lo reaches the target, hi does not
+    reached = {lo: zero}
+    while True:
+        mid = (lo + hi) / 2
+        step = boundary_at_or_after(samples, mid)
+        if not lo < step < hi:
+            step = boundary_at_or_before(samples, mid)
+            if not lo < step < hi:
+                break
+        value = fy_at_scale(step)
+        if value >= target:
+            lo, reached[step] = step, value
         else:
-            hi = mid
-    achieved = fy_at_scale(steps[lo])
-    return Needed(SOLVES, None, achieved, overshoot=achieved - target, scale=steps[lo])
+            hi = step
+    return Needed(SOLVES, None, reached[lo], overshoot=reached[lo] - target, scale=lo)

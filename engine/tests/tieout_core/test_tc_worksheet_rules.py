@@ -78,16 +78,17 @@ def test_scaling_rounds_each_sample_up_to_whole_days():
     assert rules.scaled_days((10, 30), Fraction(1)) == (10, 30)
 
 
-def test_scale_steps_are_every_scale_where_a_rounded_day_changes():
-    steps = rules.scale_steps((2, 3))
-    assert steps == [
-        Fraction(0),
-        Fraction(1, 3),
-        Fraction(1, 2),
-        Fraction(2, 3),
-        Fraction(1),
-    ]
-    # between two neighbors nothing changes; at each step the faster timing holds
+def test_boundaries_are_the_scales_where_a_rounded_day_changes():
+    # samples of two and three days change at 1/3, 1/2 and 2/3 (and at zero and one)
+    samples = (2, 3, 3)
+    assert rules.boundary_at_or_after(samples, Fraction(0)) == Fraction(0)
+    assert rules.boundary_at_or_after(samples, Fraction(1, 100)) == Fraction(1, 3)
+    assert rules.boundary_at_or_after(samples, Fraction(1, 3)) == Fraction(1, 3)
+    assert rules.boundary_at_or_after(samples, Fraction(2, 5)) == Fraction(1, 2)
+    assert rules.boundary_at_or_before(samples, Fraction(2, 5)) == Fraction(1, 3)
+    assert rules.boundary_at_or_before(samples, Fraction(99, 100)) == Fraction(2, 3)
+    assert rules.boundary_at_or_before(samples, Fraction(1)) == Fraction(1)
+    # at each boundary the faster timing holds; just past it, the slower
     assert rules.scaled_days((2, 3), Fraction(1, 2)) == (1, 2)
     assert rules.scaled_days((2, 3), Fraction(1, 2) + Fraction(1, 100)) == (2, 2)
 

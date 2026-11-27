@@ -290,7 +290,7 @@ def _needed(c: Context, driver: str, current: Decimal, observed) -> dict:
         def at_scale(s: Fraction) -> Decimal:
             return base_fy if s == 1 else fy_for(wd.with_cycle_scale(g, s))
 
-        r = wd.solve_cycle(at_scale, rules.scale_steps(samples), c.fy_target)
+        r = wd.solve_cycle(at_scale, samples, c.fy_target)
         value = current if r.outcome == wd.COVERED else wd.realized_cycle(g, r.scale)
         scale = (
             None
