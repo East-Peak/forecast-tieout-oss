@@ -9,6 +9,7 @@ import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
 import { Summary } from "./Summary";
+import { Tornado } from "./Tornado";
 import { WS } from "./worksheetBindings";
 import { YourPlanForm } from "./YourPlanForm";
 import { WindowTable } from "./WindowTable";
@@ -39,6 +40,7 @@ export default function PlanScreen() {
         </Callout>
       )}
       {scenario === YOUR_PLAN ? <YourPlanForm company={company} /> : null}
+      {worksheet ? <Tornado sheet={worksheet} /> : null}
 
       {plan !== undefined && full === null ? (
         <Callout color="amber" title="This plan cannot be valued" data-testid="plan-unavailable">

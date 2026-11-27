@@ -30,3 +30,18 @@ export const STACK_LG = {
   /** a cell that carries no label of its own (the row's title) */
   title: "block px-0 py-1 font-medium lg:table-cell lg:px-3 lg:py-3",
 } as const;
+
+/**
+ * The same stacking again, with the columns from the extra-large breakpoint: for the worksheet's driver table, whose
+ * columns include a bar drawn in its own cell. Written out in full for the same reason as STACK_LG.
+ */
+export const STACK_XL = {
+  table: "block xl:table",
+  head: "hidden xl:table-header-group",
+  body: "block xl:table-row-group",
+  row: "block border-b border-slate-100 py-3 last:border-0 xl:table-row xl:border-b-0 xl:py-0",
+  cell:
+    "flex min-w-0 items-baseline justify-between gap-4 [overflow-wrap:anywhere] px-0 py-1 text-right before:text-left before:text-[11px] before:font-semibold before:uppercase before:text-ft-brand before:content-[attr(data-label)] xl:table-cell xl:px-3 xl:py-3 xl:text-left xl:before:hidden",
+  /** a cell that carries no label of its own (the row's title) */
+  title: "block px-0 py-1 font-medium xl:table-cell xl:px-3 xl:py-3",
+} as const;

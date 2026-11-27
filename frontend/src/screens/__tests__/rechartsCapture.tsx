@@ -26,7 +26,8 @@ export function withCapture(actual: Recharts, captured: unknown[]): Recharts {
       const parts = flatten(props.children);
       captured.push({
         data: props.data,
-        xKey: (parts.find((p) => nameOf(p) === "XAxis")?.props as { dataKey?: string } | undefined)?.dataKey,
+        // the category axis: the x axis, or the y axis of a horizontal chart
+        xKey: (parts.find((p) => ["XAxis", "YAxis"].includes(nameOf(p)) && (p.props as { dataKey?: string }).dataKey !== undefined)?.props as { dataKey?: string } | undefined)?.dataKey,
         series: parts
           .filter((p) => ["Bar", "Area", "Line"].includes(nameOf(p)))
           .map((p) => ({ type: nameOf(p), dataKey: (p.props as { dataKey: string }).dataKey, stackId: (p.props as { stackId?: unknown }).stackId })),
