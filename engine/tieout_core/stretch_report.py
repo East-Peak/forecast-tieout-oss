@@ -166,8 +166,8 @@ def _coverage(inside: int, scored: int) -> float | None:
     return round(inside / scored, 4) if scored else None
 
 
-def _factor(x: float) -> str | None:
-    return None if x == float("inf") else f"{x:.4f}"
+def _factor(x: float | None) -> str | None:
+    return None if x is None else f"{x:.4f}"
 
 
 def _width(x: float | None) -> str | None:

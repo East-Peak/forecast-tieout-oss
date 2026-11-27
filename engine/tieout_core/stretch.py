@@ -32,13 +32,27 @@ INFINITE = math.inf
 
 @dataclass(frozen=True)
 class Factors:
-    lower: float
-    upper: float
+    """The two factors in use. A side is None when no finite factor would have held 90% of the
+    eligible folds (a past miss fell on a side with no width): that side keeps its simulated edge."""
+
+    lower: float | None
+    upper: float | None
     eligible: int  # the past folds they were learned from
 
     @property
     def learned(self) -> bool:
         return self.eligible >= MIN_ELIGIBLE_FOLDS
+
+
+@dataclass(frozen=True)
+class ScoredFold:
+    """One scored past date: where the actual fell against each range, and the factors used."""
+
+    cutoff: date
+    inside_simulated: bool
+    inside_stretched: bool
+    lower: float | None
+    upper: float | None
 
 
 @dataclass(frozen=True)
@@ -52,6 +66,7 @@ class HorizonStretch:
     median_width_simulated: float | None
     median_width_stretched: float | None
     factors: Factors
+    detail: tuple[ScoredFold, ...] = ()
 
 
 def needed(fold: Fold) -> tuple[float, float]:
@@ -86,9 +101,10 @@ def eligible_folds(folds: list[Fold], horizon: int, as_of: date) -> list[Fold]:
     ]
 
 
-def _smallest_holding(required: list[float]) -> float:
+def _smallest_holding(required: list[float]) -> float | None:
     ranked = sorted(required)
-    return ranked[side_rank(len(ranked)) - 1]
+    rank = ranked[side_rank(len(ranked)) - 1]
+    return rank if math.isfinite(rank) else None
 
 
 def factors_from(eligible: list[Fold]) -> Factors:
@@ -108,13 +124,18 @@ def factors_at(folds: list[Fold], horizon: int, as_of: date) -> Factors:
     return factors_from(eligible_folds(folds, horizon, as_of))
 
 
-def _stretch_side(edge: float, mid: float, factor: float) -> float:
+def _stretch_side(edge: float, mid: float, factor: float | None) -> float:
     distance = mid - edge if edge <= mid else edge - mid
-    if distance == 0 or factor == 1.0:
+    if distance == 0 or factor is None or factor == 1.0:
         return (
             edge  # no width to stretch, or nothing to stretch by: keep the edge exact
         )
     return mid - factor * distance if edge <= mid else mid + factor * distance
+
+
+def floored(low: float, mid: float, factors: Factors) -> bool:
+    """Whether stretching this lower edge would have taken it below zero (and so was floored)."""
+    return _stretch_side(low, mid, factors.lower) < 0
 
 
 def stretch_range(
@@ -128,15 +149,26 @@ def stretch_range(
     )
 
 
-def stretch_spread(spread: Spread, factors: Factors) -> Spread:
-    """Both ranges of a simulated spread, stretched by the same factors about its median."""
+def stretch_spread_with_floors(
+    spread: Spread, factors: Factors
+) -> tuple[Spread, tuple[bool, bool]]:
+    """Both ranges of a simulated spread, stretched by the same factors about its median, and
+    whether the 80% and the 95% lower edge had to be floored at zero."""
 
     def edges(low: float, high: float) -> tuple[float, float]:
         return stretch_range(low, spread.p50, high, factors)
 
     p10, p90 = edges(spread.p10, spread.p90)
     p2_5, p97_5 = edges(spread.p2_5, spread.p97_5)
-    return replace(spread, p2_5=p2_5, p10=p10, p90=p90, p97_5=p97_5)
+    flags = (
+        floored(spread.p10, spread.p50, factors),
+        floored(spread.p2_5, spread.p50, factors),
+    )
+    return replace(spread, p2_5=p2_5, p10=p10, p90=p90, p97_5=p97_5), flags
+
+
+def stretch_spread(spread: Spread, factors: Factors) -> Spread:
+    return stretch_spread_with_floors(spread, factors)[0]
 
 
 def horizon_for(as_of: date, end: date) -> tuple[int, bool]:
@@ -157,6 +189,7 @@ def score_horizon(folds: list[Fold], horizon: int, as_of: date) -> HorizonStretc
     The simulated range is counted on the same folds. The factors in use at ``as_of`` are
     learned from every fold eligible then."""
     inside_sim = inside_str = 0
+    detail: list[ScoredFold] = []
     width_sim: list[float] = []
     width_str: list[float] = []
     for f in sorted(
@@ -169,10 +202,13 @@ def score_horizon(folds: list[Fold], horizon: int, as_of: date) -> HorizonStretc
         if len(past) < MIN_ELIGIBLE_FOLDS:
             continue
         low, high = f.range80
-        new_low, new_high = stretch_range(low, f.median, high, factors_from(past))
+        used = factors_from(past)
+        new_low, new_high = stretch_range(low, f.median, high, used)
         actual = float(f.actual)
-        inside_sim += low <= actual <= high
-        inside_str += new_low <= actual <= new_high
+        held_sim, held_str = low <= actual <= high, new_low <= actual <= new_high
+        inside_sim += held_sim
+        inside_str += held_str
+        detail.append(ScoredFold(f.cutoff, held_sim, held_str, used.lower, used.upper))
         width_sim.append(high - low)
         width_str.append(new_high - new_low)
     return HorizonStretch(
@@ -183,4 +219,5 @@ def score_horizon(folds: list[Fold], horizon: int, as_of: date) -> HorizonStretc
         median(width_sim) if width_sim else None,
         median(width_str) if width_str else None,
         factors_at(folds, horizon, as_of),
+        tuple(detail),
     )

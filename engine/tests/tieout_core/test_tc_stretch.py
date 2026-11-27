@@ -22,6 +22,7 @@ from engine.tieout_core.stretch import (
     score_horizon,
     stretch_range,
     stretch_spread,
+    stretch_spread_with_floors,
 )
 
 
@@ -111,7 +112,7 @@ def test_each_side_has_its_own_factor():
 def test_a_side_the_stretch_cannot_reach_is_left_alone_and_the_fold_counts_as_a_miss():
     folds = [make(date(2025, 1, 28), 1, 80, low=100.0)] * 5
     f = factors_from(folds)
-    assert math.isinf(f.lower)
+    assert f.lower is None  # no finite factor would have held them
     low, _ = stretch_range(100.0, 100.0, 110.0, f)
     assert low == 100.0  # no width to stretch
 
@@ -232,3 +233,61 @@ def test_a_factor_of_one_leaves_the_range_bit_for_bit_alone():
         57.123456789,
         143.987654321,
     )
+
+
+def unreachable_upper(n=5):
+    """Folds whose median sits on p90 (no width above it) and whose actual lay above it."""
+    return [make(date(2025, 1, 28), 1, 120, high=100.0)] * n
+
+
+def test_a_learned_factor_that_is_infinite_is_unavailable_not_infinity():
+    f = factors_from(unreachable_upper())
+    assert f.upper is None and f.lower == 1.0 and f.learned
+
+
+def test_an_unavailable_factor_leaves_a_side_with_width_at_its_simulated_edge_in_both_ranges():
+    f = factors_from(unreachable_upper())
+    # a later range whose upper side does have width: the unavailable factor must not stretch it
+    low, high = stretch_range(90.0, 100.0, 110.0, f)
+    assert (low, high) == (90.0, 110.0)
+    s = Spread(mean=100.0, p2_5=80.0, p10=90.0, p50=100.0, p90=110.0, p97_5=125.0)
+    out = stretch_spread(s, f)
+    assert (out.p90, out.p97_5) == (110.0, 125.0)
+    assert all(math.isfinite(v) for v in (out.p2_5, out.p10, out.p90, out.p97_5))
+
+
+def test_an_unavailable_factor_on_a_zero_width_side_also_leaves_it_alone():
+    f = factors_from(unreachable_upper())
+    assert stretch_range(90.0, 100.0, 100.0, f) == (90.0, 100.0)
+
+
+def test_scoring_counts_a_fold_on_an_unavailable_side_as_it_falls():
+    # five folds that cannot be reached above, then a sixth whose range has width and whose actual is above it
+    folds = unreachable_upper(5) + [make(date(2025, 7, 28), 1, 120)]
+    s = score_horizon(folds, 1, date(2026, 6, 30))
+    assert s.scored == 1
+    assert (s.inside_simulated, s.inside_stretched) == (0, 0)
+    assert s.factors.upper is None
+
+
+def test_a_range_says_when_its_lower_edge_was_floored_at_zero():
+    s = Spread(mean=100.0, p2_5=20.0, p10=40.0, p50=100.0, p90=110.0, p97_5=125.0)
+    out, flags = stretch_spread_with_floors(
+        s, Factors(2.0, 1.0, 10)
+    )  # 100 - 2 * 60 < 0 for the 80%
+    assert out.p10 == 0.0 and flags == (True, True)
+    _, flags = stretch_spread_with_floors(
+        s, Factors(1.5, 1.0, 10)
+    )  # 80% -> 10, 95% -> -20
+    assert flags == (False, True)
+    _, flags = stretch_spread_with_floors(s, Factors(1.0, 1.0, 10))
+    assert flags == (False, False)
+
+
+def test_the_scorer_keeps_each_scored_date_with_the_factors_it_used():
+    s = score_horizon(monthly(1, [100] * 8 + [70] * 4), 1, date(2026, 6, 30))
+    assert [d.cutoff for d in s.detail] == sorted(d.cutoff for d in s.detail)
+    assert len(s.detail) == s.scored == 7
+    assert sum(d.inside_simulated for d in s.detail) == s.inside_simulated
+    assert sum(d.inside_stretched for d in s.detail) == s.inside_stretched
+    assert s.detail[0].lower == 1.0 and s.detail[-1].lower == 3.0
