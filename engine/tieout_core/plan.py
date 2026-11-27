@@ -96,12 +96,18 @@ def next_month_start(as_of: date) -> date:
 
 def load_plan(path: Path, as_of: date, members) -> Plan:
     doc = yaml.safe_load(Path(path).read_text()) or {}
+    return parse_plan(doc, as_of, members, str(path))
+
+
+def parse_plan(doc: dict, as_of: date, members, source: str) -> Plan:
+    """A plan from its parsed document; ``source`` names it at the start of every message
+    (the file's path, or "your plan" when it came from a form)."""
     signed = {
         (m.segment, m.start.year, m.start.month) for m in members if m.start > as_of
     }
     hires = []
     for i, raw in enumerate(doc.get("hires") or (), start=1):
-        where = f"{path}: hires[{i}]"
+        where = f"{source}: hires[{i}]"
         start = _month(raw.get("start"), as_of, where)
         segment = str(raw.get("segment") or "").strip()
         count = raw.get("count", 1)
@@ -115,7 +121,7 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
         hires.append(PlanHire(segment, start, count))
     programs = []
     for i, raw in enumerate(doc.get("programs") or (), start=1):
-        where = f"{path}: programs[{i}]"
+        where = f"{source}: programs[{i}]"
         pipeline = _decimal(raw.get("pipeline"), "pipeline", where)
         if pipeline <= 0:
             raise ValueError(f"{where}: pipeline must be more than 0")
