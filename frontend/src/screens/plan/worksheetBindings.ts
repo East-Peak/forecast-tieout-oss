@@ -51,6 +51,15 @@ export const WS = {
   sensitivityNote: text("worksheet.sensitivity-note", `${SHEET}/sensitivity_note`),
   expectationNote: text("worksheet.expectation-note", `${SHEET}/expectation_note`),
 
+  // the bridge
+  bridgeMeasure: text("worksheet.bridge.measure", `${SHEET}/bridge/measure`),
+  bridgeOrder: text("worksheet.bridge.order", `${SHEET}/bridge/order`),
+  bridgeTarget: usd("worksheet.bridge.target", `${SHEET}/bridge/target/value`),
+
+  // the as-signed chain
+  chainNote: text("worksheet.chain.note", `${SHEET}/chain/note`),
+  chainUnavailable: text("worksheet.chain.unavailable", `${SHEET}/chain/unavailable`),
+
 
 
 } as const satisfies Record<string, Binding>;
@@ -104,9 +113,47 @@ export const ACTION = {
   closes: text("action.worksheet.closes", "/closes_alone_label"),
 } as const;
 
+/** One step of the bridge, read from `/worksheet/bridge/steps/{i}`. */
+export const STEP = {
+  label: text("step.label", "/label"),
+  level: usd("step.level", "/to"),
+  change: usd("step.change", "/change", { unavailable: words("not valued") }),
+  note: text("step.note", "/note"),
+} as const;
+
+/** Where the quarter table reads: the as-signed quarter, and the working plan's. */
+export const QUARTER = {
+  quarter: text("quarter.name", "/quarter"),
+  target: usd("quarter.target", "/target"),
+  asSigned: usd("quarter.as-signed", "/expected", { unavailable: words("unavailable") }),
+  /** the working plan's quarter: read from the plan's own quarters, or from the as-signed ones where no plan is in force */
+  planned: usd("quarter.planned", "/expected", { unavailable: words("unavailable") }),
+  remainingGap: usd("quarter.remaining-gap", "/gap", { tint: "shortfall", unavailable: words("unavailable") }),
+} as const;
+
+/** One remaining quarter of the as-signed chain, read from `/worksheet/chain/quarters/{i}`. */
+export const CHAIN = {
+  quarter: text("chain.quarter", "/quarter"),
+  status: text("chain.status", "/status/value"),
+  bookingsTarget: usd("chain.bookings.target", "/bookings/target/value"),
+  bookingsExpected: usd("chain.bookings.expected", "/bookings/expected/value", { unavailable: words("unavailable") }),
+  bookingsGap: usd("chain.bookings.gap", "/bookings/gap/value", { tint: "shortfall", unavailable: words("unavailable") }),
+  pipelineRequired: usd("chain.pipeline.required", "/created_pipeline/required/value", { unavailable: { reason: "/created_pipeline/required_note/value", sentence: true, words: "no figure" } }),
+  pipelineExpected: usd("chain.pipeline.expected", "/created_pipeline/expected/value"),
+  pipelineHeadline: text("chain.pipeline.headline", "/created_pipeline/headline/value"),
+  perRequired: usd("chain.per-ae.required", "/per_ramped_ae_month/required/value", { unavailable: { reason: "/per_ramped_ae_month/note/value", sentence: true, words: "no figure" } }),
+  perExpected: usd("chain.per-ae.expected", "/per_ramped_ae_month/expected/value", { unavailable: { reason: "/per_ramped_ae_month/note/value", sentence: true, words: "no figure" } }),
+  timingLabel: text("chain.timing.label", "/timing/label/value"),
+  timingReason: text("chain.timing.reason", ""),
+} as const;
+
 export const WS_ROWS = {
   drivers: `${SHEET}/drivers`,
   actions: `${SHEET}/actions/rows`,
+  steps: `${SHEET}/bridge/steps`,
+  chain: `${SHEET}/chain/quarters`,
+  gapQuarters: "/gap/quarters",
+  plannedQuarters: "/plan/with_plan_quarters",
 } as const;
 
 /** The two bars of a driver, in a window: the change at its historical low and high settings. */
@@ -125,10 +172,34 @@ export function actionSeries(window: Window): { gain: SeriesSpec } {
   };
 }
 
+/**
+ * The bridge's bars: the two totals stand on the scale's floor, each item floats from where the one above it
+ * ended to where it ends (the file's own `from` and `to`), and the remaining gap floats from the working plan to the target.
+ */
+export const BRIDGE_SERIES = {
+  total: { key: "total", label: "Total", kind: "decimal", path: `${SHEET}/bridge/steps/{period}/to`, periods: { indexesAt: `${SHEET}/bridge/steps`, where: ["kind", ["as_signed", "working_plan"]] } },
+  move: {
+    key: "move",
+    label: "Plan item",
+    kind: "span",
+    path: `${SHEET}/bridge/steps/{period}/to`,
+    from: `${SHEET}/bridge/steps/{period}/from`,
+    periods: { indexesAt: `${SHEET}/bridge/steps`, where: ["kind", ["hires", "program"]] },
+  },
+  gap: {
+    key: "gap",
+    label: "Remaining gap",
+    kind: "span",
+    path: `${SHEET}/bridge/target/value`,
+    from: `${SHEET}/bridge/steps/{kind=working_plan}/to`,
+    periods: { indexesAt: `${SHEET}/bridge/steps`, where: ["kind", ["remaining_gap"]] },
+  },
+} as const satisfies Record<string, SeriesSpec>;
+
 function everyBinding(): Binding[] {
   const flat = (o: Record<string, unknown>): Binding[] =>
     Object.values(o).flatMap((v) => (v && typeof v === "object" && "id" in v ? [v as Binding] : flat(v as Record<string, unknown>)));
-  return [...flat(WS), ...flat(DRIVER), ...flat(OBSERVATION), ...flat(ACTION)];
+  return [...flat(WS), ...flat(DRIVER), ...flat(OBSERVATION), ...flat(ACTION), ...flat(STEP), ...flat(QUARTER), ...flat(CHAIN)];
 }
 
 export const WORKSHEET_BINDINGS: readonly Binding[] = everyBinding();

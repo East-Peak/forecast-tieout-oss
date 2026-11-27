@@ -10,19 +10,39 @@ import { formatValue, signOf } from "../../lib/format";
  * ahead and shortfall. A gap in the file is a gap in the chart.
  */
 const MARGIN = { top: 4, right: 12, bottom: 4, left: 12 } as const;
-const colorOf = (value: unknown) => (typeof value === "number" && signOf(value) < 0 ? CHART_COLORS.negative : CHART_COLORS.positive);
+/** Green is more booked, red less: a number by its side of zero, a floating span by the way it runs. */
+export function direction(value: unknown): string {
+  if (Array.isArray(value)) return value[1] < value[0] ? CHART_COLORS.negative : CHART_COLORS.positive;
+  return typeof value === "number" && signOf(value) < 0 ? CHART_COLORS.negative : CHART_COLORS.positive;
+}
 
-export function BarCell({ row, keys, domain, label }: { row: PlotRow; keys: readonly string[]; domain: [number, number]; label: string }) {
+export function BarCell({
+  row,
+  keys,
+  domain,
+  label,
+  fill = (_key, value) => direction(value),
+  reference,
+}: {
+  row: PlotRow;
+  keys: readonly string[];
+  domain: [number, number];
+  label: string;
+  /** the color of a bar, by series and value (the default is `direction`) */
+  fill?: (key: string, value: unknown) => string;
+  /** a vertical line at this value (the bridge's target); without it the line is at zero */
+  reference?: number;
+}) {
   return (
     <div className="relative h-16 xl:absolute xl:inset-0 xl:h-auto" role="img" aria-label={label} data-testid="bar-cell">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart layout="vertical" data={[row]} margin={MARGIN} barGap={3} barCategoryGap="12%">
           <XAxis type="number" domain={domain} hide />
           <YAxis type="category" dataKey="period" hide />
-          <ReferenceLine x={0} stroke={CHART_COLORS.muted} />
+          <ReferenceLine x={reference ?? 0} stroke={CHART_COLORS.muted} strokeDasharray={reference === undefined ? undefined : "4 3"} />
           {keys.map((key) => (
             <Bar key={key} dataKey={key} maxBarSize={16} isAnimationActive={false}>
-              <Cell fill={colorOf(row[key])} />
+              <Cell fill={fill(key, row[key])} />
             </Bar>
           ))}
         </ComposedChart>

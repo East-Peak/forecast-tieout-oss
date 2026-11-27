@@ -8,6 +8,9 @@ import { ActionsCard } from "./ActionsCard";
 import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
+import { Bridge } from "./Bridge";
+import { Chain } from "./Chain";
+import { QuarterTable } from "./QuarterTable";
 import { Summary } from "./Summary";
 import { Tornado } from "./Tornado";
 import { WS } from "./worksheetBindings";
@@ -40,7 +43,14 @@ export default function PlanScreen() {
         </Callout>
       )}
       {scenario === YOUR_PLAN ? <YourPlanForm company={company} /> : null}
-      {worksheet ? <Tornado sheet={worksheet} /> : null}
+      {worksheet ? (
+        <>
+          <Tornado sheet={worksheet} />
+          <Bridge sheet={worksheet} />
+          <QuarterTable />
+          <Chain sheet={worksheet} />
+        </>
+      ) : null}
 
       {plan !== undefined && full === null ? (
         <Callout color="amber" title="This plan cannot be valued" data-testid="plan-unavailable">

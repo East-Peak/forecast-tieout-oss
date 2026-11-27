@@ -45,7 +45,7 @@ function expectedCharts(r: TieoutReport, window: Window): Array<{ name: string; 
 
 /** The charts drawn with bars, once each (the last drawing of each), in page order. */
 function drawn(): CapturedChart[] {
-  const all = (captured as CapturedChart[]).filter((c) => c.series.length > 0);
+  const all = (captured as CapturedChart[]).filter((c) => c.series.some((s) => ["low", "high", "gain"].includes(s.dataKey)));
   const last = new Map<string, CapturedChart>();
   for (const c of all) last.set(`${c.series.map((s) => s.dataKey).join()}|${(c.data as Array<{ period: string }>)[0]?.period}`, c);
   return [...last.values()];

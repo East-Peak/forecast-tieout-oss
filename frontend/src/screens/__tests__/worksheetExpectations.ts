@@ -6,7 +6,7 @@
  */
 import type { Absent, Expectation } from "../../binding/__tests__/harness";
 import type { TieoutReport } from "../../generated/report";
-import { ACTION, DRIVER, OBSERVATION, WS } from "../plan/worksheetBindings";
+import { ACTION, CHAIN, DRIVER, OBSERVATION, QUARTER, STEP, WS } from "../plan/worksheetBindings";
 import * as fmt from "./independent";
 import type { Case } from "./screenChecks";
 
@@ -50,6 +50,9 @@ export function worksheetExpectations({ report: r, comparison, scenario }: Case,
   one(WS.expectationNote.id, ws.expectation_note);
 
   tornado(ws, put, REST_WINDOW);
+  bridge(ws, put);
+  quarters(r, put);
+  chain(ws, put);
   alsoNamed.push(...otherWindowIds());
   return { alsoNamed };
 }
@@ -148,4 +151,65 @@ export function tornado(ws: Sheet, { one: _one, many }: Put, window: WindowKey):
   many(ACTION.name.id, actions.map((a) => a.action.value), aRows);
   many(ACTION.gain[window].id, actions.map((a) => (a.bookings_gained.value === null ? a.status.value : fmt.usdShort(a.bookings_gained.value[window]))), aRows);
   many(ACTION.closes.id, actions.map((a) => a.closes_alone_label), aRows);
+}
+
+/** The bridge, drawn only where a plan is in force: its steps in the report's own order, each with its amount and its change. */
+function bridge(ws: Sheet, { many, when }: Put): void {
+  const b = ws.bridge;
+  const on = ws.plan_in_force;
+  when(on, WS.bridgeMeasure.id, () => b.measure);
+  when(on, WS.bridgeTarget.id, () => fmt.usdShort(b.target.value));
+  when(on, WS.bridgeOrder.id, () => b.order);
+  const steps = on ? b.steps.map((s, i) => [s, i] as const) : [];
+  const rows = (list: ReadonlyArray<readonly [unknown, number]>) => list.map(([, i]) => `/worksheet/bridge/steps/${i}`);
+  many(STEP.label.id, steps.map(([s]) => s.label), rows(steps));
+  many(STEP.level.id, steps.map(([s]) => fmt.usdShort(s.to)), rows(steps));
+  const changed = steps.filter(([s]) => s.change !== null);
+  many(STEP.change.id, changed.map(([s]) => fmt.usdShort(s.change!)), rows(changed));
+  const noted = steps.filter(([s]) => s.note !== null);
+  many(STEP.note.id, noted.map(([s]) => s.note!), rows(noted));
+}
+
+/** Each quarter against its target: the working plan's quarters from the plan in force, or the as-signed ones where there is none. */
+function quarters(r: TieoutReport, { many }: Put): void {
+  const q = r.gap.quarters;
+  const signed = q.map((_, i) => `/gap/quarters/${i}`);
+  many(QUARTER.quarter.id, q.map((x) => x.quarter), signed);
+  many(QUARTER.target.id, q.map((x) => fmt.usdShort(x.target)), signed);
+  many(QUARTER.asSigned.id, q.map((x) => (x.expected === null ? "unavailable" : fmt.usdShort(x.expected))), signed);
+  const plan = r.plan;
+  if (plan !== undefined && "unavailable" in plan) {
+    many(QUARTER.planned.id, []);
+    many(QUARTER.remainingGap.id, []);
+    return;
+  }
+  const own = plan === undefined ? q : plan.with_plan_quarters;
+  const prefix = plan === undefined ? "/gap/quarters" : "/plan/with_plan_quarters";
+  many(QUARTER.planned.id, own.map((x) => (x.expected === null ? "unavailable" : fmt.usdShort(x.expected))), own.map((_, i) => `${prefix}/${i}`));
+  many(QUARTER.remainingGap.id, own.map((x) => (x.gap === null ? "unavailable" : fmt.usdShort(x.gap))), own.map((_, i) => `${prefix}/${i}`));
+}
+
+/** The as-signed chain: three measures and the timing constraint for each remaining quarter. */
+function chain(ws: Sheet, { one, many }: Put): void {
+  one(WS.chainNote.id, ws.chain.note);
+  const unavailable = ws.chain.unavailable;
+  many(WS.chainUnavailable.id, unavailable === null ? [] : [unavailable]);
+  const q = unavailable === null ? ws.chain.quarters : [];
+  const rows = q.map((_, i) => `/worksheet/chain/quarters/${i}`);
+  many(CHAIN.quarter.id, q.map((x) => x.quarter), rows);
+  many(CHAIN.status.id, q.map((x) => x.status.value), rows);
+  many(CHAIN.bookingsTarget.id, q.map((x) => fmt.usdShort(x.bookings.target.value)), rows);
+  many(CHAIN.bookingsExpected.id, q.map((x) => (x.bookings.expected.value === null ? "unavailable" : fmt.usdShort(x.bookings.expected.value))), rows);
+  many(CHAIN.bookingsGap.id, q.map((x) => (x.bookings.gap.value === null ? "unavailable" : fmt.usdShort(x.bookings.gap.value))), rows);
+  const pipeline = q.map((x) => x.created_pipeline);
+  many(CHAIN.pipelineRequired.id, pipeline.map((p) => (p.required.value === null ? (p.required_note.value ?? "no figure") : fmt.usdShort(p.required.value))), rows);
+  many(CHAIN.pipelineExpected.id, pipeline.map((p) => fmt.usdShort(p.expected.value)), rows);
+  many(CHAIN.pipelineHeadline.id, pipeline.map((p) => p.headline.value), rows);
+  const per = q.map((x) => x.per_ramped_ae_month);
+  many(CHAIN.perRequired.id, per.map((p) => (p.required.value === null ? (p.note.value ?? "no figure") : fmt.usdShort(p.required.value))), rows);
+  many(CHAIN.perExpected.id, per.map((p) => (p.expected.value === null ? (p.note.value ?? "no figure") : fmt.usdShort(p.expected.value))), rows);
+  const timed = q.map((x, i) => [x, i] as const).filter(([x]) => x.timing.applies.value);
+  many(CHAIN.timingLabel.id, timed.map(([x]) => x.timing.label.value ?? ""), timed.map(([, i]) => rows[i]));
+  const reasons = timed.flatMap(([x, i]) => x.timing.reasons.value.map((text, j) => ({ text, row: `/worksheet/chain/quarters/${i}/timing/reasons/value/${j}` })));
+  many(CHAIN.timingReason.id, reasons.map((x) => x.text), reasons.map((x) => x.row));
 }
