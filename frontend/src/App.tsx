@@ -13,6 +13,7 @@ const BUILT: Record<string, LazyExoticComponent<ComponentType>> = {
   "/forecast": lazy(() => import("./screens/forecast/ForecastScreen")),
   "/capacity": lazy(() => import("./screens/capacity/CapacityScreen")),
   "/pipeline": lazy(() => import("./screens/pipeline/PipelineScreen")),
+  "/plan": lazy(() => import("./screens/plan/PlanScreen")),
 };
 
 function RouteLoading() {

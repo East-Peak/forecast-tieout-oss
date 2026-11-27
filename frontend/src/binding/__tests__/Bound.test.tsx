@@ -92,6 +92,21 @@ describe("Bound", () => {
     expect(el.textContent).not.toMatch(/\$0/);
   });
 
+  it("a reason that is itself null falls back to the stated words, not an error", () => {
+    show(
+      <Bound
+        binding={bind({
+          id: "r",
+          path: "/gap/fiscal_year/target",
+          unit: "usd",
+          format: "usd-short",
+          unavailable: { reason: "/gap/fiscal_year/target", words: "not within the window" },
+        })}
+      />,
+    );
+    expect(screen.getByText("not within the window")).toHaveAttribute("data-unavailable", "true");
+  });
+
   it("a null can be stated in the file's own words instead of a reason pointer", () => {
     show(
       <Bound

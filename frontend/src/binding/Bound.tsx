@@ -127,7 +127,8 @@ export function Bound({
     let shown = say.words ?? "unavailable";
     if (say.reason) {
       const reasonPath = expandPath((say.absolute ? "" : row) + say.reason, ctx);
-      shown = `unavailable: ${formatValue("text", resolvePointer(ctx.files[binding.source], reasonPath))}`;
+      const reason = resolvePointer(ctx.files[binding.source], reasonPath);
+      shown = reason === null ? shown : `unavailable: ${formatValue("text", reason)}`;
     }
     return (
       <span {...attrs} data-unavailable="true" className={className}>
