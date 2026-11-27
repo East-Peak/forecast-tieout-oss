@@ -12,7 +12,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 
-from . import capacity_report
+from . import capacity_report, pipeline_report
 from .backtest import (
     HORIZONS,
     MIN_FOLDS,
@@ -147,6 +147,16 @@ def build_report(
         cap, as_of, windows, Path(profile_dir), diagnostic
     )
     productivity = capacity_report.quota_productivity(cap, pop, as_of, fy_target)
+    if fitted.available:
+        required, required_checks, _ = pipeline_report.required_pipeline(
+            cap, model, pop, as_of, windows, targets,
+            {q: _quarter_actual(rec, qw) for q, (qw, _) in targets.items()},
+            fy.quarter_keys,
+            LEVER_CAP_MULTIPLE * _trailing_created_arr(pop, as_of, model.params.trailing_days),
+            gap["lever"], fy.start,
+        )  # fmt: skip
+    else:
+        required, required_checks = {"unavailable": fitted.unavailable_reason}, []
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
@@ -164,6 +174,7 @@ def build_report(
             "every rate defined once", True, f"{len(list(book))} rates in one registry"
         ),
         *capacity_report.checks(cap, productivity, fitted),
+        *required_checks,
     ]
     failed = [c for c in checks if not c.passed]
 
@@ -219,6 +230,7 @@ def build_report(
         },
         "roster_capacity": roster_section,
         "quota_productivity": productivity,
+        "required_pipeline": required,
     }
     return report
 

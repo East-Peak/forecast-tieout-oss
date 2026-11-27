@@ -30,6 +30,7 @@ def render(r: dict) -> str:
     if "roster_capacity" in r:
         out += _roster_capacity(r["roster_capacity"])
         out += _productivity(r["quota_productivity"])
+        out += _required(r["required_pipeline"])
     return "\n".join(out).rstrip() + "\n"
 
 
@@ -393,7 +394,7 @@ def _roster_capacity(s: dict) -> list[str]:
     out += [
         f"**Capacity term: {d['outcome']}.** {d['reason']}.",
         "",
-        f"Scored on {d['scored_on']}. {d['label'].capitalize()}.",
+        f"Scored on {d['scored_on']}. {_up(d['label'])}.",
         f"Declared rule: {d['declared_rule']}.",
         f"The forecast, gap, plan and actions use the {d['forecast_uses']}. {d['association']}",
         "",
@@ -519,7 +520,7 @@ def _productivity(s: dict) -> list[str]:
     if "unavailable" in s:
         return out + [f"Unavailable: {s['unavailable']}.", ""]
     out += [
-        f"{s['definition'].capitalize()} ({s['window']}). Observed, never model output.",
+        f"{_up(s['definition'])} ({s['window']}). Observed, never model output.",
         "",
     ]
     rows = [
@@ -557,6 +558,10 @@ def _productivity(s: dict) -> list[str]:
     return out
 
 
+def _up(text: str) -> str:
+    return text[:1].upper() + text[1:]
+
+
 def _pct_str(x) -> str:
     return "n/a" if x is None else f"{float(x):.0%}"
 
@@ -569,3 +574,55 @@ def _spread(x) -> str:
             f"{float(x[k]):.0%}" for k in ("min", "p25", "median", "p75", "max")
         )
     )
+
+
+def _required(s: dict) -> list[str]:
+    out = ["## 10. Required against expected pipeline, by quarter", ""]
+    if "unavailable" in s:
+        return out + [
+            f"Unavailable: the fitted forecast is unavailable ({s['unavailable']}).",
+            "",
+        ]
+    out += [
+        (
+            f"{_up(s['method'])}. Forward function: {s['forward_function']}. Cap: "
+            f"{_usd(s['cap'])} ({s['cap_rule']})."
+        ),
+        "",
+    ]
+    out += _table(
+        ["Quarter", "Target", "Actual", "Created between", "Result", "Bookings without own pipeline",
+         "Expected created", "Required total created", "Ramped AE-months", "Expected per ramped AE-month",
+         "Required per ramped AE-month", "Share of its pipeline booking in the quarter"],
+        [
+            (q["quarter"] + ("" if q["in_fiscal_year"] else " (next year)"), _usd(q["target"]),
+             _usd(q["actual"]), " to ".join(q["created_between"]), q["headline"],
+             _usd(q["bookings_without_own_pipeline"]), _usd(q["expected_created_pipeline"]),
+             _usd(q["required_total_created_pipeline"]), q["ramped_ae_months"] or "n/a",
+             _usd(q["per_ramped_ae_month"]["expected"]), _usd(q["per_ramped_ae_month"]["required_total"]),
+             _pct_str(q["share_booking_in_quarter"]))
+            for q in s["quarters"]
+        ],
+    )  # fmt: skip
+    fy, h = s["fiscal_year"], s["team_history"]
+    out += [
+        (
+            f"Fiscal year, quarter by quarter: **{_usd(fy['sum_of_quarters'])}** of extra pipeline across "
+            f"{', '.join(fy['quarters_needing_pipeline']) or 'no quarters'}"
+            + (
+                f"; unreachable: {', '.join(fy['quarters_unreachable'])}"
+                if fy["quarters_unreachable"]
+                else ""
+            )
+            + f". {fy['relation']} Single-spread lever: {fy['single_spread_lever']}."
+        ),
+        "",
+        (
+            f"The team's own record ({h['quarters']} complete quarters, {h['unit']}): median "
+            f"{_usd(h['median'])}, best four-quarter average {_usd(h['best_four_quarter_average'])}. {h['note']}."
+        ),
+        "",
+        f"_{_up(s['meaning'])}. {_up(s['expected_basis'])}._",
+        "",
+    ]
+    return out

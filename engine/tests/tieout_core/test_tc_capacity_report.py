@@ -300,3 +300,58 @@ def test_a_capacity_fold_cannot_see_a_later_departure_a_later_hire_or_later_deal
     assert again[0].actual != base[0].actual  # only what happened moved
     known = as_known_at(later, cutoff)
     assert all(d.created <= cutoff for d in known.deals)
+
+
+# ---------------------------------------------------------------- section 10
+
+
+@pytest.mark.parametrize("which", ["adopted", "not_shown"])
+def test_required_pipeline_has_a_row_per_open_quarter_and_its_checks_pass(
+    which, request
+):
+    r = request.getfixturevalue(which)
+    sec = r["required_pipeline"]
+    assert [q["quarter"] for q in sec["quarters"]] == ["Q3FY26", "Q4FY26"]
+    assert {q["outcome"] for q in sec["quarters"]} <= {
+        "already covered", "feasible", "unreachable within bounds"
+    }  # fmt: skip
+    checks = {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}
+    name = "quarterly requirements agree with the forward function and sum to the fiscal-year lever"
+    assert checks[name]["passed"], checks[name]["detail"]
+    total = sum(
+        Decimal(q["required_extra_pipeline"])
+        for q in sec["quarters"]
+        if q["required_extra_pipeline"]
+    )
+    assert Decimal(sec["fiscal_year"]["sum_of_quarters"]) == total
+    assert sec["team_history"]["quarters"] > 0
+
+
+def test_expected_pipeline_is_per_ramped_ae_month_beside_the_teams_own_record(adopted):
+    sec = adopted["required_pipeline"]
+    assert float(sec["team_history"]["median"]) > 0
+    q = sec["quarters"][0]
+    assert q["per_ramped_ae_month"]["expected"] is not None
+    assert "capacity term" in sec["forward_function"]
+
+
+def test_when_not_shown_the_expected_pipeline_is_the_flat_rates_and_says_so(not_shown):
+    sec = not_shown["required_pipeline"]
+    assert "flat trailing rate" in sec["forward_function"]
+    assert "diagnostic" in sec["expected_basis"]
+
+
+def test_a_target_the_pipeline_cannot_reach_is_unreachable_and_assigned_nothing(
+    demand, tmp_path
+):
+    profile, data = staffed.write(
+        tmp_path,
+        rep_rate=0.0,
+        demand=18.0,
+        targets={f"Q{q}FY26": 10**10 for q in range(1, 5)},
+    )
+    r = build_report(profile, data, AS_OF, draws=DRAWS)
+    sec = r["required_pipeline"]
+    assert all(q["outcome"] == "unreachable within bounds" for q in sec["quarters"])
+    assert sec["fiscal_year"]["sum_of_quarters"] == "0.00"
+    assert r["verdicts"]["software_correct"]["verdict"] == "yes"
