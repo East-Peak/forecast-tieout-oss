@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EditorFailure, PlanEditorClient, timeoutsFromSearch } from "../client";
+import type { Timeouts } from "../client";
 import type { Facts, FromWorker, PlanDoc, ToWorker } from "../protocol";
 
 class FakeWorker {
@@ -27,7 +28,7 @@ const facts = (company: string): Facts => ({ company, segments: [], months: [], 
 const REPORT = { schema_version: "x", inputs: { identity: { company: "acme", scenario: "your-plan" } } };
 const ROW = { scenario: "your-plan", label: "Your plan" };
 
-function setup(timeouts = { startMs: 1000, applyMs: 500 }) {
+function setup(timeouts: Timeouts = { startMs: 1000, applyMs: 500 }) {
   const workers: FakeWorker[] = [];
   const client = new PlanEditorClient({
     createWorker: () => {
@@ -242,9 +243,21 @@ describe("crashes", () => {
 
 describe("the test hook for shorter timeouts", () => {
   const base = { startMs: 60_000, applyMs: 30_000 };
-  it("shortens both clocks when the address asks for it, and otherwise leaves them", () => {
-    expect(timeoutsFromSearch("?editorTimeout=short", base)).toEqual({ startMs: 3000, applyMs: 3000 });
+  it("shortens the first start-up when the address asks for it, and otherwise leaves the clocks alone", () => {
+    expect(timeoutsFromSearch("?editorTimeout=short", base)).toEqual({ ...base, firstStartMs: 3000 });
     expect(timeoutsFromSearch("?editorTimeout=long", base)).toEqual(base);
     expect(timeoutsFromSearch("", base)).toEqual(base);
+  });
+
+  it("gives only the first start-up the short allowance: a retry after it is not cut off in the middle of a real start", async () => {
+    const { client, workers } = setup({ startMs: 1000, applyMs: 500, firstStartMs: 100 });
+    const first = client.open("acme").catch((e: unknown) => e);
+    await vi.advanceTimersByTimeAsync(100);
+    expect(await first).toMatchObject({ kind: "timeout" });
+    const again = client.open("acme");
+    await vi.advanceTimersByTimeAsync(900);
+    expect(client.status.phase).toBe("starting");
+    opened(workers[1], "acme");
+    await expect(again).resolves.toMatchObject({ company: "acme" });
   });
 });

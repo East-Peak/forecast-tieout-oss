@@ -15,6 +15,8 @@ export interface Timeouts {
   startMs: number;
   /** one Apply: finishing a prepared company with a plan */
   applyMs: number;
+  /** the very first start-up only, when set (the test hook below) */
+  firstStartMs?: number;
 }
 
 export const TIMEOUTS: Timeouts = { startMs: 60_000, applyMs: 30_000 };
@@ -39,15 +41,13 @@ export type EditorStatus =
   | { phase: "computing"; company: string }
   | { phase: "failed"; kind: "timeout" | "crash" | "error"; message: string };
 
-/** What `?editorTimeout=short` sets: both clocks at three seconds. */
-const SHORT_TIMEOUTS: Timeouts = { startMs: 3000, applyMs: 3000 };
-
 /**
- * The test hook: `?editorTimeout=short` shortens both clocks, so a test of the timeout state does not wait
- * a minute. It can only shorten them. Documented in ARCHITECTURE.md.
+ * The test hook: `?editorTimeout=short` lets the first start-up take three seconds instead of a minute, so a
+ * test of the timeout state does not wait one. Every later attempt gets the normal allowance (a retry must be
+ * able to finish a real start). Documented in ARCHITECTURE.md.
  */
 export function timeoutsFromSearch(search: string, base: Timeouts): Timeouts {
-  return new URLSearchParams(search).get("editorTimeout") === "short" ? SHORT_TIMEOUTS : base;
+  return new URLSearchParams(search).get("editorTimeout") === "short" ? { ...base, firstStartMs: 3000 } : base;
 }
 
 interface Pending {
@@ -78,6 +78,7 @@ export class PlanEditorClient {
   private worker: WorkerLike | null = null;
   private facts: Facts | null = null;
   private pending: Pending | null = null;
+  private started = false;
   private readonly listeners = new Set<() => void>();
 
   constructor(private readonly options: Options) {}
@@ -105,7 +106,9 @@ export class PlanEditorClient {
     const worker = this.ensureWorker();
     this.facts = null;
     this.set({ phase: "starting", company, progress: "Starting" });
-    return this.request<Facts>(worker, this.timeouts.startMs, (id) => ({ type: "open", id, company, assets: this.options.assets }), (m, done) => {
+    const limit = this.started ? this.timeouts.startMs : (this.timeouts.firstStartMs ?? this.timeouts.startMs);
+    this.started = true;
+    return this.request<Facts>(worker, limit, (id) => ({ type: "open", id, company, assets: this.options.assets }), (m, done) => {
       if (m.type === "progress") this.set({ phase: "starting", company, progress: m.text });
       else if (m.type === "opened") {
         this.facts = JSON.parse(m.facts) as Facts;
