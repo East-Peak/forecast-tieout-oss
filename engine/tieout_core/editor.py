@@ -119,10 +119,14 @@ def _shaped(doc) -> dict:
 def _error(message: str) -> dict:
     found = _ITEM.match(message)
     if found is None:
-        return {"section": None, "index": None, "message": message}
+        return {"section": None, "index": None, "position": None, "message": message}
     return {
         "section": found.group(1),
-        "index": int(found.group(2)),
+        "index": int(
+            found.group(2)
+        ),  # as the core counts items in its messages, from one
+        "position": int(found.group(2))
+        - 1,  # the same item's place in the list, from zero
         "message": message[len("your plan: ") :],
     }
 

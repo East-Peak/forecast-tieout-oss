@@ -119,6 +119,7 @@ def test_an_invalid_plan_is_explained_in_the_cores_words_beside_its_item(
     assert applied.report_text is None and applied.comparison is None
     [error] = applied.errors
     assert (error["section"], error["index"]) == (section, index)
+    assert error["position"] == index - 1
     assert text in error["message"]
     assert error["message"].startswith(f"{section}[{index}]")
 
