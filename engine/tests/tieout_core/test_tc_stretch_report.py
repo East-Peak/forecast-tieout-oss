@@ -20,7 +20,7 @@ from engine.tests.tieout_core.builders import write_profile
 from engine.tieout_core import contract, stretch_report
 from engine.tieout_core import report as report_module
 from engine.tieout_core.markdown import render
-from engine.tieout_core.stretch_rules import ADOPTED, NOT_ADOPTED, Decision
+from engine.tieout_core.stretch_rules import ADOPTED, NOT_ADOPTED
 
 DRAWS = 300
 PLAN = """\
@@ -53,7 +53,7 @@ def build(world, plan=True):
     )
 
 
-def forced(world, outcome):
+def forced(world, outcome, plan=True):
     """The report with the decision forced. The suite's wrapper validates every report against
     the contract, and a forced decision breaks the contract's rule on purpose, so the check is
     lifted for this build only."""
@@ -62,12 +62,15 @@ def forced(world, outcome):
     def evaluate(bt, as_of):
         ev = original(bt, as_of)
         return replace(
-            ev, decision=Decision(outcome, "forced for the test", None, None)
+            ev,
+            decision=replace(
+                ev.decision, outcome=outcome, reason="forced for the test"
+            ),
         )
 
     stretch_report.evaluate, contract.validate = evaluate, lambda r: []
     try:
-        return build(world)
+        return build(world, plan)
     finally:
         stretch_report.evaluate, contract.validate = original, checked
 
@@ -89,7 +92,7 @@ def stretched(world):
 
 RANGE_KEYS = {
     "range80", "range95", "expected_range80", "expected_range95", "range80_label",
-    "range95_label", "label80", "label95", "by_window_label", "fitted_ranges",
+    "range95_label", "label80", "label95", "by_window_label", "fitted_ranges", "basis", "range_basis",
 }  # fmt: skip
 
 
@@ -115,31 +118,48 @@ def test_the_report_carries_the_decision_with_its_evidence_per_horizon(decided):
     assert "scored folds" in c["reason"] or "pooled" in c["reason"]
 
 
-def test_every_range_is_labeled(stretched):
+def test_every_range_is_labeled_with_the_horizon_whose_factors_it_uses(stretched):
     f = stretched["forecasts"]["fitted_ranges"]
     assert f["by_window_label"].startswith("stretched by past misses")
-    assert f["horizons"]["rest of fiscal year"]["label80"].startswith(
-        "stretched by past misses; held "
-    )
     for h in f["horizons"].values():
-        assert h["label80"].startswith("stretched by past misses")
+        assert h["label80"].startswith("stretched by past misses with the ")
+        assert (
+            " factors, which held " in h["label80"]
+            or "could be scored yet" in h["label80"]
+        )
         assert h["label95"] == "stretched, not separately tested"
+        assert h["basis"]["factor_horizon_months"] in (1, 3, 6)
     year = stretched["gap"]["fiscal_year"]
-    assert year["range80_label"].startswith("stretched by past misses")
+    assert year["range80_label"].startswith("stretched by past misses with the ")
     assert year["range95_label"] == "stretched, not separately tested"
     for q in stretched["gap"]["quarters"]:
         assert q["range80_label"].startswith(("stretched", "closed"))
 
 
-def test_the_labels_say_how_many_past_forecasts_the_range_held(stretched):
+def test_a_window_that_is_not_the_tested_cumulative_shape_says_it_is_extrapolated(
+    stretched,
+):
+    f = stretched["forecasts"]["fitted_ranges"]["horizons"]
+    rest = f["rest of fiscal year"]
+    assert rest["basis"]["extrapolated"] is True  # five months out, tested at six
+    assert "extrapolated: it covers" in rest["label80"]
+    nxt = f["next twelve months"]
+    assert nxt["basis"]["extrapolation_reason"].startswith("longer than six months")
+    assert "extrapolated: longer than six months" in nxt["label80"]
+    quarters = [q for q in stretched["gap"]["quarters"] if q.get("range_basis")]
+    assert quarters and all(q["range_basis"]["extrapolated"] for q in quarters)
+
+
+def test_the_labels_name_the_tested_horizon_and_what_it_held(stretched):
     ev = stretched["backtest"]["candidates"]["ranges"]["horizons"]
     six = next(h for h in ev if h["horizon_months"] == 6)
     nxt = stretched["forecasts"]["fitted_ranges"]["horizons"]["next twelve months"]
+    assert "with the six-month factors" in nxt["label80"]
     assert (
-        "six-month factors" in nxt["label80"]
-        and "longer than six months" in nxt["label80"]
+        f"which held {six['inside_stretched']} of {six['scored_folds']} past six-month forecasts"
+        in nxt["label80"]
     )
-    assert f"held {six['inside_stretched']} of {six['scored_folds']}" in nxt["label80"]
+    assert nxt["basis"]["held"] == six["inside_stretched"]
 
 
 def test_not_adopted_keeps_the_simulated_labels(unstretched):
@@ -195,7 +215,9 @@ def test_a_range_never_runs_below_zero(stretched):
 def test_the_markdown_states_the_decision_and_the_labels(stretched):
     text = render(stretched)
     assert "Ranges stretched by the model's own past misses" in text
-    assert "stretched by past misses; held" in text
+    assert "stretched by past misses with the" in text
+    assert "extrapolated" in text
+    assert "plain empirical rule" in text
     assert "Lower factor" in text
 
 
@@ -260,14 +282,14 @@ def test_a_stretched_label_on_a_range_that_was_not_stretched_is_refused(unstretc
             range80_label="stretched by past misses; held 1 of 2"
         ),
     )
-    assert any("labeled stretched" in p for p in problems)
+    assert any("labeled stretched but nothing stands behind it" in p for p in problems)
 
 
 def test_a_range_not_labeled_stretched_after_adoption_is_refused(stretched):
     problems = broken(
         stretched, lambda r: r["gap"]["fiscal_year"].update(range80_label="simulated")
     )
-    assert any("not labeled stretched" in p for p in problems)
+    assert any("80% label is not what its basis says" in p for p in problems)
 
 
 def test_the_files_exist_in_a_short_history_report(tmp_path):
@@ -282,3 +304,191 @@ def test_the_files_exist_in_a_short_history_report(tmp_path):
     r = report_module.build_report(PROFILE, data, date(2026, 8, 31), draws=50)
     assert r["backtest"]["candidates"]["ranges"]["decision"] == "not enough history"
     assert contract.validate(r) == []
+
+
+# ---------------------------------------------------------------- the structured evidence behind the labels
+
+
+def horizon_range(r, name="rest of fiscal year"):
+    return r["forecasts"]["fitted_ranges"]["horizons"][name]
+
+
+def test_a_label_with_a_fabricated_count_is_refused(stretched):
+    def edit(r):
+        v = horizon_range(r)
+        v["label80"] = v["label80"].replace("held ", "held 9", 1)
+
+    assert any(
+        "80% label is not what its basis says" in p for p in broken(stretched, edit)
+    )
+
+
+def test_a_basis_whose_counts_are_not_the_evidences_is_refused(stretched):
+    def edit(r):
+        b = horizon_range(r)["basis"]
+        b["held"] += 1
+
+    assert any("basis counts" in p for p in broken(stretched, edit))
+
+
+def test_a_ninety_five_label_that_claims_a_test_is_refused(stretched):
+    def edit(r):
+        horizon_range(r)["label95"] = "stretched and tested"
+
+    assert any(
+        "95% label is not what its basis says" in p for p in broken(stretched, edit)
+    )
+
+
+def test_a_basis_on_a_range_when_the_rule_does_not_adopt_is_refused(stretched):
+    def tie(r):
+        # make the stretched outcomes equal the simulated ones: the rule cannot call that closer
+        for h in r["backtest"]["candidates"]["ranges"]["horizons"]:
+            for d in h["scored_dates"]:
+                d["inside_stretched"] = d["inside_simulated"]
+            h["inside_stretched"] = h["inside_simulated"]
+
+    assert any("stretch was not adopted" in p for p in broken(stretched, tie))
+
+
+def test_the_window_must_use_the_horizon_it_belongs_to(stretched):
+    def edit(r):
+        horizon_range(r, "next twelve months")["basis"]["factor_horizon_months"] = 3
+
+    assert any(
+        "tested horizon its window belongs to" in p or "basis counts" in p
+        for p in broken(stretched, edit)
+    )
+
+
+def test_an_extrapolated_range_must_give_its_reason(stretched):
+    def edit(r):
+        horizon_range(r)["basis"]["extrapolation_reason"] = None
+
+    assert any(
+        "extrapolated exactly when a reason is given" in p
+        for p in broken(stretched, edit)
+    )
+
+
+def test_the_scored_dates_are_every_fold_with_enough_earlier_folds(stretched):
+    def drop(r):
+        row(r)["scored_dates"].pop()
+
+    def flip(r):
+        d = row(r)["scored_dates"][0]
+        d["inside_simulated"] = not d["inside_simulated"]
+
+    problems = broken(stretched, drop)
+    assert any(
+        "exactly the back-test folds" in p or "not as many" in p for p in problems
+    )
+    assert any("disagrees with the back-test" in p for p in broken(stretched, flip))
+
+
+def test_a_scored_subset_with_more_hits_than_the_back_test_has_is_refused(stretched):
+    def edit(r):
+        h = row(r, 1)  # the one-month back-test has misses on this report
+        assert h["inside_simulated"] < h["scored_folds"]
+        for d in h["scored_dates"]:
+            d["inside_simulated"] = True
+        h["inside_simulated"] = h["scored_folds"]
+
+    problems = broken(stretched, edit)
+    assert any("disagrees with the back-test" in p for p in problems)
+    assert any(
+        "more hits or misses" in p or "simulated coverage is not the back-test's" in p
+        for p in problems
+    )
+
+
+def test_a_null_factor_needs_its_reason_and_a_reason_needs_a_null_factor(stretched):
+    def no_reason(r):
+        row(r)["lower_factor"] = None
+
+    def reason_without_null(r):
+        row(r)["upper_reason"] = "because"
+
+    assert any(
+        "absent exactly when its reason is given" in p
+        for p in broken(stretched, no_reason)
+    )
+    assert any(
+        "absent exactly when its reason is given" in p
+        for p in broken(stretched, reason_without_null)
+    )
+
+
+def test_what_the_rule_accepted_is_stated_and_checked(stretched):
+    acc = stretched["backtest"]["candidates"]["ranges"]["acceptance"]
+    assert acc["stretched_side"] in ("lower", "upper", "both", "neither")
+    assert str(acc["six_month_scored_folds"]) in acc["sentence"]
+
+    def edit(r):
+        r["backtest"]["candidates"]["ranges"]["acceptance"]["sentence"] += (
+            " It was a triumph."
+        )
+
+    assert any("what its fields say" in p for p in broken(stretched, edit))
+
+    def side(r):
+        a = r["backtest"]["candidates"]["ranges"]["acceptance"]
+        a["stretched_side"] = "both" if a["stretched_side"] != "both" else "lower"
+
+    assert any(
+        "stretched side is not what the factors say" in p
+        for p in broken(stretched, side)
+    )
+
+
+def test_the_method_text_states_the_rank_convention_and_the_six_month_noise(decided):
+    m = decided["backtest"]["candidates"]["ranges"]["method"]
+    assert "plain empirical rule, not a finite-sample guarantee" in m
+    assert "overlapping forecasts" in m and "noisier" in m
+    six = row(decided, 6)
+    assert (
+        f"{six['eligible_folds']} past six-month forecasts to learn from, {six['scored_folds']} scored"
+        in m
+    )
+    assert any(
+        "method text" in p
+        for p in broken(
+            decided, lambda r: r["backtest"]["candidates"]["ranges"].update(method="x")
+        )
+    )
+
+
+def test_a_lower_edge_floored_at_zero_says_so_in_words_and_in_the_acceptance(world):
+    # a shift deep enough that a stretched lower edge reaches zero
+    root = Path(world[0]).parent
+    profile = write_profile(
+        root / "deep-profile", {f"Q{q}FY26": 2_000_000 for q in range(1, 5)}
+    )
+    (profile / "capacity.yaml").write_text(staffed.CAPACITY_YAML)
+    data = root / "deep-data"
+    company = replace(
+        staffed.company(1.5, 4), conversion_change=(date(2025, 3, 1), 0.35)
+    )
+    write_company_files(generate(company), data)
+    r = forced((profile, data, None), ADOPTED, plan=False)
+    flagged = [
+        q
+        for q in r["gap"]["quarters"]
+        if q.get("range_basis") and q["range_basis"]["floored_at_zero_80"]
+    ] + [
+        n
+        for n, v in r["forecasts"]["fitted_ranges"]["horizons"].items()
+        if v["basis"] and v["basis"]["floored_at_zero_80"]
+    ]
+    assert flagged, "the deep shift should floor at least one range"
+    texts = [q["range80_label"] for q in flagged if isinstance(q, dict)] + [
+        r["forecasts"]["fitted_ranges"]["horizons"][n]["label80"]
+        for n in flagged
+        if isinstance(n, str)
+    ]
+    assert all("lower edge floored at zero" in t for t in texts)
+    assert r["backtest"]["candidates"]["ranges"]["acceptance"]["floored_at_zero"]
+    assert (
+        "floored at zero for:"
+        in r["backtest"]["candidates"]["ranges"]["acceptance"]["sentence"]
+    )

@@ -15,9 +15,14 @@ from datetime import date
 from fractions import Fraction
 
 from .backtest import Backtest
-from .fiscal import Window
+from .fiscal import Window, add_months
 from .forecast import Simulation
-from .stretch import HorizonStretch, horizon_for, score_horizon, stretch_spread
+from .stretch import (
+    HorizonStretch,
+    horizon_for,
+    score_horizon,
+    stretch_spread_with_floors,
+)
 from .stretch_rules import (
     ADOPTED,
     HORIZONS,
@@ -81,85 +86,154 @@ def stretched(
     groups: dict[str, list[str]],
     as_of: date,
     ev: Evaluation,
-) -> Simulation:
+) -> tuple[Simulation, dict[str, tuple[bool, bool]]]:
     """The simulation with every month's and every group's range stretched by the factors
-    of the tested horizon it falls in; unchanged when the stretch is not adopted."""
+    of the tested horizon it falls in, and, per group, whether its 80% and its 95% lower edge
+    had to be floored at zero; unchanged when the stretch is not adopted."""
     if not ev.adopted:
-        return sim
+        return sim, {}
     ends = {w.label: w.end for w in windows}
 
     def factors(end: date):
         return ev.horizons[horizon_for(as_of, end)[0]].factors
 
     by_window = {
-        label: stretch_spread(spread, factors(ends[label]))
+        label: stretch_spread_with_floors(spread, factors(ends[label]))[0]
         for label, spread in sim.by_window.items()
     }
-    by_group = {}
+    by_group, floors = {}, {}
     for name, spread in sim.by_group.items():
         months = [ends[m] for m in groups.get(name, []) if m in ends]
-        by_group[name] = (
-            stretch_spread(spread, factors(max(months))) if months else spread
-        )
-    return replace(sim, by_window=by_window, by_group=by_group)
+        if months:
+            by_group[name], floors[name] = stretch_spread_with_floors(
+                spread, factors(max(months))
+            )
+        else:
+            by_group[name] = spread
+    return replace(sim, by_window=by_window, by_group=by_group), floors
 
 
 # ---------------------------------------------------------------- the labels
 
 
-def labels(ev: Evaluation, as_of: date, end: date) -> tuple[str, str] | None:
-    """The (80%, 95%) labels of a range that ends at ``end``, or None when the stretch is
-    not adopted (the range keeps its back-test label)."""
+@dataclass(frozen=True)
+class Basis:
+    """What stands behind a stretched range: the tested horizon whose factors it uses, how
+    many past forecasts at that horizon held and were scored, whether the range's shape is
+    one that was tested, and whether a lower edge was floored at zero."""
+
+    factor_horizon_months: int
+    held: int
+    scored: int
+    extrapolated: bool
+    extrapolation_reason: str | None
+    floored80: bool
+    floored95: bool
+
+    def as_json(self) -> dict:
+        return {
+            "factor_horizon_months": self.factor_horizon_months,
+            "held": self.held,
+            "scored": self.scored,
+            "extrapolated": self.extrapolated,
+            "extrapolation_reason": self.extrapolation_reason,
+            "floored_at_zero_80": self.floored80,
+            "floored_at_zero_95": self.floored95,
+        }
+
+
+def basis(
+    ev: Evaluation,
+    as_of: date,
+    start: date,
+    end: date,
+    floors: tuple[bool, bool] = (False, False),
+) -> Basis | None:
+    """The basis of a range that covers (``start``, ``end``], or None when the stretch is not
+    adopted or its horizon has too few folds to have learned a factor. Only a range that runs
+    from the as-of date to exactly a tested horizon out is the shape that was tested; any
+    other is extrapolated, and says so."""
     if not ev.adopted:
         return None
     h, beyond = horizon_for(as_of, end)
     s = ev.horizons[h]
     if not s.factors.learned:
-        return (
-            (
-                f"{SIMULATED}: fewer than {MIN_ELIGIBLE_FOLDS} past {_WORDS[h]} "
-                "forecasts to stretch from"
-            ),
-            f"{SIMULATED}, {NOT_SEPARATELY_TESTED}",
-        )
+        return None
+    reason = None
     if beyond:
-        head = (
-            f"{STRETCHED} with the six-month factors, because this range is longer "
-            "than six months"
+        reason = "longer than six months, so it uses the six-month factors"
+    elif start != as_of or end != add_months(as_of, h):
+        reason = (
+            f"it covers {start} to {end}, not the cumulative forecast from the as-of date "
+            f"that was tested {_AHEAD[h]} ahead"
         )
-        held = f"held {s.inside_stretched} of {s.scored} past {_WORDS[h]} forecasts"
-    else:
-        head = STRETCHED
-        held = f"held {s.inside_stretched} of {s.scored} past forecasts at this horizon"
-    if not s.scored:
-        held = f"no past {_WORDS[h]} forecast could be scored yet"
-    return f"{head}; {held}", f"stretched, {NOT_SEPARATELY_TESTED}"
-
-
-def status(ev: Evaluation, as_of: date, end: date) -> str | None:
-    """A window's long status: its label and what the simulated range alone held."""
-    got = labels(ev, as_of, end)
-    if got is None or not got[0].startswith(STRETCHED):
-        return None if got is None else got[0]
-    h, _ = horizon_for(as_of, end)
-    s = ev.horizons[h]
-    if not s.scored:
-        return got[0]
-    return (
-        f"{got[0]} (the simulated range alone held {s.inside_simulated} of {s.scored})"
+    return Basis(
+        h,
+        s.inside_stretched,
+        s.scored,
+        reason is not None,
+        reason,
+        floors[0],
+        floors[1],
     )
+
+
+_AHEAD = {1: "one month", 3: "three months", 6: "six months"}
+_FLOORED = "lower edge floored at zero"
+
+
+def label80(b: Basis) -> str:
+    word = _WORDS[b.factor_horizon_months]
+    text = f"{STRETCHED} with the {word} factors, " + (
+        f"which held {b.held} of {b.scored} past {word} forecasts"
+        if b.scored
+        else f"and no past {word} forecast could be scored yet"
+    )
+    if b.extrapolated:
+        text += f"; extrapolated: {b.extrapolation_reason}"
+    return f"{text}; {_FLOORED}" if b.floored80 else text
+
+
+def label95(b: Basis) -> str:
+    text = f"stretched, {NOT_SEPARATELY_TESTED}"
+    return f"{text}; {_FLOORED}" if b.floored95 else text
+
+
+def unlearned_label(as_of: date, end: date) -> str | None:
+    """The label of a range whose horizon has too few past forecasts to stretch from."""
+    h, _ = horizon_for(as_of, end)
+    return (
+        f"{SIMULATED}: fewer than {MIN_ELIGIBLE_FOLDS} past {_WORDS[h]} forecasts "
+        "to stretch from"
+    )
+
+
+def status_text(label: str, b: Basis, ev: Evaluation) -> str:
+    """A window's long status: its label and what the simulated range alone held."""
+    s = ev.horizons[b.factor_horizon_months]
+    if not s.scored:
+        return label
+    return (
+        f"{label} (the simulated range alone held {s.inside_simulated} of {s.scored})"
+    )
+
+
+BY_WINDOW_LABEL = (
+    f"{STRETCHED}; each month by the factors of the horizon it falls in, and months "
+    "beyond six use the six-month factors"
+)
 
 
 def by_window_label(ev: Evaluation) -> str | None:
-    if not ev.adopted:
-        return None
-    return (
-        f"{STRETCHED}; each month by the factors of the horizon it falls in, and months "
-        "beyond six use the six-month factors"
-    )
+    return BY_WINDOW_LABEL if ev.adopted else None
 
 
 # ---------------------------------------------------------------- the report's section
+
+_NO_FINITE = (
+    "a past forecast fell outside this side of a range that had no width on it, so no "
+    "finite factor would have held {rank} of the eligible past forecasts"
+)
 
 
 def _coverage(inside: int, scored: int) -> float | None:
@@ -170,15 +244,59 @@ def _factor(x: float | None) -> str | None:
     return None if x is None else f"{x:.4f}"
 
 
+def _reason(x: float | None) -> str | None:
+    return None if x is not None else _NO_FINITE.format(rank=_percent(SIDE_COVERAGE))
+
+
 def _width(x: float | None) -> str | None:
     return None if x is None else f"{x:.2f}"
 
 
-def evidence(ev: Evaluation) -> dict:
+def method_text(eligible_six: int, scored_six: int) -> str:
+    """How the factor is chosen, said plainly, and why the six-month one is the least certain."""
+    return (
+        f"Each side's factor is the ceil({_percent(SIDE_COVERAGE)} of n)-th smallest of the factors "
+        "the n eligible past forecasts would have needed: the plain empirical rule, not a "
+        "finite-sample guarantee. Six-month factors come from overlapping forecasts (each shares "
+        f"five of its six months with its neighbors) and are noisier: {eligible_six} past "
+        f"six-month forecasts to learn from, {scored_six} scored."
+    )
+
+
+def stretched_side(ev: Evaluation) -> str:
+    """Which sides the factors in use stretch: lower, upper, both or neither."""
+    learned = [s.factors for s in ev.horizons.values() if s.factors.learned]
+    lower = any(f.lower is not None and f.lower > 1 for f in learned)
+    upper = any(f.upper is not None and f.upper > 1 for f in learned)
+    return {(True, True): "both", (True, False): "lower", (False, True): "upper"}.get(
+        (lower, upper), "neither"
+    )
+
+
+def acceptance_text(
+    side: str, coverage: float, eligible_six: int, scored_six: int, floored: list[str]
+) -> str:
+    shape = (
+        f"The stretch was one-sided: only the {side} side was stretched."
+        if side in ("lower", "upper")
+        else f"The stretch moved {'both sides' if side == 'both' else 'neither side'}."
+    )
+    text = (
+        f"{shape} On the scored past dates it held {coverage:.1%} of actuals against a target "
+        f"of {_percent(TARGET)}. The six-month factors rest on {eligible_six} past six-month "
+        f"forecasts, of which {scored_six} could be scored."
+    )
+    if floored:
+        text += f" The lower edge was floored at zero for: {', '.join(floored)}."
+    return text
+
+
+def evidence(ev: Evaluation, floored_names: list[str] | None = None) -> dict:
     """``backtest.candidates.ranges``: the rule, the decision and, per tested horizon, what
     the back-test says."""
     d = ev.decision
-    pooled = None
+    six = ev.horizons[6]
+    pooled = acceptance = None
     if d.pooled is not None:
         scored = sum(ev.horizons[h].scored for h in SCORED_HORIZONS)
         pooled = {
@@ -186,11 +304,28 @@ def evidence(ev: Evaluation) -> dict:
             "coverage_simulated": round(float(d.pooled[0]), 4),
             "coverage_stretched": round(float(d.pooled[1]), 4),
         }
+    if ev.adopted:
+        names = list(floored_names or [])
+        side = stretched_side(ev)
+        coverage = round(float(d.pooled[1]), 4)  # type: ignore[index]
+        acceptance = {
+            "stretched_side": side,
+            "one_sided": side in ("lower", "upper"),
+            "two_sided_coverage": coverage,
+            "six_month_eligible_folds": six.factors.eligible,
+            "six_month_scored_folds": six.scored,
+            "floored_at_zero": names,
+            "sentence": acceptance_text(
+                side, coverage, six.factors.eligible, six.scored, names
+            ),
+        }
     return {
         "rule": RULE,
+        "method": method_text(six.factors.eligible, six.scored),
         "decision": d.outcome,
         "reason": d.reason,
         "pooled": pooled,
+        "acceptance": acceptance,
         "horizons": [
             {
                 "horizon_months": h,
@@ -205,6 +340,18 @@ def evidence(ev: Evaluation) -> dict:
                 "median_width80_stretched": _width(s.median_width_stretched),
                 "lower_factor": _factor(s.factors.lower),
                 "upper_factor": _factor(s.factors.upper),
+                "lower_reason": _reason(s.factors.lower),
+                "upper_reason": _reason(s.factors.upper),
+                "scored_dates": [
+                    {
+                        "cutoff": f.cutoff.isoformat(),
+                        "inside_simulated": f.inside_simulated,
+                        "inside_stretched": f.inside_stretched,
+                        "lower_factor": _factor(f.lower),
+                        "upper_factor": _factor(f.upper),
+                    }
+                    for f in s.detail
+                ],
             }
             for h, s in ev.horizons.items()
         ],

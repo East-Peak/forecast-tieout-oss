@@ -418,7 +418,10 @@ def _stretch(c: dict) -> list[str]:
             for h in c["horizons"]
         ],
     )
-    return out + [f"**{c['decision'].capitalize()}**: {c['reason']}.", ""]
+    out += [f"**{c['decision'].capitalize()}**: {c['reason']}.", ""]
+    if c["acceptance"] is not None:
+        out += [f"What the rule accepted: {c['acceptance']['sentence']}", ""]
+    return out + [f"Method: {c['method']}", ""]
 
 
 def _pct(x) -> str:

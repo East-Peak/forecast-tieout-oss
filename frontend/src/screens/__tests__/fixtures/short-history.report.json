@@ -28,9 +28,11 @@
       },
       "ranges": {
         "rule": "adopted if there are at least 6 scored folds at 1 and at 3 months, pooled 80% coverage over 1 and 3 months is closer to 80% than the simulated range's on the same folds, and no horizon (1, 3 or 6 months) moves more than 10 points further from 80%; each side's factor is the smallest, never below 1, that would have put at least 90% of the eligible past folds inside on that side (a fold is eligible once its whole horizon has ended; at least 5 are needed)",
+        "method": "Each side's factor is the ceil(90% of n)-th smallest of the factors the n eligible past forecasts would have needed: the plain empirical rule, not a finite-sample guarantee. Six-month factors come from overlapping forecasts (each shares five of its six months with its neighbors) and are noisier: 0 past six-month forecasts to learn from, 0 scored.",
         "decision": "not enough history",
         "reason": "0 scored folds at 1 month(s); at least 6 are needed",
         "pooled": null,
+        "acceptance": null,
         "horizons": [
           {
             "horizon_months": 1,
@@ -44,7 +46,10 @@
             "median_width80_simulated": null,
             "median_width80_stretched": null,
             "lower_factor": "1.0000",
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "lower_reason": null,
+            "upper_reason": null,
+            "scored_dates": []
           },
           {
             "horizon_months": 3,
@@ -58,7 +63,10 @@
             "median_width80_simulated": null,
             "median_width80_stretched": null,
             "lower_factor": "1.0000",
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "lower_reason": null,
+            "upper_reason": null,
+            "scored_dates": []
           },
           {
             "horizon_months": 6,
@@ -72,7 +80,10 @@
             "median_width80_simulated": null,
             "median_width80_stretched": null,
             "lower_factor": "1.0000",
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "lower_reason": null,
+            "upper_reason": null,
+            "scored_dates": []
           }
         ]
       }
@@ -955,7 +966,7 @@
       "unavailable": "no capacity.yaml in the profile"
     }
   },
-  "schema_version": "2.2.0",
+  "schema_version": "2.3.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [],

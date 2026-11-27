@@ -16,20 +16,24 @@ from this module and a test keeps the two equal.
 from __future__ import annotations
 
 import json
+from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from . import stretch_report
 from . import stretch_rules as sr
 from .adoption import ADOPTED, NOT_SHOWN, UNAVAILABLE
 from .backtest import BASELINE_LOWER, BASELINES, MODEL_LOWER, TIE, VERDICT_HORIZONS
+from .fiscal import add_months, month_end
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
 from .rates import rate_unit
+from .stretch import horizon_for
 from .stretch_rules import HORIZONS
 
-SCHEMA_VERSION = "2.2.0"
+SCHEMA_VERSION = "2.3.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -119,6 +123,18 @@ DEFS: dict = {
     "Date": {"type": "string", "pattern": r"^\d{4}-\d{2}-\d{2}$"},
     "Quarter": {"type": "string", "pattern": r"^Q[1-4]FY\d{2}$"},
     "MoneyRange": pair(MONEY),
+    # what stands behind a stretched range (null when it is not stretched)
+    "RangeBasis": obj(
+        {
+            "factor_horizon_months": enum(1, 3, 6),
+            "held": INT,
+            "scored": INT,
+            "extrapolated": BOOL,
+            "extrapolation_reason": maybe(TEXT),
+            "floored_at_zero_80": BOOL,
+            "floored_at_zero_95": BOOL,
+        }
+    ),
     "Check": obj({"name": TEXT, "passed": BOOL, "detail": TEXT}),
 }
 
@@ -244,7 +260,13 @@ def _forecasts() -> dict:
     # the label beside each range: stretched by past misses (adopted) or simulated with its
     # back-test label; the 95% range is "not separately tested" either way
     horizon_spread = obj(
-        {"status": TEXT, "label80": TEXT, "label95": TEXT, **SPREAD["properties"]}
+        {
+            "status": TEXT,
+            "label80": TEXT,
+            "label95": TEXT,
+            "basis": maybe(ref("RangeBasis")),
+            **SPREAD["properties"],
+        }
     )
     ranged = obj(
         {
@@ -350,6 +372,7 @@ def _gap() -> dict:
             "gap": MONEY,
             "expected_range80": ref("MoneyRange"),
             "range80_label": TEXT,
+            "range_basis": maybe(ref("RangeBasis")),
         }
     )
     quarter_unavailable = obj(
@@ -375,6 +398,7 @@ def _gap() -> dict:
             "expected_range95": ref("MoneyRange"),
             "range80_label": TEXT,
             "range95_label": TEXT,
+            "range_basis": maybe(ref("RangeBasis")),
         }
     )
     year_unavailable = obj(
@@ -445,11 +469,39 @@ def _stretch_decision() -> dict:
             # null when a side has no width to stretch
             "lower_factor": DECIMAL_OR_NULL,
             "upper_factor": DECIMAL_OR_NULL,
+            # the reason a factor is null, and nothing otherwise
+            "lower_reason": maybe(TEXT),
+            "upper_reason": maybe(TEXT),
+            # every scored past date, with where the actual fell and the factors used then
+            "scored_dates": arr(
+                obj(
+                    {
+                        "cutoff": DATE,
+                        "inside_simulated": BOOL,
+                        "inside_stretched": BOOL,
+                        "lower_factor": DECIMAL_OR_NULL,
+                        "upper_factor": DECIMAL_OR_NULL,
+                    }
+                )
+            ),
+        }
+    )
+    acceptance = obj(
+        {
+            "stretched_side": enum("lower", "upper", "both", "neither"),
+            "one_sided": BOOL,
+            "two_sided_coverage": FRACTION,
+            "six_month_eligible_folds": INT,
+            "six_month_scored_folds": INT,
+            "floored_at_zero": arr(TEXT),
+            "sentence": TEXT,
         }
     )
     return obj(
         {
             "rule": TEXT,
+            "method": TEXT,
+            "acceptance": maybe(acceptance),
             "decision": enum(sr.ADOPTED, sr.NOT_ADOPTED, sr.NOT_ENOUGH_HISTORY),
             "reason": TEXT,
             "pooled": maybe(
@@ -489,6 +541,8 @@ def _backtest() -> dict:
             "horizon_months": INT,
             "actual": DECIMAL,
             "forecasts": by_method,
+            # whether the actual fell inside the simulated 80% range; null without a range
+            "inside80": maybe(BOOL),
         }
     )
     recency = obj(
@@ -1256,6 +1310,12 @@ def _stretch_rules(r: dict, rule) -> None:
                 >= Decimal(h["median_width80_simulated"]),
                 f"{where}: stretching by factors of at least 1 cannot narrow the median range",
             )
+        for side in ("lower", "upper"):
+            rule(
+                (h[f"{side}_factor"] is None) == (h[f"{side}_reason"] is not None),
+                f"{where}: the {side} factor is absent exactly when its reason is given",
+            )
+        _scored_dates_rules(r, h, rule, where)
         cell = cells.get(m)
         if cell is not None:
             rule(
@@ -1303,32 +1363,266 @@ def _stretch_rules(r: dict, rule) -> None:
             "the pooled coverage is not the sum of the horizons' folds",
         )
     ranges = r["forecasts"]["fitted_ranges"]
-    if not ranges["by_window"]:
-        return
     adopted = decided.outcome == sr.ADOPTED
-    learned = all(h["factors_learned"] for h in rows)
-    labels = [
-        ranges["by_window_label"],
-        *(v[k] for v in ranges["horizons"].values() for k in ("label80", "label95")),
-        *(
-            q["range80_label"]
-            for q in r["gap"]["quarters"]
-            if "range80_label" in q and q["status"] != "closed"
-        ),
-        r["gap"]["fiscal_year"]["range80_label"],
-        r["gap"]["fiscal_year"]["range95_label"],
-    ]
-    labels = [
-        t for t in labels if not t.startswith("closed")
-    ]  # nothing left to range over
-    stretched = [text.startswith("stretched") for text in labels]
+    by_h = {h["horizon_months"]: h for h in rows}
+    six = by_h[6]
     rule(
-        not any(stretched) or adopted,
-        "a range is labeled stretched but the stretch was not adopted",
+        c["method"]
+        == stretch_report.method_text(six["eligible_folds"], six["scored_folds"]),
+        "the method text is not the declared rule's, with this report's six-month fold counts",
     )
     rule(
-        not (adopted and learned) or all(stretched),
-        "the stretch was adopted but a range is not labeled stretched",
+        (c["acceptance"] is not None) == adopted,
+        "what the rule accepted is stated exactly when the stretch is adopted",
+    )
+    if not ranges["by_window"]:
+        return
+    _label_rules(r, c, ranges, by_h, adopted, rule)
+
+
+def _scored_dates_rules(r: dict, h: dict, rule, where: str) -> None:
+    """The scored dates are every back-test fold at this horizon with five eligible folds
+    before it, each with the back-test's own outcome for the simulated range."""
+    m = h["horizon_months"]
+    folds = [f for f in r["backtest"]["folds"] if f["horizon_months"] == m]
+    ranged = {f["cutoff"]: f for f in folds if f["inside80"] is not None}
+
+    def ended_by(earlier: str, cutoff: str) -> bool:
+        return add_months(date.fromisoformat(earlier), m) <= date.fromisoformat(cutoff)
+
+    should = sorted(
+        c
+        for c in ranged
+        if sum(ended_by(o, c) for o in ranged) >= sr.MIN_ELIGIBLE_FOLDS
+    )
+    dates = h["scored_dates"]
+    rule(
+        len(dates) == h["scored_folds"],
+        f"{where}: the scored dates are not as many as the scored folds",
+    )
+    rule(
+        [d["cutoff"] for d in dates] == should,
+        f"{where}: the scored dates are not exactly the back-test folds with enough earlier folds",
+    )
+    for d in dates:
+        fold = ranged.get(d["cutoff"])
+        rule(
+            fold is not None and fold["inside80"] == d["inside_simulated"],
+            f"{where}: {d['cutoff']} disagrees with the back-test on whether the simulated range held",
+        )
+        for side in ("lower_factor", "upper_factor"):
+            rule(
+                d[side] is None or Decimal(d[side]) >= 1,
+                f"{where}: {d['cutoff']} used a {side.replace('_', ' ')} below 1",
+            )
+    rule(
+        sum(d["inside_simulated"] for d in dates) == h["inside_simulated"]
+        and sum(d["inside_stretched"] for d in dates) == h["inside_stretched"],
+        f"{where}: the counts are not the scored dates' outcomes",
+    )
+    hits = sum(f["inside80"] is True for f in folds)
+    misses = sum(f["inside80"] is False for f in folds)
+    rule(
+        h["inside_simulated"] <= hits
+        and h["scored_folds"] - h["inside_simulated"] <= misses,
+        f"{where}: more hits or misses than the back-test has",
+    )
+
+
+def _basis_of(b: dict | None):
+    if b is None:
+        return None
+    return stretch_report.Basis(
+        b["factor_horizon_months"],
+        b["held"],
+        b["scored"],
+        b["extrapolated"],
+        b["extrapolation_reason"],
+        b["floored_at_zero_80"],
+        b["floored_at_zero_95"],
+    )
+
+
+SIMULATED_95 = "simulated, not separately tested"
+
+
+def _label_rules(
+    r: dict, c: dict, ranges: dict, by_h: dict, adopted: bool, rule
+) -> None:
+    """Every label is the sentence its structured basis gives, the basis agrees with the
+    evidence, and a range has a basis exactly when the stretch is adopted and learned."""
+    as_of = date.fromisoformat(r["inputs"]["as_of"])
+    all_learned = all(h["factors_learned"] for h in by_h.values())
+    rule(
+        ranges["by_window_label"].startswith("stretched") == adopted
+        and (
+            not adopted or ranges["by_window_label"] == stretch_report.BY_WINDOW_LABEL
+        ),
+        "the months' label does not agree with the decision",
+    )
+
+    def check(name, label80, label95, basis, horizon=None, closed=False) -> None:
+        b = _basis_of(basis)
+        if closed:
+            rule(
+                basis is None and label80.startswith("closed"),
+                f"{name}: a closed range has no basis",
+            )
+            return
+        if b is None:
+            rule(
+                not label80.startswith("stretched")
+                and not label95.startswith("stretched"),
+                f"{name}: labeled stretched but nothing stands behind it",
+            )
+            rule(
+                label95 == SIMULATED_95,
+                f"{name}: an unstretched 95% range is labeled simulated",
+            )
+            learned = by_h[horizon]["factors_learned"] if horizon else all_learned
+            rule(
+                not (adopted and learned),
+                f"{name}: the stretch was adopted and its factors learned, but the range has no basis",
+            )
+            return
+        rule(
+            adopted,
+            f"{name}: a range has a stretch basis but the stretch was not adopted",
+        )
+        row = by_h[b.factor_horizon_months]
+        rule(
+            (b.held, b.scored) == (row["inside_stretched"], row["scored_folds"]),
+            f"{name}: the basis counts are not the {b.factor_horizon_months}-month evidence's",
+        )
+        rule(
+            row["factors_learned"],
+            f"{name}: stretched with factors that were not learned",
+        )
+        rule(
+            b.extrapolated == (b.extrapolation_reason is not None),
+            f"{name}: extrapolated exactly when a reason is given",
+        )
+        if horizon is not None:
+            rule(
+                b.factor_horizon_months == horizon,
+                f"{name}: not the tested horizon its window belongs to",
+            )
+        rule(
+            label80 == stretch_report.label80(b),
+            f"{name}: the 80% label is not what its basis says",
+        )
+        rule(
+            label95 == stretch_report.label95(b),
+            f"{name}: the 95% label is not what its basis says",
+        )
+
+    windows = r["forecasts"]["horizon_windows"]
+    for h, v in ranges["horizons"].items():
+        months = windows[h]
+        horizon = None
+        if months:
+            y, mo = map(int, months[-1].split("-"))
+            horizon = horizon_for(as_of, month_end(date(y, mo, 1)))[0]
+        check(
+            f"the {h} range",
+            v["label80"],
+            v["label95"],
+            v["basis"],
+            horizon,
+            not months,
+        )
+        if v["basis"] is not None:
+            rule(
+                v["label80"] in v["status"],
+                f"the {h} range's status does not carry its label",
+            )
+        elif not adopted and months:
+            rule(
+                v["label80"] == v["status"].split(":")[0],
+                f"the {h} range's label is not its back-test label",
+            )
+    for q in r["gap"]["quarters"]:
+        if "range80_label" not in q:
+            continue
+        b = _basis_of(q["range_basis"])
+        check(
+            q["quarter"],
+            q["range80_label"],
+            stretch_report.label95(b) if b else SIMULATED_95,
+            q["range_basis"],
+            None,
+            q["status"] == "closed",
+        )
+        if not adopted and q["status"] != "closed":
+            rule(
+                q["range80_label"] == "simulated",
+                f"{q['quarter']}: an unstretched range is labeled simulated",
+            )
+    year = r["gap"]["fiscal_year"]
+    if "range80_label" in year:
+        check(
+            "the fiscal year",
+            year["range80_label"],
+            year["range95_label"],
+            year["range_basis"],
+            None,
+            not windows["rest of fiscal year"],
+        )
+    acc = c["acceptance"]
+    if acc is None:
+        return
+    flagged = sorted(
+        {
+            *(
+                h
+                for h, v in ranges["horizons"].items()
+                if v["basis"] and v["basis"]["floored_at_zero_80"]
+            ),
+            *(
+                q["quarter"]
+                for q in r["gap"]["quarters"]
+                if q.get("range_basis") and q["range_basis"]["floored_at_zero_80"]
+            ),
+        }
+    )
+    rule(
+        sorted(acc["floored_at_zero"]) == flagged,
+        "the ranges said to be floored at zero are not the ones whose basis says so",
+    )
+    six = by_h[6]
+    rule(
+        acc["two_sided_coverage"] == (c["pooled"] or {}).get("coverage_stretched")
+        and (acc["six_month_eligible_folds"], acc["six_month_scored_folds"])
+        == (six["eligible_folds"], six["scored_folds"]),
+        "what the rule accepted does not agree with the evidence",
+    )
+    learned = [h for h in by_h.values() if h["factors_learned"]]
+    lower = any(
+        h["lower_factor"] is not None and Decimal(h["lower_factor"]) > 1
+        for h in learned
+    )
+    upper = any(
+        h["upper_factor"] is not None and Decimal(h["upper_factor"]) > 1
+        for h in learned
+    )
+    want = {(True, True): "both", (True, False): "lower", (False, True): "upper"}.get(
+        (lower, upper), "neither"
+    )
+    rule(
+        acc["stretched_side"] == want
+        and acc["one_sided"] == (want in ("lower", "upper")),
+        "the stretched side is not what the factors say",
+    )
+    rule(
+        acc["sentence"]
+        == stretch_report.acceptance_text(
+            acc["stretched_side"],
+            acc["two_sided_coverage"],
+            acc["six_month_eligible_folds"],
+            acc["six_month_scored_folds"],
+            acc["floored_at_zero"],
+        ),
+        "the sentence on what the rule accepted is not what its fields say",
     )
 
 

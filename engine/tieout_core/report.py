@@ -138,11 +138,14 @@ def build_report(
     by_label = {w.label: w for w in windows}
     ranged_groups = {**quarter_labels, **horizons}
     ev = stretch_report.evaluate(bt, as_of)
-    shown = sim
+    shown, floors = sim, {}
     if sim is not None:
-        shown = stretch_report.stretched(sim, windows, ranged_groups, as_of, ev)
-    group_ends = {
-        name: max(by_label[m].end for m in months)
+        shown, floors = stretch_report.stretched(sim, windows, ranged_groups, as_of, ev)
+    spans = {
+        name: (
+            min(by_label[m].start for m in months),
+            max(by_label[m].end for m in months),
+        )
         for name, months in ranged_groups.items()
         if months
     }
@@ -163,7 +166,7 @@ def build_report(
         horizons, creation,
     )  # fmt: skip
     if shown is not None:
-        _label_gap_ranges(gap, ev, as_of, group_ends)
+        _label_gap_ranges(gap, ev, as_of, spans, floors)
     fy_target = sum(profile.quarterly_targets.values(), Decimal(0))
     diagnostic = (
         _diagnostic(cap, model, pop, as_of, windows, horizons, fitted)
@@ -258,7 +261,16 @@ def build_report(
         "reconciliation": _reconciliation(rec),
         "history": _history(loaded, rec, model, bt, as_of, recency, cap),
         "forecasts": _forecasts(
-            forecasts, labels, horizons, shown, bt, cap.adopted, ev, as_of, group_ends
+            forecasts,
+            labels,
+            horizons,
+            shown,
+            bt,
+            cap.adopted,
+            ev,
+            as_of,
+            spans,
+            floors,
         ),
         "rates": [_rate(r) for r in book],
         "gap": gap,
@@ -266,7 +278,9 @@ def build_report(
             **_backtest(bt),
             "candidates": {
                 "recency": _candidate(recency, incumbent_name, params.estimator),
-                "ranges": stretch_report.evidence(ev),
+                "ranges": stretch_report.evidence(
+                    ev, [n for n in ranged_groups if floors.get(n, (False, False))[0]]
+                ),
             },
         },
         "verdicts": {
@@ -487,7 +501,8 @@ def _forecasts(
     capacity: bool,
     ev,
     as_of,
-    ends,
+    spans,
+    floors,
 ) -> dict:
     cells = [
         {
@@ -533,16 +548,18 @@ def _forecasts(
     }
     # when the stretch is adopted each range's label is the stretch's, with what the simulated
     # range alone held; otherwise the range keeps its back-test label and is called simulated
-    range_labels = {}
+    range_labels, bases = {}, {}
     for h in horizons:
-        got = stretch_report.labels(ev, as_of, ends[h]) if h in ends else None
-        if h not in ends:
+        got = _stretch_labels(ev, as_of, h, spans, floors)
+        if h not in spans:
             range_labels[h] = (_NOTHING_LEFT, _NOTHING_LEFT)
+            bases[h] = None
         elif got is None:
             range_labels[h] = (statuses[h].split(":")[0], _SIMULATED_95)
+            bases[h] = None
         else:
-            range_labels[h] = got
-            said = stretch_report.status(ev, as_of, ends[h]) or statuses[h]
+            range_labels[h], bases[h] = (got[0], got[1]), got[2]
+            said = stretch_report.status_text(got[0], got[2], ev) if got[2] else got[0]
             # a range that includes the capacity term stays unvalidated; what the stretch held is
             # a statistic beside that, not a validation of it
             statuses[h] = f"{statuses[h]}; {said}" if capacity else said
@@ -583,6 +600,7 @@ def _forecasts(
                     "status": statuses[h],
                     "label80": range_labels[h][0],
                     "label95": range_labels[h][1],
+                    "basis": bases[h].as_json() if bases[h] else None,
                     **_spread(sim.by_group[h]),
                 }
                 for h in horizons
@@ -604,29 +622,41 @@ _SIMULATED_MONTHS = "simulated; see how the ranges were checked"
 _NOTHING_LEFT = "closed: nothing left to range over"
 
 
-def _label_gap_ranges(gap: dict, ev, as_of: date, ends: dict[str, date]) -> None:
-    """The label beside each of the gap's ranges: the stretch's when it is adopted, else the
-    simulated range's. A closed quarter has nothing left to range over."""
+def _stretch_labels(ev, as_of: date, name: str, spans, floors):
+    """(80% label, 95% label, basis) of the named range once the stretch is adopted: stretched,
+    with its basis, or simulated when its horizon has too few past forecasts to learn from.
+    None when the stretch is not adopted or the range has no months."""
+    if not ev.adopted or name not in spans:
+        return None
+    start, end = spans[name]
+    b = stretch_report.basis(ev, as_of, start, end, floors.get(name, (False, False)))
+    if b is None:
+        return stretch_report.unlearned_label(as_of, end), _SIMULATED_95, None
+    return stretch_report.label80(b), stretch_report.label95(b), b
+
+
+def _label_gap_ranges(gap: dict, ev, as_of: date, spans, floors) -> None:
+    """The label and basis beside each of the gap's ranges: the stretch's when it is adopted,
+    else the simulated range's. A closed quarter has nothing left to range over."""
     for q in gap["quarters"]:
         if q["expected_range80"] is None:
             continue
-        got = (
-            stretch_report.labels(ev, as_of, ends[q["quarter"]])
-            if q["quarter"] in ends
-            else None
-        )
+        got = _stretch_labels(ev, as_of, q["quarter"], spans, floors)
         q["range80_label"] = (
             got[0] if got else _NOTHING_LEFT if q["status"] == "closed" else "simulated"
         )
+        q["range_basis"] = got[2].as_json() if got and got[2] else None
     year = gap["fiscal_year"]
     if year["expected_range80"] is None:
         return
-    if REST_OF_FY not in ends:
+    if REST_OF_FY not in spans:
         year["range80_label"] = year["range95_label"] = _NOTHING_LEFT
+        year["range_basis"] = None
         return
-    got = stretch_report.labels(ev, as_of, ends[REST_OF_FY])
+    got = _stretch_labels(ev, as_of, REST_OF_FY, spans, floors)
     year["range80_label"] = got[0] if got else "simulated"
     year["range95_label"] = got[1] if got else _SIMULATED_95
+    year["range_basis"] = got[2].as_json() if got and got[2] else None
 
 
 def _window_status(months: int, cells: list[dict]) -> str:
@@ -977,6 +1007,9 @@ def _backtest(bt) -> dict:
                 "horizon_months": f.horizon,
                 "actual": _exact(f.actual),
                 "forecasts": {k: _opt_money(v) for k, v in f.forecasts.items()},
+                "inside80": None
+                if f.range80 is None
+                else f.range80[0] <= float(f.actual) <= f.range80[1],
             }
             for f in bt.folds
         ],

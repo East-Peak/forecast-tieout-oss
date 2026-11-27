@@ -121,11 +121,58 @@
       "pattern": "^Q[1-4]FY\\d{2}$",
       "type": "string"
     },
+    "RangeBasis": {
+      "additionalProperties": false,
+      "properties": {
+        "extrapolated": {
+          "type": "boolean"
+        },
+        "extrapolation_reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "factor_horizon_months": {
+          "enum": [
+            1,
+            3,
+            6
+          ]
+        },
+        "floored_at_zero_80": {
+          "type": "boolean"
+        },
+        "floored_at_zero_95": {
+          "type": "boolean"
+        },
+        "held": {
+          "type": "integer"
+        },
+        "scored": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "factor_horizon_months",
+        "held",
+        "scored",
+        "extrapolated",
+        "extrapolation_reason",
+        "floored_at_zero_80",
+        "floored_at_zero_95"
+      ],
+      "type": "object"
+    },
     "Text": {
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.2.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.3.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -678,6 +725,59 @@
             "ranges": {
               "additionalProperties": false,
               "properties": {
+                "acceptance": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "floored_at_zero": {
+                          "items": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "type": "array"
+                        },
+                        "one_sided": {
+                          "type": "boolean"
+                        },
+                        "sentence": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "six_month_eligible_folds": {
+                          "type": "integer"
+                        },
+                        "six_month_scored_folds": {
+                          "type": "integer"
+                        },
+                        "stretched_side": {
+                          "enum": [
+                            "lower",
+                            "upper",
+                            "both",
+                            "neither"
+                          ]
+                        },
+                        "two_sided_coverage": {
+                          "maximum": 1,
+                          "minimum": 0,
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "stretched_side",
+                        "one_sided",
+                        "two_sided_coverage",
+                        "six_month_eligible_folds",
+                        "six_month_scored_folds",
+                        "floored_at_zero",
+                        "sentence"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "decision": {
                   "enum": [
                     "adopted",
@@ -742,6 +842,16 @@
                           }
                         ]
                       },
+                      "lower_reason": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "median_width80_simulated": {
                         "anyOf": [
                           {
@@ -762,6 +872,51 @@
                           }
                         ]
                       },
+                      "scored_dates": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "cutoff": {
+                              "$ref": "#/$defs/Date"
+                            },
+                            "inside_simulated": {
+                              "type": "boolean"
+                            },
+                            "inside_stretched": {
+                              "type": "boolean"
+                            },
+                            "lower_factor": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/$defs/Decimal"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "upper_factor": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/$defs/Decimal"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "cutoff",
+                            "inside_simulated",
+                            "inside_stretched",
+                            "lower_factor",
+                            "upper_factor"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
                       "scored_folds": {
                         "type": "integer"
                       },
@@ -769,6 +924,16 @@
                         "anyOf": [
                           {
                             "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "upper_reason": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
                           },
                           {
                             "type": "null"
@@ -788,13 +953,19 @@
                       "median_width80_simulated",
                       "median_width80_stretched",
                       "lower_factor",
-                      "upper_factor"
+                      "upper_factor",
+                      "lower_reason",
+                      "upper_reason",
+                      "scored_dates"
                     ],
                     "type": "object"
                   },
                   "maxItems": 3,
                   "minItems": 3,
                   "type": "array"
+                },
+                "method": {
+                  "$ref": "#/$defs/Text"
                 },
                 "pooled": {
                   "anyOf": [
@@ -836,6 +1007,8 @@
               },
               "required": [
                 "rule",
+                "method",
+                "acceptance",
                 "decision",
                 "reason",
                 "pooled",
@@ -931,13 +1104,24 @@
               },
               "horizon_months": {
                 "type": "integer"
+              },
+              "inside80": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
               "cutoff",
               "horizon_months",
               "actual",
-              "forecasts"
+              "forecasts",
+              "inside80"
             ],
             "type": "object"
           },
@@ -1167,6 +1351,16 @@
                     "next twelve months": {
                       "additionalProperties": false,
                       "properties": {
+                        "basis": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/RangeBasis"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "label80": {
                           "$ref": "#/$defs/Text"
                         },
@@ -1193,6 +1387,7 @@
                         "status",
                         "label80",
                         "label95",
+                        "basis",
                         "mean",
                         "median",
                         "range80",
@@ -1203,6 +1398,16 @@
                     "rest of fiscal year": {
                       "additionalProperties": false,
                       "properties": {
+                        "basis": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/RangeBasis"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "label80": {
                           "$ref": "#/$defs/Text"
                         },
@@ -1229,6 +1434,7 @@
                         "status",
                         "label80",
                         "label95",
+                        "basis",
                         "mean",
                         "median",
                         "range80",
@@ -1555,6 +1761,16 @@
                 "range95_label": {
                   "$ref": "#/$defs/Text"
                 },
+                "range_basis": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/RangeBasis"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
                 "target": {
                   "$ref": "#/$defs/Decimal"
                 }
@@ -1568,7 +1784,8 @@
                 "expected_range80",
                 "expected_range95",
                 "range80_label",
-                "range95_label"
+                "range95_label",
+                "range_basis"
               ],
               "type": "object"
             },
@@ -2117,6 +2334,16 @@
                   "range80_label": {
                     "$ref": "#/$defs/Text"
                   },
+                  "range_basis": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/RangeBasis"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "status": {
                     "enum": [
                       "closed",
@@ -2137,7 +2364,8 @@
                   "expected",
                   "gap",
                   "expected_range80",
-                  "range80_label"
+                  "range80_label",
+                  "range_basis"
                 ],
                 "type": "object"
               },
@@ -4745,7 +4973,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.2.0"
+      "const": "2.3.0"
     },
     "verdicts": {
       "additionalProperties": false,
