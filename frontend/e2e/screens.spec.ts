@@ -178,26 +178,29 @@ test.describe("at phone width, with device emulation @smoke", () => {
   for (const [fontName, css] of Object.entries(FONTS)) {
     for (const company of COMPANIES) {
       for (const screen of ALL_SCREENS) {
-        test(`${screen}: ${company} does not scroll sideways in ${fontName}, opened or closed @smoke`, async ({ page }) => {
-          const issues = collectBrowserIssues(page);
-          await open(page, screen, company, "demo-plan");
-          await page.evaluate(() => document.fonts.ready);
-          if (css) await page.addStyleTag({ content: css });
-          const sideways = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-          expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
-          await openAll(page);
-          expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
-          const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => el.scrollWidth > el.clientWidth + 1).length);
-          expect(scrolling, "no table scrolls sideways inside its card").toBe(0);
-          const wide = await page.evaluate(() =>
-            Array.from(document.querySelectorAll("main *"))
-              .filter((el) => el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
-              .map((el) => `${el.tagName}.${String(el.className).slice(0, 40)}`)
-              .slice(0, 5),
-          );
-          expect(wide, "nothing in the page runs past the right edge").toEqual([]);
-          expect(issues).toEqual([]);
-        });
+        // as signed too: its ranges carry the stretch's labels, which a plan's do not
+        for (const scenario of ["demo-plan", "as-signed"] as const) {
+          test(`${screen}: ${company} / ${scenario} does not scroll sideways in ${fontName}, opened or closed @smoke`, async ({ page }) => {
+            const issues = collectBrowserIssues(page);
+            await open(page, screen, company, scenario);
+            await page.evaluate(() => document.fonts.ready);
+            if (css) await page.addStyleTag({ content: css });
+            const sideways = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+            expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
+            await openAll(page);
+            expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
+            const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => el.scrollWidth > el.clientWidth + 1).length);
+            expect(scrolling, "no table scrolls sideways inside its card").toBe(0);
+            const wide = await page.evaluate(() =>
+              Array.from(document.querySelectorAll("main *"))
+                .filter((el) => el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
+                .map((el) => `${el.tagName}.${String(el.className).slice(0, 40)}`)
+                .slice(0, 5),
+            );
+            expect(wide, "nothing in the page runs past the right edge").toEqual([]);
+            expect(issues).toEqual([]);
+          });
+        }
       }
     }
   }
@@ -209,21 +212,23 @@ test.describe("at tablet widths, with stretched text @smoke", () => {
       test.use({ viewport: { width, height: 900 } });
       for (const company of COMPANIES) {
         for (const screen of ALL_SCREENS) {
-          test(`${screen}: ${company} does not scroll sideways, opened or closed @smoke`, async ({ page }) => {
-            await open(page, screen, company, "demo-plan");
-            await page.evaluate(() => document.fonts.ready);
-            await page.addStyleTag({ content: STRETCH });
-            const sideways = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-            expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
-            await openAll(page);
-            expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
-            const scrolling = await page.evaluate(() =>
-              Array.from(document.querySelectorAll(".overflow-x-auto"))
-                .filter((el) => el.scrollWidth > el.clientWidth + 1)
-                .map((el) => `${el.tagName}: ${(el.textContent ?? "").slice(0, 50)}`),
-            );
-            expect(scrolling, "no table scrolls sideways inside its card").toEqual([]);
-          });
+          for (const scenario of ["demo-plan", "as-signed"] as const) {
+            test(`${screen}: ${company} / ${scenario} does not scroll sideways, opened or closed @smoke`, async ({ page }) => {
+              await open(page, screen, company, scenario);
+              await page.evaluate(() => document.fonts.ready);
+              await page.addStyleTag({ content: STRETCH });
+              const sideways = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+              expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
+              await openAll(page);
+              expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
+              const scrolling = await page.evaluate(() =>
+                Array.from(document.querySelectorAll(".overflow-x-auto"))
+                  .filter((el) => el.scrollWidth > el.clientWidth + 1)
+                  .map((el) => `${el.tagName}: ${(el.textContent ?? "").slice(0, 50)}`),
+              );
+              expect(scrolling, "no table scrolls sideways inside its card").toEqual([]);
+            });
+          }
         }
       }
     });
