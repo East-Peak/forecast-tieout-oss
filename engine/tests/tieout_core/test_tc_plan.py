@@ -217,3 +217,33 @@ def test_ordered_plan_contributions_by_hand():
     assert abs(Decimal(b["contribution"]["next twelve months"]) - 240_000) <= near
     assert abs(Decimal(section["difference"]["next twelve months"]) - 600_000) <= near
     assert all(c.passed for c in checks)
+
+
+# ---------------------------------------------------------------- review round: full schedule first
+
+
+def test_a_programme_longer_than_the_window_is_normalised_over_its_whole_length():
+    # $2.4M over 24 months with a one-month ramp is $100,000 a month: the first
+    # twelve months carry $1.2M, not all $2.4M.
+    flows = programme_inflows(
+        programme(2_400_000, "2026-07-01", ramp=1, months=24), WINDOWS, AS_OF, FY_END, 3
+    )
+    assert len(flows) == 12
+    assert sum((f.dollars for f in flows), Decimal(0)) == pytest.approx(
+        Decimal(1_200_000)
+    )
+
+
+def test_a_partial_final_month_takes_its_share_of_the_days_inside_the_window():
+    # As of 2026-06-15 the window ends 2027-06-15. A 12-month programme of $1.2M
+    # (ramp 1, $100,000 a month) from July has June 2027 as its last month, of which
+    # 15 of 30 days fall inside: 11 x 100,000 + 50,000.
+    as_of = date(2026, 6, 15)
+    windows = month_windows(as_of, date(2027, 6, 15))
+    flows = programme_inflows(
+        programme(1_200_000, "2026-07-01", ramp=1, months=12), windows, as_of, FY_END, 3
+    )
+    assert sum((f.dollars for f in flows), Decimal(0)) == pytest.approx(
+        Decimal(1_150_000)
+    )
+    assert flows[-1].dollars == pytest.approx(Decimal(50_000))

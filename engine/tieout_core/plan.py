@@ -8,16 +8,18 @@ optional cost. Items are applied in the order hires first, then programmes,
 each in file order.
 
 Programme arithmetic: a programme running N months (default: through the
-fiscal-year end) creates its dollars in the month windows from its start month,
-month j at a weight of min(1, j / ramp); the dollars are split in proportion to
-those weights and spread evenly over each month's days. The dollars are exact:
-they add to the programme's pipeline.
+fiscal-year end) creates its dollars in the calendar months from its start
+month, month j at a weight of min(1, j / ramp); the dollars of the whole
+programme are split in proportion to those weights and spread evenly over each
+month's days. Only then is the schedule clipped to the report's twelve months
+(a partial final month keeps its share of the days), so the dollars in the
+window never exceed the programme's pipeline.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
@@ -115,7 +117,9 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
                 _month(raw.get("start"), as_of, where),
                 _opt_int(raw.get("ramp_months"), "ramp_months", where),
                 _opt_int(raw.get("months"), "months", where),
-                None if cost is None else _decimal(cost, "cost", where),
+                None
+                if cost is None
+                else _non_negative(_decimal(cost, "cost", where), "cost", where),
             )
         )
     return Plan(tuple(hires), tuple(programmes))
@@ -138,20 +142,36 @@ def programme_inflows(
 ) -> tuple[Inflow, ...]:
     """The dollars a programme creates in each month window, as exact inflows."""
     ramp = p.ramp_months or default_ramp_months
+    horizon = (windows[-1].end - as_of).days if windows else 0
     starts = f"{p.start:%Y-%m}"
-    months = [w for w in windows if w.label >= starts]
     if p.months is not None:
-        months = months[: p.months]
+        length = p.months
     elif p.start <= fiscal_year_end:
-        months = [w for w in months if w.end <= fiscal_year_end]
-    weights = [Decimal(min(j, ramp)) / Decimal(ramp) for j in range(1, len(months) + 1)]
+        length = (
+            (fiscal_year_end.year - p.start.year) * 12
+            + fiscal_year_end.month
+            - p.start.month
+            + 1
+        )
+    else:
+        length = sum(1 for w in windows if w.label >= starts)
+    # The whole programme is normalised first; only then is it clipped to the
+    # report's window (a partial final month keeps its share of the days).
+    weights = [Decimal(min(j, ramp)) / Decimal(ramp) for j in range(1, length + 1)]
     total = sum(weights, Decimal(0))
-    if not total:
-        return ()
-    return tuple(
-        Inflow((w.start - as_of).days, (w.end - as_of).days, p.pipeline * wt / total)
-        for w, wt in zip(months, weights)
-    )
+    flows = []
+    for j, wt in enumerate(weights):
+        first = add_months(p.start, j)
+        last = add_months(p.start, j + 1) - timedelta(days=1)
+        lo, hi = (first - timedelta(days=1) - as_of).days, (last - as_of).days
+        if lo >= horizon:
+            break
+        dollars = p.pipeline * wt / total
+        if hi > horizon:
+            dollars = dollars * Decimal(horizon - lo) / Decimal(hi - lo)
+            hi = horizon
+        flows.append(Inflow(lo, hi, dollars))
+    return tuple(flows)
 
 
 def _month(value, as_of: date, where: str) -> date:
@@ -170,9 +190,18 @@ def _month(value, as_of: date, where: str) -> date:
 
 def _decimal(value, name: str, where: str) -> Decimal:
     try:
-        return Decimal(str(value))
+        out = Decimal(str(value))
     except InvalidOperation:
         raise ValueError(f"{where}: {name} must be a number") from None
+    if not out.is_finite():
+        raise ValueError(f"{where}: {name} must be a finite number")
+    return out
+
+
+def _non_negative(value: Decimal, name: str, where: str) -> Decimal:
+    if value < 0:
+        raise ValueError(f"{where}: {name} must not be negative")
+    return value
 
 
 def _opt_int(value, name: str, where: str) -> int | None:
