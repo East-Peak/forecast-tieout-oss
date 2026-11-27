@@ -6,6 +6,7 @@ import { unboundDigits } from "../../binding/__tests__/harness";
 import type { TieoutReport } from "../../generated/report";
 import type { Loaders } from "../../session/ReportSession";
 import { B, LISTED_BINDINGS, W } from "../plan/bindings";
+import { WORKSHEET_BINDINGS } from "../plan/worksheetBindings";
 import PlanScreen from "../plan/PlanScreen";
 import * as files from "./files";
 import * as fmt from "./independent";
@@ -29,8 +30,8 @@ const fullPlan = (r: TieoutReport) => {
 runScreenChecks({
   name: "Plan",
   Screen: PlanScreen,
-  listFor: () => LISTED_BINDINGS,
-  fullList: LISTED_BINDINGS,
+  listFor: () => [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS],
+  fullList: [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS],
   build,
   swap: { binding: B.closeGap, to: B.programCap.path },
   flip: (report) => {
@@ -43,14 +44,14 @@ runScreenChecks({
   probe: "close.gap",
   more: () => {
     describe("Plan: with no plan selected", () => {
-      it("says there is no plan and invites picking one, and shows no figure for a plan (not zeros)", () => {
+      it("says there is no plan in the report's words and invites building one, and shows no figure for a plan (not zeros)", () => {
         for (const company of files.COMPANIES) {
           const c = caseOf(company, "as-signed");
           const container = mountScreen(PlanScreen, c, c.company, c.scenario);
           const note = container.querySelector("[data-testid='no-plan']")!;
-          expect(note.textContent).toContain("There is no plan in this scenario");
+          expect(note.textContent).toContain(c.report.worksheet && "summary" in c.report.worksheet ? c.report.worksheet.summary.no_plan_note : "");
           expect(note.textContent).toContain("Pick a scenario");
-          for (const id of ["plan.expected", "plan.gap", "plan.gap-change", "item.label", "window.rest.with-plan", "items.cost"]) {
+          for (const id of ["worksheet.summary.twelve-month-gain", "worksheet.summary.cash-cost", "item.label", "window.rest.with-plan", "items.cost"]) {
             expect(container.querySelector(`[data-binding='${id}']`), `${company} ${id}`).toBeNull();
           }
           cleanup();
@@ -141,12 +142,11 @@ runScreenChecks({
     });
 
     describe("Plan: what could not be valued is not a zero", () => {
-      it("Mighty Oak's hires-only scenario shows words, not $0, with the reason once and the table saying so too", () => {
+      it("Mighty Oak's hires-only scenario shows words, not $0, with the reason in words and the table saying so too", () => {
         const c = caseOf("mighty-oak-holdings", "hires-only");
         const container = mountScreen(PlanScreen, c, c.company, c.scenario);
         const text = (id: string) => container.querySelector(`[data-binding='${id}']`)!.textContent;
-        expect(text("plan.gap-change")).toBe("not valued");
-        expect(text("plan.more-booked.next12")).toBe("not valued");
+        expect(text("worksheet.summary.twelve-month-gain.not-valued")).toBe("not valued");
         expect(text("window.rest.gain")).toBe("not valued");
         expect(text("items.total.rest")).toBe("not valued");
         expect(container.querySelector("[data-testid='unvalued-note']")!.textContent).toMatch(/^no item in this plan is valued: hiring is unsupported by this history/);
@@ -158,14 +158,13 @@ runScreenChecks({
       it("a partly valued plan keeps its figure and names what it leaves out", () => {
         const c = caseOf("mighty-oak-holdings", "demo-plan");
         const container = mountScreen(PlanScreen, c, c.company, c.scenario);
-        expect(container.querySelector("[data-binding='plan.more-booked.next12']")!.textContent).toBe("$1.6M");
+        expect(container.querySelector("[data-binding='worksheet.summary.twelve-month-gain']")!.textContent).toBe("$1.6M");
         expect(container.querySelector("[data-testid='unvalued-note']")!.textContent).toMatch(/leave out what cannot be valued: 4 Mid-Market hires/);
       });
 
-      it("the baseline line under the headline is labeled, and segment names read as words", () => {
+      it("segment names read as words", () => {
         const c = caseOf("sprout-labs", "demo-plan");
         const container = mountScreen(PlanScreen, c, c.company, c.scenario);
-        expect(container.textContent).toContain("Compared against:");
         expect(container.textContent).not.toMatch(/mid_market|_market/);
         expect(container.textContent).toMatch(/Mid Market/);
       });
@@ -233,7 +232,7 @@ runScreenChecks({
         report.plan = { unavailable: "no close-timing evidence" };
         const container = mountScreen(PlanScreen, { ...c, report }, c.company, c.scenario);
         expect(container.querySelector("[data-binding='plan.unavailable']")!.textContent).toBe("no close-timing evidence");
-        expect(container.querySelector("[data-binding='plan.expected']")).toBeNull();
+        expect(container.querySelector("[data-binding='window.rest.with-plan']")).toBeNull();
         expect(container.querySelector("[data-testid='no-plan']")).toBeNull();
       });
 
@@ -256,7 +255,7 @@ runScreenChecks({
         );
         await waitFor(() => expect(screen.getByTestId("no-plan")).toBeInTheDocument());
         const press = (id: string) => fireEvent.click(document.querySelector(`[data-scenario-id='${id}']`)!);
-        const gap = () => document.querySelector("[data-binding='plan.gap']")?.textContent;
+        const gap = () => document.querySelector("[data-binding='worksheet.summary.remaining-gap']")?.textContent;
 
         press("demo-plan");
         await waitFor(() => expect(gap()).toBeDefined());
@@ -275,7 +274,7 @@ runScreenChecks({
 
         press("as-signed");
         await waitFor(() => expect(screen.getByTestId("no-plan")).toBeInTheDocument());
-        expect(document.querySelector("[data-binding='plan.gap']")).toBeNull();
+        expect(document.querySelector("[data-binding='worksheet.summary.twelve-month-gain']")).toBeNull();
         cleanup();
       });
     });

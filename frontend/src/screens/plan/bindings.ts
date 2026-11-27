@@ -34,14 +34,7 @@ export const B = {
 
   // the plan, in one line: this scenario against as signed (comparison.json)
   planUnavailable: text("plan.unavailable", `${PLAN}/unavailable`),
-  planExpected: usd("plan.expected", `${PLAN}/expected_fiscal_year`),
-  planGap: usd("plan.gap", `${PLAN}/gap/fiscal_year/gap_with_plan`, { tint: "shortfall" }),
-  cmpGapChange: usd("plan.gap-change", `${ME}/fiscal_year_gap_change`, { ...cmp, tint: "shortfall", unavailable: words("not valued") }),
-  cmpMoreNext: usd("plan.more-booked.next12", `${ME}/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("not valued") }),
   cmpNote: text("plan.note", `${ME}/note`, cmp),
-  cmpCost: usd("plan.cost", `${ME}/cash_cost_in_twelve_months`, { ...cmp, unavailable: words("cost not entered") }),
-  planDefinition: text("plan.baseline-definition", `${PLAN}/baseline_definition`),
-  planFile: text("plan.file", `${PLAN}/file`),
 
   rangeStatus: text("plan.ranges.status", `${PLAN}/ranges/status`),
   rangeDrawn: text("plan.ranges.drawn", `${PLAN}/ranges/what_is_drawn`),

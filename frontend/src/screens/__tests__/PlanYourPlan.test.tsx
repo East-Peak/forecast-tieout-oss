@@ -7,6 +7,7 @@ import { YOUR_PLAN, withYourPlan, withYourPlanRow } from "../../editor/yourPlan"
 import type { ComparisonRow } from "../../editor/protocol";
 import type { TieoutReport } from "../../generated/report";
 import { LISTED_BINDINGS } from "../plan/bindings";
+import { WORKSHEET_BINDINGS } from "../plan/worksheetBindings";
 import PlanScreen from "../plan/PlanScreen";
 import * as files from "./files";
 import { build } from "./planExpectations";
@@ -37,8 +38,8 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     const container = mountScreen(PlanScreen, c, c.company, c.scenario);
     const { expected, absent, periodLabels } = build(c);
     expect(expected.length).toBeGreaterThan(20);
-    expect([...checkBindings(container, expected, absent, LISTED_BINDINGS, c), ...unboundDigits(container, periodLabels)]).toEqual([]);
-    expect(container.querySelector("[data-binding='plan.gap']")?.getAttribute("data-scenario")).toBe(YOUR_PLAN);
+    expect([...checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], c), ...unboundDigits(container, periodLabels)]).toEqual([]);
+    expect(container.querySelector("[data-binding='worksheet.summary.remaining-gap']")?.getAttribute("data-scenario")).toBe(YOUR_PLAN);
   });
 
   it("the comparison table lists the visitor's plan last, from the core's row", () => {
@@ -54,6 +55,6 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     const other = { ...c, report: files.report(COMPANY, "demo-plan") };
     const container = mountScreen(PlanScreen, other, c.company, c.scenario);
     const { expected, absent } = build(c);
-    expect(checkBindings(container, expected, absent, LISTED_BINDINGS, c).length).toBeGreaterThan(0);
+    expect(checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], c).length).toBeGreaterThan(0);
   });
 });

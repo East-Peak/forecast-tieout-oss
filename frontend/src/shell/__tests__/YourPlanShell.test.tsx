@@ -72,30 +72,31 @@ function open(url: string, editor: FakeEditor, desktop: boolean) {
 }
 
 describe("on a desktop screen", () => {
-  it("sets Build your own plan apart from the four named scenarios, and nothing starts until it is chosen", async () => {
+  it("offers the four named scenarios as choices and Edit plan beside them, and nothing starts until it is chosen", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
-    const picker = await screen.findByTestId("scenario-picker");
-    const named = within(within(picker).getByRole("group", { name: "Scenario" }));
+    const summary = await screen.findByTestId("worksheet-summary");
+    const named = within(within(summary).getByRole("group", { name: "Scenario" }));
     expect(named.getAllByRole("button").map((b) => b.textContent)).toEqual(["As signed", "Demo plan", "Hires only", "Program only"]);
-    const build = within(picker).getByRole("button", { name: "Build your own plan" });
-    expect(build).toHaveAttribute("data-scenario-id", "your-plan");
-    expect(build).toHaveAttribute("aria-pressed", "false");
-    expect(picker).toHaveTextContent("Change the hires and programs and see every screen update. Computed in your browser.");
+    const edit = within(summary).getByRole("button", { name: "Edit plan" });
+    expect(edit).toHaveAttribute("aria-pressed", "false");
     expect(editor.opened).toEqual([]);
     expect(screen.queryByTestId("your-plan-mark")).toBeNull();
     expect(screen.queryByTestId("plan-form")).toBeNull();
   });
 
-  it("the as-signed notice offers the same choice in a sentence, and it opens the form", async () => {
+  it("the as-signed line offers the same choice in a sentence, and it opens the form in place under the summary", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
     const notice = await screen.findByTestId("no-plan");
-    expect(notice).toHaveTextContent("Pick a scenario above to see what a plan buys. Or build your own plan.");
+    expect(notice).toHaveTextContent("No plan is in force");
+    expect(notice).toHaveTextContent("Build a plan to see what it changes, or pick a scenario above.");
     expect(editor.opened).toEqual([]);
-    fireEvent.click(within(notice).getByRole("button", { name: "build your own plan" }));
+    fireEvent.click(within(notice).getByRole("button", { name: "Build a plan" }));
     await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
     expect(editor.opened).toEqual(["sprout-labs"]);
+    const summary = screen.getByTestId("worksheet-summary");
+    expect(summary.compareDocumentPosition(screen.getByTestId("plan-form")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("moves focus to the form's heading and scrolls it into view when the form opens", async () => {
@@ -114,7 +115,7 @@ describe("on a desktop screen", () => {
   it.each(["Forecast", "Capacity", "Pipeline", "Trust"])("%s ends with a link to the editor that opens it on the Plan screen, and starts nothing before it is clicked", async (name) => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
-    await screen.findByTestId("scenario-picker");
+    await screen.findByTestId("worksheet-summary");
     fireEvent.click(within(screen.getByRole("navigation", { name: "Screens" })).getByRole("link", { name }));
     await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(name));
     const line = await screen.findByTestId("build-your-own");
@@ -129,13 +130,13 @@ describe("on a desktop screen", () => {
   it("shows what the editor is doing while it loads, then the plan screen with its form, marked as the visitor's own", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
-    fireEvent.click(await screen.findByRole("button", { name: "Build your own plan" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Edit plan" }));
     await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
-    expect(screen.getByRole("button", { name: "Build your own plan" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "Edit plan" })).toHaveAttribute("aria-pressed", "true");
     expect(editor.opened).toEqual(["sprout-labs"]);
     expect(editor.applied).toEqual([DEMO]);
     expect(screen.getByTestId("your-plan-mark")).toHaveTextContent("Your plan, computed in your browser; ranges unvalidated");
-    expect(document.querySelector("[data-binding='plan.gap']")?.getAttribute("data-scenario")).toBe("your-plan");
+    expect(document.querySelector("[data-binding='worksheet.summary.remaining-gap']")?.getAttribute("data-scenario")).toBe("your-plan");
     expect(screen.getAllByTestId("compare-row").map((r) => r.querySelector("[data-binding]")?.textContent)).toContain("Your plan");
   });
 
@@ -187,12 +188,12 @@ describe("on a desktop screen", () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=your-plan", editor, true);
     await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
-    const before = document.querySelector("[data-binding='plan.gap']");
+    const before = document.querySelector("[data-binding='worksheet.summary.remaining-gap']");
     fireEvent.click(screen.getByRole("button", { name: "Apply" }));
     await waitFor(() => expect(editor.applied).toHaveLength(2));
     await waitFor(() => expect(screen.getByRole("button", { name: "Apply" })).toBeEnabled());
     expect(screen.queryByTestId("session-status")).toBeNull();
-    expect(document.querySelector("[data-binding='plan.gap']")).not.toBeNull();
+    expect(document.querySelector("[data-binding='worksheet.summary.remaining-gap']")).not.toBeNull();
     expect(before).not.toBeNull();
   });
 
@@ -208,15 +209,14 @@ describe("on a desktop screen", () => {
 });
 
 describe("on a phone", () => {
-  it("has no Your plan, says editing needs a larger screen, and never touches the editor", async () => {
+  it("has no Edit plan, says editing needs a larger screen, and never touches the editor", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, false);
-    const picker = await screen.findByTestId("scenario-picker");
-    expect(within(picker).queryByRole("button", { name: "Build your own plan" })).toBeNull();
-    expect(picker).not.toHaveTextContent("Computed in your browser");
-    expect(within(picker).getByText("Editing your own plan needs a larger screen.")).toBeInTheDocument();
-    expect(screen.getByTestId("no-plan")).not.toHaveTextContent("build your own plan");
-    expect(screen.queryByRole("button", { name: /build your own plan/i })).toBeNull();
+    const summary = await screen.findByTestId("worksheet-summary");
+    expect(within(summary).queryByRole("button", { name: "Edit plan" })).toBeNull();
+    expect(within(summary).getByText(/Editing your own plan needs a larger screen\./)).toBeInTheDocument();
+    expect(screen.getByTestId("no-plan")).not.toHaveTextContent("Build a plan");
+    expect(screen.queryByRole("button", { name: /build a plan|edit plan|build your own plan/i })).toBeNull();
     for (const name of ["Forecast", "Capacity", "Pipeline", "Trust"]) {
       fireEvent.click(within(screen.getByRole("navigation", { name: "Screens" })).getByRole("link", { name }));
       await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(name));

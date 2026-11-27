@@ -5,6 +5,7 @@
  */
 import type { TieoutReport } from "../../generated/report";
 import { B, W } from "../plan/bindings";
+import { worksheetExpectations } from "./worksheetExpectations";
 import { kit, orWords } from "./expectKit";
 import * as fmt from "./independent";
 import type { Built, Case } from "./screenChecks";
@@ -35,15 +36,8 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
 
   // a plan that cannot be valued says so; as signed there is no plan and nothing is shown for one
   when(r.plan !== undefined && plan === null, B.planUnavailable.id, () => (r.plan && "unavailable" in r.plan ? r.plan.unavailable : ""));
-  when(plan !== null, B.planExpected.id, () => fmt.usdShort(plan!.expected_fiscal_year));
-  when(plan !== null, B.planGap.id, () => fmt.usdShort(plan!.gap.fiscal_year.gap_with_plan));
-  when(plan !== null, B.cmpGapChange.id, () => orWords(me.fiscal_year_gap_change, fmt.usdShort, "not valued"));
-  when(plan !== null && me.note !== null, B.cmpNote.id, () => me.note!);
-  when(plan !== null, B.cmpMoreNext.id, () => orWords(me.bookings_change?.[TWELVE] ?? null, fmt.usdShort, "not valued"));
-  when(plan !== null, B.cmpCost.id, () => orWords(me.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
-  when(plan !== null, B.planDefinition.id, () => plan!.baseline_definition);
-  // the visitor's own plan is a form, not a file: the line names no file
-  when(plan !== null && scenario !== "your-plan", B.planFile.id, () => plan!.file);
+  // the note on what the plan leaves out is said twice: with the summary and under the plan's items
+  when(plan !== null && me.note !== null, B.cmpNote.id, () => me.note!, 2);
 
   // both windows, each with its ranges (the 95% ones in the opened row)
   const horizons = r.forecasts.fitted_ranges.horizons as Record<string, Ranged>;
@@ -148,5 +142,6 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   many(B.sCostNone.id, rowsBy(true).map(() => "no plan, no cost"), rowsBy(true).map(([, i]) => `/rows/${i}`));
   many(B.sCost.id, rowsBy(false).map(([x]) => orWords(x.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered")), rowsBy(false).map(([, i]) => `/rows/${i}`));
 
-  return { expected, absent, periodLabels: [] };
+  const sheet = worksheetExpectations({ report: r, index, comparison, company, scenario }, { one, many, when, expected, absent });
+  return { expected, absent, periodLabels: [], alsoNamed: sheet.alsoNamed };
 }

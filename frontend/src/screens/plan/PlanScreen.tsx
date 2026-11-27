@@ -1,8 +1,6 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Callout } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { MetricCard } from "../../components/workbook/MetricCard";
-import { useYourPlan } from "../../editor/YourPlanContext";
 import { YOUR_PLAN } from "../../editor/yourPlan";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { STACK } from "../../components/workbook/stack";
@@ -10,46 +8,38 @@ import { ActionsCard } from "./ActionsCard";
 import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
-import { ScenarioPicker } from "./ScenarioPicker";
+import { Summary } from "./Summary";
+import { WS } from "./worksheetBindings";
 import { YourPlanForm } from "./YourPlanForm";
 import { WindowTable } from "./WindowTable";
 
 /**
- * Plan: what do the actions buy, and which is cheaper? A scenario is picked; as signed there is no plan and
- * the screen says so and invites a pick, rather than showing zeros. With a plan the headline is its effect on
- * the year, then both windows with ranges, each item, the two unit actions compared, and what closes the gap alone.
+ * Plan, the landing screen and the planning worksheet. Top to bottom: the summary row (target, as signed, working
+ * plan, remaining gap), the editor in place when it is open, then the ledger of the plan in force: what each item
+ * contributes and costs, the two unit actions compared, what closes the gap alone, and every scenario side by side.
  */
 export default function PlanScreen() {
-  const { files, scenario, company, choose } = useBindingContext();
-  const yourPlan = useYourPlan();
+  const { files, scenario, company } = useBindingContext();
   const plan = files.report.plan;
   const full = plan !== undefined && !("unavailable" in plan) ? plan : null;
   const note = files.comparison.rows.find((r) => r.scenario === scenario)?.note != null;
+  const sheet = files.report.worksheet;
+  const worksheet = "unavailable" in sheet ? null : sheet;
 
   return (
     <div className="flex max-w-6xl flex-col gap-6">
-      <SectionHeader title="Plan" subtitle="What do the actions buy, and which is cheaper?" />
+      <SectionHeader title="Plan" subtitle="What moves the outcome, and which plan do we choose?" />
       <p className="-mt-3 text-xs text-slate-500">
         <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
       </p>
-      <ScenarioPicker />
+      <Summary planInForce={worksheet ? worksheet.plan_in_force : null} />
+      {worksheet ? null : (
+        <Callout color="amber" title="The worksheet cannot be built for this scenario" data-testid="worksheet-unavailable">
+          <Bound binding={WS.unavailable} />
+        </Callout>
+      )}
       {scenario === YOUR_PLAN ? <YourPlanForm company={company} /> : null}
 
-      {plan === undefined ? (
-        <Callout color="blue" title="There is no plan in this scenario" data-testid="no-plan">
-          As signed, nothing is planned, so there is nothing to value and no figure to show. Pick a scenario above to see what a plan buys.
-          {yourPlan?.desktop ? (
-            <>
-              {" "}Or{" "}
-              <button type="button" onClick={() => choose?.(company, YOUR_PLAN)} className="font-medium text-ft-brand underline">
-                build your own plan
-              </button>
-              .
-            </>
-          ) : null}{" "}
-          The two actions below are compared on the roster as signed.
-        </Callout>
-      ) : null}
       {plan !== undefined && full === null ? (
         <Callout color="amber" title="This plan cannot be valued" data-testid="plan-unavailable">
           <Bound binding={B.planUnavailable} />
@@ -58,20 +48,6 @@ export default function PlanScreen() {
 
       {full ? (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4" data-testid="plan-headline">
-            <MetricCard label="Expected year, with this scenario" value={<Bound binding={B.planExpected} />} className="p-4" />
-            <MetricCard label="Gap to target, with it" value={<Bound binding={B.planGap} />} className="p-4" />
-            <MetricCard label="The gap changes by" value={<Bound binding={B.cmpGapChange} />} note="Against the roster as signed" className="p-4" />
-            <MetricCard label="More booked, next twelve months" value={<Bound binding={B.cmpMoreNext} />} className="p-4">
-              <p className="mt-1 text-[11px] leading-tight text-slate-500">
-                Cash cost in the same months: <Bound binding={B.cmpCost} />
-              </p>
-            </MetricCard>
-          </div>
-          <p className="-mt-2 text-xs text-slate-500">
-            <span className="font-semibold text-slate-600">Compared against:</span> <Bound binding={B.planDefinition} />.
-            {scenario === YOUR_PLAN ? " The plan is the one in the form above." : <> The plan file is <Bound binding={B.planFile} />.</>}
-          </p>
           <WindowTable />
           <Card>
             <SectionHeader title="The gap to target, both windows" subtitle="Gap is target less expected: positive is a shortfall, negative is ahead." />

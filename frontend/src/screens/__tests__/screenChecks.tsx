@@ -31,6 +31,8 @@ export interface Built {
   absent: Absent[];
   /** what a tooltip's or an axis's period labels may read on this page */
   periodLabels: string[];
+  /** ids the page shows only after a choice (the other window), named by the expectations so the lists stay in step */
+  alsoNamed?: string[];
 }
 
 export const caseOf = (company: string, scenario: string): Case => ({
@@ -94,8 +96,9 @@ export function runScreenChecks(checks: ScreenChecks): void {
     it("the committed list and the independent expectations name the same bindings", () => {
       const named = new Set<string>();
       for (const [company, scenario] of CASES) {
-        const { expected, absent } = checks.build(caseOf(company, scenario));
+        const { expected, absent, alsoNamed } = checks.build(caseOf(company, scenario));
         [...expected, ...absent].forEach((e) => named.add(e.id));
+        alsoNamed?.forEach((id) => named.add(id));
       }
       const listed = checks.fullList.map((b) => b.id);
       expect([...named].sort()).toEqual([...new Set(listed)].sort());
