@@ -143,8 +143,10 @@ not yes. CI runs it on every push.
 
 ## Tests
 
+Install `engine/requirements-dev.txt` first, so the linter and test runner match CI.
+
 ```bash
-python -m pytest engine/tests/                                  # the core, the generators, the report contract
+python -m pytest engine/tests/ -n auto                                  # the core, the generators, the report contract
 python -m engine.scripts.generate_data_v2 --verify              # the demo data is what the generator writes
 python -m engine.scripts.generate_app_reports --verify          # the committed reports are what the core writes
 ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py

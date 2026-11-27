@@ -4,3 +4,4 @@
 -r requirements.txt
 pytest>=7.0
 ruff==0.17.6
+pytest-xdist==3.8.0
