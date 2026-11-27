@@ -357,6 +357,35 @@ def require_correct(reports: dict[str, dict]) -> None:
 # ---------------------------------------------------------------- types
 
 
+def replay_problems(companies=COMPANIES) -> list[str]:
+    """Every committed worksheet replayed through the whole forward function: each sensitivity at
+    its setting, and each needed-alone setting fed back in as written. Independent of the code
+    that wrote the section, so a stale or wrong figure cannot agree with itself."""
+    from engine.tieout_core.plan import load_plan
+    from engine.tieout_core.report import prepare
+    from engine.tieout_core.worksheet_replay import replay
+
+    found: list[str] = []
+    with in_repo():
+        for company in companies:
+            state = prepare(PROFILES / company, DATA / company, AS_OF, DRAWS, SEED)
+            for sc in SCENARIOS:
+                report = json.loads(
+                    (REPO / REPORTS / company / f"{sc.id}.json").read_text()
+                )
+                plan = (
+                    None
+                    if sc.plan is None
+                    else load_plan(
+                        PROFILES / company / sc.plan, AS_OF, state.cap.members
+                    )
+                )
+                found += [
+                    f"{company}/{sc.id}: {p}" for p in replay(state, report, plan)
+                ]
+    return found
+
+
 def types_files() -> dict[Path, str]:
     """The TypeScript types, compiled from the schemas by the pinned
     json-schema-to-typescript (``frontend/scripts/generate-types.mjs``)."""
@@ -429,7 +458,7 @@ def main(argv=None) -> int:
     )
     parser.add_argument(
         "--verify", action="store_true",
-        help="regenerate to a temporary directory and fail if any committed file differs",
+        help="regenerate to a temporary directory and fail if any committed file differs, or if a committed worksheet figure does not replay through the model",
     )  # fmt: skip
     args = parser.parse_args(argv)
 
@@ -460,6 +489,7 @@ def main(argv=None) -> int:
                 f"{REPORTS}/{p}" for p in differences(REPO / REPORTS, regenerated)
             ]
         problems += _file_differences({**types, **schema_text})
+        problems += replay_problems()
         if problems:
             print(
                 "generated app data is stale:", *problems, sep="\n  ", file=sys.stderr
