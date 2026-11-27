@@ -964,8 +964,8 @@ export type TieoutReport = {
   };
 };
 export type Text = string;
-export type Money = string;
-export type Decimal = string;
+export type Money = string & { readonly __decimal: true };
+export type Decimal = string & { readonly __decimal: true };
 export type Month = string;
 export type Date = string;
 export type BetterVerdict = "yes" | "no" | "not enough history to say";

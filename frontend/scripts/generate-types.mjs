@@ -30,4 +30,8 @@ for (const file of schemas) {
     }),
   );
 }
-await writeFile(out, banner + parts.join("\n"));
+// Report decimals are branded strings, so arithmetic on one is a compile error (see src/__tests__/noArithmetic.test.ts).
+const branded = parts
+  .join("\n")
+  .replace(/export type (Money|Decimal) = string;/g, "export type $1 = string & { readonly __decimal: true };");
+await writeFile(out, banner + branded);

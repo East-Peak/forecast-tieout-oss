@@ -83,7 +83,7 @@ export function reduce(state: SessionState, action: SessionAction): SessionState
         index: state.index,
         selection: action.selection,
         notice: action.notice,
-        requestId: state.requestId + 1,
+        requestId: state.requestId + 1, // arithmetic-ok: a request counter, not a report value
       };
     case "loaded":
       // An answer to any request but the current one (the visitor has moved on, even if back to the same

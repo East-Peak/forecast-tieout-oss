@@ -32,7 +32,7 @@ export function resolvePointer(doc: unknown, pointer: string, options: { nullBel
           (item) => typeof item === "object" && item !== null && (item as Record<string, unknown>)[filter[1]] === filter[2],
         );
       } else {
-        node = /^\d+$/.test(raw) ? node[Number(raw)] : undefined;
+        node = /^\d+$/.test(raw) ? node[Number(raw)] : undefined; // arithmetic-ok: an array index from a pointer, not a report value
       }
     } else if (typeof node === "object" && node !== null && !filter) {
       const key = decode(raw);

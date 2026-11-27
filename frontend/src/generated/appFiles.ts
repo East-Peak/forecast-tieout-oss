@@ -26,7 +26,7 @@ export interface ReportIndex {
   schema_version: string;
 }
 
-export type Money = string;
+export type Money = string & { readonly __decimal: true };
 
 /**
  * How each named scenario compares with the as-signed baseline, written by the core's generator; the browser shows these figures and subtracts nothing.
