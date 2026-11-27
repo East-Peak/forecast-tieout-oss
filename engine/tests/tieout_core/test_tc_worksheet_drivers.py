@@ -368,3 +368,39 @@ def test_the_cycle_solve_agrees_with_a_search_of_every_step_for_many_targets():
         )
         assert r.outcome in (wd.SOLVES, wd.COVERED)
         assert r.scale == best
+
+
+def test_a_solution_is_rounded_up_to_the_places_the_driver_is_written_to_and_reaches_the_target():
+    # fy(v) = 100 + 300 v; the exact root for a target of 250 is 0.5, for 251 it is 0.50333..
+    fy = affine(D(100), D(300))
+    exact = wd.solve_linear(fy, D("0.2"), D(251), upper=D(1))
+    r = wd.round_solution(fy, exact, rules.WIN_RATE, D(251), D(1))
+    assert r.value == D("0.5034") and r.achieved == D(100) + D(300) * D("0.5034")
+    assert r.achieved >= 251 and r.overshoot == r.achieved - 251
+    # entering the number as written reaches the target; entering it rounded down would not
+    assert fy(D("0.5033")) < 251
+
+
+def test_a_solution_that_is_already_on_its_places_is_not_moved():
+    fy = affine(D(100), D(50))
+    r = wd.round_solution(
+        fy, wd.solve_linear(fy, D(2), D(400), None), rules.WON_ARR, D(400)
+    )
+    assert r.value == D(6) and r.overshoot == 0
+
+
+def test_dollars_round_up_to_the_cent_and_ratios_to_four_places():
+    fy = affine(D(0), D(1))
+    r = wd.round_solution(
+        fy, wd.Needed(wd.SOLVES, D("12.3401"), D(0)), rules.WON_ARR, D("12.3401")
+    )
+    assert r.value == D("12.35")
+    r = wd.round_solution(
+        fy, wd.Needed(wd.SOLVES, D("2.12341"), D(0)), rules.PRODUCTIVITY, D("2.12341")
+    )
+    assert r.value == D("2.1235")
+
+
+def test_other_outcomes_pass_through_a_rounding_untouched():
+    cannot = wd.Needed(wd.CANNOT, D(1), D(5), wd.BOUNDED_AT_ONE)
+    assert wd.round_solution(lambda v: v, cannot, rules.WIN_RATE, D(9), D(1)) is cannot

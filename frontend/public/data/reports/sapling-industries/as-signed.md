@@ -328,7 +328,7 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 
 ## 7. Verdicts
 
-**The software is correct: yes.** 20 of 20 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
+**The software is correct: yes.** 27 of 27 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
 
 | Check | Result | Detail |
 |---|---|---|
@@ -352,6 +352,13 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 | lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one | pass | 4 quarters checked on a $250,000 probe in two parts; win share 0.2193, not 0.7807 |
 | hires solve returns the smallest whole number that closes the gap | pass | unreachable: None hires give 58872158.49 against 60000000 |
 | program solve agrees with the forward function | pass | feasible: forward(45404741.70) = 60000000.00 against 60000000 |
+| worksheet bridge steps sum to the working plan | pass | 58089724.29 plus the contributions is 58089724.29; the working plan is 58089724.29 |
+| worksheet working plan and remaining gap close on the target | pass | target 60000000 less 58089724.29 is 1910275.71 |
+| worksheet baseline is the report's own expected fiscal year | pass | the probe's baseline 58089724.29 against the report's 58089724.29 |
+| worksheet win_rate needed alone agrees with the target | pass | solves: 60001600.40 against 60000000.00 |
+| worksheet won_arr needed alone agrees with the target | pass | solves: 60000000.10 against 60000000.00 |
+| worksheet productivity needed alone agrees with the target | pass | solves: 60000201.05 against 60000000.00 |
+| worksheet cycle_days needed alone agrees with the target | pass | solves: 60001174.28 against 60000000.00 |
 
 **The forecast is better than the baselines: no.** the model's mean absolute error is not lower than every baseline: 3m: model 1,944,676 vs trailing run-rate 1,942,333; 3m: model 1,944,676 vs stage-weighted pipeline 1,776,756.
 

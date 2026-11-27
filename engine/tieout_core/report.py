@@ -306,12 +306,15 @@ def finish(
         hires, inflows = (
             actions.plan_inputs(ground, plan) if plan is not None else ((), ())
         )
-        worksheet_section, _ = worksheet.worksheet_section(
+        worksheet_section, worksheet_checks = worksheet.worksheet_section(
             ground, state.quarters, params, plan_section if plan is not None else None,
             hires, inflows, actions_section, gap, required,
         )  # fmt: skip
     else:
-        worksheet_section = {"unavailable": fitted.unavailable_reason}
+        worksheet_section, worksheet_checks = (
+            {"unavailable": fitted.unavailable_reason},
+            [],
+        )
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
@@ -331,6 +334,7 @@ def finish(
         *capacity_report.checks(cap, productivity, fitted),
         *required_checks,
         *plan_checks,
+        *worksheet_checks,
     ]
     failed = [c for c in checks if not c.passed]
 

@@ -187,10 +187,21 @@ CYCLE_LIMITATION = (
 )
 
 
+NO_WIN_TIMES = (
+    "There is no win-time evidence for new pipeline, so its cycle length has no current value and "
+    "cannot be moved."
+)
+ZERO_CYCLE = (
+    "Wins already come on the day a deal is created, so scaling the cycle cannot change it: there "
+    "is no setting to move to and no historical setting to offer."
+)
+SUB_CENT_NOTE = "The shortfall is less than one cent, so the figures shown look equal; the gap is not closed."
+
+
 def _fmt(driver: str, value: Decimal) -> str:
     if driver == WON_ARR:
         return money(value)
-    return number(value, 2 if driver == CYCLE_DAYS else 4)
+    return number(value, rules.PRECISION[driver])
 
 
 def _per_window(values: dict[str, Decimal]) -> dict[str, str]:
@@ -215,37 +226,43 @@ class Context:
     fy_target: Decimal
 
 
-def _unit(g: Ground, driver: str) -> tuple[str, str, str, str]:
+def unit_for(adopted: bool, driver: str) -> tuple[str, str, str, str]:
     """(unit, unit label, display, what it applies to)."""
     if driver == PRODUCTIVITY:
-        unit, applies = PRODUCTIVITY_ADOPTED if g.cap.adopted else PRODUCTIVITY_FLAT
+        unit, applies = PRODUCTIVITY_ADOPTED if adopted else PRODUCTIVITY_FLAT
         return unit, unit, "decimal", applies
     unit, label, display = FORMS[driver]
     return unit, label, display, APPLIES[driver]
 
 
-def _fit_window(c: Context, driver: str) -> tuple[date, date]:
+def fit_window(driver: str, p: FitParams, as_of: date) -> tuple[date, date]:
     """The creation dates the fit in use learns this driver's current value from."""
-    g, p = c.g, c.params
     if driver == PRODUCTIVITY:
-        return g.as_of - timedelta(days=p.trailing_days - 1), g.as_of
+        return as_of - timedelta(days=p.trailing_days - 1), as_of
     if p.estimator == RECENCY:
-        return add_months(g.as_of, -p.recency_months) + timedelta(days=1), g.as_of
-    end = g.as_of - timedelta(days=p.horizon_days)
+        return add_months(as_of, -p.recency_months) + timedelta(days=1), as_of
+    end = as_of - timedelta(days=p.horizon_days)
     return end - timedelta(days=p.trailing_days - 1), end
 
 
-def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
+def limitation_text(
+    driver: str, gate_passed: bool, estimator: str, adopted: bool
+) -> str | None:
+    """The limitation sentence, from the driver, the gate, the fit in use and the capacity term."""
     parts = []
     if not gate_passed:
         parts.append(GATE_FAILED)
-    if driver != PRODUCTIVITY and c.params.estimator == RECENCY:
+    if driver != PRODUCTIVITY and estimator == RECENCY:
         parts.append(RECENCY_LIMITATION)
     if driver == PRODUCTIVITY:
-        parts.append(RAMP_LIMITATION if c.g.cap.adopted else FLAT_LIMITATION)
+        parts.append(RAMP_LIMITATION if adopted else FLAT_LIMITATION)
     if driver == CYCLE_DAYS:
         parts.append(CYCLE_LIMITATION)
     return " ".join(parts) or None
+
+
+def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
+    return limitation_text(driver, gate_passed, c.params.estimator, c.g.cap.adopted)
 
 
 def _observations(c: Context, driver: str) -> tuple[list[dict], list[Decimal]]:
@@ -277,8 +294,13 @@ def _change_at(c: Context, driver: str, setting: Decimal) -> dict[str, str]:
     return _per_window(c.probe.change(f))
 
 
-def _needed(c: Context, driver: str, current: Decimal, observed) -> dict:
+def _needed(c: Context, driver: str, current: Decimal | None, observed) -> dict | None:
+    """What alone closes the gap. The classification is by exact bookings against the exact
+    target; the figures written are to the cent (money) and to the driver's places (settings),
+    with a setting rounded up so that entering it reaches the target."""
     g, probe = c.g, c.probe
+    if current is None:
+        return None
     base_fy = probe.fiscal_year(probe.base)
 
     def fy_for(adjusted: Ground) -> Decimal:
@@ -304,6 +326,7 @@ def _needed(c: Context, driver: str, current: Decimal, observed) -> dict:
 
         upper = Decimal(1) if driver == WIN_RATE else None
         r = wd.solve_linear(at_value, current, c.fy_target, upper)
+        r = wd.round_solution(at_value, r, driver, c.fy_target, upper)
         value, scale = r.value, None
     label = (
         STEPPED_LABEL
@@ -313,15 +336,20 @@ def _needed(c: Context, driver: str, current: Decimal, observed) -> dict:
     inside = None
     if observed is not None and value is not None and r.outcome == wd.SOLVES:
         inside = observed.minimum <= value <= observed.maximum
+    target_shown, achieved_shown = money(c.fy_target), money(r.achieved)
     return {
         "outcome": r.outcome,
         "outcome_label": label,
+        "reaches_target": r.outcome != wd.CANNOT,
         "reason": r.reason,
         "reason_label": REASON_LABELS.get(r.reason) if r.reason else None,
         "value": None if value is None else _fmt(driver, value),
-        "achieved_fiscal_year_bookings": money(r.achieved),
-        "target": money(c.fy_target),
+        "achieved_fiscal_year_bookings": achieved_shown,
+        "target": target_shown,
         "overshoot": None if r.overshoot is None else money(r.overshoot),
+        "precision_note": SUB_CENT_NOTE
+        if r.outcome == wd.CANNOT and achieved_shown == target_shown
+        else None,
         "stepped": driver == CYCLE_DAYS,
         "scale": scale,
         "inside_observed_range": inside,
@@ -339,12 +367,17 @@ def _needed(c: Context, driver: str, current: Decimal, observed) -> dict:
 
 def driver_row(c: Context, driver: str) -> dict:
     current = wd.current_value(c.g, driver)
-    unit, unit_label, display, applies = _unit(c.g, driver)
+    unit, unit_label, display, applies = unit_for(c.g.cap.adopted, driver)
     rows, values = _observations(c, driver)
     settings = rules.historical_settings(values)
     gate_passed = settings is not None
-    fit_from, fit_to = _fit_window(c, driver)
-    if settings is None:
+    fit_from, fit_to = fit_window(driver, c.params, c.g.as_of)
+    cannot_scale = None
+    if driver == CYCLE_DAYS and not current:
+        cannot_scale = NO_WIN_TIMES if current is None else ZERO_CYCLE
+    if cannot_scale is not None:
+        historical, why = None, cannot_scale
+    elif settings is None:
         historical, why = None, GATE_FAILED
     else:
         historical, why = (
@@ -364,8 +397,10 @@ def driver_row(c: Context, driver: str) -> dict:
         "unit": unit,
         "unit_label": unit_label,
         "display": display,
+        "places": rules.PRECISION[driver],
+        "cannot_scale_because": cannot_scale,
         "current": {
-            "value": _fmt(driver, current),
+            "value": None if current is None else _fmt(driver, current),
             "fit_in_use": c.params.estimator,
             "creation_from": fit_from.isoformat(),
             "creation_to": fit_to.isoformat(),
@@ -386,6 +421,40 @@ def driver_row(c: Context, driver: str) -> dict:
 
 def _setting(c: Context, driver: str, setting: Decimal) -> dict:
     return {"setting": _fmt(driver, setting), "change": _change_at(c, driver, setting)}
+
+
+def rank_by_window(
+    magnitudes: list[dict[str, Decimal] | None],
+) -> list[dict[str, int | None]]:
+    """For each window, 1 for the largest absolute change in that window within the group, ties
+    in the listed order; None where there is no change to rank. The browser never sorts."""
+    ranks: list[dict[str, int | None]] = [{} for _ in magnitudes]
+    for w in WINDOWS:
+        order = sorted(
+            (i for i, m in enumerate(magnitudes) if m is not None),
+            key=lambda i: (-abs(magnitudes[i][w]), i),
+        )
+        position = {i: k for k, i in enumerate(order, start=1)}
+        for i in range(len(magnitudes)):
+            ranks[i][w] = position.get(i)
+    return ranks
+
+
+def _driver_magnitudes(row: dict) -> dict[str, Decimal] | None:
+    h = row["historical"]
+    if h is None:
+        return None
+    return {
+        w: max(
+            abs(Decimal(h["low"]["change"][w])), abs(Decimal(h["high"]["change"][w]))
+        )
+        for w in WINDOWS
+    }
+
+
+def _action_magnitudes(row: dict) -> dict[str, Decimal] | None:
+    gained = row["bookings_gained"]["value"]
+    return None if gained is None else {w: abs(Decimal(gained[w])) for w in WINDOWS}
 
 
 # ------------------------------------------------------------------ restated and referenced
@@ -414,6 +483,8 @@ def _action_rows(actions_section: dict) -> dict:
                 ),
             }
         )
+    for row, rank in zip(rows, rank_by_window([_action_magnitudes(r) for r in rows])):
+        row["rank"] = rank
     return {"basis": "as signed", "note": ACTIONS_NOTE, "rows": rows}
 
 
@@ -426,9 +497,7 @@ def _closes_alone_label(kind: str, outcome: str) -> str:
     }.get(outcome, "Not valued by this history, so there is nothing to solve for.")
 
 
-def _bridge(
-    g: Ground, plan_section: dict | None, gap: dict
-) -> tuple[dict, list[Check]]:
+def _bridge(plan_section: dict | None, gap: dict) -> tuple[dict, list[Check]]:
     year = gap["fiscal_year"]
     signed = Decimal(year["expected"])
     steps = [
@@ -653,6 +722,26 @@ def company_quarters(g: Ground) -> tuple[Quarter, ...]:
     )
 
 
+def static_texts(plan_in_force: bool) -> dict:
+    """The section's fixed sentences and flags, which depend only on whether a plan is in force."""
+    return {
+        "definition": (
+            "What moves the outcome: four operating drivers, each changed alone for deals "
+            "created after the as-of date, measured around the plan in force."
+        ),
+        "plan_in_force": plan_in_force,
+        "measured_around": (
+            "the plan in force: its hires and program pipeline, as applied"
+            if plan_in_force
+            else "the roster as signed and nothing planned"
+        ),
+        "windows": list(WINDOWS),
+        "expectation_note": EXPECTATION_NOTE,
+        "sensitivity_note": SENSITIVITY_NOTE,
+        "history_note": rules.HISTORY_PROMISES_NOTHING,
+    }
+
+
 def worksheet_section(
     g: Ground,
     quarters: Sequence[Quarter],
@@ -667,7 +756,11 @@ def worksheet_section(
     probe = wd.Probe(g, hires, inflows)
     c = Context(g, probe, quarters, params, g.fy_target)
     drivers = [driver_row(c, d) for d in DRIVERS]
-    bridge, checks = _bridge(g, plan_section, gap)
+    for row, rank in zip(
+        drivers, rank_by_window([_driver_magnitudes(r) for r in drivers])
+    ):
+        row["rank"] = rank
+    bridge, checks = _bridge(plan_section, gap)
     expected_in_force = money(g.fytd + probe.shown(probe.base)[REST_OF_FY])
     reference = (
         plan_section["expected_fiscal_year"]
@@ -683,43 +776,30 @@ def worksheet_section(
     )
     for row in drivers:
         n = row["needed_alone"]
-        reached = Decimal(n["achieved_fiscal_year_bookings"])
-        target = Decimal(n["target"])
-        if n["outcome"] == wd.SOLVES and not n["stepped"]:
-            ok, how = (
-                abs(reached - target) <= Decimal("0.01"),
-                "lands on the target to the cent",
-            )
-        elif n["outcome"] == wd.SOLVES:
+        if n is None:
+            continue
+        reached, target = (
+            Decimal(n["achieved_fiscal_year_bookings"]),
+            Decimal(n["target"]),
+        )
+        if n["outcome"] == wd.SOLVES:
             ok = (
                 reached >= target
                 and abs(Decimal(n["overshoot"]) - (reached - target)) <= CENT
             )
-            how = "reaches the target and the overshoot is what it reaches beyond it"
+        elif n["outcome"] == wd.COVERED:
+            ok = reached >= target
         else:
-            ok, how = True, "nothing to reach"
+            ok = reached <= target
         checks.append(
             Check(
-                f"worksheet {row['driver']} solve {how}",
+                f"worksheet {row['driver']} needed alone agrees with the target",
                 ok,
-                f"{reached} against {target}",
+                f"{n['outcome']}: {reached} against {target}",
             )
         )
     section = {
-        "definition": (
-            "What moves the outcome: four operating drivers, each changed alone for deals "
-            "created after the as-of date, measured around the plan in force."
-        ),
-        "plan_in_force": plan_section is not None,
-        "measured_around": (
-            "the plan in force: its hires and program pipeline, as applied"
-            if plan_section is not None
-            else "the roster as signed and nothing planned"
-        ),
-        "windows": list(WINDOWS),
-        "expectation_note": EXPECTATION_NOTE,
-        "sensitivity_note": SENSITIVITY_NOTE,
-        "history_note": rules.HISTORY_PROMISES_NOTHING,
+        **static_texts(plan_section is not None),
         "drivers": drivers,
         "actions": _action_rows(actions_section),
         "bridge": bridge,

@@ -218,7 +218,7 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 
 ## 7. Verdicts
 
-**The software is correct: yes.** 20 of 20 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
+**The software is correct: yes.** 27 of 27 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
 
 | Check | Result | Detail |
 |---|---|---|
@@ -242,6 +242,13 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 | lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one | pass | 4 quarters checked on a $250,000 probe in two parts; win share 0.1566, not 0.8434 |
 | hires solve returns the smallest whole number that closes the gap | pass | unreachable: None hires give 6230674.42 against 8000000 |
 | program solve agrees with the forward function | pass | feasible: forward(58885194.74) = 8000000.00 against 8000000 |
+| worksheet bridge steps sum to the working plan | pass | 6119924.84 plus the contributions is 6119924.84; the working plan is 6119924.84 |
+| worksheet working plan and remaining gap close on the target | pass | target 8000000 less 6119924.84 is 1880075.16 |
+| worksheet baseline is the report's own expected fiscal year | pass | the probe's baseline 6119924.84 against the report's 6119924.84 |
+| worksheet win_rate needed alone agrees with the target | pass | solves: 8000147.32 against 8000000.00 |
+| worksheet won_arr needed alone agrees with the target | pass | solves: 8000000.09 against 8000000.00 |
+| worksheet productivity needed alone agrees with the target | pass | solves: 8000008.68 against 8000000.00 |
+| worksheet cycle_days needed alone agrees with the target | pass | cannot_close_alone: 7896411.68 against 8000000.00 |
 
 **The forecast is better than the baselines: yes.** the model's mean absolute error is lower than both baselines at 1 and 3 months.
 

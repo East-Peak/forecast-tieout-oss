@@ -101,7 +101,7 @@ def test_a_share_is_between_zero_and_one_and_a_name_without_a_unit_is_refused(re
 
 
 def test_the_schema_version_is_bumped_and_the_schema_requires_the_new_fields(reports):
-    assert contract.SCHEMA_VERSION == "2.5.0"
+    assert contract.SCHEMA_VERSION == "2.6.0"
     report = json.loads(json.dumps(reports["sprout-labs"]))
     assert contract.validate(report) == []
     del report["backtest"]["candidates"]["ranges"]

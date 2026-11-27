@@ -192,7 +192,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.5.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.6.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -5013,7 +5013,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.5.0"
+      "const": "2.6.0"
     },
     "verdicts": {
       "additionalProperties": false,
@@ -5189,6 +5189,36 @@
                           "program"
                         ]
                       },
+                      "rank": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "next twelve months": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "rest of fiscal year": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "rest of fiscal year",
+                          "next twelve months"
+                        ],
+                        "type": "object"
+                      },
                       "status": {
                         "additionalProperties": false,
                         "properties": {
@@ -5212,10 +5242,12 @@
                       "status",
                       "bookings_gained",
                       "closes_alone_outcome",
-                      "closes_alone_label"
+                      "closes_alone_label",
+                      "rank"
                     ],
                     "type": "object"
                   },
+                  "maxItems": 2,
                   "type": "array"
                 }
               },
@@ -5351,6 +5383,7 @@
                     ],
                     "type": "object"
                   },
+                  "minItems": 3,
                   "type": "array"
                 },
                 "target": {
@@ -5835,6 +5868,16 @@
                   "applies_to": {
                     "$ref": "#/$defs/Text"
                   },
+                  "cannot_scale_because": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Text"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "current": {
                     "additionalProperties": false,
                     "properties": {
@@ -5848,7 +5891,14 @@
                         "$ref": "#/$defs/Text"
                       },
                       "value": {
-                        "$ref": "#/$defs/Decimal"
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
                       }
                     },
                     "required": [
@@ -6082,96 +6132,161 @@
                     ]
                   },
                   "needed_alone": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "achieved_fiscal_year_bookings": {
-                        "$ref": "#/$defs/Money"
-                      },
-                      "history_label": {
-                        "anyOf": [
-                          {
-                            "$ref": "#/$defs/Text"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "inside_observed_range": {
-                        "anyOf": [
-                          {
-                            "type": "boolean"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "outcome": {
-                        "enum": [
-                          "solves",
-                          "cannot_close_alone",
-                          "already_at_or_ahead"
-                        ]
-                      },
-                      "outcome_label": {
-                        "$ref": "#/$defs/Text"
-                      },
-                      "overshoot": {
-                        "anyOf": [
-                          {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "achieved_fiscal_year_bookings": {
                             "$ref": "#/$defs/Money"
                           },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "reason": {
-                        "anyOf": [
-                          {
-                            "enum": [
-                              "bounded_at_one",
-                              "no_effect_in_the_year",
-                              "short_even_at_zero_days"
+                          "history_label": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Text"
+                              },
+                              {
+                                "type": "null"
+                              }
                             ]
                           },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "reason_label": {
-                        "anyOf": [
-                          {
+                          "inside_observed_range": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "outcome": {
+                            "enum": [
+                              "solves",
+                              "cannot_close_alone",
+                              "already_at_or_ahead"
+                            ]
+                          },
+                          "outcome_label": {
                             "$ref": "#/$defs/Text"
                           },
-                          {
-                            "type": "null"
+                          "overshoot": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Money"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "precision_note": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Text"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "reaches_target": {
+                            "type": "boolean"
+                          },
+                          "reason": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  "bounded_at_one",
+                                  "no_effect_in_the_year",
+                                  "short_even_at_zero_days"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "reason_label": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Text"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scale": {
+                            "anyOf": [
+                              {
+                                "pattern": "^\\d+/\\d+$",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "stepped": {
+                            "type": "boolean"
+                          },
+                          "target": {
+                            "$ref": "#/$defs/Money"
+                          },
+                          "value": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
-                        ]
+                        },
+                        "required": [
+                          "outcome",
+                          "outcome_label",
+                          "reaches_target",
+                          "precision_note",
+                          "reason",
+                          "reason_label",
+                          "value",
+                          "achieved_fiscal_year_bookings",
+                          "target",
+                          "overshoot",
+                          "stepped",
+                          "scale",
+                          "inside_observed_range",
+                          "history_label"
+                        ],
+                        "type": "object"
                       },
-                      "scale": {
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "places": {
+                    "type": "integer"
+                  },
+                  "rank": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "next twelve months": {
                         "anyOf": [
                           {
-                            "pattern": "^\\d+/\\d+$",
-                            "type": "string"
+                            "type": "integer"
                           },
                           {
                             "type": "null"
                           }
                         ]
                       },
-                      "stepped": {
-                        "type": "boolean"
-                      },
-                      "target": {
-                        "$ref": "#/$defs/Money"
-                      },
-                      "value": {
+                      "rest of fiscal year": {
                         "anyOf": [
                           {
-                            "$ref": "#/$defs/Decimal"
+                            "type": "integer"
                           },
                           {
                             "type": "null"
@@ -6180,18 +6295,8 @@
                       }
                     },
                     "required": [
-                      "outcome",
-                      "outcome_label",
-                      "reason",
-                      "reason_label",
-                      "value",
-                      "achieved_fiscal_year_bookings",
-                      "target",
-                      "overshoot",
-                      "stepped",
-                      "scale",
-                      "inside_observed_range",
-                      "history_label"
+                      "rest of fiscal year",
+                      "next twelve months"
                     ],
                     "type": "object"
                   },
@@ -6209,6 +6314,9 @@
                   "unit",
                   "unit_label",
                   "display",
+                  "places",
+                  "cannot_scale_because",
+                  "rank",
                   "current",
                   "evidence",
                   "historical",
@@ -6218,6 +6326,8 @@
                 ],
                 "type": "object"
               },
+              "maxItems": 4,
+              "minItems": 4,
               "type": "array"
             },
             "expectation_note": {

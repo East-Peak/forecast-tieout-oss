@@ -22,11 +22,13 @@ from .plan import NEXT_12, REST_OF_FY
 from .roster import Member
 from .worksheet_rules import (
     CYCLE_DAYS,
+    PRECISION,
     PRODUCTIVITY,
     WIN_RATE,
     WON_ARR,
     boundary_at_or_after,
     boundary_at_or_before,
+    round_up,
     scaled_days,
 )
 
@@ -44,14 +46,18 @@ ZERO_DAYS_SHORT = "short_even_at_zero_days"
 # ------------------------------------------------------------------ the overrides
 
 
-def timing_mean(t: Timing) -> Decimal:
-    """Mean days of a win-time distribution: each sample once, or by its weight."""
+def timing_mean(t: Timing) -> Decimal | None:
+    """Mean days of a win-time distribution: each sample once, or by its weight. None when there
+    is no evidence (no samples, or no weight)."""
     weights = t.weights if t.weights is not None else (ONE,) * len(t.samples)
     total = sum(weights, ZERO)
+    if not t.samples or total <= 0:
+        return None
     return sum((Decimal(d) * w for d, w in zip(t.samples, weights)), ZERO) / total
 
 
-def current_value(g: Ground, driver: str) -> Decimal:
+def current_value(g: Ground, driver: str) -> Decimal | None:
+    """The fitted value of ``driver`` now (None for a cycle with no win-time evidence)."""
     new = g.model.new_pipeline
     if driver == WIN_RATE:
         return new.win_rate
@@ -104,12 +110,17 @@ def with_setting(g: Ground, driver: str, value: Decimal) -> Ground:
         return with_won_arr(g, value)
     if driver == PRODUCTIVITY:
         return with_productivity(g, value)
-    return with_cycle_scale(g, Fraction(value) / Fraction(current_value(g, CYCLE_DAYS)))
+    current = current_value(g, CYCLE_DAYS)
+    if not current:
+        raise ValueError(
+            "a cycle of no days, or with no evidence, cannot be scaled to a setting"
+        )
+    return with_cycle_scale(g, Fraction(value) / Fraction(current))
 
 
 def realized_cycle(g: Ground, scale: Fraction) -> Decimal:
     """The mean win time after ``scale`` and the rounding up."""
-    return timing_mean(with_cycle_scale(g, scale).model.new_pipeline.timing)
+    return timing_mean(with_cycle_scale(g, scale).model.new_pipeline.timing)  # type: ignore[return-value]
 
 
 # ------------------------------------------------------------------ the probe
@@ -203,6 +214,29 @@ def solve_linear(
     if upper is not None and needed > upper:
         return Needed(CANNOT, upper, at_probe, BOUNDED_AT_ONE)
     return Needed(SOLVES, needed, fy_at(needed))
+
+
+def round_solution(
+    fy_at: Callable[[Decimal], Decimal],
+    solved: Needed,
+    driver: str,
+    target: Decimal,
+    upper: Decimal | None = None,
+) -> Needed:
+    """``solved`` with its value written to the driver's places, rounded up, and its bookings
+    and overshoot recomputed from that written value, so that entering the number shown reaches
+    the target. Anything but a solve is returned as it is."""
+    if solved.outcome != SOLVES:
+        return solved
+    unit = Decimal(1).scaleb(-PRECISION[driver])
+    value = round_up(solved.value, driver)
+    while True:
+        capped = value if upper is None else min(value, upper)
+        achieved = fy_at(capped)
+        if achieved >= target or capped == upper:
+            break
+        value += unit
+    return Needed(SOLVES, capped, achieved, overshoot=achieved - target)
 
 
 def solve_cycle(

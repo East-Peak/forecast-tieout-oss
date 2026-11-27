@@ -136,4 +136,6 @@ def project(
             ramped_draws += alive * weights[None, :]
         return ramped_draws / float(per_month) * rate
 
-    return Creation(per_day, creation_text(fit.rate), ramped, tuple(heads), tuple(leaving), draws)
+    return Creation(
+        per_day, creation_text(fit.rate), ramped, tuple(heads), tuple(leaving), draws
+    )
