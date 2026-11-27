@@ -125,3 +125,28 @@ def _error(message: str) -> dict:
         "index": int(found.group(2)),
         "message": message[len("your plan: ") :],
     }
+
+
+class EditorSession:
+    """What the worker holds: the company opened last, and text in, text out (the worker passes
+    strings across the Python and JavaScript boundary and nothing else)."""
+
+    def __init__(self) -> None:
+        self._opened: Opened | None = None
+
+    def open(self, company: str) -> str:
+        """Prepare ``company`` (the slow step); the form's facts as JSON text."""
+        self._opened = open_company(company)
+        return json.dumps(self._opened.facts)
+
+    def apply(self, plan_json: str) -> tuple[str, str]:
+        """The report text ("" when there is none) and what else came back, as JSON text."""
+        if self._opened is None:
+            raise RuntimeError("open a company first")
+        applied = apply_plan(self._opened, json.loads(plan_json))
+        meta = {
+            "problems": applied.problems,
+            "errors": applied.errors,
+            "comparison": applied.comparison,
+        }
+        return applied.report_text or "", json.dumps(meta)

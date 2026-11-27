@@ -141,3 +141,31 @@ def test_the_form_facts_come_from_the_core(opened):
         (gen.REPO / gen.PROFILES / COMPANY / "targets.yaml").read_text()
     )
     assert facts["max_dollars"] == str(10 * targets["annual_target"])
+
+
+def test_the_session_the_worker_drives_speaks_json_text_both_ways():
+    from engine.tieout_core.editor import EditorSession
+
+    with gen.in_repo():
+        session = EditorSession()
+        facts = json.loads(session.open(COMPANY))
+        assert facts["company"] == COMPANY
+        report_text, meta_text = session.apply(json.dumps(EDITED))
+        bad_text, bad_meta = session.apply(
+            json.dumps({"hires": [{"segment": "x", "start": "2026-11", "count": 0}]})
+        )
+    meta = json.loads(meta_text)
+    assert json.loads(report_text)["inputs"]["identity"] == {
+        "company": COMPANY,
+        "scenario": YOUR_PLAN,
+    }
+    assert meta["problems"] == [] and meta["errors"] == []
+    assert meta["comparison"]["scenario"] == YOUR_PLAN
+    assert bad_text == "" and json.loads(bad_meta)["errors"][0]["section"] == "hires"
+
+
+def test_applying_before_opening_a_company_is_an_error_not_a_crash():
+    from engine.tieout_core.editor import EditorSession
+
+    with pytest.raises(RuntimeError, match="open a company first"):
+        EditorSession().apply("{}")
