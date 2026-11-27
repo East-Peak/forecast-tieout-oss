@@ -46,14 +46,17 @@ jobs:
 
       - name: Tieout core lint and format
         run: |
-          ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py
-          ruff format --check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py
+          ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py engine/scripts/generate_editor_fixture.py
+          ruff format --check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py engine/scripts/generate_editor_fixture.py
 
       - name: Data-v2 determinism check
         run: python -m engine.scripts.generate_data_v2 --verify
 
       - name: App data is current (reports, scenario plan files, schema, TypeScript types)
         run: python -m engine.scripts.generate_app_reports --verify
+
+      - name: Plan editor's expected result is current (a native run of the edited plan)
+        run: python -m engine.scripts.generate_editor_fixture --verify
 
       - name: Tieout core report for the demo companies, without and with the plan
         run: |
