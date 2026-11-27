@@ -2,8 +2,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-const protectedDataModeEnabled = process.env.VITE_PROTECTED_DATA_MODE === "supabase-private";
-
 function getPackageName(id: string): string | null {
   const marker = "node_modules/";
   const index = id.lastIndexOf(marker);
@@ -65,7 +63,6 @@ function manualChunks(id: string): string | undefined {
 
 export default defineConfig({
   plugins: [react()],
-  publicDir: protectedDataModeEnabled ? false : "public",
   server: {
     port: 3000,
     proxy: {

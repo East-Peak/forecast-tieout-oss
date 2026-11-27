@@ -2,6 +2,10 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   // Dead-code gate: dead files, dependencies, exports, and exported types fail `verify`.
   "include": ["files", "dependencies", "exports", "types"],
+  // Run by engine/scripts/generate_app_reports.py, not imported.
+  "entry": ["scripts/generate-types.mjs"],
   // Only exported JSON/API contract shapes carry @contract. Untagged dead exports still fail.
   "tags": ["-contract"],
+  // Generated from the report schemas: every type the schema defines is exported, used or not.
+  "ignoreIssues": { "src/generated/**": ["exports", "types"] },
 }

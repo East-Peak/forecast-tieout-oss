@@ -20,13 +20,11 @@
   },
   "dependencies": {
     "@fontsource/space-grotesk": "^5.2.10",
-    "@supabase/supabase-js": "^2.57.4",
     "@vercel/analytics": "^2.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
-    "recharts": "^2.15.4",
-    "xlsx": "^0.18.5"
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

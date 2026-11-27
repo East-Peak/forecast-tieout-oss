@@ -25,23 +25,6 @@ export const GRID_STYLE = {
   vertical: false,
 } as const;
 
-export const TOOLTIP_STYLE = {
-  contentStyle: {
-    fontSize: 12,
-    fontFamily: "Inter, system-ui, sans-serif",
-    borderRadius: 8,
-    border: "1px solid #e2e8f0",
-    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-    padding: "8px 12px",
-  },
-  labelStyle: { fontWeight: 600, marginBottom: 4 },
-} as const;
-
-export const LEGEND_STYLE = {
-  iconSize: 8,
-  wrapperStyle: { fontSize: 12, fontFamily: "Inter, system-ui, sans-serif", paddingTop: 8 },
-} as const;
-
 export const CHART_SERIES = {
   actualBar: {
     fill: CHART_COLORS.positive,
@@ -109,33 +92,3 @@ export const CHART_SERIES = {
     isAnimationActive: false,
   },
 } as const;
-
-export const REFERENCE_LINE_STYLE = {
-  zero: { stroke: CHART_COLORS.gray, strokeWidth: 1 },
-  projected: {
-    stroke: CHART_COLORS.muted,
-    strokeWidth: 2,
-    label: { value: "Projected", position: "top", fill: CHART_COLORS.muted, fontSize: 11 },
-  },
-} as const;
-
-export const SANKEY_COLORS = {
-  marketing: CHART_COLORS.accent,
-  outbound: CHART_COLORS.capacity,
-  dropOff: CHART_COLORS.dropOff,
-  totalS0: CHART_COLORS.muted,
-  totalS1: CHART_COLORS.slate,
-  totalS2: CHART_COLORS.brand,
-  link: CHART_COLORS.dropOff,
-  linkHover: CHART_COLORS.gray,
-  label: CHART_COLORS.brand,
-  labelMuted: CHART_COLORS.muted,
-} as const;
-
-export function currencyFormatter(v: number): string {
-  return `$${(v / 1_000_000).toFixed(1)}M`;
-}
-
-export function currencyTooltipFormatter(value: number, name: string): [string, string] {
-  return [currencyFormatter(value), name];
-}

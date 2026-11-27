@@ -2,8 +2,6 @@ import type {
   ComponentPropsWithoutRef,
   ElementType,
   HTMLAttributes,
-  OptionHTMLAttributes,
-  SelectHTMLAttributes,
   TdHTMLAttributes,
 } from "react";
 
@@ -229,41 +227,4 @@ export function Callout({
       <div className={cx("text-sm leading-6", title ? "mt-1" : undefined)}>{children}</div>
     </div>
   );
-}
-
-export interface SelectProps
-  extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "onChange"> {
-  onValueChange?: (value: string) => void;
-}
-
-export function Select({
-  className,
-  onValueChange,
-  children,
-  ...props
-}: SelectProps) {
-  return (
-    <div className={cx("relative inline-flex w-full", className)}>
-      <select
-        className="w-full appearance-none rounded-ft border border-slate-300 bg-white px-3 py-2 pr-9 text-sm text-slate-900 shadow-ft transition outline-none focus:border-ft-accent focus:ring-2 focus:ring-ft-accentSoft"
-        onChange={(event) => onValueChange?.(event.target.value)}
-        {...props}
-      >
-        {children}
-      </select>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-slate-400"
-      >
-        ▾
-      </span>
-    </div>
-  );
-}
-
-export interface SelectItemProps
-  extends OptionHTMLAttributes<HTMLOptionElement> {}
-
-export function SelectItem(props: SelectItemProps) {
-  return <option {...props} />;
 }
