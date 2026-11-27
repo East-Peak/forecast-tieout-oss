@@ -41,4 +41,6 @@ def year_status(report: dict) -> str:
 def company_line(report: dict) -> str:
     headcount = HEADCOUNT[report["roster_capacity"]["decision"]["outcome"]]
     better = BETTER[report["verdicts"]["forecast_better_than_baselines"]["verdict"]]
-    return f"{YEAR[year_status(report)]} {headcount[0].upper()}{headcount[1:]}; {better}."
+    return (
+        f"{YEAR[year_status(report)]} {headcount[0].upper()}{headcount[1:]}; {better}."
+    )

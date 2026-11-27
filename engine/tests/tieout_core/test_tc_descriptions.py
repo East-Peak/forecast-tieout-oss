@@ -1,38 +1,18 @@
-"""Goal 3C: a company's one-line description in ``index.json`` says only what its
-as-signed report says. Every number in it is a figure in that report, rounded as
-the app rounds it; it names the target, the expected total and the gap; and it
-carries no text from the retired app."""
+"""A company's one-line description in ``index.json`` is generated from its as-signed
+report's statuses (engine/tieout_core/company_line.py): no figure, one plain line, and
+agreeing with the report on the three things it says. Profiles carry no hand-written
+description."""
 
 import json
-import re
-from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 import pytest
+import yaml
 
-REPORTS = (
-    Path(__file__).resolve().parents[3] / "frontend" / "public" / "data" / "reports"
-)
+ROOT = Path(__file__).resolve().parents[3]
+REPORTS = ROOT / "frontend" / "public" / "data" / "reports"
+PROFILES = ROOT / "engine" / "config" / "profiles"
 COMPANIES = ["sprout-labs", "sapling-industries", "mighty-oak-holdings"]
-DECIMAL = re.compile(r"^-?\d+(\.\d+)?$")
-NUMBER = re.compile(r"(\$)?(\d[\d,]*(?:\.\d+)?)(%)?")
-
-
-def leaves(node):
-    if isinstance(node, dict):
-        for v in node.values():
-            yield from leaves(v)
-    elif isinstance(node, list):
-        for v in node:
-            yield from leaves(v)
-    elif isinstance(node, bool) or node is None:
-        return
-    else:
-        yield node
-
-
-def whole(text: str) -> Decimal:
-    return Decimal(text).quantize(Decimal(1), rounding=ROUND_HALF_UP)
 
 
 def report(company: str) -> dict:
@@ -44,66 +24,54 @@ def description(company: str) -> str:
     return next(c["description"] for c in index["companies"] if c["id"] == company)
 
 
-def numbers_in(text: str):
-    """(kind, value) for each number in the text; fiscal-year labels are not figures."""
-    text = re.sub(r"\bFY\d{2}\b", "", text)
-    for m in NUMBER.finditer(text):
-        dollar, digits, percent = m.groups()
-        yield (
-            ("dollar" if dollar else "percent" if percent else "count"),
-            digits.replace(",", ""),
-        )
-
-
-def is_in_report(kind: str, value: str, r: dict) -> bool:
-    flat = list(leaves(r))
-    strings = [x for x in flat if isinstance(x, str)]
-    if kind == "dollar":
-        wanted = Decimal(value)
-        return any(DECIMAL.match(s) and whole(s) == wanted for s in strings)
-    if kind == "percent":
-        return any(re.search(rf"(?<![\d.]){re.escape(value)}%", s) for s in strings)
-    wanted = Decimal(value)
-    return any(isinstance(x, int) and x == wanted for x in flat)
-
-
 @pytest.mark.parametrize("company", COMPANIES)
-def test_every_number_in_the_description_is_in_the_report(company):
-    r, text = report(company), description(company)
-    found = list(numbers_in(text))
-    assert found, text
-    missing = [(k, v) for k, v in found if not is_in_report(k, v, r)]
-    assert missing == [], f"{company}: {text}"
-
-
-@pytest.mark.parametrize("company", COMPANIES)
-def test_the_description_names_the_target_the_expected_total_and_the_gap(company):
-    fy = report(company)["gap"]["fiscal_year"]
+def test_the_description_has_no_digit_and_is_one_plain_line(company):
     text = description(company)
-    for key in ("target", "expected", "gap"):
-        assert f"${whole(fy[key]):,}" in text, (key, text)
-    assert text.startswith("FY26 target"), text
+    assert not any(ch.isdigit() for ch in text), text
+    assert "$" not in text and "%" not in text and "\n" not in text, text
+    assert len(text) <= 200, text
 
 
 @pytest.mark.parametrize("company", COMPANIES)
-def test_the_description_is_one_plain_line_without_old_app_text(company):
+def test_the_year_phrase_agrees_with_the_sign_of_the_gap(company):
+    gap = report(company)["gap"]["fiscal_year"]["gap"]
     text = description(company)
-    assert "\n" not in text and len(text) <= 220, text
-    for old in (
-        "scale-up",
-        "enterprise plan",
-        "early-PMF",
-        "expansion bridge",
-        "ramp debt",
-        "$10M",
-        "$100M",
-        "$800M",
-    ):
-        assert old not in text, (old, text)
+    expected = (
+        "Short of target"
+        if float(gap) > 0
+        else "Ahead of target"
+        if float(gap) < 0
+        else "On target"
+    )
+    assert text.startswith(expected), (gap, text)
 
 
-def test_the_checker_rejects_a_figure_the_report_does_not_carry():
-    r = report("sprout-labs")
-    assert not is_in_report("dollar", "8000001", r)
-    assert not is_in_report("percent", "99", r)
-    assert is_in_report("dollar", "8000000", r)
+@pytest.mark.parametrize("company", COMPANIES)
+def test_the_headcount_phrase_agrees_with_the_capacity_decision(company):
+    outcome = report(company)["roster_capacity"]["decision"]["outcome"]
+    text = description(company)
+    explains = "Headcount explains pipeline" in text
+    cannot_say = "cannot say whether headcount explains pipeline" in text
+    assert explains == (outcome == "adopted"), (outcome, text)
+    assert cannot_say == (outcome == "not shown"), (outcome, text)
+
+
+@pytest.mark.parametrize("company", COMPANIES)
+def test_the_baseline_phrase_agrees_with_the_verdict(company):
+    verdict = report(company)["verdicts"]["forecast_better_than_baselines"]["verdict"]
+    text = description(company)
+    assert ("beats the simple yardsticks" in text) == (verdict == "yes"), text
+    assert ("does not yet beat the simple yardsticks" in text) == (verdict == "no"), (
+        text
+    )
+
+
+def test_the_three_companies_read_differently():
+    assert len({description(c) for c in COMPANIES}) == len(COMPANIES)
+
+
+@pytest.mark.parametrize("company", COMPANIES)
+def test_a_profile_carries_no_hand_written_description(company):
+    doc = yaml.safe_load((PROFILES / company / "profile.yaml").read_text())
+    assert "description" not in doc
+    assert doc["org_name"]

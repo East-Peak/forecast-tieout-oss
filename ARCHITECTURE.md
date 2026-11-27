@@ -55,8 +55,11 @@ report the core's tests build is validated against it.
   it into a temporary directory and compares byte for byte. Paths inside the files are
   repo-relative and key order is fixed, so output is identical on every machine.
 
-A company's one-line description in `index.json` comes from its `profile.yaml`; a test
-checks every figure in it against the company's as-signed report.
+A company's one-line description in `index.json` is generated from its as-signed report
+(`engine/tieout_core/company_line.py`): whether the year is short of, on or ahead of
+target, whether headcount explains pipeline, and whether the fitted forecast beats the
+simple baselines, each from a status in the report through one table of phrases. It holds
+no figure, and a test checks that it agrees with the report's statuses.
 
 ## The app: `frontend/src`
 

@@ -3,7 +3,7 @@
     {
       "as_of": "2026-08-31",
       "comparison": "sprout-labs/comparison.json",
-      "description": "FY26 target $8,000,000; the fitted forecast expects $6,119,925, a gap of $1,880,075. Headcount explains pipeline in the back-test; 6 heads against a target of 6.",
+      "description": "Short of target this year. Headcount explains pipeline; the fitted forecast beats the simple yardsticks.",
       "fiscal_year": "FY26",
       "id": "sprout-labs",
       "name": "Sprout Labs",
@@ -45,7 +45,7 @@
     {
       "as_of": "2026-08-31",
       "comparison": "sapling-industries/comparison.json",
-      "description": "FY26 target $60,000,000; the fitted forecast expects $58,089,724, a gap of $1,910,276. Headcount explains pipeline in the back-test; 44 heads against a target of 45.",
+      "description": "Short of target this year. Headcount explains pipeline; the fitted forecast does not yet beat the simple yardsticks.",
       "fiscal_year": "FY26",
       "id": "sapling-industries",
       "name": "Sapling Industries",
@@ -87,7 +87,7 @@
     {
       "as_of": "2026-08-31",
       "comparison": "mighty-oak-holdings/comparison.json",
-      "description": "FY26 target $84,000,000; the fitted forecast expects $60,639,661, a gap of $23,360,339. Staffing varied only 14%, so the history cannot say whether headcount explains pipeline; 99 heads against a target of 100.",
+      "description": "Short of target this year. The history cannot say whether headcount explains pipeline; the fitted forecast does not yet beat the simple yardsticks.",
       "fiscal_year": "FY26",
       "id": "mighty-oak-holdings",
       "name": "Mighty Oak Holdings",

@@ -38,6 +38,7 @@ from jsonschema import Draft202012Validator
 
 from engine.tieout_core import contract
 from engine.tieout_core.comparison import BASELINE, comparison_rows
+from engine.tieout_core.company_line import company_line
 from engine.tieout_core.markdown import render as render_markdown
 from engine.tieout_core.plan import NEXT_12, REST_OF_FY
 from engine.tieout_core.report import build_report
@@ -259,9 +260,10 @@ def in_repo():
         os.chdir(here)
 
 
-def _profile_facts(company: str) -> dict:
+def _profile_facts(company: str, as_signed: dict) -> dict:
+    """The company's name, and the line under it: generated from its as-signed report."""
     doc = yaml.safe_load((REPO / PROFILES / company / "profile.yaml").read_text())
-    return {"name": doc["org_name"], "description": doc["description"]}
+    return {"name": doc["org_name"], "description": company_line(as_signed)}
 
 
 def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str, str]:
@@ -295,7 +297,7 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
             entries.append(
                 {
                     "id": company,
-                    **_profile_facts(company),
+                    **_profile_facts(company, reports[BASELINE]),
                     "as_of": inputs["as_of"],
                     "fiscal_year": inputs["fiscal_year"],
                     "comparison": f"{company}/comparison.json",

@@ -7,7 +7,3 @@ timezone: "US/Eastern"
 fiscal_year_start_month: 2
 
 revenue_metric: "bookings"
-
-# Shown under the company's name in the app (index.json). Every figure in it must be in the
-# as-signed report: engine/tests/tieout_core/test_tc_descriptions.py.
-description: "FY26 target $60,000,000; the fitted forecast expects $58,089,724, a gap of $1,910,276. Headcount explains pipeline in the back-test; 44 heads against a target of 45."

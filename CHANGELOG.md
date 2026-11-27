@@ -18,7 +18,8 @@ The app now runs on a new calculation core, and the old engine is retired (git t
 
 ### Changed
 - American English throughout. The report contract changes with it (schema version 2.0.0): every key, plan file and the scenario id now say `program` (scenario `program-only`); no figure changed (every report compared before and after under the same renaming). Tests keep the old spellings out.
-- Company descriptions state the fiscal-year target, the expected total, the gap and what the report finds about headcount; a test checks each figure against the report.
+- The line under each company's name is generated from its as-signed report's statuses (year short of, on or ahead of target; whether headcount explains pipeline; whether the fitted forecast beats the simple baselines), in words with no figures; profiles carry no hand-written description.
+- The "Is the fitted forecast better than the baselines?" card gives its reason in words and compares the back-test errors at one and three months for the fitted model and each baseline, with which is lower decided in the report (schema version 2.1.0). The report's own sentence stays in `report.json` and `report.md`.
 - Demo company data is rebuilt (`engine/data-v2`); the demo companies remain synthetic.
 
 ### Removed from the app
