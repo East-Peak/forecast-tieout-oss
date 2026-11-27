@@ -139,18 +139,24 @@ test.describe("the plan editor, one shared page @smoke", () => {
   });
 
   test("nothing of the editor is fetched until Your plan is opened, whichever screen or scenario is shown @smoke", async () => {
-    for (const screen of ["Forecast", "Capacity", "Pipeline", "Trust", "Plan"]) await goTo(page, screen);
+    for (const screen of ["Forecast", "Capacity", "Pipeline", "Trust", "Plan"]) {
+      await goTo(page, screen);
+      // the foot-of-screen links point at the editor without starting it; the Plan screen has the button and the notice instead
+      if (screen !== "Plan") await expect(page.getByTestId("build-your-own").getByRole("link", { name: "Build your own plan" })).toBeVisible();
+    }
+    await expect(page.getByTestId("no-plan").getByRole("button", { name: "build your own plan" })).toBeVisible();
     for (const scenario of ["demo-plan", "hires-only", "as-signed"]) {
       await page.locator(`[data-scenario-id='${scenario}']`).click();
       await expect(page.locator(`[data-scenario-id='${scenario}']`)).toHaveAttribute("aria-pressed", "true");
     }
     expect(editorRequests(requests)).toEqual([]);
-    await expect(page.getByRole("button", { name: "Your plan" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Build your own plan", exact: true })).toBeVisible();
   });
 
   test("opening Your plan starts the core, shows the demo plan's figures as a report identical to the committed one, and marks the page @smoke", async () => {
-    await page.getByRole("button", { name: "Your plan" }).click();
+    await page.getByRole("button", { name: "Build your own plan", exact: true }).click();
     await expect(page.getByTestId("plan-form")).toBeVisible({ timeout: 90_000 });
+    await expect(page.getByTestId("plan-form").getByRole("heading", { name: "Your plan" })).toBeFocused();
     expect(await lastReport(page)).toBe(asYourPlan("sapling-industries"));
     await expect(page.getByTestId("your-plan-mark")).toHaveText("Your plan, computed in your browser; ranges unvalidated.");
     expect(editorRequests(requests).some((u) => u.includes("pyodide.asm.wasm"))).toBe(true);
@@ -277,7 +283,7 @@ test.describe("a blocked download and a phone @smoke", () => {
     const context = await browser.newContext({ baseURL: info.project.use.baseURL, viewport: { width: 1440, height: 900 } });
     const { page } = await newPage(context, "&editorTimeout=short");
     await page.route("**/pyodide.asm.wasm", (route) => route.abort());
-    await page.getByRole("button", { name: "Your plan" }).click();
+    await page.getByRole("button", { name: "Build your own plan", exact: true }).click();
     const status = page.getByTestId("session-status");
     await expect(status).toContainText("no answer within the time allowed", { timeout: 20_000 });
     await expect(status).toContainText("Choose another company or scenario");
@@ -298,10 +304,13 @@ test.describe("a blocked download and a phone @smoke", () => {
       userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
     });
     const { page, requests } = await newPage(context);
-    await expect(page.getByRole("button", { name: "Your plan" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Build your own plan", exact: true })).toHaveCount(0);
     await expect(page.getByTestId("scenario-picker")).toContainText("Editing your own plan needs a larger screen.");
     await expect(page.locator("#scenario-selector option")).toHaveText(["As signed", "Demo plan", "Hires only", "Program only"]);
-    for (const screen of ["forecast", "capacity", "pipeline", "plan", "trust"]) await page.goto(`/${screen}?company=sapling-industries&scenario=your-plan`, { waitUntil: "networkidle" });
+    for (const screen of ["forecast", "capacity", "pipeline", "plan", "trust"]) {
+      await page.goto(`/${screen}?company=sapling-industries&scenario=your-plan`, { waitUntil: "networkidle" });
+      await expect(page.getByText(/build your own plan/i), "no pointer to an editor that is not there").toHaveCount(0);
+    }
     await expect(page.locator("#scenario-selector")).toHaveValue("as-signed");
     expect(editorRequests(requests)).toEqual([]);
     await context.close();
