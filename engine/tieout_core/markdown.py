@@ -596,6 +596,14 @@ def _spread(x) -> str:
     )
 
 
+def _times(x: str | None) -> str:
+    return "n/a" if x is None else f"{float(x):.2f}x"
+
+
+def _share(x: str) -> str:
+    return f"{float(x):.1%}"
+
+
 def _required(s: dict) -> list[str]:
     out = ["## 10. Required against expected pipeline, by quarter", ""]
     if "unavailable" in s:
@@ -611,17 +619,58 @@ def _required(s: dict) -> list[str]:
         "",
     ]
     out += _table(
-        ["Quarter", "Target", "Actual", "Created between", "Result", "Bookings without own pipeline",
-         "Expected created", "Required total created", "Ramped AE-months", f"Expected per ramped AE-month ({s['per_ramped_ae_month_label']})",
-         f"Required per ramped AE-month ({s['per_ramped_ae_month_label']})", "Share of its pipeline booking in the quarter"],
+        ["Quarter", "Target", "Actual", "Created between", "Result", "Cents booked in the quarter per dollar created",
+         "Bookings without own pipeline", "Expected created", "Required total created", "Ramped AE-months",
+         f"Expected per ramped AE-month ({s['per_ramped_ae_month_label']})",
+         f"Required per ramped AE-month ({s['per_ramped_ae_month_label']})", "Required against the team's best",
+         "Too late?"],
         [
             (q["quarter"] + ("" if q["in_fiscal_year"] else " (next year)"), _usd(q["target"]),
              _usd(q["actual"]), " to ".join(q["created_between"]), q["headline"],
+             f"{q['cents_booked_in_quarter_per_dollar']}c",
              _usd(q["bookings_without_own_pipeline"]), _usd(q["expected_created_pipeline"]),
              _usd(q["required_total_created_pipeline"]), q["ramped_ae_months"] or "n/a",
              _usd(q["per_ramped_ae_month"]["expected"]), _usd(q["per_ramped_ae_month"]["required_total"]),
-             _pct_str(q["share_booking_in_quarter"]))
+             _times(q["per_ramped_ae_month"]["required_against_team_best"]),
+             "too late" if q["too_late"]["applies"] else "no")
             for q in s["quarters"]
+        ],
+    )  # fmt: skip
+    rule = s["per_rep_rule"]
+    out += [
+        (
+            f"Too late, as a rule: {s['too_late_rule']}. Per-ramped-AE-month comparison "
+            f"{'applies' if rule['applies'] else 'does not apply'}: {rule['why']}."
+        ),
+        "",
+    ]
+    for q in s["quarters"]:
+        late = q["too_late"]
+        if not late["applies"]:
+            continue
+        op = late["open_pipeline"]
+        out += [
+            (
+                f"**{q['quarter']}: {late['label']}.** Why: {'; '.join(late['reasons'])}. The open pipeline "
+                f"({_usd(op['open_arr'])}) is expected to book {_usd(op['expected_contribution'])} of it; "
+                f"{op['statement']}."
+            ),
+            "",
+        ]
+    lt = s["lead_time"]
+    out += [
+        f"**Lead time: {lt['question']}** (created {' to '.join(lt['created_between'])}; {lt['basis']}).",
+        "",
+    ]
+    out += _table(
+        ["Quarter", "Booked inside the quarter", "Booked by its end"],
+        [
+            (q["quarter"], _share(q["booked_in_quarter"]), _share(q["booked_by_quarter_end"]))
+            for q in lt["quarters"]
+        ]
+        + [
+            ("After the fourth quarter", _share(lt["booked_later"]), ""),
+            (f"Never booked ({lt['never_booked_meaning']})", _share(lt["never_booked"]), ""),
         ],
     )  # fmt: skip
     fy, h = s["fiscal_year"], s["team_history"]

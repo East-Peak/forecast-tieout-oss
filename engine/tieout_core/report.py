@@ -178,7 +178,7 @@ def build_report(
             {q: _quarter_actual(rec, qw) for q, (qw, _) in targets.items()},
             fy.quarter_keys,
             LEVER_CAP_MULTIPLE * _trailing_created_arr(pop, as_of, model.params.trailing_days),
-            gap["lever"], fy.start,
+            gap["lever"], fy.start, fy,
         )  # fmt: skip
     else:
         required, required_checks = {"unavailable": fitted.unavailable_reason}, []

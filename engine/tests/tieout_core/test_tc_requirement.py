@@ -1,11 +1,12 @@
 """Goal 2B section 10: required against expected pipeline, by quarter.
 
 One deterministic solve in quarter order. For each remaining quarter with a
-target: the extra pipeline that must be created, spread evenly from the as-of
-date (or the previous quarter's end) to that quarter's end, to meet its target
-given actuals, existing pipeline and what earlier quarters were already
-assigned. Covered, required $X, or unreachable within the cap; an unreachable
-quarter is assigned nothing and the next is solved from there."""
+target: the extra pipeline that must be created, spread evenly from the day
+after the as-of date (Goal 2C: creation starts now, not at the previous
+quarter's end) to that quarter's end, to meet its target given actuals,
+existing pipeline and what earlier quarters were already assigned. Covered,
+required $X, or unreachable within the cap; an unreachable quarter is assigned
+nothing and the next is solved from there."""
 
 from datetime import date
 from decimal import Decimal
@@ -16,7 +17,7 @@ from engine.tests.tieout_core.builders import write_profile
 from engine.tests.tieout_core.test_tc_backtest import AS_OF, regular_history
 from engine.tieout_core.fiscal import FiscalYear, month_windows
 from engine.tieout_core.fit import fit
-from engine.tieout_core.forecast import model_forecast
+from engine.tieout_core.forecast import EXISTING, Inflow, model_forecast
 from engine.tieout_core.history import as_known_at
 from engine.tieout_core.lever import COVERED, FEASIBLE, UNREACHABLE
 from engine.tieout_core.load import load_profile
@@ -66,34 +67,82 @@ def test_the_current_quarter_cannot_be_helped_by_pipeline_that_books_after_it_en
     assert r[0].outcome == UNREACHABLE and r[0].required is None
 
 
-def test_the_inverse_by_hand_the_share_of_the_pipeline_that_lands_in_the_quarter(world):
-    # Q3FY26 is 2026-08-01..2026-10-31. Each deal books exactly 45 days after it is
-    # created (win rate 1, size unchanged), and the piece is spread in equal thirds
-    # over the August, September and October windows. Created in August: booked
-    # 2026-09-15 to 2026-10-15, all inside. Created in September: booked
-    # 2026-10-16 to 2026-11-14, inside up to 2026-10-31: the first 16 of 30 days.
-    # October's pipeline books after the quarter. So the share landing in Q3 is
-    # 1/3 + (1/3)(16/30) = 46/90 of the dollars added.
-    target = Decimal(10**6)
-    q2, q3 = solve(
-        world, {"Q2FY26": 1, "Q3FY26": target}
-    )  # Q2 is covered: it ends at 07-31
-    assert q2.outcome == COVERED and q3.piece == (date(2026, 7, 31), date(2026, 10, 31))
+def test_the_schedule_by_hand_creation_starts_the_day_after_the_as_of(world):
+    # As of 2026-06-30, Q3FY26 is 2026-08-01..2026-10-31. Its pipeline is created
+    # evenly on every day from 2026-07-01 to 2026-10-31: 31 + 31 + 30 + 31 = 123
+    # days. Each deal books exactly 45 days after creation (win rate 1, size
+    # unchanged), so it lands in Q3 when created on 2026-06-17..2026-09-16; of the
+    # creation days that is 07-01..09-16 = 31 + 31 + 16 = 78 of 123. So 78/123 of
+    # the dollars created book in the quarter. To close a shortfall of $780,000 the
+    # quarter needs 780,000 * 123 / 78 = $1,230,000 of pipeline.
     base = quarter_bookings(world, ["2026-08", "2026-09", "2026-10"], [])
-    assert q3.outcome == FEASIBLE
-    assert abs(q3.required * Decimal(46) / Decimal(90) - (target - base)) <= CENT
+    q2, q3 = solve(world, {"Q2FY26": 1, "Q3FY26": base + 780_000})
+    assert q2.outcome == COVERED
+    assert q3.outcome == FEASIBLE and q3.piece == (AS_OF, date(2026, 10, 31))
+    assert abs(q3.required - Decimal(1_230_000)) <= CENT
     assert abs(q3.forecast_without - base) < Decimal("1e-9")
-    assert abs(q3.forecast_with - target) <= CENT
+    assert abs(q3.forecast_with - (base + 780_000)) <= CENT
+    assert abs(q3.yield_per_dollar - Decimal(78) / Decimal(123)) < Decimal("1e-12")
+    assert q3.inflows == (Inflow(0, 123, q3.required),)  # one even schedule, day 1..123
+
+
+def test_two_quarters_by_hand_an_earlier_assignment_is_counted_once(world):
+    # Q3 as above: $1,230,000 created 07-01..10-31 (123 days).
+    # Q4FY26 is 2026-11-01..2027-01-31; a deal created on d lands in it when d is
+    # 2026-09-17..2026-12-17. Q3's schedule puts 1,230,000 / 123 = $10,000 a day on
+    # 09-17..10-31 = 14 + 31 = 45 days, so $450,000 of Q3's pipeline books in Q4,
+    # once. Q4's own pipeline is created on every day 07-01..01-31 = 31 + 31 + 30 +
+    # 31 + 30 + 31 + 31 = 215 days, of which 09-17..12-17 = 14 + 31 + 30 + 17 = 92
+    # land in Q4: 92/215 of it. A Q4 target $450,000 + $920,000 over its base
+    # therefore needs 920,000 * 215 / 92 = $2,150,000 of its own.
+    q3_labels, q4_labels = (
+        ["2026-08", "2026-09", "2026-10"],
+        ["2026-11", "2026-12", "2027-01"],
+    )
+    base3 = quarter_bookings(world, q3_labels, [])
+    base4 = quarter_bookings(world, q4_labels, [])
+    q3, q4 = solve(
+        world, {"Q3FY26": base3 + 780_000, "Q4FY26": base4 + 450_000 + 920_000}
+    )
+    assert abs(q3.required - Decimal(1_230_000)) <= CENT
+    assert abs(q4.required - Decimal(2_150_000)) <= CENT
+    assert abs(q4.forecast_without - (base4 + 450_000)) <= CENT  # counted once
+    assert q4.piece == (AS_OF, date(2027, 1, 31))
+    assert abs(q4.yield_per_dollar - Decimal(92) / Decimal(215)) < Decimal("1e-12")
+    assert q4.inflows == (Inflow(0, 215, q4.required),)
+
+
+def test_the_yield_is_shown_for_a_quarter_nothing_can_help(world):
+    # Q2FY26 ends 2026-07-31; pipeline created from 07-01 books from 08-15.
+    r = solve(world, {"Q2FY26": 10**12})
+    assert r[0].outcome == UNREACHABLE and r[0].yield_per_dollar == 0
+
+
+def test_the_open_pipeline_and_what_it_is_expected_to_book(world):
+    # Four open deals of $100 (created 05-26, 06-05, 06-15 and 06-25) = $400.
+    data, model, windows = world
+    r = solve(world, {"Q3FY26": 10**6})[0]
+    assert r.open_arr == Decimal(400)
+    f = model_forecast(model, data, AS_OF, windows)
+    in_q3 = sum(
+        (f.components[EXISTING][m] for m in ("2026-08", "2026-09", "2026-10")),
+        Decimal(0),
+    )
+    assert r.open_expected == in_q3 and 0 < in_q3 < 400
 
 
 def test_forward_and_inverse_agree_to_the_cent_for_every_feasible_quarter(world):
+    # Each quarter is solved after the ones before it, so its target is met by the
+    # schedules up to and including its own; a later quarter's pipeline, created
+    # from the same as-of date, also books in it and can only add.
     r = solve(world, {"Q3FY26": 3 * 10**6, "Q4FY26": 6 * 10**6})
     assert [x.outcome for x in r] == [FEASIBLE, FEASIBLE]
-    inflows = [f for x in r for f in x.inflows]
-    for x, labels in zip(
-        r, (["2026-08", "2026-09", "2026-10"], ["2026-11", "2026-12", "2027-01"])
-    ):
-        assert abs(quarter_bookings(world, labels, inflows) - x.target) <= CENT
+    labels = (["2026-08", "2026-09", "2026-10"], ["2026-11", "2026-12", "2027-01"])
+    for i, (x, months) in enumerate(zip(r, labels)):
+        so_far = [f for y in r[: i + 1] for f in y.inflows]
+        assert abs(quarter_bookings(world, months, so_far) - x.target) <= CENT
+    everything = [f for y in r for f in y.inflows]
+    assert quarter_bookings(world, labels[0], everything) > r[0].target + CENT
 
 
 def test_an_earlier_quarters_pipeline_lowers_what_the_next_quarter_needs(world):
@@ -106,8 +155,8 @@ def test_an_unreachable_quarter_is_assigned_nothing_and_the_next_is_solved_from_
     world,
 ):
     # Q3 cannot be met within the cap, so it is assigned nothing; Q4 is then solved
-    # exactly as if Q3 had been covered with no pipeline of its own: its pipeline is
-    # spread from Q3's end, and nothing from Q3 books in it.
+    # exactly as if Q3 had been covered with no pipeline of its own: nothing from
+    # Q3 books in it.
     unreachable = solve(
         world, {"Q3FY26": 10**12, "Q4FY26": 6 * 10**6}, cap=Decimal(10**9)
     )
@@ -118,7 +167,7 @@ def test_an_unreachable_quarter_is_assigned_nothing_and_the_next_is_solved_from_
     assert (
         unreachable[1].piece
         == covered[1].piece
-        == (date(2026, 10, 31), date(2027, 1, 31))
+        == (AS_OF, date(2027, 1, 31))  # creation starts now, not at Q3's end
     )
     assert all(x.assigned == 0 for x in solve(world, {"Q3FY26": 10**9}, cap=Decimal(1)))
 
@@ -252,3 +301,163 @@ def test_an_unreachable_label_is_checked_against_the_cap_and_the_selling_window(
     ]
     bad = quarter_checks(wrong, model, data, AS_OF, windows, None, {}, targets, cap)
     assert not bad[0].passed and "Q3FY26" in bad[0].detail
+
+
+# ---------------------------------------------------------------- Goal 2C: too late, and the open pipeline
+
+
+def _quarter(outcome, required, *, expected=1000, months=10, **more):
+    from engine.tieout_core.requirement import QuarterResult
+
+    fields = {
+        "quarter": "Q4FY26", "status": "not started", "target": Decimal(10_000), "actual": Decimal(0),
+        "outcome": outcome, "required": None if required is None else Decimal(required),
+        "assigned": Decimal(required or 0) if outcome == FEASIBLE else Decimal(0),
+        "cap_left": Decimal(10**9), "forecast_without": Decimal(7_000),
+        "forecast_with": Decimal(10_000), "piece": (AS_OF, date(2027, 1, 31)), "inflows": (),
+        "expected_created": Decimal(expected), "ramped_ae_months": Decimal(months),
+        "yield_per_dollar": Decimal("0.2"), "open_arr": Decimal(12_000), "open_expected": Decimal(3_000),
+    }  # fmt: skip
+    return QuarterResult(**{**fields, **more})
+
+
+def test_too_late_by_the_cap_rule_alone_when_no_per_rep_comparison_applies():
+    from engine.tieout_core.requirement import too_late
+
+    over_cap = _quarter(UNREACHABLE, 10**12)  # needs more than the cap
+    nothing_helps = _quarter(UNREACHABLE, None)  # no amount books inside the quarter
+    fine = _quarter(FEASIBLE, 500)
+    covered = _quarter(COVERED, 0)
+    assert too_late(over_cap, None, False) == ("over the cap",)
+    assert too_late(nothing_helps, None, False) == (
+        "no pipeline created in time books inside it",
+    )
+    assert too_late(fine, None, False) == () and too_late(covered, None, False) == ()
+
+
+def test_too_late_by_the_per_rep_rule_exactly_when_the_requirement_is_above_the_teams_best():
+    from engine.tieout_core.requirement import too_late
+
+    # (expected 1,000 + required 500) over 10 ramped AE-months = 150 per month.
+    q = _quarter(FEASIBLE, 500)
+    assert too_late(q, Decimal(149), True) != ()  # 150 > 149
+    assert too_late(q, Decimal(150), True) == ()  # equal is not above
+    assert too_late(q, Decimal(151), True) == ()
+    reason = too_late(q, Decimal(149), True)[0]
+    assert "150" in reason and "149" in reason
+    # a covered quarter asks nothing of the team, however its expected pipeline compares
+    assert too_late(_quarter(COVERED, 0), Decimal(1), True) == ()
+
+
+def test_the_per_rep_leg_is_off_when_not_applicable_or_there_is_no_best_or_no_roster():
+    from engine.tieout_core.requirement import too_late
+
+    q = _quarter(FEASIBLE, 500)
+    assert (
+        too_late(q, Decimal(1), False) == ()
+    )  # capacity not adopted: a diagnostic only
+    assert too_late(q, None, True) == ()  # fewer than four complete quarters on record
+    assert (
+        too_late(_quarter(FEASIBLE, 500, ramped_ae_months=None), Decimal(1), True) == ()
+    )
+    assert (
+        too_late(_quarter(FEASIBLE, 500, ramped_ae_months=Decimal(0)), Decimal(1), True)
+        == ()
+    )
+
+
+def test_the_win_rate_that_would_close_the_quarter_is_arithmetic_on_existing_figures():
+    from engine.tieout_core.requirement import close_with_open_pipeline
+
+    # Target 10,000; the forecast without its own pipeline gives 7,000, of which the
+    # open pipeline's expected contribution is 3,000 out of 12,000 open ARR. The
+    # open pipeline would have to book 3,000 + (10,000 - 7,000) = 6,000 inside the
+    # quarter: 50% of its dollars against the 25% expected.
+    c = close_with_open_pipeline(_quarter(UNREACHABLE, 10**12))
+    assert (c.expected, c.needed, c.open_arr) == (
+        Decimal(3000),
+        Decimal(6000),
+        Decimal(12000),
+    )
+    assert (c.expected_share, c.needed_share) == (Decimal("0.25"), Decimal("0.5"))
+    assert c.possible
+    # More than the whole open pipeline is needed: no win rate closes it.
+    big = close_with_open_pipeline(
+        _quarter(UNREACHABLE, 10**12, open_arr=Decimal(5000))
+    )
+    assert big.needed == 6000 and not big.possible
+    none = close_with_open_pipeline(
+        _quarter(UNREACHABLE, 10**12, open_arr=Decimal(0), open_expected=Decimal(0))
+    )
+    assert none.needed_share is None and not none.possible
+
+
+# ---------------------------------------------------------------- Goal 2C: the lead-time table
+
+
+def march_quarters(as_of=AS_OF):
+    from engine.tieout_core.requirement import next_quarters
+
+    return next_quarters(FiscalYear(date(2026, 3, 1)), as_of)
+
+
+def test_the_next_four_quarters_are_the_ones_that_end_after_the_as_of():
+    # FY starting 2026-03-01 (FY26): Q1 ends 05-31, Q2 08-31, Q3 11-30, Q4 02-28.
+    q = march_quarters()
+    assert [k for k, _ in q] == ["Q2FY26", "Q3FY26", "Q4FY26", "Q1FY27"]
+    assert q[0][1].end == date(2026, 8, 31) and q[3][1].end == date(2027, 5, 31)
+    # a quarter that ended on the as-of is behind us
+    assert march_quarters(date(2026, 8, 31))[0][0] == "Q3FY26"
+
+
+def test_lead_time_by_hand_a_dollar_created_next_month_straddling_a_quarter_end(world):
+    from engine.tieout_core.requirement import lead_times
+
+    # Created evenly through July 2026 (as-of 06-30); every deal books 45 days later,
+    # on 08-15..09-14. Quarter ends 2026-08-31 and 2026-11-30: a dollar created on
+    # July d books by 08-31 when d <= 07-17: 17 of the 31 days. The other 14 of 31
+    # book in the second quarter. Win rate 1: nothing is lost and nothing is later.
+    data, model, _ = world
+    lt = lead_times(model, data, AS_OF, march_quarters())
+    assert lt.created_between == (AS_OF, date(2026, 7, 31))
+    tol = Decimal("1e-12")
+    assert [k for k, _ in lt.booked] == ["Q2FY26", "Q3FY26", "Q4FY26", "Q1FY27"]
+    got = [v for _, v in lt.booked]
+    assert abs(got[0] - Decimal(17) / 31) < tol and abs(got[1] - Decimal(14) / 31) < tol
+    assert got[2] == 0 and got[3] == 0
+    assert abs(lt.later) < tol and abs(lt.never) < tol
+    assert abs(sum(got) + lt.later + lt.never - 1) < tol
+    assert (
+        abs(lt.cumulative[0][1] - Decimal(17) / 31) < tol
+        and abs(lt.cumulative[1][1] - 1) < tol
+    )
+
+
+def test_lead_time_with_losses_never_booked_is_the_dollars_that_do_not_win(
+    world, tmp_path
+):
+    from dataclasses import replace
+
+    from engine.tieout_core.records import Dataset, Transition
+    from engine.tieout_core.requirement import lead_times
+
+    data, _, _ = world
+    # Every second closed deal is lost instead of won: 18 of the 37 deals in the
+    # matured cohort win, so 19/37 of a created dollar never books.
+    lost = {d.id for i, d in enumerate(data.deals) if d.is_closed and i % 2 == 1}
+    deals = tuple(
+        replace(d, stage="Lost", is_won=False) if d.id in lost else d
+        for d in data.deals
+    )
+    moves = tuple(
+        t for t in data.transitions if not (t.deal_id in lost and t.stage == "Won")
+    ) + tuple(Transition(d.id, "Lost", d.close) for d in deals if d.id in lost)
+    ds = Dataset(deals, moves, data.observations)
+    model = fit(as_known_at(ds, AS_OF), AS_OF, load_profile(write_profile(tmp_path)))
+    lt = lead_times(model, ds, AS_OF, march_quarters())
+    tol = Decimal("1e-12")
+    assert abs(lt.never - Decimal(19) / 37) < tol
+    assert (
+        abs(sum((v for _, v in lt.booked), Decimal(0)) + lt.later + lt.never - 1) < tol
+    )
+    assert abs(sum((v for _, v in lt.booked), Decimal(0)) - Decimal(18) / 37) < tol
