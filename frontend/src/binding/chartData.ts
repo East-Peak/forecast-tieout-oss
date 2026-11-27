@@ -18,6 +18,8 @@ export interface SeriesSpec {
   key: string;
   label: string;
   kind: SeriesKind;
+  /** how the tooltip shows a value: dollars (the default) or a quantity at the report's own places */
+  format?: "usd-short" | "quantity";
   /** pointer to each point's value; "{period}" stands for the x value */
   path: string;
   periods: PeriodsFrom;
@@ -53,7 +55,7 @@ export function buildChart(doc: unknown, specs: SeriesSpec[]): { periods: string
       else if (spec.kind === "range") {
         const [low, high] = raw as [string, string];
         row[spec.key] = [decimalToNumber(low), decimalToNumber(high)];
-      } else row[spec.key] = decimalToNumber(raw as string);
+      } else row[spec.key] = typeof raw === "number" ? raw : decimalToNumber(raw as string);
     });
     return row;
   });

@@ -11,11 +11,15 @@
  *              else whole dollars, rounded into the next unit when it rounds up:  $58.1M  $612K  $12
  *   percent1   a fraction as a percent to one decimal:  83.3%
  *   count      a whole number, grouped
+ *   quantity   a count or a decimal at the report's own places, grouped:  93.60  1,234
+ *   multiple   a quantity and "x":  1.31x
+ *   cents      a quantity and the cent sign:  13.98¢
+ *   passed     a true or false check result:  passed  failed
  *   date       ISO date as  Aug 31, 2026
  *   month      ISO month as  Sep 2026
  *   text       verbatim
  */
-export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "date" | "month" | "text";
+export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "quantity" | "multiple" | "cents" | "passed" | "date" | "month" | "text";
 
 const DECIMAL = /^(-?)(\d+)(?:\.(\d+))?$/;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -101,6 +105,16 @@ function count(raw: unknown): string {
   return signed(raw < 0, magnitude, group(magnitude));
 }
 
+/** A count, or a decimal string left at the places the report gives it (93.60 stays 93.60). */
+function quantity(raw: unknown): string {
+  if (typeof raw === "number") return count(raw);
+  const d = parseDecimal(raw);
+  const power = 10n ** BigInt(d.scale);
+  const whole = group(d.units / power);
+  const fraction = d.scale === 0 ? "" : `.${(d.units % power).toString().padStart(d.scale, "0")}`;
+  return signed(d.negative, d.units, `${whole}${fraction}`);
+}
+
 function parseDate(raw: unknown): [string, string, string] {
   const match = typeof raw === "string" ? /^(\d{4})-(0[1-9]|1[0-2])-(\d{2})$/.exec(raw) : null;
   if (!match) throw new Error(`not an ISO date: ${JSON.stringify(raw)}`);
@@ -136,6 +150,15 @@ export function formatValue(format: FormatName, raw: unknown): string {
       return percent1(raw);
     case "count":
       return count(raw);
+    case "quantity":
+      return quantity(raw);
+    case "multiple":
+      return `${quantity(raw)}x`;
+    case "cents":
+      return `${quantity(raw)}¢`;
+    case "passed":
+      if (typeof raw !== "boolean") throw new Error(`not true or false: ${JSON.stringify(raw)}`);
+      return raw ? "passed" : "failed";
     case "date": {
       const [year, m, day] = parseDate(raw);
       return `${MONTHS[Number(m) - 1]} ${Number(day)}, ${year}`;

@@ -85,3 +85,25 @@ describe("buildChart", () => {
     expect(() => buildChart({ ...doc }, [{ ...text, path: "/windows/0" }])).toThrow(/decimal/);
   });
 });
+
+describe("a value the file holds as a JSON count", () => {
+  it("is plotted as that count, beside decimals", () => {
+    const monthly = {
+      months: [
+        { month: "2026-07", heads: 96, ramped: "92.04" },
+        { month: "2026-08", heads: "74.2", ramped: "93.96" },
+      ],
+    };
+    const from = { rowsAt: "/months", property: "month" } as const;
+    const heads: SeriesSpec = { key: "heads", label: "Heads", kind: "decimal", path: "/months/{month={period}}/heads", periods: from };
+    expect(buildChart(monthly, [heads]).rows).toEqual([
+      { period: "2026-07", heads: 96 },
+      { period: "2026-08", heads: 74.2 },
+    ]);
+  });
+  it("a string that is not a decimal is still refused", () => {
+    const bad = { months: [{ month: "2026-07", heads: "many" }] };
+    const heads: SeriesSpec = { key: "heads", label: "Heads", kind: "decimal", path: "/months/{month={period}}/heads", periods: { rowsAt: "/months", property: "month" } };
+    expect(() => buildChart(bad, [heads])).toThrow(/decimal/);
+  });
+});

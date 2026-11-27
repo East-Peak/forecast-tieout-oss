@@ -58,6 +58,8 @@ interface TooltipProps {
   periodFormat: (period: string) => string;
 }
 
+const unitOf = (spec: SeriesSpec) => (spec.format === "quantity" ? "quantity" : "usd");
+
 /** The hover card. Its figures are read from the file at each series' declared path, not taken from the plotted numbers. */
 export function ChartTooltip({ chartId, specs, active, label, payload, periodFormat }: TooltipProps) {
   if (!active || !payload || label === undefined) return null;
@@ -77,12 +79,12 @@ export function ChartTooltip({ chartId, specs, active, label, payload, periodFor
         <span className="font-medium text-slate-900">
           {spec.kind === "range" ? (
             <>
-              <Bound binding={bind({ id: `${id}.low`, path: `${path}/0`, unit: "usd", format: "usd-short" })} />
+              <Bound binding={bind({ id: `${id}.low`, path: `${path}/0`, unit: unitOf(spec), format: spec.format ?? "usd-short" })} />
               {" to "}
-              <Bound binding={bind({ id: `${id}.high`, path: `${path}/1`, unit: "usd", format: "usd-short" })} />
+              <Bound binding={bind({ id: `${id}.high`, path: `${path}/1`, unit: unitOf(spec), format: spec.format ?? "usd-short" })} />
             </>
           ) : (
-            <Bound binding={bind({ id, path, unit: "usd", format: "usd-short" })} />
+            <Bound binding={bind({ id, path, unit: unitOf(spec), format: spec.format ?? "usd-short" })} />
           )}
         </span>
       </div>,

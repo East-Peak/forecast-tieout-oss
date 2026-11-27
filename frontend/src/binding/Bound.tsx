@@ -12,12 +12,14 @@ import { resolvePointer } from "./pointer";
  * one of the named formats. The browser formats; it calculates nothing.
  */
 export type SourceName = "report" | "index" | "comparison";
-type Unit = "usd" | "fraction" | "count" | "date" | "month" | "text";
+type Unit = "usd" | "fraction" | "count" | "quantity" | "flag" | "date" | "month" | "text";
 
 const FORMATS: Record<Unit, FormatName[]> = {
   usd: ["usd-full", "usd-short"],
   fraction: ["percent1"],
   count: ["count"],
+  quantity: ["quantity", "multiple", "cents"],
+  flag: ["passed"],
   date: ["date"],
   month: ["month"],
   text: ["text"],
@@ -56,6 +58,8 @@ interface BindingContextValue {
   company: string;
   scenario: string;
   files: Files;
+  /** Show another company's scenario (the shell supplies it; a screen mounted on its own has none). */
+  choose?: (company: string, scenario: string) => void;
 }
 
 const BindingContext = createContext<BindingContextValue | null>(null);
@@ -64,9 +68,10 @@ export function BindingProvider({
   company,
   scenario,
   files,
+  choose,
   children,
 }: BindingContextValue & { children: ReactNode }) {
-  return <BindingContext.Provider value={{ company, scenario, files }}>{children}</BindingContext.Provider>;
+  return <BindingContext.Provider value={{ company, scenario, files, choose }}>{children}</BindingContext.Provider>;
 }
 
 export function useBindingContext(): BindingContextValue {
@@ -93,7 +98,18 @@ const TONES = {
   "1": { tone: "short", className: "text-red-700" },
 } as const;
 
-export function Bound({ binding, row = "", className }: { binding: Binding; row?: string; className?: string }) {
+/** `linkBase`: the value (a text) is the address of a published file under this base, shown as a link to it. */
+export function Bound({
+  binding,
+  row = "",
+  className,
+  linkBase,
+}: {
+  binding: Binding;
+  row?: string;
+  className?: string;
+  linkBase?: string;
+}) {
   const ctx = useBindingContext();
   const path = expandPath(row + binding.path, ctx);
   const attrs = {
@@ -117,6 +133,14 @@ export function Bound({ binding, row = "", className }: { binding: Binding; row?
       <span {...attrs} data-unavailable="true" className={className}>
         {shown}
       </span>
+    );
+  }
+  if (linkBase !== undefined) {
+    const address = formatValue("text", value);
+    return (
+      <a {...attrs} href={linkBase + address} className={className}>
+        {address}
+      </a>
     );
   }
   const tone = binding.tint ? TONES[String(signOf(value)) as keyof typeof TONES] : null;

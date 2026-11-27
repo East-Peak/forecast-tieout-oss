@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
-import { Bound, BindingProvider, bind } from "../Bound";
+import { Bound, BindingProvider, bind, useBindingContext } from "../Bound";
 import { UnboundPath } from "../pointer";
 
 const report = {
@@ -19,15 +19,16 @@ const report = {
   inputs: { as_of: "2026-08-31", fiscal_year: "FY26" },
   history: { facts: { months_of_history: 31 } },
   coverage: { c80: 0.8333 },
+  roster: { ramped: "93.60", heads: 99, ratio: "1.31", cents: "13.98", ok: true, bad: false, file: "x/as-signed.md" },
 } as unknown as TieoutReport;
 const index = { companies: [{ id: "x", description: "A company: $10M plan" }] } as unknown as ReportIndex;
 const comparison = {
   rows: [{ scenario: "as-signed", fiscal_year_gap_change: null }, { scenario: "demo-plan", fiscal_year_gap_change: "-36261.69" }],
 } as unknown as ScenarioComparison;
 
-function show(node: React.ReactNode) {
+function show(node: React.ReactNode, choose?: (company: string, scenario: string) => void) {
   return render(
-    <BindingProvider company="x" scenario="demo-plan" files={{ report, index, comparison }}>
+    <BindingProvider company="x" scenario="demo-plan" files={{ report, index, comparison }} choose={choose}>
       {node}
     </BindingProvider>,
   );
@@ -178,5 +179,49 @@ describe("bind", () => {
   });
   it("defaults to the report", () => {
     expect(bind({ id: "x", path: "/a", unit: "text", format: "text" }).source).toBe("report");
+  });
+});
+
+describe("quantities, units and flags", () => {
+  it("shows a quantity at the report's own places, a multiple and cents", () => {
+    show(
+      <>
+        <Bound binding={bind({ id: "q1", path: "/roster/ramped", unit: "quantity", format: "quantity" })} />
+        <Bound binding={bind({ id: "q2", path: "/roster/heads", unit: "quantity", format: "quantity" })} />
+        <Bound binding={bind({ id: "q3", path: "/roster/ratio", unit: "quantity", format: "multiple" })} />
+        <Bound binding={bind({ id: "q4", path: "/roster/cents", unit: "quantity", format: "cents" })} />
+      </>,
+    );
+    for (const text of ["93.60", "99", "1.31x", "13.98\u00a2"]) expect(screen.getByText(text)).toBeInTheDocument();
+  });
+
+  it("says passed or failed for a true or false in the file", () => {
+    show(
+      <>
+        <Bound binding={bind({ id: "ok", path: "/roster/ok", unit: "flag", format: "passed" })} />
+        <Bound binding={bind({ id: "bad", path: "/roster/bad", unit: "flag", format: "passed" })} />
+      </>,
+    );
+    expect(screen.getByText("passed")).toHaveAttribute("data-binding", "ok");
+    expect(screen.getByText("failed")).toHaveAttribute("data-binding", "bad");
+  });
+
+  it("a text binding can be a link to a published file, its address read from the file", () => {
+    show(<Bound binding={bind({ id: "md", path: "/roster/file", unit: "text", format: "text" })} linkBase="/data/reports/" />);
+    const link = screen.getByRole("link", { name: "x/as-signed.md" });
+    expect(link).toHaveAttribute("href", "/data/reports/x/as-signed.md");
+    expect(link).toHaveAttribute("data-binding", "md");
+    expect(link).toHaveAttribute("data-path", "/roster/file");
+  });
+
+  it("the provider can pass on the visitor's way to choose another scenario", () => {
+    const seen: string[] = [];
+    function Chooser() {
+      const { choose } = useBindingContext();
+      return <button onClick={() => choose?.("x", "hires-only")}>go</button>;
+    }
+    show(<Chooser />, (company, scenario) => seen.push(`${company}/${scenario}`));
+    screen.getByText("go").click();
+    expect(seen).toEqual(["x/hires-only"]);
   });
 });

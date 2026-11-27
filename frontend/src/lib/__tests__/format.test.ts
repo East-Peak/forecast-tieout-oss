@@ -100,3 +100,35 @@ describe("decimalToNumber: the one place a report decimal becomes a plottable nu
     expect(() => decimalToNumber(5 as unknown as string)).toThrow();
   });
 });
+
+describe("quantity: a count or a decimal at the report's own places, grouped", () => {
+  const cases: Array<[string | number, string]> = [
+    [99, "99"],
+    [1234567, "1,234,567"],
+    ["93.60", "93.60"],
+    ["74.2", "74.2"],
+    ["0.12", "0.12"],
+    ["1234.5000", "1,234.5000"],
+    ["113", "113"],
+    ["-0.05", "-0.05"],
+    ["-0.00", "0.00"], // a zero has no sign
+  ];
+  it.each(cases)("%s -> %s", (raw, shown) => {
+    expect(formatValue("quantity", raw)).toBe(shown);
+  });
+  it("refuses what is not a number", () => {
+    expect(() => formatValue("quantity", "ten")).toThrow();
+    expect(() => formatValue("quantity", null)).toThrow();
+  });
+});
+
+describe("multiple and cents: a quantity with its unit", () => {
+  it("multiple", () => {
+    expect(formatValue("multiple", "1.31")).toBe("1.31x");
+    expect(formatValue("multiple", "10.00")).toBe("10.00x");
+  });
+  it("cents", () => {
+    expect(formatValue("cents", "0.50")).toBe("0.50\u00a2");
+    expect(formatValue("cents", "13.98")).toBe("13.98\u00a2");
+  });
+});

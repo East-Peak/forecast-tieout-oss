@@ -132,6 +132,7 @@ export default function Layout() {
       company={selection.company}
       scenario={selection.scenario}
       files={{ report: state.report, index: state.index, comparison: state.comparison }}
+      choose={choose}
     >
       {page}
     </BindingProvider>
