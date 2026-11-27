@@ -37,8 +37,8 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from engine.tieout_core import contract
-from engine.tieout_core.comparison import BASELINE, comparison_rows
 from engine.tieout_core.company_line import company_line
+from engine.tieout_core.comparison import BASELINE, comparison_rows
 from engine.tieout_core.markdown import render as render_markdown
 from engine.tieout_core.plan import NEXT_12, REST_OF_FY
 from engine.tieout_core.report import build_report
