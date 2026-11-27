@@ -361,3 +361,17 @@ def test_an_adopted_hire_may_not_carry_a_note_variant_shape(good):
     r = copy.deepcopy(good)
     r["actions"]["close_the_fiscal_year_gap"]["hires"] = {"outcome": "x", "count": None}
     assert errors(r) != []
+
+
+def test_the_committed_frontend_fixtures_for_an_unavailable_forecast_satisfy_the_contract():
+    """frontend/src/screens/__tests__/fixtures are short-history reports (the variants
+    'forecast unavailable' without and with a plan) with their paths scrubbed."""
+    fixtures = Path("frontend/src/screens/__tests__/fixtures")
+    for name, plan in (
+        ("short-history.report.json", False),
+        ("short-history-plan.report.json", True),
+    ):
+        r = json.loads((fixtures / name).read_text())
+        assert errors(r) == []
+        assert not r["forecasts"]["methods"][2]["available"]
+        assert ("plan" in r) is plan
