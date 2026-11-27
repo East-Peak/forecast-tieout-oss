@@ -64,7 +64,8 @@ export default function ForecastScreen() {
         </Callout>
       ) : null}
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+      {/* from xl the two range cards take a third more room each, so "$50.0M to $68.0M" stays on one line */}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 xl:grid-cols-[repeat(3,minmax(0,1fr))_repeat(2,minmax(0,1.5fr))]">
         <MetricCard label="Target" value={<Bound binding={B.yearTarget} />} note="The year's quarterly targets together" className="p-4" />
         <MetricCard
           label={planned ? "Expected, with this scenario" : "Expected for the year"}
@@ -91,7 +92,7 @@ export default function ForecastScreen() {
         <MetricCard
           label="80% range"
           value={
-            <span className="text-xl">
+            <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
               <Bound binding={V.range80Low} /> to <Bound binding={V.range80High} />
             </span>
           }
@@ -101,7 +102,7 @@ export default function ForecastScreen() {
         <MetricCard
           label="95% range"
           value={
-            <span className="text-xl">
+            <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
               <Bound binding={V.range95Low} /> to <Bound binding={V.range95High} />
             </span>
           }

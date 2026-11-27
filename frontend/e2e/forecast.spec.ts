@@ -210,6 +210,32 @@ test.describe("Forecast, every company and scenario @smoke", () => {
   }
 });
 
+test.describe("the two range cards hold their figure on one line at desktop widths @smoke", () => {
+  for (const width of [1280, 1440]) {
+    test.describe(`${width} wide`, () => {
+      test.use({ viewport: { width, height: 900 } });
+      for (const company of COMPANIES) {
+        for (const scenario of ["as-signed", "demo-plan"] as const) {
+          test(`${company} / ${scenario} @smoke`, async ({ page }) => {
+            await openForecast(page, company, scenario);
+            await page.evaluate(() => document.fonts.ready);
+            const figures = page.getByTestId("range-figure");
+            await expect(figures).toHaveCount(2);
+            const lines = await figures.evaluateAll((els) =>
+              els.map((el) => Math.round(el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight))),
+            );
+            expect(lines, "each range figure is one line tall").toEqual([1, 1]);
+            const spills = await figures.evaluateAll((els) =>
+              els.map((el) => el.getBoundingClientRect().right > (el.closest("[data-testid='metric-card']") as HTMLElement).getBoundingClientRect().right),
+            );
+            expect(spills, "and stays inside its card").toEqual([false, false]);
+          });
+        }
+      }
+    });
+  }
+});
+
 test.describe("switching, and a phone @smoke", () => {
   test("choosing another company and scenario reloads the report and the URL follows @smoke", async ({ page }) => {
     const issues = collectBrowserIssues(page);
