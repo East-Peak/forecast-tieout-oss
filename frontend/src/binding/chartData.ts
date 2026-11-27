@@ -12,7 +12,7 @@ type SeriesKind = "decimal" | "range";
 type PeriodsFrom =
   | { keysAt: string } // the keys of an object
   | { arrayAt: string } // an array of strings
-  | { rowsAt: string; property: string }; // a property of each row of an array of objects
+  | { rowsAt: string; property: string; unless?: readonly [string, string] }; // a property of each row of an array of objects, skipping rows where unless[0] equals unless[1]
 
 export interface SeriesSpec {
   key: string;
@@ -30,7 +30,8 @@ function periodsOf(doc: unknown, from: PeriodsFrom): string[] {
   if ("keysAt" in from) return Object.keys(resolvePointer(doc, from.keysAt) as Record<string, unknown>);
   if ("arrayAt" in from) return (resolvePointer(doc, from.arrayAt) as unknown[]).map(String);
   const rows = resolvePointer(doc, from.rowsAt) as Array<Record<string, unknown>>;
-  return rows.map((row) => String(row[from.property]));
+  const [skip, value] = from.unless ?? [];
+  return rows.filter((row) => skip === undefined || row[skip] !== value).map((row) => String(row[from.property]));
 }
 
 export function pointFor(spec: SeriesSpec, period: string): string {

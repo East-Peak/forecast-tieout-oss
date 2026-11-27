@@ -50,6 +50,18 @@ describe("buildChart", () => {
     ]);
   });
 
+  it("a series can leave out the rows that say they have nothing to plot (a closed quarter has no range)", () => {
+    const range: SeriesSpec = {
+      key: "range",
+      label: "Range",
+      kind: "range",
+      path: "/quarters/{quarter={period}}/range80",
+      periods: { rowsAt: "/quarters", property: "quarter", unless: ["quarter", "Q2FY26"] },
+    };
+    const { rows } = buildChart(doc, [range]);
+    expect(rows).toEqual([{ period: "Q1FY26", range: [8, 12] }]);
+  });
+
   it("a null the file holds stays null (a gap in the line), never zero", () => {
     const range: SeriesSpec = {
       key: "range",

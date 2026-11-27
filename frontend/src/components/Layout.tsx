@@ -106,7 +106,7 @@ export default function Layout() {
             key={screen.path}
             to={withCurrentSearch(screen.path)}
             className={({ isActive }) =>
-              `whitespace-nowrap border-b-2 px-4 py-2 text-sm transition-colors ${
+              `whitespace-nowrap border-b-2 px-3 py-2 text-sm transition-colors sm:px-4 ${
                 isActive ? "border-ft-accent text-ft-accent" : "border-transparent text-text-secondary hover:text-text-primary"
               }`
             }

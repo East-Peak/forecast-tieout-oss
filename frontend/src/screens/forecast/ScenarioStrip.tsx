@@ -1,6 +1,7 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card, Callout, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
+import { STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 /** What the chosen scenario is and, for a plan, what it changes against the roster as signed (figures from comparison.json). */
@@ -20,7 +21,7 @@ export function ScenarioStrip() {
       </p>
       {isBaseline ? (
         <p className="text-xs text-slate-500">
-          Every figure above is for the roster as signed. Choose another scenario to see what a plan changes.
+          Everything above is for the roster as signed. Choose another scenario to see what a plan changes.
         </p>
       ) : (
         <>
@@ -34,32 +35,32 @@ export function ScenarioStrip() {
           </dl>
           {plan && "unavailable" in plan ? (
             <Callout color="amber" className="mt-4">
-              The plan cannot be valued: <Bound binding={B.planUnavailable} />
+              This plan cannot be valued; the reason is at the top of the page.
             </Callout>
           ) : plan ? (
             <div className="mt-4">
               <p className="mb-2 text-xs text-slate-500">
                 <Bound binding={B.planDefinition} />
               </p>
-              <Table>
-                <TableHead>
+              <Table className={STACK.table}>
+                <TableHead className={STACK.head}>
                   <TableRow>
                     <TableHeaderCell>Item</TableHeaderCell>
                     <TableHeaderCell className="text-right">More booked, rest of year</TableHeaderCell>
                     <TableHeaderCell className="text-right">Cash cost, next twelve months</TableHeaderCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody className={STACK.body}>
                   {plan.items.map((_, i) => {
                     const row = `${ROWS.planItem}/${i}`;
                     return (
-                      <TableRow key={i} data-testid="plan-item-row">
-                        <TableCell>
+                      <TableRow key={i} className={STACK.row} data-testid="plan-item-row">
+                        <TableCell className={STACK.title}>
                           <div className="font-medium"><Bound binding={B.pItemLabel} row={row} /></div>
                           <div className="text-xs text-slate-500"><Bound binding={B.pItemDetail} row={row} /></div>
                         </TableCell>
-                        <TableCell className="text-right"><Bound binding={B.pItemContribution} row={row} /></TableCell>
-                        <TableCell className="text-right"><Bound binding={B.pItemCost} row={row} /></TableCell>
+                        <TableCell className={STACK.cell} data-label="More booked, rest of year"><Bound binding={B.pItemContribution} row={row} /></TableCell>
+                        <TableCell className={STACK.cell} data-label="Cash cost, next twelve months"><Bound binding={B.pItemCost} row={row} /></TableCell>
                       </TableRow>
                     );
                   })}

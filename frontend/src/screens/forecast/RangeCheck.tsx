@@ -1,4 +1,5 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
+import { STACK } from "../../components/workbook/stack";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure } from "../../components/workbook";
 import { B, ROWS } from "./bindings";
@@ -14,14 +15,14 @@ export function RangeCheck() {
     >
       <div className="mb-3 space-y-1 text-sm text-slate-700">
         <p>
-          Rest of the year: <Bound binding={B.yearRangeStatus} />
+          Rest of the year: <Bound binding={B.checkYearStatus} />
         </p>
         <p>
-          Next twelve months: <Bound binding={B.nextRangeStatus} />
+          Next twelve months: <Bound binding={B.checkNextStatus} />
         </p>
       </div>
-      <Table>
-        <TableHead>
+      <Table className={STACK.table}>
+        <TableHead className={STACK.head}>
           <TableRow>
             <TableHeaderCell>Months ahead</TableHeaderCell>
             <TableHeaderCell className="text-right">Past dates scored</TableHeaderCell>
@@ -31,17 +32,17 @@ export function RangeCheck() {
             <TableHeaderCell>Coverage reads</TableHeaderCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody className={STACK.body}>
           {cells.map((_, i) => {
             const row = `${ROWS.cell}/${i}`;
             return (
-              <TableRow key={i} data-testid="range-cell-row">
-                <TableCell><Bound binding={B.cHorizon} row={row} /></TableCell>
-                <TableCell className="text-right"><Bound binding={B.cFolds} row={row} /></TableCell>
-                <TableCell className="text-right"><Bound binding={B.cCoverage80} row={row} /></TableCell>
-                <TableCell className="text-right"><Bound binding={B.cCoverage95} row={row} /></TableCell>
-                <TableCell><Bound binding={B.cLabel} row={row} /></TableCell>
-                <TableCell><Bound binding={B.cJudgement} row={row} /></TableCell>
+              <TableRow key={i} className={STACK.row} data-testid="range-cell-row">
+                <TableCell className={STACK.cell} data-label="Months ahead"><Bound binding={B.cHorizon} row={row} /></TableCell>
+                <TableCell className={STACK.cell} data-label="Past dates scored"><Bound binding={B.cFolds} row={row} /></TableCell>
+                <TableCell className={STACK.cell} data-label="Inside the 80% range"><Bound binding={B.cCoverage80} row={row} /></TableCell>
+                <TableCell className={STACK.cell} data-label="Inside the 95% range"><Bound binding={B.cCoverage95} row={row} /></TableCell>
+                <TableCell className={STACK.cell} data-label="Label"><Bound binding={B.cLabel} row={row} /></TableCell>
+                <TableCell className={STACK.cell} data-label="Coverage reads"><Bound binding={B.cJudgement} row={row} /></TableCell>
               </TableRow>
             );
           })}
