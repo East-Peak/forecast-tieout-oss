@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Bound, readBinding, useBindingContext } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
 import { Badge, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
+import { STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 type Tone = "green" | "red" | "amber" | "slate";
@@ -52,21 +53,28 @@ function Verdict({
 }
 
 /** A baseline's error with, beneath it, the report's word for which of the two is lower. */
-function Against({ error, outcome, row }: { error: Binding; outcome: Binding; row: string }) {
+function Against({ label, error, outcome, row }: { label: string; error: Binding; outcome: Binding; row: string }) {
   const ctx = useBindingContext();
   return (
-    <TableCell className="px-1 py-2 text-right align-top">
-      <Bound binding={error} row={row} />
-      <div className="mt-1">
+    <TableCell className={`${STACK.cell} sm:text-right sm:align-top`} data-label={label}>
+      <span className="flex flex-col items-end gap-1">
+        <Bound binding={error} row={row} />
         <Badge color={outcomeTone(String(readBinding(ctx, outcome, row)))} size="xs">
           <Bound binding={outcome} row={row} />
         </Badge>
-      </div>
+      </span>
     </TableCell>
   );
 }
 
-/** The back-test errors the verdict rests on, for each horizon the rule uses; absent when there is no verdict. */
+const STAGE = "Stage-weighted pipeline";
+const RUN_RATE = "Last twelve months' pace";
+
+/**
+ * The back-test errors the verdict rests on, for each horizon the rule uses; absent when there is no verdict.
+ * Laid out like the app's other tables: columns from the small breakpoint up, and on a phone each horizon a
+ * block of labeled lines, so no font's width can push it past the card.
+ */
 function Comparison() {
   const { files } = useBindingContext();
   const rows = files.report.verdicts.forecast_better_than_baselines.comparisons;
@@ -74,28 +82,28 @@ function Comparison() {
   return (
     <>
       <p className="mt-3 text-[11px] text-slate-500">Average miss in dollars on the past, lower is better.</p>
-      <Table className="mt-1 text-xs">
-        <TableHead>
+      <Table className={`${STACK.table} mt-1 text-xs`}>
+        <TableHead className={STACK.head}>
           <TableRow>
             <TableHeaderCell className="px-1 py-1 text-left">Months ahead</TableHeaderCell>
             <TableHeaderCell className="px-1 py-1 text-right">Fitted model</TableHeaderCell>
-            <TableHeaderCell className="px-1 py-1 text-right">Stage-weighted pipeline</TableHeaderCell>
-            <TableHeaderCell className="px-1 py-1 text-right">Last twelve months' pace</TableHeaderCell>
+            <TableHeaderCell className="px-1 py-1 text-right">{STAGE}</TableHeaderCell>
+            <TableHeaderCell className="px-1 py-1 text-right">{RUN_RATE}</TableHeaderCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody className={STACK.body}>
           {rows.map((_, i) => {
             const row = `${ROWS.betterComparisons}/${i}`;
             return (
-              <TableRow key={i} data-testid="verdict-comparison-row">
-                <TableCell className="px-1 py-2 align-top">
+              <TableRow key={i} className={STACK.row} data-testid="verdict-comparison-row">
+                <TableCell className={`${STACK.cell} sm:text-left sm:align-top`} data-label="Months ahead">
                   <Bound binding={B.cmpMonths} row={row} />
                 </TableCell>
-                <TableCell className="px-1 py-2 text-right align-top font-medium">
+                <TableCell className={`${STACK.cell} font-medium sm:align-top`} data-label="Fitted model">
                   <Bound binding={B.cmpModel} row={row} />
                 </TableCell>
-                <Against error={B.cmpStage} outcome={B.cmpStageOutcome} row={row} />
-                <Against error={B.cmpRunRate} outcome={B.cmpRunRateOutcome} row={row} />
+                <Against label={STAGE} error={B.cmpStage} outcome={B.cmpStageOutcome} row={row} />
+                <Against label={RUN_RATE} error={B.cmpRunRate} outcome={B.cmpRunRateOutcome} row={row} />
               </TableRow>
             );
           })}
@@ -109,7 +117,7 @@ export function Verdicts() {
   const ctx = useBindingContext();
   const better = String(readBinding(ctx, B.betterVerdict));
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 lg:grid-cols-2">
       <Verdict question="Is the software correct?" verdict={B.softwareVerdict} reason={B.softwareSummary} />
       <Verdict
         question="Is the fitted forecast better than the baselines?"

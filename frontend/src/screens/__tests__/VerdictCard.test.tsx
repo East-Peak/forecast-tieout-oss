@@ -37,6 +37,20 @@ describe("the card 'Is the fitted forecast better than the baselines?'", () => {
     expect(outcomes).toContain("baseline lower");
   });
 
+  it("is laid out like the app's other tables, so on a phone each horizon stacks as labeled lines", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const container = mountScreen(Verdicts, c, c.company, c.scenario);
+    const table = card(container).querySelector("table")!;
+    expect(table.className).toContain("block sm:table");
+    const row = table.querySelector("[data-testid='verdict-comparison-row']")!;
+    expect([...row.querySelectorAll("td")].map((td) => td.getAttribute("data-label"))).toEqual([
+      "Months ahead",
+      "Fitted model",
+      "Stage-weighted pipeline",
+      "Last twelve months' pace",
+    ]);
+  });
+
   it("a yes reads as yes in green, with every outcome 'model lower'", () => {
     const c = caseOf("sprout-labs", "as-signed");
     const container = mountScreen(Verdicts, c, c.company, c.scenario);
