@@ -218,7 +218,7 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 
 ## 7. Verdicts
 
-**The software is correct: yes.** 22 of 22 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
+**The software is correct: yes.** 29 of 29 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
 
 | Check | Result | Detail |
 |---|---|---|
@@ -244,6 +244,13 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 | plan simulation centered on its expectation | pass | simulated mean 6,367,705.85 vs expected 6,361,897.78 (2000 draws) |
 | hires solve returns the smallest whole number that closes the gap | pass | unreachable: None hires give 6230674.42 against 8000000 |
 | program solve agrees with the forward function | pass | feasible: forward(58885194.74) = 8000000.00 against 8000000 |
+| worksheet bridge steps sum to the working plan | pass | 6119924.84 plus the contributions is 6144471.88; the working plan is 6144471.88 |
+| worksheet working plan and remaining gap close on the target | pass | target 8000000 less 6144471.88 is 1855528.12 |
+| worksheet baseline is the report's own expected fiscal year | pass | the probe's baseline 6144471.88 against the report's 6144471.88 |
+| worksheet win_rate needed alone agrees with the target | pass | solves: 8000244.21 against 8000000.00 |
+| worksheet won_arr needed alone agrees with the target | pass | solves: 8000000.06 against 8000000.00 |
+| worksheet productivity needed alone agrees with the target | pass | solves: 8000009.14 against 8000000.00 |
+| worksheet cycle_days needed alone agrees with the target | pass | solves: 8000179.12 against 8000000.00 |
 
 **The forecast is better than the baselines: yes.** the model's mean absolute error is lower than both baselines at 1 and 3 months.
 

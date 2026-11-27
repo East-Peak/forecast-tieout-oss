@@ -130,12 +130,18 @@ def test_needed_alone_matches_the_reference_where_the_conventions_agree(prepared
         want = k["needed"]
         if name != rules.CYCLE_DAYS:
             assert n["outcome"] == "solves"
-            assert near(
-                n["value"],
-                want["value"],
-                D("0.0001") if name != rules.WON_ARR else CENT,
+            # DIFFERENCE: the reference prints the exact root rounded to nearest and reaches the
+            # target only to a hair; the core writes the setting rounded UP to the driver's places
+            # and reports the bookings that written value reaches (the target or a little more).
+            places = D(1).scaleb(-rules.PRECISION[name])
+            assert (
+                D(want["value"]) - places <= D(n["value"]) <= D(want["value"]) + places
             )
-            assert near(n["achieved_fiscal_year_bookings"], want["achieved"])
+            assert D(n["value"]) >= D(want["value"]) - D("0.0000001")
+            assert D(n["achieved_fiscal_year_bookings"]) >= D(want["achieved"])
+            assert D(n["overshoot"]) == D(n["achieved_fiscal_year_bookings"]) - D(
+                want["achieved"]
+            )
             # the reference calls it extrapolation when outside min/max; so does the core
             assert (n["inside_observed_range"] is False) == want["extrapolation"]
         elif want["scale"] == "0":

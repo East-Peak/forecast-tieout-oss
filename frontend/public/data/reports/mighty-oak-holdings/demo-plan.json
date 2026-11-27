@@ -7338,7 +7338,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.5.0",
+  "schema_version": "2.6.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [
@@ -7481,10 +7481,45 @@
           "detail": "unreachable within bounds: forward(3007281482.38) = 79207625.42 against 84000000",
           "name": "program solve agrees with the forward function",
           "passed": true
+        },
+        {
+          "detail": "60639660.81 plus the contributions is 60722956.21; the working plan is 60722956.21",
+          "name": "worksheet bridge steps sum to the working plan",
+          "passed": true
+        },
+        {
+          "detail": "target 84000000 less 60722956.21 is 23277043.79",
+          "name": "worksheet working plan and remaining gap close on the target",
+          "passed": true
+        },
+        {
+          "detail": "the probe's baseline 60722956.21 against the report's 60722956.21",
+          "name": "worksheet baseline is the report's own expected fiscal year",
+          "passed": true
+        },
+        {
+          "detail": "solves: 84004264.64 against 84000000.00",
+          "name": "worksheet win_rate needed alone agrees with the target",
+          "passed": true
+        },
+        {
+          "detail": "solves: 84000000.01 against 84000000.00",
+          "name": "worksheet won_arr needed alone agrees with the target",
+          "passed": true
+        },
+        {
+          "detail": "solves: 84000154.61 against 84000000.00",
+          "name": "worksheet productivity needed alone agrees with the target",
+          "passed": true
+        },
+        {
+          "detail": "solves: 84003761.93 against 84000000.00",
+          "name": "worksheet cycle_days needed alone agrees with the target",
+          "passed": true
         }
       ],
       "scope": "runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
-      "summary": "21 of 21 self-checks passed",
+      "summary": "28 of 28 self-checks passed",
       "verdict": "yes"
     }
   },
@@ -7511,6 +7546,10 @@
             "value": "unreachable"
           },
           "kind": "program",
+          "rank": {
+            "next twelve months": 1,
+            "rest of fiscal year": 1
+          },
           "status": {
             "source": "/actions/comparison/0/status",
             "value": "valued"
@@ -7531,6 +7570,10 @@
             "value": "unsupported by this history"
           },
           "kind": "hire",
+          "rank": {
+            "next twelve months": null,
+            "rest of fiscal year": null
+          },
           "status": {
             "source": "/actions/comparison/1/status",
             "value": "unsupported by this history"
@@ -7824,23 +7867,23 @@
         "passed": true
       },
       {
-        "detail": "84000000.00 against 84000000.00",
-        "name": "worksheet win_rate solve lands on the target to the cent",
+        "detail": "solves: 84004264.64 against 84000000.00",
+        "name": "worksheet win_rate needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "84000000.00 against 84000000.00",
-        "name": "worksheet won_arr solve lands on the target to the cent",
+        "detail": "solves: 84000000.01 against 84000000.00",
+        "name": "worksheet won_arr needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "84000000.00 against 84000000.00",
-        "name": "worksheet productivity solve lands on the target to the cent",
+        "detail": "solves: 84000154.61 against 84000000.00",
+        "name": "worksheet productivity needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "84003761.93 against 84000000.00",
-        "name": "worksheet cycle_days solve reaches the target and the overshoot is what it reaches beyond it",
+        "detail": "solves: 84003761.93 against 84000000.00",
+        "name": "worksheet cycle_days needed alone agrees with the target",
         "passed": true
       }
     ],
@@ -7848,6 +7891,7 @@
     "drivers": [
       {
         "applies_to": "The share of deals created after the as-of date that are won, for organic, hire-generated and program pipeline alike. Open deals and actuals are untouched.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2024-09-01",
           "creation_to": "2026-08-31",
@@ -8007,24 +8051,32 @@
         "label": "Win rate of new pipeline",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "84000000.00",
+          "achieved_fiscal_year_bookings": "84004264.64",
           "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
           "inside_observed_range": false,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": null,
+          "overshoot": "4264.64",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": null,
           "stepped": false,
           "target": "84000000.00",
-          "value": "0.6106"
+          "value": "0.6107"
+        },
+        "places": 4,
+        "rank": {
+          "next twelve months": 1,
+          "rest of fiscal year": 1
         },
         "unit": "fraction",
         "unit_label": "share of created deals won"
       },
       {
         "applies_to": "The mean ARR of each win among deals created after the as-of date. Creation counts and the program dollars-to-deals conversion are unchanged.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2024-09-01",
           "creation_to": "2026-08-31",
@@ -8184,24 +8236,32 @@
         "label": "Won ARR per new win",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "84000000.00",
+          "achieved_fiscal_year_bookings": "84000000.01",
           "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
           "inside_observed_range": false,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": null,
+          "overshoot": "0.01",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": null,
           "stepped": false,
           "target": "84000000.00",
-          "value": "13325496.68"
+          "value": "13325496.69"
+        },
+        "places": 2,
+        "rank": {
+          "next twelve months": 3,
+          "rest of fiscal year": 4
         },
         "unit": "dollars",
         "unit_label": "dollars of ARR per won deal"
       },
       {
         "applies_to": "Organic deals created per day after the as-of date. The capacity term is not in use for this company, so headcount is not tied to creation here. Open deals and actuals are untouched.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2025-09-01",
           "creation_to": "2026-08-31",
@@ -8361,12 +8421,14 @@
         "label": "Creation productivity",
         "limitation": "Each quarter is organic deals created per day of the quarter; the capacity term is not in use, so headcount plays no part.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "84000000.00",
+          "achieved_fiscal_year_bookings": "84000154.61",
           "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
           "inside_observed_range": false,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": null,
+          "overshoot": "154.61",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": null,
@@ -8374,11 +8436,17 @@
           "target": "84000000.00",
           "value": "8.2681"
         },
+        "places": 4,
+        "rank": {
+          "next twelve months": 2,
+          "rest of fiscal year": 3
+        },
         "unit": "organic deals per day",
         "unit_label": "organic deals per day"
       },
       {
         "applies_to": "Days from creation to win for deals created after the as-of date. Each win-time sample is scaled and rounded up to whole days; weights, probability and size are unchanged.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2024-09-01",
           "creation_to": "2026-08-31",
@@ -8544,12 +8612,19 @@
           "outcome": "solves",
           "outcome_label": "Solves mathematically, stepped: win times are whole days, so there is no exact root. This is the largest setting that reaches the target, and it overshoots by the amount shown.",
           "overshoot": "3761.93",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": "53/288",
           "stepped": true,
           "target": "84000000.00",
           "value": "33.65"
+        },
+        "places": 2,
+        "rank": {
+          "next twelve months": 4,
+          "rest of fiscal year": 2
         },
         "unit": "days",
         "unit_label": "days from creation to win"

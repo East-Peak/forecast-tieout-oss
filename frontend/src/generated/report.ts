@@ -1075,7 +1075,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.5.0";
+  schema_version: "2.6.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];
@@ -1098,29 +1098,96 @@ export type TieoutReport = {
         actions: {
           basis: "as signed";
           note: Text;
-          rows: {
-            action: {
-              source: Text;
-              value: Text;
-            };
-            bookings_gained: {
-              source: Text;
-              value: {
-                "next twelve months": Money;
-                "rest of fiscal year": Money;
-              } | null;
-            };
-            closes_alone_label: Text;
-            closes_alone_outcome: {
-              source: Text;
-              value: Text;
-            };
-            kind: "hire" | "program";
-            status: {
-              source: Text;
-              value: Text;
-            };
-          }[];
+          /**
+           * @maxItems 2
+           */
+          rows:
+            | []
+            | [
+                {
+                  action: {
+                    source: Text;
+                    value: Text;
+                  };
+                  bookings_gained: {
+                    source: Text;
+                    value: {
+                      "next twelve months": Money;
+                      "rest of fiscal year": Money;
+                    } | null;
+                  };
+                  closes_alone_label: Text;
+                  closes_alone_outcome: {
+                    source: Text;
+                    value: Text;
+                  };
+                  kind: "hire" | "program";
+                  rank: {
+                    "next twelve months": number | null;
+                    "rest of fiscal year": number | null;
+                  };
+                  status: {
+                    source: Text;
+                    value: Text;
+                  };
+                }
+              ]
+            | [
+                {
+                  action: {
+                    source: Text;
+                    value: Text;
+                  };
+                  bookings_gained: {
+                    source: Text;
+                    value: {
+                      "next twelve months": Money;
+                      "rest of fiscal year": Money;
+                    } | null;
+                  };
+                  closes_alone_label: Text;
+                  closes_alone_outcome: {
+                    source: Text;
+                    value: Text;
+                  };
+                  kind: "hire" | "program";
+                  rank: {
+                    "next twelve months": number | null;
+                    "rest of fiscal year": number | null;
+                  };
+                  status: {
+                    source: Text;
+                    value: Text;
+                  };
+                },
+                {
+                  action: {
+                    source: Text;
+                    value: Text;
+                  };
+                  bookings_gained: {
+                    source: Text;
+                    value: {
+                      "next twelve months": Money;
+                      "rest of fiscal year": Money;
+                    } | null;
+                  };
+                  closes_alone_label: Text;
+                  closes_alone_outcome: {
+                    source: Text;
+                    value: Text;
+                  };
+                  kind: "hire" | "program";
+                  rank: {
+                    "next twelve months": number | null;
+                    "rest of fiscal year": number | null;
+                  };
+                  status: {
+                    source: Text;
+                    value: Text;
+                  };
+                }
+              ];
         };
         bridge: {
           contributions: {
@@ -1132,16 +1199,51 @@ export type TieoutReport = {
           }[];
           measure: Text;
           order: Text;
-          steps: {
-            change: Money | null;
-            from: Money | null;
-            kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
-            label: Text;
-            note: Text | null;
-            source: Text;
-            to: Money;
-            valued: boolean;
-          }[];
+          /**
+           * @minItems 3
+           */
+          steps: [
+            {
+              change: Money | null;
+              from: Money | null;
+              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              label: Text;
+              note: Text | null;
+              source: Text;
+              to: Money;
+              valued: boolean;
+            },
+            {
+              change: Money | null;
+              from: Money | null;
+              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              label: Text;
+              note: Text | null;
+              source: Text;
+              to: Money;
+              valued: boolean;
+            },
+            {
+              change: Money | null;
+              from: Money | null;
+              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              label: Text;
+              note: Text | null;
+              source: Text;
+              to: Money;
+              valued: boolean;
+            },
+            ...{
+              change: Money | null;
+              from: Money | null;
+              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              label: Text;
+              note: Text | null;
+              source: Text;
+              to: Money;
+              valued: boolean;
+            }[]
+          ];
           target: {
             source: Text;
             value: Decimal;
@@ -1237,73 +1339,312 @@ export type TieoutReport = {
         };
         checks: Check[];
         definition: Text;
-        drivers: {
-          applies_to: Text;
-          current: {
-            creation_from: Date;
-            creation_to: Date;
-            fit_in_use: Text;
-            value: Decimal;
-          };
-          display: "percent" | "money" | "decimal";
-          driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
-          evidence: {
-            eligible_quarters: number;
-            gate: Text;
-            gate_passed: boolean;
-            quarters: {
-              created: number;
-              eligible: boolean;
-              end: Date;
-              exposure: Decimal | null;
-              mature: boolean;
-              not_eligible_because: Text | null;
-              quarter: Quarter;
-              start: Date;
+        /**
+         * @minItems 4
+         * @maxItems 4
+         */
+        drivers: [
+          {
+            applies_to: Text;
+            cannot_scale_because: Text | null;
+            current: {
+              creation_from: Date;
+              creation_to: Date;
+              fit_in_use: Text;
               value: Decimal | null;
-              wins: number;
-            }[];
-            required_quarters: number;
-          };
-          historical: {
-            high: {
-              change: {
-                "next twelve months": Money;
-                "rest of fiscal year": Money;
-              };
-              setting: Decimal;
             };
-            low: {
-              change: {
-                "next twelve months": Money;
-                "rest of fiscal year": Money;
-              };
-              setting: Decimal;
+            display: "percent" | "money" | "decimal";
+            driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
+            evidence: {
+              eligible_quarters: number;
+              gate: Text;
+              gate_passed: boolean;
+              quarters: {
+                created: number;
+                eligible: boolean;
+                end: Date;
+                exposure: Decimal | null;
+                mature: boolean;
+                not_eligible_because: Text | null;
+                quarter: Quarter;
+                start: Date;
+                value: Decimal | null;
+                wins: number;
+              }[];
+              required_quarters: number;
             };
-            maximum: Decimal;
-            minimum: Decimal;
-            rule: Text;
-          } | null;
-          historical_unavailable_because: Text | null;
-          label: Text;
-          limitation: Text | null;
-          needed_alone: {
-            achieved_fiscal_year_bookings: Money;
-            history_label: Text | null;
-            inside_observed_range: boolean | null;
-            outcome: "solves" | "cannot_close_alone" | "already_at_or_ahead";
-            outcome_label: Text;
-            overshoot: Money | null;
-            reason: ("bounded_at_one" | "no_effect_in_the_year" | "short_even_at_zero_days") | null;
-            reason_label: Text | null;
-            scale: string | null;
-            stepped: boolean;
-            target: Money;
-            value: Decimal | null;
-          };
-          unit: Text;
-          unit_label: Text;
-        }[];
+            historical: {
+              high: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              low: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              maximum: Decimal;
+              minimum: Decimal;
+              rule: Text;
+            } | null;
+            historical_unavailable_because: Text | null;
+            label: Text;
+            limitation: Text | null;
+            needed_alone: {
+              achieved_fiscal_year_bookings: Money;
+              history_label: Text | null;
+              inside_observed_range: boolean | null;
+              outcome: "solves" | "cannot_close_alone" | "already_at_or_ahead";
+              outcome_label: Text;
+              overshoot: Money | null;
+              precision_note: Text | null;
+              reaches_target: boolean;
+              reason: ("bounded_at_one" | "no_effect_in_the_year" | "short_even_at_zero_days") | null;
+              reason_label: Text | null;
+              scale: string | null;
+              stepped: boolean;
+              target: Money;
+              value: Decimal | null;
+            } | null;
+            places: number;
+            rank: {
+              "next twelve months": number | null;
+              "rest of fiscal year": number | null;
+            };
+            unit: Text;
+            unit_label: Text;
+          },
+          {
+            applies_to: Text;
+            cannot_scale_because: Text | null;
+            current: {
+              creation_from: Date;
+              creation_to: Date;
+              fit_in_use: Text;
+              value: Decimal | null;
+            };
+            display: "percent" | "money" | "decimal";
+            driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
+            evidence: {
+              eligible_quarters: number;
+              gate: Text;
+              gate_passed: boolean;
+              quarters: {
+                created: number;
+                eligible: boolean;
+                end: Date;
+                exposure: Decimal | null;
+                mature: boolean;
+                not_eligible_because: Text | null;
+                quarter: Quarter;
+                start: Date;
+                value: Decimal | null;
+                wins: number;
+              }[];
+              required_quarters: number;
+            };
+            historical: {
+              high: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              low: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              maximum: Decimal;
+              minimum: Decimal;
+              rule: Text;
+            } | null;
+            historical_unavailable_because: Text | null;
+            label: Text;
+            limitation: Text | null;
+            needed_alone: {
+              achieved_fiscal_year_bookings: Money;
+              history_label: Text | null;
+              inside_observed_range: boolean | null;
+              outcome: "solves" | "cannot_close_alone" | "already_at_or_ahead";
+              outcome_label: Text;
+              overshoot: Money | null;
+              precision_note: Text | null;
+              reaches_target: boolean;
+              reason: ("bounded_at_one" | "no_effect_in_the_year" | "short_even_at_zero_days") | null;
+              reason_label: Text | null;
+              scale: string | null;
+              stepped: boolean;
+              target: Money;
+              value: Decimal | null;
+            } | null;
+            places: number;
+            rank: {
+              "next twelve months": number | null;
+              "rest of fiscal year": number | null;
+            };
+            unit: Text;
+            unit_label: Text;
+          },
+          {
+            applies_to: Text;
+            cannot_scale_because: Text | null;
+            current: {
+              creation_from: Date;
+              creation_to: Date;
+              fit_in_use: Text;
+              value: Decimal | null;
+            };
+            display: "percent" | "money" | "decimal";
+            driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
+            evidence: {
+              eligible_quarters: number;
+              gate: Text;
+              gate_passed: boolean;
+              quarters: {
+                created: number;
+                eligible: boolean;
+                end: Date;
+                exposure: Decimal | null;
+                mature: boolean;
+                not_eligible_because: Text | null;
+                quarter: Quarter;
+                start: Date;
+                value: Decimal | null;
+                wins: number;
+              }[];
+              required_quarters: number;
+            };
+            historical: {
+              high: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              low: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              maximum: Decimal;
+              minimum: Decimal;
+              rule: Text;
+            } | null;
+            historical_unavailable_because: Text | null;
+            label: Text;
+            limitation: Text | null;
+            needed_alone: {
+              achieved_fiscal_year_bookings: Money;
+              history_label: Text | null;
+              inside_observed_range: boolean | null;
+              outcome: "solves" | "cannot_close_alone" | "already_at_or_ahead";
+              outcome_label: Text;
+              overshoot: Money | null;
+              precision_note: Text | null;
+              reaches_target: boolean;
+              reason: ("bounded_at_one" | "no_effect_in_the_year" | "short_even_at_zero_days") | null;
+              reason_label: Text | null;
+              scale: string | null;
+              stepped: boolean;
+              target: Money;
+              value: Decimal | null;
+            } | null;
+            places: number;
+            rank: {
+              "next twelve months": number | null;
+              "rest of fiscal year": number | null;
+            };
+            unit: Text;
+            unit_label: Text;
+          },
+          {
+            applies_to: Text;
+            cannot_scale_because: Text | null;
+            current: {
+              creation_from: Date;
+              creation_to: Date;
+              fit_in_use: Text;
+              value: Decimal | null;
+            };
+            display: "percent" | "money" | "decimal";
+            driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
+            evidence: {
+              eligible_quarters: number;
+              gate: Text;
+              gate_passed: boolean;
+              quarters: {
+                created: number;
+                eligible: boolean;
+                end: Date;
+                exposure: Decimal | null;
+                mature: boolean;
+                not_eligible_because: Text | null;
+                quarter: Quarter;
+                start: Date;
+                value: Decimal | null;
+                wins: number;
+              }[];
+              required_quarters: number;
+            };
+            historical: {
+              high: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              low: {
+                change: {
+                  "next twelve months": Money;
+                  "rest of fiscal year": Money;
+                };
+                setting: Decimal;
+              };
+              maximum: Decimal;
+              minimum: Decimal;
+              rule: Text;
+            } | null;
+            historical_unavailable_because: Text | null;
+            label: Text;
+            limitation: Text | null;
+            needed_alone: {
+              achieved_fiscal_year_bookings: Money;
+              history_label: Text | null;
+              inside_observed_range: boolean | null;
+              outcome: "solves" | "cannot_close_alone" | "already_at_or_ahead";
+              outcome_label: Text;
+              overshoot: Money | null;
+              precision_note: Text | null;
+              reaches_target: boolean;
+              reason: ("bounded_at_one" | "no_effect_in_the_year" | "short_even_at_zero_days") | null;
+              reason_label: Text | null;
+              scale: string | null;
+              stepped: boolean;
+              target: Money;
+              value: Decimal | null;
+            } | null;
+            places: number;
+            rank: {
+              "next twelve months": number | null;
+              "rest of fiscal year": number | null;
+            };
+            unit: Text;
+            unit_label: Text;
+          }
+        ];
         expectation_note: Text;
         history_note: Text;
         measured_around: Text;

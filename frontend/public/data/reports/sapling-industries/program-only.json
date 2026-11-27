@@ -3815,7 +3815,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.5.0",
+  "schema_version": "2.6.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [
@@ -3963,10 +3963,45 @@
           "detail": "feasible: forward(45404741.70) = 60000000.00 against 60000000",
           "name": "program solve agrees with the forward function",
           "passed": true
+        },
+        {
+          "detail": "58089724.29 plus the contributions is 58235665.34; the working plan is 58235665.34",
+          "name": "worksheet bridge steps sum to the working plan",
+          "passed": true
+        },
+        {
+          "detail": "target 60000000 less 58235665.34 is 1764334.66",
+          "name": "worksheet working plan and remaining gap close on the target",
+          "passed": true
+        },
+        {
+          "detail": "the probe's baseline 58235665.34 against the report's 58235665.34",
+          "name": "worksheet baseline is the report's own expected fiscal year",
+          "passed": true
+        },
+        {
+          "detail": "solves: 60003659.32 against 60000000.00",
+          "name": "worksheet win_rate needed alone agrees with the target",
+          "passed": true
+        },
+        {
+          "detail": "solves: 60000000.07 against 60000000.00",
+          "name": "worksheet won_arr needed alone agrees with the target",
+          "passed": true
+        },
+        {
+          "detail": "solves: 60000234.74 against 60000000.00",
+          "name": "worksheet productivity needed alone agrees with the target",
+          "passed": true
+        },
+        {
+          "detail": "solves: 60002070.72 against 60000000.00",
+          "name": "worksheet cycle_days needed alone agrees with the target",
+          "passed": true
         }
       ],
       "scope": "runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
-      "summary": "22 of 22 self-checks passed",
+      "summary": "29 of 29 self-checks passed",
       "verdict": "yes"
     }
   },
@@ -3993,6 +4028,10 @@
             "value": "unreachable"
           },
           "kind": "hire",
+          "rank": {
+            "next twelve months": 1,
+            "rest of fiscal year": 1
+          },
           "status": {
             "source": "/actions/comparison/0/status",
             "value": "valued"
@@ -4016,6 +4055,10 @@
             "value": "feasible"
           },
           "kind": "program",
+          "rank": {
+            "next twelve months": 2,
+            "rest of fiscal year": 2
+          },
           "status": {
             "source": "/actions/comparison/1/status",
             "value": "valued"
@@ -4272,23 +4315,23 @@
         "passed": true
       },
       {
-        "detail": "60000000.00 against 60000000.00",
-        "name": "worksheet win_rate solve lands on the target to the cent",
+        "detail": "solves: 60003659.32 against 60000000.00",
+        "name": "worksheet win_rate needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "60000000.00 against 60000000.00",
-        "name": "worksheet won_arr solve lands on the target to the cent",
+        "detail": "solves: 60000000.07 against 60000000.00",
+        "name": "worksheet won_arr needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "60000000.00 against 60000000.00",
-        "name": "worksheet productivity solve lands on the target to the cent",
+        "detail": "solves: 60000234.74 against 60000000.00",
+        "name": "worksheet productivity needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "60002070.72 against 60000000.00",
-        "name": "worksheet cycle_days solve reaches the target and the overshoot is what it reaches beyond it",
+        "detail": "solves: 60002070.72 against 60000000.00",
+        "name": "worksheet cycle_days needed alone agrees with the target",
         "passed": true
       }
     ],
@@ -4296,6 +4339,7 @@
     "drivers": [
       {
         "applies_to": "The share of deals created after the as-of date that are won, for organic, hire-generated and program pipeline alike. Open deals and actuals are untouched.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2024-09-01",
           "creation_to": "2026-08-31",
@@ -4455,24 +4499,32 @@
         "label": "Win rate of new pipeline",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60000000.00",
+          "achieved_fiscal_year_bookings": "60003659.32",
           "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
           "inside_observed_range": false,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": null,
+          "overshoot": "3659.32",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": null,
           "stepped": false,
           "target": "60000000.00",
-          "value": "0.2667"
+          "value": "0.2668"
+        },
+        "places": 4,
+        "rank": {
+          "next twelve months": 2,
+          "rest of fiscal year": 3
         },
         "unit": "fraction",
         "unit_label": "share of created deals won"
       },
       {
         "applies_to": "The mean ARR of each win among deals created after the as-of date. Creation counts and the program dollars-to-deals conversion are unchanged.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2024-09-01",
           "creation_to": "2026-08-31",
@@ -4632,12 +4684,14 @@
         "label": "Won ARR per new win",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60000000.00",
+          "achieved_fiscal_year_bookings": "60000000.07",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
           "inside_observed_range": true,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": null,
+          "overshoot": "0.07",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": null,
@@ -4645,11 +4699,17 @@
           "target": "60000000.00",
           "value": "503273.02"
         },
+        "places": 2,
+        "rank": {
+          "next twelve months": 1,
+          "rest of fiscal year": 1
+        },
         "unit": "dollars",
         "unit_label": "dollars of ARR per won deal"
       },
       {
         "applies_to": "Deals created per ramped AE-month, for the signed roster and any planned hires, after the as-of date. Open deals and actuals are untouched.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2025-09-01",
           "creation_to": "2026-08-31",
@@ -4809,24 +4869,32 @@
         "label": "Creation productivity",
         "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60000000.00",
+          "achieved_fiscal_year_bookings": "60000234.74",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
           "inside_observed_range": true,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": null,
+          "overshoot": "234.74",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": null,
           "stepped": false,
           "target": "60000000.00",
-          "value": "2.5208"
+          "value": "2.5209"
+        },
+        "places": 4,
+        "rank": {
+          "next twelve months": 3,
+          "rest of fiscal year": 4
         },
         "unit": "created deals per ramped AE-month",
         "unit_label": "created deals per ramped AE-month"
       },
       {
         "applies_to": "Days from creation to win for deals created after the as-of date. Each win-time sample is scaled and rounded up to whole days; weights, probability and size are unchanged.",
+        "cannot_scale_because": null,
         "current": {
           "creation_from": "2024-09-01",
           "creation_to": "2026-08-31",
@@ -4992,12 +5060,19 @@
           "outcome": "solves",
           "outcome_label": "Solves mathematically, stepped: win times are whole days, so there is no exact root. This is the largest setting that reaches the target, and it overshoots by the amount shown.",
           "overshoot": "2070.72",
+          "precision_note": null,
+          "reaches_target": true,
           "reason": null,
           "reason_label": null,
           "scale": "37/42",
           "stepped": true,
           "target": "60000000.00",
           "value": "117.42"
+        },
+        "places": 2,
+        "rank": {
+          "next twelve months": 4,
+          "rest of fiscal year": 2
         },
         "unit": "days",
         "unit_label": "days from creation to win"

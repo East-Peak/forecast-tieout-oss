@@ -68,6 +68,14 @@ def daily_survival(monthly_attrition: Decimal) -> Decimal:
     return ((1 - monthly_attrition).ln() / rules.DAYS_PER_AE_MONTH).exp()
 
 
+def creation_text(rate: Decimal) -> str:
+    """The sentence a forecast gives for its creation assumption, from the fitted rate."""
+    return (
+        f"new pipeline is created at {rate:.4f} deals per ramped AE-month (trailing "
+        f"{rules.TRAILING_DAYS} days) times the expected ramped AE-months of the roster"
+    )
+
+
 def project(
     fit: CapacityFit, members: Sequence[Member], as_of: date, horizon_days: int
 ) -> Creation:
@@ -128,8 +136,6 @@ def project(
             ramped_draws += alive * weights[None, :]
         return ramped_draws / float(per_month) * rate
 
-    text = (
-        f"new pipeline is created at {fit.rate:.4f} deals per ramped AE-month (trailing "
-        f"{rules.TRAILING_DAYS} days) times the expected ramped AE-months of the roster"
+    return Creation(
+        per_day, creation_text(fit.rate), ramped, tuple(heads), tuple(leaving), draws
     )
-    return Creation(per_day, text, ramped, tuple(heads), tuple(leaving), draws)

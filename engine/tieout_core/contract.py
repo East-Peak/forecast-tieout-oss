@@ -33,7 +33,7 @@ from .rates import rate_unit
 from .stretch import horizon_for
 from .stretch_rules import HORIZONS
 
-SCHEMA_VERSION = "2.5.0"
+SCHEMA_VERSION = "2.6.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders

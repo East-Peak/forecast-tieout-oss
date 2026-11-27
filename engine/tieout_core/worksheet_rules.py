@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
+from decimal import ROUND_CEILING, Decimal
 from fractions import Fraction
 
 from .fiscal import FiscalYear
@@ -38,6 +38,11 @@ MIN_WINS_FOR_SIZE_OR_TIMING = 5  # wins behind a mean size or a mean cycle
 # same twenty as a conversion cohort) and some exposure to divide by: a positive count of ramped
 # AE-months (or days, where the capacity term is not adopted).
 MIN_CREATED_FOR_PRODUCTIVITY = 20
+
+# The places each driver's values are written to, and so the places a "needed alone" setting is
+# rounded to. A setting that closes the gap is rounded up (never down) to its places, so entering
+# the number the screen shows reaches the target.
+PRECISION = {WIN_RATE: 4, WON_ARR: 2, PRODUCTIVITY: 4, CYCLE_DAYS: 2}
 
 HISTORY_PROMISES_NOTHING = (
     "Historical settings describe what the company has done. They are not forecasts, they are "
@@ -99,6 +104,11 @@ def eligible(q: Quarter, driver: str) -> tuple[bool, str | None]:
     if q.wins < MIN_WINS_FOR_SIZE_OR_TIMING:
         return False, "too few wins for a stable mean"
     return True, None
+
+
+def round_up(value: Decimal, driver: str) -> Decimal:
+    """``value`` rounded up to the places its driver is written to."""
+    return value.quantize(Decimal(1).scaleb(-PRECISION[driver]), rounding=ROUND_CEILING)
 
 
 def halves(values: list[Decimal]) -> tuple[Decimal, Decimal]:

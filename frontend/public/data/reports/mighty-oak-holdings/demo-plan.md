@@ -900,7 +900,7 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 
 ## 7. Verdicts
 
-**The software is correct: yes.** 21 of 21 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
+**The software is correct: yes.** 28 of 28 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).
 
 | Check | Result | Detail |
 |---|---|---|
@@ -925,6 +925,13 @@ Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the 
 | plan contributions sum to the difference | pass | rest of fiscal year: 83295.40 = 33275197.21 - 33191901.81; next twelve months: 1600600.21 = 86603810.44 - 85003210.23 |
 | plan simulation centered on its expectation | pass | simulated mean 86,865,409.79 vs expected 86,603,810.44 (2000 draws) |
 | program solve agrees with the forward function | pass | unreachable within bounds: forward(3007281482.38) = 79207625.42 against 84000000 |
+| worksheet bridge steps sum to the working plan | pass | 60639660.81 plus the contributions is 60722956.21; the working plan is 60722956.21 |
+| worksheet working plan and remaining gap close on the target | pass | target 84000000 less 60722956.21 is 23277043.79 |
+| worksheet baseline is the report's own expected fiscal year | pass | the probe's baseline 60722956.21 against the report's 60722956.21 |
+| worksheet win_rate needed alone agrees with the target | pass | solves: 84004264.64 against 84000000.00 |
+| worksheet won_arr needed alone agrees with the target | pass | solves: 84000000.01 against 84000000.00 |
+| worksheet productivity needed alone agrees with the target | pass | solves: 84000154.61 against 84000000.00 |
+| worksheet cycle_days needed alone agrees with the target | pass | solves: 84003761.93 against 84000000.00 |
 
 **The forecast is better than the baselines: no.** the model's mean absolute error is not lower than every baseline: 3m: model 11,625,581 vs trailing run-rate 8,100,541.
 
