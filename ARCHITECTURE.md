@@ -31,7 +31,16 @@ each past date; compute the gap to the quarterly targets; read the roster for ca
 (ramp, attrition, created pipeline per ramped rep) and decide, by a rule declared
 before scoring, whether headcount explains pipeline; solve for the pipeline or hires
 that would close the gap; apply a plan if one is given. Ranges come from simulated draws
-of deal outcomes at a fixed seed.
+of deal outcomes at a fixed seed. The simulation cannot see a shift common to every stage,
+so a declared rule (`stretch_rules.py`, committed before it was scored) decides, per
+company, whether the ranges are stretched away from their median by factors learned from the
+model's own past misses at 1, 3 and 6 months, using only back-test forecasts whose whole
+horizon had ended by the date being forecast. When it is adopted, every range carries a
+label naming the horizon whose factors it uses and whether its shape was one that was
+tested; with-plan ranges are never stretched. The report states the decision, the evidence
+per horizon (scored dates with the factors used then), what the rule accepted and how the
+factors are chosen, and the validator recomputes the decision and checks the evidence
+against the back-test fold by fold.
 
 The report carries two verdicts. *Is the software correct* is a list of self-checks
 (rows partition, bookings tie to source, pipeline flow, the solved levers agree with
