@@ -67,7 +67,7 @@ the address.
 
 ## Your own plan (desktop only)
 
-At desktop widths, the Plan screen has a fifth choice, "Your plan": a form of hires and
+At desktop widths, the Plan screen has a "Build your own plan" button, set apart from the named scenarios: a form of hires and
 programs that starts from the company's demo plan. Apply computes a complete report for
 it in your browser, with the same Python core that wrote the committed reports (Pyodide in
 a web worker), and every screen then shows it, marked as your plan. The first time costs
