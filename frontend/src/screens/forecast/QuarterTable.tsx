@@ -65,7 +65,7 @@ export function QuarterTable({ planned }: { planned: boolean }) {
                     )}
                     <Bound binding={B.qName} row={row} />
                   </TableCell>
-                  <TableCell className={`${STACK.cell} whitespace-nowrap`} data-label="Status"><Bound binding={B.qStatus} row={row} /></TableCell>
+                  <TableCell className={`${STACK.cell} whitespace-nowrap sm:text-left`} data-label="Status"><Bound binding={B.qStatus} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Target"><Bound binding={B.qTarget} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Booked"><Bound binding={B.qActual} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Forecast">

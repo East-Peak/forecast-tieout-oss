@@ -64,7 +64,7 @@ export function WindowTable({ planned, fittedAvailable }: { planned: boolean; fi
         </TableBody>
       </Table>
       <p className="mt-3 text-xs text-slate-500">
-        <Bound binding={B.nextNote} />.
+        Note: <Bound binding={B.nextNote} />.
       </p>
     </Card>
   );
