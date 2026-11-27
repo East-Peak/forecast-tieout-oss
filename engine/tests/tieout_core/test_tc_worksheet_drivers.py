@@ -342,19 +342,29 @@ def test_a_probe_gives_what_the_whole_forward_function_gives_for_every_driver():
 
 
 def test_the_cycle_solve_agrees_with_a_search_of_every_step_for_many_targets():
-    g = ground(timing=(30, 45, 60, 90))
+    """The expected values come from first principles (``by_hand`` in the first-principles
+    tests), never through ``Probe`` or ``Scenario``; only the solve itself runs the model."""
+    from engine.tests.tieout_core import test_tc_worksheet_first_principles as fp
+
     samples = (30, 45, 60, 90)
-    p = wd.Probe(g)
-    steps = steps_for(samples)
-    values = {s: fy_by_scale(g, s) for s in steps}
+    g = fp.build(samples)
+    rest = {w.label for w in WINDOWS if w.end <= FY_END}
+
+    def hand(s):
+        days = rules.scaled_days(samples, s)
+        out = fp.by_hand(days, None, lambda t: Fraction(1, 5), 1000, Fraction(1, 2))
+        return sum((v for k, v in out.items() if k in rest), Fraction(0))
+
+    values = {s: hand(s) for s in steps_for(samples)}
     low, high = min(values.values()), max(values.values())
+    p = wd.Probe(g)
     for k in range(1, 12):
         target = low + (high - low) * k / 12
         best = max(s for s, v in values.items() if v >= target)
         r = wd.solve_cycle(
             lambda s: p.fiscal_year(p.forecast(wd.with_cycle_scale(g, s))),
             samples,
-            target,
+            D(target.numerator) / D(target.denominator),
         )
         assert r.outcome in (wd.SOLVES, wd.COVERED)
         assert r.scale == best

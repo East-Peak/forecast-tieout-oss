@@ -15,6 +15,7 @@ from decimal import Decimal
 from fractions import Fraction
 
 from .actions import Ground, Scenario
+from .capacity import creation_text
 from .fit import Timing
 from .forecast import EXISTING, Forecast, Inflow, model_forecast
 from .plan import NEXT_12, REST_OF_FY
@@ -145,7 +146,9 @@ class Probe:
         if creation is not None and adjusted.cap.fit.rate != self.g.cap.fit.rate:
             rate = adjusted.cap.fit.rate
             creation = replace(
-                creation, per_day=tuple(rate * x for x in creation.ramped_ae_months)
+                creation,
+                per_day=tuple(rate * x for x in creation.ramped_ae_months),
+                text=creation_text(rate),
             )
         return self._run(adjusted.model, creation, self.base.components[EXISTING])
 
