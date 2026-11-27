@@ -25,32 +25,21 @@ frontend/test-results/
 .DS_Store
 Thumbs.db
 
-# Real org data (keep demo/fixture profiles only)
-# The three public personas and Acme engine fixture are allowlisted below; everything else is
-# ignored so users following the README ("drop real CSVs in
-# engine/data/<profile>/", "copy a demo profile under
-# engine/config/profiles/") don't accidentally commit real data.
-frontend/public/data/profiles/*/
-!frontend/public/data/profiles/sprout-labs/
-!frontend/public/data/profiles/sapling-industries/
-!frontend/public/data/profiles/mighty-oak-holdings/
-
-frontend/public/data/profiles/*.json
-!frontend/public/data/profiles/index.json
-!frontend/public/data/profiles/sprout-labs.json
-!frontend/public/data/profiles/sapling-industries.json
-!frontend/public/data/profiles/mighty-oak-holdings.json
-
-engine/data/*/
-!engine/data/acme-saas/
-!engine/data/sprout-labs/
-!engine/data/sapling-industries/
-!engine/data/mighty-oak-holdings/
-!engine/data/templates/
+# Real org data: only the three synthetic demo companies are tracked. Anything else
+# under engine/data-v2/, engine/config/profiles/ or the reports directory stays out of
+# git unless you deliberately commit it.
+engine/data-v2/*/
+!engine/data-v2/sprout-labs/
+!engine/data-v2/sapling-industries/
+!engine/data-v2/mighty-oak-holdings/
 
 engine/config/profiles/*/
-!engine/config/profiles/acme-saas/
 !engine/config/profiles/sprout-labs/
 !engine/config/profiles/sapling-industries/
 !engine/config/profiles/mighty-oak-holdings/
+
+frontend/public/data/reports/*/
+!frontend/public/data/reports/sprout-labs/
+!frontend/public/data/reports/sapling-industries/
+!frontend/public/data/reports/mighty-oak-holdings/
 .vercel

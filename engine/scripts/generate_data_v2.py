@@ -1,10 +1,7 @@
 """Write the demo companies' rebuilt data to ``engine/data-v2/<company>/``.
 
-Goal 1 of the rebuild needs history the old demo data cannot support (close
-dates that disagree with stage history, three or four months of outcomes,
-deals created after the as-of date). This rebuilds the same three companies
-with 31 months of history ending at the as-of date, close dates equal to the
-final stage transition, nothing dated after the as-of date, and a
+Each demo company gets 31 months of history ending at the as-of date, close dates
+equal to the final stage transition, nothing dated after the as-of date, and a
 ``deal_observations.csv`` that records past amounts and expected close dates.
 
 Goal 2A makes pipeline creation depend on people. Each company is staffed
@@ -15,8 +12,7 @@ while demand that ignores headcount creates the rest, in the mix stated in
 start and end dates and full-ramp ``annual_quota``; every deal's owner was
 employed on its creation date. The stories stay: Sprout has few reps and lumpy
 deals; Sapling's heads are on plan but many are still ramping; Mighty Oak is
-staffed and its conversion is the problem. The old ``engine/data`` stays
-untouched.
+staffed and its conversion is the problem.
 
     python -m engine.scripts.generate_data_v2            # write all three
     python -m engine.scripts.generate_data_v2 --verify   # fail if a file is stale or breaks an invariant

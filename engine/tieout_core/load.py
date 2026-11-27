@@ -1,8 +1,7 @@
 """Read a profile directory and a company's CSV files.
 
-This package keeps its own small reader (rather than reusing the old engine's
-connector) so that it has no path into ``engine.gtm_model`` and so that money is
-parsed straight into exact decimals.
+This package keeps its own small reader so that money is parsed straight into
+exact decimals.
 """
 
 from __future__ import annotations

@@ -8,12 +8,6 @@ fiscal_year_start_month: 2
 
 revenue_metric: "bookings"
 
-# Declarative backend selection.
-data_access:
-  type: csv
-  params:
-    path: engine/data/mighty-oak-holdings
-
 # Shown under the company's name in the app (index.json). Every figure in it must be in the
 # as-signed report: engine/tests/tieout_core/test_tc_descriptions.py.
 description: "FY26 target $84,000,000; the fitted forecast expects $60,639,661, a gap of $23,360,339. Staffing varied only 14%, so the history cannot say whether headcount explains pipeline; 99 heads against a target of 100."

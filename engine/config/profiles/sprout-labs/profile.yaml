@@ -7,12 +7,6 @@ fiscal_year_start_month: 2
 
 revenue_metric: "bookings"
 
-# Declarative backend selection.
-data_access:
-  type: csv
-  params:
-    path: engine/data/sprout-labs
-
 # Shown under the company's name in the app (index.json). Every figure in it must be in the
 # as-signed report: engine/tests/tieout_core/test_tc_descriptions.py.
 description: "FY26 target $8,000,000; the fitted forecast expects $6,119,925, a gap of $1,880,075. Headcount explains pipeline in the back-test; 6 heads against a target of 6."
