@@ -2,14 +2,12 @@ import { expect, test, type Page } from "@playwright/test";
 import { month, usdShort } from "../src/screens/__tests__/independent";
 
 /**
- * Browser smoke for the report-backed app: every company and scenario on Forecast, the four
- * screens not built yet, and a phone-sized window. The checks are the ones a unit test cannot make:
+ * Browser smoke for the report-backed app: every company and scenario on Forecast, and a phone-sized window. The checks are the ones a unit test cannot make:
  * a real page with a real console, charts that have drawn geometry, tooltips opened by hovering,
  * and no NaN, blank or unbound output. A report-backed zero ($0) is fine; "unavailable" is words.
  */
 const COMPANIES = ["sprout-labs", "sapling-industries", "mighty-oak-holdings"] as const;
 const SCENARIOS = ["as-signed", "demo-plan", "hires-only", "programme-only"] as const;
-const PLACEHOLDERS = ["trust"] as const;
 const BAD_TEXT = /\bNaN\b|\bundefined\b|\[object|\bInfinity\b|\bnull\b/;
 
 function collectBrowserIssues(page: Page): string[] {
@@ -261,18 +259,6 @@ test.describe("Forecast, every company and scenario @smoke", () => {
         expect(issues, `${company}/${scenario} console hygiene`).toEqual([]);
       });
     }
-  }
-});
-
-test.describe("the screens not built yet @smoke", () => {
-  for (const screen of PLACEHOLDERS) {
-    test(`${screen} says so and shows no numbers @smoke`, async ({ page }) => {
-      const issues = collectBrowserIssues(page);
-      await page.goto(`/${screen}?company=sapling-industries&scenario=as-signed`, { waitUntil: "networkidle" });
-      await expect(page.getByTestId("not-built")).toContainText("Not built yet");
-      expect(await page.locator("main").innerText()).not.toMatch(/\d/);
-      expect(issues).toEqual([]);
-    });
   }
 });
 

@@ -5,15 +5,15 @@ import Layout from "./components/Layout";
 import { fileLoaders } from "./data/reportFiles";
 import { ReportSessionProvider } from "./session/ReportSession";
 import type { Loaders } from "./session/ReportSession";
-import { NotBuilt } from "./shell/NotBuilt";
 import { SCREENS } from "./shell/screens";
 
-/** The screens that are built; the rest of the five are placeholders until they are. */
-const BUILT: Record<string, LazyExoticComponent<ComponentType>> = {
+/** The five screens, each loaded when first opened. */
+const SCREEN_COMPONENTS: Record<string, LazyExoticComponent<ComponentType>> = {
   "/forecast": lazy(() => import("./screens/forecast/ForecastScreen")),
   "/capacity": lazy(() => import("./screens/capacity/CapacityScreen")),
   "/pipeline": lazy(() => import("./screens/pipeline/PipelineScreen")),
   "/plan": lazy(() => import("./screens/plan/PlanScreen")),
+  "/trust": lazy(() => import("./screens/trust/TrustScreen")),
 };
 
 function RouteLoading() {
@@ -36,19 +36,15 @@ export default function App({ loaders = fileLoaders }: { loaders?: Loaders }) {
       <Routes>
         <Route element={<Layout />}>
           {SCREENS.map((screen) => {
-            const Built = BUILT[screen.path];
+            const Screen = SCREEN_COMPONENTS[screen.path];
             return (
               <Route
                 key={screen.path}
                 path={screen.path}
                 element={
-                  Built ? (
-                    <Suspense fallback={<RouteLoading />}>
-                      <Built />
-                    </Suspense>
-                  ) : (
-                    <NotBuilt screen={screen} />
-                  )
+                  <Suspense fallback={<RouteLoading />}>
+                    <Screen />
+                  </Suspense>
                 }
               />
             );

@@ -62,14 +62,14 @@ describe("the shell", () => {
     expect(target).toBeTruthy();
   });
 
-  it("the four screens not built yet say so, with no numbers", async () => {
-    for (const path of ["trust"]) {
+  it("every one of the five screens opens on its own address with its own heading, and none is a placeholder", async () => {
+    const headings: Record<string, string> = { forecast: "Forecast", capacity: "Capacity", pipeline: "Pipeline", plan: "Plan", trust: "Trust" };
+    for (const [path, heading] of Object.entries(headings)) {
       const { unmount } = open(`/${path}?company=sprout-labs&scenario=as-signed`);
-      await waitFor(() => expect(screen.getByTestId("not-built")).toBeInTheDocument());
-      expect(screen.getByTestId("not-built").textContent).toMatch(/Not built yet/);
-      const main = document.querySelector("main")!;
-      expect(main.textContent).not.toMatch(/\d/);
-      expect(main.querySelectorAll("[data-binding]").length).toBe(0);
+      await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(heading));
+      expect(screen.queryByTestId("not-built")).toBeNull();
+      expect(document.querySelectorAll("main [data-binding]").length).toBeGreaterThan(10);
+      expect(unboundDigits(document.body)).toEqual([]);
       unmount();
     }
   });

@@ -78,6 +78,13 @@ def test_every_rate_in_every_report_has_a_declared_unit(reports):
             assert rate["unit"] == rate_unit(rate["name"])
 
 
+def test_only_a_share_carries_a_range(reports):
+    for report in reports.values():
+        for rate in report["rates"]:
+            if rate["range95"] is not None:
+                assert rate["unit"] == "share", rate["name"]
+
+
 def test_a_share_is_between_zero_and_one_and_a_name_without_a_unit_is_refused(reports):
     for report in reports.values():
         for rate in report["rates"]:

@@ -132,3 +132,18 @@ describe("multiple and cents: a quantity with its unit", () => {
     expect(formatValue("cents", "13.98")).toBe("13.98\u00a2");
   });
 });
+
+describe("passed and yesno: a true or false in words", () => {
+  it("passed", () => {
+    expect(formatValue("passed", true)).toBe("passed");
+    expect(formatValue("passed", false)).toBe("failed");
+  });
+  it("yesno", () => {
+    expect(formatValue("yesno", true)).toBe("yes");
+    expect(formatValue("yesno", false)).toBe("no");
+  });
+  it("refuse what is not true or false", () => {
+    expect(() => formatValue("passed", "yes")).toThrow();
+    expect(() => formatValue("yesno", null)).toThrow();
+  });
+});

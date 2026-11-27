@@ -15,11 +15,12 @@
  *   multiple   a quantity and "x":  1.31x
  *   cents      a quantity and the cent sign:  13.98¢
  *   passed     a true or false check result:  passed  failed
+ *   yesno      a true or false fact:  yes  no
  *   date       ISO date as  Aug 31, 2026
  *   month      ISO month as  Sep 2026
  *   text       verbatim
  */
-export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "quantity" | "multiple" | "cents" | "passed" | "date" | "month" | "text";
+export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "quantity" | "multiple" | "cents" | "passed" | "yesno" | "date" | "month" | "text";
 
 const DECIMAL = /^(-?)(\d+)(?:\.(\d+))?$/;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -157,8 +158,9 @@ export function formatValue(format: FormatName, raw: unknown): string {
     case "cents":
       return `${quantity(raw)}¢`;
     case "passed":
+    case "yesno":
       if (typeof raw !== "boolean") throw new Error(`not true or false: ${JSON.stringify(raw)}`);
-      return raw ? "passed" : "failed";
+      return format === "passed" ? (raw ? "passed" : "failed") : raw ? "yes" : "no";
     case "date": {
       const [year, m, day] = parseDate(raw);
       return `${MONTHS[Number(m) - 1]} ${Number(day)}, ${year}`;

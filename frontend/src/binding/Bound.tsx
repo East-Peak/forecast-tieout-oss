@@ -19,7 +19,7 @@ const FORMATS: Record<Unit, FormatName[]> = {
   fraction: ["percent1"],
   count: ["count"],
   quantity: ["quantity", "multiple", "cents"],
-  flag: ["passed"],
+  flag: ["passed", "yesno"],
   date: ["date"],
   month: ["month"],
   text: ["text"],
