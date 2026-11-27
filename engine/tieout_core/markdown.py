@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from decimal import Decimal
 
+from .plan import NEXT_12 as NEXT
+from .plan import REST_OF_FY as REST
+
 
 def render(r: dict) -> str:
     i = r["inputs"]
@@ -31,6 +34,9 @@ def render(r: dict) -> str:
         out += _roster_capacity(r["roster_capacity"])
         out += _productivity(r["quota_productivity"])
         out += _required(r["required_pipeline"])
+        if "plan" in r:
+            out += _plan(r["plan"])
+        out += _actions(r["actions"])
     return "\n".join(out).rstrip() + "\n"
 
 
@@ -625,4 +631,157 @@ def _required(s: dict) -> list[str]:
         f"_{_up(s['meaning'])}. {_up(s['expected_basis'])}._",
         "",
     ]
+    return out
+
+
+def _plan(s: dict) -> list[str]:
+    out = ["## 11. The plan", ""]
+    if "unavailable" in s:
+        return out + [
+            f"Unavailable: the fitted forecast is unavailable ({s['unavailable']}).",
+            "",
+        ]
+    out += [
+        f"Plan file `{s['file']}`. {_up(s['order'])}. Baseline: {s['baseline_definition']}.",
+        "",
+    ]
+    rows = []
+    for i in s["items"]:
+        c = i["contribution"]
+        rows.append(
+            [i["label"], i["detail"], i.get("note", "valued"),
+             _usd(c[REST]) if c else "not valued", _usd(c[NEXT]) if c else "not valued",
+             _cost(i["cash_cost_in_twelve_months"])]
+        )  # fmt: skip
+    out += _table(
+        [
+            "Item",
+            "What",
+            "",
+            f"Adds, {REST}",
+            f"Adds, {NEXT}",
+            "Cash cost in twelve months",
+        ],
+        rows,
+    )
+    out += _table(
+        ["Bookings", REST, NEXT],
+        [
+            ("Baseline", _usd(s["baseline"][REST], True), _usd(s["baseline"][NEXT], True)),
+            ("With the plan", _usd(s["with_plan"][REST], True), _usd(s["with_plan"][NEXT], True)),
+            ("Difference", _usd(s["difference"][REST], True), _usd(s["difference"][NEXT], True)),
+            ("Sum of the contributions", _usd(s["contributions_total"][REST], True),
+             _usd(s["contributions_total"][NEXT], True)),
+        ],
+    )  # fmt: skip
+    fy, t = s["gap"]["fiscal_year"], s["gap"]["next_twelve_months"]
+    out += [
+        (
+            f"Fiscal-year gap: {_usd(fy['baseline_gap'])} before the plan, **{_usd(fy['gap_with_plan'])}** "
+            f"with it (target {_usd(fy['target'])}, actual to date {_usd(fy['actual_to_date'])})."
+        ),
+        "",
+    ]
+    if t is not None:
+        out += [
+            f"Twelve-month gap ({t['note']}): {_usd(t['baseline_gap'])} before, **{_usd(t['gap_with_plan'])}** with the plan.",
+            "",
+        ]
+    out += [
+        f"Cash cost of the plan in the twelve months: {_cost(s['cash_cost_in_twelve_months'])} ({s['cost_note']}). {_up(s['unvalidated'])}.",
+        "",
+    ]
+    return out
+
+
+def _cost(x) -> str:
+    return "cost not entered" if x is None else _usd(x)
+
+
+def _actions(s: dict) -> list[str]:
+    if "unavailable" in s:
+        return [
+            "## 12. Two actions, compared",
+            "",
+            f"Unavailable: the fitted forecast is unavailable ({s['unavailable']}).",
+            "",
+        ]
+    out = [
+        "## 12. Two actions, compared",
+        "",
+        f"{s['definition']} Programme shape: {s['programme_shape']}.",
+        "",
+    ]
+    rows = []
+    for a in s["comparison"]:
+        if a["status"] != "valued":
+            rows.append([a["action"], a["status"], "", "", "", "", ""])
+            continue
+        g = a["bookings_gained"]
+        rows.append(
+            [a["action"], a.get("rank") or ("not ranked: " + a["not_ranked_because"] if a["not_ranked_because"] else ""),
+             _usd(g[REST]), _usd(g[NEXT]), a["starts_paying"] or "never inside the window",
+             _cost(a["cash_cost_in_twelve_months"]),
+             "n/a" if a["gain_per_dollar"] is None else a["gain_per_dollar"]]
+        )  # fmt: skip
+    out += _table(
+        [
+            "Action",
+            "Rank",
+            f"Gains, {REST}",
+            f"Gains, {NEXT}",
+            "Starts paying",
+            "Cash cost inside the twelve months",
+            "Gain per dollar",
+        ],
+        rows,
+    )
+    c = s["close_the_fiscal_year_gap"]
+    out += [
+        f"Closing the fiscal-year gap of {_usd(c['fiscal_year_gap'])}: {c['basis']}.",
+        "",
+    ]
+    h, p = c["hires"], c["programme"]
+    if h["count"] is None and "bound" not in h:
+        out += [f"- **Hires:** {h['outcome']}: {h['note']}."]
+    elif h["outcome"] == "feasible":
+        out += [
+            (
+                f"- **Hires:** {h['count']} whole hires starting together close it, overshooting by "
+                f"{_usd(h['overshoot'])} (fiscal-year bookings {_usd(h['fiscal_year_bookings_with'])}; one "
+                f"fewer gives {_usd(h['fiscal_year_bookings_one_fewer'])}); cash cost "
+                f"{_cost(h['cash_cost_in_twelve_months'])} in twelve months. Bound {h['bound']}: "
+                f"{h['bound_basis']}."
+            )
+        ]
+    elif h["outcome"] == "already covered":
+        out += ["- **Hires:** already covered: no hires needed."]
+    else:
+        out += [
+            (
+                f"- **Hires:** unreachable within the bound of {h['bound']} ({h['bound_basis']}); "
+                f"the best case gives {_usd(h['fiscal_year_bookings_with'])}."
+            )
+        ]
+    if p["outcome"] == "feasible":
+        out += [
+            (
+                f"- **Programme pipeline:** feasible: {_usd(p['dollars'], True)} of created pipeline closes "
+                f"it (overshoot {_usd(p['overshoot'], True)}); cash cost "
+                f"{_cost(p['cash_cost_in_twelve_months'])}; {_pct_str(p['share_booking_in_fiscal_year'])} "
+                "of those dollars book by the fiscal-year end."
+            )
+        ]
+    elif p["outcome"] == "already covered":
+        out += ["- **Programme pipeline:** already covered: nothing needed."]
+    else:
+        over = (
+            f"; it would take {_usd(p['needed_but_over_the_cap'], True)}"
+            if p["needed_but_over_the_cap"]
+            else ""
+        )
+        out += [
+            f"- **Programme pipeline:** unreachable within the cap of {_usd(p['cap'])} ({p['cap_rule']}){over}."
+        ]
+    out += ["", f"_{_up(s['meaning'])}._", ""]
     return out

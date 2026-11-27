@@ -1,4 +1,4 @@
-"""python -m engine.tieout_core report --profile P --data D --as-of YYYY-MM-DD --out DIR
+"""python -m engine.tieout_core report --profile P --data D --as-of YYYY-MM-DD --out DIR [--plan plan.yaml]
 python -m engine.tieout_core candidates   (Goal 2A before-and-after tables on the demo data)"""
 
 from __future__ import annotations
@@ -26,6 +26,10 @@ def main(argv=None) -> int:
         "--draws", type=int, default=2000, help="simulation draws (default 2000)"
     )
     rep.add_argument("--seed", type=int, default=0, help="simulation seed (default 0)")
+    rep.add_argument(
+        "--plan",
+        help="plan.yaml: further hires and programme pipeline (adds section 11)",
+    )
     sub.add_parser("candidates", help="score the Goal 2A candidates on the demo data")
     args = parser.parse_args(argv)
     if args.command == "candidates":
@@ -35,8 +39,9 @@ def main(argv=None) -> int:
         return 0
     try:
         report = build_report(
-            args.profile, args.data, args.as_of, draws=args.draws, seed=args.seed
-        )
+            args.profile, args.data, args.as_of, draws=args.draws, seed=args.seed,
+            plan_path=args.plan,
+        )  # fmt: skip
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

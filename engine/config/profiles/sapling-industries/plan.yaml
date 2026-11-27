@@ -1,0 +1,16 @@
+# Demo plan for Sapling Industries (synthetic): further hires and programme pipeline.
+# Hires are further to any signed hire on team_members.csv; a hire starts on the
+# first day of its month. A programme is dollars of created pipeline; it runs from
+# its start month to the fiscal-year end unless `months` says otherwise.
+hires:
+  - segment: mid_market
+    start: 2026-10
+    count: 2
+  - segment: enterprise
+    start: 2026-11
+    count: 1
+programmes:
+  - name: Partner referrals
+    pipeline: 6000000
+    start: 2026-10
+    ramp_months: 3

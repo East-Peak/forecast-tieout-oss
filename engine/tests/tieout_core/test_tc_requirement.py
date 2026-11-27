@@ -74,7 +74,6 @@ def test_the_inverse_by_hand_the_share_of_the_pipeline_that_lands_in_the_quarter
     # 2026-10-16 to 2026-11-14, inside up to 2026-10-31: the first 16 of 30 days.
     # October's pipeline books after the quarter. So the share landing in Q3 is
     # 1/3 + (1/3)(16/30) = 46/90 of the dollars added.
-    data, model, windows = world
     target = Decimal(10**6)
     q2, q3 = solve(
         world, {"Q2FY26": 1, "Q3FY26": target}

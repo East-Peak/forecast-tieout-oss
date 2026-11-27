@@ -27,6 +27,7 @@ from .figures import exact, money, number
 from .fiscal import Window, add_months, month_windows
 from .fit import FitParams
 from .forecast import Creation
+from .plan import DEFAULT_PROGRAMME_RAMP_MONTHS
 from .rates import DEFAULT, ENTERED, FITTED, Rate
 from .records import Check, Dataset
 from .roster import (
@@ -38,7 +39,6 @@ from .roster import (
     roster_at,
 )
 
-DEFAULT_PROGRAMME_RAMP_MONTHS = 3
 SPREAD_MIN_DAYS = (
     180  # reps employed fewer days than this are in totals, not in the spread
 )

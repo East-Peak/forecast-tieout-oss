@@ -1,0 +1,16 @@
+# Demo plan for Mighty Oak Holdings (synthetic): further hires and programme pipeline.
+# Hires are further to any signed hire on team_members.csv; a hire starts on the
+# first day of its month. A programme is dollars of created pipeline; it runs from
+# its start month to the fiscal-year end unless `months` says otherwise.
+hires:
+  - segment: Mid-Market
+    start: 2026-10
+    count: 4
+  - segment: Enterprise
+    start: 2026-11
+    count: 2
+programmes:
+  - name: Channel partner programme
+    pipeline: 20000000
+    start: 2026-10
+    ramp_months: 3

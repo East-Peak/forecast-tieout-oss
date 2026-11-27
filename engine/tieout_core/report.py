@@ -12,7 +12,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 
-from . import capacity_report, pipeline_report
+from . import actions, capacity_report, pipeline_report
 from .backtest import (
     HORIZONS,
     MIN_FOLDS,
@@ -39,6 +39,7 @@ from .history import creation_amounts, latest_known_date
 from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .load import load_company, load_profile
 from .markdown import render as render_markdown
+from .plan import NEXT_12, REST_OF_FY, load_plan
 from .rates import DEFAULT, Rate, RateBook
 from .reconcile import reconcile
 from .records import Check
@@ -53,8 +54,6 @@ SECTIONS = (
     "verdicts",
 )
 MEASURE = "new-business ARR bookings (type = new_business, the arr column)"
-REST_OF_FY = "rest of fiscal year"
-NEXT_12 = "next twelve months"
 NO_TARGET = "no target in this window"
 LEVER_CAP_MULTIPLE = 3
 
@@ -68,6 +67,7 @@ def build_report(
     params: FitParams = DEFAULT_PARAMS,
     plan_path: Path | None = None,
 ) -> dict:
+    """``plan_path`` (plan.yaml) adds section 11; without it sections 8 to 10 and 12 stand."""
     profile = load_profile(Path(profile_dir))
     loaded = load_company(Path(data_dir), profile)
     rec = reconcile(Path(data_dir), loaded, profile, as_of)
@@ -147,6 +147,31 @@ def build_report(
         cap, as_of, windows, Path(profile_dir), diagnostic
     )
     productivity = capacity_report.quota_productivity(cap, pop, as_of, fy_target)
+    plan = None if plan_path is None else load_plan(Path(plan_path), as_of, cap.members)
+    plan_section = actions_section = None
+    plan_checks: list[Check] = []
+    if fitted.available:
+        _, through, targeted, _, goal12, actual12 = twelve_month_scope(
+            rec, as_of, windows, targets
+        )
+        ground = actions.Ground(
+            cap, model, pop, as_of, windows, horizons[REST_OF_FY], horizons[NEXT_12], targeted,
+            rec.bookings_fytd, fy_target, fy.start, fy.end, goal12 if through else None, actual12,
+            LEVER_CAP_MULTIPLE * _trailing_created_arr(pop, as_of, model.params.trailing_days),
+            (horizon_end - as_of).days,
+        )  # fmt: skip
+        scenario = actions.Scenario(ground)
+        if plan is not None:
+            plan_section, c = actions.plan_section(
+                ground, scenario, plan, Path(plan_path)
+            )
+            plan_checks += c
+        actions_section, c = actions.actions_section(ground, scenario)
+        plan_checks += c
+    else:
+        unavailable = {"unavailable": fitted.unavailable_reason}
+        plan_section = unavailable if plan is not None else None
+        actions_section = unavailable
     if fitted.available:
         required, required_checks, _ = pipeline_report.required_pipeline(
             cap, model, pop, as_of, windows, targets,
@@ -175,6 +200,7 @@ def build_report(
         ),
         *capacity_report.checks(cap, productivity, fitted),
         *required_checks,
+        *plan_checks,
     ]
     failed = [c for c in checks if not c.passed]
 
@@ -232,6 +258,9 @@ def build_report(
         "quota_productivity": productivity,
         "required_pipeline": required,
     }
+    if plan_section is not None:
+        report["plan"] = plan_section
+    report["actions"] = actions_section
     return report
 
 
@@ -597,10 +626,10 @@ def _gap(rec, profile, model, pop, as_of, windows, fitted, sim, targets, quarter
     return gap, [fy_check, check12]
 
 
-def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
-    """The twelve months after the as-of: a gap against the quarters with a
-    target that end inside it, and bookings alone after the last of them."""
-    check_name = "twelve-month lever agrees with forward function"
+def twelve_month_scope(rec, as_of, windows, targets):
+    """The quarters with a target that end inside the twelve months, the months
+    that meet one, and the others (bookings alone): (open quarters, last target
+    end, targeted months, untargeted months, their goal, their actual to date)."""
     open_q = [q for q, (qw, _) in targets.items() if qw.end > as_of]
     through = max((targets[q][0].end for q in open_q), default=None)
     # Only months inside a quarter that has a target meet one; a quarter without
@@ -609,6 +638,18 @@ def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
         w.label for w in windows if any(targets[q][0].contains(w.end) for q in open_q)
     ]
     untargeted = [w.label for w in windows if w.label not in targeted]
+    goal = sum((targets[q][1] for q in open_q), Decimal(0))
+    actual = sum((_quarter_actual(rec, targets[q][0]) for q in open_q), Decimal(0))
+    return open_q, through, targeted, untargeted, goal, actual
+
+
+def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
+    """The twelve months after the as-of: a gap against the quarters with a
+    target that end inside it, and bookings alone after the last of them."""
+    check_name = "twelve-month lever agrees with forward function"
+    open_q, through, targeted, untargeted, goal, actual = twelve_month_scope(
+        rec, as_of, windows, targets
+    )
     note = (
         f"months outside a targeted quarter (targets end {through}): bookings alone"
         if through is not None
@@ -634,8 +675,6 @@ def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
             _no_target_lever(),
             Check(check_name, True, f"not applicable: {note}"),
         )
-    goal = sum((targets[q][1] for q in open_q), Decimal(0))
-    actual = sum((_quarter_actual(rec, targets[q][0]) for q in open_q), Decimal(0))
     block["target"], block["actual"] = _exact(goal), _exact(actual)
     if fitted is None:
         return block, None, None
