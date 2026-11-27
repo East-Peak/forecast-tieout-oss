@@ -1,0 +1,52 @@
+{
+  "as_of": "2026-08-31",
+  "baseline": "as-signed",
+  "company": "mighty-oak-holdings",
+  "rows": [
+    {
+      "bookings_change": null,
+      "cash_cost_in_twelve_months": null,
+      "expected_fiscal_year": "60639660.81",
+      "fiscal_year_gap": "23360339.19",
+      "fiscal_year_gap_change": null,
+      "label": "As signed",
+      "scenario": "as-signed"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "1600600.21",
+        "rest of fiscal year": "83295.40"
+      },
+      "cash_cost_in_twelve_months": "1966208.69",
+      "expected_fiscal_year": "60722956.21",
+      "fiscal_year_gap": "23277043.79",
+      "fiscal_year_gap_change": "-83295.40",
+      "label": "Demo plan",
+      "scenario": "demo-plan"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "0.00",
+        "rest of fiscal year": "0.00"
+      },
+      "cash_cost_in_twelve_months": "966208.69",
+      "expected_fiscal_year": "60639660.81",
+      "fiscal_year_gap": "23360339.19",
+      "fiscal_year_gap_change": "0.00",
+      "label": "Hires only",
+      "scenario": "hires-only"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "1600600.21",
+        "rest of fiscal year": "83295.40"
+      },
+      "cash_cost_in_twelve_months": "1000000.00",
+      "expected_fiscal_year": "60722956.21",
+      "fiscal_year_gap": "23277043.79",
+      "fiscal_year_gap_change": "-83295.40",
+      "label": "Programme only",
+      "scenario": "programme-only"
+    }
+  ]
+}

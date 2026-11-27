@@ -1,0 +1,3324 @@
+{
+  "actions": {
+    "close_the_fiscal_year_gap": {
+      "basis": "the baseline forecast (the roster as signed, nothing planned), each action alone",
+      "fiscal_year_gap": "1910275.71",
+      "hires": {
+        "bound": 10,
+        "bound_basis": "the most the company has started in one fiscal quarter",
+        "cash_cost_in_twelve_months": null,
+        "cost_status": "entered",
+        "count": null,
+        "fiscal_year_bookings_one_fewer": null,
+        "fiscal_year_bookings_with": "58872158.49",
+        "outcome": "unreachable",
+        "overshoot": null
+      },
+      "programme": {
+        "cap": "729997731.00",
+        "cap_rule": "the Goal 1 cap: three times the new-business pipeline created in the trailing 365 days",
+        "cash_cost_in_twelve_months": "2724284.50",
+        "cost_status": "entered",
+        "dollars": "45404741.70",
+        "fiscal_year_bookings_with": "60000000.00",
+        "needed_but_over_the_cap": null,
+        "outcome": "feasible",
+        "overshoot": "0.00",
+        "share_booking_in_fiscal_year": "0.042"
+      }
+    },
+    "comparison": [
+      {
+        "action": "Hire one AE starting 2026-09-01",
+        "bookings_gained": {
+          "next twelve months": "717970.86",
+          "rest of fiscal year": "78243.41"
+        },
+        "cash_cost_in_twelve_months": "160898.30",
+        "cost_status": "entered",
+        "gain_per_dollar": "4.46",
+        "kind": "hire",
+        "not_ranked_because": null,
+        "rank": 1,
+        "starts_paying": "2026-11",
+        "status": "valued"
+      },
+      {
+        "action": "Add $1,000,000 of programme pipeline starting 2026-09-01",
+        "bookings_gained": {
+          "next twelve months": "220271.27",
+          "rest of fiscal year": "42072.16"
+        },
+        "cash_cost_in_twelve_months": "60000.00",
+        "cost_status": "entered",
+        "gain_per_dollar": "3.67",
+        "kind": "programme",
+        "not_ranked_because": null,
+        "rank": 2,
+        "starts_paying": "2026-11",
+        "status": "valued"
+      }
+    ],
+    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of programme pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
+    "meaning": "'feasible' means achievable inside the model's bounds, not operationally achievable; that a new hire adds pipeline at the fitted rate is an assumption",
+    "programme_shape": "created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise)"
+  },
+  "backtest": {
+    "candidates": {
+      "recency": {
+        "adopted": true,
+        "candidate": "cumulative incidence",
+        "fit_in_use": "cumulative incidence",
+        "folds": {
+          "1m": 16,
+          "3m": 14
+        },
+        "incumbent": "matured snapshots",
+        "mean_absolute_error": {
+          "1m": {
+            "cumulative incidence": "998998.50",
+            "matured snapshots": "1384619.16"
+          },
+          "3m": {
+            "cumulative incidence": "1944675.87",
+            "matured snapshots": "2261995.29"
+          }
+        },
+        "reason": "lower mean absolute error at 1 and 3 months (1m: 998,999 vs 1,384,619; 3m: 1,944,676 vs 2,261,995)",
+        "rule": "adopted only if the fitted model's mean absolute error is lower than the Goal 1 fit's at both 1 and 3 months, on the same folds (at least 6 at each)"
+      }
+    },
+    "folds": [
+      {
+        "actual": "7528814",
+        "cutoff": "2026-07-31",
+        "forecasts": {
+          "fitted model": "7338117.16",
+          "stage-weighted pipeline": "12927654.84",
+          "trailing run-rate": "3577203.55"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "4337298",
+        "cutoff": "2026-06-30",
+        "forecasts": {
+          "fitted model": "6418697.47",
+          "stage-weighted pipeline": "11340105.58",
+          "trailing run-rate": "3528869.18"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "3743138",
+        "cutoff": "2026-05-31",
+        "forecasts": {
+          "fitted model": "4997530.18",
+          "stage-weighted pipeline": "9345788.98",
+          "trailing run-rate": "3477192.08"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "15609250",
+        "cutoff": "2026-05-31",
+        "forecasts": {
+          "fitted model": "15709515.51",
+          "stage-weighted pipeline": "12064518.14",
+          "trailing run-rate": "10663389.05"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "5473845",
+        "cutoff": "2026-04-30",
+        "forecasts": {
+          "fitted model": "5922641.91",
+          "stage-weighted pipeline": "10253865.84",
+          "trailing run-rate": "3093999.53"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "13554281",
+        "cutoff": "2026-04-30",
+        "forecasts": {
+          "fitted model": "16654543.62",
+          "stage-weighted pipeline": "14136307.32",
+          "trailing run-rate": "9385131.92"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "3365758",
+        "cutoff": "2026-03-31",
+        "forecasts": {
+          "fitted model": "5647289.93",
+          "stage-weighted pipeline": "10260393.56",
+          "trailing run-rate": "3060953.01"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "12582741",
+        "cutoff": "2026-03-31",
+        "forecasts": {
+          "fitted model": "17332546.57",
+          "stage-weighted pipeline": "13739306.68",
+          "trailing run-rate": "9284890.81"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "2427755",
+        "cutoff": "2026-02-28",
+        "forecasts": {
+          "fitted model": "3641302.64",
+          "stage-weighted pipeline": "7051580.76",
+          "trailing run-rate": "3320679.33"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "11131248",
+        "cutoff": "2026-02-28",
+        "forecasts": {
+          "fitted model": "13437845.99",
+          "stage-weighted pipeline": "11066367.66",
+          "trailing run-rate": "10555016.45"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "27449301",
+        "cutoff": "2026-02-28",
+        "forecasts": {
+          "fitted model": "27462654.97",
+          "stage-weighted pipeline": "14159513.60",
+          "trailing run-rate": "21465819.96"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "2143610",
+        "cutoff": "2026-01-31",
+        "forecasts": {
+          "fitted model": "3589262.54",
+          "stage-weighted pipeline": "1909336.26",
+          "trailing run-rate": "3175287.07"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "8616665",
+        "cutoff": "2026-01-31",
+        "forecasts": {
+          "fitted model": "11427092.33",
+          "stage-weighted pipeline": "9591213.46",
+          "trailing run-rate": "10092876.75"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "22170946",
+        "cutoff": "2026-01-31",
+        "forecasts": {
+          "fitted model": "23815833.78",
+          "stage-weighted pipeline": "12424732.15",
+          "trailing run-rate": "20525962.84"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "2723294",
+        "cutoff": "2025-12-31",
+        "forecasts": {
+          "fitted model": "4086415.24",
+          "stage-weighted pipeline": "8266847.20",
+          "trailing run-rate": "3672751.92"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "7974201",
+        "cutoff": "2025-12-31",
+        "forecasts": {
+          "fitted model": "11264073.40",
+          "stage-weighted pipeline": "9474976.22",
+          "trailing run-rate": "10662828.16"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "20556942",
+        "cutoff": "2025-12-31",
+        "forecasts": {
+          "fitted model": "22901469.10",
+          "stage-weighted pipeline": "12005915.94",
+          "trailing run-rate": "21444132.20"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "5246349",
+        "cutoff": "2025-11-30",
+        "forecasts": {
+          "fitted model": "4875373.12",
+          "stage-weighted pipeline": "9320787.90",
+          "trailing run-rate": "3515453.84"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "10113253",
+        "cutoff": "2025-11-30",
+        "forecasts": {
+          "fitted model": "12909847.58",
+          "stage-weighted pipeline": "10831918.38",
+          "trailing run-rate": "10546361.51"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "22060153",
+        "cutoff": "2025-11-30",
+        "forecasts": {
+          "fitted model": "24460189.83",
+          "stage-weighted pipeline": "13512035.73",
+          "trailing run-rate": "21209904.81"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "3667153",
+        "cutoff": "2025-10-31",
+        "forecasts": {
+          "fitted model": "3979047.87",
+          "stage-weighted pipeline": "7398972.98",
+          "trailing run-rate": "3384467.67"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "11636796",
+        "cutoff": "2025-10-31",
+        "forecasts": {
+          "fitted model": "12123481.64",
+          "stage-weighted pipeline": "9994675.42",
+          "trailing run-rate": "10379034.19"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "20253461",
+        "cutoff": "2025-10-31",
+        "forecasts": {
+          "fitted model": "23962152.62",
+          "stage-weighted pipeline": "12569213.96",
+          "trailing run-rate": "20419621.62"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "4185136",
+        "cutoff": "2025-09-30",
+        "forecasts": {
+          "fitted model": "3360079.95",
+          "stage-weighted pipeline": "6615506.60",
+          "trailing run-rate": "3142506.16"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "13190634",
+        "cutoff": "2025-09-30",
+        "forecasts": {
+          "fitted model": "11266983.69",
+          "stage-weighted pipeline": "8941465.00",
+          "trailing run-rate": "9532268.70"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "21164835",
+        "cutoff": "2025-09-30",
+        "forecasts": {
+          "fitted model": "23753281.91",
+          "stage-weighted pipeline": "11712565.07",
+          "trailing run-rate": "18959787.19"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "1389709",
+        "cutoff": "2025-08-31",
+        "forecasts": {
+          "fitted model": "2505926.23",
+          "stage-weighted pipeline": "5064436.54",
+          "trailing run-rate": "3062940.58"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "9333994",
+        "cutoff": "2025-08-31",
+        "forecasts": {
+          "fitted model": "9088452.23",
+          "stage-weighted pipeline": "7058113.12",
+          "trailing run-rate": "9290919.75"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "19447247",
+        "cutoff": "2025-08-31",
+        "forecasts": {
+          "fitted model": "20396047.94",
+          "stage-weighted pipeline": "9728305.40",
+          "trailing run-rate": "18479741.47"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "2644104",
+        "cutoff": "2025-07-31",
+        "forecasts": {
+          "fitted model": "2515383.94",
+          "stage-weighted pipeline": "4781925.46",
+          "trailing run-rate": "3024708.30"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "8310945",
+        "cutoff": "2025-07-31",
+        "forecasts": {
+          "fitted model": "8569796.91",
+          "stage-weighted pipeline": "6582869.10",
+          "trailing run-rate": "8976553.68"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "19947741",
+        "cutoff": "2025-07-31",
+        "forecasts": {
+          "fitted model": "19294383.56",
+          "stage-weighted pipeline": "8993137.49",
+          "trailing run-rate": "17953107.35"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "5153186",
+        "cutoff": "2025-06-30",
+        "forecasts": {
+          "fitted model": "4526367.97",
+          "stage-weighted pipeline": "5984749.70",
+          "trailing run-rate": "2929617.21"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "9186999",
+        "cutoff": "2025-06-30",
+        "forecasts": {
+          "fitted model": "10751384.51",
+          "stage-weighted pipeline": "9349069.98",
+          "trailing run-rate": "8984159.43"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "22377633",
+        "cutoff": "2025-06-30",
+        "forecasts": {
+          "fitted model": "21531798.29",
+          "stage-weighted pipeline": "11377140.03",
+          "trailing run-rate": "17870664.95"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "3114400",
+        "cutoff": "2025-05-31",
+        "forecasts": {
+          "fitted model": "2909871.19",
+          "stage-weighted pipeline": "5114337.64",
+          "trailing run-rate": "2685423.86"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "10911690",
+        "cutoff": "2025-05-31",
+        "forecasts": {
+          "fitted model": "8759706.18",
+          "stage-weighted pipeline": "7343036.78",
+          "trailing run-rate": "8235299.85"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "20245684",
+        "cutoff": "2025-05-31",
+        "forecasts": {
+          "fitted model": "19527669.58",
+          "stage-weighted pipeline": "9622858.82",
+          "trailing run-rate": "16381085.56"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "811669",
+        "cutoff": "2025-04-30",
+        "forecasts": {
+          "fitted model": "2932295.32",
+          "stage-weighted pipeline": "4606576.90",
+          "trailing run-rate": "2630001.53"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "9079255",
+        "cutoff": "2025-04-30",
+        "forecasts": {
+          "fitted model": "7638717.71",
+          "stage-weighted pipeline": "6372828.40",
+          "trailing run-rate": "7977671.32"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "17298204",
+        "cutoff": "2025-04-30",
+        "forecasts": {
+          "fitted model": "17822083.08",
+          "stage-weighted pipeline": "8518677.34",
+          "trailing run-rate": "16043009.36"
+        },
+        "horizon_months": 6
+      }
+    ],
+    "horizons": [
+      {
+        "folds": 16,
+        "horizon_months": 1,
+        "mean_absolute_error": {
+          "fitted model": "998998.50",
+          "stage-weighted pipeline": "3922262.26",
+          "trailing run-rate": "1260351.16"
+        },
+        "range_coverage": {
+          "80%": 0.9375,
+          "95%": 1.0,
+          "folds_with_a_range": 16
+        },
+        "signed_bias": {
+          "fitted model": "705649.04",
+          "stage-weighted pipeline": "3892978.05",
+          "trailing run-rate": "-417072.70"
+        }
+      },
+      {
+        "folds": 14,
+        "horizon_months": 3,
+        "mean_absolute_error": {
+          "fitted model": "1944675.87",
+          "stage-weighted pipeline": "1776756.46",
+          "trailing run-rate": "1942333.05"
+        },
+        "range_coverage": {
+          "80%": 0.8571,
+          "95%": 1.0,
+          "folds_with_a_range": 14
+        },
+        "signed_bias": {
+          "fitted model": "1121573.99",
+          "stage-weighted pipeline": "-1048949.02",
+          "trailing run-rate": "-1190396.46"
+        }
+      },
+      {
+        "folds": 11,
+        "horizon_months": 6,
+        "mean_absolute_error": {
+          "fitted model": "1489984.62",
+          "stage-weighted pipeline": "9849822.86",
+          "trailing run-rate": "2211455.57"
+        },
+        "range_coverage": {
+          "80%": 1.0,
+          "95%": 1.0,
+          "folds_with_a_range": 11
+        },
+        "signed_bias": {
+          "fitted model": "1086856.15",
+          "stage-weighted pipeline": "-9849822.86",
+          "trailing run-rate": "-2019937.24"
+        }
+      }
+    ],
+    "notes": [],
+    "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 1,944,676 vs trailing run-rate 1,942,333; 3m: model 1,944,676 vs stage-weighted pipeline 1,776,756",
+    "scoring": "per horizon, mean absolute dollar error over all folds; 'yes' only if the fitted model's error is lower than both baselines at 1 and 3 months; under 6 folds is 'not enough history to say'",
+    "verdict": "no"
+  },
+  "forecasts": {
+    "fitted_ranges": {
+      "by_window": {
+        "2026-09": {
+          "mean": "5579309.81",
+          "median": "5544060.50",
+          "range80": [
+            "3388877.30",
+            "7850931.40"
+          ],
+          "range95": [
+            "2461071.55",
+            "9023986.57"
+          ]
+        },
+        "2026-10": {
+          "mean": "4966726.89",
+          "median": "4776322.50",
+          "range80": [
+            "2618028.80",
+            "7557706.50"
+          ],
+          "range95": [
+            "1683008.88",
+            "9831915.67"
+          ]
+        },
+        "2026-11": {
+          "mean": "5652101.35",
+          "median": "5222954.50",
+          "range80": [
+            "2935353.90",
+            "8897491.60"
+          ],
+          "range95": [
+            "1998914.70",
+            "11728356.68"
+          ]
+        },
+        "2026-12": {
+          "mean": "5814675.09",
+          "median": "5513395.00",
+          "range80": [
+            "2847766.60",
+            "9102439.30"
+          ],
+          "range95": [
+            "1971806.90",
+            "11770804.85"
+          ]
+        },
+        "2027-01": {
+          "mean": "6348878.87",
+          "median": "5981682.00",
+          "range80": [
+            "3159502.50",
+            "9902809.20"
+          ],
+          "range95": [
+            "2037667.95",
+            "12465811.10"
+          ]
+        },
+        "2027-02": {
+          "mean": "6137878.60",
+          "median": "5774999.50",
+          "range80": [
+            "2915838.70",
+            "9680485.70"
+          ],
+          "range95": [
+            "2013375.43",
+            "12760221.22"
+          ]
+        },
+        "2027-03": {
+          "mean": "6530089.30",
+          "median": "6200801.00",
+          "range80": [
+            "3188125.90",
+            "10249051.70"
+          ],
+          "range95": [
+            "2090254.53",
+            "12590304.38"
+          ]
+        },
+        "2027-04": {
+          "mean": "6782654.58",
+          "median": "6515841.50",
+          "range80": [
+            "3371328.10",
+            "10621658.50"
+          ],
+          "range95": [
+            "2113068.62",
+            "12909083.52"
+          ]
+        },
+        "2027-05": {
+          "mean": "7156554.13",
+          "median": "6826337.00",
+          "range80": [
+            "3624464.30",
+            "11181912.20"
+          ],
+          "range95": [
+            "2429949.67",
+            "13541104.40"
+          ]
+        },
+        "2027-06": {
+          "mean": "6692678.91",
+          "median": "6472967.50",
+          "range80": [
+            "3213156.50",
+            "10511317.90"
+          ],
+          "range95": [
+            "2190545.38",
+            "13232718.47"
+          ]
+        },
+        "2027-07": {
+          "mean": "7499128.28",
+          "median": "7126705.00",
+          "range80": [
+            "3902520.40",
+            "11396015.00"
+          ],
+          "range95": [
+            "2734483.38",
+            "14173093.82"
+          ]
+        },
+        "2027-08": {
+          "mean": "7556920.36",
+          "median": "7181820.50",
+          "range80": [
+            "3935230.00",
+            "11694178.60"
+          ],
+          "range95": [
+            "2529702.35",
+            "14474253.40"
+          ]
+        }
+      },
+      "cells": [
+        {
+          "coverage80": 0.9375,
+          "coverage95": 1.0,
+          "coverage_judgement": "back-tested",
+          "folds_with_a_range": 16,
+          "horizon_months": 1,
+          "label": "unvalidated",
+          "median_width80": "4312124.80"
+        },
+        {
+          "coverage80": 0.8571,
+          "coverage95": 1.0,
+          "coverage_judgement": "back-tested",
+          "folds_with_a_range": 14,
+          "horizon_months": 3,
+          "label": "unvalidated",
+          "median_width80": "7387763.80"
+        },
+        {
+          "coverage80": 1.0,
+          "coverage95": 1.0,
+          "coverage_judgement": "back-tested",
+          "folds_with_a_range": 11,
+          "horizon_months": 6,
+          "label": "unvalidated",
+          "median_width80": "11351452.10"
+        }
+      ],
+      "horizons": {
+        "next twelve months": {
+          "mean": "76717596.17",
+          "median": "76393742.50",
+          "range80": [
+            "65680444.90",
+            "88236075.50"
+          ],
+          "range95": [
+            "60433870.67",
+            "94448821.72"
+          ],
+          "status": "unvalidated: twelve-month ranges are not back-tested (the back-test scores 1, 3, 6 months)"
+        },
+        "rest of fiscal year": {
+          "mean": "28361692.02",
+          "median": "28122170.50",
+          "range80": [
+            "22636891.30",
+            "34387378.00"
+          ],
+          "range95": [
+            "20285726.30",
+            "38339258.00"
+          ],
+          "status": "unvalidated: the ranges include the capacity term, so the back-test coverage is shown as a statistic and not as a validation"
+        }
+      },
+      "status": "1-month unvalidated (the coverage statistics read back-tested) (80% range held 94% of 16 folds); 3-month unvalidated (the coverage statistics read back-tested) (80% range held 86% of 14 folds); 6-month unvalidated (the coverage statistics read back-tested) (80% range held 100% of 11 folds)"
+    },
+    "horizon_windows": {
+      "next twelve months": [
+        "2026-09",
+        "2027-08"
+      ],
+      "rest of fiscal year": [
+        "2026-09",
+        "2027-01"
+      ]
+    },
+    "methods": [
+      {
+        "assumptions": [
+          "new-business bookings continue at the trailing 365-day rate of 128776.43 per day"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "3863292.90",
+          "2026-10": "3992069.33",
+          "2026-11": "3863292.90",
+          "2026-12": "3992069.33",
+          "2027-01": "3992069.33",
+          "2027-02": "3605740.04",
+          "2027-03": "3992069.33",
+          "2027-04": "3863292.90",
+          "2027-05": "3992069.33",
+          "2027-06": "3863292.90",
+          "2027-07": "3992069.33",
+          "2027-08": "3992069.33"
+        },
+        "components": {
+          "run-rate": {
+            "2026-09": "3863292.90",
+            "2026-10": "3992069.33",
+            "2026-11": "3863292.90",
+            "2026-12": "3992069.33",
+            "2027-01": "3992069.33",
+            "2027-02": "3605740.04",
+            "2027-03": "3992069.33",
+            "2027-04": "3863292.90",
+            "2027-05": "3992069.33",
+            "2027-06": "3863292.90",
+            "2027-07": "3992069.33",
+            "2027-08": "3992069.33"
+          }
+        },
+        "horizons": {
+          "next twelve months": "47003396.95",
+          "rest of fiscal year": "19702793.79"
+        },
+        "method": "trailing run-rate",
+        "unavailable_reason": ""
+      },
+      {
+        "assumptions": [
+          "open deals book at their amount times the profile's stage probability (stages.yaml), in the month of their expected close; past-due deals count in the first month",
+          "new pipeline is created at 666664.59 ARR per day (trailing 365 days) and converts at the Discovery probability 0.06, closing 114 days after creation (median cycle of 129 trailing wins)"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "9953951.78",
+          "2026-10": "2102900.62",
+          "2026-11": "751541.64",
+          "2026-12": "1378693.99",
+          "2027-01": "1239996.15",
+          "2027-02": "1119996.52",
+          "2027-03": "1239996.15",
+          "2027-04": "1199996.27",
+          "2027-05": "1239996.15",
+          "2027-06": "1199996.27",
+          "2027-07": "1239996.15",
+          "2027-08": "1239996.15"
+        },
+        "components": {
+          "existing pipeline": {
+            "2026-09": "9953951.78",
+            "2026-10": "2102900.62",
+            "2026-11": "751541.64",
+            "2026-12": "1058694.98",
+            "2027-01": "0.00",
+            "2027-02": "0.00",
+            "2027-03": "0.00",
+            "2027-04": "0.00",
+            "2027-05": "0.00",
+            "2027-06": "0.00",
+            "2027-07": "0.00",
+            "2027-08": "0.00"
+          },
+          "future pipeline": {
+            "2026-09": "0.00",
+            "2026-10": "0.00",
+            "2026-11": "0.00",
+            "2026-12": "319999.01",
+            "2027-01": "1239996.15",
+            "2027-02": "1119996.52",
+            "2027-03": "1239996.15",
+            "2027-04": "1199996.27",
+            "2027-05": "1239996.15",
+            "2027-06": "1199996.27",
+            "2027-07": "1239996.15",
+            "2027-08": "1239996.15"
+          }
+        },
+        "horizons": {
+          "next twelve months": "23907057.84",
+          "rest of fiscal year": "15427084.18"
+        },
+        "method": "stage-weighted pipeline",
+        "unavailable_reason": ""
+      },
+      {
+        "assumptions": [
+          "open deals book at their current amount times the fitted win rate for their stage and age, on the fitted close-timing distribution",
+          "new pipeline is created at 2.0662 deals per ramped AE-month (trailing 365 days) times the expected ramped AE-months of the roster and wins at the fitted creation-cohort rate 0.2193, averaging 413835.73 ARR per win"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "5609666.34",
+          "2026-10": "4882816.42",
+          "2026-11": "5637232.15",
+          "2026-12": "5785982.89",
+          "2027-01": "6474266.49",
+          "2027-02": "6133815.66",
+          "2027-03": "6597946.15",
+          "2027-04": "6830667.75",
+          "2027-05": "7052406.51",
+          "2027-06": "6765605.67",
+          "2027-07": "7402183.97",
+          "2027-08": "7500416.81"
+        },
+        "components": {
+          "existing pipeline": {
+            "2026-09": "5608755.74",
+            "2026-10": "4676417.31",
+            "2026-11": "4438776.24",
+            "2026-12": "3116631.72",
+            "2027-01": "2531562.36",
+            "2027-02": "1681280.34",
+            "2027-03": "838267.38",
+            "2027-04": "802950.54",
+            "2027-05": "394302.33",
+            "2027-06": "28998.56",
+            "2027-07": "203471.98",
+            "2027-08": "68110.47"
+          },
+          "future pipeline": {
+            "2026-09": "910.61",
+            "2026-10": "206399.12",
+            "2026-11": "1198455.91",
+            "2026-12": "2669351.17",
+            "2027-01": "3942704.12",
+            "2027-02": "4452535.33",
+            "2027-03": "5759678.76",
+            "2027-04": "6027717.22",
+            "2027-05": "6658104.18",
+            "2027-06": "6736607.10",
+            "2027-07": "7198712.00",
+            "2027-08": "7432306.33"
+          }
+        },
+        "horizons": {
+          "next twelve months": "76673006.81",
+          "rest of fiscal year": "28389964.29"
+        },
+        "method": "fitted model",
+        "unavailable_reason": ""
+      }
+    ],
+    "windows": [
+      "2026-09",
+      "2026-10",
+      "2026-11",
+      "2026-12",
+      "2027-01",
+      "2027-02",
+      "2027-03",
+      "2027-04",
+      "2027-05",
+      "2027-06",
+      "2027-07",
+      "2027-08"
+    ]
+  },
+  "gap": {
+    "fiscal_year": {
+      "actual_to_date": "29699760",
+      "expected": "58089724.29",
+      "expected_range80": [
+        "52336651.30",
+        "64087138.00"
+      ],
+      "expected_range95": [
+        "49985486.30",
+        "68039018.00"
+      ],
+      "forecast_rest_of_year": "28389964.29",
+      "gap": "1910275.71",
+      "target": "60000000"
+    },
+    "forecast_method": "fitted model (expected value)",
+    "lever": {
+      "bookings_gained": {
+        "next twelve months": "7215263.77",
+        "rest of fiscal year": "1910275.71"
+      },
+      "bookings_gained_at": "the required amount",
+      "cap": "729997731.00",
+      "cap_rule": "3 times the new-business pipeline created in the trailing 365 days",
+      "forecast_with_lever": "60000000.00",
+      "forecast_without_lever": "58089724.29",
+      "headline": "feasible: $32,444,653.50",
+      "lever": "new-business pipeline added",
+      "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and timing, the cap above), not operationally achievable",
+      "outcome": "feasible",
+      "required": "32444653.50",
+      "schedule": "added evenly across the 5 months to the target's end",
+      "target": "60000000"
+    },
+    "lever_next_twelve_months": {
+      "bookings_gained": {
+        "next twelve months": "4083860.66",
+        "rest of fiscal year": "1081221.71"
+      },
+      "bookings_gained_at": "the required amount",
+      "cap": "729997731.00",
+      "cap_rule": "3 times the new-business pipeline created in the trailing 365 days",
+      "forecast_with_lever": "37000000.00",
+      "forecast_without_lever": "35918778.29",
+      "headline": "feasible: $18,363,769.99",
+      "lever": "new-business pipeline added",
+      "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and timing, the cap above), not operationally achievable",
+      "outcome": "feasible",
+      "required": "18363769.99",
+      "schedule": "added evenly across the 5 months to the target's end",
+      "target": "37000000"
+    },
+    "measure": "new-business ARR bookings (type = new_business, the arr column)",
+    "next_twelve_months": {
+      "actual": "7528814",
+      "forecast": "28389964.29",
+      "gap": "1081221.71",
+      "quarters": [
+        "Q3FY26",
+        "Q4FY26"
+      ],
+      "target": "37000000",
+      "targets_through": "2027-01-31",
+      "untargeted": {
+        "forecast": "48283042.52",
+        "months": [
+          "2027-02",
+          "2027-03",
+          "2027-04",
+          "2027-05",
+          "2027-06",
+          "2027-07",
+          "2027-08"
+        ],
+        "note": "months outside a targeted quarter (targets end 2027-01-31): bookings alone"
+      },
+      "window": [
+        "2026-09",
+        "2027-08"
+      ]
+    },
+    "quarters": [
+      {
+        "actual": "8616665",
+        "expected": "8616665.00",
+        "expected_range80": [
+          "8616665.00",
+          "8616665.00"
+        ],
+        "forecast": "0.00",
+        "gap": "1383335.00",
+        "quarter": "Q1FY26",
+        "status": "closed",
+        "target": "10000000"
+      },
+      {
+        "actual": "13554281",
+        "expected": "13554281.00",
+        "expected_range80": [
+          "13554281.00",
+          "13554281.00"
+        ],
+        "forecast": "0.00",
+        "gap": "-554281.00",
+        "quarter": "Q2FY26",
+        "status": "closed",
+        "target": "13000000"
+      },
+      {
+        "actual": "7528814",
+        "expected": "18021296.76",
+        "expected_range80": [
+          "15267194.80",
+          "21014585.40"
+        ],
+        "forecast": "10492482.76",
+        "gap": "-1021296.76",
+        "quarter": "Q3FY26",
+        "status": "in progress",
+        "target": "17000000"
+      },
+      {
+        "actual": "0",
+        "expected": "17897481.53",
+        "expected_range80": [
+          "12461321.50",
+          "23521982.90"
+        ],
+        "forecast": "17897481.53",
+        "gap": "2102518.47",
+        "quarter": "Q4FY26",
+        "status": "not started",
+        "target": "20000000"
+      }
+    ]
+  },
+  "history": {
+    "facts": {
+      "backtest_folds": {
+        "1m": 16,
+        "3m": 14,
+        "6m": 11
+      },
+      "closed_outcomes": 1092,
+      "deal_observations": true,
+      "earliest_close": "2024-02-16",
+      "first_deal_created": "2024-02-01",
+      "matured_snapshots": 24,
+      "months_of_history": 30,
+      "new_business_deals": 1252
+    },
+    "limitations": [
+      "stage_history.csv records stage changes only: it holds no past deal amounts and no past expected close dates",
+      "deal_observations.csv supplies past amounts and expected close dates (4738 observations); a deal's state on a past date is its latest observation on or before that date",
+      "12 deals have no stage history, so they never appear in a win-rate snapshot; 3 of them are open: today's forecasts use their current stage from deals.csv, but at past cutoffs their stage is unknown and back-test folds leave them out",
+      "win rates use snapshots from the trailing 24 months, young ones counted only for the days observed (the recency fit was adopted: lower mean absolute error at 1 and 3 months (1m: 998,999 vs 1,384,619; 3m: 1,944,676 vs 2,261,995))",
+      "the model is pooled across segments; a segment split is not evaluated in this report",
+      "roles on team_members.csv: ae 49, manager 3, sdr 6, se 5, vp_sales 1; the capacity term is adopted (created-pipeline error with realised staffing: 3 months 6,601,779 against 13,010,602 (49.3% lower); 6 months 9,102,642 against 26,549,427 (65.7% lower); ramped AE-months varied 61%)",
+      "team_members.csv holds no history of role, segment, quota or deal ownership: today's values stand in for every past date, and a deal's owner is its current owner"
+    ]
+  },
+  "inputs": {
+    "as_of": "2026-08-31",
+    "capacity": {
+      "decision": "adopted",
+      "forecast_uses": "capacity term"
+    },
+    "data": "engine/data-v2/sapling-industries",
+    "fiscal_year": "FY26",
+    "fiscal_year_end": "2027-01-31",
+    "fiscal_year_start": "2026-02-01",
+    "fit": "cumulative incidence",
+    "measure": "new-business ARR bookings (type = new_business, the arr column)",
+    "profile": "engine/config/profiles/sapling-industries",
+    "ranges": "deal outcomes only",
+    "simulation": {
+      "draws": 2000,
+      "seed": 0
+    }
+  },
+  "plan": {
+    "baseline": {
+      "next twelve months": "76673006.81",
+      "rest of fiscal year": "28389964.29"
+    },
+    "baseline_definition": "the roster as signed and nothing planned",
+    "cash_cost_in_twelve_months": "360000.00",
+    "contributions_total": {
+      "next twelve months": "1305120.17",
+      "rest of fiscal year": "145941.05"
+    },
+    "cost_note": "hires at loaded cost per AE-month over expected months employed; programmes at their cost, paid in step with the pipeline they create (or on the plan's own payment schedule), counting only what falls inside the twelve months",
+    "difference": {
+      "next twelve months": "1305120.17",
+      "rest of fiscal year": "145941.05"
+    },
+    "file": "engine/config/profiles/sapling-industries/plan-programme-only.yaml",
+    "gap": {
+      "fiscal_year": {
+        "actual_to_date": "29699760",
+        "baseline_gap": "1910275.71",
+        "gap_with_plan": "1764334.66",
+        "target": "60000000"
+      },
+      "next_twelve_months": {
+        "actual_to_date": "7528814",
+        "baseline_gap": "1081221.71",
+        "gap_with_plan": "935280.66",
+        "note": "against the quarters with a target that end in the window; later months are bookings alone",
+        "target": "37000000"
+      }
+    },
+    "items": [
+      {
+        "cash_cost_in_twelve_months": "360000.00",
+        "cash_cost_total": "360000.00",
+        "contribution": {
+          "next twelve months": "1305120.17",
+          "rest of fiscal year": "145941.05"
+        },
+        "detail": "$6,000,000 of created pipeline from 2026-10",
+        "kind": "programme",
+        "label": "Partner referrals",
+        "payment_schedule": "paid in step with the pipeline it creates",
+        "valued": true
+      }
+    ],
+    "order": "hires first, then programmes, each in the plan file's order; each contribution is the extra bookings from adding that item to everything above it, so they sum to the difference",
+    "ranges": {
+      "bookings_in_window": {
+        "next twelve months": {
+          "median": "77771794.50",
+          "range80": [
+            "66995184.10",
+            "89293713.60"
+          ],
+          "range95": [
+            "62035379.23",
+            "95247460.47"
+          ]
+        },
+        "rest of fiscal year": {
+          "median": "28069535.50",
+          "range80": [
+            "22988435.80",
+            "34646427.00"
+          ],
+          "range95": [
+            "20199030.00",
+            "37848398.38"
+          ]
+        }
+      },
+      "draws": 2000,
+      "fiscal_year_expected_range80": [
+        "52688195.80",
+        "64346187.00"
+      ],
+      "status": "unvalidated: these ranges include the plan and the capacity term; they have not been back-tested",
+      "what_is_drawn": "deal outcomes, future departures, with the planned hires and programme pipeline in the scenario"
+    },
+    "with_plan": {
+      "next twelve months": "77978126.98",
+      "rest of fiscal year": "28535905.34"
+    }
+  },
+  "quota_productivity": {
+    "all_reps": {
+      "attainment": "0.741",
+      "prorated_quota": "58384657.53",
+      "reps": 47,
+      "spread_across_reps": {
+        "max": "2.497",
+        "median": "0.568",
+        "min": "0.000",
+        "p25": "0.264",
+        "p75": "0.815"
+      },
+      "spread_reps": 30,
+      "wins_credited": "43252317.00"
+    },
+    "by_segment": {
+      "commercial": {
+        "attainment": "0.409",
+        "prorated_quota": "9872876.71",
+        "reps": 18,
+        "spread_across_reps": {
+          "max": "0.783",
+          "median": "0.520",
+          "min": "0.000",
+          "p25": "0.250",
+          "p75": "0.638"
+        },
+        "spread_reps": 10,
+        "wins_credited": "4034672.00"
+      },
+      "enterprise": {
+        "attainment": "0.836",
+        "prorated_quota": "30097534.25",
+        "reps": 13,
+        "spread_across_reps": {
+          "max": "2.497",
+          "median": "0.560",
+          "min": "0.000",
+          "p25": "0.204",
+          "p75": "0.729"
+        },
+        "spread_reps": 10,
+        "wins_credited": "25149215.00"
+      },
+      "mid_market": {
+        "attainment": "0.764",
+        "prorated_quota": "18414246.58",
+        "reps": 16,
+        "spread_across_reps": {
+          "max": "1.427",
+          "median": "0.843",
+          "min": "0.000",
+          "p25": "0.401",
+          "p75": "1.151"
+        },
+        "spread_reps": 10,
+        "wins_credited": "14068430.00"
+      }
+    },
+    "definition": "wins credited to the owner on deals.csv and closed while that person was employed, over annual quota prorated by days employed in the window",
+    "limits": [
+      "the owner is the deal's current owner and the quota is today's annual quota, standing in for their history",
+      "quota is a full-ramp annual figure; ramp is not prorated out of it"
+    ],
+    "reps_without_quota": 0,
+    "spread_min_days": 180,
+    "total_quota": {
+      "annual_quota_of_people_employed_at_as_of": "79300000",
+      "fiscal_year_target": "60000000",
+      "note": "full-ramp annual quotas of the quota-carrying people employed on the as-of date (signed hires excluded) over the fiscal year's bookings target",
+      "people": 44,
+      "quota_over_target": "1.32"
+    },
+    "unattributed_note": "wins whose owner is not on the roster, or who had left or not yet started on the close date",
+    "window": "trailing 365 days to 2026-08-31",
+    "wins_credited": "43252317.00",
+    "wins_in_window": "47003397.00",
+    "wins_unattributed": "3751080.00"
+  },
+  "rates": [
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Discovery (losses compete; deals still open are counted for the days observed)",
+      "denominator": "571 deals open in S1 at their first snapshot in the trailing 24 months (73 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1",
+      "numerator": "92 wins observed within 365 days",
+      "range95": [
+        0.1655,
+        0.2375
+      ],
+      "sample_size": 571,
+      "source": "fitted",
+      "value": "0.199064"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Qualification (losses compete; deals still open are counted for the days observed)",
+      "denominator": "396 deals open in S2 at their first snapshot in the trailing 24 months (53 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2",
+      "numerator": "121 wins observed within 365 days",
+      "range95": [
+        0.3079,
+        0.409
+      ],
+      "sample_size": 396,
+      "source": "fitted",
+      "value": "0.356861"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Technical Evaluation (losses compete; deals still open are counted for the days observed)",
+      "denominator": "280 deals open in S3 at their first snapshot in the trailing 24 months (33 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3",
+      "numerator": "128 wins observed within 365 days",
+      "range95": [
+        0.4579,
+        0.5824
+      ],
+      "sample_size": 280,
+      "source": "fitted",
+      "value": "0.520496"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Business Case (losses compete; deals still open are counted for the days observed)",
+      "denominator": "185 deals open in S4 at their first snapshot in the trailing 24 months (12 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4",
+      "numerator": "119 wins observed within 365 days",
+      "range95": [
+        0.6087,
+        0.747
+      ],
+      "sample_size": 185,
+      "source": "fitted",
+      "value": "0.681807"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Negotiation (losses compete; deals still open are counted for the days observed)",
+      "denominator": "96 deals open in S5 at their first snapshot in the trailing 24 months (2 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5",
+      "numerator": "79 wins observed within 365 days",
+      "range95": [
+        0.7559,
+        0.902
+      ],
+      "sample_size": 96,
+      "source": "fitted",
+      "value": "0.842262"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S1 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "569 deals open in S1 aged 0-90d (469.0 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1:0-90d",
+      "numerator": "92 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 569,
+      "source": "fitted",
+      "value": "0.199852"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S1 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "15 deals open in S1 aged 181d+ (9.3 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1:181d+",
+      "numerator": "2 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 15,
+      "source": "fitted",
+      "value": "0.202799"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S1 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "32 deals open in S1 aged 91-180d (22.1 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1:91-180d",
+      "numerator": "5 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 32,
+      "source": "fitted",
+      "value": "0.206441"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S2 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "373 deals open in S2 aged 0-90d (321.7 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2:0-90d",
+      "numerator": "114 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 373,
+      "source": "fitted",
+      "value": "0.357043"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S2 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "22 deals open in S2 aged 181d+ (18.9 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2:181d+",
+      "numerator": "3 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 22,
+      "source": "fitted",
+      "value": "0.260821"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S2 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "75 deals open in S2 aged 91-180d (66.9 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2:91-180d",
+      "numerator": "20 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 75,
+      "source": "fitted",
+      "value": "0.311559"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S3 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "213 deals open in S3 aged 0-90d (184.6 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3:0-90d",
+      "numerator": "103 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 213,
+      "source": "fitted",
+      "value": "0.552818"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S3 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "27 deals open in S3 aged 181d+ (20.6 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3:181d+",
+      "numerator": "10 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 27,
+      "source": "fitted",
+      "value": "0.480818"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S3 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "106 deals open in S3 aged 91-180d (87.2 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3:91-180d",
+      "numerator": "37 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 106,
+      "source": "fitted",
+      "value": "0.433097"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S4 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "91 deals open in S4 aged 0-90d (80.1 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4:0-90d",
+      "numerator": "62 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 91,
+      "source": "fitted",
+      "value": "0.719256"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S4 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "33 deals open in S4 aged 181d+ (30.3 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4:181d+",
+      "numerator": "17 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 33,
+      "source": "fitted",
+      "value": "0.600573"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S4 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "97 deals open in S4 aged 91-180d (88.8 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4:91-180d",
+      "numerator": "60 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 97,
+      "source": "fitted",
+      "value": "0.668733"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S5 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "33 deals open in S5 aged 0-90d (33.0 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5:0-90d",
+      "numerator": "29 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 33,
+      "source": "fitted",
+      "value": "0.865004"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S5 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "24 deals open in S5 aged 181d+ (22.2 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5:181d+",
+      "numerator": "20 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 24,
+      "source": "fitted",
+      "value": "0.853992"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S5 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "54 deals open in S5 aged 91-180d (54.0 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5:91-180d",
+      "numerator": "43 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 54,
+      "source": "fitted",
+      "value": "0.808719"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2026-08-31",
+      "definition": "cumulative incidence of a win within 365 days of creation (losses compete; deals still open are counted for the days observed)",
+      "denominator": "1068 deals created (158 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "new_pipeline_win_rate",
+      "numerator": "181 wins observed within 365 days",
+      "range95": [
+        0.1928,
+        0.2483
+      ],
+      "sample_size": 1068,
+      "source": "fitted",
+      "value": "0.219306"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2026-08-31",
+      "definition": "mean booked ARR of a created deal that is won, each win weighted by its day's incidence increment",
+      "denominator": "181 wins observed",
+      "horizon": "365 days",
+      "name": "mean_won_arr",
+      "numerator": "booked ARR of those wins",
+      "range95": null,
+      "sample_size": 181,
+      "source": "fitted",
+      "value": "413835.730063"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2026-08-31",
+      "definition": "mean ARR of a created deal (first recorded amount)",
+      "denominator": "1068 deals with a known amount",
+      "horizon": "at creation",
+      "name": "mean_created_arr",
+      "numerator": "ARR of created deals",
+      "range95": null,
+      "sample_size": 1068,
+      "source": "fitted",
+      "value": "391508.998127"
+    },
+    {
+      "cohort": "created 2025-09-01 to 2026-08-31",
+      "definition": "new-business deals created per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "created_deals_per_day",
+      "numerator": "630 deals created",
+      "range95": null,
+      "sample_size": 630,
+      "source": "fitted",
+      "value": "1.726027"
+    },
+    {
+      "cohort": "closed 2025-09-01 to 2026-08-31",
+      "definition": "new-business ARR booked per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "trailing_bookings_per_day",
+      "numerator": "47003397.00 ARR booked",
+      "range95": null,
+      "sample_size": 129,
+      "source": "fitted",
+      "value": "128776.430137"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Discovery is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S1",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.060000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Qualification is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S2",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.140000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Technical Evaluation is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S3",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.280000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Business Case is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S4",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.520000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Negotiation is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S5",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.780000"
+    },
+    {
+      "cohort": "created 2025-09-01 to 2026-08-31",
+      "definition": "new-business ARR created per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "created_arr_per_day",
+      "numerator": "243332577.00 ARR created (first recorded amount)",
+      "range95": null,
+      "sample_size": 630,
+      "source": "fitted",
+      "value": "666664.594521"
+    },
+    {
+      "cohort": "closed 2025-09-01 to 2026-08-31",
+      "definition": "median days from creation to close of a won deal",
+      "denominator": "129 wins",
+      "horizon": "trailing",
+      "name": "median_won_cycle_days",
+      "numerator": "median of days to close",
+      "range95": null,
+      "sample_size": 129,
+      "source": "fitted",
+      "value": "114"
+    },
+    {
+      "cohort": "",
+      "definition": "days within which a win counts for a win rate",
+      "denominator": "",
+      "horizon": "",
+      "name": "horizon_days",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "365"
+    },
+    {
+      "cohort": "",
+      "definition": "pull of an age-group cell toward its stage rate",
+      "denominator": "",
+      "horizon": "",
+      "name": "smoothing_pseudo_observations",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "20"
+    },
+    {
+      "cohort": "",
+      "definition": "wins a stage needs for its own close timing",
+      "denominator": "",
+      "horizon": "",
+      "name": "min_timing_samples",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "20"
+    },
+    {
+      "cohort": "",
+      "definition": "window for trailing rates",
+      "denominator": "",
+      "horizon": "",
+      "name": "trailing_days",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "365"
+    },
+    {
+      "cohort": "",
+      "definition": "trailing months of snapshots for the cumulative-incidence fit",
+      "denominator": "",
+      "horizon": "",
+      "name": "recency_months",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "24"
+    },
+    {
+      "cohort": "",
+      "definition": "cap on added pipeline, times trailing created pipeline",
+      "denominator": "",
+      "horizon": "",
+      "name": "lever_cap_multiple",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "3"
+    },
+    {
+      "cohort": "",
+      "definition": "Monte Carlo draws behind the ranges",
+      "denominator": "",
+      "horizon": "",
+      "name": "simulation_draws",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "2000"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 1",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:1",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.1747,
+        0.4421
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.277881"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 2",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:2",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.2131,
+        0.5403
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.339297"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 3",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:3",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.2943,
+        0.6661
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.442781"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 4",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:4",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.367,
+        0.7703
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.531655"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 5",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:5",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.3329,
+        0.7962
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.514862"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 6",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:6",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.4292,
+        0.8835
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.615784"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 7",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:7",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.5379,
+        1.0
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.759918"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 8",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:8",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.3934,
+        0.8939
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.593009"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 9",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:9",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.5192,
+        1.0
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.753191"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 10",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:10",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.5964,
+        1.0
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "0.850006"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 11",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:11",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        1.0,
+        1.0
+      ],
+      "sample_size": 21,
+      "source": "fitted",
+      "value": "1"
+    },
+    {
+      "cohort": "2024-02-01 to 2026-08-31",
+      "definition": "departures per AE-month (monthly attrition)",
+      "denominator": "687.9 AE-months employed",
+      "horizon": "per AE-month",
+      "name": "attrition_per_ae_month",
+      "numerator": "5 departures",
+      "range95": [
+        0.0023,
+        0.017
+      ],
+      "sample_size": 5,
+      "source": "fitted",
+      "value": "0.007268"
+    },
+    {
+      "cohort": "trailing 365 days to 2026-08-31",
+      "definition": "new-business deals created per ramped AE-month",
+      "denominator": "304.91 ramped AE-months",
+      "horizon": "per ramped AE-month",
+      "name": "created_deals_per_ramped_ae_month",
+      "numerator": "630 deals created",
+      "range95": null,
+      "sample_size": 630,
+      "source": "fitted",
+      "value": "2.066174"
+    },
+    {
+      "cohort": "capacity.yaml",
+      "definition": "cash cost of one AE for one month (capacity.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "loaded_cost_per_ae_month",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "14000"
+    },
+    {
+      "cohort": "capacity.yaml",
+      "definition": "cash cost per dollar of programme pipeline created (capacity.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "programme_cost_per_dollar_of_pipeline",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.060000"
+    },
+    {
+      "cohort": "capacity.yaml",
+      "definition": "months a programme takes to reach its full monthly pipeline",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "programme_ramp_months",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "3"
+    },
+    {
+      "cohort": "",
+      "definition": "ramped AE-months must vary by this much across the scored period for capacity to be testable",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_staffing_variation",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.200000"
+    },
+    {
+      "cohort": "",
+      "definition": "capacity's created-pipeline error must be this much lower than the flat rate's at both horizons",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_improvement",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.100000"
+    },
+    {
+      "cohort": "",
+      "definition": "folds needed at each scored horizon",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_folds",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "6"
+    },
+    {
+      "cohort": "",
+      "definition": "days in one AE-month",
+      "denominator": "",
+      "horizon": "",
+      "name": "days_per_ae_month",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "30.437500"
+    }
+  ],
+  "reconciliation": {
+    "bookings_by_month": {
+      "2026-02": "2143610",
+      "2026-03": "3107297",
+      "2026-04": "3365758",
+      "2026-05": "5473845",
+      "2026-06": "3743138",
+      "2026-07": "4337298",
+      "2026-08": "7528814"
+    },
+    "bookings_fytd": "29699760",
+    "checks": [
+      {
+        "detail": "1252 included + 83 excluded = 1335 of 1335 source rows",
+        "name": "rows partition",
+        "passed": true
+      },
+      {
+        "detail": "included + excluded arr = 509616229 against source total 509616229 (0 rows had no readable arr)",
+        "name": "arr partition",
+        "passed": true
+      },
+      {
+        "detail": "source file new-business won FYTD 29699760 = included 29699760 + excluded rows 0",
+        "name": "bookings tie to source",
+        "passed": true
+      },
+      {
+        "detail": "open at FY start 46644255 + created 163677459 = won 29699760 + lost 112733453 + open now 67888501",
+        "name": "pipeline flow",
+        "passed": true
+      }
+    ],
+    "excluded_motions": {
+      "expansion": {
+        "arr": "12561691",
+        "rows": 83,
+        "won_fytd_arr": "1769215"
+      }
+    },
+    "exclusions": [
+      {
+        "arr": "81779",
+        "deal_id": "SAP-00012",
+        "reason": "excluded motion: expansion",
+        "row": 13
+      },
+      {
+        "arr": "75274",
+        "deal_id": "SAP-00017",
+        "reason": "excluded motion: expansion",
+        "row": 18
+      },
+      {
+        "arr": "140039",
+        "deal_id": "SAP-00019",
+        "reason": "excluded motion: expansion",
+        "row": 20
+      },
+      {
+        "arr": "318550",
+        "deal_id": "SAP-00040",
+        "reason": "excluded motion: expansion",
+        "row": 41
+      },
+      {
+        "arr": "190620",
+        "deal_id": "SAP-00041",
+        "reason": "excluded motion: expansion",
+        "row": 42
+      },
+      {
+        "arr": "245724",
+        "deal_id": "SAP-00043",
+        "reason": "excluded motion: expansion",
+        "row": 44
+      },
+      {
+        "arr": "133096",
+        "deal_id": "SAP-00052",
+        "reason": "excluded motion: expansion",
+        "row": 53
+      },
+      {
+        "arr": "198582",
+        "deal_id": "SAP-00063",
+        "reason": "excluded motion: expansion",
+        "row": 64
+      },
+      {
+        "arr": "62907",
+        "deal_id": "SAP-00087",
+        "reason": "excluded motion: expansion",
+        "row": 88
+      },
+      {
+        "arr": "129006",
+        "deal_id": "SAP-00121",
+        "reason": "excluded motion: expansion",
+        "row": 122
+      },
+      {
+        "arr": "45299",
+        "deal_id": "SAP-00122",
+        "reason": "excluded motion: expansion",
+        "row": 123
+      },
+      {
+        "arr": "98999",
+        "deal_id": "SAP-00124",
+        "reason": "excluded motion: expansion",
+        "row": 125
+      },
+      {
+        "arr": "99496",
+        "deal_id": "SAP-00135",
+        "reason": "excluded motion: expansion",
+        "row": 136
+      },
+      {
+        "arr": "154217",
+        "deal_id": "SAP-00146",
+        "reason": "excluded motion: expansion",
+        "row": 147
+      },
+      {
+        "arr": "327593",
+        "deal_id": "SAP-00166",
+        "reason": "excluded motion: expansion",
+        "row": 167
+      },
+      {
+        "arr": "292386",
+        "deal_id": "SAP-00192",
+        "reason": "excluded motion: expansion",
+        "row": 193
+      },
+      {
+        "arr": "117114",
+        "deal_id": "SAP-00193",
+        "reason": "excluded motion: expansion",
+        "row": 194
+      },
+      {
+        "arr": "224414",
+        "deal_id": "SAP-00196",
+        "reason": "excluded motion: expansion",
+        "row": 197
+      },
+      {
+        "arr": "52528",
+        "deal_id": "SAP-00197",
+        "reason": "excluded motion: expansion",
+        "row": 198
+      },
+      {
+        "arr": "151845",
+        "deal_id": "SAP-00222",
+        "reason": "excluded motion: expansion",
+        "row": 223
+      },
+      {
+        "arr": "78209",
+        "deal_id": "SAP-00248",
+        "reason": "excluded motion: expansion",
+        "row": 249
+      },
+      {
+        "arr": "236523",
+        "deal_id": "SAP-00265",
+        "reason": "excluded motion: expansion",
+        "row": 266
+      },
+      {
+        "arr": "188732",
+        "deal_id": "SAP-00269",
+        "reason": "excluded motion: expansion",
+        "row": 270
+      },
+      {
+        "arr": "166113",
+        "deal_id": "SAP-00274",
+        "reason": "excluded motion: expansion",
+        "row": 275
+      },
+      {
+        "arr": "349145",
+        "deal_id": "SAP-00296",
+        "reason": "excluded motion: expansion",
+        "row": 297
+      },
+      {
+        "arr": "178102",
+        "deal_id": "SAP-00315",
+        "reason": "excluded motion: expansion",
+        "row": 316
+      },
+      {
+        "arr": "99383",
+        "deal_id": "SAP-00320",
+        "reason": "excluded motion: expansion",
+        "row": 321
+      },
+      {
+        "arr": "195915",
+        "deal_id": "SAP-00321",
+        "reason": "excluded motion: expansion",
+        "row": 322
+      },
+      {
+        "arr": "202892",
+        "deal_id": "SAP-00322",
+        "reason": "excluded motion: expansion",
+        "row": 323
+      },
+      {
+        "arr": "108533",
+        "deal_id": "SAP-00342",
+        "reason": "excluded motion: expansion",
+        "row": 343
+      },
+      {
+        "arr": "130294",
+        "deal_id": "SAP-00360",
+        "reason": "excluded motion: expansion",
+        "row": 361
+      },
+      {
+        "arr": "149449",
+        "deal_id": "SAP-00364",
+        "reason": "excluded motion: expansion",
+        "row": 365
+      },
+      {
+        "arr": "73918",
+        "deal_id": "SAP-00388",
+        "reason": "excluded motion: expansion",
+        "row": 389
+      },
+      {
+        "arr": "243485",
+        "deal_id": "SAP-00390",
+        "reason": "excluded motion: expansion",
+        "row": 391
+      },
+      {
+        "arr": "209542",
+        "deal_id": "SAP-00394",
+        "reason": "excluded motion: expansion",
+        "row": 395
+      },
+      {
+        "arr": "83521",
+        "deal_id": "SAP-00406",
+        "reason": "excluded motion: expansion",
+        "row": 407
+      },
+      {
+        "arr": "62611",
+        "deal_id": "SAP-00419",
+        "reason": "excluded motion: expansion",
+        "row": 420
+      },
+      {
+        "arr": "165626",
+        "deal_id": "SAP-00424",
+        "reason": "excluded motion: expansion",
+        "row": 425
+      },
+      {
+        "arr": "223126",
+        "deal_id": "SAP-00445",
+        "reason": "excluded motion: expansion",
+        "row": 446
+      },
+      {
+        "arr": "156435",
+        "deal_id": "SAP-00446",
+        "reason": "excluded motion: expansion",
+        "row": 447
+      },
+      {
+        "arr": "128768",
+        "deal_id": "SAP-00484",
+        "reason": "excluded motion: expansion",
+        "row": 485
+      },
+      {
+        "arr": "42442",
+        "deal_id": "SAP-00485",
+        "reason": "excluded motion: expansion",
+        "row": 486
+      },
+      {
+        "arr": "248579",
+        "deal_id": "SAP-00493",
+        "reason": "excluded motion: expansion",
+        "row": 494
+      },
+      {
+        "arr": "262572",
+        "deal_id": "SAP-00497",
+        "reason": "excluded motion: expansion",
+        "row": 498
+      },
+      {
+        "arr": "144887",
+        "deal_id": "SAP-00511",
+        "reason": "excluded motion: expansion",
+        "row": 512
+      },
+      {
+        "arr": "138863",
+        "deal_id": "SAP-00523",
+        "reason": "excluded motion: expansion",
+        "row": 524
+      },
+      {
+        "arr": "156595",
+        "deal_id": "SAP-00565",
+        "reason": "excluded motion: expansion",
+        "row": 566
+      },
+      {
+        "arr": "55851",
+        "deal_id": "SAP-00569",
+        "reason": "excluded motion: expansion",
+        "row": 570
+      },
+      {
+        "arr": "183671",
+        "deal_id": "SAP-00590",
+        "reason": "excluded motion: expansion",
+        "row": 591
+      },
+      {
+        "arr": "492364",
+        "deal_id": "SAP-00606",
+        "reason": "excluded motion: expansion",
+        "row": 607
+      },
+      {
+        "arr": "42899",
+        "deal_id": "SAP-00607",
+        "reason": "excluded motion: expansion",
+        "row": 608
+      },
+      {
+        "arr": "128396",
+        "deal_id": "SAP-00619",
+        "reason": "excluded motion: expansion",
+        "row": 620
+      },
+      {
+        "arr": "363707",
+        "deal_id": "SAP-00624",
+        "reason": "excluded motion: expansion",
+        "row": 625
+      },
+      {
+        "arr": "85439",
+        "deal_id": "SAP-00632",
+        "reason": "excluded motion: expansion",
+        "row": 633
+      },
+      {
+        "arr": "141044",
+        "deal_id": "SAP-00639",
+        "reason": "excluded motion: expansion",
+        "row": 640
+      },
+      {
+        "arr": "102272",
+        "deal_id": "SAP-00661",
+        "reason": "excluded motion: expansion",
+        "row": 662
+      },
+      {
+        "arr": "54098",
+        "deal_id": "SAP-00662",
+        "reason": "excluded motion: expansion",
+        "row": 663
+      },
+      {
+        "arr": "308712",
+        "deal_id": "SAP-00673",
+        "reason": "excluded motion: expansion",
+        "row": 674
+      },
+      {
+        "arr": "104699",
+        "deal_id": "SAP-00709",
+        "reason": "excluded motion: expansion",
+        "row": 710
+      },
+      {
+        "arr": "79762",
+        "deal_id": "SAP-00713",
+        "reason": "excluded motion: expansion",
+        "row": 714
+      },
+      {
+        "arr": "115329",
+        "deal_id": "SAP-00743",
+        "reason": "excluded motion: expansion",
+        "row": 744
+      },
+      {
+        "arr": "256201",
+        "deal_id": "SAP-00760",
+        "reason": "excluded motion: expansion",
+        "row": 761
+      },
+      {
+        "arr": "171269",
+        "deal_id": "SAP-00777",
+        "reason": "excluded motion: expansion",
+        "row": 778
+      },
+      {
+        "arr": "91577",
+        "deal_id": "SAP-00782",
+        "reason": "excluded motion: expansion",
+        "row": 783
+      },
+      {
+        "arr": "57409",
+        "deal_id": "SAP-00792",
+        "reason": "excluded motion: expansion",
+        "row": 793
+      },
+      {
+        "arr": "108758",
+        "deal_id": "SAP-00794",
+        "reason": "excluded motion: expansion",
+        "row": 795
+      },
+      {
+        "arr": "64842",
+        "deal_id": "SAP-00819",
+        "reason": "excluded motion: expansion",
+        "row": 820
+      },
+      {
+        "arr": "159223",
+        "deal_id": "SAP-00820",
+        "reason": "excluded motion: expansion",
+        "row": 821
+      },
+      {
+        "arr": "112949",
+        "deal_id": "SAP-00842",
+        "reason": "excluded motion: expansion",
+        "row": 843
+      },
+      {
+        "arr": "220449",
+        "deal_id": "SAP-00845",
+        "reason": "excluded motion: expansion",
+        "row": 846
+      },
+      {
+        "arr": "68076",
+        "deal_id": "SAP-00851",
+        "reason": "excluded motion: expansion",
+        "row": 852
+      },
+      {
+        "arr": "54579",
+        "deal_id": "SAP-00859",
+        "reason": "excluded motion: expansion",
+        "row": 860
+      },
+      {
+        "arr": "130150",
+        "deal_id": "SAP-00880",
+        "reason": "excluded motion: expansion",
+        "row": 881
+      },
+      {
+        "arr": "94313",
+        "deal_id": "SAP-00934",
+        "reason": "excluded motion: expansion",
+        "row": 935
+      },
+      {
+        "arr": "216608",
+        "deal_id": "SAP-00981",
+        "reason": "excluded motion: expansion",
+        "row": 982
+      },
+      {
+        "arr": "33396",
+        "deal_id": "SAP-01084",
+        "reason": "excluded motion: expansion",
+        "row": 1085
+      },
+      {
+        "arr": "121831",
+        "deal_id": "SAP-01096",
+        "reason": "excluded motion: expansion",
+        "row": 1097
+      },
+      {
+        "arr": "109108",
+        "deal_id": "SAP-01123",
+        "reason": "excluded motion: expansion",
+        "row": 1124
+      },
+      {
+        "arr": "168201",
+        "deal_id": "SAP-01182",
+        "reason": "excluded motion: expansion",
+        "row": 1183
+      },
+      {
+        "arr": "80745",
+        "deal_id": "SAP-01188",
+        "reason": "excluded motion: expansion",
+        "row": 1189
+      },
+      {
+        "arr": "64808",
+        "deal_id": "SAP-01253",
+        "reason": "excluded motion: expansion",
+        "row": 1253
+      },
+      {
+        "arr": "291672",
+        "deal_id": "SAP-01286",
+        "reason": "excluded motion: expansion",
+        "row": 1285
+      },
+      {
+        "arr": "63556",
+        "deal_id": "SAP-01290",
+        "reason": "excluded motion: expansion",
+        "row": 1289
+      }
+    ],
+    "included_rows": 1252,
+    "pipeline_flow": {
+      "created": {
+        "arr": "163677459",
+        "count": 401
+      },
+      "lost": {
+        "arr": "112733453",
+        "count": 288
+      },
+      "open at as-of": {
+        "arr": "67888501",
+        "count": 160
+      },
+      "open at fiscal-year start": {
+        "arr": "46644255",
+        "count": 128
+      },
+      "won": {
+        "arr": "29699760",
+        "count": 81
+      }
+    },
+    "source_arr_total": "509616229",
+    "source_rows": 1335
+  },
+  "required_pipeline": {
+    "cap": "729997731.00",
+    "cap_rule": "one cap across the quarters: three times the new-business pipeline created in the trailing 365 days, less what earlier quarters were assigned",
+    "expected_basis": "expected pipeline is what the forward function in use creates; the ramped AE-months beside it are the roster's expected ones",
+    "fiscal_year": {
+      "headline": "$36,979,070.55 of extra pipeline to meet every remaining quarter's target; too late to fund with new pipeline: Q4FY26",
+      "name": "pipeline to meet every remaining quarter's target",
+      "quarters_remaining": 2,
+      "single_spread": {
+        "headline": "feasible: $32,444,653.50",
+        "name": "pipeline to meet the fiscal-year total, spread evenly to year end (section 5)"
+      },
+      "solvable_quarters": [
+        "Q3FY26",
+        "Q4FY26"
+      ],
+      "solvable_total": "36979070.55",
+      "too_late_quarters": [
+        "Q4FY26"
+      ],
+      "unreachable_quarters": [],
+      "why_they_differ": "Meeting every quarter's own target is stricter than meeting the year's total: a quarter that is ahead cannot lend its surplus to one that is behind, and pipeline created in a quarter mostly books after it."
+    },
+    "forward_function": "the capacity term",
+    "lead_time": {
+      "basis": "the production forward function's own timing, on a probe dollar-amount created evenly through the month; independent of the capacity decision. These are dollar yields, not probabilities: amounts change between creation and win, so they can exceed or fall short of what the deal counts imply and are not forced to sum to one",
+      "cents_booked_later": "0.30",
+      "count_outcome": {
+        "do_not_win": "0.780694",
+        "meaning": "of the deals created, from the fit in use; counts, so these sum to one",
+        "win_within_horizon": "0.219306"
+      },
+      "created_between": [
+        "2026-08-31",
+        "2026-09-30"
+      ],
+      "quarters": [
+        {
+          "cents_booked_by_quarter_end": "0.79",
+          "cents_booked_in_quarter": "0.79",
+          "quarter": "Q3FY26"
+        },
+        {
+          "cents_booked_by_quarter_end": "13.98",
+          "cents_booked_in_quarter": "13.19",
+          "quarter": "Q4FY26"
+        },
+        {
+          "cents_booked_by_quarter_end": "20.79",
+          "cents_booked_in_quarter": "6.81",
+          "quarter": "Q1FY27"
+        },
+        {
+          "cents_booked_by_quarter_end": "22.88",
+          "cents_booked_in_quarter": "2.09",
+          "quarter": "Q2FY27"
+        }
+      ],
+      "question": "of a dollar of pipeline created next month (at its first recorded amount), the cents booked by the end of each of the next four quarters"
+    },
+    "meaning": "'required' means achievable inside the model's bounds (fitted conversion and timing, the cap above), not operationally achievable",
+    "method": "one deterministic solve in quarter order; each quarter's pipeline is created evenly on every day from the day after the as-of date to its end (creation starts now), and meets that quarter's target given its actual bookings, the pipeline already open and what earlier quarters were assigned; an unreachable quarter is assigned nothing. Pipeline assigned to a later quarter is also created in the earlier quarters' months, so it can only add to them",
+    "per_ramped_ae_month_label": "the forecast's basis",
+    "per_rep_rule": {
+      "applies": true,
+      "why": "capacity is the forecast's basis, so the team's best per ramped AE-month is a third leg beside the cap and the total rate"
+    },
+    "quarters": [
+      {
+        "actual": "7528814",
+        "bookings_under_completed_schedule": "18079240.19",
+        "bookings_with_own_pipeline": "18021296.77",
+        "bookings_without_own_pipeline": "18021296.77",
+        "cap_left_before": "729997731.00",
+        "cents_booked_in_quarter_per_dollar": "0.39",
+        "created_between": [
+          "2026-08-31",
+          "2026-10-31"
+        ],
+        "earlier_assigned_in_span": "0.00",
+        "expected_created_pipeline": "54157914.95",
+        "headline": "already covered",
+        "in_fiscal_year": true,
+        "outcome": "already covered",
+        "per_day": {
+          "expected": "887834.67",
+          "required_against_team_best": null,
+          "required_total": null
+        },
+        "per_ramped_ae_month": {
+          "decides": true,
+          "expected": "808925.88",
+          "required_against_team_best": null,
+          "required_total": null
+        },
+        "quarter": "Q3FY26",
+        "ramped_ae_months": "67.0",
+        "required_extra_pipeline": null,
+        "status": "in progress",
+        "surplus_over_target": "1079240.19",
+        "target": "17000000",
+        "too_late": {
+          "applies": false,
+          "diagnostics": [],
+          "label": null,
+          "legs": [],
+          "open_pipeline": null,
+          "reasons": []
+        },
+        "total_created_in_span": null
+      },
+      {
+        "actual": "0",
+        "bookings_under_completed_schedule": "20000000.00",
+        "bookings_with_own_pipeline": "20000000.00",
+        "bookings_without_own_pipeline": "17897481.52",
+        "cap_left_before": "729997731.00",
+        "cents_booked_in_quarter_per_dollar": "5.69",
+        "created_between": [
+          "2026-08-31",
+          "2027-01-31"
+        ],
+        "earlier_assigned_in_span": "0.00",
+        "expected_created_pipeline": "143078682.03",
+        "headline": "required: $36,979,070.55",
+        "in_fiscal_year": true,
+        "outcome": "feasible",
+        "per_day": {
+          "expected": "935154.78",
+          "required_against_team_best": "1.85",
+          "required_total": "1176848.06"
+        },
+        "per_ramped_ae_month": {
+          "decides": true,
+          "expected": "808925.88",
+          "required_against_team_best": "0.98",
+          "required_total": "1017994.95"
+        },
+        "quarter": "Q4FY26",
+        "ramped_ae_months": "176.9",
+        "required_extra_pipeline": "36979070.55",
+        "status": "not started",
+        "surplus_over_target": "0.00",
+        "target": "20000000",
+        "too_late": {
+          "applies": true,
+          "diagnostics": [],
+          "label": "too late to fund with new pipeline: this quarter depends on the pipeline already open",
+          "legs": [
+            "total_rate"
+          ],
+          "open_pipeline": {
+            "expected_contribution": "10086970.32",
+            "expected_share_of_open": "0.1486",
+            "needed_contribution": "12189488.80",
+            "needed_share_of_open": "0.1796",
+            "open_arr": "67888501.00",
+            "possible": true,
+            "statement": "to close it, $12,189,489 of the open pipeline would have to book inside the quarter (18.0% of its dollars) against the 14.9% expected (arithmetic on the figures above, not a lever the model solves)"
+          },
+          "reasons": [
+            "needs $1,176,848.06 of pipeline created a day in total, above the team's best four-quarter average of $635,022.36 a day"
+          ]
+        },
+        "total_created_in_span": "180057752.58"
+      }
+    ],
+    "team_history": {
+      "best_four_quarter_average": "1033546.76",
+      "best_four_quarter_average_per_day": "635022.36",
+      "median": "883375.56",
+      "note": "Observed over the complete fiscal quarters in the files, with today's roster and ramp; fewer than four quarters has no four-quarter average",
+      "per_day_unit": "total created pipeline dollars per day, over four consecutive complete fiscal quarters (observed; needs no roster)",
+      "quarters": 10,
+      "unit": "created pipeline dollars per ramped AE-month"
+    },
+    "too_late_rule": "a quarter is too late to fund with new pipeline when its requirement is over the cap (or the cap is used up, or no pipeline created in time can book inside it), or when everything created in its span (expected, earlier quarters' assignments and its own requirement) per day is above the team's best four-quarter average of total created pipeline per day, or, only where capacity is the forecast's basis, when that total per ramped AE-month is above the team's best; the reason names exactly the legs that fired"
+  },
+  "roster_capacity": {
+    "attrition": {
+      "forward": "an expectation in the headline (a constant daily hazard from this monthly rate); a random draw in the ranges; nobody is back-filled unless the plan says so",
+      "monthly_rate": "0.00727",
+      "range95": [
+        "0.00234",
+        "0.01696"
+      ],
+      "sample": "5 departures over 687.9 AE-months",
+      "source": "fitted",
+      "why_not_fitted": ""
+    },
+    "creation_rate": {
+      "deals_per_ramped_ae_month": "2.066174",
+      "trailing_deals": 630,
+      "trailing_ramped_ae_months": "304.91",
+      "window": "trailing 365 days to 2026-08-31"
+    },
+    "decision": {
+      "association": "An association in the history, not a promise: that a new hire adds pipeline at this rate is an assumption.",
+      "declared_rule": "adopted only if ramped AE-months varied by at least 20% across the scored period, the capacity rate's mean absolute error is at least 10% lower than the flat trailing rate's at both 3 and 6 months, and there are at least 6 folds at each",
+      "forecast_uses": "the capacity term (ramped AE-months times created deals per ramped AE-month)",
+      "horizons": [
+        {
+          "folds": 14,
+          "horizon_months": 3,
+          "improvement": "0.4926",
+          "mean_absolute_error_capacity": "6601778.50",
+          "mean_absolute_error_flat": "13010601.90"
+        },
+        {
+          "folds": 11,
+          "horizon_months": 6,
+          "improvement": "0.6571",
+          "mean_absolute_error_capacity": "9102641.67",
+          "mean_absolute_error_flat": "26549427.14"
+        }
+      ],
+      "label": "conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts",
+      "outcome": "adopted",
+      "reason": "created-pipeline error with realised staffing: 3 months 6,601,779 against 13,010,602 (49.3% lower); 6 months 9,102,642 against 26,549,427 (65.7% lower); ramped AE-months varied 61%",
+      "scored_on": "created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred",
+      "scored_period": [
+        "2025-04-30",
+        "2026-08-31"
+      ],
+      "staffing_variation": "0.6059"
+    },
+    "limitations": [
+      "team_members.csv records no history of role, segment, quota or deal ownership: today's values stand in for every past date",
+      "a deal's owner is its current owner, not necessarily the person who created it",
+      "people who left the company before the first deal in the files are not on the roster"
+    ],
+    "months": [
+      {
+        "departures": 0,
+        "headcount_target": null,
+        "heads": 26,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-09",
+        "ramped": "20.29"
+      },
+      {
+        "departures": 0,
+        "headcount_target": null,
+        "heads": 26,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-10",
+        "ramped": "21.26"
+      },
+      {
+        "departures": 1,
+        "headcount_target": null,
+        "heads": 25,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-11",
+        "ramped": "21.59"
+      },
+      {
+        "departures": 0,
+        "headcount_target": null,
+        "heads": 26,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-12",
+        "ramped": "22.53"
+      },
+      {
+        "departures": 0,
+        "headcount_target": null,
+        "heads": 26,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-01",
+        "ramped": "23.21"
+      },
+      {
+        "departures": 0,
+        "headcount_target": 30,
+        "heads": 30,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-02",
+        "ramped": "24.80"
+      },
+      {
+        "departures": 0,
+        "headcount_target": 30,
+        "heads": 30,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-03",
+        "ramped": "25.05"
+      },
+      {
+        "departures": 0,
+        "headcount_target": 30,
+        "heads": 30,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-04",
+        "ramped": "25.75"
+      },
+      {
+        "departures": 0,
+        "headcount_target": 36,
+        "heads": 36,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-05",
+        "ramped": "28.04"
+      },
+      {
+        "departures": 0,
+        "headcount_target": 36,
+        "heads": 36,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-06",
+        "ramped": "29.42"
+      },
+      {
+        "departures": 1,
+        "headcount_target": 36,
+        "heads": 35,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-07",
+        "ramped": "30.15"
+      },
+      {
+        "departures": 1,
+        "headcount_target": 45,
+        "heads": 44,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-08",
+        "ramped": "32.81"
+      },
+      {
+        "departures": "0.16",
+        "headcount_target": 45,
+        "heads": "22.8",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-09",
+        "ramped": "32.52"
+      },
+      {
+        "departures": "0.17",
+        "headcount_target": 45,
+        "heads": "22.7",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-10",
+        "ramped": "34.26"
+      },
+      {
+        "departures": "0.17",
+        "headcount_target": 45,
+        "heads": "23.5",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-11",
+        "ramped": "36.17"
+      },
+      {
+        "departures": "0.17",
+        "headcount_target": 45,
+        "heads": "23.3",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-12",
+        "ramped": "35.89"
+      },
+      {
+        "departures": "0.20",
+        "headcount_target": 45,
+        "heads": "27.0",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-01",
+        "ramped": "37.03"
+      },
+      {
+        "departures": "0.18",
+        "headcount_target": null,
+        "heads": "26.8",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-02",
+        "ramped": "38.63"
+      },
+      {
+        "departures": "0.20",
+        "headcount_target": null,
+        "heads": "26.6",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-03",
+        "ramped": "38.32"
+      },
+      {
+        "departures": "0.22",
+        "headcount_target": null,
+        "heads": "32.1",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-04",
+        "ramped": "38.96"
+      },
+      {
+        "departures": "0.24",
+        "headcount_target": null,
+        "heads": "31.8",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-05",
+        "ramped": "39.74"
+      },
+      {
+        "departures": "0.23",
+        "headcount_target": null,
+        "heads": "31.6",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-06",
+        "ramped": "40.72"
+      },
+      {
+        "departures": "0.29",
+        "headcount_target": null,
+        "heads": "40.6",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-07",
+        "ramped": "40.76"
+      },
+      {
+        "departures": "0.30",
+        "headcount_target": null,
+        "heads": "40.3",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-08",
+        "ramped": "40.46"
+      }
+    ],
+    "ramp": {
+      "after": "1 from the next tenure month on",
+      "deals_left_out": {
+        "count": 0,
+        "why": null
+      },
+      "definition": "created deals per rep by tenure month, relative to reps with twelve or more months' tenure in the same calendar month",
+      "fitted_through": null,
+      "limitation": "ownership on deals.csv says who owns a deal, not who made it: deals handed to a new rep count as that rep's, so a fitted ramp can read faster than the true one",
+      "sample": "21 reps observed from hire through their sixth month; 27 tenured reps alongside",
+      "source": "fitted",
+      "weights": [
+        {
+          "range95": [
+            "0.1747",
+            "0.4421"
+          ],
+          "tenure_month": 1,
+          "weight": "0.2779"
+        },
+        {
+          "range95": [
+            "0.2131",
+            "0.5403"
+          ],
+          "tenure_month": 2,
+          "weight": "0.3393"
+        },
+        {
+          "range95": [
+            "0.2943",
+            "0.6661"
+          ],
+          "tenure_month": 3,
+          "weight": "0.4428"
+        },
+        {
+          "range95": [
+            "0.3670",
+            "0.7703"
+          ],
+          "tenure_month": 4,
+          "weight": "0.5317"
+        },
+        {
+          "range95": [
+            "0.3329",
+            "0.7962"
+          ],
+          "tenure_month": 5,
+          "weight": "0.5149"
+        },
+        {
+          "range95": [
+            "0.4292",
+            "0.8835"
+          ],
+          "tenure_month": 6,
+          "weight": "0.6158"
+        },
+        {
+          "range95": [
+            "0.5379",
+            "1.0000"
+          ],
+          "tenure_month": 7,
+          "weight": "0.7599"
+        },
+        {
+          "range95": [
+            "0.3934",
+            "0.8939"
+          ],
+          "tenure_month": 8,
+          "weight": "0.5930"
+        },
+        {
+          "range95": [
+            "0.5192",
+            "1.0000"
+          ],
+          "tenure_month": 9,
+          "weight": "0.7532"
+        },
+        {
+          "range95": [
+            "0.5964",
+            "1.0000"
+          ],
+          "tenure_month": 10,
+          "weight": "0.8500"
+        },
+        {
+          "range95": "at the ceiling (1)",
+          "tenure_month": 11,
+          "weight": "1.0000"
+        }
+      ],
+      "why_not_fitted": ""
+    },
+    "roster": {
+      "departed_to_date": 5,
+      "excluded": [],
+      "headcount_target_note": "monthly_ae_targets in targets.yaml: a comparison line only; it never creates a hire",
+      "headcount_target_this_month": 45,
+      "heads_at_as_of": 44,
+      "other_roles_counted_no_capacity": {
+        "manager": 3,
+        "sdr": 6,
+        "se": 5,
+        "vp_sales": 1
+      },
+      "quota_carrying_rows": 49,
+      "ramped_equivalents_at_as_of": "32.76",
+      "rows": 64,
+      "signed_hires": []
+    }
+  },
+  "schema_version": "1.0.0",
+  "verdicts": {
+    "forecast_better_than_baselines": {
+      "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 1,944,676 vs trailing run-rate 1,942,333; 3m: model 1,944,676 vs stage-weighted pipeline 1,776,756",
+      "verdict": "no"
+    },
+    "software_correct": {
+      "checks": [
+        {
+          "detail": "1252 included + 83 excluded = 1335 of 1335 source rows",
+          "name": "rows partition",
+          "passed": true
+        },
+        {
+          "detail": "included + excluded arr = 509616229 against source total 509616229 (0 rows had no readable arr)",
+          "name": "arr partition",
+          "passed": true
+        },
+        {
+          "detail": "source file new-business won FYTD 29699760 = included 29699760 + excluded rows 0",
+          "name": "bookings tie to source",
+          "passed": true
+        },
+        {
+          "detail": "open at FY start 46644255 + created 163677459 = won 29699760 + lost 112733453 + open now 67888501",
+          "name": "pipeline flow",
+          "passed": true
+        },
+        {
+          "detail": "open 67888501.00 = won in window 24389524.96 + won later 0.00 + not won 43498976.04",
+          "name": "existing pipeline conserved",
+          "passed": true
+        },
+        {
+          "detail": "forward($32,444,653.50) = 60000000.0003 against target 60000000",
+          "name": "lever agrees with forward function",
+          "passed": true
+        },
+        {
+          "detail": "forward($18,363,769.99) = 37000000.0006 against target 37000000",
+          "name": "twelve-month lever agrees with forward function",
+          "passed": true
+        },
+        {
+          "detail": "simulated mean 76,717,596.17 vs expected 76,673,006.81 (tolerance 791,742.07, 2000 draws)",
+          "name": "simulation centred on the expectation",
+          "passed": true
+        },
+        {
+          "detail": "each method's total equals the sum of its months (largest difference 1.00E-20)",
+          "name": "forecast parts add up",
+          "passed": true
+        },
+        {
+          "detail": "16 cutoffs rebuilt with as_known_at; each fold asserts its latest fact is on or before its cutoff",
+          "name": "folds saw nothing after their cutoff",
+          "passed": true
+        },
+        {
+          "detail": "59 rates in one registry",
+          "name": "every rate defined once",
+          "passed": true
+        },
+        {
+          "detail": "49 quota-carrying + 15 other roles + 0 excluded = 64 of 64 roster rows",
+          "name": "roster rows partition",
+          "passed": true
+        },
+        {
+          "detail": "capacity decision: adopted; forecast uses the capacity term",
+          "name": "the forecast uses capacity exactly when it was adopted",
+          "passed": true
+        },
+        {
+          "detail": "43252317.00 + 3751080.00 = 47003397.00 against 47003397.00",
+          "name": "wins credited plus unattributed equal bookings in the window",
+          "passed": true
+        },
+        {
+          "detail": "2 solvable quarters re-run through the forward function, each with the schedules solved up to and including its own; 0 unreachable checked against the cap, the cap left and the selling window",
+          "name": "each solvable quarter meets its target under the schedules solved up to and including it",
+          "passed": true
+        },
+        {
+          "detail": "2 quarters rebuilt by adding each quarter's own schedule to the no-pipeline forecast",
+          "name": "the completed schedule books each quarter's stated bookings and surplus over target",
+          "passed": true
+        },
+        {
+          "detail": "1 solved schedules re-run on their own",
+          "name": "cents booked in each quarter, re-derived from the solved schedule, match the stated yield",
+          "passed": true
+        },
+        {
+          "detail": "4 quarters checked on a $250,000 probe in two parts; win share 0.2193, not 0.7807",
+          "name": "lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one",
+          "passed": true
+        },
+        {
+          "detail": "rest of fiscal year: 145941.05 = 28535905.34 - 28389964.29; next twelve months: 1305120.17 = 77978126.98 - 76673006.81",
+          "name": "plan contributions sum to the difference",
+          "passed": true
+        },
+        {
+          "detail": "simulated mean 78,043,144.64 vs expected 77,978,126.99 (2000 draws)",
+          "name": "plan simulation centred on its expectation",
+          "passed": true
+        },
+        {
+          "detail": "unreachable: None hires give 58872158.49 against 60000000",
+          "name": "hires solve returns the smallest whole number that closes the gap",
+          "passed": true
+        },
+        {
+          "detail": "feasible: forward(45404741.70) = 60000000.00 against 60000000",
+          "name": "programme solve agrees with the forward function",
+          "passed": true
+        }
+      ],
+      "scope": "runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
+      "summary": "22 of 22 self-checks passed",
+      "verdict": "yes"
+    }
+  }
+}

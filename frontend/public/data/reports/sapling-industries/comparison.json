@@ -1,0 +1,52 @@
+{
+  "as_of": "2026-08-31",
+  "baseline": "as-signed",
+  "company": "sapling-industries",
+  "rows": [
+    {
+      "bookings_change": null,
+      "cash_cost_in_twelve_months": null,
+      "expected_fiscal_year": "58089724.29",
+      "fiscal_year_gap": "1910275.71",
+      "fiscal_year_gap_change": null,
+      "label": "As signed",
+      "scenario": "as-signed"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "2979488.19",
+        "rest of fiscal year": "235289.18"
+      },
+      "cash_cost_in_twelve_months": "791071.40",
+      "expected_fiscal_year": "58325013.47",
+      "fiscal_year_gap": "1674986.53",
+      "fiscal_year_gap_change": "-235289.18",
+      "label": "Demo plan",
+      "scenario": "demo-plan"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "1674367.99",
+        "rest of fiscal year": "89348.12"
+      },
+      "cash_cost_in_twelve_months": "431071.40",
+      "expected_fiscal_year": "58179072.41",
+      "fiscal_year_gap": "1820927.59",
+      "fiscal_year_gap_change": "-89348.12",
+      "label": "Hires only",
+      "scenario": "hires-only"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "1305120.17",
+        "rest of fiscal year": "145941.05"
+      },
+      "cash_cost_in_twelve_months": "360000.00",
+      "expected_fiscal_year": "58235665.34",
+      "fiscal_year_gap": "1764334.66",
+      "fiscal_year_gap_change": "-145941.05",
+      "label": "Programme only",
+      "scenario": "programme-only"
+    }
+  ]
+}

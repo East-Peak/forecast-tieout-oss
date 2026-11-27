@@ -1,0 +1,120 @@
+{
+  "companies": [
+    {
+      "as_of": "2026-08-31",
+      "comparison": "sprout-labs/comparison.json",
+      "description": "Sprout Labs — $10M early-PMF plan, repeatability not proven",
+      "fiscal_year": "FY26",
+      "id": "sprout-labs",
+      "name": "Sprout Labs",
+      "scenarios": [
+        {
+          "description": "The roster as signed and nothing planned.",
+          "id": "as-signed",
+          "label": "As signed",
+          "plan_file": null,
+          "report": "sprout-labs/as-signed.json"
+        },
+        {
+          "description": "The company's demo plan: further hires and programme pipeline together.",
+          "id": "demo-plan",
+          "label": "Demo plan",
+          "plan_file": "engine/config/profiles/sprout-labs/plan.yaml",
+          "report": "sprout-labs/demo-plan.json"
+        },
+        {
+          "description": "Only the demo plan's further hires.",
+          "id": "hires-only",
+          "label": "Hires only",
+          "plan_file": "engine/config/profiles/sprout-labs/plan-hires-only.yaml",
+          "report": "sprout-labs/hires-only.json"
+        },
+        {
+          "description": "Only the demo plan's programme pipeline.",
+          "id": "programme-only",
+          "label": "Programme only",
+          "plan_file": "engine/config/profiles/sprout-labs/plan-programme-only.yaml",
+          "report": "sprout-labs/programme-only.json"
+        }
+      ]
+    },
+    {
+      "as_of": "2026-08-31",
+      "comparison": "sapling-industries/comparison.json",
+      "description": "Sapling Industries — $100M scale-up, headcount on plan but capacity short",
+      "fiscal_year": "FY26",
+      "id": "sapling-industries",
+      "name": "Sapling Industries",
+      "scenarios": [
+        {
+          "description": "The roster as signed and nothing planned.",
+          "id": "as-signed",
+          "label": "As signed",
+          "plan_file": null,
+          "report": "sapling-industries/as-signed.json"
+        },
+        {
+          "description": "The company's demo plan: further hires and programme pipeline together.",
+          "id": "demo-plan",
+          "label": "Demo plan",
+          "plan_file": "engine/config/profiles/sapling-industries/plan.yaml",
+          "report": "sapling-industries/demo-plan.json"
+        },
+        {
+          "description": "Only the demo plan's further hires.",
+          "id": "hires-only",
+          "label": "Hires only",
+          "plan_file": "engine/config/profiles/sapling-industries/plan-hires-only.yaml",
+          "report": "sapling-industries/hires-only.json"
+        },
+        {
+          "description": "Only the demo plan's programme pipeline.",
+          "id": "programme-only",
+          "label": "Programme only",
+          "plan_file": "engine/config/profiles/sapling-industries/plan-programme-only.yaml",
+          "report": "sapling-industries/programme-only.json"
+        }
+      ]
+    },
+    {
+      "as_of": "2026-08-31",
+      "comparison": "mighty-oak-holdings/comparison.json",
+      "description": "Mighty Oak Holdings — $800M enterprise plan, expansion bridge at risk",
+      "fiscal_year": "FY26",
+      "id": "mighty-oak-holdings",
+      "name": "Mighty Oak Holdings",
+      "scenarios": [
+        {
+          "description": "The roster as signed and nothing planned.",
+          "id": "as-signed",
+          "label": "As signed",
+          "plan_file": null,
+          "report": "mighty-oak-holdings/as-signed.json"
+        },
+        {
+          "description": "The company's demo plan: further hires and programme pipeline together.",
+          "id": "demo-plan",
+          "label": "Demo plan",
+          "plan_file": "engine/config/profiles/mighty-oak-holdings/plan.yaml",
+          "report": "mighty-oak-holdings/demo-plan.json"
+        },
+        {
+          "description": "Only the demo plan's further hires.",
+          "id": "hires-only",
+          "label": "Hires only",
+          "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-hires-only.yaml",
+          "report": "mighty-oak-holdings/hires-only.json"
+        },
+        {
+          "description": "Only the demo plan's programme pipeline.",
+          "id": "programme-only",
+          "label": "Programme only",
+          "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-programme-only.yaml",
+          "report": "mighty-oak-holdings/programme-only.json"
+        }
+      ]
+    }
+  ],
+  "default_company": "sapling-industries",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,6758 @@
+{
+  "actions": {
+    "close_the_fiscal_year_gap": {
+      "basis": "the baseline forecast (the roster as signed, nothing planned), each action alone",
+      "fiscal_year_gap": "23360339.19",
+      "hires": {
+        "count": null,
+        "note": "the hiring action is not valued, so there is no number of hires to solve for",
+        "outcome": "unsupported by this history"
+      },
+      "programme": {
+        "cap": "2390337558.00",
+        "cap_rule": "the Goal 1 cap: three times the new-business pipeline created in the trailing 365 days",
+        "cash_cost_in_twelve_months": null,
+        "cost_status": "entered",
+        "dollars": null,
+        "fiscal_year_bookings_with": "79207625.42",
+        "needed_but_over_the_cap": "3007281482.38",
+        "outcome": "unreachable",
+        "overshoot": null,
+        "share_booking_in_fiscal_year": null
+      }
+    },
+    "comparison": [
+      {
+        "action": "Add $1,000,000 of programme pipeline starting 2026-09-01",
+        "bookings_gained": {
+          "next twelve months": "83384.81",
+          "rest of fiscal year": "7767.93"
+        },
+        "cash_cost_in_twelve_months": "50000.00",
+        "cost_status": "entered",
+        "gain_per_dollar": "1.67",
+        "kind": "programme",
+        "not_ranked_because": null,
+        "rank": 1,
+        "starts_paying": "2026-12",
+        "status": "valued"
+      },
+      {
+        "action": "Hire one AE starting 2026-09-01",
+        "bookings_gained": null,
+        "cash_cost_in_twelve_months": null,
+        "gain_per_dollar": null,
+        "kind": "hire",
+        "not_ranked_because": "unsupported by this history",
+        "rank": null,
+        "starts_paying": null,
+        "status": "unsupported by this history"
+      }
+    ],
+    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of programme pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
+    "meaning": "'feasible' means achievable inside the model's bounds, not operationally achievable; that a new hire adds pipeline at the fitted rate is an assumption",
+    "programme_shape": "created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise)"
+  },
+  "backtest": {
+    "candidates": {
+      "recency": {
+        "adopted": true,
+        "candidate": "cumulative incidence",
+        "fit_in_use": "cumulative incidence",
+        "folds": {
+          "1m": 16,
+          "3m": 14
+        },
+        "incumbent": "matured snapshots",
+        "mean_absolute_error": {
+          "1m": {
+            "cumulative incidence": "3234093.72",
+            "matured snapshots": "4398197.05"
+          },
+          "3m": {
+            "cumulative incidence": "11625580.86",
+            "matured snapshots": "12417198.70"
+          }
+        },
+        "reason": "lower mean absolute error at 1 and 3 months (1m: 3,234,094 vs 4,398,197; 3m: 11,625,581 vs 12,417,199)",
+        "rule": "adopted only if the fitted model's mean absolute error is lower than the Goal 1 fit's at both 1 and 3 months, on the same folds (at least 6 at each)"
+      }
+    },
+    "folds": [
+      {
+        "actual": "2440779",
+        "cutoff": "2026-07-31",
+        "forecasts": {
+          "fitted model": "7314946.49",
+          "stage-weighted pipeline": "19869128.83",
+          "trailing run-rate": "6450190.38"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "681454",
+        "cutoff": "2026-06-30",
+        "forecasts": {
+          "fitted model": "6139695.16",
+          "stage-weighted pipeline": "20295769.76",
+          "trailing run-rate": "6712683.53"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "5327468",
+        "cutoff": "2026-05-31",
+        "forecasts": {
+          "fitted model": "6463493.38",
+          "stage-weighted pipeline": "19132291.45",
+          "trailing run-rate": "6804136.60"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "8449701",
+        "cutoff": "2026-05-31",
+        "forecasts": {
+          "fitted model": "19121903.98",
+          "stage-weighted pipeline": "24771005.68",
+          "trailing run-rate": "20866018.92"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "6158077",
+        "cutoff": "2026-04-30",
+        "forecasts": {
+          "fitted model": "7406058.66",
+          "stage-weighted pipeline": "21210252.95",
+          "trailing run-rate": "7426117.97"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "12166999",
+        "cutoff": "2026-04-30",
+        "forecasts": {
+          "fitted model": "24390590.81",
+          "stage-weighted pipeline": "29313661.98",
+          "trailing run-rate": "22525891.18"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "1681412",
+        "cutoff": "2026-03-31",
+        "forecasts": {
+          "fitted model": "8371615.89",
+          "stage-weighted pipeline": "24552666.52",
+          "trailing run-rate": "7476665.34"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "13166957",
+        "cutoff": "2026-03-31",
+        "forecasts": {
+          "fitted model": "28161455.69",
+          "stage-weighted pipeline": "32960867.86",
+          "trailing run-rate": "22679218.21"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "0",
+        "cutoff": "2026-02-28",
+        "forecasts": {
+          "fitted model": "7614819.20",
+          "stage-weighted pipeline": "20371563.61",
+          "trailing run-rate": "8250423.00"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "11728649",
+        "cutoff": "2026-02-28",
+        "forecasts": {
+          "fitted model": "30811919.25",
+          "stage-weighted pipeline": "31795414.49",
+          "trailing run-rate": "26224558.83"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "20178350",
+        "cutoff": "2026-02-28",
+        "forecasts": {
+          "fitted model": "58637820.59",
+          "stage-weighted pipeline": "37493268.99",
+          "trailing run-rate": "53333091.55"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "7269409",
+        "cutoff": "2026-01-31",
+        "forecasts": {
+          "fitted model": "8665854.40",
+          "stage-weighted pipeline": "11032508.18",
+          "trailing run-rate": "8217470.30"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "12839981",
+        "cutoff": "2026-01-31",
+        "forecasts": {
+          "fitted model": "29882560.25",
+          "stage-weighted pipeline": "32202684.78",
+          "trailing run-rate": "26119816.32"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "25006980",
+        "cutoff": "2026-01-31",
+        "forecasts": {
+          "fitted model": "60532587.31",
+          "stage-weighted pipeline": "37981959.34",
+          "trailing run-rate": "53120075.88"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "6433842",
+        "cutoff": "2025-12-31",
+        "forecasts": {
+          "fitted model": "7013136.36",
+          "stage-weighted pipeline": "22243933.58",
+          "trailing run-rate": "8677682.30"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "17592411",
+        "cutoff": "2025-12-31",
+        "forecasts": {
+          "fitted model": "30150342.99",
+          "stage-weighted pipeline": "33363378.37",
+          "trailing run-rate": "25193271.21"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "30759368",
+        "cutoff": "2025-12-31",
+        "forecasts": {
+          "fitted model": "64587620.78",
+          "stage-weighted pipeline": "39174148.81",
+          "trailing run-rate": "50666467.65"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "9960487",
+        "cutoff": "2025-11-30",
+        "forecasts": {
+          "fitted model": "8243159.98",
+          "stage-weighted pipeline": "20871471.80",
+          "trailing run-rate": "8550081.04"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "23663738",
+        "cutoff": "2025-11-30",
+        "forecasts": {
+          "fitted model": "29696255.43",
+          "stage-weighted pipeline": "29036340.42",
+          "trailing run-rate": "25650243.12"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "35392387",
+        "cutoff": "2025-11-30",
+        "forecasts": {
+          "fitted model": "65157452.67",
+          "stage-weighted pipeline": "37377316.02",
+          "trailing run-rate": "51585488.95"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "1031238",
+        "cutoff": "2025-10-31",
+        "forecasts": {
+          "fitted model": "7343504.11",
+          "stage-weighted pipeline": "18143149.75",
+          "trailing run-rate": "8631786.66"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "17425567",
+        "cutoff": "2025-10-31",
+        "forecasts": {
+          "fitted model": "26851720.22",
+          "stage-weighted pipeline": "26375803.34",
+          "trailing run-rate": "26470812.42"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "30265548",
+        "cutoff": "2025-10-31",
+        "forecasts": {
+          "fitted model": "59892665.69",
+          "stage-weighted pipeline": "32069935.44",
+          "trailing run-rate": "52078446.17"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "10323131",
+        "cutoff": "2025-09-30",
+        "forecasts": {
+          "fitted model": "9102393.69",
+          "stage-weighted pipeline": "22424542.29",
+          "trailing run-rate": "8221280.79"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "21314856",
+        "cutoff": "2025-09-30",
+        "forecasts": {
+          "fitted model": "29730265.47",
+          "stage-weighted pipeline": "30091518.95",
+          "trailing run-rate": "24937885.08"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "35018107",
+        "cutoff": "2025-09-30",
+        "forecasts": {
+          "fitted model": "62417529.37",
+          "stage-weighted pipeline": "34293133.58",
+          "trailing run-rate": "49601727.46"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "7395495",
+        "cutoff": "2025-08-31",
+        "forecasts": {
+          "fitted model": "12751525.95",
+          "stage-weighted pipeline": "29860700.18",
+          "trailing run-rate": "8345330.79"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "18749864",
+        "cutoff": "2025-08-31",
+        "forecasts": {
+          "fitted model": "41981784.27",
+          "stage-weighted pipeline": "38472940.35",
+          "trailing run-rate": "25314170.08"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "42413602",
+        "cutoff": "2025-08-31",
+        "forecasts": {
+          "fitted model": "79046809.38",
+          "stage-weighted pipeline": "44087652.11",
+          "trailing run-rate": "50350162.46"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "15794617",
+        "cutoff": "2025-07-31",
+        "forecasts": {
+          "fitted model": "13675124.33",
+          "stage-weighted pipeline": "28032165.70",
+          "trailing run-rate": "8352019.92"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "33513243",
+        "cutoff": "2025-07-31",
+        "forecasts": {
+          "fitted model": "44081815.29",
+          "stage-weighted pipeline": "40414250.09",
+          "trailing run-rate": "24786639.75"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "50938810",
+        "cutoff": "2025-07-31",
+        "forecasts": {
+          "fitted model": "82582418.84",
+          "stage-weighted pipeline": "47416703.99",
+          "trailing run-rate": "49573279.50"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "6406647",
+        "cutoff": "2025-06-30",
+        "forecasts": {
+          "fitted model": "8898382.85",
+          "stage-weighted pipeline": "25718862.07",
+          "trailing run-rate": "7883001.78"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "29596759",
+        "cutoff": "2025-06-30",
+        "forecasts": {
+          "fitted model": "38636451.16",
+          "stage-weighted pipeline": "33199170.84",
+          "trailing run-rate": "24174538.79"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "50911615",
+        "cutoff": "2025-06-30",
+        "forecasts": {
+          "fitted model": "76000227.30",
+          "stage-weighted pipeline": "42544715.77",
+          "trailing run-rate": "48086310.86"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "6440147",
+        "cutoff": "2025-05-31",
+        "forecasts": {
+          "fitted model": "7735850.65",
+          "stage-weighted pipeline": "18703972.96",
+          "trailing run-rate": "7894506.49"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "28641411",
+        "cutoff": "2025-05-31",
+        "forecasts": {
+          "fitted model": "30495627.86",
+          "stage-weighted pipeline": "27274493.32",
+          "trailing run-rate": "24209819.91"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "47391275",
+        "cutoff": "2025-05-31",
+        "forecasts": {
+          "fitted model": "64239476.34",
+          "stage-weighted pipeline": "34897135.05",
+          "trailing run-rate": "48156489.61"
+        },
+        "horizon_months": 6
+      },
+      {
+        "actual": "13725517",
+        "cutoff": "2025-04-30",
+        "forecasts": {
+          "fitted model": "11490489.53",
+          "stage-weighted pipeline": "24164093.60",
+          "trailing run-rate": "6800543.67"
+        },
+        "horizon_months": 1
+      },
+      {
+        "actual": "26572311",
+        "cutoff": "2025-04-30",
+        "forecasts": {
+          "fitted model": "34187886.36",
+          "stage-weighted pipeline": "30556038.77",
+          "trailing run-rate": "20628315.80"
+        },
+        "horizon_months": 3
+      },
+      {
+        "actual": "60085554",
+        "cutoff": "2025-04-30",
+        "forecasts": {
+          "fitted model": "68673239.62",
+          "stage-weighted pipeline": "39513133.50",
+          "trailing run-rate": "41483316.39"
+        },
+        "horizon_months": 6
+      }
+    ],
+    "horizons": [
+      {
+        "folds": 16,
+        "horizon_months": 1,
+        "mean_absolute_error": {
+          "fitted model": "3234093.72",
+          "stage-weighted pipeline": "15347334.58",
+          "trailing run-rate": "3711490.86"
+        },
+        "range_coverage": {
+          "80%": 0.6875,
+          "95%": 0.875,
+          "folds_with_a_range": 16
+        },
+        "signed_bias": {
+          "fitted model": "2322520.66",
+          "stage-weighted pipeline": "15347334.58",
+          "trailing run-rate": "1476512.54"
+        }
+      },
+      {
+        "folds": 14,
+        "horizon_months": 3,
+        "mean_absolute_error": {
+          "fitted model": "11625580.86",
+          "stage-weighted pipeline": "11938496.97",
+          "trailing run-rate": "8100540.86"
+        },
+        "range_coverage": {
+          "80%": 0.3571,
+          "95%": 0.7857,
+          "folds_with_a_range": 14
+        },
+        "signed_bias": {
+          "fitted model": "11625580.86",
+          "stage-weighted pipeline": "11743223.02",
+          "trailing run-rate": "4597053.76"
+        }
+      },
+      {
+        "folds": 11,
+        "horizon_months": 6,
+        "mean_absolute_error": {
+          "fitted model": "28491477.44",
+          "stage-weighted pipeline": "8168053.17",
+          "trailing run-rate": "15023582.27"
+        },
+        "range_coverage": {
+          "80%": 0.0909,
+          "95%": 0.2727,
+          "folds_with_a_range": 11
+        },
+        "signed_bias": {
+          "fitted model": "28491477.44",
+          "stage-weighted pipeline": "-137499.40",
+          "trailing run-rate": "10879387.32"
+        }
+      }
+    ],
+    "notes": [],
+    "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 11,625,581 vs trailing run-rate 8,100,541",
+    "scoring": "per horizon, mean absolute dollar error over all folds; 'yes' only if the fitted model's error is lower than both baselines at 1 and 3 months; under 6 folds is 'not enough history to say'",
+    "verdict": "no"
+  },
+  "forecasts": {
+    "fitted_ranges": {
+      "by_window": {
+        "2026-09": {
+          "mean": "7575941.44",
+          "median": "6666619.50",
+          "range80": [
+            "3546188.80",
+            "13988174.40"
+          ],
+          "range95": [
+            "2057444.30",
+            "17400306.55"
+          ]
+        },
+        "2026-10": {
+          "mean": "5201914.19",
+          "median": "4140650.00",
+          "range80": [
+            "1083731.00",
+            "11152673.60"
+          ],
+          "range95": [
+            "323466.38",
+            "14975942.07"
+          ]
+        },
+        "2026-11": {
+          "mean": "6186355.64",
+          "median": "4979139.50",
+          "range80": [
+            "1466733.80",
+            "12531748.10"
+          ],
+          "range95": [
+            "467118.33",
+            "17789957.15"
+          ]
+        },
+        "2026-12": {
+          "mean": "8360689.90",
+          "median": "6914100.00",
+          "range80": [
+            "2209396.70",
+            "16544944.70"
+          ],
+          "range95": [
+            "824907.60",
+            "22752949.77"
+          ]
+        },
+        "2027-01": {
+          "mean": "6079257.71",
+          "median": "4898006.50",
+          "range80": [
+            "1194762.10",
+            "12297306.60"
+          ],
+          "range95": [
+            "335355.62",
+            "18217535.52"
+          ]
+        },
+        "2027-02": {
+          "mean": "6311477.28",
+          "median": "5170530.00",
+          "range80": [
+            "1213245.50",
+            "12881535.00"
+          ],
+          "range95": [
+            "184861.55",
+            "20214494.12"
+          ]
+        },
+        "2027-03": {
+          "mean": "7612427.98",
+          "median": "6520718.00",
+          "range80": [
+            "1831772.70",
+            "14354789.10"
+          ],
+          "range95": [
+            "578703.88",
+            "20727477.92"
+          ]
+        },
+        "2027-04": {
+          "mean": "7598735.20",
+          "median": "6529105.00",
+          "range80": [
+            "1865330.00",
+            "14481490.60"
+          ],
+          "range95": [
+            "557844.18",
+            "21640586.75"
+          ]
+        },
+        "2027-05": {
+          "mean": "7970028.27",
+          "median": "6801497.50",
+          "range80": [
+            "1746680.30",
+            "15625325.90"
+          ],
+          "range95": [
+            "371172.00",
+            "22559944.52"
+          ]
+        },
+        "2027-06": {
+          "mean": "7962299.62",
+          "median": "6510640.00",
+          "range80": [
+            "1725952.30",
+            "16244173.20"
+          ],
+          "range95": [
+            "285234.00",
+            "23383606.50"
+          ]
+        },
+        "2027-07": {
+          "mean": "7133044.22",
+          "median": "6170153.00",
+          "range80": [
+            "1256516.80",
+            "14248526.80"
+          ],
+          "range95": [
+            "0.00",
+            "20245818.30"
+          ]
+        },
+        "2027-08": {
+          "mean": "6995800.35",
+          "median": "5795045.50",
+          "range80": [
+            "1371903.00",
+            "14270231.40"
+          ],
+          "range95": [
+            "127269.00",
+            "20683594.60"
+          ]
+        }
+      },
+      "cells": [
+        {
+          "coverage80": 0.6875,
+          "coverage95": 0.875,
+          "coverage_judgement": "back-tested",
+          "folds_with_a_range": 16,
+          "horizon_months": 1,
+          "label": "back-tested",
+          "median_width80": "12156569.05"
+        },
+        {
+          "coverage80": 0.3571,
+          "coverage95": 0.7857,
+          "coverage_judgement": "too narrow",
+          "folds_with_a_range": 14,
+          "horizon_months": 3,
+          "label": "too narrow",
+          "median_width80": "22767546.55"
+        },
+        {
+          "coverage80": 0.0909,
+          "coverage95": 0.2727,
+          "coverage_judgement": "too narrow",
+          "folds_with_a_range": 11,
+          "horizon_months": 6,
+          "label": "too narrow",
+          "median_width80": "34670264.80"
+        }
+      ],
+      "horizons": {
+        "next twelve months": {
+          "mean": "84987971.80",
+          "median": "83620370.50",
+          "range80": [
+            "64754156.80",
+            "107009984.10"
+          ],
+          "range95": [
+            "56691892.50",
+            "120188666.22"
+          ],
+          "status": "unvalidated: twelve-month ranges are not back-tested (the back-test scores 1, 3, 6 months)"
+        },
+        "rest of fiscal year": {
+          "mean": "33404158.88",
+          "median": "32679736.00",
+          "range80": [
+            "22300648.50",
+            "45242809.60"
+          ],
+          "range95": [
+            "17990873.82",
+            "53567375.62"
+          ],
+          "status": "too narrow: judged by the 6-month back-test cell"
+        }
+      },
+      "status": "1-month back-tested (80% range held 69% of 16 folds); 3-month too narrow (80% range held 36% of 14 folds); 6-month too narrow (80% range held 9% of 11 folds)"
+    },
+    "horizon_windows": {
+      "next twelve months": [
+        "2026-09",
+        "2027-08"
+      ],
+      "rest of fiscal year": [
+        "2026-09",
+        "2027-01"
+      ]
+    },
+    "methods": [
+      {
+        "assumptions": [
+          "new-business bookings continue at the trailing 365-day rate of 171484.80 per day"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "5144544.00",
+          "2026-10": "5316028.80",
+          "2026-11": "5144544.00",
+          "2026-12": "5316028.80",
+          "2027-01": "5316028.80",
+          "2027-02": "4801574.40",
+          "2027-03": "5316028.80",
+          "2027-04": "5144544.00",
+          "2027-05": "5316028.80",
+          "2027-06": "5144544.00",
+          "2027-07": "5316028.80",
+          "2027-08": "5316028.80"
+        },
+        "components": {
+          "run-rate": {
+            "2026-09": "5144544.00",
+            "2026-10": "5316028.80",
+            "2026-11": "5144544.00",
+            "2026-12": "5316028.80",
+            "2027-01": "5316028.80",
+            "2027-02": "4801574.40",
+            "2027-03": "5316028.80",
+            "2027-04": "5144544.00",
+            "2027-05": "5316028.80",
+            "2027-06": "5144544.00",
+            "2027-07": "5316028.80",
+            "2027-08": "5316028.80"
+          }
+        },
+        "horizons": {
+          "next twelve months": "62591952.00",
+          "rest of fiscal year": "26237174.40"
+        },
+        "method": "trailing run-rate",
+        "unavailable_reason": ""
+      },
+      {
+        "assumptions": [
+          "open deals book at their amount times the profile's stage probability (stages.yaml), in the month of their expected close; past-due deals count in the first month",
+          "new pipeline is created at 2182956.67 ARR per day (trailing 365 days) and converts at the Discovery probability 0.04, closing 208 days after creation (median cycle of 38 trailing wins)"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "19428410.05",
+          "2026-10": "2625879.38",
+          "2026-11": "2055496.77",
+          "2026-12": "1136779.46",
+          "2027-01": "2015980.04",
+          "2027-02": "1603732.82",
+          "2027-03": "414242.15",
+          "2027-04": "2619548.01",
+          "2027-05": "2706866.28",
+          "2027-06": "2619548.01",
+          "2027-07": "2706866.28",
+          "2027-08": "2706866.28"
+        },
+        "components": {
+          "existing pipeline": {
+            "2026-09": "19428410.05",
+            "2026-10": "2625879.38",
+            "2026-11": "2055496.77",
+            "2026-12": "1136779.46",
+            "2027-01": "2015980.04",
+            "2027-02": "1603732.82",
+            "2027-03": "64969.08",
+            "2027-04": "0.00",
+            "2027-05": "0.00",
+            "2027-06": "0.00",
+            "2027-07": "0.00",
+            "2027-08": "0.00"
+          },
+          "future pipeline": {
+            "2026-09": "0.00",
+            "2026-10": "0.00",
+            "2026-11": "0.00",
+            "2026-12": "0.00",
+            "2027-01": "0.00",
+            "2027-02": "0.00",
+            "2027-03": "349273.07",
+            "2027-04": "2619548.01",
+            "2027-05": "2706866.28",
+            "2027-06": "2619548.01",
+            "2027-07": "2706866.28",
+            "2027-08": "2706866.28"
+          }
+        },
+        "horizons": {
+          "next twelve months": "42640215.53",
+          "rest of fiscal year": "27262545.70"
+        },
+        "method": "stage-weighted pipeline",
+        "unavailable_reason": ""
+      },
+      {
+        "assumptions": [
+          "open deals book at their current amount times the fitted win rate for their stage and age, on the fitted close-timing distribution",
+          "new pipeline is created at 1.2110 deals per day and wins at the fitted creation-cohort rate 0.0910, averaging 1986317.81 ARR per win"
+        ],
+        "available": true,
+        "by_window": {
+          "2026-09": "7482507.71",
+          "2026-10": "5316658.27",
+          "2026-11": "6171150.62",
+          "2026-12": "8119482.82",
+          "2027-01": "6102102.39",
+          "2027-02": "6377371.92",
+          "2027-03": "7786464.06",
+          "2027-04": "7646324.09",
+          "2027-05": "7971346.36",
+          "2027-06": "7730087.30",
+          "2027-07": "7025637.77",
+          "2027-08": "7274076.92"
+        },
+        "components": {
+          "existing pipeline": {
+            "2026-09": "7482507.71",
+            "2026-10": "5174825.22",
+            "2026-11": "5762256.54",
+            "2026-12": "6838641.11",
+            "2027-01": "3939457.39",
+            "2027-02": "3716549.30",
+            "2027-03": "3818319.09",
+            "2027-04": "3025897.60",
+            "2027-05": "2275730.47",
+            "2027-06": "1696166.05",
+            "2027-07": "313709.08",
+            "2027-08": "487271.70"
+          },
+          "future pipeline": {
+            "2026-09": "0.00",
+            "2026-10": "141833.05",
+            "2026-11": "408894.08",
+            "2026-12": "1280841.71",
+            "2027-01": "2162645.00",
+            "2027-02": "2660822.63",
+            "2027-03": "3968144.98",
+            "2027-04": "4620426.49",
+            "2027-05": "5695615.89",
+            "2027-06": "6033921.25",
+            "2027-07": "6711928.68",
+            "2027-08": "6786805.23"
+          }
+        },
+        "horizons": {
+          "next twelve months": "85003210.23",
+          "rest of fiscal year": "33191901.81"
+        },
+        "method": "fitted model",
+        "unavailable_reason": ""
+      }
+    ],
+    "windows": [
+      "2026-09",
+      "2026-10",
+      "2026-11",
+      "2026-12",
+      "2027-01",
+      "2027-02",
+      "2027-03",
+      "2027-04",
+      "2027-05",
+      "2027-06",
+      "2027-07",
+      "2027-08"
+    ]
+  },
+  "gap": {
+    "fiscal_year": {
+      "actual_to_date": "27447759",
+      "expected": "60639660.81",
+      "expected_range80": [
+        "49748407.50",
+        "72690568.60"
+      ],
+      "expected_range95": [
+        "45438632.83",
+        "81015134.62"
+      ],
+      "forecast_rest_of_year": "33191901.81",
+      "gap": "23360339.19",
+      "target": "84000000"
+    },
+    "forecast_method": "fitted model (expected value)",
+    "lever": {
+      "bookings_gained": {
+        "next twelve months": "173367158.56",
+        "rest of fiscal year": "23360339.19"
+      },
+      "bookings_gained_at": "the required amount",
+      "cap": "2390337558.00",
+      "cap_rule": "3 times the new-business pipeline created in the trailing 365 days",
+      "forecast_with_lever": "84000000.00",
+      "forecast_without_lever": "60639660.81",
+      "headline": "feasible: $2,018,192,885.26",
+      "lever": "new-business pipeline added",
+      "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and timing, the cap above), not operationally achievable",
+      "outcome": "feasible",
+      "required": "2018192885.26",
+      "schedule": "added evenly across the 5 months to the target's end",
+      "target": "84000000"
+    },
+    "lever_next_twelve_months": {
+      "bookings_gained": {
+        "next twelve months": "91783212.96",
+        "rest of fiscal year": "12367319.19"
+      },
+      "bookings_gained_at": "the required amount",
+      "cap": "2390337558.00",
+      "cap_rule": "3 times the new-business pipeline created in the trailing 365 days",
+      "forecast_with_lever": "48000000.00",
+      "forecast_without_lever": "35632680.81",
+      "headline": "feasible: $1,068,462,037.02",
+      "lever": "new-business pipeline added",
+      "meaning": "'feasible' means achievable inside the model's bounds (fitted conversion and timing, the cap above), not operationally achievable",
+      "outcome": "feasible",
+      "required": "1068462037.02",
+      "schedule": "added evenly across the 5 months to the target's end",
+      "target": "48000000"
+    },
+    "measure": "new-business ARR bookings (type = new_business, the arr column)",
+    "next_twelve_months": {
+      "actual": "2440779",
+      "forecast": "33191901.81",
+      "gap": "12367319.19",
+      "quarters": [
+        "Q3FY26",
+        "Q4FY26"
+      ],
+      "target": "48000000",
+      "targets_through": "2027-01-31",
+      "untargeted": {
+        "forecast": "51811308.42",
+        "months": [
+          "2027-02",
+          "2027-03",
+          "2027-04",
+          "2027-05",
+          "2027-06",
+          "2027-07",
+          "2027-08"
+        ],
+        "note": "months outside a targeted quarter (targets end 2027-01-31): bookings alone"
+      },
+      "window": [
+        "2026-09",
+        "2027-08"
+      ]
+    },
+    "quarters": [
+      {
+        "actual": "12839981",
+        "expected": "12839981.00",
+        "expected_range80": [
+          "12839981.00",
+          "12839981.00"
+        ],
+        "forecast": "0.00",
+        "gap": "4160019.00",
+        "quarter": "Q1FY26",
+        "status": "closed",
+        "target": "17000000"
+      },
+      {
+        "actual": "12166999",
+        "expected": "12166999.00",
+        "expected_range80": [
+          "12166999.00",
+          "12166999.00"
+        ],
+        "forecast": "0.00",
+        "gap": "6833001.00",
+        "quarter": "Q2FY26",
+        "status": "closed",
+        "target": "19000000"
+      },
+      {
+        "actual": "2440779",
+        "expected": "15239944.98",
+        "expected_range80": [
+          "9531657.80",
+          "22496549.90"
+        ],
+        "forecast": "12799165.98",
+        "gap": "6760055.02",
+        "quarter": "Q3FY26",
+        "status": "in progress",
+        "target": "22000000"
+      },
+      {
+        "actual": "0",
+        "expected": "20392735.83",
+        "expected_range80": [
+          "10598149.40",
+          "32331600.10"
+        ],
+        "forecast": "20392735.83",
+        "gap": "5607264.17",
+        "quarter": "Q4FY26",
+        "status": "not started",
+        "target": "26000000"
+      }
+    ]
+  },
+  "history": {
+    "facts": {
+      "backtest_folds": {
+        "1m": 16,
+        "3m": 14,
+        "6m": 11
+      },
+      "closed_outcomes": 944,
+      "deal_observations": true,
+      "earliest_close": "2024-02-07",
+      "first_deal_created": "2024-02-01",
+      "matured_snapshots": 24,
+      "months_of_history": 30,
+      "new_business_deals": 1075
+    },
+    "limitations": [
+      "stage_history.csv records stage changes only: it holds no past deal amounts and no past expected close dates",
+      "deal_observations.csv supplies past amounts and expected close dates (3848 observations); a deal's state on a past date is its latest observation on or before that date",
+      "16 deals have no stage history, so they never appear in a win-rate snapshot; 1 of them are open: today's forecasts use their current stage from deals.csv, but at past cutoffs their stage is unknown and back-test folds leave them out",
+      "win rates use snapshots from the trailing 24 months, young ones counted only for the days observed (the recency fit was adopted: lower mean absolute error at 1 and 3 months (1m: 3,234,094 vs 4,398,197; 3m: 11,625,581 vs 12,417,199))",
+      "the model is pooled across segments; a segment split is not evaluated in this report",
+      "roles on team_members.csv: ae 128, manager 7, renewal_manager 4, sdr 18, se 14, vp_sales 1; the capacity term is not shown (ramped AE-months varied 14% across the scored period; at least 20% is needed for headcount to be testable)",
+      "team_members.csv holds no history of role, segment, quota or deal ownership: today's values stand in for every past date, and a deal's owner is its current owner"
+    ]
+  },
+  "inputs": {
+    "as_of": "2026-08-31",
+    "capacity": {
+      "decision": "not shown",
+      "forecast_uses": "flat trailing creation rate"
+    },
+    "data": "engine/data-v2/mighty-oak-holdings",
+    "fiscal_year": "FY26",
+    "fiscal_year_end": "2027-01-31",
+    "fiscal_year_start": "2026-02-01",
+    "fit": "cumulative incidence",
+    "measure": "new-business ARR bookings (type = new_business, the arr column)",
+    "profile": "engine/config/profiles/mighty-oak-holdings",
+    "ranges": "deal outcomes only",
+    "simulation": {
+      "draws": 2000,
+      "seed": 0
+    }
+  },
+  "plan": {
+    "baseline": {
+      "next twelve months": "85003210.23",
+      "rest of fiscal year": "33191901.81"
+    },
+    "baseline_definition": "the roster as signed and nothing planned; the capacity term was not adopted, so hires are listed but not valued",
+    "cash_cost_in_twelve_months": "1000000.00",
+    "contributions_total": {
+      "next twelve months": "1600600.21",
+      "rest of fiscal year": "83295.40"
+    },
+    "cost_note": "hires at loaded cost per AE-month over expected months employed; programmes at their cost, paid in step with the pipeline they create (or on the plan's own payment schedule), counting only what falls inside the twelve months",
+    "difference": {
+      "next twelve months": "1600600.21",
+      "rest of fiscal year": "83295.40"
+    },
+    "file": "engine/config/profiles/mighty-oak-holdings/plan-programme-only.yaml",
+    "gap": {
+      "fiscal_year": {
+        "actual_to_date": "27447759",
+        "baseline_gap": "23360339.19",
+        "gap_with_plan": "23277043.79",
+        "target": "84000000"
+      },
+      "next_twelve_months": {
+        "actual_to_date": "2440779",
+        "baseline_gap": "12367319.19",
+        "gap_with_plan": "12284023.79",
+        "note": "against the quarters with a target that end in the window; later months are bookings alone",
+        "target": "48000000"
+      }
+    },
+    "items": [
+      {
+        "cash_cost_in_twelve_months": "1000000.00",
+        "cash_cost_total": "1000000.00",
+        "contribution": {
+          "next twelve months": "1600600.21",
+          "rest of fiscal year": "83295.40"
+        },
+        "detail": "$20,000,000 of created pipeline from 2026-10",
+        "kind": "programme",
+        "label": "Channel partner programme",
+        "payment_schedule": "paid in step with the pipeline it creates",
+        "valued": true
+      }
+    ],
+    "order": "hires first, then programmes, each in the plan file's order; each contribution is the extra bookings from adding that item to everything above it, so they sum to the difference",
+    "ranges": {
+      "bookings_in_window": {
+        "next twelve months": {
+          "median": "86149250.00",
+          "range80": [
+            "65932283.10",
+            "108785719.90"
+          ],
+          "range95": [
+            "57341414.50",
+            "122708233.42"
+          ]
+        },
+        "rest of fiscal year": {
+          "median": "32754783.00",
+          "range80": [
+            "21921675.30",
+            "45416895.50"
+          ],
+          "range95": [
+            "17888516.62",
+            "54565056.00"
+          ]
+        }
+      },
+      "draws": 2000,
+      "fiscal_year_expected_range80": [
+        "49369434.30",
+        "72864654.50"
+      ],
+      "status": "unvalidated: these ranges include the plan; they have not been back-tested",
+      "what_is_drawn": "deal outcomes, with the planned hires and programme pipeline in the scenario"
+    },
+    "with_plan": {
+      "next twelve months": "86603810.44",
+      "rest of fiscal year": "33275197.21"
+    }
+  },
+  "quota_productivity": {
+    "all_reps": {
+      "attainment": "0.589",
+      "prorated_quota": "99041095.89",
+      "reps": 113,
+      "spread_across_reps": {
+        "max": "5.533",
+        "median": "0.000",
+        "min": "0.000",
+        "p25": "0.000",
+        "p75": "0.759"
+      },
+      "spread_reps": 88,
+      "wins_credited": "58355817.00"
+    },
+    "by_segment": {
+      "Enterprise": {
+        "attainment": "0.531",
+        "prorated_quota": "55374246.58",
+        "reps": 56,
+        "spread_across_reps": {
+          "max": "3.655",
+          "median": "0.000",
+          "min": "0.000",
+          "p25": "0.000",
+          "p75": "1.004"
+        },
+        "spread_reps": 45,
+        "wins_credited": "29408150.00"
+      },
+      "Mid-Market": {
+        "attainment": "0.480",
+        "prorated_quota": "23600547.95",
+        "reps": 42,
+        "spread_across_reps": {
+          "max": "4.083",
+          "median": "0.000",
+          "min": "0.000",
+          "p25": "0.000",
+          "p75": "0.703"
+        },
+        "spread_reps": 33,
+        "wins_credited": "11316607.00"
+      },
+      "Strategic Enterprise": {
+        "attainment": "0.879",
+        "prorated_quota": "20066301.37",
+        "reps": 15,
+        "spread_across_reps": {
+          "max": "5.533",
+          "median": "0.000",
+          "min": "0.000",
+          "p25": "0.000",
+          "p75": "0.777"
+        },
+        "spread_reps": 10,
+        "wins_credited": "17631060.00"
+      }
+    },
+    "definition": "wins credited to the owner on deals.csv and closed while that person was employed, over annual quota prorated by days employed in the window",
+    "limits": [
+      "the owner is the deal's current owner and the quota is today's annual quota, standing in for their history",
+      "quota is a full-ramp annual figure; ramp is not prorated out of it"
+    ],
+    "reps_without_quota": 0,
+    "spread_min_days": 180,
+    "total_quota": {
+      "annual_quota_of_people_employed_at_as_of": "109200000",
+      "fiscal_year_target": "84000000",
+      "note": "full-ramp annual quotas of the quota-carrying people employed on the as-of date (signed hires excluded) over the fiscal year's bookings target",
+      "people": 99,
+      "quota_over_target": "1.30"
+    },
+    "unattributed_note": "wins whose owner is not on the roster, or who had left or not yet started on the close date",
+    "window": "trailing 365 days to 2026-08-31",
+    "wins_credited": "58355817.00",
+    "wins_in_window": "62591952.00",
+    "wins_unattributed": "4236135.00"
+  },
+  "rates": [
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Discovery (losses compete; deals still open are counted for the days observed)",
+      "denominator": "540 deals open in S1 at their first snapshot in the trailing 24 months (70 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1",
+      "numerator": "45 wins observed within 365 days",
+      "range95": [
+        0.0773,
+        0.1337
+      ],
+      "sample_size": 540,
+      "source": "fitted",
+      "value": "0.102064"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Qualification (losses compete; deals still open are counted for the days observed)",
+      "denominator": "341 deals open in S2 at their first snapshot in the trailing 24 months (48 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2",
+      "numerator": "56 wins observed within 365 days",
+      "range95": [
+        0.1563,
+        0.2482
+      ],
+      "sample_size": 341,
+      "source": "fitted",
+      "value": "0.198270"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Technical Evaluation (losses compete; deals still open are counted for the days observed)",
+      "denominator": "178 deals open in S3 at their first snapshot in the trailing 24 months (24 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3",
+      "numerator": "55 wins observed within 365 days",
+      "range95": [
+        0.2779,
+        0.4251
+      ],
+      "sample_size": 178,
+      "source": "fitted",
+      "value": "0.347911"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Business Case (losses compete; deals still open are counted for the days observed)",
+      "denominator": "124 deals open in S4 at their first snapshot in the trailing 24 months (12 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4",
+      "numerator": "62 wins observed within 365 days",
+      "range95": [
+        0.435,
+        0.6143
+      ],
+      "sample_size": 124,
+      "source": "fitted",
+      "value": "0.525472"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Negotiation (losses compete; deals still open are counted for the days observed)",
+      "denominator": "71 deals open in S5 at their first snapshot in the trailing 24 months (5 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5",
+      "numerator": "58 wins observed within 365 days",
+      "range95": [
+        0.7873,
+        0.94
+      ],
+      "sample_size": 71,
+      "source": "fitted",
+      "value": "0.883944"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S1 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "533 deals open in S1 aged 0-90d (435.5 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1:0-90d",
+      "numerator": "43 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 533,
+      "source": "fitted",
+      "value": "0.099783"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S1 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "27 deals open in S1 aged 181d+ (21.3 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1:181d+",
+      "numerator": "1 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 27,
+      "source": "fitted",
+      "value": "0.073688"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S1 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "67 deals open in S1 aged 91-180d (58.1 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S1:91-180d",
+      "numerator": "4 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 67,
+      "source": "fitted",
+      "value": "0.076603"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S2 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "295 deals open in S2 aged 0-90d (247.8 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2:0-90d",
+      "numerator": "48 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 295,
+      "source": "fitted",
+      "value": "0.197349"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S2 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "39 deals open in S2 aged 181d+ (31.9 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2:181d+",
+      "numerator": "5 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 39,
+      "source": "fitted",
+      "value": "0.170520"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S2 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "119 deals open in S2 aged 91-180d (93.3 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S2:91-180d",
+      "numerator": "16 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 119,
+      "source": "fitted",
+      "value": "0.176453"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S3 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "107 deals open in S3 aged 0-90d (91.2 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3:0-90d",
+      "numerator": "30 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 107,
+      "source": "fitted",
+      "value": "0.328555"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S3 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "39 deals open in S3 aged 181d+ (35.6 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3:181d+",
+      "numerator": "11 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 39,
+      "source": "fitted",
+      "value": "0.321799"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S3 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "88 deals open in S3 aged 91-180d (79.6 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S3:91-180d",
+      "numerator": "31 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 88,
+      "source": "fitted",
+      "value": "0.376624"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S4 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "37 deals open in S4 aged 0-90d (34.7 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4:0-90d",
+      "numerator": "17 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 37,
+      "source": "fitted",
+      "value": "0.497060"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S4 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "55 deals open in S4 aged 181d+ (42.2 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4:181d+",
+      "numerator": "23 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 55,
+      "source": "fitted",
+      "value": "0.489314"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S4 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "76 deals open in S4 aged 91-180d (70.9 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S4:91-180d",
+      "numerator": "35 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 76,
+      "source": "fitted",
+      "value": "0.491788"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S5 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "5 deals open in S5 aged 0-90d (5.0 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5:0-90d",
+      "numerator": "5 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 5,
+      "source": "fitted",
+      "value": "0.907155"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S5 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "37 deals open in S5 aged 181d+ (35.6 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5:181d+",
+      "numerator": "29 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 37,
+      "source": "fitted",
+      "value": "0.868025"
+    },
+    {
+      "cohort": "monthly snapshots 2024-08-31 to 2026-07-31",
+      "definition": "stage S5 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
+      "denominator": "35 deals open in S5 aged 91-180d (35.0 effective after censoring, +20)",
+      "horizon": "365 days",
+      "name": "win_within_horizon:S5:91-180d",
+      "numerator": "30 wins observed within 365 days (+20 x stage rate)",
+      "range95": null,
+      "sample_size": 35,
+      "source": "fitted",
+      "value": "0.903252"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2026-08-31",
+      "definition": "cumulative incidence of a win within 365 days of creation (losses compete; deals still open are counted for the days observed)",
+      "denominator": "857 deals created (127 still open at the cutoff)",
+      "horizon": "365 days",
+      "name": "new_pipeline_win_rate",
+      "numerator": "60 wins observed within 365 days",
+      "range95": [
+        0.0715,
+        0.1152
+      ],
+      "sample_size": 857,
+      "source": "fitted",
+      "value": "0.091018"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2026-08-31",
+      "definition": "mean booked ARR of a created deal that is won, each win weighted by its day's incidence increment",
+      "denominator": "60 wins observed",
+      "horizon": "365 days",
+      "name": "mean_won_arr",
+      "numerator": "booked ARR of those wins",
+      "range95": null,
+      "sample_size": 60,
+      "source": "fitted",
+      "value": "1986317.813547"
+    },
+    {
+      "cohort": "new-business deals created 2024-09-01 to 2026-08-31",
+      "definition": "mean ARR of a created deal (first recorded amount)",
+      "denominator": "857 deals with a known amount",
+      "horizon": "at creation",
+      "name": "mean_created_arr",
+      "numerator": "ARR of created deals",
+      "range95": null,
+      "sample_size": 857,
+      "source": "fitted",
+      "value": "1877318.065344"
+    },
+    {
+      "cohort": "created 2025-09-01 to 2026-08-31",
+      "definition": "new-business deals created per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "created_deals_per_day",
+      "numerator": "442 deals created",
+      "range95": null,
+      "sample_size": 442,
+      "source": "fitted",
+      "value": "1.210959"
+    },
+    {
+      "cohort": "closed 2025-09-01 to 2026-08-31",
+      "definition": "new-business ARR booked per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "trailing_bookings_per_day",
+      "numerator": "62591952.00 ARR booked",
+      "range95": null,
+      "sample_size": 38,
+      "source": "fitted",
+      "value": "171484.800000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Discovery is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S1",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.040000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Qualification is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S2",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.100000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Technical Evaluation is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S3",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.220000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Business Case is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S4",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.450000"
+    },
+    {
+      "cohort": "stages.yaml",
+      "definition": "probability that a deal in Negotiation is won (stages.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "stage_probability:S5",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.720000"
+    },
+    {
+      "cohort": "created 2025-09-01 to 2026-08-31",
+      "definition": "new-business ARR created per day",
+      "denominator": "365 days",
+      "horizon": "trailing",
+      "name": "created_arr_per_day",
+      "numerator": "796779186.00 ARR created (first recorded amount)",
+      "range95": null,
+      "sample_size": 442,
+      "source": "fitted",
+      "value": "2182956.673973"
+    },
+    {
+      "cohort": "closed 2025-09-01 to 2026-08-31",
+      "definition": "median days from creation to close of a won deal",
+      "denominator": "38 wins",
+      "horizon": "trailing",
+      "name": "median_won_cycle_days",
+      "numerator": "median of days to close",
+      "range95": null,
+      "sample_size": 38,
+      "source": "fitted",
+      "value": "208"
+    },
+    {
+      "cohort": "",
+      "definition": "days within which a win counts for a win rate",
+      "denominator": "",
+      "horizon": "",
+      "name": "horizon_days",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "365"
+    },
+    {
+      "cohort": "",
+      "definition": "pull of an age-group cell toward its stage rate",
+      "denominator": "",
+      "horizon": "",
+      "name": "smoothing_pseudo_observations",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "20"
+    },
+    {
+      "cohort": "",
+      "definition": "wins a stage needs for its own close timing",
+      "denominator": "",
+      "horizon": "",
+      "name": "min_timing_samples",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "20"
+    },
+    {
+      "cohort": "",
+      "definition": "window for trailing rates",
+      "denominator": "",
+      "horizon": "",
+      "name": "trailing_days",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "365"
+    },
+    {
+      "cohort": "",
+      "definition": "trailing months of snapshots for the cumulative-incidence fit",
+      "denominator": "",
+      "horizon": "",
+      "name": "recency_months",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "24"
+    },
+    {
+      "cohort": "",
+      "definition": "cap on added pipeline, times trailing created pipeline",
+      "denominator": "",
+      "horizon": "",
+      "name": "lever_cap_multiple",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "3"
+    },
+    {
+      "cohort": "",
+      "definition": "Monte Carlo draws behind the ranges",
+      "denominator": "",
+      "horizon": "",
+      "name": "simulation_draws",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "2000"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 1",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:1",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.4733,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.791008"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 2",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:2",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.2345,
+        0.8763
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.453341"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 3",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:3",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.5077,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.836122"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 4",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:4",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.3001,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.561506"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 5",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:5",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.4014,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.696964"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 6",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:6",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.6702,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "1"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 7",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:7",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.6873,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "1"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 8",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:8",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.7308,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "1"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 9",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:9",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.5299,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.873378"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 10",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:10",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.5973,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "0.935954"
+    },
+    {
+      "cohort": "reps observed 2024-02-01 to 2026-08-31",
+      "definition": "share of a tenured rep's created deals in tenure month 11",
+      "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
+      "horizon": "per tenure month",
+      "name": "ramp_weight:11",
+      "numerator": "deals created by reps in this tenure month",
+      "range95": [
+        0.6769,
+        1.0
+      ],
+      "sample_size": 26,
+      "source": "fitted",
+      "value": "1"
+    },
+    {
+      "cohort": "2024-02-01 to 2026-08-31",
+      "definition": "departures per AE-month (monthly attrition)",
+      "denominator": "2641.7 AE-months employed",
+      "horizon": "per AE-month",
+      "name": "attrition_per_ae_month",
+      "numerator": "29 departures",
+      "range95": [
+        0.0074,
+        0.0158
+      ],
+      "sample_size": 29,
+      "source": "fitted",
+      "value": "0.010978"
+    },
+    {
+      "cohort": "trailing 365 days to 2026-08-31",
+      "definition": "new-business deals created per ramped AE-month",
+      "denominator": "1052.47 ramped AE-months",
+      "horizon": "per ramped AE-month",
+      "name": "created_deals_per_ramped_ae_month",
+      "numerator": "442 deals created",
+      "range95": null,
+      "sample_size": 442,
+      "source": "fitted",
+      "value": "0.419963"
+    },
+    {
+      "cohort": "capacity.yaml",
+      "definition": "cash cost of one AE for one month (capacity.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "loaded_cost_per_ae_month",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "16000"
+    },
+    {
+      "cohort": "capacity.yaml",
+      "definition": "cash cost per dollar of programme pipeline created (capacity.yaml)",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "programme_cost_per_dollar_of_pipeline",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "0.050000"
+    },
+    {
+      "cohort": "capacity.yaml",
+      "definition": "months a programme takes to reach its full monthly pipeline",
+      "denominator": "",
+      "horizon": "unstated",
+      "name": "programme_ramp_months",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "entered",
+      "value": "3"
+    },
+    {
+      "cohort": "",
+      "definition": "ramped AE-months must vary by this much across the scored period for capacity to be testable",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_staffing_variation",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.200000"
+    },
+    {
+      "cohort": "",
+      "definition": "capacity's created-pipeline error must be this much lower than the flat rate's at both horizons",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_improvement",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "0.100000"
+    },
+    {
+      "cohort": "",
+      "definition": "folds needed at each scored horizon",
+      "denominator": "",
+      "horizon": "",
+      "name": "capacity_min_folds",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "6"
+    },
+    {
+      "cohort": "",
+      "definition": "days in one AE-month",
+      "denominator": "",
+      "horizon": "",
+      "name": "days_per_ae_month",
+      "numerator": "",
+      "range95": null,
+      "sample_size": 0,
+      "source": "default",
+      "value": "30.437500"
+    }
+  ],
+  "reconciliation": {
+    "bookings_by_month": {
+      "2026-02": "7269409",
+      "2026-03": "3889160",
+      "2026-04": "1681412",
+      "2026-05": "6158077",
+      "2026-06": "5327468",
+      "2026-07": "681454",
+      "2026-08": "2440779"
+    },
+    "bookings_fytd": "27447759",
+    "checks": [
+      {
+        "detail": "1075 included + 651 excluded = 1726 of 1726 source rows",
+        "name": "rows partition",
+        "passed": true
+      },
+      {
+        "detail": "included + excluded arr = 2504080299 against source total 2504080299 (0 rows had no readable arr)",
+        "name": "arr partition",
+        "passed": true
+      },
+      {
+        "detail": "source file new-business won FYTD 27447759 = included 27447759 + excluded rows 0",
+        "name": "bookings tie to source",
+        "passed": true
+      },
+      {
+        "detail": "open at FY start 216414277 + created 444438240 = won 27447759 + lost 431434537 + open now 201970221",
+        "name": "pipeline flow",
+        "passed": true
+      }
+    ],
+    "excluded_motions": {
+      "expansion": {
+        "arr": "110577998",
+        "rows": 300,
+        "won_fytd_arr": "29415198"
+      },
+      "renewal": {
+        "arr": "346753004",
+        "rows": 351,
+        "won_fytd_arr": "93779695"
+      }
+    },
+    "exclusions": [
+      {
+        "arr": "79658",
+        "deal_id": "MOH-00004",
+        "reason": "excluded motion: expansion",
+        "row": 5
+      },
+      {
+        "arr": "698387",
+        "deal_id": "MOH-00005",
+        "reason": "excluded motion: renewal",
+        "row": 6
+      },
+      {
+        "arr": "313730",
+        "deal_id": "MOH-00008",
+        "reason": "excluded motion: expansion",
+        "row": 9
+      },
+      {
+        "arr": "669366",
+        "deal_id": "MOH-00015",
+        "reason": "excluded motion: renewal",
+        "row": 16
+      },
+      {
+        "arr": "383642",
+        "deal_id": "MOH-00019",
+        "reason": "excluded motion: expansion",
+        "row": 20
+      },
+      {
+        "arr": "471056",
+        "deal_id": "MOH-00020",
+        "reason": "excluded motion: renewal",
+        "row": 21
+      },
+      {
+        "arr": "2275185",
+        "deal_id": "MOH-00023",
+        "reason": "excluded motion: renewal",
+        "row": 24
+      },
+      {
+        "arr": "1316821",
+        "deal_id": "MOH-00024",
+        "reason": "excluded motion: renewal",
+        "row": 25
+      },
+      {
+        "arr": "686366",
+        "deal_id": "MOH-00025",
+        "reason": "excluded motion: renewal",
+        "row": 26
+      },
+      {
+        "arr": "678196",
+        "deal_id": "MOH-00026",
+        "reason": "excluded motion: expansion",
+        "row": 27
+      },
+      {
+        "arr": "195777",
+        "deal_id": "MOH-00027",
+        "reason": "excluded motion: renewal",
+        "row": 28
+      },
+      {
+        "arr": "1718935",
+        "deal_id": "MOH-00029",
+        "reason": "excluded motion: renewal",
+        "row": 30
+      },
+      {
+        "arr": "181814",
+        "deal_id": "MOH-00031",
+        "reason": "excluded motion: expansion",
+        "row": 32
+      },
+      {
+        "arr": "400280",
+        "deal_id": "MOH-00032",
+        "reason": "excluded motion: renewal",
+        "row": 33
+      },
+      {
+        "arr": "516589",
+        "deal_id": "MOH-00034",
+        "reason": "excluded motion: expansion",
+        "row": 35
+      },
+      {
+        "arr": "561613",
+        "deal_id": "MOH-00037",
+        "reason": "excluded motion: renewal",
+        "row": 38
+      },
+      {
+        "arr": "309114",
+        "deal_id": "MOH-00038",
+        "reason": "excluded motion: renewal",
+        "row": 39
+      },
+      {
+        "arr": "241818",
+        "deal_id": "MOH-00041",
+        "reason": "excluded motion: expansion",
+        "row": 42
+      },
+      {
+        "arr": "319507",
+        "deal_id": "MOH-00049",
+        "reason": "excluded motion: expansion",
+        "row": 50
+      },
+      {
+        "arr": "375962",
+        "deal_id": "MOH-00054",
+        "reason": "excluded motion: renewal",
+        "row": 55
+      },
+      {
+        "arr": "746321",
+        "deal_id": "MOH-00055",
+        "reason": "excluded motion: renewal",
+        "row": 56
+      },
+      {
+        "arr": "1873981",
+        "deal_id": "MOH-00056",
+        "reason": "excluded motion: renewal",
+        "row": 57
+      },
+      {
+        "arr": "419468",
+        "deal_id": "MOH-00059",
+        "reason": "excluded motion: renewal",
+        "row": 60
+      },
+      {
+        "arr": "1037504",
+        "deal_id": "MOH-00062",
+        "reason": "excluded motion: renewal",
+        "row": 63
+      },
+      {
+        "arr": "2428991",
+        "deal_id": "MOH-00063",
+        "reason": "excluded motion: renewal",
+        "row": 64
+      },
+      {
+        "arr": "556905",
+        "deal_id": "MOH-00066",
+        "reason": "excluded motion: expansion",
+        "row": 67
+      },
+      {
+        "arr": "536491",
+        "deal_id": "MOH-00067",
+        "reason": "excluded motion: expansion",
+        "row": 68
+      },
+      {
+        "arr": "1031040",
+        "deal_id": "MOH-00068",
+        "reason": "excluded motion: renewal",
+        "row": 69
+      },
+      {
+        "arr": "319233",
+        "deal_id": "MOH-00070",
+        "reason": "excluded motion: expansion",
+        "row": 71
+      },
+      {
+        "arr": "767689",
+        "deal_id": "MOH-00071",
+        "reason": "excluded motion: renewal",
+        "row": 72
+      },
+      {
+        "arr": "490695",
+        "deal_id": "MOH-00072",
+        "reason": "excluded motion: expansion",
+        "row": 73
+      },
+      {
+        "arr": "564713",
+        "deal_id": "MOH-00074",
+        "reason": "excluded motion: renewal",
+        "row": 75
+      },
+      {
+        "arr": "608229",
+        "deal_id": "MOH-00075",
+        "reason": "excluded motion: renewal",
+        "row": 76
+      },
+      {
+        "arr": "822295",
+        "deal_id": "MOH-00077",
+        "reason": "excluded motion: renewal",
+        "row": 78
+      },
+      {
+        "arr": "226531",
+        "deal_id": "MOH-00078",
+        "reason": "excluded motion: renewal",
+        "row": 79
+      },
+      {
+        "arr": "391771",
+        "deal_id": "MOH-00080",
+        "reason": "excluded motion: renewal",
+        "row": 81
+      },
+      {
+        "arr": "392527",
+        "deal_id": "MOH-00083",
+        "reason": "excluded motion: expansion",
+        "row": 84
+      },
+      {
+        "arr": "1297467",
+        "deal_id": "MOH-00086",
+        "reason": "excluded motion: expansion",
+        "row": 87
+      },
+      {
+        "arr": "235333",
+        "deal_id": "MOH-00087",
+        "reason": "excluded motion: renewal",
+        "row": 88
+      },
+      {
+        "arr": "1660596",
+        "deal_id": "MOH-00089",
+        "reason": "excluded motion: renewal",
+        "row": 90
+      },
+      {
+        "arr": "330358",
+        "deal_id": "MOH-00090",
+        "reason": "excluded motion: expansion",
+        "row": 91
+      },
+      {
+        "arr": "1184435",
+        "deal_id": "MOH-00094",
+        "reason": "excluded motion: renewal",
+        "row": 95
+      },
+      {
+        "arr": "875763",
+        "deal_id": "MOH-00097",
+        "reason": "excluded motion: renewal",
+        "row": 98
+      },
+      {
+        "arr": "1559539",
+        "deal_id": "MOH-00098",
+        "reason": "excluded motion: renewal",
+        "row": 99
+      },
+      {
+        "arr": "461847",
+        "deal_id": "MOH-00101",
+        "reason": "excluded motion: expansion",
+        "row": 102
+      },
+      {
+        "arr": "614454",
+        "deal_id": "MOH-00102",
+        "reason": "excluded motion: renewal",
+        "row": 103
+      },
+      {
+        "arr": "251189",
+        "deal_id": "MOH-00105",
+        "reason": "excluded motion: renewal",
+        "row": 106
+      },
+      {
+        "arr": "460516",
+        "deal_id": "MOH-00109",
+        "reason": "excluded motion: renewal",
+        "row": 110
+      },
+      {
+        "arr": "169406",
+        "deal_id": "MOH-00112",
+        "reason": "excluded motion: expansion",
+        "row": 113
+      },
+      {
+        "arr": "369910",
+        "deal_id": "MOH-00113",
+        "reason": "excluded motion: renewal",
+        "row": 114
+      },
+      {
+        "arr": "468689",
+        "deal_id": "MOH-00115",
+        "reason": "excluded motion: expansion",
+        "row": 116
+      },
+      {
+        "arr": "2377181",
+        "deal_id": "MOH-00116",
+        "reason": "excluded motion: renewal",
+        "row": 117
+      },
+      {
+        "arr": "679956",
+        "deal_id": "MOH-00117",
+        "reason": "excluded motion: renewal",
+        "row": 118
+      },
+      {
+        "arr": "310375",
+        "deal_id": "MOH-00124",
+        "reason": "excluded motion: expansion",
+        "row": 125
+      },
+      {
+        "arr": "575684",
+        "deal_id": "MOH-00127",
+        "reason": "excluded motion: expansion",
+        "row": 128
+      },
+      {
+        "arr": "222081",
+        "deal_id": "MOH-00128",
+        "reason": "excluded motion: expansion",
+        "row": 129
+      },
+      {
+        "arr": "188456",
+        "deal_id": "MOH-00130",
+        "reason": "excluded motion: renewal",
+        "row": 131
+      },
+      {
+        "arr": "1823093",
+        "deal_id": "MOH-00132",
+        "reason": "excluded motion: renewal",
+        "row": 133
+      },
+      {
+        "arr": "2607937",
+        "deal_id": "MOH-00137",
+        "reason": "excluded motion: renewal",
+        "row": 138
+      },
+      {
+        "arr": "826771",
+        "deal_id": "MOH-00142",
+        "reason": "excluded motion: renewal",
+        "row": 143
+      },
+      {
+        "arr": "1228856",
+        "deal_id": "MOH-00145",
+        "reason": "excluded motion: renewal",
+        "row": 146
+      },
+      {
+        "arr": "2600897",
+        "deal_id": "MOH-00147",
+        "reason": "excluded motion: renewal",
+        "row": 148
+      },
+      {
+        "arr": "599801",
+        "deal_id": "MOH-00149",
+        "reason": "excluded motion: expansion",
+        "row": 150
+      },
+      {
+        "arr": "264685",
+        "deal_id": "MOH-00164",
+        "reason": "excluded motion: expansion",
+        "row": 165
+      },
+      {
+        "arr": "2576233",
+        "deal_id": "MOH-00168",
+        "reason": "excluded motion: renewal",
+        "row": 169
+      },
+      {
+        "arr": "323668",
+        "deal_id": "MOH-00170",
+        "reason": "excluded motion: renewal",
+        "row": 171
+      },
+      {
+        "arr": "1064355",
+        "deal_id": "MOH-00172",
+        "reason": "excluded motion: renewal",
+        "row": 173
+      },
+      {
+        "arr": "864382",
+        "deal_id": "MOH-00176",
+        "reason": "excluded motion: renewal",
+        "row": 177
+      },
+      {
+        "arr": "88300",
+        "deal_id": "MOH-00177",
+        "reason": "excluded motion: expansion",
+        "row": 178
+      },
+      {
+        "arr": "920205",
+        "deal_id": "MOH-00178",
+        "reason": "excluded motion: renewal",
+        "row": 179
+      },
+      {
+        "arr": "118782",
+        "deal_id": "MOH-00181",
+        "reason": "excluded motion: expansion",
+        "row": 182
+      },
+      {
+        "arr": "712130",
+        "deal_id": "MOH-00183",
+        "reason": "excluded motion: renewal",
+        "row": 184
+      },
+      {
+        "arr": "2466307",
+        "deal_id": "MOH-00184",
+        "reason": "excluded motion: renewal",
+        "row": 185
+      },
+      {
+        "arr": "169723",
+        "deal_id": "MOH-00185",
+        "reason": "excluded motion: expansion",
+        "row": 186
+      },
+      {
+        "arr": "1398951",
+        "deal_id": "MOH-00186",
+        "reason": "excluded motion: renewal",
+        "row": 187
+      },
+      {
+        "arr": "267466",
+        "deal_id": "MOH-00189",
+        "reason": "excluded motion: expansion",
+        "row": 190
+      },
+      {
+        "arr": "987169",
+        "deal_id": "MOH-00192",
+        "reason": "excluded motion: renewal",
+        "row": 193
+      },
+      {
+        "arr": "671028",
+        "deal_id": "MOH-00194",
+        "reason": "excluded motion: renewal",
+        "row": 195
+      },
+      {
+        "arr": "588070",
+        "deal_id": "MOH-00201",
+        "reason": "excluded motion: renewal",
+        "row": 202
+      },
+      {
+        "arr": "1014463",
+        "deal_id": "MOH-00202",
+        "reason": "excluded motion: renewal",
+        "row": 203
+      },
+      {
+        "arr": "569411",
+        "deal_id": "MOH-00211",
+        "reason": "excluded motion: expansion",
+        "row": 212
+      },
+      {
+        "arr": "136309",
+        "deal_id": "MOH-00212",
+        "reason": "excluded motion: expansion",
+        "row": 213
+      },
+      {
+        "arr": "382503",
+        "deal_id": "MOH-00215",
+        "reason": "excluded motion: renewal",
+        "row": 216
+      },
+      {
+        "arr": "1603690",
+        "deal_id": "MOH-00218",
+        "reason": "excluded motion: renewal",
+        "row": 219
+      },
+      {
+        "arr": "210520",
+        "deal_id": "MOH-00219",
+        "reason": "excluded motion: expansion",
+        "row": 220
+      },
+      {
+        "arr": "504433",
+        "deal_id": "MOH-00223",
+        "reason": "excluded motion: expansion",
+        "row": 224
+      },
+      {
+        "arr": "495494",
+        "deal_id": "MOH-00224",
+        "reason": "excluded motion: expansion",
+        "row": 225
+      },
+      {
+        "arr": "320017",
+        "deal_id": "MOH-00226",
+        "reason": "excluded motion: expansion",
+        "row": 227
+      },
+      {
+        "arr": "214911",
+        "deal_id": "MOH-00227",
+        "reason": "excluded motion: expansion",
+        "row": 228
+      },
+      {
+        "arr": "231129",
+        "deal_id": "MOH-00228",
+        "reason": "excluded motion: renewal",
+        "row": 229
+      },
+      {
+        "arr": "324172",
+        "deal_id": "MOH-00231",
+        "reason": "excluded motion: expansion",
+        "row": 232
+      },
+      {
+        "arr": "2119948",
+        "deal_id": "MOH-00232",
+        "reason": "excluded motion: renewal",
+        "row": 233
+      },
+      {
+        "arr": "469504",
+        "deal_id": "MOH-00234",
+        "reason": "excluded motion: renewal",
+        "row": 235
+      },
+      {
+        "arr": "473649",
+        "deal_id": "MOH-00236",
+        "reason": "excluded motion: expansion",
+        "row": 237
+      },
+      {
+        "arr": "1637752",
+        "deal_id": "MOH-00240",
+        "reason": "excluded motion: renewal",
+        "row": 241
+      },
+      {
+        "arr": "535943",
+        "deal_id": "MOH-00244",
+        "reason": "excluded motion: renewal",
+        "row": 245
+      },
+      {
+        "arr": "905426",
+        "deal_id": "MOH-00247",
+        "reason": "excluded motion: renewal",
+        "row": 248
+      },
+      {
+        "arr": "1485966",
+        "deal_id": "MOH-00250",
+        "reason": "excluded motion: renewal",
+        "row": 251
+      },
+      {
+        "arr": "211129",
+        "deal_id": "MOH-00254",
+        "reason": "excluded motion: renewal",
+        "row": 255
+      },
+      {
+        "arr": "1665914",
+        "deal_id": "MOH-00256",
+        "reason": "excluded motion: renewal",
+        "row": 257
+      },
+      {
+        "arr": "210179",
+        "deal_id": "MOH-00257",
+        "reason": "excluded motion: expansion",
+        "row": 258
+      },
+      {
+        "arr": "1231127",
+        "deal_id": "MOH-00258",
+        "reason": "excluded motion: renewal",
+        "row": 259
+      },
+      {
+        "arr": "1097031",
+        "deal_id": "MOH-00262",
+        "reason": "excluded motion: renewal",
+        "row": 263
+      },
+      {
+        "arr": "172752",
+        "deal_id": "MOH-00265",
+        "reason": "excluded motion: expansion",
+        "row": 266
+      },
+      {
+        "arr": "96232",
+        "deal_id": "MOH-00267",
+        "reason": "excluded motion: expansion",
+        "row": 268
+      },
+      {
+        "arr": "226603",
+        "deal_id": "MOH-00270",
+        "reason": "excluded motion: expansion",
+        "row": 271
+      },
+      {
+        "arr": "705253",
+        "deal_id": "MOH-00276",
+        "reason": "excluded motion: renewal",
+        "row": 277
+      },
+      {
+        "arr": "404872",
+        "deal_id": "MOH-00281",
+        "reason": "excluded motion: expansion",
+        "row": 282
+      },
+      {
+        "arr": "1461990",
+        "deal_id": "MOH-00282",
+        "reason": "excluded motion: renewal",
+        "row": 283
+      },
+      {
+        "arr": "1101940",
+        "deal_id": "MOH-00284",
+        "reason": "excluded motion: renewal",
+        "row": 285
+      },
+      {
+        "arr": "928908",
+        "deal_id": "MOH-00288",
+        "reason": "excluded motion: renewal",
+        "row": 289
+      },
+      {
+        "arr": "480517",
+        "deal_id": "MOH-00291",
+        "reason": "excluded motion: renewal",
+        "row": 292
+      },
+      {
+        "arr": "1152658",
+        "deal_id": "MOH-00293",
+        "reason": "excluded motion: renewal",
+        "row": 294
+      },
+      {
+        "arr": "723767",
+        "deal_id": "MOH-00295",
+        "reason": "excluded motion: expansion",
+        "row": 296
+      },
+      {
+        "arr": "324530",
+        "deal_id": "MOH-00300",
+        "reason": "excluded motion: expansion",
+        "row": 301
+      },
+      {
+        "arr": "575012",
+        "deal_id": "MOH-00301",
+        "reason": "excluded motion: renewal",
+        "row": 302
+      },
+      {
+        "arr": "476371",
+        "deal_id": "MOH-00303",
+        "reason": "excluded motion: expansion",
+        "row": 304
+      },
+      {
+        "arr": "213790",
+        "deal_id": "MOH-00304",
+        "reason": "excluded motion: expansion",
+        "row": 305
+      },
+      {
+        "arr": "509509",
+        "deal_id": "MOH-00307",
+        "reason": "excluded motion: expansion",
+        "row": 308
+      },
+      {
+        "arr": "198042",
+        "deal_id": "MOH-00313",
+        "reason": "excluded motion: expansion",
+        "row": 314
+      },
+      {
+        "arr": "147668",
+        "deal_id": "MOH-00316",
+        "reason": "excluded motion: expansion",
+        "row": 317
+      },
+      {
+        "arr": "476088",
+        "deal_id": "MOH-00317",
+        "reason": "excluded motion: renewal",
+        "row": 318
+      },
+      {
+        "arr": "729708",
+        "deal_id": "MOH-00320",
+        "reason": "excluded motion: expansion",
+        "row": 321
+      },
+      {
+        "arr": "113563",
+        "deal_id": "MOH-00322",
+        "reason": "excluded motion: expansion",
+        "row": 323
+      },
+      {
+        "arr": "363539",
+        "deal_id": "MOH-00327",
+        "reason": "excluded motion: expansion",
+        "row": 328
+      },
+      {
+        "arr": "1457858",
+        "deal_id": "MOH-00328",
+        "reason": "excluded motion: renewal",
+        "row": 329
+      },
+      {
+        "arr": "158271",
+        "deal_id": "MOH-00329",
+        "reason": "excluded motion: expansion",
+        "row": 330
+      },
+      {
+        "arr": "368314",
+        "deal_id": "MOH-00334",
+        "reason": "excluded motion: expansion",
+        "row": 335
+      },
+      {
+        "arr": "625176",
+        "deal_id": "MOH-00336",
+        "reason": "excluded motion: renewal",
+        "row": 337
+      },
+      {
+        "arr": "1031215",
+        "deal_id": "MOH-00337",
+        "reason": "excluded motion: renewal",
+        "row": 338
+      },
+      {
+        "arr": "55926",
+        "deal_id": "MOH-00339",
+        "reason": "excluded motion: expansion",
+        "row": 340
+      },
+      {
+        "arr": "1702209",
+        "deal_id": "MOH-00340",
+        "reason": "excluded motion: renewal",
+        "row": 341
+      },
+      {
+        "arr": "659961",
+        "deal_id": "MOH-00341",
+        "reason": "excluded motion: expansion",
+        "row": 342
+      },
+      {
+        "arr": "545608",
+        "deal_id": "MOH-00345",
+        "reason": "excluded motion: expansion",
+        "row": 346
+      },
+      {
+        "arr": "374453",
+        "deal_id": "MOH-00346",
+        "reason": "excluded motion: expansion",
+        "row": 347
+      },
+      {
+        "arr": "132962",
+        "deal_id": "MOH-00347",
+        "reason": "excluded motion: expansion",
+        "row": 348
+      },
+      {
+        "arr": "751193",
+        "deal_id": "MOH-00348",
+        "reason": "excluded motion: expansion",
+        "row": 349
+      },
+      {
+        "arr": "1386387",
+        "deal_id": "MOH-00351",
+        "reason": "excluded motion: renewal",
+        "row": 352
+      },
+      {
+        "arr": "122525",
+        "deal_id": "MOH-00355",
+        "reason": "excluded motion: expansion",
+        "row": 356
+      },
+      {
+        "arr": "792277",
+        "deal_id": "MOH-00359",
+        "reason": "excluded motion: renewal",
+        "row": 360
+      },
+      {
+        "arr": "368612",
+        "deal_id": "MOH-00361",
+        "reason": "excluded motion: expansion",
+        "row": 362
+      },
+      {
+        "arr": "230420",
+        "deal_id": "MOH-00362",
+        "reason": "excluded motion: expansion",
+        "row": 363
+      },
+      {
+        "arr": "933842",
+        "deal_id": "MOH-00363",
+        "reason": "excluded motion: renewal",
+        "row": 364
+      },
+      {
+        "arr": "1004390",
+        "deal_id": "MOH-00369",
+        "reason": "excluded motion: renewal",
+        "row": 370
+      },
+      {
+        "arr": "471681",
+        "deal_id": "MOH-00380",
+        "reason": "excluded motion: renewal",
+        "row": 381
+      },
+      {
+        "arr": "483361",
+        "deal_id": "MOH-00382",
+        "reason": "excluded motion: expansion",
+        "row": 383
+      },
+      {
+        "arr": "193328",
+        "deal_id": "MOH-00383",
+        "reason": "excluded motion: renewal",
+        "row": 384
+      },
+      {
+        "arr": "889659",
+        "deal_id": "MOH-00385",
+        "reason": "excluded motion: renewal",
+        "row": 386
+      },
+      {
+        "arr": "547104",
+        "deal_id": "MOH-00386",
+        "reason": "excluded motion: expansion",
+        "row": 387
+      },
+      {
+        "arr": "567912",
+        "deal_id": "MOH-00387",
+        "reason": "excluded motion: renewal",
+        "row": 388
+      },
+      {
+        "arr": "410738",
+        "deal_id": "MOH-00388",
+        "reason": "excluded motion: expansion",
+        "row": 389
+      },
+      {
+        "arr": "909516",
+        "deal_id": "MOH-00389",
+        "reason": "excluded motion: expansion",
+        "row": 390
+      },
+      {
+        "arr": "485597",
+        "deal_id": "MOH-00391",
+        "reason": "excluded motion: expansion",
+        "row": 392
+      },
+      {
+        "arr": "1284595",
+        "deal_id": "MOH-00394",
+        "reason": "excluded motion: renewal",
+        "row": 395
+      },
+      {
+        "arr": "277687",
+        "deal_id": "MOH-00395",
+        "reason": "excluded motion: expansion",
+        "row": 396
+      },
+      {
+        "arr": "534424",
+        "deal_id": "MOH-00396",
+        "reason": "excluded motion: expansion",
+        "row": 397
+      },
+      {
+        "arr": "191426",
+        "deal_id": "MOH-00398",
+        "reason": "excluded motion: expansion",
+        "row": 399
+      },
+      {
+        "arr": "249236",
+        "deal_id": "MOH-00405",
+        "reason": "excluded motion: expansion",
+        "row": 406
+      },
+      {
+        "arr": "675912",
+        "deal_id": "MOH-00406",
+        "reason": "excluded motion: renewal",
+        "row": 407
+      },
+      {
+        "arr": "374234",
+        "deal_id": "MOH-00410",
+        "reason": "excluded motion: expansion",
+        "row": 411
+      },
+      {
+        "arr": "890840",
+        "deal_id": "MOH-00411",
+        "reason": "excluded motion: renewal",
+        "row": 412
+      },
+      {
+        "arr": "402132",
+        "deal_id": "MOH-00414",
+        "reason": "excluded motion: expansion",
+        "row": 415
+      },
+      {
+        "arr": "518049",
+        "deal_id": "MOH-00417",
+        "reason": "excluded motion: expansion",
+        "row": 418
+      },
+      {
+        "arr": "481314",
+        "deal_id": "MOH-00422",
+        "reason": "excluded motion: expansion",
+        "row": 423
+      },
+      {
+        "arr": "491087",
+        "deal_id": "MOH-00423",
+        "reason": "excluded motion: renewal",
+        "row": 424
+      },
+      {
+        "arr": "3566187",
+        "deal_id": "MOH-00432",
+        "reason": "excluded motion: renewal",
+        "row": 433
+      },
+      {
+        "arr": "353181",
+        "deal_id": "MOH-00435",
+        "reason": "excluded motion: expansion",
+        "row": 436
+      },
+      {
+        "arr": "1099843",
+        "deal_id": "MOH-00436",
+        "reason": "excluded motion: renewal",
+        "row": 437
+      },
+      {
+        "arr": "6296669",
+        "deal_id": "MOH-00442",
+        "reason": "excluded motion: renewal",
+        "row": 443
+      },
+      {
+        "arr": "1827705",
+        "deal_id": "MOH-00443",
+        "reason": "excluded motion: renewal",
+        "row": 444
+      },
+      {
+        "arr": "1354263",
+        "deal_id": "MOH-00444",
+        "reason": "excluded motion: renewal",
+        "row": 445
+      },
+      {
+        "arr": "1052777",
+        "deal_id": "MOH-00446",
+        "reason": "excluded motion: renewal",
+        "row": 447
+      },
+      {
+        "arr": "149909",
+        "deal_id": "MOH-00449",
+        "reason": "excluded motion: expansion",
+        "row": 450
+      },
+      {
+        "arr": "589889",
+        "deal_id": "MOH-00450",
+        "reason": "excluded motion: renewal",
+        "row": 451
+      },
+      {
+        "arr": "333617",
+        "deal_id": "MOH-00454",
+        "reason": "excluded motion: expansion",
+        "row": 455
+      },
+      {
+        "arr": "344258",
+        "deal_id": "MOH-00455",
+        "reason": "excluded motion: expansion",
+        "row": 456
+      },
+      {
+        "arr": "201545",
+        "deal_id": "MOH-00465",
+        "reason": "excluded motion: expansion",
+        "row": 466
+      },
+      {
+        "arr": "184908",
+        "deal_id": "MOH-00466",
+        "reason": "excluded motion: renewal",
+        "row": 467
+      },
+      {
+        "arr": "246090",
+        "deal_id": "MOH-00469",
+        "reason": "excluded motion: expansion",
+        "row": 470
+      },
+      {
+        "arr": "3337941",
+        "deal_id": "MOH-00472",
+        "reason": "excluded motion: renewal",
+        "row": 473
+      },
+      {
+        "arr": "2312474",
+        "deal_id": "MOH-00474",
+        "reason": "excluded motion: renewal",
+        "row": 475
+      },
+      {
+        "arr": "451508",
+        "deal_id": "MOH-00477",
+        "reason": "excluded motion: expansion",
+        "row": 478
+      },
+      {
+        "arr": "339757",
+        "deal_id": "MOH-00478",
+        "reason": "excluded motion: renewal",
+        "row": 479
+      },
+      {
+        "arr": "933376",
+        "deal_id": "MOH-00479",
+        "reason": "excluded motion: renewal",
+        "row": 480
+      },
+      {
+        "arr": "296605",
+        "deal_id": "MOH-00480",
+        "reason": "excluded motion: expansion",
+        "row": 481
+      },
+      {
+        "arr": "646412",
+        "deal_id": "MOH-00481",
+        "reason": "excluded motion: renewal",
+        "row": 482
+      },
+      {
+        "arr": "736207",
+        "deal_id": "MOH-00482",
+        "reason": "excluded motion: renewal",
+        "row": 483
+      },
+      {
+        "arr": "463055",
+        "deal_id": "MOH-00487",
+        "reason": "excluded motion: renewal",
+        "row": 488
+      },
+      {
+        "arr": "545735",
+        "deal_id": "MOH-00489",
+        "reason": "excluded motion: expansion",
+        "row": 490
+      },
+      {
+        "arr": "307763",
+        "deal_id": "MOH-00492",
+        "reason": "excluded motion: renewal",
+        "row": 493
+      },
+      {
+        "arr": "579261",
+        "deal_id": "MOH-00493",
+        "reason": "excluded motion: expansion",
+        "row": 494
+      },
+      {
+        "arr": "247879",
+        "deal_id": "MOH-00494",
+        "reason": "excluded motion: expansion",
+        "row": 495
+      },
+      {
+        "arr": "336686",
+        "deal_id": "MOH-00497",
+        "reason": "excluded motion: expansion",
+        "row": 498
+      },
+      {
+        "arr": "573488",
+        "deal_id": "MOH-00498",
+        "reason": "excluded motion: renewal",
+        "row": 499
+      },
+      {
+        "arr": "237340",
+        "deal_id": "MOH-00501",
+        "reason": "excluded motion: expansion",
+        "row": 502
+      },
+      {
+        "arr": "314202",
+        "deal_id": "MOH-00505",
+        "reason": "excluded motion: expansion",
+        "row": 506
+      },
+      {
+        "arr": "665412",
+        "deal_id": "MOH-00506",
+        "reason": "excluded motion: renewal",
+        "row": 507
+      },
+      {
+        "arr": "278736",
+        "deal_id": "MOH-00510",
+        "reason": "excluded motion: expansion",
+        "row": 511
+      },
+      {
+        "arr": "435854",
+        "deal_id": "MOH-00511",
+        "reason": "excluded motion: expansion",
+        "row": 512
+      },
+      {
+        "arr": "844891",
+        "deal_id": "MOH-00513",
+        "reason": "excluded motion: renewal",
+        "row": 514
+      },
+      {
+        "arr": "755276",
+        "deal_id": "MOH-00515",
+        "reason": "excluded motion: renewal",
+        "row": 516
+      },
+      {
+        "arr": "1038895",
+        "deal_id": "MOH-00516",
+        "reason": "excluded motion: renewal",
+        "row": 517
+      },
+      {
+        "arr": "618357",
+        "deal_id": "MOH-00518",
+        "reason": "excluded motion: renewal",
+        "row": 519
+      },
+      {
+        "arr": "411323",
+        "deal_id": "MOH-00519",
+        "reason": "excluded motion: renewal",
+        "row": 520
+      },
+      {
+        "arr": "256707",
+        "deal_id": "MOH-00522",
+        "reason": "excluded motion: expansion",
+        "row": 523
+      },
+      {
+        "arr": "2129178",
+        "deal_id": "MOH-00523",
+        "reason": "excluded motion: renewal",
+        "row": 524
+      },
+      {
+        "arr": "237993",
+        "deal_id": "MOH-00524",
+        "reason": "excluded motion: expansion",
+        "row": 525
+      },
+      {
+        "arr": "595530",
+        "deal_id": "MOH-00526",
+        "reason": "excluded motion: expansion",
+        "row": 527
+      },
+      {
+        "arr": "1281059",
+        "deal_id": "MOH-00532",
+        "reason": "excluded motion: renewal",
+        "row": 533
+      },
+      {
+        "arr": "643248",
+        "deal_id": "MOH-00533",
+        "reason": "excluded motion: renewal",
+        "row": 534
+      },
+      {
+        "arr": "446748",
+        "deal_id": "MOH-00539",
+        "reason": "excluded motion: renewal",
+        "row": 540
+      },
+      {
+        "arr": "345373",
+        "deal_id": "MOH-00542",
+        "reason": "excluded motion: expansion",
+        "row": 543
+      },
+      {
+        "arr": "541811",
+        "deal_id": "MOH-00544",
+        "reason": "excluded motion: expansion",
+        "row": 545
+      },
+      {
+        "arr": "736197",
+        "deal_id": "MOH-00545",
+        "reason": "excluded motion: renewal",
+        "row": 546
+      },
+      {
+        "arr": "225022",
+        "deal_id": "MOH-00547",
+        "reason": "excluded motion: expansion",
+        "row": 548
+      },
+      {
+        "arr": "398122",
+        "deal_id": "MOH-00548",
+        "reason": "excluded motion: renewal",
+        "row": 549
+      },
+      {
+        "arr": "1857089",
+        "deal_id": "MOH-00549",
+        "reason": "excluded motion: renewal",
+        "row": 550
+      },
+      {
+        "arr": "856382",
+        "deal_id": "MOH-00550",
+        "reason": "excluded motion: renewal",
+        "row": 551
+      },
+      {
+        "arr": "455155",
+        "deal_id": "MOH-00552",
+        "reason": "excluded motion: renewal",
+        "row": 553
+      },
+      {
+        "arr": "473027",
+        "deal_id": "MOH-00555",
+        "reason": "excluded motion: renewal",
+        "row": 556
+      },
+      {
+        "arr": "505314",
+        "deal_id": "MOH-00558",
+        "reason": "excluded motion: renewal",
+        "row": 559
+      },
+      {
+        "arr": "3375644",
+        "deal_id": "MOH-00559",
+        "reason": "excluded motion: renewal",
+        "row": 560
+      },
+      {
+        "arr": "574143",
+        "deal_id": "MOH-00564",
+        "reason": "excluded motion: expansion",
+        "row": 565
+      },
+      {
+        "arr": "147576",
+        "deal_id": "MOH-00565",
+        "reason": "excluded motion: expansion",
+        "row": 566
+      },
+      {
+        "arr": "605025",
+        "deal_id": "MOH-00566",
+        "reason": "excluded motion: renewal",
+        "row": 567
+      },
+      {
+        "arr": "1065570",
+        "deal_id": "MOH-00569",
+        "reason": "excluded motion: renewal",
+        "row": 570
+      },
+      {
+        "arr": "242374",
+        "deal_id": "MOH-00579",
+        "reason": "excluded motion: expansion",
+        "row": 580
+      },
+      {
+        "arr": "254516",
+        "deal_id": "MOH-00580",
+        "reason": "excluded motion: expansion",
+        "row": 581
+      },
+      {
+        "arr": "954521",
+        "deal_id": "MOH-00581",
+        "reason": "excluded motion: renewal",
+        "row": 582
+      },
+      {
+        "arr": "990215",
+        "deal_id": "MOH-00582",
+        "reason": "excluded motion: renewal",
+        "row": 583
+      },
+      {
+        "arr": "289965",
+        "deal_id": "MOH-00585",
+        "reason": "excluded motion: expansion",
+        "row": 586
+      },
+      {
+        "arr": "297630",
+        "deal_id": "MOH-00588",
+        "reason": "excluded motion: expansion",
+        "row": 589
+      },
+      {
+        "arr": "890017",
+        "deal_id": "MOH-00591",
+        "reason": "excluded motion: renewal",
+        "row": 592
+      },
+      {
+        "arr": "494480",
+        "deal_id": "MOH-00597",
+        "reason": "excluded motion: expansion",
+        "row": 598
+      },
+      {
+        "arr": "314557",
+        "deal_id": "MOH-00598",
+        "reason": "excluded motion: expansion",
+        "row": 599
+      },
+      {
+        "arr": "1144807",
+        "deal_id": "MOH-00600",
+        "reason": "excluded motion: renewal",
+        "row": 601
+      },
+      {
+        "arr": "138077",
+        "deal_id": "MOH-00604",
+        "reason": "excluded motion: expansion",
+        "row": 605
+      },
+      {
+        "arr": "301520",
+        "deal_id": "MOH-00605",
+        "reason": "excluded motion: expansion",
+        "row": 606
+      },
+      {
+        "arr": "742981",
+        "deal_id": "MOH-00606",
+        "reason": "excluded motion: expansion",
+        "row": 607
+      },
+      {
+        "arr": "1573259",
+        "deal_id": "MOH-00607",
+        "reason": "excluded motion: expansion",
+        "row": 608
+      },
+      {
+        "arr": "342709",
+        "deal_id": "MOH-00608",
+        "reason": "excluded motion: renewal",
+        "row": 609
+      },
+      {
+        "arr": "691703",
+        "deal_id": "MOH-00609",
+        "reason": "excluded motion: expansion",
+        "row": 610
+      },
+      {
+        "arr": "1574715",
+        "deal_id": "MOH-00614",
+        "reason": "excluded motion: renewal",
+        "row": 615
+      },
+      {
+        "arr": "316161",
+        "deal_id": "MOH-00623",
+        "reason": "excluded motion: renewal",
+        "row": 624
+      },
+      {
+        "arr": "110862",
+        "deal_id": "MOH-00624",
+        "reason": "excluded motion: expansion",
+        "row": 625
+      },
+      {
+        "arr": "338563",
+        "deal_id": "MOH-00625",
+        "reason": "excluded motion: expansion",
+        "row": 626
+      },
+      {
+        "arr": "253211",
+        "deal_id": "MOH-00626",
+        "reason": "excluded motion: expansion",
+        "row": 627
+      },
+      {
+        "arr": "945082",
+        "deal_id": "MOH-00627",
+        "reason": "excluded motion: renewal",
+        "row": 628
+      },
+      {
+        "arr": "772509",
+        "deal_id": "MOH-00630",
+        "reason": "excluded motion: expansion",
+        "row": 631
+      },
+      {
+        "arr": "261778",
+        "deal_id": "MOH-00631",
+        "reason": "excluded motion: expansion",
+        "row": 632
+      },
+      {
+        "arr": "875638",
+        "deal_id": "MOH-00632",
+        "reason": "excluded motion: renewal",
+        "row": 633
+      },
+      {
+        "arr": "2523467",
+        "deal_id": "MOH-00634",
+        "reason": "excluded motion: renewal",
+        "row": 635
+      },
+      {
+        "arr": "100142",
+        "deal_id": "MOH-00637",
+        "reason": "excluded motion: expansion",
+        "row": 638
+      },
+      {
+        "arr": "233623",
+        "deal_id": "MOH-00638",
+        "reason": "excluded motion: expansion",
+        "row": 639
+      },
+      {
+        "arr": "799430",
+        "deal_id": "MOH-00641",
+        "reason": "excluded motion: expansion",
+        "row": 642
+      },
+      {
+        "arr": "784716",
+        "deal_id": "MOH-00643",
+        "reason": "excluded motion: renewal",
+        "row": 644
+      },
+      {
+        "arr": "535020",
+        "deal_id": "MOH-00644",
+        "reason": "excluded motion: renewal",
+        "row": 645
+      },
+      {
+        "arr": "1030588",
+        "deal_id": "MOH-00646",
+        "reason": "excluded motion: renewal",
+        "row": 647
+      },
+      {
+        "arr": "499775",
+        "deal_id": "MOH-00647",
+        "reason": "excluded motion: expansion",
+        "row": 648
+      },
+      {
+        "arr": "116013",
+        "deal_id": "MOH-00651",
+        "reason": "excluded motion: expansion",
+        "row": 652
+      },
+      {
+        "arr": "329314",
+        "deal_id": "MOH-00655",
+        "reason": "excluded motion: expansion",
+        "row": 656
+      },
+      {
+        "arr": "163745",
+        "deal_id": "MOH-00660",
+        "reason": "excluded motion: expansion",
+        "row": 661
+      },
+      {
+        "arr": "333267",
+        "deal_id": "MOH-00662",
+        "reason": "excluded motion: expansion",
+        "row": 663
+      },
+      {
+        "arr": "516553",
+        "deal_id": "MOH-00667",
+        "reason": "excluded motion: renewal",
+        "row": 668
+      },
+      {
+        "arr": "2111571",
+        "deal_id": "MOH-00671",
+        "reason": "excluded motion: renewal",
+        "row": 672
+      },
+      {
+        "arr": "929843",
+        "deal_id": "MOH-00672",
+        "reason": "excluded motion: expansion",
+        "row": 673
+      },
+      {
+        "arr": "1066858",
+        "deal_id": "MOH-00674",
+        "reason": "excluded motion: renewal",
+        "row": 675
+      },
+      {
+        "arr": "651566",
+        "deal_id": "MOH-00677",
+        "reason": "excluded motion: renewal",
+        "row": 678
+      },
+      {
+        "arr": "678484",
+        "deal_id": "MOH-00679",
+        "reason": "excluded motion: renewal",
+        "row": 680
+      },
+      {
+        "arr": "968964",
+        "deal_id": "MOH-00683",
+        "reason": "excluded motion: renewal",
+        "row": 684
+      },
+      {
+        "arr": "169311",
+        "deal_id": "MOH-00686",
+        "reason": "excluded motion: expansion",
+        "row": 687
+      },
+      {
+        "arr": "568634",
+        "deal_id": "MOH-00688",
+        "reason": "excluded motion: renewal",
+        "row": 689
+      },
+      {
+        "arr": "192153",
+        "deal_id": "MOH-00690",
+        "reason": "excluded motion: expansion",
+        "row": 691
+      },
+      {
+        "arr": "717104",
+        "deal_id": "MOH-00691",
+        "reason": "excluded motion: renewal",
+        "row": 692
+      },
+      {
+        "arr": "973123",
+        "deal_id": "MOH-00696",
+        "reason": "excluded motion: renewal",
+        "row": 697
+      },
+      {
+        "arr": "2415007",
+        "deal_id": "MOH-00697",
+        "reason": "excluded motion: renewal",
+        "row": 698
+      },
+      {
+        "arr": "424594",
+        "deal_id": "MOH-00700",
+        "reason": "excluded motion: renewal",
+        "row": 701
+      },
+      {
+        "arr": "751496",
+        "deal_id": "MOH-00702",
+        "reason": "excluded motion: renewal",
+        "row": 703
+      },
+      {
+        "arr": "204985",
+        "deal_id": "MOH-00705",
+        "reason": "excluded motion: expansion",
+        "row": 706
+      },
+      {
+        "arr": "170426",
+        "deal_id": "MOH-00711",
+        "reason": "excluded motion: expansion",
+        "row": 712
+      },
+      {
+        "arr": "723391",
+        "deal_id": "MOH-00712",
+        "reason": "excluded motion: renewal",
+        "row": 713
+      },
+      {
+        "arr": "700910",
+        "deal_id": "MOH-00715",
+        "reason": "excluded motion: renewal",
+        "row": 716
+      },
+      {
+        "arr": "617372",
+        "deal_id": "MOH-00716",
+        "reason": "excluded motion: renewal",
+        "row": 717
+      },
+      {
+        "arr": "334992",
+        "deal_id": "MOH-00724",
+        "reason": "excluded motion: expansion",
+        "row": 725
+      },
+      {
+        "arr": "430410",
+        "deal_id": "MOH-00725",
+        "reason": "excluded motion: renewal",
+        "row": 726
+      },
+      {
+        "arr": "786620",
+        "deal_id": "MOH-00726",
+        "reason": "excluded motion: renewal",
+        "row": 727
+      },
+      {
+        "arr": "368200",
+        "deal_id": "MOH-00728",
+        "reason": "excluded motion: expansion",
+        "row": 729
+      },
+      {
+        "arr": "768962",
+        "deal_id": "MOH-00730",
+        "reason": "excluded motion: renewal",
+        "row": 731
+      },
+      {
+        "arr": "499784",
+        "deal_id": "MOH-00734",
+        "reason": "excluded motion: renewal",
+        "row": 735
+      },
+      {
+        "arr": "247525",
+        "deal_id": "MOH-00735",
+        "reason": "excluded motion: expansion",
+        "row": 736
+      },
+      {
+        "arr": "237498",
+        "deal_id": "MOH-00736",
+        "reason": "excluded motion: expansion",
+        "row": 737
+      },
+      {
+        "arr": "659210",
+        "deal_id": "MOH-00737",
+        "reason": "excluded motion: renewal",
+        "row": 738
+      },
+      {
+        "arr": "181957",
+        "deal_id": "MOH-00738",
+        "reason": "excluded motion: expansion",
+        "row": 739
+      },
+      {
+        "arr": "242130",
+        "deal_id": "MOH-00743",
+        "reason": "excluded motion: renewal",
+        "row": 744
+      },
+      {
+        "arr": "446521",
+        "deal_id": "MOH-00744",
+        "reason": "excluded motion: expansion",
+        "row": 745
+      },
+      {
+        "arr": "922612",
+        "deal_id": "MOH-00745",
+        "reason": "excluded motion: renewal",
+        "row": 746
+      },
+      {
+        "arr": "400791",
+        "deal_id": "MOH-00747",
+        "reason": "excluded motion: expansion",
+        "row": 748
+      },
+      {
+        "arr": "515480",
+        "deal_id": "MOH-00748",
+        "reason": "excluded motion: expansion",
+        "row": 749
+      },
+      {
+        "arr": "411991",
+        "deal_id": "MOH-00750",
+        "reason": "excluded motion: renewal",
+        "row": 751
+      },
+      {
+        "arr": "309005",
+        "deal_id": "MOH-00754",
+        "reason": "excluded motion: expansion",
+        "row": 755
+      },
+      {
+        "arr": "309522",
+        "deal_id": "MOH-00755",
+        "reason": "excluded motion: expansion",
+        "row": 756
+      },
+      {
+        "arr": "579116",
+        "deal_id": "MOH-00756",
+        "reason": "excluded motion: renewal",
+        "row": 757
+      },
+      {
+        "arr": "854282",
+        "deal_id": "MOH-00757",
+        "reason": "excluded motion: renewal",
+        "row": 758
+      },
+      {
+        "arr": "447902",
+        "deal_id": "MOH-00768",
+        "reason": "excluded motion: expansion",
+        "row": 769
+      },
+      {
+        "arr": "109212",
+        "deal_id": "MOH-00773",
+        "reason": "excluded motion: expansion",
+        "row": 774
+      },
+      {
+        "arr": "1259295",
+        "deal_id": "MOH-00779",
+        "reason": "excluded motion: renewal",
+        "row": 780
+      },
+      {
+        "arr": "199142",
+        "deal_id": "MOH-00787",
+        "reason": "excluded motion: expansion",
+        "row": 788
+      },
+      {
+        "arr": "612820",
+        "deal_id": "MOH-00790",
+        "reason": "excluded motion: expansion",
+        "row": 791
+      },
+      {
+        "arr": "795349",
+        "deal_id": "MOH-00792",
+        "reason": "excluded motion: renewal",
+        "row": 793
+      },
+      {
+        "arr": "992791",
+        "deal_id": "MOH-00796",
+        "reason": "excluded motion: renewal",
+        "row": 797
+      },
+      {
+        "arr": "234066",
+        "deal_id": "MOH-00798",
+        "reason": "excluded motion: expansion",
+        "row": 799
+      },
+      {
+        "arr": "140376",
+        "deal_id": "MOH-00799",
+        "reason": "excluded motion: expansion",
+        "row": 800
+      },
+      {
+        "arr": "197397",
+        "deal_id": "MOH-00803",
+        "reason": "excluded motion: expansion",
+        "row": 804
+      },
+      {
+        "arr": "1058660",
+        "deal_id": "MOH-00804",
+        "reason": "excluded motion: renewal",
+        "row": 805
+      },
+      {
+        "arr": "420889",
+        "deal_id": "MOH-00806",
+        "reason": "excluded motion: expansion",
+        "row": 807
+      },
+      {
+        "arr": "212727",
+        "deal_id": "MOH-00809",
+        "reason": "excluded motion: expansion",
+        "row": 810
+      },
+      {
+        "arr": "406818",
+        "deal_id": "MOH-00810",
+        "reason": "excluded motion: expansion",
+        "row": 811
+      },
+      {
+        "arr": "652462",
+        "deal_id": "MOH-00811",
+        "reason": "excluded motion: renewal",
+        "row": 812
+      },
+      {
+        "arr": "894857",
+        "deal_id": "MOH-00812",
+        "reason": "excluded motion: renewal",
+        "row": 813
+      },
+      {
+        "arr": "240338",
+        "deal_id": "MOH-00813",
+        "reason": "excluded motion: expansion",
+        "row": 814
+      },
+      {
+        "arr": "187380",
+        "deal_id": "MOH-00814",
+        "reason": "excluded motion: expansion",
+        "row": 815
+      },
+      {
+        "arr": "437040",
+        "deal_id": "MOH-00817",
+        "reason": "excluded motion: expansion",
+        "row": 818
+      },
+      {
+        "arr": "942279",
+        "deal_id": "MOH-00818",
+        "reason": "excluded motion: renewal",
+        "row": 819
+      },
+      {
+        "arr": "768633",
+        "deal_id": "MOH-00821",
+        "reason": "excluded motion: renewal",
+        "row": 822
+      },
+      {
+        "arr": "863891",
+        "deal_id": "MOH-00824",
+        "reason": "excluded motion: renewal",
+        "row": 825
+      },
+      {
+        "arr": "485304",
+        "deal_id": "MOH-00827",
+        "reason": "excluded motion: expansion",
+        "row": 828
+      },
+      {
+        "arr": "1409336",
+        "deal_id": "MOH-00828",
+        "reason": "excluded motion: renewal",
+        "row": 829
+      },
+      {
+        "arr": "138624",
+        "deal_id": "MOH-00831",
+        "reason": "excluded motion: expansion",
+        "row": 832
+      },
+      {
+        "arr": "482979",
+        "deal_id": "MOH-00837",
+        "reason": "excluded motion: renewal",
+        "row": 838
+      },
+      {
+        "arr": "690048",
+        "deal_id": "MOH-00838",
+        "reason": "excluded motion: expansion",
+        "row": 839
+      },
+      {
+        "arr": "254545",
+        "deal_id": "MOH-00841",
+        "reason": "excluded motion: expansion",
+        "row": 842
+      },
+      {
+        "arr": "253591",
+        "deal_id": "MOH-00842",
+        "reason": "excluded motion: expansion",
+        "row": 843
+      },
+      {
+        "arr": "616830",
+        "deal_id": "MOH-00843",
+        "reason": "excluded motion: expansion",
+        "row": 844
+      },
+      {
+        "arr": "667294",
+        "deal_id": "MOH-00852",
+        "reason": "excluded motion: expansion",
+        "row": 853
+      },
+      {
+        "arr": "1527319",
+        "deal_id": "MOH-00855",
+        "reason": "excluded motion: renewal",
+        "row": 856
+      },
+      {
+        "arr": "137472",
+        "deal_id": "MOH-00863",
+        "reason": "excluded motion: expansion",
+        "row": 864
+      },
+      {
+        "arr": "274239",
+        "deal_id": "MOH-00867",
+        "reason": "excluded motion: expansion",
+        "row": 868
+      },
+      {
+        "arr": "1372089",
+        "deal_id": "MOH-00869",
+        "reason": "excluded motion: renewal",
+        "row": 870
+      },
+      {
+        "arr": "226410",
+        "deal_id": "MOH-00874",
+        "reason": "excluded motion: expansion",
+        "row": 875
+      },
+      {
+        "arr": "205528",
+        "deal_id": "MOH-00875",
+        "reason": "excluded motion: expansion",
+        "row": 876
+      },
+      {
+        "arr": "716985",
+        "deal_id": "MOH-00876",
+        "reason": "excluded motion: renewal",
+        "row": 877
+      },
+      {
+        "arr": "853259",
+        "deal_id": "MOH-00883",
+        "reason": "excluded motion: renewal",
+        "row": 884
+      },
+      {
+        "arr": "617153",
+        "deal_id": "MOH-00884",
+        "reason": "excluded motion: renewal",
+        "row": 885
+      },
+      {
+        "arr": "284526",
+        "deal_id": "MOH-00886",
+        "reason": "excluded motion: expansion",
+        "row": 887
+      },
+      {
+        "arr": "600377",
+        "deal_id": "MOH-00887",
+        "reason": "excluded motion: renewal",
+        "row": 888
+      },
+      {
+        "arr": "672764",
+        "deal_id": "MOH-00888",
+        "reason": "excluded motion: renewal",
+        "row": 889
+      },
+      {
+        "arr": "565409",
+        "deal_id": "MOH-00890",
+        "reason": "excluded motion: renewal",
+        "row": 891
+      },
+      {
+        "arr": "608341",
+        "deal_id": "MOH-00898",
+        "reason": "excluded motion: expansion",
+        "row": 899
+      },
+      {
+        "arr": "497545",
+        "deal_id": "MOH-00899",
+        "reason": "excluded motion: renewal",
+        "row": 900
+      },
+      {
+        "arr": "768234",
+        "deal_id": "MOH-00900",
+        "reason": "excluded motion: renewal",
+        "row": 901
+      },
+      {
+        "arr": "1582206",
+        "deal_id": "MOH-00901",
+        "reason": "excluded motion: renewal",
+        "row": 902
+      },
+      {
+        "arr": "1702410",
+        "deal_id": "MOH-00909",
+        "reason": "excluded motion: renewal",
+        "row": 910
+      },
+      {
+        "arr": "225926",
+        "deal_id": "MOH-00914",
+        "reason": "excluded motion: expansion",
+        "row": 915
+      },
+      {
+        "arr": "255503",
+        "deal_id": "MOH-00915",
+        "reason": "excluded motion: renewal",
+        "row": 916
+      },
+      {
+        "arr": "243469",
+        "deal_id": "MOH-00916",
+        "reason": "excluded motion: expansion",
+        "row": 917
+      },
+      {
+        "arr": "342991",
+        "deal_id": "MOH-00920",
+        "reason": "excluded motion: expansion",
+        "row": 921
+      },
+      {
+        "arr": "771324",
+        "deal_id": "MOH-00928",
+        "reason": "excluded motion: expansion",
+        "row": 929
+      },
+      {
+        "arr": "1835949",
+        "deal_id": "MOH-00929",
+        "reason": "excluded motion: renewal",
+        "row": 930
+      },
+      {
+        "arr": "1641011",
+        "deal_id": "MOH-00930",
+        "reason": "excluded motion: renewal",
+        "row": 931
+      },
+      {
+        "arr": "461968",
+        "deal_id": "MOH-00934",
+        "reason": "excluded motion: expansion",
+        "row": 935
+      },
+      {
+        "arr": "350484",
+        "deal_id": "MOH-00942",
+        "reason": "excluded motion: expansion",
+        "row": 943
+      },
+      {
+        "arr": "430142",
+        "deal_id": "MOH-00943",
+        "reason": "excluded motion: expansion",
+        "row": 944
+      },
+      {
+        "arr": "447211",
+        "deal_id": "MOH-00944",
+        "reason": "excluded motion: expansion",
+        "row": 945
+      },
+      {
+        "arr": "82185",
+        "deal_id": "MOH-00945",
+        "reason": "excluded motion: expansion",
+        "row": 946
+      },
+      {
+        "arr": "1029400",
+        "deal_id": "MOH-00949",
+        "reason": "excluded motion: renewal",
+        "row": 950
+      },
+      {
+        "arr": "415722",
+        "deal_id": "MOH-00950",
+        "reason": "excluded motion: renewal",
+        "row": 951
+      },
+      {
+        "arr": "714800",
+        "deal_id": "MOH-00951",
+        "reason": "excluded motion: renewal",
+        "row": 952
+      },
+      {
+        "arr": "464584",
+        "deal_id": "MOH-00953",
+        "reason": "excluded motion: expansion",
+        "row": 954
+      },
+      {
+        "arr": "1149816",
+        "deal_id": "MOH-00954",
+        "reason": "excluded motion: renewal",
+        "row": 955
+      },
+      {
+        "arr": "956229",
+        "deal_id": "MOH-00955",
+        "reason": "excluded motion: renewal",
+        "row": 956
+      },
+      {
+        "arr": "425990",
+        "deal_id": "MOH-00959",
+        "reason": "excluded motion: expansion",
+        "row": 960
+      },
+      {
+        "arr": "144636",
+        "deal_id": "MOH-00960",
+        "reason": "excluded motion: expansion",
+        "row": 961
+      },
+      {
+        "arr": "224357",
+        "deal_id": "MOH-00964",
+        "reason": "excluded motion: expansion",
+        "row": 965
+      },
+      {
+        "arr": "789775",
+        "deal_id": "MOH-00965",
+        "reason": "excluded motion: expansion",
+        "row": 966
+      },
+      {
+        "arr": "685293",
+        "deal_id": "MOH-00968",
+        "reason": "excluded motion: renewal",
+        "row": 969
+      },
+      {
+        "arr": "1209055",
+        "deal_id": "MOH-00969",
+        "reason": "excluded motion: renewal",
+        "row": 970
+      },
+      {
+        "arr": "825642",
+        "deal_id": "MOH-00972",
+        "reason": "excluded motion: renewal",
+        "row": 973
+      },
+      {
+        "arr": "558886",
+        "deal_id": "MOH-00979",
+        "reason": "excluded motion: renewal",
+        "row": 980
+      },
+      {
+        "arr": "574668",
+        "deal_id": "MOH-00983",
+        "reason": "excluded motion: expansion",
+        "row": 984
+      },
+      {
+        "arr": "379434",
+        "deal_id": "MOH-00987",
+        "reason": "excluded motion: expansion",
+        "row": 988
+      },
+      {
+        "arr": "1198504",
+        "deal_id": "MOH-00988",
+        "reason": "excluded motion: renewal",
+        "row": 989
+      },
+      {
+        "arr": "1097564",
+        "deal_id": "MOH-00991",
+        "reason": "excluded motion: renewal",
+        "row": 992
+      },
+      {
+        "arr": "147416",
+        "deal_id": "MOH-00992",
+        "reason": "excluded motion: renewal",
+        "row": 993
+      },
+      {
+        "arr": "496594",
+        "deal_id": "MOH-00998",
+        "reason": "excluded motion: renewal",
+        "row": 999
+      },
+      {
+        "arr": "991558",
+        "deal_id": "MOH-01006",
+        "reason": "excluded motion: renewal",
+        "row": 1007
+      },
+      {
+        "arr": "964012",
+        "deal_id": "MOH-01010",
+        "reason": "excluded motion: renewal",
+        "row": 1011
+      },
+      {
+        "arr": "112927",
+        "deal_id": "MOH-01014",
+        "reason": "excluded motion: expansion",
+        "row": 1015
+      },
+      {
+        "arr": "2035369",
+        "deal_id": "MOH-01025",
+        "reason": "excluded motion: renewal",
+        "row": 1026
+      },
+      {
+        "arr": "458202",
+        "deal_id": "MOH-01026",
+        "reason": "excluded motion: renewal",
+        "row": 1027
+      },
+      {
+        "arr": "105823",
+        "deal_id": "MOH-01031",
+        "reason": "excluded motion: expansion",
+        "row": 1032
+      },
+      {
+        "arr": "583392",
+        "deal_id": "MOH-01032",
+        "reason": "excluded motion: renewal",
+        "row": 1033
+      },
+      {
+        "arr": "447038",
+        "deal_id": "MOH-01033",
+        "reason": "excluded motion: expansion",
+        "row": 1034
+      },
+      {
+        "arr": "264799",
+        "deal_id": "MOH-01034",
+        "reason": "excluded motion: renewal",
+        "row": 1035
+      },
+      {
+        "arr": "221766",
+        "deal_id": "MOH-01039",
+        "reason": "excluded motion: expansion",
+        "row": 1040
+      },
+      {
+        "arr": "273821",
+        "deal_id": "MOH-01040",
+        "reason": "excluded motion: expansion",
+        "row": 1041
+      },
+      {
+        "arr": "740876",
+        "deal_id": "MOH-01041",
+        "reason": "excluded motion: renewal",
+        "row": 1042
+      },
+      {
+        "arr": "549949",
+        "deal_id": "MOH-01044",
+        "reason": "excluded motion: renewal",
+        "row": 1045
+      },
+      {
+        "arr": "1328419",
+        "deal_id": "MOH-01048",
+        "reason": "excluded motion: renewal",
+        "row": 1049
+      },
+      {
+        "arr": "684645",
+        "deal_id": "MOH-01050",
+        "reason": "excluded motion: renewal",
+        "row": 1051
+      },
+      {
+        "arr": "327566",
+        "deal_id": "MOH-01052",
+        "reason": "excluded motion: expansion",
+        "row": 1053
+      },
+      {
+        "arr": "426843",
+        "deal_id": "MOH-01054",
+        "reason": "excluded motion: renewal",
+        "row": 1055
+      },
+      {
+        "arr": "291023",
+        "deal_id": "MOH-01055",
+        "reason": "excluded motion: renewal",
+        "row": 1056
+      },
+      {
+        "arr": "693808",
+        "deal_id": "MOH-01057",
+        "reason": "excluded motion: renewal",
+        "row": 1058
+      },
+      {
+        "arr": "1789830",
+        "deal_id": "MOH-01059",
+        "reason": "excluded motion: renewal",
+        "row": 1060
+      },
+      {
+        "arr": "910612",
+        "deal_id": "MOH-01062",
+        "reason": "excluded motion: renewal",
+        "row": 1063
+      },
+      {
+        "arr": "1347666",
+        "deal_id": "MOH-01069",
+        "reason": "excluded motion: renewal",
+        "row": 1070
+      },
+      {
+        "arr": "162670",
+        "deal_id": "MOH-01071",
+        "reason": "excluded motion: expansion",
+        "row": 1072
+      },
+      {
+        "arr": "171536",
+        "deal_id": "MOH-01074",
+        "reason": "excluded motion: expansion",
+        "row": 1075
+      },
+      {
+        "arr": "420426",
+        "deal_id": "MOH-01078",
+        "reason": "excluded motion: renewal",
+        "row": 1079
+      },
+      {
+        "arr": "199913",
+        "deal_id": "MOH-01082",
+        "reason": "excluded motion: expansion",
+        "row": 1083
+      },
+      {
+        "arr": "240259",
+        "deal_id": "MOH-01083",
+        "reason": "excluded motion: expansion",
+        "row": 1084
+      },
+      {
+        "arr": "516412",
+        "deal_id": "MOH-01084",
+        "reason": "excluded motion: expansion",
+        "row": 1085
+      },
+      {
+        "arr": "519709",
+        "deal_id": "MOH-01085",
+        "reason": "excluded motion: expansion",
+        "row": 1086
+      },
+      {
+        "arr": "135629",
+        "deal_id": "MOH-01088",
+        "reason": "excluded motion: expansion",
+        "row": 1089
+      },
+      {
+        "arr": "1256546",
+        "deal_id": "MOH-01089",
+        "reason": "excluded motion: renewal",
+        "row": 1090
+      },
+      {
+        "arr": "907254",
+        "deal_id": "MOH-01090",
+        "reason": "excluded motion: renewal",
+        "row": 1091
+      },
+      {
+        "arr": "368112",
+        "deal_id": "MOH-01092",
+        "reason": "excluded motion: expansion",
+        "row": 1093
+      },
+      {
+        "arr": "739737",
+        "deal_id": "MOH-01097",
+        "reason": "excluded motion: renewal",
+        "row": 1098
+      },
+      {
+        "arr": "221855",
+        "deal_id": "MOH-01101",
+        "reason": "excluded motion: expansion",
+        "row": 1102
+      },
+      {
+        "arr": "1277164",
+        "deal_id": "MOH-01102",
+        "reason": "excluded motion: renewal",
+        "row": 1103
+      },
+      {
+        "arr": "1040991",
+        "deal_id": "MOH-01104",
+        "reason": "excluded motion: renewal",
+        "row": 1105
+      },
+      {
+        "arr": "790548",
+        "deal_id": "MOH-01106",
+        "reason": "excluded motion: renewal",
+        "row": 1107
+      },
+      {
+        "arr": "227372",
+        "deal_id": "MOH-01108",
+        "reason": "excluded motion: expansion",
+        "row": 1109
+      },
+      {
+        "arr": "544270",
+        "deal_id": "MOH-01109",
+        "reason": "excluded motion: renewal",
+        "row": 1110
+      },
+      {
+        "arr": "187944",
+        "deal_id": "MOH-01113",
+        "reason": "excluded motion: expansion",
+        "row": 1114
+      },
+      {
+        "arr": "358684",
+        "deal_id": "MOH-01116",
+        "reason": "excluded motion: renewal",
+        "row": 1117
+      },
+      {
+        "arr": "476764",
+        "deal_id": "MOH-01121",
+        "reason": "excluded motion: expansion",
+        "row": 1122
+      },
+      {
+        "arr": "169824",
+        "deal_id": "MOH-01129",
+        "reason": "excluded motion: expansion",
+        "row": 1130
+      },
+      {
+        "arr": "1223970",
+        "deal_id": "MOH-01130",
+        "reason": "excluded motion: renewal",
+        "row": 1131
+      },
+      {
+        "arr": "881455",
+        "deal_id": "MOH-01133",
+        "reason": "excluded motion: renewal",
+        "row": 1134
+      },
+      {
+        "arr": "1515567",
+        "deal_id": "MOH-01140",
+        "reason": "excluded motion: renewal",
+        "row": 1141
+      },
+      {
+        "arr": "157406",
+        "deal_id": "MOH-01141",
+        "reason": "excluded motion: renewal",
+        "row": 1142
+      },
+      {
+        "arr": "182276",
+        "deal_id": "MOH-01144",
+        "reason": "excluded motion: expansion",
+        "row": 1145
+      },
+      {
+        "arr": "885399",
+        "deal_id": "MOH-01145",
+        "reason": "excluded motion: renewal",
+        "row": 1146
+      },
+      {
+        "arr": "160217",
+        "deal_id": "MOH-01147",
+        "reason": "excluded motion: expansion",
+        "row": 1148
+      },
+      {
+        "arr": "1064168",
+        "deal_id": "MOH-01149",
+        "reason": "excluded motion: renewal",
+        "row": 1150
+      },
+      {
+        "arr": "1818159",
+        "deal_id": "MOH-01151",
+        "reason": "excluded motion: renewal",
+        "row": 1152
+      },
+      {
+        "arr": "136239",
+        "deal_id": "MOH-01153",
+        "reason": "excluded motion: expansion",
+        "row": 1154
+      },
+      {
+        "arr": "408509",
+        "deal_id": "MOH-01162",
+        "reason": "excluded motion: expansion",
+        "row": 1163
+      },
+      {
+        "arr": "302686",
+        "deal_id": "MOH-01165",
+        "reason": "excluded motion: renewal",
+        "row": 1166
+      },
+      {
+        "arr": "267198",
+        "deal_id": "MOH-01167",
+        "reason": "excluded motion: expansion",
+        "row": 1168
+      },
+      {
+        "arr": "273477",
+        "deal_id": "MOH-01168",
+        "reason": "excluded motion: expansion",
+        "row": 1169
+      },
+      {
+        "arr": "470471",
+        "deal_id": "MOH-01169",
+        "reason": "excluded motion: expansion",
+        "row": 1170
+      },
+      {
+        "arr": "150042",
+        "deal_id": "MOH-01170",
+        "reason": "excluded motion: renewal",
+        "row": 1171
+      },
+      {
+        "arr": "442265",
+        "deal_id": "MOH-01172",
+        "reason": "excluded motion: renewal",
+        "row": 1173
+      },
+      {
+        "arr": "391534",
+        "deal_id": "MOH-01175",
+        "reason": "excluded motion: expansion",
+        "row": 1176
+      },
+      {
+        "arr": "174340",
+        "deal_id": "MOH-01179",
+        "reason": "excluded motion: expansion",
+        "row": 1180
+      },
+      {
+        "arr": "1372703",
+        "deal_id": "MOH-01180",
+        "reason": "excluded motion: expansion",
+        "row": 1181
+      },
+      {
+        "arr": "661853",
+        "deal_id": "MOH-01184",
+        "reason": "excluded motion: expansion",
+        "row": 1185
+      },
+      {
+        "arr": "239548",
+        "deal_id": "MOH-01188",
+        "reason": "excluded motion: renewal",
+        "row": 1189
+      },
+      {
+        "arr": "618725",
+        "deal_id": "MOH-01191",
+        "reason": "excluded motion: renewal",
+        "row": 1192
+      },
+      {
+        "arr": "227999",
+        "deal_id": "MOH-01192",
+        "reason": "excluded motion: expansion",
+        "row": 1193
+      },
+      {
+        "arr": "572369",
+        "deal_id": "MOH-01193",
+        "reason": "excluded motion: expansion",
+        "row": 1194
+      },
+      {
+        "arr": "606094",
+        "deal_id": "MOH-01194",
+        "reason": "excluded motion: renewal",
+        "row": 1195
+      },
+      {
+        "arr": "304036",
+        "deal_id": "MOH-01195",
+        "reason": "excluded motion: renewal",
+        "row": 1196
+      },
+      {
+        "arr": "1624223",
+        "deal_id": "MOH-01198",
+        "reason": "excluded motion: renewal",
+        "row": 1199
+      },
+      {
+        "arr": "69239",
+        "deal_id": "MOH-01203",
+        "reason": "excluded motion: expansion",
+        "row": 1204
+      },
+      {
+        "arr": "3306223",
+        "deal_id": "MOH-01204",
+        "reason": "excluded motion: renewal",
+        "row": 1205
+      },
+      {
+        "arr": "571482",
+        "deal_id": "MOH-01209",
+        "reason": "excluded motion: expansion",
+        "row": 1210
+      },
+      {
+        "arr": "385381",
+        "deal_id": "MOH-01212",
+        "reason": "excluded motion: expansion",
+        "row": 1213
+      },
+      {
+        "arr": "1101168",
+        "deal_id": "MOH-01213",
+        "reason": "excluded motion: renewal",
+        "row": 1214
+      },
+      {
+        "arr": "250655",
+        "deal_id": "MOH-01215",
+        "reason": "excluded motion: renewal",
+        "row": 1216
+      },
+      {
+        "arr": "481572",
+        "deal_id": "MOH-01216",
+        "reason": "excluded motion: renewal",
+        "row": 1217
+      },
+      {
+        "arr": "1032619",
+        "deal_id": "MOH-01223",
+        "reason": "excluded motion: renewal",
+        "row": 1224
+      },
+      {
+        "arr": "582536",
+        "deal_id": "MOH-01224",
+        "reason": "excluded motion: renewal",
+        "row": 1225
+      },
+      {
+        "arr": "2376835",
+        "deal_id": "MOH-01227",
+        "reason": "excluded motion: renewal",
+        "row": 1228
+      },
+      {
+        "arr": "1423181",
+        "deal_id": "MOH-01228",
+        "reason": "excluded motion: renewal",
+        "row": 1229
+      },
+      {
+        "arr": "1124209",
+        "deal_id": "MOH-01234",
+        "reason": "excluded motion: renewal",
+        "row": 1235
+      },
+      {
+        "arr": "451531",
+        "deal_id": "MOH-01236",
+        "reason": "excluded motion: expansion",
+        "row": 1237
+      },
+      {
+        "arr": "1120588",
+        "deal_id": "MOH-01237",
+        "reason": "excluded motion: renewal",
+        "row": 1238
+      },
+      {
+        "arr": "338853",
+        "deal_id": "MOH-01239",
+        "reason": "excluded motion: expansion",
+        "row": 1240
+      },
+      {
+        "arr": "125028",
+        "deal_id": "MOH-01243",
+        "reason": "excluded motion: expansion",
+        "row": 1244
+      },
+      {
+        "arr": "718428",
+        "deal_id": "MOH-01244",
+        "reason": "excluded motion: renewal",
+        "row": 1245
+      },
+      {
+        "arr": "372184",
+        "deal_id": "MOH-01248",
+        "reason": "excluded motion: expansion",
+        "row": 1249
+      },
+      {
+        "arr": "833222",
+        "deal_id": "MOH-01250",
+        "reason": "excluded motion: renewal",
+        "row": 1251
+      },
+      {
+        "arr": "400476",
+        "deal_id": "MOH-01254",
+        "reason": "excluded motion: expansion",
+        "row": 1255
+      },
+      {
+        "arr": "765627",
+        "deal_id": "MOH-01255",
+        "reason": "excluded motion: expansion",
+        "row": 1256
+      },
+      {
+        "arr": "142115",
+        "deal_id": "MOH-01256",
+        "reason": "excluded motion: expansion",
+        "row": 1257
+      },
+      {
+        "arr": "357692",
+        "deal_id": "MOH-01257",
+        "reason": "excluded motion: renewal",
+        "row": 1258
+      },
+      {
+        "arr": "208858",
+        "deal_id": "MOH-01259",
+        "reason": "excluded motion: expansion",
+        "row": 1260
+      },
+      {
+        "arr": "705162",
+        "deal_id": "MOH-01260",
+        "reason": "excluded motion: expansion",
+        "row": 1261
+      },
+      {
+        "arr": "1060241",
+        "deal_id": "MOH-01263",
+        "reason": "excluded motion: renewal",
+        "row": 1264
+      },
+      {
+        "arr": "383418",
+        "deal_id": "MOH-01267",
+        "reason": "excluded motion: expansion",
+        "row": 1268
+      },
+      {
+        "arr": "650168",
+        "deal_id": "MOH-01270",
+        "reason": "excluded motion: renewal",
+        "row": 1271
+      },
+      {
+        "arr": "1316252",
+        "deal_id": "MOH-01271",
+        "reason": "excluded motion: renewal",
+        "row": 1272
+      },
+      {
+        "arr": "220134",
+        "deal_id": "MOH-01272",
+        "reason": "excluded motion: expansion",
+        "row": 1273
+      },
+      {
+        "arr": "128193",
+        "deal_id": "MOH-01275",
+        "reason": "excluded motion: expansion",
+        "row": 1276
+      },
+      {
+        "arr": "519826",
+        "deal_id": "MOH-01277",
+        "reason": "excluded motion: expansion",
+        "row": 1278
+      },
+      {
+        "arr": "2224659",
+        "deal_id": "MOH-01278",
+        "reason": "excluded motion: renewal",
+        "row": 1279
+      },
+      {
+        "arr": "638193",
+        "deal_id": "MOH-01283",
+        "reason": "excluded motion: renewal",
+        "row": 1284
+      },
+      {
+        "arr": "534886",
+        "deal_id": "MOH-01284",
+        "reason": "excluded motion: expansion",
+        "row": 1285
+      },
+      {
+        "arr": "497772",
+        "deal_id": "MOH-01291",
+        "reason": "excluded motion: expansion",
+        "row": 1292
+      },
+      {
+        "arr": "372448",
+        "deal_id": "MOH-01292",
+        "reason": "excluded motion: expansion",
+        "row": 1293
+      },
+      {
+        "arr": "1796218",
+        "deal_id": "MOH-01293",
+        "reason": "excluded motion: renewal",
+        "row": 1294
+      },
+      {
+        "arr": "1090762",
+        "deal_id": "MOH-01294",
+        "reason": "excluded motion: renewal",
+        "row": 1295
+      },
+      {
+        "arr": "363116",
+        "deal_id": "MOH-01304",
+        "reason": "excluded motion: renewal",
+        "row": 1305
+      },
+      {
+        "arr": "657009",
+        "deal_id": "MOH-01310",
+        "reason": "excluded motion: renewal",
+        "row": 1311
+      },
+      {
+        "arr": "742974",
+        "deal_id": "MOH-01311",
+        "reason": "excluded motion: renewal",
+        "row": 1312
+      },
+      {
+        "arr": "598339",
+        "deal_id": "MOH-01318",
+        "reason": "excluded motion: expansion",
+        "row": 1319
+      },
+      {
+        "arr": "123542",
+        "deal_id": "MOH-01319",
+        "reason": "excluded motion: expansion",
+        "row": 1320
+      },
+      {
+        "arr": "307769",
+        "deal_id": "MOH-01320",
+        "reason": "excluded motion: renewal",
+        "row": 1321
+      },
+      {
+        "arr": "968990",
+        "deal_id": "MOH-01321",
+        "reason": "excluded motion: renewal",
+        "row": 1322
+      },
+      {
+        "arr": "739716",
+        "deal_id": "MOH-01323",
+        "reason": "excluded motion: expansion",
+        "row": 1324
+      },
+      {
+        "arr": "1632426",
+        "deal_id": "MOH-01324",
+        "reason": "excluded motion: renewal",
+        "row": 1325
+      },
+      {
+        "arr": "987512",
+        "deal_id": "MOH-01326",
+        "reason": "excluded motion: expansion",
+        "row": 1327
+      },
+      {
+        "arr": "573148",
+        "deal_id": "MOH-01329",
+        "reason": "excluded motion: expansion",
+        "row": 1330
+      },
+      {
+        "arr": "872217",
+        "deal_id": "MOH-01330",
+        "reason": "excluded motion: expansion",
+        "row": 1331
+      },
+      {
+        "arr": "1210615",
+        "deal_id": "MOH-01331",
+        "reason": "excluded motion: renewal",
+        "row": 1332
+      },
+      {
+        "arr": "592696",
+        "deal_id": "MOH-01334",
+        "reason": "excluded motion: renewal",
+        "row": 1335
+      },
+      {
+        "arr": "1460220",
+        "deal_id": "MOH-01335",
+        "reason": "excluded motion: renewal",
+        "row": 1336
+      },
+      {
+        "arr": "645219",
+        "deal_id": "MOH-01339",
+        "reason": "excluded motion: expansion",
+        "row": 1340
+      },
+      {
+        "arr": "289984",
+        "deal_id": "MOH-01340",
+        "reason": "excluded motion: expansion",
+        "row": 1341
+      },
+      {
+        "arr": "679661",
+        "deal_id": "MOH-01341",
+        "reason": "excluded motion: renewal",
+        "row": 1342
+      },
+      {
+        "arr": "890400",
+        "deal_id": "MOH-01342",
+        "reason": "excluded motion: renewal",
+        "row": 1343
+      },
+      {
+        "arr": "749732",
+        "deal_id": "MOH-01343",
+        "reason": "excluded motion: renewal",
+        "row": 1344
+      },
+      {
+        "arr": "1855460",
+        "deal_id": "MOH-01344",
+        "reason": "excluded motion: renewal",
+        "row": 1345
+      },
+      {
+        "arr": "321244",
+        "deal_id": "MOH-01346",
+        "reason": "excluded motion: expansion",
+        "row": 1347
+      },
+      {
+        "arr": "514788",
+        "deal_id": "MOH-01347",
+        "reason": "excluded motion: renewal",
+        "row": 1348
+      },
+      {
+        "arr": "1331925",
+        "deal_id": "MOH-01349",
+        "reason": "excluded motion: renewal",
+        "row": 1350
+      },
+      {
+        "arr": "1197266",
+        "deal_id": "MOH-01352",
+        "reason": "excluded motion: renewal",
+        "row": 1353
+      },
+      {
+        "arr": "1870172",
+        "deal_id": "MOH-01353",
+        "reason": "excluded motion: renewal",
+        "row": 1354
+      },
+      {
+        "arr": "528345",
+        "deal_id": "MOH-01358",
+        "reason": "excluded motion: expansion",
+        "row": 1359
+      },
+      {
+        "arr": "645636",
+        "deal_id": "MOH-01359",
+        "reason": "excluded motion: expansion",
+        "row": 1360
+      },
+      {
+        "arr": "2396440",
+        "deal_id": "MOH-01361",
+        "reason": "excluded motion: renewal",
+        "row": 1362
+      },
+      {
+        "arr": "360825",
+        "deal_id": "MOH-01362",
+        "reason": "excluded motion: expansion",
+        "row": 1363
+      },
+      {
+        "arr": "289631",
+        "deal_id": "MOH-01363",
+        "reason": "excluded motion: renewal",
+        "row": 1364
+      },
+      {
+        "arr": "646168",
+        "deal_id": "MOH-01364",
+        "reason": "excluded motion: expansion",
+        "row": 1365
+      },
+      {
+        "arr": "486172",
+        "deal_id": "MOH-01369",
+        "reason": "excluded motion: expansion",
+        "row": 1370
+      },
+      {
+        "arr": "316886",
+        "deal_id": "MOH-01370",
+        "reason": "excluded motion: expansion",
+        "row": 1371
+      },
+      {
+        "arr": "811232",
+        "deal_id": "MOH-01371",
+        "reason": "excluded motion: renewal",
+        "row": 1372
+      },
+      {
+        "arr": "1156465",
+        "deal_id": "MOH-01372",
+        "reason": "excluded motion: renewal",
+        "row": 1373
+      },
+      {
+        "arr": "229023",
+        "deal_id": "MOH-01373",
+        "reason": "excluded motion: expansion",
+        "row": 1374
+      },
+      {
+        "arr": "215619",
+        "deal_id": "MOH-01374",
+        "reason": "excluded motion: expansion",
+        "row": 1375
+      },
+      {
+        "arr": "441016",
+        "deal_id": "MOH-01376",
+        "reason": "excluded motion: expansion",
+        "row": 1377
+      },
+      {
+        "arr": "78072",
+        "deal_id": "MOH-01381",
+        "reason": "excluded motion: expansion",
+        "row": 1382
+      },
+      {
+        "arr": "827618",
+        "deal_id": "MOH-01382",
+        "reason": "excluded motion: renewal",
+        "row": 1383
+      },
+      {
+        "arr": "783197",
+        "deal_id": "MOH-01384",
+        "reason": "excluded motion: renewal",
+        "row": 1385
+      },
+      {
+        "arr": "1045021",
+        "deal_id": "MOH-01386",
+        "reason": "excluded motion: renewal",
+        "row": 1387
+      },
+      {
+        "arr": "769781",
+        "deal_id": "MOH-01389",
+        "reason": "excluded motion: expansion",
+        "row": 1390
+      },
+      {
+        "arr": "1558417",
+        "deal_id": "MOH-01390",
+        "reason": "excluded motion: renewal",
+        "row": 1391
+      },
+      {
+        "arr": "572884",
+        "deal_id": "MOH-01394",
+        "reason": "excluded motion: expansion",
+        "row": 1395
+      },
+      {
+        "arr": "347148",
+        "deal_id": "MOH-01395",
+        "reason": "excluded motion: expansion",
+        "row": 1396
+      },
+      {
+        "arr": "1545487",
+        "deal_id": "MOH-01396",
+        "reason": "excluded motion: renewal",
+        "row": 1397
+      },
+      {
+        "arr": "76580",
+        "deal_id": "MOH-01400",
+        "reason": "excluded motion: expansion",
+        "row": 1401
+      },
+      {
+        "arr": "724776",
+        "deal_id": "MOH-01401",
+        "reason": "excluded motion: renewal",
+        "row": 1402
+      },
+      {
+        "arr": "1017097",
+        "deal_id": "MOH-01402",
+        "reason": "excluded motion: renewal",
+        "row": 1403
+      },
+      {
+        "arr": "696073",
+        "deal_id": "MOH-01411",
+        "reason": "excluded motion: renewal",
+        "row": 1412
+      },
+      {
+        "arr": "324151",
+        "deal_id": "MOH-01414",
+        "reason": "excluded motion: expansion",
+        "row": 1415
+      },
+      {
+        "arr": "391212",
+        "deal_id": "MOH-01421",
+        "reason": "excluded motion: expansion",
+        "row": 1422
+      },
+      {
+        "arr": "3367275",
+        "deal_id": "MOH-01423",
+        "reason": "excluded motion: renewal",
+        "row": 1424
+      },
+      {
+        "arr": "815596",
+        "deal_id": "MOH-01425",
+        "reason": "excluded motion: expansion",
+        "row": 1426
+      },
+      {
+        "arr": "478681",
+        "deal_id": "MOH-01426",
+        "reason": "excluded motion: renewal",
+        "row": 1427
+      },
+      {
+        "arr": "830312",
+        "deal_id": "MOH-01427",
+        "reason": "excluded motion: renewal",
+        "row": 1428
+      },
+      {
+        "arr": "743246",
+        "deal_id": "MOH-01432",
+        "reason": "excluded motion: renewal",
+        "row": 1433
+      },
+      {
+        "arr": "771456",
+        "deal_id": "MOH-01433",
+        "reason": "excluded motion: renewal",
+        "row": 1434
+      },
+      {
+        "arr": "822666",
+        "deal_id": "MOH-01436",
+        "reason": "excluded motion: expansion",
+        "row": 1437
+      },
+      {
+        "arr": "549352",
+        "deal_id": "MOH-01437",
+        "reason": "excluded motion: renewal",
+        "row": 1438
+      },
+      {
+        "arr": "257231",
+        "deal_id": "MOH-01441",
+        "reason": "excluded motion: expansion",
+        "row": 1442
+      },
+      {
+        "arr": "1554281",
+        "deal_id": "MOH-01442",
+        "reason": "excluded motion: renewal",
+        "row": 1443
+      },
+      {
+        "arr": "255108",
+        "deal_id": "MOH-01445",
+        "reason": "excluded motion: expansion",
+        "row": 1446
+      },
+      {
+        "arr": "399605",
+        "deal_id": "MOH-01446",
+        "reason": "excluded motion: renewal",
+        "row": 1447
+      },
+      {
+        "arr": "1288552",
+        "deal_id": "MOH-01448",
+        "reason": "excluded motion: renewal",
+        "row": 1449
+      },
+      {
+        "arr": "270286",
+        "deal_id": "MOH-01449",
+        "reason": "excluded motion: expansion",
+        "row": 1450
+      },
+      {
+        "arr": "264485",
+        "deal_id": "MOH-01450",
+        "reason": "excluded motion: expansion",
+        "row": 1451
+      },
+      {
+        "arr": "285138",
+        "deal_id": "MOH-01451",
+        "reason": "excluded motion: expansion",
+        "row": 1452
+      },
+      {
+        "arr": "773192",
+        "deal_id": "MOH-01453",
+        "reason": "excluded motion: expansion",
+        "row": 1454
+      },
+      {
+        "arr": "849596",
+        "deal_id": "MOH-01460",
+        "reason": "excluded motion: renewal",
+        "row": 1461
+      },
+      {
+        "arr": "617987",
+        "deal_id": "MOH-01461",
+        "reason": "excluded motion: renewal",
+        "row": 1462
+      },
+      {
+        "arr": "361542",
+        "deal_id": "MOH-01463",
+        "reason": "excluded motion: renewal",
+        "row": 1464
+      },
+      {
+        "arr": "1182062",
+        "deal_id": "MOH-01464",
+        "reason": "excluded motion: renewal",
+        "row": 1465
+      },
+      {
+        "arr": "834874",
+        "deal_id": "MOH-01468",
+        "reason": "excluded motion: renewal",
+        "row": 1469
+      },
+      {
+        "arr": "844903",
+        "deal_id": "MOH-01471",
+        "reason": "excluded motion: renewal",
+        "row": 1472
+      },
+      {
+        "arr": "192208",
+        "deal_id": "MOH-01473",
+        "reason": "excluded motion: expansion",
+        "row": 1474
+      },
+      {
+        "arr": "1337953",
+        "deal_id": "MOH-01475",
+        "reason": "excluded motion: renewal",
+        "row": 1476
+      },
+      {
+        "arr": "869423",
+        "deal_id": "MOH-01477",
+        "reason": "excluded motion: renewal",
+        "row": 1478
+      },
+      {
+        "arr": "680067",
+        "deal_id": "MOH-01479",
+        "reason": "excluded motion: renewal",
+        "row": 1480
+      },
+      {
+        "arr": "318990",
+        "deal_id": "MOH-01486",
+        "reason": "excluded motion: expansion",
+        "row": 1487
+      },
+      {
+        "arr": "2355519",
+        "deal_id": "MOH-01487",
+        "reason": "excluded motion: renewal",
+        "row": 1488
+      },
+      {
+        "arr": "364947",
+        "deal_id": "MOH-01490",
+        "reason": "excluded motion: renewal",
+        "row": 1491
+      },
+      {
+        "arr": "398908",
+        "deal_id": "MOH-01492",
+        "reason": "excluded motion: expansion",
+        "row": 1493
+      },
+      {
+        "arr": "1537649",
+        "deal_id": "MOH-01493",
+        "reason": "excluded motion: renewal",
+        "row": 1494
+      },
+      {
+        "arr": "2226081",
+        "deal_id": "MOH-01495",
+        "reason": "excluded motion: renewal",
+        "row": 1496
+      },
+      {
+        "arr": "62987",
+        "deal_id": "MOH-01497",
+        "reason": "excluded motion: expansion",
+        "row": 1498
+      },
+      {
+        "arr": "230279",
+        "deal_id": "MOH-01500",
+        "reason": "excluded motion: expansion",
+        "row": 1501
+      },
+      {
+        "arr": "319331",
+        "deal_id": "MOH-01501",
+        "reason": "excluded motion: expansion",
+        "row": 1502
+      },
+      {
+        "arr": "1038852",
+        "deal_id": "MOH-01504",
+        "reason": "excluded motion: renewal",
+        "row": 1505
+      },
+      {
+        "arr": "2889671",
+        "deal_id": "MOH-01507",
+        "reason": "excluded motion: renewal",
+        "row": 1508
+      },
+      {
+        "arr": "312525",
+        "deal_id": "MOH-01509",
+        "reason": "excluded motion: expansion",
+        "row": 1510
+      },
+      {
+        "arr": "1070439",
+        "deal_id": "MOH-01510",
+        "reason": "excluded motion: renewal",
+        "row": 1511
+      },
+      {
+        "arr": "432338",
+        "deal_id": "MOH-01511",
+        "reason": "excluded motion: expansion",
+        "row": 1512
+      },
+      {
+        "arr": "1231050",
+        "deal_id": "MOH-01513",
+        "reason": "excluded motion: renewal",
+        "row": 1514
+      },
+      {
+        "arr": "1008755",
+        "deal_id": "MOH-01520",
+        "reason": "excluded motion: renewal",
+        "row": 1521
+      },
+      {
+        "arr": "712721",
+        "deal_id": "MOH-01525",
+        "reason": "excluded motion: renewal",
+        "row": 1526
+      },
+      {
+        "arr": "364084",
+        "deal_id": "MOH-01527",
+        "reason": "excluded motion: expansion",
+        "row": 1528
+      },
+      {
+        "arr": "274282",
+        "deal_id": "MOH-01528",
+        "reason": "excluded motion: expansion",
+        "row": 1529
+      },
+      {
+        "arr": "265324",
+        "deal_id": "MOH-01529",
+        "reason": "excluded motion: expansion",
+        "row": 1530
+      },
+      {
+        "arr": "396102",
+        "deal_id": "MOH-01530",
+        "reason": "excluded motion: expansion",
+        "row": 1531
+      },
+      {
+        "arr": "236262",
+        "deal_id": "MOH-01532",
+        "reason": "excluded motion: expansion",
+        "row": 1533
+      },
+      {
+        "arr": "457941",
+        "deal_id": "MOH-01536",
+        "reason": "excluded motion: expansion",
+        "row": 1537
+      },
+      {
+        "arr": "1166486",
+        "deal_id": "MOH-01537",
+        "reason": "excluded motion: renewal",
+        "row": 1538
+      },
+      {
+        "arr": "429934",
+        "deal_id": "MOH-01538",
+        "reason": "excluded motion: renewal",
+        "row": 1539
+      },
+      {
+        "arr": "627762",
+        "deal_id": "MOH-01539",
+        "reason": "excluded motion: renewal",
+        "row": 1540
+      },
+      {
+        "arr": "163464",
+        "deal_id": "MOH-01540",
+        "reason": "excluded motion: expansion",
+        "row": 1541
+      },
+      {
+        "arr": "684959",
+        "deal_id": "MOH-01541",
+        "reason": "excluded motion: renewal",
+        "row": 1542
+      },
+      {
+        "arr": "1501430",
+        "deal_id": "MOH-01543",
+        "reason": "excluded motion: renewal",
+        "row": 1544
+      },
+      {
+        "arr": "348825",
+        "deal_id": "MOH-01546",
+        "reason": "excluded motion: expansion",
+        "row": 1547
+      },
+      {
+        "arr": "432636",
+        "deal_id": "MOH-01553",
+        "reason": "excluded motion: expansion",
+        "row": 1554
+      },
+      {
+        "arr": "291371",
+        "deal_id": "MOH-01554",
+        "reason": "excluded motion: expansion",
+        "row": 1555
+      },
+      {
+        "arr": "428077",
+        "deal_id": "MOH-01558",
+        "reason": "excluded motion: renewal",
+        "row": 1559
+      },
+      {
+        "arr": "442179",
+        "deal_id": "MOH-01565",
+        "reason": "excluded motion: renewal",
+        "row": 1566
+      },
+      {
+        "arr": "256007",
+        "deal_id": "MOH-01567",
+        "reason": "excluded motion: expansion",
+        "row": 1568
+      },
+      {
+        "arr": "376247",
+        "deal_id": "MOH-01568",
+        "reason": "excluded motion: expansion",
+        "row": 1569
+      },
+      {
+        "arr": "142958",
+        "deal_id": "MOH-01570",
+        "reason": "excluded motion: expansion",
+        "row": 1571
+      },
+      {
+        "arr": "855825",
+        "deal_id": "MOH-01574",
+        "reason": "excluded motion: renewal",
+        "row": 1575
+      },
+      {
+        "arr": "474871",
+        "deal_id": "MOH-01576",
+        "reason": "excluded motion: renewal",
+        "row": 1577
+      },
+      {
+        "arr": "561063",
+        "deal_id": "MOH-01580",
+        "reason": "excluded motion: expansion",
+        "row": 1581
+      },
+      {
+        "arr": "1139371",
+        "deal_id": "MOH-01583",
+        "reason": "excluded motion: renewal",
+        "row": 1584
+      },
+      {
+        "arr": "947132",
+        "deal_id": "MOH-01587",
+        "reason": "excluded motion: renewal",
+        "row": 1588
+      },
+      {
+        "arr": "214282",
+        "deal_id": "MOH-01588",
+        "reason": "excluded motion: renewal",
+        "row": 1589
+      },
+      {
+        "arr": "433670",
+        "deal_id": "MOH-01590",
+        "reason": "excluded motion: expansion",
+        "row": 1591
+      },
+      {
+        "arr": "366432",
+        "deal_id": "MOH-01591",
+        "reason": "excluded motion: renewal",
+        "row": 1592
+      },
+      {
+        "arr": "479684",
+        "deal_id": "MOH-01592",
+        "reason": "excluded motion: renewal",
+        "row": 1593
+      },
+      {
+        "arr": "214808",
+        "deal_id": "MOH-01593",
+        "reason": "excluded motion: expansion",
+        "row": 1594
+      },
+      {
+        "arr": "265015",
+        "deal_id": "MOH-01595",
+        "reason": "excluded motion: expansion",
+        "row": 1596
+      },
+      {
+        "arr": "742424",
+        "deal_id": "MOH-01597",
+        "reason": "excluded motion: expansion",
+        "row": 1598
+      },
+      {
+        "arr": "884102",
+        "deal_id": "MOH-01598",
+        "reason": "excluded motion: renewal",
+        "row": 1599
+      },
+      {
+        "arr": "419746",
+        "deal_id": "MOH-01600",
+        "reason": "excluded motion: expansion",
+        "row": 1601
+      },
+      {
+        "arr": "1162515",
+        "deal_id": "MOH-01604",
+        "reason": "excluded motion: renewal",
+        "row": 1605
+      },
+      {
+        "arr": "1741085",
+        "deal_id": "MOH-01609",
+        "reason": "excluded motion: renewal",
+        "row": 1610
+      },
+      {
+        "arr": "547187",
+        "deal_id": "MOH-01610",
+        "reason": "excluded motion: renewal",
+        "row": 1611
+      },
+      {
+        "arr": "1647146",
+        "deal_id": "MOH-01612",
+        "reason": "excluded motion: renewal",
+        "row": 1613
+      },
+      {
+        "arr": "403088",
+        "deal_id": "MOH-01622",
+        "reason": "excluded motion: expansion",
+        "row": 1623
+      },
+      {
+        "arr": "456430",
+        "deal_id": "MOH-01623",
+        "reason": "excluded motion: expansion",
+        "row": 1624
+      },
+      {
+        "arr": "117540",
+        "deal_id": "MOH-01626",
+        "reason": "excluded motion: expansion",
+        "row": 1627
+      },
+      {
+        "arr": "500168",
+        "deal_id": "MOH-01627",
+        "reason": "excluded motion: renewal",
+        "row": 1628
+      },
+      {
+        "arr": "1220365",
+        "deal_id": "MOH-01632",
+        "reason": "excluded motion: renewal",
+        "row": 1633
+      },
+      {
+        "arr": "649758",
+        "deal_id": "MOH-01635",
+        "reason": "excluded motion: renewal",
+        "row": 1636
+      },
+      {
+        "arr": "1045718",
+        "deal_id": "MOH-01636",
+        "reason": "excluded motion: renewal",
+        "row": 1637
+      },
+      {
+        "arr": "992474",
+        "deal_id": "MOH-01641",
+        "reason": "excluded motion: renewal",
+        "row": 1642
+      },
+      {
+        "arr": "195256",
+        "deal_id": "MOH-01643",
+        "reason": "excluded motion: renewal",
+        "row": 1644
+      },
+      {
+        "arr": "393414",
+        "deal_id": "MOH-01648",
+        "reason": "excluded motion: expansion",
+        "row": 1649
+      },
+      {
+        "arr": "442660",
+        "deal_id": "MOH-01652",
+        "reason": "excluded motion: expansion",
+        "row": 1652
+      },
+      {
+        "arr": "381255",
+        "deal_id": "MOH-01653",
+        "reason": "excluded motion: renewal",
+        "row": 1653
+      },
+      {
+        "arr": "768705",
+        "deal_id": "MOH-01664",
+        "reason": "excluded motion: renewal",
+        "row": 1663
+      },
+      {
+        "arr": "420141",
+        "deal_id": "MOH-01675",
+        "reason": "excluded motion: expansion",
+        "row": 1674
+      },
+      {
+        "arr": "535019",
+        "deal_id": "MOH-01678",
+        "reason": "excluded motion: renewal",
+        "row": 1676
+      },
+      {
+        "arr": "198785",
+        "deal_id": "MOH-01686",
+        "reason": "excluded motion: expansion",
+        "row": 1682
+      },
+      {
+        "arr": "125367",
+        "deal_id": "MOH-01689",
+        "reason": "excluded motion: expansion",
+        "row": 1684
+      },
+      {
+        "arr": "63259",
+        "deal_id": "MOH-01690",
+        "reason": "excluded motion: expansion",
+        "row": 1685
+      },
+      {
+        "arr": "1711061",
+        "deal_id": "MOH-01699",
+        "reason": "excluded motion: renewal",
+        "row": 1693
+      },
+      {
+        "arr": "2289729",
+        "deal_id": "MOH-01706",
+        "reason": "excluded motion: renewal",
+        "row": 1698
+      }
+    ],
+    "included_rows": 1075,
+    "pipeline_flow": {
+      "created": {
+        "arr": "444438240",
+        "count": 247
+      },
+      "lost": {
+        "arr": "431434537",
+        "count": 225
+      },
+      "open at as-of": {
+        "arr": "201970221",
+        "count": 131
+      },
+      "open at fiscal-year start": {
+        "arr": "216414277",
+        "count": 127
+      },
+      "won": {
+        "arr": "27447759",
+        "count": 18
+      }
+    },
+    "source_arr_total": "2504080299",
+    "source_rows": 1726
+  },
+  "required_pipeline": {
+    "cap": "2390337558.00",
+    "cap_rule": "one cap across the quarters: three times the new-business pipeline created in the trailing 365 days, less what earlier quarters were assigned",
+    "expected_basis": "expected pipeline is what the forward function in use creates; the ramped AE-months beside it are the roster's expected ones (a diagnostic here: capacity was not adopted)",
+    "fiscal_year": {
+      "headline": "partial: 1 of 2 quarters solvable (unreachable: Q3FY26); $506,268,030.57 covers only the solvable ones; too late to fund with new pipeline: Q3FY26, Q4FY26",
+      "name": "pipeline to meet every remaining quarter's target",
+      "quarters_remaining": 2,
+      "single_spread": {
+        "headline": "feasible: $2,018,192,885.26",
+        "name": "pipeline to meet the fiscal-year total, spread evenly to year end (section 5)"
+      },
+      "solvable_quarters": [
+        "Q4FY26"
+      ],
+      "solvable_total": "506268030.57",
+      "too_late_quarters": [
+        "Q3FY26",
+        "Q4FY26"
+      ],
+      "unreachable_quarters": [
+        "Q3FY26"
+      ],
+      "why_they_differ": "Meeting every quarter's own target is stricter than meeting the year's total: a quarter that is ahead cannot lend its surplus to one that is behind, and pipeline created in a quarter mostly books after it."
+    },
+    "forward_function": "the flat trailing rate",
+    "lead_time": {
+      "basis": "the production forward function's own timing, on a probe dollar-amount created evenly through the month; independent of the capacity decision. These are dollar yields, not probabilities: amounts change between creation and win, so they can exceed or fall short of what the deal counts imply and are not forced to sum to one",
+      "cents_booked_later": "0.10",
+      "count_outcome": {
+        "do_not_win": "0.908982",
+        "meaning": "of the deals created, from the fit in use; counts, so these sum to one",
+        "win_within_horizon": "0.091018"
+      },
+      "created_between": [
+        "2026-08-31",
+        "2026-09-30"
+      ],
+      "quarters": [
+        {
+          "cents_booked_by_quarter_end": "0.21",
+          "cents_booked_in_quarter": "0.21",
+          "quarter": "Q3FY26"
+        },
+        {
+          "cents_booked_by_quarter_end": "3.09",
+          "cents_booked_in_quarter": "2.88",
+          "quarter": "Q4FY26"
+        },
+        {
+          "cents_booked_by_quarter_end": "6.77",
+          "cents_booked_in_quarter": "3.68",
+          "quarter": "Q1FY27"
+        },
+        {
+          "cents_booked_by_quarter_end": "9.53",
+          "cents_booked_in_quarter": "2.75",
+          "quarter": "Q2FY27"
+        }
+      ],
+      "question": "of a dollar of pipeline created next month (at its first recorded amount), the cents booked by the end of each of the next four quarters"
+    },
+    "meaning": "'required' means achievable inside the model's bounds (fitted conversion and timing, the cap above), not operationally achievable",
+    "method": "one deterministic solve in quarter order; each quarter's pipeline is created evenly on every day from the day after the as-of date to its end (creation starts now), and meets that quarter's target given its actual bookings, the pipeline already open and what earlier quarters were assigned; an unreachable quarter is assigned nothing. Pipeline assigned to a later quarter is also created in the earlier quarters' months, so it can only add to them",
+    "per_ramped_ae_month_label": "diagnostic, not the forecast's basis",
+    "per_rep_rule": {
+      "applies": false,
+      "why": "capacity was not shown to explain pipeline in this history, so the per-ramped-AE-month comparison is a diagnostic only and does not decide; the cap and the total rate do"
+    },
+    "quarters": [
+      {
+        "actual": "2440779",
+        "bookings_under_completed_schedule": "15446387.56",
+        "bookings_with_own_pipeline": "15239944.99",
+        "bookings_without_own_pipeline": "15239944.99",
+        "cap_left_before": "2390337558.00",
+        "cents_booked_in_quarter_per_dollar": "0.10",
+        "created_between": [
+          "2026-08-31",
+          "2026-10-31"
+        ],
+        "earlier_assigned_in_span": "0.00",
+        "expected_created_pipeline": "138674656.65",
+        "headline": "unreachable within the cap (it would take $6,609,519,382.53)",
+        "in_fiscal_year": true,
+        "outcome": "unreachable within bounds",
+        "per_day": {
+          "expected": "2273355.03",
+          "required_against_team_best": "48.98",
+          "required_total": "110626131.79"
+        },
+        "per_ramped_ae_month": {
+          "decides": false,
+          "expected": "737045.16",
+          "required_against_team_best": "42.52",
+          "required_total": "35866133.67"
+        },
+        "quarter": "Q3FY26",
+        "ramped_ae_months": "188.1",
+        "required_extra_pipeline": null,
+        "status": "in progress",
+        "surplus_over_target": "-6553612.44",
+        "target": "22000000",
+        "too_late": {
+          "applies": true,
+          "diagnostics": [
+            "per ramped AE-month it would need $35,866,134, above the team's best of $843,465: a diagnostic here, it does not decide"
+          ],
+          "label": "too late to fund with new pipeline: this quarter depends on the pipeline already open",
+          "legs": [
+            "over_cap",
+            "total_rate"
+          ],
+          "open_pipeline": {
+            "expected_contribution": "12657332.93",
+            "expected_share_of_open": "0.0627",
+            "needed_contribution": "19417387.95",
+            "needed_share_of_open": "0.0961",
+            "open_arr": "201970221.00",
+            "possible": true,
+            "statement": "to close it, $19,417,388 of the open pipeline would have to book inside the quarter (9.6% of its dollars) against the 6.3% expected (arithmetic on the figures above, not a lever the model solves)"
+          },
+          "reasons": [
+            "the requirement is over the cap",
+            "needs $110,626,131.79 of pipeline created a day in total, above the team's best four-quarter average of $2,258,735.33 a day"
+          ]
+        },
+        "total_created_in_span": "6748194039.18"
+      },
+      {
+        "actual": "0",
+        "bookings_under_completed_schedule": "26000000.00",
+        "bookings_with_own_pipeline": "26000000.00",
+        "bookings_without_own_pipeline": "20392735.83",
+        "cap_left_before": "2390337558.00",
+        "cents_booked_in_quarter_per_dollar": "1.11",
+        "created_between": [
+          "2026-08-31",
+          "2027-01-31"
+        ],
+        "earlier_assigned_in_span": "0.00",
+        "expected_created_pipeline": "347823319.14",
+        "headline": "required: $506,268,030.57",
+        "in_fiscal_year": true,
+        "outcome": "feasible",
+        "per_day": {
+          "expected": "2273355.03",
+          "required_against_team_best": "2.47",
+          "required_total": "5582296.40"
+        },
+        "per_ramped_ae_month": {
+          "decides": false,
+          "expected": "740236.77",
+          "required_against_team_best": "2.16",
+          "required_total": "1817675.21"
+        },
+        "quarter": "Q4FY26",
+        "ramped_ae_months": "469.9",
+        "required_extra_pipeline": "506268030.57",
+        "status": "not started",
+        "surplus_over_target": "0.00",
+        "target": "26000000",
+        "too_late": {
+          "applies": true,
+          "diagnostics": [
+            "per ramped AE-month it would need $1,817,675, above the team's best of $843,465: a diagnostic here, it does not decide"
+          ],
+          "label": "too late to fund with new pipeline: this quarter depends on the pipeline already open",
+          "legs": [
+            "total_rate"
+          ],
+          "open_pipeline": {
+            "expected_contribution": "16540355.04",
+            "expected_share_of_open": "0.0819",
+            "needed_contribution": "22147619.21",
+            "needed_share_of_open": "0.1097",
+            "open_arr": "201970221.00",
+            "possible": true,
+            "statement": "to close it, $22,147,619 of the open pipeline would have to book inside the quarter (11.0% of its dollars) against the 8.2% expected (arithmetic on the figures above, not a lever the model solves)"
+          },
+          "reasons": [
+            "needs $5,582,296.40 of pipeline created a day in total, above the team's best four-quarter average of $2,258,735.33 a day"
+          ]
+        },
+        "total_created_in_span": "854091349.71"
+      }
+    ],
+    "team_history": {
+      "best_four_quarter_average": "843464.59",
+      "best_four_quarter_average_per_day": "2258735.33",
+      "median": "806071.05",
+      "note": "Observed over the complete fiscal quarters in the files, with today's roster and ramp; fewer than four quarters has no four-quarter average",
+      "per_day_unit": "total created pipeline dollars per day, over four consecutive complete fiscal quarters (observed; needs no roster)",
+      "quarters": 10,
+      "unit": "created pipeline dollars per ramped AE-month"
+    },
+    "too_late_rule": "a quarter is too late to fund with new pipeline when its requirement is over the cap (or the cap is used up, or no pipeline created in time can book inside it), or when everything created in its span (expected, earlier quarters' assignments and its own requirement) per day is above the team's best four-quarter average of total created pipeline per day, or, only where capacity is the forecast's basis, when that total per ramped AE-month is above the team's best; the reason names exactly the legs that fired"
+  },
+  "roster_capacity": {
+    "attrition": {
+      "forward": "an expectation in the headline (a constant daily hazard from this monthly rate); a random draw in the ranges; nobody is back-filled unless the plan says so",
+      "monthly_rate": "0.01098",
+      "range95": [
+        "0.00735",
+        "0.01577"
+      ],
+      "sample": "29 departures over 2641.7 AE-months",
+      "source": "fitted",
+      "why_not_fitted": ""
+    },
+    "creation_rate": {
+      "deals_per_ramped_ae_month": "0.419963",
+      "trailing_deals": 442,
+      "trailing_ramped_ae_months": "1052.47",
+      "window": "trailing 365 days to 2026-08-31"
+    },
+    "decision": {
+      "association": "An association in the history, not a promise: that a new hire adds pipeline at this rate is an assumption.",
+      "declared_rule": "adopted only if ramped AE-months varied by at least 20% across the scored period, the capacity rate's mean absolute error is at least 10% lower than the flat trailing rate's at both 3 and 6 months, and there are at least 6 folds at each",
+      "forecast_uses": "the flat trailing creation rate",
+      "horizons": [
+        {
+          "folds": 14,
+          "horizon_months": 3,
+          "improvement": "-0.0506",
+          "mean_absolute_error_capacity": "20489214.97",
+          "mean_absolute_error_flat": "19501668.34"
+        },
+        {
+          "folds": 11,
+          "horizon_months": 6,
+          "improvement": "-0.3181",
+          "mean_absolute_error_capacity": "36083485.66",
+          "mean_absolute_error_flat": "27375898.41"
+        }
+      ],
+      "label": "conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts",
+      "outcome": "not shown",
+      "reason": "ramped AE-months varied 14% across the scored period; at least 20% is needed for headcount to be testable",
+      "scored_on": "created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred",
+      "scored_period": [
+        "2025-04-30",
+        "2026-08-31"
+      ],
+      "staffing_variation": "0.1382"
+    },
+    "diagnostic": {
+      "bookings_with_capacity_projection": {
+        "next twelve months": "87406155.15",
+        "rest of fiscal year": "33467429.64"
+      },
+      "bookings_with_flat_rate": {
+        "next twelve months": "85003210.23",
+        "rest of fiscal year": "33191901.81"
+      },
+      "hiring_action": "unsupported by this history",
+      "label": "diagnostic only: capacity was not adopted, so nothing in this report uses it"
+    },
+    "limitations": [
+      "team_members.csv records no history of role, segment, quota or deal ownership: today's values stand in for every past date",
+      "a deal's owner is its current owner, not necessarily the person who created it",
+      "people who left the company before the first deal in the files are not on the roster"
+    ],
+    "months": [
+      {
+        "departures": 1,
+        "headcount_target": null,
+        "heads": 85,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-09",
+        "ramped": "83.35"
+      },
+      {
+        "departures": 1,
+        "headcount_target": null,
+        "heads": 85,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-10",
+        "ramped": "83.67"
+      },
+      {
+        "departures": 0,
+        "headcount_target": null,
+        "heads": 86,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-11",
+        "ramped": "83.57"
+      },
+      {
+        "departures": 0,
+        "headcount_target": null,
+        "heads": 86,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2025-12",
+        "ramped": "84.71"
+      },
+      {
+        "departures": 2,
+        "headcount_target": null,
+        "heads": 85,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-01",
+        "ramped": "84.77"
+      },
+      {
+        "departures": 0,
+        "headcount_target": 89,
+        "heads": 89,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-02",
+        "ramped": "86.50"
+      },
+      {
+        "departures": 1,
+        "headcount_target": 93,
+        "heads": 92,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-03",
+        "ramped": "88.06"
+      },
+      {
+        "departures": 1,
+        "headcount_target": 96,
+        "heads": 95,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-04",
+        "ramped": "91.04"
+      },
+      {
+        "departures": 2,
+        "headcount_target": 98,
+        "heads": 96,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-05",
+        "ramped": "91.26"
+      },
+      {
+        "departures": 2,
+        "headcount_target": 98,
+        "heads": 96,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-06",
+        "ramped": "90.89"
+      },
+      {
+        "departures": 3,
+        "headcount_target": 99,
+        "heads": 96,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-07",
+        "ramped": "92.04"
+      },
+      {
+        "departures": 1,
+        "headcount_target": 100,
+        "heads": 99,
+        "heads_with_plan": null,
+        "kind": "past",
+        "month": "2026-08",
+        "ramped": "93.13"
+      },
+      {
+        "departures": "0.81",
+        "headcount_target": 100,
+        "heads": "74.2",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-09",
+        "ramped": "93.96"
+      },
+      {
+        "departures": "0.84",
+        "headcount_target": 101,
+        "heads": "74.3",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-10",
+        "ramped": "93.80"
+      },
+      {
+        "departures": "0.80",
+        "headcount_target": 102,
+        "heads": "73.5",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-11",
+        "ramped": "93.36"
+      },
+      {
+        "departures": "0.82",
+        "headcount_target": 102,
+        "heads": "72.7",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2026-12",
+        "ramped": "93.12"
+      },
+      {
+        "departures": "0.85",
+        "headcount_target": 102,
+        "heads": "75.7",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-01",
+        "ramped": "93.15"
+      },
+      {
+        "departures": "0.79",
+        "headcount_target": null,
+        "heads": "77.7",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-02",
+        "ramped": "92.68"
+      },
+      {
+        "departures": "0.90",
+        "headcount_target": null,
+        "heads": "80.6",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-03",
+        "ramped": "91.71"
+      },
+      {
+        "departures": "0.90",
+        "headcount_target": null,
+        "heads": "82.4",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-04",
+        "ramped": "90.64"
+      },
+      {
+        "departures": "0.94",
+        "headcount_target": null,
+        "heads": "83.3",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-05",
+        "ramped": "89.82"
+      },
+      {
+        "departures": "0.93",
+        "headcount_target": null,
+        "heads": "85.1",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-06",
+        "ramped": "89.08"
+      },
+      {
+        "departures": "0.98",
+        "headcount_target": null,
+        "heads": "87.7",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-07",
+        "ramped": "88.18"
+      },
+      {
+        "departures": "0.98",
+        "headcount_target": null,
+        "heads": "86.7",
+        "heads_with_plan": null,
+        "kind": "forward",
+        "month": "2027-08",
+        "ramped": "87.20"
+      }
+    ],
+    "ramp": {
+      "after": "1 from the next tenure month on",
+      "deals_left_out": {
+        "count": 0,
+        "why": null
+      },
+      "definition": "created deals per rep by tenure month, relative to reps with twelve or more months' tenure in the same calendar month",
+      "fitted_through": null,
+      "limitation": "ownership on deals.csv says who owns a deal, not who made it: deals handed to a new rep count as that rep's, so a fitted ramp can read faster than the true one",
+      "sample": "26 reps observed from hire through their sixth month; 99 tenured reps alongside",
+      "source": "fitted",
+      "weights": [
+        {
+          "range95": [
+            "0.4733",
+            "1.0000"
+          ],
+          "tenure_month": 1,
+          "weight": "0.7910"
+        },
+        {
+          "range95": [
+            "0.2345",
+            "0.8763"
+          ],
+          "tenure_month": 2,
+          "weight": "0.4533"
+        },
+        {
+          "range95": [
+            "0.5077",
+            "1.0000"
+          ],
+          "tenure_month": 3,
+          "weight": "0.8361"
+        },
+        {
+          "range95": [
+            "0.3001",
+            "1.0000"
+          ],
+          "tenure_month": 4,
+          "weight": "0.5615"
+        },
+        {
+          "range95": [
+            "0.4014",
+            "1.0000"
+          ],
+          "tenure_month": 5,
+          "weight": "0.6970"
+        },
+        {
+          "range95": [
+            "0.6702",
+            "1.0000"
+          ],
+          "tenure_month": 6,
+          "weight": "1.0000"
+        },
+        {
+          "range95": [
+            "0.6873",
+            "1.0000"
+          ],
+          "tenure_month": 7,
+          "weight": "1.0000"
+        },
+        {
+          "range95": [
+            "0.7308",
+            "1.0000"
+          ],
+          "tenure_month": 8,
+          "weight": "1.0000"
+        },
+        {
+          "range95": [
+            "0.5299",
+            "1.0000"
+          ],
+          "tenure_month": 9,
+          "weight": "0.8734"
+        },
+        {
+          "range95": [
+            "0.5973",
+            "1.0000"
+          ],
+          "tenure_month": 10,
+          "weight": "0.9360"
+        },
+        {
+          "range95": [
+            "0.6769",
+            "1.0000"
+          ],
+          "tenure_month": 11,
+          "weight": "1.0000"
+        }
+      ],
+      "why_not_fitted": ""
+    },
+    "roster": {
+      "departed_to_date": 29,
+      "excluded": [],
+      "headcount_target_note": "monthly_ae_targets in targets.yaml: a comparison line only; it never creates a hire",
+      "headcount_target_this_month": 100,
+      "heads_at_as_of": 99,
+      "other_roles_counted_no_capacity": {
+        "manager": 7,
+        "renewal_manager": 4,
+        "sdr": 18,
+        "se": 14,
+        "vp_sales": 1
+      },
+      "quota_carrying_rows": 128,
+      "ramped_equivalents_at_as_of": "93.60",
+      "rows": 172,
+      "signed_hires": []
+    }
+  },
+  "schema_version": "1.0.0",
+  "verdicts": {
+    "forecast_better_than_baselines": {
+      "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 11,625,581 vs trailing run-rate 8,100,541",
+      "verdict": "no"
+    },
+    "software_correct": {
+      "checks": [
+        {
+          "detail": "1075 included + 651 excluded = 1726 of 1726 source rows",
+          "name": "rows partition",
+          "passed": true
+        },
+        {
+          "detail": "included + excluded arr = 2504080299 against source total 2504080299 (0 rows had no readable arr)",
+          "name": "arr partition",
+          "passed": true
+        },
+        {
+          "detail": "source file new-business won FYTD 27447759 = included 27447759 + excluded rows 0",
+          "name": "bookings tie to source",
+          "passed": true
+        },
+        {
+          "detail": "open at FY start 216414277 + created 444438240 = won 27447759 + lost 431434537 + open now 201970221",
+          "name": "pipeline flow",
+          "passed": true
+        },
+        {
+          "detail": "open 201970221.00 = won in window 44531331.26 + won later 0.00 + not won 157438889.74",
+          "name": "existing pipeline conserved",
+          "passed": true
+        },
+        {
+          "detail": "forward($2,018,192,885.26) = 84000000.0001 against target 84000000",
+          "name": "lever agrees with forward function",
+          "passed": true
+        },
+        {
+          "detail": "forward($1,068,462,037.02) = 48000000.0001 against target 48000000",
+          "name": "twelve-month lever agrees with forward function",
+          "passed": true
+        },
+        {
+          "detail": "simulated mean 84,987,971.80 vs expected 85,003,210.25 (tolerance 1,486,624.72, 2000 draws)",
+          "name": "simulation centred on the expectation",
+          "passed": true
+        },
+        {
+          "detail": "each method's total equals the sum of its months (largest difference 2.00E-20)",
+          "name": "forecast parts add up",
+          "passed": true
+        },
+        {
+          "detail": "16 cutoffs rebuilt with as_known_at; each fold asserts its latest fact is on or before its cutoff",
+          "name": "folds saw nothing after their cutoff",
+          "passed": true
+        },
+        {
+          "detail": "59 rates in one registry",
+          "name": "every rate defined once",
+          "passed": true
+        },
+        {
+          "detail": "128 quota-carrying + 44 other roles + 0 excluded = 172 of 172 roster rows",
+          "name": "roster rows partition",
+          "passed": true
+        },
+        {
+          "detail": "capacity decision: not shown; forecast uses the flat creation rate",
+          "name": "the forecast uses capacity exactly when it was adopted",
+          "passed": true
+        },
+        {
+          "detail": "58355817.00 + 4236135.00 = 62591952.00 against 62591952.00",
+          "name": "wins credited plus unattributed equal bookings in the window",
+          "passed": true
+        },
+        {
+          "detail": "1 solvable quarters re-run through the forward function, each with the schedules solved up to and including its own; 1 unreachable checked against the cap, the cap left and the selling window",
+          "name": "each solvable quarter meets its target under the schedules solved up to and including it",
+          "passed": true
+        },
+        {
+          "detail": "2 quarters rebuilt by adding each quarter's own schedule to the no-pipeline forecast",
+          "name": "the completed schedule books each quarter's stated bookings and surplus over target",
+          "passed": true
+        },
+        {
+          "detail": "1 solved schedules re-run on their own",
+          "name": "cents booked in each quarter, re-derived from the solved schedule, match the stated yield",
+          "passed": true
+        },
+        {
+          "detail": "4 quarters checked on a $250,000 probe in two parts; win share 0.0910, not 0.9090",
+          "name": "lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one",
+          "passed": true
+        },
+        {
+          "detail": "rest of fiscal year: 83295.40 = 33275197.21 - 33191901.81; next twelve months: 1600600.21 = 86603810.44 - 85003210.23",
+          "name": "plan contributions sum to the difference",
+          "passed": true
+        },
+        {
+          "detail": "simulated mean 86,865,409.79 vs expected 86,603,810.44 (2000 draws)",
+          "name": "plan simulation centred on its expectation",
+          "passed": true
+        },
+        {
+          "detail": "unreachable within bounds: forward(3007281482.38) = 79207625.42 against 84000000",
+          "name": "programme solve agrees with the forward function",
+          "passed": true
+        }
+      ],
+      "scope": "runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
+      "summary": "21 of 21 self-checks passed",
+      "verdict": "yes"
+    }
+  }
+}

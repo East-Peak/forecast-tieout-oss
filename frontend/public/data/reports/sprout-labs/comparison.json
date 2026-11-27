@@ -1,0 +1,52 @@
+{
+  "as_of": "2026-08-31",
+  "baseline": "as-signed",
+  "company": "sprout-labs",
+  "rows": [
+    {
+      "bookings_change": null,
+      "cash_cost_in_twelve_months": null,
+      "expected_fiscal_year": "6119924.84",
+      "fiscal_year_gap": "1880075.16",
+      "fiscal_year_gap_change": null,
+      "label": "As signed",
+      "scenario": "as-signed"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "844156.36",
+        "rest of fiscal year": "36261.69"
+      },
+      "cash_cost_in_twelve_months": "265222.04",
+      "expected_fiscal_year": "6156186.53",
+      "fiscal_year_gap": "1843813.47",
+      "fiscal_year_gap_change": "-36261.69",
+      "label": "Demo plan",
+      "scenario": "demo-plan"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "760779.68",
+        "rest of fiscal year": "24547.04"
+      },
+      "cash_cost_in_twelve_months": "217222.04",
+      "expected_fiscal_year": "6144471.88",
+      "fiscal_year_gap": "1855528.12",
+      "fiscal_year_gap_change": "-24547.04",
+      "label": "Hires only",
+      "scenario": "hires-only"
+    },
+    {
+      "bookings_change": {
+        "next twelve months": "83376.68",
+        "rest of fiscal year": "11714.65"
+      },
+      "cash_cost_in_twelve_months": "48000.00",
+      "expected_fiscal_year": "6131639.49",
+      "fiscal_year_gap": "1868360.51",
+      "fiscal_year_gap_change": "-11714.65",
+      "label": "Programme only",
+      "scenario": "programme-only"
+    }
+  ]
+}
