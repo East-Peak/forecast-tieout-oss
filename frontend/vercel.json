@@ -1,5 +1,6 @@
 {
   "rewrites": [
     { "source": "/((?!assets/|data/|docs/|favicon).*)", "destination": "/index.html" }
-  ]
+  ],
+  "git": { "deploymentEnabled": { "dependabot/**": false } }
 }
