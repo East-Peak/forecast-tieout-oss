@@ -432,6 +432,7 @@ def simulate(
     groups: dict[str, list[str]] | None = None,
     parameter_uncertainty: bool = False,
     creation: Creation | None = None,
+    inflows: Sequence[Inflow] = (),
 ) -> Simulation:
     """Draw outcomes from the fitted model: each open deal wins or not and, if
     it wins, closes after a day count drawn from its timing; future wins arrive
@@ -486,7 +487,17 @@ def simulate(
     new = model.new_pipeline
     if new.timing.samples and new.won_arr_samples:
         span = int(ends[-1])
-        if creation is None:
+        extra = np.zeros(span)  # deals created per day by programme inflows
+        if inflows and new.mean_created_arr:
+            for flow in inflows:
+                lo, hi = max(flow.start, 0), min(flow.end, span)
+                if hi > lo:
+                    extra[lo:hi] += float(
+                        flow.dollars
+                        / Decimal(flow.end - flow.start)
+                        / new.mean_created_arr
+                    )
+        if creation is None and not extra.any():
             lam = float(new.created_per_day * new.win_rate) * span
             if parameter_uncertainty:
                 per_day = (
@@ -504,12 +515,15 @@ def simulate(
             rows = np.repeat(draw_index, counts)
             created = rng.integers(1, span + 1, total)
         else:
-            per_day = np.asarray([float(x) for x in creation.per_day[:span]])
+            if creation is None:
+                per_day = np.full(span, float(new.created_per_day))
+            else:
+                per_day = np.asarray([float(x) for x in creation.per_day[:span]])
             deals = (
                 creation.draws(rng, draws)[:, :span]
-                if creation.draws is not None
+                if creation is not None and creation.draws is not None
                 else np.tile(per_day, (draws, 1))
-            )
+            ) + extra
             win_rate = float(new.win_rate)
             if parameter_uncertainty:
                 win_rate = _beta(rng, win_rate, new.win_rate_n, draws)[:, None]

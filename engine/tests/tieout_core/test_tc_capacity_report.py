@@ -368,7 +368,10 @@ def test_a_target_the_pipeline_cannot_reach_is_unreachable_and_assigned_nothing(
 
 
 def test_per_ramped_ae_month_columns_are_labelled_by_the_branch(adopted, not_shown):
-    assert adopted["required_pipeline"]["per_ramped_ae_month_label"] == "the forecast's basis"
+    assert (
+        adopted["required_pipeline"]["per_ramped_ae_month_label"]
+        == "the forecast's basis"
+    )
     assert not_shown["required_pipeline"]["per_ramped_ae_month_label"] == (
         "diagnostic, not the forecast's basis"
     )
@@ -376,3 +379,25 @@ def test_per_ramped_ae_month_columns_are_labelled_by_the_branch(adopted, not_sho
 
     assert "diagnostic, not the forecast's basis" in render(not_shown)
     assert "diagnostic, not the forecast's basis" not in render(adopted)
+
+
+def test_when_capacity_is_adopted_every_range_is_unvalidated_and_coverage_is_only_a_statistic(
+    adopted, not_shown
+):
+    fr = adopted["forecasts"]["fitted_ranges"]
+    assert all(c["label"] == "unvalidated" for c in fr["cells"])
+    assert any(
+        c["coverage80"] is not None for c in fr["cells"]
+    )  # the statistic is still shown
+    assert all(
+        c["coverage_judgement"]
+        in ("back-tested", "too narrow", "too wide", "unvalidated")
+        for c in fr["cells"]
+    )
+    assert all(h["status"].startswith("unvalidated") for h in fr["horizons"].values())
+    assert (
+        "include the capacity term" in fr["horizons"]["rest of fiscal year"]["status"]
+    )
+    # without capacity the ordinary labels stand
+    flat = not_shown["forecasts"]["fitted_ranges"]
+    assert {c["label"] for c in flat["cells"]} - {"unvalidated"}

@@ -281,3 +281,29 @@ def test_every_demo_company_runs_with_and_without_its_plan(company):
             assert key in r
     assert "plan" not in without and "plan" in with_
     assert with_["plan"]["difference"] == with_["plan"]["contributions_total"]
+
+
+def test_the_plan_has_simulated_ranges_labelled_unvalidated_and_centred(with_plan):
+    r = with_plan["plan"]["ranges"]
+    assert r["status"].startswith("unvalidated") and "plan" in r["status"]
+    for h in (REST, TWELVE):
+        v = r["bookings_in_window"][h]
+        lo, hi = (float(x) for x in v["range80"])
+        lo95, hi95 = (float(x) for x in v["range95"])
+        assert lo95 <= lo <= float(v["median"]) <= hi <= hi95 and hi > lo
+    # the with-plan median sits near the with-plan expectation
+    exp = float(with_plan["plan"]["with_plan"][TWELVE])
+    assert abs(float(r["bookings_in_window"][TWELVE]["median"]) - exp) < 0.15 * exp
+    checks = {c["name"]: c for c in with_plan["verdicts"]["software_correct"]["checks"]}
+    assert checks["plan simulation centred on its expectation"]["passed"]
+
+
+def test_a_programme_only_plan_in_the_flat_branch_also_has_ranges(demand, tmp_path):
+    path = plan_file(
+        tmp_path,
+        {"programmes": [{"name": "P", "pipeline": 3_000_000, "start": "2026-10"}]},
+    )
+    r = build_report(*demand, AS_OF, draws=DRAWS, plan_path=path)
+    base = r["plan"]["ranges"]["bookings_in_window"][TWELVE]
+    assert float(base["range80"][1]) > float(base["range80"][0])
+    assert "capacity term" not in r["plan"]["ranges"]["status"]

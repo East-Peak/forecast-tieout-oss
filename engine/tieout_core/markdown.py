@@ -696,7 +696,23 @@ def _plan(s: dict) -> list[str]:
             "",
         ]
     out += [
-        f"Cash cost of the plan in the twelve months: {_cost(s['cash_cost_in_twelve_months'])} ({s['cost_note']}). {_up(s['unvalidated'])}.",
+        f"Cash cost of the plan in the twelve months: {_cost(s['cash_cost_in_twelve_months'])} ({s['cost_note']}).",
+        "",
+    ]
+    r = s["ranges"]
+    out += [
+        f"Bookings with the plan, simulated ({r['status']}; {r['draws']} draws, drawing {r['what_is_drawn']}):",
+        "",
+    ]
+    out += _table(
+        ["Window", "Median", "80% range", "95% range"],
+        [
+            (h, _usd(v["median"]), _rng(v["range80"]), _rng(v["range95"]))
+            for h, v in r["bookings_in_window"].items()
+        ],
+    )
+    out += [
+        f"Fiscal-year expected with the plan, 80% range: {_rng(r['fiscal_year_expected_range80'])}.",
         "",
     ]
     return out

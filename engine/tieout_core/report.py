@@ -158,7 +158,7 @@ def build_report(
             cap, model, pop, as_of, windows, horizons[REST_OF_FY], horizons[NEXT_12], targeted,
             rec.bookings_fytd, fy_target, fy.start, fy.end, goal12 if through else None, actual12,
             LEVER_CAP_MULTIPLE * _trailing_created_arr(pop, as_of, model.params.trailing_days),
-            (horizon_end - as_of).days,
+            (horizon_end - as_of).days, draws, seed,
         )  # fmt: skip
         scenario = actions.Scenario(ground)
         if plan is not None:
@@ -225,7 +225,7 @@ def build_report(
         },
         "reconciliation": _reconciliation(rec),
         "history": _history(loaded, rec, model, bt, as_of, recency, cap),
-        "forecasts": _forecasts(forecasts, labels, horizons, sim, bt),
+        "forecasts": _forecasts(forecasts, labels, horizons, sim, bt, cap.adopted),
         "rates": [_rate(r) for r in book],
         "gap": gap,
         "backtest": {
@@ -427,7 +427,9 @@ def _history(loaded, rec, model, bt, as_of, recency, cap=None) -> dict:
     }
 
 
-def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
+def _forecasts(
+    forecasts: list[Forecast], labels, horizons, sim, bt, capacity: bool = False
+) -> dict:
     cells = [
         {
             "horizon_months": s.horizon,
@@ -437,12 +439,21 @@ def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
             "median_width80": None
             if s.median_width80 is None
             else _float(s.median_width80),
-            "label": coverage_label(s.inside80, s.range_folds),
+            "label": UNVALIDATED
+            if capacity
+            else coverage_label(s.inside80, s.range_folds),
+            "coverage_judgement": coverage_label(s.inside80, s.range_folds),
         }
         for s in bt.scores
     ]
     status = "; ".join(
-        f"{c['horizon_months']}-month {c['label']} ("
+        f"{c['horizon_months']}-month {c['label']}"
+        + (
+            f" (the coverage statistics read {c['coverage_judgement']})"
+            if capacity
+            else ""
+        )
+        + " ("
         + (
             f"80% range held {c['coverage80']:.0%} of {c['folds_with_a_range']} folds"
             if c["folds_with_a_range"]
@@ -452,7 +463,12 @@ def _forecasts(forecasts: list[Forecast], labels, horizons, sim, bt) -> dict:
         for c in cells
     )
     statuses = {
-        REST_OF_FY: _window_status(len(horizons[REST_OF_FY]), cells),
+        REST_OF_FY: (
+            f"{UNVALIDATED}: the ranges include the capacity term, so the back-test coverage is "
+            "shown as a statistic and not as a validation"
+            if capacity
+            else _window_status(len(horizons[REST_OF_FY]), cells)
+        ),
         NEXT_12: f"{UNVALIDATED}: twelve-month ranges are not back-tested (the back-test scores "
         f"{', '.join(str(h) for h in HORIZONS)} months)",
     }

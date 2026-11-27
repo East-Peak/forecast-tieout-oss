@@ -21,7 +21,7 @@ from .capacity_report import Capacity
 from .figures import CENT, cents, money, number
 from .fiscal import Window, add_months
 from .fit import Model
-from .forecast import Forecast, Inflow, model_forecast
+from .forecast import Forecast, Inflow, model_forecast, simulate
 from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .plan import (
     DEFAULT_PROGRAMME_RAMP_MONTHS,
@@ -67,6 +67,8 @@ class Ground:
     actual12: Decimal
     lever_cap: Decimal
     horizon_days: int
+    draws: int = 2000
+    seed: int = 0
 
 
 class Scenario:
@@ -75,15 +77,17 @@ class Scenario:
     def __init__(self, g: Ground) -> None:
         self.g = g
 
+    def creation(self, hires: Sequence[Member] = ()):
+        g = self.g
+        if not g.cap.adopted:
+            return None
+        return project(g.cap.fit, [*g.cap.members, *hires], g.as_of, g.horizon_days)
+
     def forecast(
         self, hires: Sequence[Member] = (), inflows: Sequence[Inflow] = ()
     ) -> Forecast:
         g = self.g
-        creation = None
-        if g.cap.adopted:
-            creation = project(
-                g.cap.fit, [*g.cap.members, *hires], g.as_of, g.horizon_days
-            )
+        creation = self.creation(hires)
         return model_forecast(
             g.model,
             g.pop,
@@ -286,6 +290,17 @@ def plan_section(
         for h in baseline
     }
     fy_gap = lambda total: g.fy_target - g.fytd - total
+    sim = simulate(
+        g.model, g.pop, g.as_of, g.windows, draws=g.draws, seed=g.seed,
+        groups={REST_OF_FY: g.rest_labels, NEXT_12: g.twelve_labels},
+        creation=scen.creation(tuple(hires)), inflows=tuple(inflows),
+    )  # fmt: skip
+    expected_total = float(final.total())
+    sd_mean = (
+        sum((x - sim.total.mean) ** 2 for x in sim.samples_total)
+        / max(1, sim.draws - 1)
+    ) ** 0.5 / sim.draws**0.5
+    centred = abs(sim.total.mean - expected_total) <= 4 * sd_mean + 0.01
     section = {
         "file": str(path),
         "order": "hires first, then programmes, each in the plan file's order; each contribution is "
@@ -326,7 +341,27 @@ def plan_section(
         else "hires at loaded cost per AE-month over expected months employed; programmes at their cost, "
         "paid in step with the pipeline they create (or on the plan's own payment schedule), counting "
         "only what falls inside the twelve months",
-        "unvalidated": "ranges that include a plan are unvalidated; the plan changes the expectation only",
+        "ranges": {
+            "status": "unvalidated: these ranges include the plan"
+            + (" and the capacity term" if adopted else "")
+            + "; they have not been back-tested",
+            "bookings_in_window": {
+                h: {
+                    "median": f"{spread.p50:.2f}",
+                    "range80": [f"{spread.p10:.2f}", f"{spread.p90:.2f}"],
+                    "range95": [f"{spread.p2_5:.2f}", f"{spread.p97_5:.2f}"],
+                }
+                for h, spread in sim.by_group.items()
+            },
+            "fiscal_year_expected_range80": [
+                f"{float(g.fytd) + sim.by_group[REST_OF_FY].p10:.2f}",
+                f"{float(g.fytd) + sim.by_group[REST_OF_FY].p90:.2f}",
+            ],
+            "draws": g.draws,
+            "what_is_drawn": "deal outcomes"
+            + (", future departures" if adopted else "")
+            + ", with the planned hires and programme pipeline in the scenario",
+        },
     }
     check = Check(
         "plan contributions sum to the difference",
@@ -336,7 +371,12 @@ def plan_section(
             for h in diff
         ),
     )
-    return section, [check]
+    sim_check = Check(
+        "plan simulation centred on its expectation",
+        centred,
+        f"simulated mean {sim.total.mean:,.2f} vs expected {expected_total:,.2f} ({g.draws} draws)",
+    )
+    return section, [check, sim_check]
 
 
 # ---------------------------------------------------------------- section 12

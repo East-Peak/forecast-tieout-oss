@@ -162,3 +162,22 @@ def test_the_simulation_with_capacity_stays_centred_on_its_expectation(setup):
     )
     sim = simulate(model, data, AS_OF, windows, draws=3000, seed=1, creation=creation)
     assert abs(sim.total.mean - expected) < 0.04 * expected
+
+
+# ---------------------------------------------------------------- review round: a plan with its error
+
+
+def test_the_simulation_with_programme_inflows_is_centred_on_the_forecast_with_them(
+    setup,
+):
+    from engine.tieout_core.forecast import Inflow
+
+    data, model, windows = setup
+    flows = (Inflow(0, 90, Decimal(2_000_000)), Inflow(90, 180, Decimal(1_000_000)))
+    expected = float(model_forecast(model, data, AS_OF, windows, inflows=flows).total())
+    plain = float(model_forecast(model, data, AS_OF, windows).total())
+    assert expected > plain
+    sim = simulate(model, data, AS_OF, windows, draws=4000, seed=2, inflows=flows)
+    assert abs(sim.total.mean - expected) < 0.04 * expected
+    base = simulate(model, data, AS_OF, windows, draws=4000, seed=2)
+    assert sim.total.mean > base.total.mean  # the inflows are in the draws
