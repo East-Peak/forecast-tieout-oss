@@ -1,6 +1,5 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
-import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
-import { SectionHeader } from "../../components/workbook";
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
@@ -9,8 +8,8 @@ export function CompareTable() {
   const { files } = useBindingContext();
   const { rows, baseline } = files.comparison;
   return (
-    <Card>
-      <SectionHeader title="Every scenario side by side" subtitle="Differences are against the roster as signed, written by the core: the browser subtracts nothing." />
+    <div data-testid="compare-table">
+      <p className="mb-3 text-xs text-slate-500">Differences are against the roster as signed, written by the core: the browser subtracts nothing.</p>
       <Table className={STACK.table}>
         <TableHead className={STACK.head}>
           <TableRow>
@@ -45,6 +44,6 @@ export function CompareTable() {
           })}
         </TableBody>
       </Table>
-    </Card>
+    </div>
   );
 }

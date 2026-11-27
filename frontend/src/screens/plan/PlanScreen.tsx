@@ -48,7 +48,9 @@ export default function PlanScreen() {
         <>
           <Tornado sheet={worksheet} />
           <Bridge sheet={worksheet} />
-          <CompareTable />
+          <Disclosure title="Every scenario side by side" initiallyOpen={desktop}>
+            <CompareTable />
+          </Disclosure>
           <QuarterTable />
           <Chain sheet={worksheet} />
         </>

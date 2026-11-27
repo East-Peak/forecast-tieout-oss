@@ -219,7 +219,7 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
             <div className="text-sm font-medium text-slate-900"><Bound binding={DRIVER.label} row={path} /></div>
             <div className="text-xs text-slate-500"><Bound binding={DRIVER.unitLabel} row={path} /></div>
           </div>
-          <div className="h-28 min-w-0 flex-1 xl:h-24">
+          <div className="h-24 w-full min-w-0 xl:h-24 xl:flex-1">
             {driver.historical === null ? (
               <p className="text-xs text-slate-600" data-testid="history-unavailable">
                 <Bound binding={DRIVER.unavailable} row={path} />
@@ -334,7 +334,7 @@ function ActionRow({ action, row, index, window, domain }: { action: ActionRowDa
           <div className="text-sm font-medium text-slate-900 xl:w-36 xl:shrink-0">
             <Bound binding={ACTION.name} row={path} />
           </div>
-          <div className="h-14 min-w-0 flex-1">
+          <div className="h-12 w-full min-w-0 xl:flex-1">
             {supported ? (
               <Track
                 row={row}
