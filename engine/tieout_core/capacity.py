@@ -84,12 +84,14 @@ def project(
     static = np.zeros(horizon_days)  # reps whose end is known, or who never leave
     at_risk = []  # (weights, first offset, hazard clock starts at this offset)
     for m in members:
+        lo, hi = max(first, m.start), last if m.end is None else min(last, m.end)
+        if lo > hi:
+            continue  # starts after the horizon or left before it: no overlap
         origin = max(0, (m.start - as_of).days)  # a hire's first day is certain
         weights = [ZERO] * horizon_days
         for lo, hi, w in segments(m, fit.curve, first, last):
             for i in range((lo - first).days, (hi - first).days + 1):
                 weights[i] = w
-        lo, hi = max(first, m.start), last if m.end is None else min(last, m.end)
         if m.end is not None:
             for i, w in enumerate(weights):
                 expected[i] += w

@@ -46,6 +46,10 @@ ASSOCIATION = (
     "An association in the history, not a promise: that a new hire adds pipeline at this rate "
     "is an assumption."
 )
+RAMP_LIMITATION = (
+    "ownership on deals.csv says who owns a deal, not who made it: deals handed to a new rep count "
+    "as that rep's, so a fitted ramp can read faster than the true one"
+)
 LIMITS = (
     (
         "team_members.csv records no history of role, segment, quota or deal ownership: today's "
@@ -134,7 +138,7 @@ def rates(cap: Capacity) -> list[Rate]:
     if fit is not None:
         curve, ramp_rate = fit.curve, fit.ramp
         for k, w in enumerate(curve.weights, start=1):
-            rng = curve.ranges[k - 1] if curve.ranges else (None, None)
+            rng = curve.ranges[k - 1] if k - 1 < len(curve.ranges) else (None, None)
             out.append(
                 Rate(
                     f"ramp_weight:{k}", w,
@@ -317,13 +321,17 @@ def _ramp(cap: Capacity) -> dict:
         "sample": f"{fit.reps_observed} reps observed from hire through their sixth month; "
         f"{fit.tenured_reps} tenured reps alongside",
         "why_not_fitted": fit.reason,
+        "fitted_through": fit.tail or None,
+        "deals_left_out": {
+            "count": fit.deals_left_out,
+            "why": fit.left_out_reason or None,
+        },
+        "limitation": RAMP_LIMITATION if c.source == "fitted" else None,
         "weights": [
             {
                 "tenure_month": k,
                 "weight": number(w),
-                "range95": None
-                if not c.ranges
-                else [number(c.ranges[k - 1][0]), number(c.ranges[k - 1][1])],
+                "range95": _range(c.ranges, k),
             }
             for k, w in enumerate(c.weights, start=1)
         ],
@@ -331,6 +339,16 @@ def _ramp(cap: Capacity) -> dict:
         "definition": "created deals per rep by tenure month, relative to reps with twelve or more "
         "months' tenure in the same calendar month",
     }
+
+
+def _range(ranges, k: int):
+    """A weight's 95% range; a range whose floor reaches 1 is at the ceiling, not zero-width."""
+    if k - 1 >= len(ranges):
+        return None
+    low, high = ranges[k - 1]
+    if low >= 1.0:
+        return "at the ceiling (1)"
+    return [number(low), number(high)]
 
 
 def _attrition(cap: Capacity) -> dict:

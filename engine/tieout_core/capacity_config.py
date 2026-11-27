@@ -48,14 +48,31 @@ def load_capacity(profile_dir: Path) -> CapacityConfig | None:
     return CapacityConfig(
         quota_roles=quota,
         other_roles=tuple(str(r).strip().lower() for r in roles.get("other") or ()),
-        ramp=None if ramp is None else tuple(_dec(x) for x in ramp),
-        attrition=_opt((doc.get("attrition") or {}).get("monthly_per_ae")),
-        loaded_cost_per_ae_month=_opt(costs.get("loaded_cost_per_ae_month")),
-        programme_cost_per_dollar=_opt(
-            costs.get("programme_cost_per_dollar_of_pipeline")
+        ramp=None
+        if ramp is None
+        else tuple(_opt(x, "ramp weight", Decimal(0), Decimal(1)) for x in ramp),
+        attrition=_opt(
+            (doc.get("attrition") or {}).get("monthly_per_ae"),
+            "monthly_per_ae",
+            Decimal(0),
+            Decimal("0.999999"),
         ),
-        programme_ramp_months=_opt_int((doc.get("programme") or {}).get("ramp_months")),
-        hires_bound=_opt_int((doc.get("hires") or {}).get("max_in_one_quarter")),
+        loaded_cost_per_ae_month=_opt(
+            costs.get("loaded_cost_per_ae_month"),
+            "loaded_cost_per_ae_month",
+            Decimal(0),
+        ),
+        programme_cost_per_dollar=_opt(
+            costs.get("programme_cost_per_dollar_of_pipeline"),
+            "programme_cost_per_dollar_of_pipeline",
+            Decimal(0),
+        ),
+        programme_ramp_months=_opt_int(
+            (doc.get("programme") or {}).get("ramp_months"), "ramp_months", 1
+        ),
+        hires_bound=_opt_int(
+            (doc.get("hires") or {}).get("max_in_one_quarter"), "max_in_one_quarter", 0
+        ),
     )
 
 
@@ -83,18 +100,28 @@ def load_roster(path: Path, cfg: CapacityConfig | None) -> RosterLoad:
         return RosterLoad((), (), {}, 0, "no team_members.csv")
     with path.open(newline="") as fh:
         rows = list(csv.DictReader(fh))
-    if not rows or "start_date" not in rows[0]:
-        return RosterLoad(
-            (),
-            (),
-            {},
-            len(rows),
-            "team_members.csv has no start_date column: no roster history",
-        )
+    for column in ("id", "role", "start_date"):
+        if not rows or column not in rows[0]:
+            extra = ": no roster history" if column == "start_date" else ""
+            return RosterLoad(
+                (), (), {}, len(rows), f"team_members.csv has no {column} column{extra}"
+            )
     members, excluded, others = [], [], Counter()
-    for raw in rows:
+    first_row: dict[str, int] = {}
+    for row_number, raw in enumerate(rows, start=2):
         role = (raw.get("role") or "").strip().lower()
         rid = (raw.get("id") or "").strip()
+        if not rid:
+            excluded.append(RosterExclusion(rid, role, "id is blank"))
+            continue
+        if rid in first_row:
+            excluded.append(
+                RosterExclusion(
+                    rid, role, f"duplicate id (first seen on row {first_row[rid]})"
+                )
+            )
+            continue
+        first_row[rid] = row_number
         if role in cfg.other_roles:
             others[role] += 1
             continue
@@ -126,22 +153,46 @@ def _member(raw: dict, rid: str, role: str) -> Member | str:
     if end is not None and end < start:
         return "ends before it starts"
     quota = parse_money(raw.get("annual_quota") or "")
+    if quota is not None and quota < 0:
+        return "annual quota is negative"
     return Member(rid, role, (raw.get("segment") or "").strip(), start, end, quota)
 
 
-def _dec(x) -> Decimal:
+def _dec(x, field: str = "value") -> Decimal:
     try:
-        return Decimal(str(x))
+        value = Decimal(str(x))
     except InvalidOperation as exc:
-        raise ValueError(f"capacity.yaml: '{x}' is not a number") from exc
+        raise ValueError(f"capacity.yaml: {field} '{x}' is not a number") from exc
+    if not value.is_finite():
+        raise ValueError(f"capacity.yaml: {field} '{x}' is not a finite number")
+    return value
 
 
-def _opt(x) -> Decimal | None:
-    return None if x is None else _dec(x)
+def _opt(
+    x, field: str = "value", low: Decimal | None = None, high: Decimal | None = None
+):
+    """A finite decimal within [low, high], or None when absent."""
+    if x is None:
+        return None
+    value = _dec(x, field)
+    if (low is not None and value < low) or (high is not None and value > high):
+        bound = (
+            f"between {low} and {high}"
+            if None not in (low, high)
+            else f"at least {low}"
+        )
+        raise ValueError(f"capacity.yaml: {field} {value} must be {bound}")
+    return value
 
 
-def _opt_int(x) -> int | None:
-    return None if x is None else int(x)
+def _opt_int(x, field: str = "value", low: int = 0) -> int | None:
+    if x is None:
+        return None
+    if isinstance(x, bool) or not isinstance(x, int) or x < low:
+        raise ValueError(
+            f"capacity.yaml: {field} '{x}' must be a whole number of at least {low}"
+        )
+    return x
 
 
 def load_headcount_targets(profile_dir: Path) -> dict[str, int]:

@@ -193,3 +193,51 @@ def test_true_attrition_is_inside_the_95_range_in_at_least_90_percent_of_seeds(
 def test_the_attrition_point_estimate_is_close(attrition_runs):
     errors = [abs(float(a.rate) - t) for a, t in attrition_runs if a.source == FITTED]
     assert median(errors) < rules.ATTRITION_POINT_TOLERANCE, median(errors)
+
+
+# ---------------------------------------------------------------- review round
+
+
+def test_reps_who_left_in_their_first_month_are_not_evidence_of_a_ramp():
+    # Eight hires start 2025-02-01 and leave on 2025-02-10: their sixth-month
+    # anniversary is long past the cutoff but none was employed, or observed, through it.
+    members, deals = hand_world()
+    members = [
+        member(m.id, "2025-02-01", "2025-02-10") if m.id.startswith("N") else m
+        for m in members
+    ]
+    deals = [
+        d
+        for d in deals
+        if not (d.owner_id.startswith("N") and d.created > date(2025, 2, 10))
+    ]
+    entered = (Decimal("0.2"), Decimal("0.6"))
+    fit = fit_ramp(deals, members, CUTOFF, entered=entered)
+    assert fit.reps_observed == 0
+    assert fit.curve.source == ENTERED and fit.curve.weights == entered
+
+
+def test_the_fit_falls_back_to_entered_weights_where_the_evidence_ends():
+    # Cutoff 2025-08-31: the eight hires of 2025-02-01 have been seen for tenure
+    # months 1 to 7 only; months 8 to 11 take the entered weights.
+    members, deals = hand_world()
+    entered = (Decimal("0.9"),) * 11
+    fit = fit_ramp([d for d in deals if d.created <= date(2025, 8, 31)], members,
+                   date(2025, 8, 31), entered=entered)  # fmt: skip
+    assert fit.curve.source == FITTED
+    assert fit.curve.weights[:7] == (Decimal("0.5"),) + (Decimal(1),) * 6
+    assert fit.curve.weights[7:] == (Decimal("0.9"),) * 4
+    assert "tenure months 1 to 7" in fit.tail and "entered" in fit.tail
+
+
+def test_deals_created_when_their_owner_was_not_employed_are_left_out_and_counted():
+    members, deals = hand_world()
+    members = [
+        member("N0", "2025-02-01", "2025-04-30") if m.id == "N0" else m for m in members
+    ]
+    base = fit_ramp([d for d in deals if not (d.owner_id == "N0" and d.created > date(2025, 4, 30))],
+                    members, CUTOFF, entered=None)  # fmt: skip
+    again = fit_ramp(deals, members, CUTOFF, entered=None)
+    assert again.curve == base.curve
+    assert again.deals_left_out > 0 and "not employed" in again.left_out_reason
+    assert base.deals_left_out == 0

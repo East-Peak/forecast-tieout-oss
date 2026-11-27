@@ -454,7 +454,18 @@ def _roster_capacity(s: dict) -> list[str]:
                 f" Not fitted because {rp['why_not_fitted']}."
                 if rp["why_not_fitted"]
                 else ""
-            ),
+            )
+            + (
+                f" Fitted through: {rp['fitted_through']}."
+                if rp["fitted_through"]
+                else ""
+            )
+            + (
+                f" {_up(rp['deals_left_out']['why'])}."
+                if rp["deals_left_out"]["why"]
+                else ""
+            )
+            + (f" Limit: {rp['limitation']}." if rp["limitation"] else ""),
             "",
         ]
         out += _table(

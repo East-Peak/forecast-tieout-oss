@@ -23,7 +23,7 @@ from fractions import Fraction
 from . import capacity_rules as rules
 from .fiscal import add_months, month_end
 from .rates import DEFAULT, ENTERED, FITTED
-from .roster import RampCurve, roster_at, tenure_month
+from .roster import RampCurve, employed, roster_at, tenure_month
 
 Z95 = 1.959964
 TENURED = "tenured"
@@ -35,23 +35,22 @@ class RampFit:
     reps_observed: int  # reps observed from hire through their sixth month
     tenured_reps: int  # reps with twelve or more months' tenure in the months used
     reason: str = ""  # why the curve is not fitted; empty when it is
+    deals_left_out: int = (
+        0  # created after their owner's last day (or before their start)
+    )
+    left_out_reason: str = ""
+    tail: str = ""  # where the fitted months end and what stands in for the rest
 
 
 def fit_ramp(deals, members, cutoff: date, entered=None) -> RampFit:
     deals = [d for d in deals if d.created <= cutoff]
     members = roster_at(members, cutoff)
     first = min((d.created for d in deals), default=None)
-    observed = tenured = 0
+    observed = tenured = left_out = 0
     if first is not None:
-        observed = sum(
-            1
-            for m in members
-            if m.start >= first
-            and add_months(m.start, rules.RAMP_ELIGIBLE_MONTHS) - timedelta(days=1)
-            <= cutoff
-        )
-        exposure, made = _by_month(deals, members, first, cutoff)
+        exposure, made, left_out = _by_month(deals, members, first, cutoff)
         tenured = len(_tenured_ids(exposure))
+        observed = _observed_from_hire(members, exposure, first, cutoff)
     problems = []
     if observed < rules.RAMP_MIN_REPS:
         problems.append(
@@ -63,12 +62,42 @@ def fit_ramp(deals, members, cutoff: date, entered=None) -> RampFit:
             f"{tenured} tenured reps (twelve or more months) alongside; "
             f"{rules.RAMP_MIN_TENURED} are needed"
         )
+    why = _left_out_reason(left_out)
     if problems:
         return RampFit(
-            _fallback(entered, observed), observed, tenured, "; ".join(problems)
-        )
-    curve = _fit_curve(exposure, made, observed)
-    return RampFit(curve, observed, tenured)
+            _fallback(entered, observed), observed, tenured, "; ".join(problems),
+            left_out, why,
+        )  # fmt: skip
+    curve, tail = _fit_curve(exposure, made, observed, entered)
+    return RampFit(curve, observed, tenured, "", left_out, why, tail)
+
+
+def _left_out_reason(n: int) -> str:
+    if not n:
+        return ""
+    return (
+        f"{n} deals were left out of the ramp fit: they were created when their owner was not "
+        "employed (before their start or after their last day), so they cannot say how fast a "
+        "rep at that tenure creates"
+    )
+
+
+def _observed_from_hire(members, exposure, first: date, cutoff: date) -> int:
+    """Reps seen from hire through their sixth month: started on or after the
+    first deal, employed through that month's end, with tenured reps present in
+    every month used that the six months touch."""
+    tenured_months = {
+        ms for (ms, cls, _), days in exposure.items() if cls == TENURED and days
+    }
+    count = 0
+    for m in members:
+        sixth = add_months(m.start, rules.RAMP_ELIGIBLE_MONTHS) - timedelta(days=1)
+        if m.start < first or sixth > cutoff or (m.end is not None and m.end < sixth):
+            continue
+        touched = {ms for (ms, _, who) in exposure if who == m.id and ms <= sixth}
+        if touched and touched <= tenured_months:
+            count += 1
+    return count
 
 
 def _fallback(entered, observed: int) -> RampCurve:
@@ -119,6 +148,7 @@ def _by_month(deals, members, first: date, cutoff: date):
     by_id = {m.id: m for m in members}
     month_of = {ms: (ms, me) for ms, me in months}
     made: dict[tuple, int] = defaultdict(int)
+    left_out = 0
     for d in deals:
         m = by_id.get(d.owner_id)
         if m is None:
@@ -126,15 +156,18 @@ def _by_month(deals, members, first: date, cutoff: date):
         ms = date(d.created.year, d.created.month, 1)
         if ms not in month_of:
             continue
+        if not employed(m, d.created):
+            left_out += 1
+            continue
         k = tenure_month(m, d.created)
         if 1 <= k < rules.TENURED_AFTER_MONTHS:
             made[(ms, k)] += 1
         elif k > rules.TENURED_AFTER_MONTHS:
             made[(ms, TENURED)] += 1
-    return exposure, made
+    return exposure, made, left_out
 
 
-def _fit_curve(exposure, made, observed: int) -> RampCurve:
+def _fit_curve(exposure, made, observed: int, entered=None):
     rep_days: dict[tuple, int] = defaultdict(int)
     for (ms, cls, _), days in exposure.items():
         rep_days[(ms, cls)] += days
@@ -158,7 +191,7 @@ def _fit_curve(exposure, made, observed: int) -> RampCurve:
             variance += Fraction(x_k * x_k * t_ten, x_ten * x_ten)
             got += made[(ms, k)]
         if not expected:
-            break  # no evidence from here on: later months are taken as fully ramped
+            break  # no evidence from here on
         w = Fraction(got) / expected
         point = min(w, Fraction(1))
         if got:
@@ -168,7 +201,21 @@ def _fit_curve(exposure, made, observed: int) -> RampCurve:
             low, high = 0.0, float(3 / expected)
         weights.append(Decimal(point.numerator) / Decimal(point.denominator))
         ranges.append((max(0.0, min(low, 1.0)), min(1.0, high)))
-    return RampCurve(tuple(weights), FITTED, observed, tuple(ranges))
+    fitted = len(weights)
+    tail = ""
+    if fitted < rules.TENURED_AFTER_MONTHS - 1:
+        stand_in = tuple(entered or ())[fitted : rules.TENURED_AFTER_MONTHS - 1]
+        weights += list(stand_in)
+        tail = (
+            f"fitted for tenure months 1 to {fitted}; no rep was observed longer, so "
+            + (
+                f"months {fitted + 1} to {fitted + len(stand_in)} use the entered weights and "
+                "later months are taken as fully ramped"
+                if stand_in
+                else f"months from {fitted + 1} are taken as fully ramped"
+            )
+        )
+    return RampCurve(tuple(weights), FITTED, observed, tuple(ranges)), tail
 
 
 # ---------------------------------------------------------------- attrition
