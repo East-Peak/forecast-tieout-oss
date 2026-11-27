@@ -29,12 +29,17 @@ function open(url: string, loaders: Loaders = fromDisk) {
 }
 
 describe("the shell", () => {
-  it("opens on Forecast for the index's default company, with the five screens in the nav", async () => {
+  it("opens on Plan for the index's default company: Plan first, then the four evidence screens under their label", async () => {
     open("/");
     const nav = screen.getByRole("navigation", { name: "Screens" });
-    expect(within(nav).getAllByRole("link").map((a) => a.textContent)).toEqual(["Forecast", "Capacity", "Pipeline", "Plan", "Trust"]);
-    await waitFor(() => expect(document.querySelector("[data-chart='monthly']")).not.toBeNull());
+    expect(within(nav).getAllByRole("link").map((a) => a.textContent)).toEqual(["Plan", "Forecast", "Capacity", "Pipeline", "Trust"]);
+    expect(within(nav).getByText("Evidence")).toBeInTheDocument();
+    // the label sits between Plan and the four screens it names
+    const order = Array.from(nav.querySelectorAll("a, [data-nav-label]")).map((el) => el.textContent);
+    expect(order).toEqual(["Plan", "Evidence", "Forecast", "Capacity", "Pipeline", "Trust"]);
+    await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe("Plan"));
     expect((document.getElementById("company-selector") as HTMLSelectElement).value).toBe(files.index().default_company);
+    expect(screen.getByRole("link", { name: "Plan" }).getAttribute("aria-current")).toBe("page");
   });
 
   it("takes the company and scenario from the URL, and describes the company from index.json", async () => {
@@ -43,7 +48,7 @@ describe("the shell", () => {
     const sprout = files.index().companies.find((c) => c.id === "sprout-labs")!;
     expect(screen.getByTestId("company-description").textContent).toBe(sprout.description);
     expect((document.getElementById("scenario-selector") as HTMLSelectElement).value).toBe("hires-only");
-    expect(document.querySelector("[data-binding='scenario.label']")?.textContent).toBe("Hires only");
+    await waitFor(() => expect(document.querySelector("[data-binding='scenario.label']")?.textContent).toBe("Hires only"));
   });
 
   it("every digit in the whole page, header included, is in a bound element", async () => {
@@ -74,10 +79,10 @@ describe("the shell", () => {
     }
   });
 
-  it("an unknown address leads to Forecast, keeping the company", async () => {
+  it("an unknown address leads to Plan, keeping the company", async () => {
     open("/nothing-here?company=sprout-labs&scenario=as-signed");
-    await waitFor(() => expect(document.querySelector("[data-chart='monthly']")).not.toBeNull());
-    expect(document.querySelector("main h2")?.textContent).toBe("Forecast");
+    await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe("Plan"));
+    expect(document.querySelector("main [data-binding]")?.getAttribute("data-company")).toBe("sprout-labs");
   });
 
   it.each([

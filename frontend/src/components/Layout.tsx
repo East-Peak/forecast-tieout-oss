@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { BindingProvider, Bound, bind } from "../binding/Bound";
 import { ReportOutlet } from "../shell/ReportOutlet";
@@ -24,6 +25,8 @@ const DESCRIPTION = bind({
 
 const selectClass =
   "min-w-0 flex-1 rounded-ft border border-slate-200 bg-white px-3 py-1.5 text-sm text-text-primary shadow-ft outline-none focus:border-ft-accent focus:ring-2 focus:ring-ft-accentSoft";
+
+const FIRST_EVIDENCE = SCREENS.find((s) => s.group === "evidence");
 
 export default function Layout() {
   const location = useLocation();
@@ -108,17 +111,23 @@ export default function Layout() {
       ) : null}
       <nav className="flex items-center gap-0 overflow-x-auto border-b border-border px-1 sm:gap-1 sm:px-6" aria-label="Screens">
         {SCREENS.map((screen) => (
-          <NavLink
-            key={screen.path}
-            to={withCurrentSearch(screen.path)}
-            className={({ isActive }) =>
-              `whitespace-nowrap border-b-2 px-2 py-2 text-sm transition-colors sm:px-4 ${
-                isActive ? "border-ft-accent text-ft-accent" : "border-transparent text-text-secondary hover:text-text-primary"
-              }`
-            }
-          >
-            {screen.label}
-          </NavLink>
+          <Fragment key={screen.path}>
+            {screen === FIRST_EVIDENCE ? (
+              <span data-nav-label className="ml-2 whitespace-nowrap border-l border-border py-2 pl-3 pr-1 text-[11px] font-semibold uppercase text-slate-500 sm:ml-3">
+                Evidence
+              </span>
+            ) : null}
+            <NavLink
+              to={withCurrentSearch(screen.path)}
+              className={({ isActive }) =>
+                `whitespace-nowrap border-b-2 px-2 py-2 text-sm transition-colors sm:px-4 ${
+                  isActive ? "border-ft-accent text-ft-accent" : "border-transparent text-text-secondary hover:text-text-primary"
+                }`
+              }
+            >
+              {screen.label}
+            </NavLink>
+          </Fragment>
         ))}
       </nav>
     </div>

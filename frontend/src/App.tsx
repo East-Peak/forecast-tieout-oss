@@ -10,7 +10,7 @@ import { YourPlanProvider, useDesktop } from "./editor/YourPlanContext";
 import { ReportSessionProvider } from "./session/ReportSession";
 import type { Loaders } from "./session/ReportSession";
 import { legacyRedirect } from "./shell/legacyRoutes";
-import { SCREENS } from "./shell/screens";
+import { LANDING, SCREENS } from "./shell/screens";
 
 /** The five screens, each loaded when first opened. */
 const SCREEN_COMPONENTS: Record<string, LazyExoticComponent<ComponentType>> = {
@@ -29,10 +29,10 @@ function RouteLoading() {
   );
 }
 
-/** Any other address goes to Forecast, keeping the company and scenario in the query string. */
-function ToForecast() {
+/** `/` and any other address go to the landing screen, keeping the company and scenario in the query string. */
+function ToLanding() {
   const { search } = useLocation();
-  return <Navigate to={{ pathname: "/forecast", search }} replace />;
+  return <Navigate to={{ pathname: LANDING, search }} replace />;
 }
 
 /**
@@ -70,7 +70,7 @@ export default function App({ loaders = fileLoaders, editor = browserEditor, des
                   />
                 );
               })}
-              <Route path="*" element={<ToForecast />} />
+              <Route path="*" element={<ToLanding />} />
             </Route>
           </Routes>
         </ReportSessionProvider>
