@@ -75,7 +75,7 @@ npm run dev        # http://localhost:3000
 
 The reports are committed under `frontend/public/data/reports/`, so the app needs no
 server and no environment variables. `npm run build` writes a static site to
-`frontend/dist`; `docker compose up` serves the same build on port 8080.
+`frontend/dist`, which any static host can serve; `vercel.json` carries the single-page rewrite.
 
 ## Run a report on your own files
 
