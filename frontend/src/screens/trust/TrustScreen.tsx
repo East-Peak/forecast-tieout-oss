@@ -1,4 +1,5 @@
 import { Bound, readBinding, useBindingContext } from "../../binding/Bound";
+import { YOUR_PLAN } from "../../editor/yourPlan";
 import type { Binding } from "../../binding/Bound";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
@@ -27,7 +28,7 @@ function Passed({ binding, row }: { binding: Binding; row: string }) {
  * cannot support, every rate once with its definition, sample and source, and the report files themselves.
  */
 export default function TrustScreen() {
-  const { files } = useBindingContext();
+  const { files, scenario } = useBindingContext();
   const r = files.report;
   const checks = r.verdicts.software_correct.checks;
   const motions = Object.keys(r.reconciliation.excluded_motions);
@@ -291,10 +292,16 @@ export default function TrustScreen() {
       </Disclosure>
 
       <Callout color="slate" title="The report itself" data-testid="report-files">
-        <p className="text-sm">
-          Every figure on every screen is in these files: <Bound binding={B.reportMd} linkBase={REPORT_FILES} className="font-medium text-ft-brand underline" /> to read, and{" "}
-          <Bound binding={B.reportJson} linkBase={REPORT_FILES} className="font-medium text-ft-brand underline" /> to use.
-        </p>
+        {scenario === YOUR_PLAN ? (
+          <p className="text-sm" data-testid="your-plan-not-a-file">
+            This report was computed in your browser from the plan you entered, by the same core. It is not one of the published report files, and it is gone when you leave the page.
+          </p>
+        ) : (
+          <p className="text-sm">
+            Every figure on every screen is in these files: <Bound binding={B.reportMd} linkBase={REPORT_FILES} className="font-medium text-ft-brand underline" /> to read, and{" "}
+            <Bound binding={B.reportJson} linkBase={REPORT_FILES} className="font-medium text-ft-brand underline" /> to use.
+          </p>
+        )}
         <p className="mt-2 text-xs text-slate-600">
           Schema <Bound binding={B.schemaVersion} /> · data in <Bound binding={B.runData} />, profile in <Bound binding={B.runProfile} /> · fit: <Bound binding={B.runFit} /> · ranges:{" "}
           <Bound binding={B.runRanges} /> from <Bound binding={B.runDraws} /> draws at seed <Bound binding={B.runSeed} /> · measure: <Bound binding={B.runMeasure} />

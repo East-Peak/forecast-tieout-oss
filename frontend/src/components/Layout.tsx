@@ -2,6 +2,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { BindingProvider, Bound, bind } from "../binding/Bound";
 import { ReportOutlet } from "../shell/ReportOutlet";
 import { SCREENS } from "../shell/screens";
+import { YOUR_PLAN } from "../editor/yourPlan";
 import { useSession } from "../session/ReportSession";
 
 // Each company keeps its accent stripe and dot (the header's look); the label and the description come from index.json.
@@ -98,6 +99,11 @@ export default function Layout() {
       {"notice" in state && state.notice ? (
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 sm:px-6" role="status">
           {state.notice}
+        </div>
+      ) : null}
+      {selection?.scenario === YOUR_PLAN ? (
+        <div className="border-b border-ft-accent/30 bg-ft-accentSoft px-4 py-2 text-xs font-medium text-ft-brand sm:px-6" data-testid="your-plan-mark">
+          Your plan, computed in your browser; ranges unvalidated.
         </div>
       ) : null}
       <nav className="flex items-center gap-0 overflow-x-auto border-b border-border px-1 sm:gap-1 sm:px-6" aria-label="Screens">

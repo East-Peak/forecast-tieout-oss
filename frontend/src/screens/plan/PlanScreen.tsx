@@ -2,6 +2,7 @@ import { Bound, useBindingContext } from "../../binding/Bound";
 import { Callout } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
+import { YOUR_PLAN } from "../../editor/yourPlan";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { STACK } from "../../components/workbook/stack";
 import { ActionsCard } from "./ActionsCard";
@@ -9,6 +10,7 @@ import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
 import { ScenarioPicker } from "./ScenarioPicker";
+import { YourPlanForm } from "./YourPlanForm";
 import { WindowTable } from "./WindowTable";
 
 /**
@@ -17,7 +19,7 @@ import { WindowTable } from "./WindowTable";
  * the year, then both windows with ranges, each item, the two unit actions compared, and what closes the gap alone.
  */
 export default function PlanScreen() {
-  const { files, scenario } = useBindingContext();
+  const { files, scenario, company } = useBindingContext();
   const plan = files.report.plan;
   const full = plan !== undefined && !("unavailable" in plan) ? plan : null;
   const note = files.comparison.rows.find((r) => r.scenario === scenario)?.note != null;
@@ -29,6 +31,7 @@ export default function PlanScreen() {
         <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
       </p>
       <ScenarioPicker />
+      {scenario === YOUR_PLAN ? <YourPlanForm company={company} /> : null}
 
       {plan === undefined ? (
         <Callout color="blue" title="There is no plan in this scenario" data-testid="no-plan">
@@ -55,8 +58,8 @@ export default function PlanScreen() {
             </MetricCard>
           </div>
           <p className="-mt-2 text-xs text-slate-500">
-            <span className="font-semibold text-slate-600">Compared against:</span> <Bound binding={B.planDefinition} />. The plan file is{" "}
-            <Bound binding={B.planFile} />.
+            <span className="font-semibold text-slate-600">Compared against:</span> <Bound binding={B.planDefinition} />.
+            {scenario === YOUR_PLAN ? " The plan is the one in the form above." : <> The plan file is <Bound binding={B.planFile} />.</>}
           </p>
           <WindowTable />
           <Card>

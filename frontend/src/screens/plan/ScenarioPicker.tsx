@@ -1,10 +1,12 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card } from "../../components/ui";
+import { useYourPlan } from "../../editor/YourPlanContext";
 import { B, ROWS } from "./bindings";
 
 /** The scenarios this company has, as buttons; the chosen one is pressed and described. Choosing one reloads the screen from that scenario's report. */
 export function ScenarioPicker() {
   const { company, scenario, files, choose } = useBindingContext();
+  const yourPlan = useYourPlan();
   const entry = files.index.companies.find((c) => c.id === company);
   if (!entry) return null;
   return (
@@ -32,6 +34,7 @@ export function ScenarioPicker() {
       <p className="mt-2 text-xs text-slate-600">
         <Bound binding={B.scenarioDescription} />
       </p>
+      {yourPlan && !yourPlan.desktop ? <p className="mt-2 text-xs text-slate-500">Editing your own plan needs a larger screen.</p> : null}
     </Card>
   );
 }
