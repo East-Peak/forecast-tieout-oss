@@ -100,13 +100,13 @@ export default function Layout() {
           {state.notice}
         </div>
       ) : null}
-      <nav className="flex items-center gap-1 overflow-x-auto border-b border-border px-2 sm:px-6" aria-label="Screens">
+      <nav className="flex items-center gap-0 overflow-x-auto border-b border-border px-1 sm:gap-1 sm:px-6" aria-label="Screens">
         {SCREENS.map((screen) => (
           <NavLink
             key={screen.path}
             to={withCurrentSearch(screen.path)}
             className={({ isActive }) =>
-              `whitespace-nowrap border-b-2 px-3 py-2 text-sm transition-colors sm:px-4 ${
+              `whitespace-nowrap border-b-2 px-2 py-2 text-sm transition-colors sm:px-4 ${
                 isActive ? "border-ft-accent text-ft-accent" : "border-transparent text-text-secondary hover:text-text-primary"
               }`
             }
