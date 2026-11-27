@@ -56,9 +56,13 @@ export function ReportSessionProvider({ loaders, children }: { loaders: Loaders;
   const index = "index" in state ? state.index : null;
   useEffect(() => {
     if (!index || !company) return;
-    const { selection } = resolveSelection(index, { company, scenario }, null);
-    dispatch({ type: "select", selection });
-  }, [index, company, scenario]);
+    const { selection, notice } = resolveSelection(index, { company, scenario }, null);
+    dispatch({ type: "select", selection, notice });
+    // an address the index cannot satisfy is corrected where the visitor can see it
+    if (company !== selection.company || scenario !== selection.scenario) {
+      setParams({ company: selection.company, scenario: selection.scenario }, { replace: true });
+    }
+  }, [index, company, scenario, setParams]);
 
   // A choice the session settled on (a default, a correction) is written into the URL.
   const settled = "selection" in state ? state.selection : null;
@@ -72,12 +76,13 @@ export function ReportSessionProvider({ loaders, children }: { loaders: Loaders;
 
   // Load the report for the choice being waited on.
   const waiting = state.status === "loading" ? state.selection : null;
+  const requestId = state.status === "loading" ? state.requestId : 0;
   useEffect(() => {
     if (!waiting || !index) return;
     const entry = index.companies.find((c) => c.id === waiting.company);
     const chosen = entry?.scenarios.find((s) => s.id === waiting.scenario);
     if (!entry || !chosen) {
-      dispatch({ type: "failed", selection: waiting, error: "the index does not list this report" });
+      dispatch({ type: "failed", requestId, error: "the index does not list this report" });
       return;
     }
     Promise.all([loaders.report(chosen.report), loaders.comparison(entry.comparison)]).then(
@@ -85,16 +90,16 @@ export function ReportSessionProvider({ loaders, children }: { loaders: Loaders;
         if (report.schema_version !== index.schema_version) {
           dispatch({
             type: "failed",
-            selection: waiting,
+            requestId,
             error: `${chosen.report} is schema ${String(report.schema_version)}; this app reads ${index.schema_version}`,
           });
         } else {
-          dispatch({ type: "loaded", selection: waiting, report, comparison });
+          dispatch({ type: "loaded", requestId, report, comparison });
         }
       },
-      (e: unknown) => dispatch({ type: "failed", selection: waiting, error: messageOf(e) }),
+      (e: unknown) => dispatch({ type: "failed", requestId, error: messageOf(e) }),
     );
-  }, [waiting?.company, waiting?.scenario, index, loaders]);
+  }, [waiting?.company, waiting?.scenario, requestId, index, loaders]);
 
   useEffect(() => {
     if (state.status === "ready") writeStoredSelection(state.selection);

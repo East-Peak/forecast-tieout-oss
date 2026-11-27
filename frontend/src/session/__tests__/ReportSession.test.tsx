@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, useLocation } from "react-router-dom";
+import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
@@ -36,22 +36,26 @@ const report = (tag: string) => ({ schema_version: "1.0.0", tag }) as unknown as
 
 function harness() {
   const pending = new Map<string, Deferred<TieoutReport>>();
+  const calls: Array<{ path: string; d: Deferred<TieoutReport> }> = [];
   const loaders: Loaders = {
     index: () => Promise.resolve(index),
     report: (path) => {
       const d = deferred<TieoutReport>();
       pending.set(path, d);
+      calls.push({ path, d });
       return d.promise;
     },
     comparison: () => Promise.resolve({ rows: [] } as unknown as ScenarioComparison),
   };
-  return { pending, loaders };
+  return { pending, calls, loaders };
 }
 
 let choose: ReturnType<typeof useSession>["choose"];
+let go: ReturnType<typeof useNavigate>;
 function Probe() {
   const { state, choose: c } = useSession();
   choose = c;
+  go = useNavigate();
   const where = useLocation();
   return (
     <div>
@@ -172,5 +176,44 @@ describe("the report-backed session", () => {
     mount(loaders, "/forecast?company=zzz");
     await waitFor(() => expect(pending.has("b/as-signed.json")).toBe(true));
     expect(text("notice")).toMatch(/zzz/);
+  });
+
+  it("A then B then A: the first A's late answer, success or failure, never touches the latest A", async () => {
+    const { calls, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(calls.length).toBe(1));
+    await act(async () => choose("b", "as-signed"));
+    await waitFor(() => expect(calls.length).toBe(2));
+    await act(async () => choose("a", "as-signed"));
+    await waitFor(() => expect(calls.length).toBe(3));
+    // the first A fails while the latest A is still loading: that must not put the screen in error
+    await act(async () => calls[0].d.reject(new Error("first A broke")));
+    expect(text("status")).toBe("loading");
+    await act(async () => calls[0].d.resolve(report("first A late")));
+    await act(async () => calls[2].d.resolve(report("A latest")));
+    expect(text("shown")).toBe("A latest");
+    await act(async () => calls[1].d.resolve(report("B late")));
+    expect(text("shown")).toBe("A latest");
+  });
+
+  it("a later URL change to an unknown company is corrected in the URL and keeps its notice", async () => {
+    const { calls, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(calls.length).toBe(1));
+    await act(async () => calls[0].d.resolve(report("A")));
+    await act(async () => go("/forecast?company=zzz&scenario=demo-plan"));
+    await waitFor(() => expect(text("url")).toBe("?company=b&scenario=demo-plan"));
+    expect(text("notice")).toMatch(/zzz/);
+  });
+
+  it("an unknown company that resolves to the very choice on screen still gets its URL corrected", async () => {
+    const { calls, loaders } = harness();
+    mount(loaders, "/forecast");
+    await waitFor(() => expect(calls.length).toBe(1)); // b/as-signed, the default
+    await act(async () => calls[0].d.resolve(report("B")));
+    await act(async () => go("/forecast?company=zzz"));
+    await waitFor(() => expect(text("url")).toBe("?company=b&scenario=as-signed"));
+    expect(text("notice")).toMatch(/zzz/);
+    expect(text("status")).toBe("ready");
   });
 });

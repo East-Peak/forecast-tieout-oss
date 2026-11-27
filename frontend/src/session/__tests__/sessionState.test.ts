@@ -50,66 +50,75 @@ describe("resolveSelection: the URL, then the stored choice, then the index's de
 
 describe("the session's states", () => {
   const sel = (company: string, scenario = "as-signed") => ({ company, scenario });
-  const ready = (company: string): SessionState =>
-    reduce(
-      reduce(initialState, { type: "indexLoaded", index, selection: sel(company), notice: null }),
-      { type: "loaded", selection: sel(company), report: report(company), comparison },
-    );
+  const first = (company: string): SessionState =>
+    reduce(initialState, { type: "indexLoaded", index, selection: sel(company), notice: null });
+  const id = (state: SessionState) => ("requestId" in state ? state.requestId : -1);
+  const ready = (company: string): SessionState => {
+    const loading = first(company);
+    return reduce(loading, { type: "loaded", requestId: id(loading), report: report(company), comparison });
+  };
 
   it("starts loading the index, and an index failure is an error, not a blank page", () => {
     expect(initialState.status).toBe("loading-index");
-    const failed = reduce(initialState, { type: "indexFailed", error: "404" });
-    expect(failed).toEqual({ status: "index-error", error: "404" });
+    expect(reduce(initialState, { type: "indexFailed", error: "404" })).toEqual({ status: "index-error", error: "404" });
   });
 
   it("loads the chosen report once the index is in", () => {
-    const loading = reduce(initialState, { type: "indexLoaded", index, selection: sel("a"), notice: null });
+    const loading = first("a");
     expect(loading.status).toBe("loading");
-    const done = reduce(loading, { type: "loaded", selection: sel("a"), report: report("a"), comparison });
-    expect(done.status).toBe("ready");
+    expect(reduce(loading, { type: "loaded", requestId: id(loading), report: report("a"), comparison }).status).toBe("ready");
   });
 
-  it("a response for a company the visitor has since left is ignored", () => {
-    const loadingA = reduce(initialState, { type: "indexLoaded", index, selection: sel("a"), notice: null });
-    const loadingB = reduce(loadingA, { type: "select", selection: sel("b") });
+  it("an answer to a request the visitor has since replaced is ignored, success or failure", () => {
+    const loadingA = first("a");
+    const loadingB = reduce(loadingA, { type: "select", selection: sel("b"), notice: null });
     expect(loadingB).toMatchObject({ status: "loading", selection: sel("b") });
-    // A's response arrives late
-    const afterLate = reduce(loadingB, { type: "loaded", selection: sel("a"), report: report("a"), comparison });
-    expect(afterLate).toBe(loadingB);
-    const afterLateError = reduce(loadingB, { type: "failed", selection: sel("a"), error: "boom" });
-    expect(afterLateError).toBe(loadingB);
-    // B's arrives and shows
-    const done = reduce(loadingB, { type: "loaded", selection: sel("b"), report: report("b"), comparison });
+    expect(id(loadingB)).toBeGreaterThan(id(loadingA));
+    expect(reduce(loadingB, { type: "loaded", requestId: id(loadingA), report: report("a"), comparison })).toBe(loadingB);
+    expect(reduce(loadingB, { type: "failed", requestId: id(loadingA), error: "boom" })).toBe(loadingB);
+    const done = reduce(loadingB, { type: "loaded", requestId: id(loadingB), report: report("b"), comparison });
     expect(done).toMatchObject({ status: "ready", report: { tag: "b" } });
   });
 
-  it("a late response for the same company but another scenario is ignored too", () => {
-    const loading = reduce(initialState, { type: "indexLoaded", index, selection: sel("a", "as-signed"), notice: null });
-    const switched = reduce(loading, { type: "select", selection: sel("a", "demo-plan") });
-    const late = reduce(switched, { type: "loaded", selection: sel("a", "as-signed"), report: report("old"), comparison });
-    expect(late).toBe(switched);
+  it("A, then B, then A again: the first A's answer is stale though the company is the same", () => {
+    const a1 = first("a");
+    const b = reduce(a1, { type: "select", selection: sel("b"), notice: null });
+    const a2 = reduce(b, { type: "select", selection: sel("a"), notice: null });
+    expect(id(a2)).toBeGreaterThan(id(b));
+    expect(reduce(a2, { type: "failed", requestId: id(a1), error: "old A broke" })).toBe(a2);
+    expect(reduce(a2, { type: "loaded", requestId: id(a1), report: report("old A"), comparison })).toBe(a2);
+    expect(reduce(a2, { type: "loaded", requestId: id(a2), report: report("A"), comparison }).status).toBe("ready");
+  });
+
+  it("a late answer for the same company but another scenario is ignored too", () => {
+    const loading = first("a");
+    const switched = reduce(loading, { type: "select", selection: sel("a", "demo-plan"), notice: null });
+    expect(reduce(switched, { type: "loaded", requestId: id(loading), report: report("old"), comparison })).toBe(switched);
   });
 
   it("switching from a ready report goes back to loading and keeps nothing of the old report", () => {
-    const next = reduce(ready("a"), { type: "select", selection: sel("b") });
+    const next = reduce(ready("a"), { type: "select", selection: sel("b"), notice: null });
     expect(next).toMatchObject({ status: "loading", selection: sel("b") });
     expect("report" in next).toBe(false);
   });
 
-  it("selecting what is already shown changes nothing", () => {
+  it("selecting what is already shown changes nothing, except that a correction's notice is kept", () => {
     const state = ready("a");
-    expect(reduce(state, { type: "select", selection: sel("a") })).toBe(state);
+    expect(reduce(state, { type: "select", selection: sel("a"), notice: null })).toBe(state);
+    expect(reduce(state, { type: "select", selection: sel("a"), notice: "There is no company zzz." })).toMatchObject({
+      status: "ready",
+      notice: "There is no company zzz.",
+    });
   });
 
-  it("a failed report load for the current choice is an error that names the choice", () => {
-    const loading = reduce(initialState, { type: "indexLoaded", index, selection: sel("a"), notice: null });
-    const failed = reduce(loading, { type: "failed", selection: sel("a"), error: "HTTP 404" });
+  it("a failed report load for the current request is an error that names the choice, and another choice recovers", () => {
+    const loading = first("a");
+    const failed = reduce(loading, { type: "failed", requestId: id(loading), error: "HTTP 404" });
     expect(failed).toMatchObject({ status: "error", selection: sel("a"), error: "HTTP 404" });
-    // and the visitor can pick something else
-    expect(reduce(failed, { type: "select", selection: sel("b") }).status).toBe("loading");
+    expect(reduce(failed, { type: "select", selection: sel("b"), notice: null }).status).toBe("loading");
   });
 
-  it("a response before the index has arrived is ignored", () => {
-    expect(reduce(initialState, { type: "loaded", selection: sel("a"), report: report("a"), comparison })).toBe(initialState);
+  it("an answer before the index has arrived is ignored", () => {
+    expect(reduce(initialState, { type: "loaded", requestId: 1, report: report("a"), comparison })).toBe(initialState);
   });
 });
