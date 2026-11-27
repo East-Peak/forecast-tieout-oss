@@ -15,7 +15,7 @@ const publicScreenshotDir = path.resolve(frontendRoot, "public/docs/screenshots"
 const fixedBrowserTime = new Date("2026-07-04T19:00:00-07:00");
 
 // README screenshots (full page, 1440 wide) and the Open Graph image: the top of Forecast, laid out at
-// 1295 x 680 and captured at a device scale of 1200/1295, so the file is 1200 x 630 and the cut falls
+// 1680 x 882 and captured at a device scale of 1200/1680, so the file is 1200 x 630 and the cut falls
 // below the verdict cards, not through a card or a chart.
 const captures = [
   { file: "forecast-sapling.png", route: "/forecast", company: "sapling-industries", scenario: "as-signed", fullPage: true },
@@ -28,8 +28,8 @@ const captures = [
     route: "/forecast",
     company: "sapling-industries",
     scenario: "as-signed",
-    viewport: { width: 1295, height: 680 },
-    deviceScaleFactor: 1200 / 1295,
+    viewport: { width: 1680, height: 882 },
+    deviceScaleFactor: 1200 / 1680,
   },
 ];
 
