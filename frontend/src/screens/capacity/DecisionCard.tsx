@@ -28,7 +28,8 @@ export function DecisionCard() {
         <Bound binding={B.decisionReason} />
       </p>
       <p className="mt-2 text-xs text-slate-500">
-        <Bound binding={B.decisionLabel} /> <Bound binding={B.decisionAssociation} />
+        <Bound binding={B.decisionLabel} />.{" "}
+        <Bound binding={B.decisionAssociation} />
       </p>
 
       {decision.horizons.length > 0 ? (

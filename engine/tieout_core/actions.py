@@ -291,7 +291,10 @@ def plan_section(
         )
         for h in baseline
     }
-    fy_gap = lambda total: g.fy_target - g.fytd - total
+
+    def fy_gap(total):
+        return g.fy_target - g.fytd - total
+
     quarter_labels = {q: list(labels) for q, _, _, _, labels in g.quarters}
     sim = simulate(
         g.model, g.pop, g.as_of, g.windows, draws=g.draws, seed=g.seed,

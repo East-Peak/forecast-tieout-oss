@@ -54,7 +54,7 @@ export default function PlanScreen() {
             </MetricCard>
           </div>
           <p className="-mt-2 text-xs text-slate-500">
-            <Bound binding={B.planDefinition} /> The plan is <Bound binding={B.planFile} />.
+            <Bound binding={B.planDefinition} />. The plan file is <Bound binding={B.planFile} />.
           </p>
           <WindowTable />
           <Card>

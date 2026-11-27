@@ -53,7 +53,10 @@ def test_parameter_draws_widen_the_range_and_keep_the_centre():
     wide = simulate(
         UNCERTAIN, CROWD, CUT, WINDOWS, draws=8000, seed=1, parameter_uncertainty=True
     )
-    width = lambda s: s.total.p90 - s.total.p10
+
+    def width(s):
+        return s.total.p90 - s.total.p10
+
     assert width(wide) > 2 * width(plain)
     assert wide.total.mean == pytest.approx(plain.total.mean, rel=0.03)
     assert wide == simulate(

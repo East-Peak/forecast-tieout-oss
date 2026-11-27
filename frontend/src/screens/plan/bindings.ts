@@ -92,7 +92,7 @@ export const B = {
   programmeDollars: usd("close.programme.dollars", `${CLOSE}/programme/dollars`, { unavailable: words("no amount closes it within the cap") }),
   programmeCap: usd("close.programme.cap", `${CLOSE}/programme/cap`),
   programmeOver: usd("close.programme.over-cap", `${CLOSE}/programme/needed_but_over_the_cap`, { unavailable: words("not over the cap") }),
-  programmeCost: usd("close.programme.cost", `${CLOSE}/programme/cash_cost_in_twelve_months`, { unavailable: words("cost not entered") }),
+  programmeCost: usd("close.programme.cost", `${CLOSE}/programme/cash_cost_in_twelve_months`, { unavailable: words("no cost without an amount") }),
 
   // every scenario side by side (a row of comparison.json)
   sLabel: text("compare.label", "/label", cmp),

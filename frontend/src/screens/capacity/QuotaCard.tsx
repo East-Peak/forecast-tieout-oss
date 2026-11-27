@@ -46,7 +46,7 @@ export function QuotaCard() {
         subtitle="Wins credited to each owner over their quota, prorated by the days they were employed in the window."
       />
       <p className="mb-3 text-xs text-slate-600">
-        <Bound binding={B.quotaDefinition} /> Window: <Bound binding={B.quotaWindow} />.
+        <Bound binding={B.quotaDefinition} />. Window: <Bound binding={B.quotaWindow} />.
       </p>
       <Table className={STACK.table}>
         <TableHead className={STACK.head}>
@@ -74,7 +74,7 @@ export function QuotaCard() {
                     >
                       <span aria-hidden="true">{expanded ? "▾" : "▸"}</span>
                     </button>
-                    {g.name ?? "All reps"}
+                    <span className="capitalize">{g.name === null ? "All reps" : g.name.split("_").join(" ")}</span>
                   </TableCell>
                   <TableCell className={STACK.cell} data-label="Reps"><Bound binding={B.gReps} row={g.row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Prorated quota"><Bound binding={B.gQuota} row={g.row} /></TableCell>

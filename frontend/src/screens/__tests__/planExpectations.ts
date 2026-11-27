@@ -120,7 +120,7 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   when(actions !== null, B.programmeDollars.id, () => orWords(programme!.dollars, fmt.usdShort, "no amount closes it within the cap"));
   when(actions !== null, B.programmeCap.id, () => fmt.usdShort(programme!.cap));
   when(actions !== null, B.programmeOver.id, () => orWords(programme!.needed_but_over_the_cap, fmt.usdShort, "not over the cap"));
-  when(actions !== null, B.programmeCost.id, () => orWords(programme!.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
+  when(actions !== null, B.programmeCost.id, () => orWords(programme!.cash_cost_in_twelve_months, fmt.usdShort, "no cost without an amount"));
 
   // every scenario side by side, from comparison.json
   const cRows = comparison.rows.map((_, i) => `/rows/${i}`);
