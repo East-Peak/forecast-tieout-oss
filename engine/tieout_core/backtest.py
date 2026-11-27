@@ -9,6 +9,7 @@ not, and "not enough history to say" under six folds at either horizon.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 from datetime import date
 from decimal import Decimal
@@ -23,7 +24,7 @@ from .fit import (
     fit,
     matured_snapshots,
 )
-from .forecast import model_forecast, run_rate, simulate, stage_weighted
+from .forecast import Creation, model_forecast, run_rate, simulate, stage_weighted
 from .history import as_known_at, latest_known_date
 from .rates import wilson
 from .records import Dataset, Profile
@@ -41,6 +42,11 @@ BACK_TESTED, TOO_NARROW, TOO_WIDE, UNVALIDATED = (
     "back-tested", "too narrow", "too wide", "unvalidated",
 )  # fmt: skip
 NOMINAL80 = 0.8
+
+# What the capacity term needs from a fold: the creation of pipeline not yet
+# created as known at the cutoff (the cutoff, the data known then, the days to
+# the end of the window). None means the flat trailing rate.
+CreationFor = Callable[[date, Dataset, int], Creation | None]
 
 
 @dataclass(frozen=True)
@@ -83,6 +89,7 @@ def fold(
     params: FitParams = DEFAULT_PARAMS,
     draws: int = 1000,
     seed: int = 0,
+    creation_for: CreationFor | None = None,
 ) -> list[Fold]:
     """Forecast each horizon from ``cutoff`` using only what was known then."""
     known = as_known_at(population, cutoff)
@@ -92,6 +99,11 @@ def fold(
     folds = []
     for h in horizons:
         window = Window(f"+{h}m", cutoff, add_months(cutoff, h))
+        creation = (
+            creation_for(cutoff, known, (window.end - cutoff).days)
+            if creation_for
+            else None
+        )
         actual = sum(
             (d.arr for d in population.deals if d.is_won and window.contains(d.close)),
             Decimal(0),
@@ -101,7 +113,7 @@ def fold(
             STAGE_WEIGHTED: stage_weighted(
                 known, cutoff, profile, [window], params.trailing_days
             ),
-            MODEL: model_forecast(model, known, cutoff, [window]),
+            MODEL: model_forecast(model, known, cutoff, [window], creation=creation),
         }
         forecasts = {
             k: (f.total() if f.available else None) for k, f in results.items()
@@ -111,10 +123,38 @@ def fold(
             spread = simulate(
                 model, known, cutoff, [window], draws=draws, seed=seed,
                 parameter_uncertainty=params.ranges == PARAMETER_RANGES,
+                creation=creation,
             ).total  # fmt: skip
             range80, range95 = (spread.p10, spread.p90), (spread.p2_5, spread.p97_5)
         folds.append(Fold(cutoff, h, actual, forecasts, range80, range95))
     return folds
+
+
+def fold_cutoffs(
+    population: Dataset, as_of: date, params: FitParams = DEFAULT_PARAMS
+) -> list[tuple[date, tuple[int, ...]]]:
+    """Each fold's cutoff, newest first, with the horizons it can be scored at.
+    Outcomes are only observed up to the latest dated fact in the files, which
+    can be earlier than the as-of date; no window may be scored past it."""
+    observed_through = (
+        min(as_of, latest_known_date(population)) if population.deals else as_of
+    )
+    out = []
+    k = 1
+    while True:
+        cutoff = add_months(as_of, -k)
+        known = as_known_at(population, cutoff)
+        if (
+            not known.deals
+            or fit_snapshots(known, cutoff, params) < MIN_TRAINING_SNAPSHOTS
+        ):
+            return out
+        horizons = tuple(
+            h for h in HORIZONS if add_months(cutoff, h) <= observed_through
+        )
+        if horizons:
+            out.append((cutoff, horizons))
+        k += 1
 
 
 def backtest(
@@ -124,30 +164,15 @@ def backtest(
     params: FitParams = DEFAULT_PARAMS,
     draws: int = 1000,
     seed: int = 0,
+    creation_for: CreationFor | None = None,
 ) -> Backtest:
     folds: list[Fold] = []
-    # Outcomes are only observed up to the latest dated fact in the files, which
-    # can be earlier than the as-of date; no window may be scored past it.
-    observed_through = (
-        min(as_of, latest_known_date(population)) if population.deals else as_of
-    )
-    k = 1
-    while True:
-        cutoff = add_months(as_of, -k)
-        known = as_known_at(population, cutoff)
-        if (
-            not known.deals
-            or fit_snapshots(known, cutoff, params) < MIN_TRAINING_SNAPSHOTS
-        ):
-            break
-        horizons = tuple(
-            h for h in HORIZONS if add_months(cutoff, h) <= observed_through
-        )
-        if horizons:
-            folds.extend(
-                fold(population, cutoff, horizons, profile, params, draws, seed)
+    for cutoff, horizons in fold_cutoffs(population, as_of, params):
+        folds.extend(
+            fold(
+                population, cutoff, horizons, profile, params, draws, seed, creation_for
             )
-        k += 1
+        )
     scores = tuple(
         score_horizon(h, [f for f in folds if f.horizon == h]) for h in HORIZONS
     )
@@ -301,12 +326,17 @@ def choose_fit(
     params: FitParams = DEFAULT_PARAMS,
     draws: int = 1000,
     seed: int = 0,
+    creation_for: CreationFor | None = None,
 ) -> tuple[FitParams, Backtest, Comparison]:
     """Score the recency candidate against ``params`` on the same folds and
     return the fit in use with its back-test, by the declared rule."""
     candidate = replace(params, estimator=RECENCY)
-    incumbent_bt = backtest(population, as_of, profile, params, draws, seed)
-    candidate_bt = backtest(population, as_of, profile, candidate, draws, seed)
+    incumbent_bt = backtest(
+        population, as_of, profile, params, draws, seed, creation_for
+    )
+    candidate_bt = backtest(
+        population, as_of, profile, candidate, draws, seed, creation_for
+    )
     cmp = compare_estimators(incumbent_bt, candidate_bt)
     if cmp.adopted:
         return candidate, candidate_bt, cmp
