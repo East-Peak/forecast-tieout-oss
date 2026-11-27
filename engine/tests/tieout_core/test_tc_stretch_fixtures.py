@@ -87,6 +87,23 @@ def test_with_no_shift_the_six_month_factors_stay_under_the_exploratory_bound(st
     assert 1.0 <= min(six) and max(six) <= rules.EXPLORATORY_SIX_MONTH_MAX_FACTOR
 
 
+@pytest.fixture(scope="module")
+def fresh(profile):
+    return [scored(STEADY, seed, profile) for seed in rules.FRESH_SEEDS]
+
+
+def test_on_fresh_seeds_the_original_six_month_criterion_holds(fresh):
+    """Seeds 101 to 103, declared in 8a43da2 before they were run, with the original criterion
+    unamended. Observed: six-month factors 1.267, 1.0, 1.0, 1.338, 1.014, 1.0 (largest 1.338,
+    median 1.007), so it holds, narrowly. The one-month factor on seed 101 (1.358) is over 1.35;
+    that bound was not declared for fresh seeds at one month and is not asserted here."""
+    six = [v for run in fresh for v in (run[6].factors.lower, run[6].factors.upper)]
+    assert all(v is not None for v in six)
+    assert max(six) == pytest.approx(1.338, abs=0.001)
+    assert max(six) <= rules.FRESH_SIX_MONTH_MAX_FACTOR
+    assert median(six) <= rules.FRESH_SIX_MONTH_MEDIAN_FACTOR
+
+
 def pooled(runs, which):
     inside = sum(getattr(r[h], which) for r in runs for h in rules.SCORED_HORIZONS)
     n = sum(r[h].scored for r in runs for h in rules.SCORED_HORIZONS)
