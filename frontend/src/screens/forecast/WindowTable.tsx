@@ -41,8 +41,8 @@ export function WindowTable() {
         </TableBody>
       </Table>
       <p className="mt-3 text-xs text-slate-500">
-        Last target ends: <Bound binding={B.nextThrough} />. <Bound binding={B.nextNote} />, forecast{" "}
-        <Bound binding={B.nextBookingsAlone} />.
+        Last target ends: <Bound binding={B.nextThrough} />. Note: <Bound binding={B.nextNote} />; forecast for those
+        months <Bound binding={B.nextBookingsAlone} />.
       </p>
     </Card>
   );

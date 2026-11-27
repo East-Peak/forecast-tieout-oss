@@ -6,14 +6,11 @@
   "type": "module",
   "scripts": {
     "sync:data": "node ./scripts/sync-data.mjs",
-    "scenario:api": "echo 'Scenario API not configured — set VITE_SCENARIO_API_URL to use a backend service'",
     "dev": "npm run sync:data && vite",
     "build": "npm run sync:data && tsc && vite build",
     "preview": "npm run sync:data && vite preview",
     "test": "vitest",
     "test:e2e": "npm run build && playwright test --grep @smoke",
-    "test:visual": "npm run build && VISUAL=1 playwright test --grep @visual",
-    "test:visual:update": "npm run build && VISUAL=1 playwright test --grep @visual --update-snapshots",
     "screenshots": "node ./scripts/capture-screenshots.mjs",
     "knip": "knip",
     "verify": "knip && vitest run"

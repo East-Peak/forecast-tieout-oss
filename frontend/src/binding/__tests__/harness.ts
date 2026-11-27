@@ -23,7 +23,8 @@ export interface Absent {
 
 /**
  * The stated exceptions to "no digit outside a bound element":
- *  - axis tick labels drawn by the chart library (.recharts-cartesian-axis);
+ *  - axis tick labels drawn by the chart library (.recharts-cartesian-axis), and the hidden span the
+ *    library measures them with (#recharts_measurement_span);
  *  - a period label (the tooltip's header), marked data-exempt="period-label";
  *  - the two literal range names "80% range" and "95% range" (the names of the report's two ranges).
  */
@@ -35,7 +36,7 @@ export function unboundDigits(container: HTMLElement): string[] {
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     const element = node.parentElement;
     if (!element) continue;
-    if (element.closest("[data-binding], .recharts-cartesian-axis, [data-exempt='period-label']")) continue;
+    if (element.closest("[data-binding], .recharts-cartesian-axis, [data-exempt='period-label'], #recharts_measurement_span")) continue;
     let text = node.textContent ?? "";
     for (const name of RANGE_NAMES) text = text.split(name).join("");
     if (/\d/.test(text)) found.push(text.trim());

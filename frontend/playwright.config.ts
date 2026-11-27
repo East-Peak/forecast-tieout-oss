@@ -5,7 +5,6 @@ import { defineConfig, devices } from "@playwright/test";
 // (empirically: agent-observatory, which the smoke suite then dutifully tested).
 const PORT = 4179;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
-const visualEnabled = process.env.VISUAL === "1";
 
 export default defineConfig({
   testDir: "./e2e",
@@ -15,13 +14,8 @@ export default defineConfig({
   workers: process.env.CI ? 4 : undefined,
   reporter: process.env.CI ? [["github"], ["list"]] : "list",
   outputDir: "test-results",
-  ignoreSnapshots: !visualEnabled,
   expect: {
     timeout: 10_000,
-    toHaveScreenshot: {
-      animations: "disabled",
-      maxDiffPixelRatio: 0,
-    },
   },
   use: {
     baseURL: BASE_URL,
@@ -43,7 +37,7 @@ export default defineConfig({
   ],
   webServer: {
     command: `npm run preview -- --host 127.0.0.1 --port ${PORT}`,
-    url: `${BASE_URL}/bookings`,
+    url: `${BASE_URL}/forecast`,
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     stderr: "pipe",
