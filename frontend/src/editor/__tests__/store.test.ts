@@ -83,7 +83,7 @@ describe("Apply", () => {
     expect(editor.applied.slice(-1)[0]).toEqual({ ...DEMO, hires: [] });
     expect(store.snapshot.applied.acme.report).toEqual(reportOf("edited"));
     expect(store.snapshot.applied.acme.plan).toEqual({ ...DEMO, hires: [] });
-    expect(store.snapshot.feedback).toEqual({ errors: [], problems: [], failure: null, busy: false });
+    expect(store.snapshot.feedback).toEqual({ company: null, errors: [], problems: [], failure: null, busy: false });
   });
 
   it("keeps the last good report and shows the core's words when it refuses the plan", async () => {
@@ -135,6 +135,25 @@ describe("Apply", () => {
     });
     await store.load("acme");
     expect(heard).toBe(true);
+  });
+});
+
+describe("what the form shows belongs to its company and its own Apply", () => {
+  it("does not carry one company's refusal over to another company's form", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    await store.load("birch");
+    editor.outcomes.push({ kind: "invalid", errors: [{ section: "hires", index: 1, position: 0, message: "hires[1]: no" }] });
+    await store.apply("acme");
+    expect(store.snapshot.feedback.company).toBe("acme");
+  });
+
+  it("is not left busy when its Apply was replaced by a load that then failed", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    editor.outcomes.push(new EditorFailure("superseded", "replaced"));
+    await store.apply("acme");
+    expect(store.snapshot.feedback.busy).toBe(false);
   });
 });
 

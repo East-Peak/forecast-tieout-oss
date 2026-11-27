@@ -137,7 +137,13 @@ export class PlanEditorClient {
       const meta = JSON.parse(m.meta) as { problems: string[]; errors: PlanError[]; comparison: ComparisonRow | null };
       if (meta.problems.length > 0) done({ kind: "refused", problems: meta.problems });
       else if (meta.errors.length > 0) done({ kind: "invalid", errors: meta.errors });
-      else done({ kind: "report", report: JSON.parse(m.report) as TieoutReport, comparison: meta.comparison as ComparisonRow });
+      else {
+        const report = JSON.parse(m.report) as TieoutReport;
+        const identity = report.inputs?.identity;
+        if (identity?.company !== company || identity.scenario !== "your-plan") {
+          this.end(worker, "error", `the worker answered for ${identity?.company ?? "no company"}, not ${company}`);
+        } else done({ kind: "report", report, comparison: meta.comparison as ComparisonRow });
+      }
     });
   }
 

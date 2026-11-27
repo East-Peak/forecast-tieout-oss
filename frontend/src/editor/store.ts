@@ -19,6 +19,8 @@ export interface Applied {
 }
 
 interface Feedback {
+  /** the company this feedback is about: another company's form shows none of it */
+  company: string | null;
   /** the core's own words for what it refused, with where */
   errors: PlanError[];
   /** a computed report that failed the contract or the core's checks: shown as a failure, never rendered */
@@ -36,7 +38,7 @@ export interface Snapshot {
   feedback: Feedback;
 }
 
-const CLEAN: Feedback = { errors: [], problems: [], failure: null, busy: false };
+const CLEAN: Feedback = { company: null, errors: [], problems: [], failure: null, busy: false };
 const copy = <T>(value: T): T => structuredClone(value);
 
 /**
@@ -46,6 +48,8 @@ const copy = <T>(value: T): T => structuredClone(value);
 export class YourPlanStore {
   snapshot: Snapshot = { facts: {}, drafts: {}, applied: {}, feedback: CLEAN };
   private readonly listeners = new Set<() => void>();
+  /** the Apply in hand: an earlier one that ends late changes nothing it no longer owns */
+  private latest: object = {};
 
   constructor(readonly editor: Editor) {}
 
@@ -86,7 +90,8 @@ export class YourPlanStore {
   /** Compute the company's form as it stands. A refusal or a failure is feedback; the last good report stays. */
   async apply(company: string): Promise<void> {
     const plan = copy(this.snapshot.drafts[company]);
-    this.change({ feedback: { ...CLEAN, busy: true } });
+    const mine = (this.latest = {});
+    this.change({ feedback: { ...CLEAN, company, busy: true } });
     try {
       const outcome = await this.editor.apply(company, plan);
       if (outcome.kind === "report") {
@@ -95,14 +100,17 @@ export class YourPlanStore {
           feedback: CLEAN,
         });
       } else if (outcome.kind === "invalid") {
-        this.change({ feedback: { ...CLEAN, errors: outcome.errors } });
+        this.change({ feedback: { ...CLEAN, company, errors: outcome.errors } });
       } else {
-        this.change({ feedback: { ...CLEAN, problems: outcome.problems } });
+        this.change({ feedback: { ...CLEAN, company, problems: outcome.problems } });
       }
     } catch (e) {
-      if (e instanceof EditorFailure && e.kind === "superseded") return;
+      if (e instanceof EditorFailure && e.kind === "superseded") {
+        if (this.latest === mine) this.change({ feedback: CLEAN });
+        return;
+      }
       const failure = e instanceof EditorFailure && e.kind !== "superseded" ? { kind: e.kind, message: e.message } : { kind: "error" as const, message: e instanceof Error ? e.message : String(e) };
-      this.change({ feedback: { ...CLEAN, failure } });
+      this.change({ feedback: { ...CLEAN, company, failure } });
     }
   }
 }

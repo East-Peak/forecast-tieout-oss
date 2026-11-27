@@ -175,7 +175,7 @@ describe("applying", () => {
     expect(workers[0].last("open")).toMatchObject({ company: "birch" });
     opened(workers[0], "birch");
     await vi.advanceTimersByTimeAsync(0);
-    workers[0].say({ type: "applied", id: workers[0].last("apply").id, report: JSON.stringify(REPORT), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW }) });
+    workers[0].say({ type: "applied", id: workers[0].last("apply").id, report: JSON.stringify({ ...REPORT, inputs: { identity: { company: "birch", scenario: "your-plan" } } }), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW }) });
     await expect(result).resolves.toMatchObject({ kind: "report" });
   });
 });
@@ -213,6 +213,20 @@ describe("stale answers", () => {
     expect(client.status.phase).toBe("starting");
     opened(workers[1], "acme");
     await expect(again).resolves.toMatchObject({ company: "acme" });
+  });
+});
+
+describe("an answer for the wrong company", () => {
+  it("is refused rather than shown: the report's own identity must be the company applied to", async () => {
+    const s = setup();
+    const o = s.client.open("acme");
+    opened(s.workers[0], "acme");
+    await o;
+    const result = s.client.apply("acme", PLAN).catch((e: unknown) => e);
+    const other = { ...REPORT, inputs: { identity: { company: "birch", scenario: "your-plan" } } };
+    s.workers[0].say({ type: "applied", id: s.workers[0].last("apply").id, report: JSON.stringify(other), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW }) });
+    expect(await result).toMatchObject({ kind: "error" });
+    expect(s.workers[0].terminated).toBe(true);
   });
 });
 

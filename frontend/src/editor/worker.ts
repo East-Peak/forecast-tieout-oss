@@ -55,8 +55,12 @@ function apply(id: string, plan: string) {
   say({ type: "applied", id, report, meta });
 }
 
+// One request at a time, in the order sent: a slow download for one company must not finish after, and
+// replace, the company a later request opened.
+let queue: Promise<void> = Promise.resolve();
+
 onmessage = (event: MessageEvent<ToWorker>) => {
   const m = event.data;
-  const run = m.type === "open" ? open(m.id, m.company, m.assets) : Promise.resolve().then(() => apply(m.id, m.plan));
+  const run = (queue = queue.then(() => (m.type === "open" ? open(m.id, m.company, m.assets) : apply(m.id, m.plan))));
   run.catch((e: unknown) => say({ type: "failed", id: m.id, error: e instanceof Error ? e.message : String(e) }));
 };

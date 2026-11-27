@@ -56,7 +56,7 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
   const draft = snap.drafts[company] as PlanDoc | undefined;
   const applied = snap.applied[company];
   if (!facts || !draft) return null;
-  const { feedback } = snap;
+  const feedback = snap.feedback.company === company ? snap.feedback : { company: null, errors: [], problems: [], failure: null, busy: false };
   const first = facts.months[0];
   const set = (next: PlanDoc) => store.setDraft(company, next);
   const hires = draft.hires;
