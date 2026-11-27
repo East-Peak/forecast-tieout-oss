@@ -92,9 +92,7 @@ export default defineConfig({
     exclude: ["e2e/**", "node_modules/**", "dist/**"],
     globals: true,
     setupFiles: ["./src/test-setup.ts"],
-    environmentMatchGlobs: [
-      ["src/components/**", "jsdom"],
-      ["src/pages/**", "jsdom"],
-    ],
+    environment: "jsdom",
+    environmentOptions: { jsdom: { url: "http://localhost/" } },
   },
 });

@@ -1,0 +1,176 @@
+import { act, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter, useLocation } from "react-router-dom";
+import { afterEach, describe, expect, it } from "vitest";
+import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
+import type { TieoutReport } from "../../generated/report";
+import { ReportSessionProvider, useSession, type Loaders } from "../ReportSession";
+import { STORAGE_KEY } from "../storage";
+
+const scenario = (id: string) => ({ id, label: `scenario ${id}`, description: "", plan_file: null, report: `${id}.json` });
+const company = (id: string) => ({
+  id,
+  name: `Company ${id}`,
+  description: "",
+  as_of: "2026-08-31",
+  fiscal_year: "FY26",
+  comparison: `${id}/comparison.json`,
+  scenarios: [scenario("as-signed"), scenario("demo-plan")].map((s) => ({ ...s, report: `${id}/${s.id}.json` })),
+});
+const index: ReportIndex = { schema_version: "1.0.0", default_company: "b", companies: [company("a"), company("b")] };
+
+interface Deferred<T> {
+  promise: Promise<T>;
+  resolve: (v: T) => void;
+  reject: (e: Error) => void;
+}
+function deferred<T>(): Deferred<T> {
+  let resolve!: (v: T) => void;
+  let reject!: (e: Error) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+const report = (tag: string) => ({ schema_version: "1.0.0", tag }) as unknown as TieoutReport;
+
+function harness() {
+  const pending = new Map<string, Deferred<TieoutReport>>();
+  const loaders: Loaders = {
+    index: () => Promise.resolve(index),
+    report: (path) => {
+      const d = deferred<TieoutReport>();
+      pending.set(path, d);
+      return d.promise;
+    },
+    comparison: () => Promise.resolve({ rows: [] } as unknown as ScenarioComparison),
+  };
+  return { pending, loaders };
+}
+
+let choose: ReturnType<typeof useSession>["choose"];
+function Probe() {
+  const { state, choose: c } = useSession();
+  choose = c;
+  const where = useLocation();
+  return (
+    <div>
+      <div data-testid="status">{state.status}</div>
+      <div data-testid="selection">{"selection" in state ? `${state.selection.company}/${state.selection.scenario}` : "-"}</div>
+      <div data-testid="shown">{state.status === "ready" ? (state.report as unknown as { tag: string }).tag : "-"}</div>
+      <div data-testid="error">{"error" in state ? state.error : ""}</div>
+      <div data-testid="notice">{"notice" in state ? (state.notice ?? "") : ""}</div>
+      <div data-testid="url">{where.search}</div>
+    </div>
+  );
+}
+
+function mount(loaders: Loaders, url: string) {
+  return render(
+    <MemoryRouter initialEntries={[url]}>
+      <ReportSessionProvider loaders={loaders}>
+        <Probe />
+      </ReportSessionProvider>
+    </MemoryRouter>,
+  );
+}
+const text = (id: string) => screen.getByTestId(id).textContent;
+
+afterEach(() => localStorage.clear());
+
+describe("the report-backed session", () => {
+  it("reads company and scenario from the URL, loads that report, and shows it", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a&scenario=demo-plan");
+    await waitFor(() => expect(pending.has("a/demo-plan.json")).toBe(true));
+    expect(text("status")).toBe("loading");
+    await act(async () => pending.get("a/demo-plan.json")!.resolve(report("A demo")));
+    expect(text("status")).toBe("ready");
+    expect(text("shown")).toBe("A demo");
+  });
+
+  it("with nothing in the URL uses the index default, then writes the choice into the URL", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast");
+    await waitFor(() => expect(pending.has("b/as-signed.json")).toBe(true));
+    await waitFor(() => expect(text("url")).toBe("?company=b&scenario=as-signed"));
+  });
+
+  it("remembers the choice under the new storage key", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => pending.get("a/as-signed.json")!.resolve(report("A")));
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual({ company: "a", scenario: "as-signed" });
+  });
+
+  it("uses a remembered choice only when the URL says nothing", async () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ company: "a", scenario: "demo-plan" }));
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast");
+    await waitFor(() => expect(pending.has("a/demo-plan.json")).toBe(true));
+  });
+
+  it("a late response for the company the visitor has left never reaches the screen", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => choose("b", "as-signed"));
+    await waitFor(() => expect(pending.has("b/as-signed.json")).toBe(true));
+    await act(async () => pending.get("b/as-signed.json")!.resolve(report("B")));
+    expect(text("shown")).toBe("B");
+    await act(async () => pending.get("a/as-signed.json")!.resolve(report("A late")));
+    expect(text("shown")).toBe("B");
+    expect(text("selection")).toBe("b/as-signed");
+  });
+
+  it("a late failure for a company left behind does not turn the screen into an error", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => choose("b", "as-signed"));
+    await waitFor(() => expect(pending.has("b/as-signed.json")).toBe(true));
+    await act(async () => pending.get("a/as-signed.json")!.reject(new Error("A broke")));
+    expect(text("status")).toBe("loading");
+    await act(async () => pending.get("b/as-signed.json")!.resolve(report("B")));
+    expect(text("status")).toBe("ready");
+  });
+
+  it("a report that fails to load is an error naming the problem, and another choice recovers", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => pending.get("a/as-signed.json")!.reject(new Error("HTTP 404")));
+    expect(text("status")).toBe("error");
+    expect(text("error")).toContain("HTTP 404");
+    await act(async () => choose("b", "as-signed"));
+    await waitFor(() => expect(pending.has("b/as-signed.json")).toBe(true));
+    await act(async () => pending.get("b/as-signed.json")!.resolve(report("B")));
+    expect(text("status")).toBe("ready");
+  });
+
+  it("an index that fails to load is an error, not a blank page", async () => {
+    const loaders: Loaders = { ...harness().loaders, index: () => Promise.reject(new Error("index 500")) };
+    mount(loaders, "/forecast");
+    await waitFor(() => expect(text("status")).toBe("index-error"));
+    expect(text("error")).toContain("index 500");
+  });
+
+  it("a report from another schema version is refused, not shown", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=a");
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () =>
+      pending.get("a/as-signed.json")!.resolve({ schema_version: "9.9.9" } as unknown as TieoutReport),
+    );
+    expect(text("status")).toBe("error");
+    expect(text("error")).toMatch(/schema/i);
+  });
+
+  it("says so when the URL names a company that does not exist", async () => {
+    const { pending, loaders } = harness();
+    mount(loaders, "/forecast?company=zzz");
+    await waitFor(() => expect(pending.has("b/as-signed.json")).toBe(true));
+    expect(text("notice")).toMatch(/zzz/);
+  });
+});
