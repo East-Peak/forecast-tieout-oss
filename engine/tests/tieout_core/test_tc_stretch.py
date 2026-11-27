@@ -224,3 +224,11 @@ def test_no_range_folds_means_nothing_scored():
     assert (s.scored, s.inside_simulated, s.inside_stretched) == (0, 0, 0)
     assert s.median_width_simulated is None and s.median_width_stretched is None
     assert s.factors.learned is False
+
+
+def test_a_factor_of_one_leaves_the_range_bit_for_bit_alone():
+    # 100 - 1 * (100 - 57.123456789) is not 57.123456789 in floating point
+    assert stretch_range(57.123456789, 100.0, 143.987654321, Factors(1.0, 1.0, 10)) == (
+        57.123456789,
+        143.987654321,
+    )

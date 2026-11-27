@@ -110,8 +110,10 @@ def factors_at(folds: list[Fold], horizon: int, as_of: date) -> Factors:
 
 def _stretch_side(edge: float, mid: float, factor: float) -> float:
     distance = mid - edge if edge <= mid else edge - mid
-    if distance == 0:
-        return edge  # no width to stretch
+    if distance == 0 or factor == 1.0:
+        return (
+            edge  # no width to stretch, or nothing to stretch by: keep the edge exact
+        )
     return mid - factor * distance if edge <= mid else mid + factor * distance
 
 
