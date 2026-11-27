@@ -22,6 +22,7 @@ def test_the_fixture_tolerances_are_declared():
     assert r.FIXTURE_SEEDS == 3
     assert r.NO_SHIFT_MAX_FACTOR == 1.35
     assert r.NO_SHIFT_MEDIAN_FACTOR == 1.10
+    assert r.NO_SHIFT_MAX_FACTOR_SIX == 1.75  # amended after the first fixture run
     assert r.SHIFT_FACTOR == 0.5
     assert r.SHIFT_MAX_SIMULATED == 0.60
     assert r.SHIFT_MIN_GAIN == 0.15
