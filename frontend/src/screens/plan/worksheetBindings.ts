@@ -68,7 +68,7 @@ export const WS = {
 export const DRIVER = {
   label: text("driver.label", "/label"),
   unitLabel: text("driver.unit-label", "/unit_label"),
-  current: byDisplay("driver.current", "/current/value"),
+  current: byDisplay("driver.current", "/current/value", { unavailable: { reason: "/cannot_scale_because", sentence: true, words: "no figure" } }),
   lowSetting: byDisplay("driver.low.setting", "/historical/low/setting"),
   highSetting: byDisplay("driver.high.setting", "/historical/high/setting"),
   lowChange: {
@@ -89,6 +89,9 @@ export const DRIVER = {
   eligible: count("driver.eligible-quarters", "/evidence/eligible_quarters"),
   required: count("driver.required-quarters", "/evidence/required_quarters"),
   neededValue: byDisplay("driver.needed.value", "/needed_alone/value"),
+  /** a driver the history cannot scale has no "needed alone"; the report says why */
+  neededNone: text("driver.needed.none", "/needed_alone/outcome_label", { unavailable: { reason: "/cannot_scale_because", sentence: true, words: "no figure" } }),
+  precision: text("driver.needed.precision", "/needed_alone/precision_note"),
   neededLabel: text("driver.needed.label", "/needed_alone/outcome_label"),
   neededReason: text("driver.needed.reason", "/needed_alone/reason_label"),
   overshoot: usd("driver.needed.overshoot", "/needed_alone/overshoot"),

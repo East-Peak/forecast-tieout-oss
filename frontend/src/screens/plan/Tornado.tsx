@@ -15,6 +15,20 @@ type Sheet = Exclude<TieoutReport["worksheet"], { unavailable: string }>;
 type Driver = Sheet["drivers"][number];
 
 /** The two windows the report carries, in words: the first is this fiscal year, the second the next twelve months. */
+/** The rows' order for a window: the report's own rank (1 is the largest change), rows with none last, ties in the report's order. Nothing is parsed or subtracted. */
+function byRank(ranks: ReadonlyArray<number | null>): number[] {
+  return ranks
+    .map((_, i) => i)
+    .sort((a, b) => {
+      const x = ranks[a];
+      const y = ranks[b];
+      if (x === y) return a < b ? -1 : 1;
+      if (x === null) return 1;
+      if (y === null) return -1;
+      return x < y ? -1 : 1;
+    });
+}
+
 const WINDOW_WORDS: Record<Window, string> = { "rest of fiscal year": "This fiscal year", "next twelve months": "Next twelve months" };
 
 /**
@@ -31,6 +45,8 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
   const drivers = usePlot(useMemo(() => [driverSpecs.low, driverSpecs.high], [driverSpecs]));
   const actions = usePlot(useMemo(() => [actionSpecs.gain], [actionSpecs]));
   // one scale for both groups and both bars, so that a bar's length means the same dollars wherever it is drawn
+  const driverOrder = byRank(sheet.drivers.map((d) => d.rank[window]));
+  const actionOrder = byRank(sheet.actions.rows.map((a) => a.rank[window]));
   const domain = useMemo(() => plotExtent([...drivers.rows, ...actions.rows], ["low", "high", "gain"], { zero: true, padding: 0.04 }), [drivers.rows, actions.rows]);
 
   return (
@@ -75,8 +91,8 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
             </TableRow>
           </TableHead>
           <TableBody className={STACK_XL.body}>
-            {sheet.drivers.map((driver, i) => (
-              <DriverRow key={driver.driver} driver={driver} row={drivers.rows[i]} index={i} window={window} domain={domain} />
+            {driverOrder.map((i) => (
+              <DriverRow key={sheet.drivers[i].driver} driver={sheet.drivers[i]} row={drivers.rows[i]} index={i} window={window} domain={domain} />
             ))}
           </TableBody>
         </Table>
@@ -93,8 +109,8 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
             </TableRow>
           </TableHead>
           <TableBody className={STACK_XL.body}>
-            {sheet.actions.rows.map((action, i) => (
-              <ActionRow key={action.kind} row={actions.rows[i]} index={i} window={window} domain={domain} kind={action.kind} supported={action.bookings_gained.value !== null} />
+            {actionOrder.map((i) => (
+              <ActionRow key={sheet.actions.rows[i].kind} row={actions.rows[i]} index={i} window={window} domain={domain} kind={sheet.actions.rows[i].kind} supported={sheet.actions.rows[i].bookings_gained.value !== null} />
             ))}
           </TableBody>
         </Table>
@@ -122,7 +138,8 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
   const [open, setOpen] = useState(false);
   const path = `${WS_ROWS.drivers}/${index}`;
   const { display } = driver;
-  const solves = driver.needed_alone.outcome === "solves";
+  const needed = driver.needed_alone;
+  const solves = needed !== null && needed.outcome === "solves";
   return (
     <>
       <TableRow className={STACK_XL.row} data-testid="driver-row" data-driver={driver.driver}>
@@ -173,7 +190,7 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
         </TableCell>
         <TableCell className={STACK_XL.cell} data-label="Needed alone">
           <span className="text-xs xl:text-sm">
-            {solves ? <Bound binding={DRIVER.neededValue[display]} row={path} /> : <Bound binding={DRIVER.neededLabel} row={path} />}
+            {needed === null ? <Bound binding={DRIVER.neededNone} row={path} /> : solves ? <Bound binding={DRIVER.neededValue[display]} row={path} /> : <Bound binding={DRIVER.neededLabel} row={path} />}
           </span>
         </TableCell>
         <TableCell className={STACK_XL.cell} data-label="Inside history">
@@ -190,10 +207,11 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
                 This is an assumption to discuss: it cannot be added to the plan as an item yet. <Bound binding={DRIVER.appliesTo} row={path} />
               </p>
               {solves ? <p><Bound binding={DRIVER.neededLabel} row={path} /></p> : null}
-              {driver.needed_alone.reason_label === null ? null : <p><Bound binding={DRIVER.neededReason} row={path} /></p>}
-              {driver.needed_alone.overshoot !== null ? (
+              {needed === null || needed.reason_label === null ? null : <p><Bound binding={DRIVER.neededReason} row={path} /></p>}
+              {needed !== null && needed.overshoot !== null ? (
                 <p>Overshoot at that setting: <Bound binding={DRIVER.overshoot} row={path} /></p>
               ) : null}
+              {needed === null || needed.precision_note === null ? null : <p><Bound binding={DRIVER.precision} row={path} /></p>}
               {driver.historical === null ? null : (
                 <p>
                   Observed range <Bound binding={DRIVER.minimum[display]} row={path} /> to <Bound binding={DRIVER.maximum[display]} row={path} />. <Bound binding={DRIVER.rule} row={path} />

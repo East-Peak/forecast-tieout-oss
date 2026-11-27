@@ -31,13 +31,16 @@ const sheetOf = (r: TieoutReport) => {
 function expectedCharts(r: TieoutReport, window: Window): Array<{ name: string; data: unknown; keys: string[] }> {
   const ws = sheetOf(r);
   const num = (s: string | null) => (s === null ? null : Number(s));
+  // the rows stand in the report's rank for the window: 1 first, none last
+  const ranked = <T extends { rank: Record<string, number | null> }>(rows: T[]) =>
+    rows.map((row, i) => [row, i] as const).sort(([a, i], [b, j]) => (a.rank[window] ?? Infinity) - (b.rank[window] ?? Infinity) || i - j);
   return [
-    ...ws.drivers.flatMap((d, i) =>
+    ...ranked(ws.drivers).flatMap(([d, i]) =>
       d.historical === null
         ? []
         : [{ name: `driver ${d.driver}`, keys: ["low", "high"], data: [{ period: String(i), low: num(d.historical.low.change[window]), high: num(d.historical.high.change[window]) }] }],
     ),
-    ...ws.actions.rows.flatMap((a, i) =>
+    ...ranked(ws.actions.rows).flatMap(([a, i]) =>
       a.bookings_gained.value === null ? [] : [{ name: `action ${a.kind}`, keys: ["gain"], data: [{ period: String(i), gain: num(a.bookings_gained.value[window]) }] }],
     ),
   ];
@@ -178,5 +181,33 @@ describe("the tornado's chart checks fail when a chart is wrong (mutations)", ()
     const row = (got[1].data as Array<Record<string, number>>)[0];
     row.high = row.high * 1.1; // test-side corruption
     expect(failuresOf(got, base(), REST_WINDOW).some((f) => f.includes("data given"))).toBe(true);
+  });
+});
+
+describe("the tornado's rows stand in the report's rank, and a driver that cannot be scaled says why", () => {
+  const order = (container: HTMLElement) => Array.from(container.querySelectorAll("[data-testid='driver-row']")).map((r) => r.getAttribute("data-driver"));
+
+  it("this fiscal year and the next twelve months each follow their own rank, which differ", () => {
+    const report = files.report("sapling-industries", "as-signed");
+    const ws = sheetOf(report);
+    const ranked = (w: Window) => [...ws.drivers].sort((a, b) => a.rank[w]! - b.rank[w]!).map((d) => d.driver);
+    expect(ranked(REST_WINDOW)).not.toEqual(ranked(TWELVE_WINDOW));
+    const { container } = mount("sapling-industries", "as-signed");
+    expect(order(container)).toEqual(ranked(REST_WINDOW));
+    fireEvent.click(container.querySelector("[data-window-choice='next twelve months']")!);
+    expect(order(container)).toEqual(ranked(TWELVE_WINDOW));
+  });
+
+  it("a cycle the history cannot scale shows the report's sentence in place of the figures", () => {
+    const report = structuredClone(files.report("sapling-industries", "as-signed"));
+    const cycle = sheetOf(report).drivers.find((d) => d.driver === "cycle_days")!;
+    cycle.current.value = null;
+    cycle.needed_alone = null;
+    cycle.cannot_scale_because = "the fit in use has no win times to scale";
+    const { container } = mount("sapling-industries", "as-signed", report);
+    const row = container.querySelector("[data-driver='cycle_days']")!;
+    expect(row.textContent).toContain("the fit in use has no win times to scale");
+    expect(container.querySelector("[data-binding='driver.needed.none']")!.textContent).toBe("the fit in use has no win times to scale");
+    expect(unboundDigits(container, [])).toEqual([]);
   });
 });

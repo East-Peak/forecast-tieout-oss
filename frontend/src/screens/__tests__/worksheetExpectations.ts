@@ -70,8 +70,13 @@ function otherWindowIds(): string[] {
 }
 
 /** The driver table, its disclosures and the two actions, for the window the switch is on. */
-export function tornado(ws: Sheet, { one: _one, many }: Put, window: WindowKey): void {
-  const rows = ws.drivers.map((_, i) => `/worksheet/drivers/${i}`);
+export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKey): void {
+  // the rows stand in the report's own rank for the window (1 first, none last, ties in the report's order)
+  const order = (ranks: Array<number | null>) =>
+    ranks.map((_, i) => i).sort((a, b) => (ranks[a] ?? Infinity) - (ranks[b] ?? Infinity) || a - b);
+  const idx = order(sheet.drivers.map((d) => d.rank[window]));
+  const ws = { ...sheet, drivers: idx.map((i) => sheet.drivers[i]) };
+  const rows = idx.map((i) => `/worksheet/drivers/${i}`);
   const each = (id: (d: Sheet["drivers"][number]) => string | null, ids: (d: Sheet["drivers"][number]) => string) => {
     // grouped by binding id, in row order
     const byId = new Map<string, { texts: string[]; rows: string[] }>();
@@ -97,7 +102,7 @@ export function tornado(ws: Sheet, { one: _one, many }: Put, window: WindowKey):
 
   many(DRIVER.label.id, ws.drivers.map((d) => d.label), rows);
   many(DRIVER.unitLabel.id, ws.drivers.map((d) => d.unit_label), rows);
-  put(each((d) => shown(d.display, d.current.value), (d) => DRIVER.current[d.display].id), variants((k) => DRIVER.current[k as "percent"].id));
+  put(each((d) => (d.current.value === null ? (d.cannot_scale_because ?? "no figure") : shown(d.display, d.current.value)), (d) => DRIVER.current[d.display].id), variants((k) => DRIVER.current[k as "percent"].id));
 
   const withHistory = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.historical !== null);
   const without = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.historical === null);
@@ -108,17 +113,21 @@ export function tornado(ws: Sheet, { one: _one, many }: Put, window: WindowKey):
   many(DRIVER.highChange[window].id, withHistory.map(([d]) => fmt.usdShort(d.historical!.high.change[window])), withHistory.map(([, i]) => rows[i]));
 
   // needed alone: the value where it solves, the report's words where it does not
-  const solved = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone.outcome === "solves");
-  const unsolved = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone.outcome !== "solves");
-  put(each((d) => (d.needed_alone.outcome === "solves" ? shown(d.display, d.needed_alone.value!) : null), (d) => DRIVER.neededValue[d.display].id), variants((k) => DRIVER.neededValue[k as "percent"].id));
+  // (a driver the history cannot scale has none, and the report's sentence stands in its place)
+  const solves = (d: Sheet["drivers"][number]) => d.needed_alone !== null && d.needed_alone.outcome === "solves";
+  put(each((d) => (solves(d) ? shown(d.display, d.needed_alone!.value!) : null), (d) => DRIVER.neededValue[d.display].id), variants((k) => DRIVER.neededValue[k as "percent"].id));
+  const none = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone === null);
+  many(DRIVER.neededNone.id, none.map(([d]) => d.cannot_scale_because ?? "no figure"), none.map(([, i]) => rows[i]));
   // the label is in the cell where it does not solve, and in the opened row where it does
-  const withLabel = [...unsolved, ...solved].sort((a, b) => a[1] - b[1]);
-  many(DRIVER.neededLabel.id, withLabel.map(([d]) => d.needed_alone.outcome_label), withLabel.map(([, i]) => rows[i]));
-  const reasoned = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone.reason_label !== null);
-  many(DRIVER.neededReason.id, reasoned.map(([d]) => d.needed_alone.reason_label!), reasoned.map(([, i]) => rows[i]));
-  const overshot = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone.overshoot !== null);
-  many(DRIVER.overshoot.id, overshot.map(([d]) => fmt.usdShort(d.needed_alone.overshoot!)), overshot.map(([, i]) => rows[i]));
-  many(DRIVER.history.id, ws.drivers.map((d) => d.needed_alone.history_label ?? "not compared with history"), rows);
+  const withWords = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone !== null);
+  many(DRIVER.neededLabel.id, withWords.map(([d]) => d.needed_alone!.outcome_label), withWords.map(([, i]) => rows[i]));
+  const reasoned = withWords.filter(([d]) => d.needed_alone!.reason_label !== null);
+  many(DRIVER.neededReason.id, reasoned.map(([d]) => d.needed_alone!.reason_label!), reasoned.map(([, i]) => rows[i]));
+  const overshot = withWords.filter(([d]) => d.needed_alone!.overshoot !== null);
+  many(DRIVER.overshoot.id, overshot.map(([d]) => fmt.usdShort(d.needed_alone!.overshoot!)), overshot.map(([, i]) => rows[i]));
+  const precise = withWords.filter(([d]) => d.needed_alone!.precision_note !== null);
+  many(DRIVER.precision.id, precise.map(([d]) => d.needed_alone!.precision_note!), precise.map(([, i]) => rows[i]));
+  many(DRIVER.history.id, ws.drivers.map((d) => d.needed_alone?.history_label ?? "not compared with history"), rows);
 
   // the opened row
   many(DRIVER.appliesTo.id, ws.drivers.map((d) => d.applies_to), rows);
@@ -132,7 +141,7 @@ export function tornado(ws: Sheet, { one: _one, many }: Put, window: WindowKey):
   many(DRIVER.limitation.id, limited.map(([d]) => d.limitation!), limited.map(([, i]) => rows[i]));
 
   // every past quarter of every driver
-  const quarters = ws.drivers.flatMap((d, i) => d.evidence.quarters.map((q, j) => ({ d, q, row: `/worksheet/drivers/${i}/evidence/quarters/${j}` })));
+  const quarters = ws.drivers.flatMap((d, i) => d.evidence.quarters.map((q, j) => ({ d, q, row: `/worksheet/drivers/${idx[i]}/evidence/quarters/${j}` })));
   many(OBSERVATION.quarter.id, quarters.map(({ q }) => q.quarter), quarters.map(({ row }) => row));
   many(OBSERVATION.created.id, quarters.map(({ q }) => fmt.quantity(q.created)), quarters.map(({ row }) => row));
   many(OBSERVATION.wins.id, quarters.map(({ q }) => fmt.quantity(q.wins)), quarters.map(({ row }) => row));
@@ -146,8 +155,9 @@ export function tornado(ws: Sheet, { one: _one, many }: Put, window: WindowKey):
   }
 
   // the two actions, in the same window
-  const actions = ws.actions.rows;
-  const aRows = actions.map((_, i) => `/worksheet/actions/rows/${i}`);
+  const aIdx = order(sheet.actions.rows.map((a) => a.rank[window]));
+  const actions = aIdx.map((i) => sheet.actions.rows[i]);
+  const aRows = aIdx.map((i) => `/worksheet/actions/rows/${i}`);
   many(ACTION.name.id, actions.map((a) => a.action.value), aRows);
   many(ACTION.gain[window].id, actions.map((a) => (a.bookings_gained.value === null ? a.status.value : fmt.usdShort(a.bookings_gained.value[window]))), aRows);
   many(ACTION.closes.id, actions.map((a) => a.closes_alone_label), aRows);
