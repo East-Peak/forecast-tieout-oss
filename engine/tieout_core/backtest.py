@@ -57,6 +57,9 @@ class Fold:
     forecasts: dict[str, Decimal | None]
     range80: tuple[float, float] | None
     range95: tuple[float, float] | None
+    median: float | None = (
+        None  # the simulation's median, which a stretch is measured from
+    )
 
 
 @dataclass(frozen=True)
@@ -130,7 +133,7 @@ def fold(
         forecasts = {
             k: (f.total() if f.available else None) for k, f in results.items()
         }
-        range80 = range95 = None
+        range80 = range95 = median_total = None
         if results[MODEL].available:
             spread = simulate(
                 model, known, cutoff, [window], draws=draws, seed=seed,
@@ -138,7 +141,8 @@ def fold(
                 creation=creation,
             ).total  # fmt: skip
             range80, range95 = (spread.p10, spread.p90), (spread.p2_5, spread.p97_5)
-        folds.append(Fold(cutoff, h, actual, forecasts, range80, range95))
+            median_total = spread.p50
+        folds.append(Fold(cutoff, h, actual, forecasts, range80, range95, median_total))
     return folds
 
 
