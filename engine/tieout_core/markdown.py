@@ -652,7 +652,7 @@ def _required(s: dict) -> list[str]:
         out += [
             (
                 f"**{q['quarter']}: {late['label']}.** Why: {'; '.join(late['reasons'])}. The open pipeline "
-                f"({_usd(op['open_arr'])}) is expected to book {_usd(op['expected_contribution'])} of it; "
+                f"({_usd(op['open_arr'])}) is expected to book {_usd(op['expected_contribution'])} inside the quarter; "
                 f"{op['statement']}."
             ),
             "",

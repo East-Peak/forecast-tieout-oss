@@ -205,14 +205,14 @@ def _open_pipeline(r: QuarterResult) -> dict:
         statement = "no open pipeline to win from"
     elif c.possible:
         statement = (
-            f"the open pipeline's ${c.open_arr:,.0f} would have to book ${c.needed:,.0f} inside the "
+            f"to close it, ${c.needed:,.0f} of the open pipeline would have to book inside the "
             f"quarter ({pct(c.needed_share)} of its dollars) against the {pct(c.expected_share)} "
-            "expected; this is arithmetic on the figures above, not a lever the model solves"
+            "expected (arithmetic on the figures above, not a lever the model solves)"
         )
     else:
         statement = (
             f"no win rate on the open pipeline closes it: ${c.needed:,.0f} would have to book "
-            f"from ${c.open_arr:,.0f} open (arithmetic on the figures above, not a lever)"
+            f"from ${c.open_arr:,.0f} open (arithmetic on the figures above, not a lever the model solves)"
         )
     return {
         "open_arr": money(c.open_arr),
@@ -268,7 +268,7 @@ def _lead_time(lt: LeadTimes) -> dict:
         ],
         "booked_later": number(lt.later, 6),
         "never_booked": number(lt.never, 6),
-        "never_booked_meaning": "the dollars that do not win (lost or never closing)",
+        "never_booked_meaning": "lost, or never closing",
     }
 
 
