@@ -962,17 +962,17 @@ Heads, ramped equivalents and departures by month (forward months are expectatio
 | 2026-06 | past | 96 | 90.89 | 2 | 98 |
 | 2026-07 | past | 96 | 92.04 | 3 | 99 |
 | 2026-08 | past | 99 | 93.13 | 1 | 100 |
-| 2026-09 | forward | 74.2 | 93.96 | 0.81 | 100 |
-| 2026-10 | forward | 74.3 | 93.80 | 0.84 | 101 |
-| 2026-11 | forward | 73.5 | 93.36 | 0.80 | 102 |
-| 2026-12 | forward | 72.7 | 93.12 | 0.82 | 102 |
-| 2027-01 | forward | 75.7 | 93.15 | 0.85 | 102 |
-| 2027-02 | forward | 77.7 | 92.68 | 0.79 |  |
-| 2027-03 | forward | 80.6 | 91.71 | 0.90 |  |
-| 2027-04 | forward | 82.4 | 90.64 | 0.90 |  |
-| 2027-05 | forward | 83.3 | 89.82 | 0.94 |  |
-| 2027-06 | forward | 85.1 | 89.08 | 0.93 |  |
-| 2027-07 | forward | 87.7 | 88.18 | 0.98 |  |
+| 2026-09 | forward | 97.9 | 93.96 | 1.07 | 100 |
+| 2026-10 | forward | 96.8 | 93.80 | 1.09 | 101 |
+| 2026-11 | forward | 95.8 | 93.36 | 1.05 | 102 |
+| 2026-12 | forward | 94.7 | 93.12 | 1.07 | 102 |
+| 2027-01 | forward | 93.7 | 93.15 | 1.06 | 102 |
+| 2027-02 | forward | 92.7 | 92.68 | 0.95 |  |
+| 2027-03 | forward | 91.7 | 91.71 | 1.04 |  |
+| 2027-04 | forward | 90.7 | 90.64 | 0.99 |  |
+| 2027-05 | forward | 89.7 | 89.82 | 1.01 |  |
+| 2027-06 | forward | 88.7 | 89.08 | 0.97 |  |
+| 2027-07 | forward | 87.7 | 88.18 | 0.99 |  |
 | 2027-08 | forward | 86.7 | 87.20 | 0.98 |  |
 
 **Capacity projection, a diagnostic (diagnostic only: capacity was not adopted, so nothing in this report uses it):** bookings if capacity drove the forecast: rest of fiscal year $33,467,430; next twelve months $87,406,155; the forecast actually shown, at the flat rate: rest of fiscal year $33,191,902; next twelve months $85,003,210. Hiring action: unsupported by this history.

@@ -89,8 +89,8 @@ def project(
             continue  # starts after the horizon or left before it: no overlap
         origin = max(0, (m.start - as_of).days)  # a hire's first day is certain
         weights = [ZERO] * horizon_days
-        for lo, hi, w in segments(m, fit.curve, first, last):
-            for i in range((lo - first).days, (hi - first).days + 1):
+        for seg_from, seg_through, w in segments(m, fit.curve, first, last):
+            for i in range((seg_from - first).days, (seg_through - first).days + 1):
                 weights[i] = w
         if m.end is not None:
             for i, w in enumerate(weights):

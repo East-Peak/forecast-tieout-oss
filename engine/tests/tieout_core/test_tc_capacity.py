@@ -181,3 +181,47 @@ def test_the_simulation_with_programme_inflows_is_centred_on_the_forecast_with_t
     assert abs(sim.total.mean - expected) < 0.04 * expected
     base = simulate(model, data, AS_OF, windows, draws=4000, seed=2)
     assert sim.total.mean > base.total.mean  # the inflows are in the draws
+
+
+# ---------------------------------------------------------------- heads and departures count the whole stay
+
+
+def test_forward_heads_are_never_below_the_expected_ramped_weight_sum():
+    # B started ten days before the as-of date and is still ramping: heads count the person for every
+    # day of the stay, not only the days after the ramp ends.
+    members = [ae("A", "2020-01-01"), ae("B", "2026-06-20")]
+    cfg = replace(CFG, attrition=Decimal("0.02"))
+    cap = capacity(members, cfg)
+    creation = project(cap, members, AS_OF, 120)
+    for day in range(120):
+        assert creation.heads[day] >= creation.ramped_ae_months[
+            day
+        ] * DAYS_PER_AE_MONTH - Decimal("1e-20"), day
+
+
+def test_heads_on_the_first_forward_day_are_the_roster_less_one_day_of_survival():
+    members = [ae("A", "2020-01-01"), ae("B", "2026-06-20")]
+    cfg = replace(CFG, attrition=Decimal("0.02"))
+    cap = capacity(members, cfg)
+    creation = project(cap, members, AS_OF, 60)
+    s = Decimal(0.98 ** (1 / float(DAYS_PER_AE_MONTH)))
+    assert abs(creation.heads[0] - 2 * s) < Decimal("1e-12")
+
+
+def test_a_member_still_ramping_who_leaves_on_a_known_day_is_a_head_until_then():
+    members = [ae("A", "2020-01-01"), ae("B", "2026-06-20", "2026-07-10")]
+    cap = capacity(members, CFG)
+    creation = project(cap, members, AS_OF, 30)
+    assert creation.heads[0] == 2  # 2026-07-01
+    assert creation.heads[9] == 2  # 2026-07-10, the last day
+    assert creation.heads[10] == 1  # 2026-07-11
+
+
+def test_departures_of_a_member_still_ramping_are_counted_over_the_whole_horizon():
+    members = [ae("B", "2026-06-20")]
+    cfg = replace(CFG, attrition=Decimal("0.02"))
+    cap = capacity(members, cfg)
+    days = 90
+    creation = project(cap, members, AS_OF, days)
+    s = Decimal(0.98 ** (1 / float(DAYS_PER_AE_MONTH)))
+    assert abs(sum(creation.departures) - (1 - s**days)) < Decimal("1e-12")

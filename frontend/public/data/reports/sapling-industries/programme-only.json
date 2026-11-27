@@ -3252,97 +3252,97 @@
         "ramped": "32.81"
       },
       {
-        "departures": "0.16",
+        "departures": "0.32",
         "headcount_target": 45,
-        "heads": "22.8",
+        "heads": "43.7",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2026-09",
         "ramped": "32.52"
       },
       {
-        "departures": "0.17",
+        "departures": "0.32",
         "headcount_target": 45,
-        "heads": "22.7",
+        "heads": "43.4",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2026-10",
         "ramped": "34.26"
       },
       {
-        "departures": "0.17",
+        "departures": "0.31",
         "headcount_target": 45,
-        "heads": "23.5",
+        "heads": "43.1",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2026-11",
         "ramped": "36.17"
       },
       {
-        "departures": "0.17",
+        "departures": "0.32",
         "headcount_target": 45,
-        "heads": "23.3",
+        "heads": "42.7",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2026-12",
         "ramped": "35.89"
       },
       {
-        "departures": "0.20",
+        "departures": "0.32",
         "headcount_target": 45,
-        "heads": "27.0",
+        "heads": "42.4",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2027-01",
         "ramped": "37.03"
       },
       {
-        "departures": "0.18",
+        "departures": "0.28",
         "headcount_target": null,
-        "heads": "26.8",
+        "heads": "42.1",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2027-02",
         "ramped": "38.63"
       },
       {
-        "departures": "0.20",
+        "departures": "0.31",
         "headcount_target": null,
-        "heads": "26.6",
+        "heads": "41.8",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2027-03",
         "ramped": "38.32"
       },
       {
-        "departures": "0.22",
+        "departures": "0.30",
         "headcount_target": null,
-        "heads": "32.1",
+        "heads": "41.5",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2027-04",
         "ramped": "38.96"
       },
       {
-        "departures": "0.24",
+        "departures": "0.31",
         "headcount_target": null,
-        "heads": "31.8",
+        "heads": "41.2",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2027-05",
         "ramped": "39.74"
       },
       {
-        "departures": "0.23",
+        "departures": "0.30",
         "headcount_target": null,
-        "heads": "31.6",
+        "heads": "40.9",
         "heads_with_plan": null,
         "kind": "forward",
         "month": "2027-06",
         "ramped": "40.72"
       },
       {
-        "departures": "0.29",
+        "departures": "0.30",
         "headcount_target": null,
         "heads": "40.6",
         "heads_with_plan": null,
