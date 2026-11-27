@@ -108,6 +108,13 @@ jobs:
       - name: Install Node deps
         run: cd frontend && npm ci
 
+      # Wheels are checked against the sha256 in pyodide's own lock before use, so a cache can only save a download.
+      - name: Cache the plan editor's wheels
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules/.cache/editor-wheels
+          key: editor-wheels-${{ hashFiles('frontend/package-lock.json') }}
+
       - name: Install Chromium
         run: cd frontend && npx playwright install --with-deps chromium
 

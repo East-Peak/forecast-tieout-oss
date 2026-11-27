@@ -65,6 +65,16 @@ $58,325,013 and closes $235,289 of the gap, at a cash cost of $791,071 over the 
 twelve months. A scenario is chosen with the selector in the header or `?scenario=` in
 the address.
 
+## Your own plan (desktop only)
+
+At desktop widths, the Plan screen has a fifth choice, "Your plan": a form of hires and
+programs that starts from the company's demo plan. Apply computes a complete report for
+it in your browser, with the same Python core that wrote the committed reports (Pyodide in
+a web worker), and every screen then shows it, marked as your plan. The first time costs
+a download of about 10 MB gzipped (17 MB raw) from this site and a few seconds of start-up;
+nothing is fetched before you open the choice, nothing comes from another site, and
+nothing is stored or sent. On a phone the choice is absent.
+
 ## Run the app
 
 ```bash
@@ -149,6 +159,7 @@ Install `engine/requirements-dev.txt` first, so the linter and test runner match
 python -m pytest engine/tests/ -n auto                                  # the core, the generators, the report contract
 python -m engine.scripts.generate_data_v2 --verify              # the demo data is what the generator writes
 python -m engine.scripts.generate_app_reports --verify          # the committed reports are what the core writes
+python -m engine.scripts.generate_editor_fixture --verify       # the plan editor's expected result is what a native run writes
 ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py
 cd frontend
 npx tsc --noEmit

@@ -88,6 +88,32 @@ Trust). It has no server and no arithmetic.
   read as the company.
 - `generated/`: types written from the report schema; not edited by hand.
 
+## The plan editor (desktop only)
+
+The same core runs in the browser. `report.build_report` is `prepare` (everything a plan
+does not change: the fit, back-test, forecasts, ranges, gap, capacity, actions) and
+`finish` (the plan section, the self-checks, the assembly), joined by a typed `Prepared`
+record; `finish` changes nothing in it, so one preparation serves any number of plans.
+`tieout_core/editor.py` is the entry: `open_company` prepares a company, `apply_plan`
+takes a plan as parsed data (never a path), finishes it, validates the report against the
+contract in Python, and returns the report text exactly as the generator serializes it,
+the contract's findings and the comparison row against as-signed from `comparison.py`.
+The generator's constants and serializer live there too.
+
+`npm run build` first runs `scripts/build-editor-assets.mjs` (Node only, no Python):
+Pyodide's files from the pinned `pyodide` package, the wheels the core needs (sha256-checked
+against the package's lock), `core.zip` and one zip per company's inputs, written to
+`public/editor/<content hash>/` (ignored by git; cached for a year by `vercel.json` because
+the folder is named by its contents). `src/editor/worker.ts` loads them from the site itself
+and is started by `PlanEditorClient` only when "Your plan" is first opened and the window
+is at least as wide as the large breakpoint. A failed download never rejects and a dead worker
+never answers, so the client bounds start-up (60 s) and each Apply (30 s), fails the request in
+hand, ends the worker and starts a new one for the next request; answers carry request ids and a
+stale one is ignored. `?editorTimeout=short` is a test hook that lets the first start-up take
+three seconds. The session treats scenario `your-plan` like any other (same identity and schema
+checks; the core's comparison row joins the file's rows), the visitor's plan is kept in memory
+only, and the choice is never remembered for the next visit.
+
 ## What keeps it honest
 
 1. The binding rule: a number on a screen is a binding to a report path, or it is not on
@@ -101,7 +127,9 @@ Trust). It has no server and no arithmetic.
    software-correct verdict is yes.
 4. CI runs the Python tests, ruff on the core and the generators, both `--verify`
    commands, `tsc --noEmit`, `npm run verify` (knip dead-code check and the unit tests),
-   the build, and a Playwright smoke run against the built site.
+   the build (which also writes the plan editor's assets), and a Playwright smoke run against the built
+   site, including the plan editor in a real browser: its reports are byte for byte the committed ones
+   for the demo plan's items and equal to a native run for an edited plan (`generate_editor_fixture`).
 
 ## Retired
 
