@@ -1,0 +1,4317 @@
+{
+  "$defs": {
+    "BetterVerdict": {
+      "enum": [
+        "yes",
+        "no",
+        "not enough history to say"
+      ]
+    },
+    "Check": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "$ref": "#/$defs/Text"
+        },
+        "name": {
+          "$ref": "#/$defs/Text"
+        },
+        "passed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "passed",
+        "detail"
+      ],
+      "type": "object"
+    },
+    "Date": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "type": "string"
+    },
+    "Decimal": {
+      "pattern": "^-?\\d+(\\.\\d+)?$",
+      "type": "string"
+    },
+    "Money": {
+      "pattern": "^-?\\d+\\.\\d{2}$",
+      "type": "string"
+    },
+    "MoneyRange": {
+      "items": {
+        "$ref": "#/$defs/Money"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "Month": {
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+      "type": "string"
+    },
+    "Quarter": {
+      "pattern": "^Q[1-4]FY\\d{2}$",
+      "type": "string"
+    },
+    "Text": {
+      "type": "string"
+    }
+  },
+  "$id": "https://forecast-tieout.example/schema/report-1.0.0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "else": {
+        "properties": {
+          "actions": {
+            "not": {
+              "required": [
+                "unavailable"
+              ]
+            }
+          },
+          "gap": {
+            "properties": {
+              "fiscal_year": {
+                "properties": {
+                  "expected": {
+                    "$ref": "#/$defs/Money"
+                  }
+                }
+              }
+            }
+          },
+          "plan": {
+            "not": {
+              "required": [
+                "unavailable"
+              ]
+            }
+          },
+          "required_pipeline": {
+            "not": {
+              "required": [
+                "unavailable"
+              ]
+            }
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "forecasts": {
+            "properties": {
+              "methods": {
+                "contains": {
+                  "properties": {
+                    "available": {
+                      "const": false
+                    },
+                    "method": {
+                      "const": "fitted model"
+                    }
+                  },
+                  "required": [
+                    "method",
+                    "available"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "methods"
+            ]
+          }
+        },
+        "required": [
+          "forecasts"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actions": {
+            "required": [
+              "unavailable"
+            ]
+          },
+          "forecasts": {
+            "properties": {
+              "fitted_ranges": {
+                "properties": {
+                  "status": {
+                    "pattern": "^unavailable: "
+                  }
+                }
+              }
+            }
+          },
+          "gap": {
+            "properties": {
+              "fiscal_year": {
+                "properties": {
+                  "expected": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          },
+          "plan": {
+            "required": [
+              "unavailable"
+            ]
+          },
+          "required_pipeline": {
+            "required": [
+              "unavailable"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "description": "report.json written by `python -m engine.tieout_core report`.",
+  "properties": {
+    "actions": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "unavailable": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "unavailable"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "close_the_fiscal_year_gap": {
+              "additionalProperties": false,
+              "properties": {
+                "basis": {
+                  "$ref": "#/$defs/Text"
+                },
+                "fiscal_year_gap": {
+                  "$ref": "#/$defs/Money"
+                },
+                "hires": {
+                  "oneOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "bound": {
+                          "type": "integer"
+                        },
+                        "bound_basis": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "cash_cost_in_twelve_months": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/Money"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "cost_status": {
+                          "enum": [
+                            "entered",
+                            "cost not entered"
+                          ]
+                        },
+                        "count": {
+                          "anyOf": [
+                            {
+                              "type": "integer"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "fiscal_year_bookings_one_fewer": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/Money"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "fiscal_year_bookings_with": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "outcome": {
+                          "enum": [
+                            "already covered",
+                            "feasible",
+                            "unreachable"
+                          ]
+                        },
+                        "overshoot": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/Money"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "outcome",
+                        "count",
+                        "overshoot",
+                        "fiscal_year_bookings_with",
+                        "fiscal_year_bookings_one_fewer",
+                        "bound",
+                        "bound_basis",
+                        "cash_cost_in_twelve_months",
+                        "cost_status"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "count": {
+                          "type": "null"
+                        },
+                        "note": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "outcome": {
+                          "$ref": "#/$defs/Text"
+                        }
+                      },
+                      "required": [
+                        "outcome",
+                        "count",
+                        "note"
+                      ],
+                      "type": "object"
+                    }
+                  ]
+                },
+                "programme": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cap": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "cap_rule": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "cash_cost_in_twelve_months": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "cost_status": {
+                      "enum": [
+                        "entered",
+                        "cost not entered"
+                      ]
+                    },
+                    "dollars": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fiscal_year_bookings_with": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "needed_but_over_the_cap": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "outcome": {
+                      "enum": [
+                        "already covered",
+                        "feasible",
+                        "unreachable"
+                      ]
+                    },
+                    "overshoot": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "share_booking_in_fiscal_year": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "outcome",
+                    "dollars",
+                    "needed_but_over_the_cap",
+                    "cap",
+                    "cap_rule",
+                    "fiscal_year_bookings_with",
+                    "overshoot",
+                    "share_booking_in_fiscal_year",
+                    "cash_cost_in_twelve_months",
+                    "cost_status"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "fiscal_year_gap",
+                "basis",
+                "hires",
+                "programme"
+              ],
+              "type": "object"
+            },
+            "comparison": {
+              "items": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "bookings_gained": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "next twelve months": {
+                            "$ref": "#/$defs/Money"
+                          },
+                          "rest of fiscal year": {
+                            "$ref": "#/$defs/Money"
+                          }
+                        },
+                        "required": [
+                          "rest of fiscal year",
+                          "next twelve months"
+                        ],
+                        "type": "object"
+                      },
+                      "cash_cost_in_twelve_months": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "cost_status": {
+                        "enum": [
+                          "entered",
+                          "cost not entered"
+                        ]
+                      },
+                      "gain_per_dollar": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "kind": {
+                        "enum": [
+                          "hire",
+                          "programme"
+                        ]
+                      },
+                      "not_ranked_because": {
+                        "anyOf": [
+                          {
+                            "const": "cost not entered"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "rank": {
+                        "anyOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "starts_paying": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Month"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "status": {
+                        "const": "valued"
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "kind",
+                      "not_ranked_because",
+                      "status",
+                      "bookings_gained",
+                      "starts_paying",
+                      "cash_cost_in_twelve_months",
+                      "cost_status",
+                      "gain_per_dollar",
+                      "rank"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "bookings_gained": {
+                        "type": "null"
+                      },
+                      "cash_cost_in_twelve_months": {
+                        "type": "null"
+                      },
+                      "gain_per_dollar": {
+                        "type": "null"
+                      },
+                      "kind": {
+                        "enum": [
+                          "hire",
+                          "programme"
+                        ]
+                      },
+                      "not_ranked_because": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "rank": {
+                        "type": "null"
+                      },
+                      "starts_paying": {
+                        "type": "null"
+                      },
+                      "status": {
+                        "pattern": "^(?!valued$)",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "kind",
+                      "not_ranked_because",
+                      "status",
+                      "bookings_gained",
+                      "starts_paying",
+                      "cash_cost_in_twelve_months",
+                      "gain_per_dollar",
+                      "rank"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "definition": {
+              "$ref": "#/$defs/Text"
+            },
+            "meaning": {
+              "$ref": "#/$defs/Text"
+            },
+            "programme_shape": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "definition",
+            "programme_shape",
+            "comparison",
+            "close_the_fiscal_year_gap",
+            "meaning"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "backtest": {
+      "additionalProperties": false,
+      "properties": {
+        "candidates": {
+          "additionalProperties": false,
+          "properties": {
+            "recency": {
+              "additionalProperties": false,
+              "properties": {
+                "adopted": {
+                  "type": "boolean"
+                },
+                "candidate": {
+                  "$ref": "#/$defs/Text"
+                },
+                "fit_in_use": {
+                  "$ref": "#/$defs/Text"
+                },
+                "folds": {
+                  "additionalProperties": {
+                    "type": "integer"
+                  },
+                  "type": "object"
+                },
+                "incumbent": {
+                  "$ref": "#/$defs/Text"
+                },
+                "mean_absolute_error": {
+                  "additionalProperties": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "type": "object"
+                  },
+                  "type": "object"
+                },
+                "reason": {
+                  "$ref": "#/$defs/Text"
+                },
+                "rule": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "rule",
+                "incumbent",
+                "candidate",
+                "mean_absolute_error",
+                "folds",
+                "adopted",
+                "reason",
+                "fit_in_use"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "recency"
+          ],
+          "type": "object"
+        },
+        "folds": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "actual": {
+                "$ref": "#/$defs/Decimal"
+              },
+              "cutoff": {
+                "$ref": "#/$defs/Date"
+              },
+              "forecasts": {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              "horizon_months": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "cutoff",
+              "horizon_months",
+              "actual",
+              "forecasts"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "horizons": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "folds": {
+                "type": "integer"
+              },
+              "horizon_months": {
+                "type": "integer"
+              },
+              "mean_absolute_error": {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              "range_coverage": {
+                "additionalProperties": false,
+                "properties": {
+                  "80%": {
+                    "anyOf": [
+                      {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "95%": {
+                    "anyOf": [
+                      {
+                        "maximum": 1,
+                        "minimum": 0,
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "folds_with_a_range": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "folds_with_a_range",
+                  "80%",
+                  "95%"
+                ],
+                "type": "object"
+              },
+              "signed_bias": {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "horizon_months",
+              "folds",
+              "mean_absolute_error",
+              "signed_bias",
+              "range_coverage"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "notes": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "type": "array"
+        },
+        "reason": {
+          "$ref": "#/$defs/Text"
+        },
+        "scoring": {
+          "$ref": "#/$defs/Text"
+        },
+        "verdict": {
+          "$ref": "#/$defs/BetterVerdict"
+        }
+      },
+      "required": [
+        "scoring",
+        "horizons",
+        "folds",
+        "notes",
+        "verdict",
+        "reason",
+        "candidates"
+      ],
+      "type": "object"
+    },
+    "forecasts": {
+      "additionalProperties": false,
+      "properties": {
+        "fitted_ranges": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "by_window": {
+                  "additionalProperties": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "mean": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "median": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "range80": {
+                        "$ref": "#/$defs/MoneyRange"
+                      },
+                      "range95": {
+                        "$ref": "#/$defs/MoneyRange"
+                      }
+                    },
+                    "required": [
+                      "mean",
+                      "median",
+                      "range80",
+                      "range95"
+                    ],
+                    "type": "object"
+                  },
+                  "propertyNames": {
+                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                  },
+                  "type": "object"
+                },
+                "cells": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "coverage80": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "coverage95": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "coverage_judgement": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "folds_with_a_range": {
+                        "type": "integer"
+                      },
+                      "horizon_months": {
+                        "type": "integer"
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "median_width80": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "horizon_months",
+                      "folds_with_a_range",
+                      "coverage80",
+                      "coverage95",
+                      "median_width80",
+                      "label",
+                      "coverage_judgement"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "horizons": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "mean": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "median": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "range80": {
+                          "$ref": "#/$defs/MoneyRange"
+                        },
+                        "range95": {
+                          "$ref": "#/$defs/MoneyRange"
+                        },
+                        "status": {
+                          "$ref": "#/$defs/Text"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "mean",
+                        "median",
+                        "range80",
+                        "range95"
+                      ],
+                      "type": "object"
+                    },
+                    "rest of fiscal year": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "mean": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "median": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "range80": {
+                          "$ref": "#/$defs/MoneyRange"
+                        },
+                        "range95": {
+                          "$ref": "#/$defs/MoneyRange"
+                        },
+                        "status": {
+                          "$ref": "#/$defs/Text"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "mean",
+                        "median",
+                        "range80",
+                        "range95"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "status": {
+                  "pattern": "^(?!unavailable: )",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "status",
+                "cells",
+                "by_window",
+                "horizons"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "by_window": {
+                  "maxProperties": 0,
+                  "type": "object"
+                },
+                "cells": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "coverage80": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "coverage95": {
+                        "anyOf": [
+                          {
+                            "maximum": 1,
+                            "minimum": 0,
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "coverage_judgement": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "folds_with_a_range": {
+                        "type": "integer"
+                      },
+                      "horizon_months": {
+                        "type": "integer"
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "median_width80": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "horizon_months",
+                      "folds_with_a_range",
+                      "coverage80",
+                      "coverage95",
+                      "median_width80",
+                      "label",
+                      "coverage_judgement"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "horizons": {
+                  "maxProperties": 0,
+                  "type": "object"
+                },
+                "status": {
+                  "pattern": "^unavailable: ",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "status",
+                "cells",
+                "by_window",
+                "horizons"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "horizon_windows": {
+          "additionalProperties": false,
+          "properties": {
+            "next twelve months": {
+              "items": {
+                "$ref": "#/$defs/Month"
+              },
+              "type": "array"
+            },
+            "rest of fiscal year": {
+              "items": {
+                "$ref": "#/$defs/Month"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "rest of fiscal year",
+            "next twelve months"
+          ],
+          "type": "object"
+        },
+        "methods": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "assumptions": {
+                    "items": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "type": "array"
+                  },
+                  "available": {
+                    "const": true
+                  },
+                  "by_window": {
+                    "additionalProperties": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "propertyNames": {
+                      "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                    },
+                    "type": "object"
+                  },
+                  "components": {
+                    "additionalProperties": {
+                      "additionalProperties": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "propertyNames": {
+                        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                      },
+                      "type": "object"
+                    },
+                    "type": "object"
+                  },
+                  "horizons": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "next twelve months": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "rest of fiscal year": {
+                        "$ref": "#/$defs/Money"
+                      }
+                    },
+                    "required": [
+                      "rest of fiscal year",
+                      "next twelve months"
+                    ],
+                    "type": "object"
+                  },
+                  "method": {
+                    "enum": [
+                      "trailing run-rate",
+                      "stage-weighted pipeline",
+                      "fitted model"
+                    ]
+                  },
+                  "unavailable_reason": {
+                    "const": ""
+                  }
+                },
+                "required": [
+                  "method",
+                  "components",
+                  "assumptions",
+                  "available",
+                  "unavailable_reason",
+                  "by_window",
+                  "horizons"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "assumptions": {
+                    "items": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "type": "array"
+                  },
+                  "available": {
+                    "const": false
+                  },
+                  "by_window": {
+                    "maxProperties": 0,
+                    "type": "object"
+                  },
+                  "components": {
+                    "additionalProperties": {
+                      "additionalProperties": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "propertyNames": {
+                        "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                      },
+                      "type": "object"
+                    },
+                    "type": "object"
+                  },
+                  "horizons": {
+                    "maxProperties": 0,
+                    "type": "object"
+                  },
+                  "method": {
+                    "enum": [
+                      "trailing run-rate",
+                      "stage-weighted pipeline",
+                      "fitted model"
+                    ]
+                  },
+                  "unavailable_reason": {
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "method",
+                  "components",
+                  "assumptions",
+                  "available",
+                  "unavailable_reason",
+                  "by_window",
+                  "horizons"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        },
+        "windows": {
+          "items": {
+            "$ref": "#/$defs/Month"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "windows",
+        "horizon_windows",
+        "methods",
+        "fitted_ranges"
+      ],
+      "type": "object"
+    },
+    "gap": {
+      "additionalProperties": false,
+      "properties": {
+        "fiscal_year": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "actual_to_date": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "expected": {
+                  "$ref": "#/$defs/Money"
+                },
+                "expected_range80": {
+                  "$ref": "#/$defs/MoneyRange"
+                },
+                "expected_range95": {
+                  "$ref": "#/$defs/MoneyRange"
+                },
+                "forecast_rest_of_year": {
+                  "$ref": "#/$defs/Money"
+                },
+                "gap": {
+                  "$ref": "#/$defs/Money"
+                },
+                "target": {
+                  "$ref": "#/$defs/Decimal"
+                }
+              },
+              "required": [
+                "target",
+                "actual_to_date",
+                "forecast_rest_of_year",
+                "expected",
+                "gap",
+                "expected_range80",
+                "expected_range95"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "actual_to_date": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "expected": {
+                  "type": "null"
+                },
+                "expected_range80": {
+                  "type": "null"
+                },
+                "expected_range95": {
+                  "type": "null"
+                },
+                "forecast_rest_of_year": {
+                  "type": "null"
+                },
+                "gap": {
+                  "type": "null"
+                },
+                "target": {
+                  "$ref": "#/$defs/Decimal"
+                }
+              },
+              "required": [
+                "target",
+                "actual_to_date",
+                "forecast_rest_of_year",
+                "expected",
+                "gap",
+                "expected_range80",
+                "expected_range95"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "forecast_method": {
+          "$ref": "#/$defs/Text"
+        },
+        "lever": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "bookings_gained": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "bookings_gained_at": {
+                  "$ref": "#/$defs/Text"
+                },
+                "cap": {
+                  "$ref": "#/$defs/Money"
+                },
+                "cap_rule": {
+                  "$ref": "#/$defs/Text"
+                },
+                "forecast_with_lever": {
+                  "$ref": "#/$defs/Money"
+                },
+                "forecast_without_lever": {
+                  "$ref": "#/$defs/Money"
+                },
+                "headline": {
+                  "$ref": "#/$defs/Text"
+                },
+                "lever": {
+                  "$ref": "#/$defs/Text"
+                },
+                "meaning": {
+                  "$ref": "#/$defs/Text"
+                },
+                "note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "outcome": {
+                  "enum": [
+                    "already covered",
+                    "feasible",
+                    "unreachable within bounds"
+                  ]
+                },
+                "required": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "schedule": {
+                  "$ref": "#/$defs/Text"
+                },
+                "target": {
+                  "$ref": "#/$defs/Decimal"
+                }
+              },
+              "required": [
+                "lever",
+                "outcome",
+                "headline",
+                "required",
+                "cap",
+                "cap_rule",
+                "schedule",
+                "forecast_without_lever",
+                "forecast_with_lever",
+                "target",
+                "bookings_gained",
+                "bookings_gained_at",
+                "meaning"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "headline": {
+                  "const": "unavailable"
+                },
+                "lever": {
+                  "$ref": "#/$defs/Text"
+                },
+                "meaning": {
+                  "$ref": "#/$defs/Text"
+                },
+                "outcome": {
+                  "const": "unavailable"
+                },
+                "reason": {
+                  "$ref": "#/$defs/Text"
+                },
+                "target": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "lever",
+                "outcome",
+                "headline",
+                "reason",
+                "target",
+                "meaning"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "headline": {
+                  "$ref": "#/$defs/Text"
+                },
+                "lever": {
+                  "$ref": "#/$defs/Text"
+                },
+                "outcome": {
+                  "const": "no target in this window"
+                },
+                "reason": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "lever",
+                "outcome",
+                "headline",
+                "reason"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "lever_next_twelve_months": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "bookings_gained": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "bookings_gained_at": {
+                  "$ref": "#/$defs/Text"
+                },
+                "cap": {
+                  "$ref": "#/$defs/Money"
+                },
+                "cap_rule": {
+                  "$ref": "#/$defs/Text"
+                },
+                "forecast_with_lever": {
+                  "$ref": "#/$defs/Money"
+                },
+                "forecast_without_lever": {
+                  "$ref": "#/$defs/Money"
+                },
+                "headline": {
+                  "$ref": "#/$defs/Text"
+                },
+                "lever": {
+                  "$ref": "#/$defs/Text"
+                },
+                "meaning": {
+                  "$ref": "#/$defs/Text"
+                },
+                "note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "outcome": {
+                  "enum": [
+                    "already covered",
+                    "feasible",
+                    "unreachable within bounds"
+                  ]
+                },
+                "required": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "schedule": {
+                  "$ref": "#/$defs/Text"
+                },
+                "target": {
+                  "$ref": "#/$defs/Decimal"
+                }
+              },
+              "required": [
+                "lever",
+                "outcome",
+                "headline",
+                "required",
+                "cap",
+                "cap_rule",
+                "schedule",
+                "forecast_without_lever",
+                "forecast_with_lever",
+                "target",
+                "bookings_gained",
+                "bookings_gained_at",
+                "meaning"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "headline": {
+                  "const": "unavailable"
+                },
+                "lever": {
+                  "$ref": "#/$defs/Text"
+                },
+                "meaning": {
+                  "$ref": "#/$defs/Text"
+                },
+                "outcome": {
+                  "const": "unavailable"
+                },
+                "reason": {
+                  "$ref": "#/$defs/Text"
+                },
+                "target": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "lever",
+                "outcome",
+                "headline",
+                "reason",
+                "target",
+                "meaning"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "headline": {
+                  "$ref": "#/$defs/Text"
+                },
+                "lever": {
+                  "$ref": "#/$defs/Text"
+                },
+                "outcome": {
+                  "const": "no target in this window"
+                },
+                "reason": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "lever",
+                "outcome",
+                "headline",
+                "reason"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "measure": {
+          "$ref": "#/$defs/Text"
+        },
+        "next_twelve_months": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "actual": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "forecast": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "gap": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "quarters": {
+                  "items": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "type": "array"
+                },
+                "target": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "targets_through": {
+                  "$ref": "#/$defs/Date"
+                },
+                "untargeted": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "forecast": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "months": {
+                      "items": {
+                        "$ref": "#/$defs/Month"
+                      },
+                      "type": "array"
+                    },
+                    "note": {
+                      "$ref": "#/$defs/Text"
+                    }
+                  },
+                  "required": [
+                    "months",
+                    "forecast",
+                    "note"
+                  ],
+                  "type": "object"
+                },
+                "window": {
+                  "items": {
+                    "$ref": "#/$defs/Month"
+                  },
+                  "maxItems": 2,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "window",
+                "targets_through",
+                "quarters",
+                "target",
+                "actual",
+                "forecast",
+                "gap",
+                "untargeted"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "actual": {
+                  "type": "null"
+                },
+                "forecast": {
+                  "type": "null"
+                },
+                "gap": {
+                  "type": "null"
+                },
+                "quarters": {
+                  "items": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "type": "array"
+                },
+                "target": {
+                  "type": "null"
+                },
+                "targets_through": {
+                  "type": "null"
+                },
+                "untargeted": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "forecast": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Money"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "months": {
+                      "items": {
+                        "$ref": "#/$defs/Month"
+                      },
+                      "type": "array"
+                    },
+                    "note": {
+                      "$ref": "#/$defs/Text"
+                    }
+                  },
+                  "required": [
+                    "months",
+                    "forecast",
+                    "note"
+                  ],
+                  "type": "object"
+                },
+                "window": {
+                  "items": {
+                    "$ref": "#/$defs/Month"
+                  },
+                  "maxItems": 2,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "window",
+                "targets_through",
+                "quarters",
+                "target",
+                "actual",
+                "forecast",
+                "gap",
+                "untargeted"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "quarters": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "actual": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "expected": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "expected_range80": {
+                    "$ref": "#/$defs/MoneyRange"
+                  },
+                  "forecast": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "gap": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "quarter": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "status": {
+                    "enum": [
+                      "closed",
+                      "in progress",
+                      "not started"
+                    ]
+                  },
+                  "target": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "quarter",
+                  "status",
+                  "target",
+                  "actual",
+                  "forecast",
+                  "expected",
+                  "gap",
+                  "expected_range80"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "actual": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "expected": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "expected_range80": {
+                    "type": "null"
+                  },
+                  "forecast": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "gap": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "quarter": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "status": {
+                    "enum": [
+                      "closed",
+                      "in progress",
+                      "not started"
+                    ]
+                  },
+                  "target": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "quarter",
+                  "status",
+                  "target",
+                  "actual",
+                  "forecast",
+                  "expected",
+                  "gap",
+                  "expected_range80"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "measure",
+        "forecast_method",
+        "quarters",
+        "fiscal_year",
+        "next_twelve_months",
+        "lever",
+        "lever_next_twelve_months"
+      ],
+      "type": "object"
+    },
+    "history": {
+      "additionalProperties": false,
+      "properties": {
+        "facts": {
+          "additionalProperties": false,
+          "properties": {
+            "backtest_folds": {
+              "additionalProperties": {
+                "type": "integer"
+              },
+              "type": "object"
+            },
+            "closed_outcomes": {
+              "type": "integer"
+            },
+            "deal_observations": {
+              "type": "boolean"
+            },
+            "earliest_close": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Date"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "first_deal_created": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Date"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "matured_snapshots": {
+              "type": "integer"
+            },
+            "months_of_history": {
+              "type": "integer"
+            },
+            "new_business_deals": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "first_deal_created",
+            "months_of_history",
+            "new_business_deals",
+            "closed_outcomes",
+            "earliest_close",
+            "deal_observations",
+            "matured_snapshots",
+            "backtest_folds"
+          ],
+          "type": "object"
+        },
+        "limitations": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "facts",
+        "limitations"
+      ],
+      "type": "object"
+    },
+    "inputs": {
+      "additionalProperties": false,
+      "properties": {
+        "as_of": {
+          "$ref": "#/$defs/Date"
+        },
+        "capacity": {
+          "additionalProperties": false,
+          "properties": {
+            "decision": {
+              "enum": [
+                "adopted",
+                "not shown",
+                "unavailable"
+              ]
+            },
+            "forecast_uses": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "decision",
+            "forecast_uses"
+          ],
+          "type": "object"
+        },
+        "data": {
+          "$ref": "#/$defs/Text"
+        },
+        "fiscal_year": {
+          "$ref": "#/$defs/Text"
+        },
+        "fiscal_year_end": {
+          "$ref": "#/$defs/Date"
+        },
+        "fiscal_year_start": {
+          "$ref": "#/$defs/Date"
+        },
+        "fit": {
+          "$ref": "#/$defs/Text"
+        },
+        "measure": {
+          "$ref": "#/$defs/Text"
+        },
+        "profile": {
+          "$ref": "#/$defs/Text"
+        },
+        "ranges": {
+          "$ref": "#/$defs/Text"
+        },
+        "simulation": {
+          "additionalProperties": false,
+          "properties": {
+            "draws": {
+              "type": "integer"
+            },
+            "seed": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "draws",
+            "seed"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "profile",
+        "data",
+        "as_of",
+        "fiscal_year",
+        "fiscal_year_start",
+        "fiscal_year_end",
+        "measure",
+        "fit",
+        "ranges",
+        "simulation",
+        "capacity"
+      ],
+      "type": "object"
+    },
+    "plan": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "unavailable": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "unavailable"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "baseline": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            },
+            "baseline_definition": {
+              "$ref": "#/$defs/Text"
+            },
+            "cash_cost_in_twelve_months": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Money"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "contributions_total": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            },
+            "cost_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "difference": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            },
+            "file": {
+              "$ref": "#/$defs/Text"
+            },
+            "gap": {
+              "additionalProperties": false,
+              "properties": {
+                "fiscal_year": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "actual_to_date": {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    "baseline_gap": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "gap_with_plan": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "target": {
+                      "$ref": "#/$defs/Decimal"
+                    }
+                  },
+                  "required": [
+                    "target",
+                    "actual_to_date",
+                    "baseline_gap",
+                    "gap_with_plan"
+                  ],
+                  "type": "object"
+                },
+                "next_twelve_months": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "actual_to_date": {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        "baseline_gap": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "gap_with_plan": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "note": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "target": {
+                          "$ref": "#/$defs/Decimal"
+                        }
+                      },
+                      "required": [
+                        "target",
+                        "actual_to_date",
+                        "baseline_gap",
+                        "gap_with_plan",
+                        "note"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "fiscal_year",
+                "next_twelve_months"
+              ],
+              "type": "object"
+            },
+            "items": {
+              "items": {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cash_cost_in_twelve_months": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "cash_cost_total": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "contribution": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "next twelve months": {
+                            "$ref": "#/$defs/Money"
+                          },
+                          "rest of fiscal year": {
+                            "$ref": "#/$defs/Money"
+                          }
+                        },
+                        "required": [
+                          "rest of fiscal year",
+                          "next twelve months"
+                        ],
+                        "type": "object"
+                      },
+                      "detail": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "kind": {
+                        "const": "hires"
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "valued": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "label",
+                      "detail",
+                      "valued",
+                      "contribution",
+                      "cash_cost_in_twelve_months",
+                      "cash_cost_total"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cash_cost_in_twelve_months": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "cash_cost_total": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "contribution": {
+                        "type": "null"
+                      },
+                      "detail": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "kind": {
+                        "const": "hires"
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "note": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "valued": {
+                        "const": false
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "label",
+                      "detail",
+                      "valued",
+                      "note",
+                      "contribution",
+                      "cash_cost_in_twelve_months",
+                      "cash_cost_total"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cash_cost_in_twelve_months": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "cash_cost_total": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "contribution": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "next twelve months": {
+                            "$ref": "#/$defs/Money"
+                          },
+                          "rest of fiscal year": {
+                            "$ref": "#/$defs/Money"
+                          }
+                        },
+                        "required": [
+                          "rest of fiscal year",
+                          "next twelve months"
+                        ],
+                        "type": "object"
+                      },
+                      "detail": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "kind": {
+                        "const": "programme"
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "payment_schedule": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "valued": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "label",
+                      "detail",
+                      "valued",
+                      "contribution",
+                      "cash_cost_in_twelve_months",
+                      "cash_cost_total",
+                      "payment_schedule"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "order": {
+              "$ref": "#/$defs/Text"
+            },
+            "ranges": {
+              "additionalProperties": false,
+              "properties": {
+                "bookings_in_window": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "median": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "range80": {
+                          "$ref": "#/$defs/MoneyRange"
+                        },
+                        "range95": {
+                          "$ref": "#/$defs/MoneyRange"
+                        }
+                      },
+                      "required": [
+                        "median",
+                        "range80",
+                        "range95"
+                      ],
+                      "type": "object"
+                    },
+                    "rest of fiscal year": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "median": {
+                          "$ref": "#/$defs/Money"
+                        },
+                        "range80": {
+                          "$ref": "#/$defs/MoneyRange"
+                        },
+                        "range95": {
+                          "$ref": "#/$defs/MoneyRange"
+                        }
+                      },
+                      "required": [
+                        "median",
+                        "range80",
+                        "range95"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "draws": {
+                  "type": "integer"
+                },
+                "fiscal_year_expected_range80": {
+                  "$ref": "#/$defs/MoneyRange"
+                },
+                "status": {
+                  "$ref": "#/$defs/Text"
+                },
+                "what_is_drawn": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "status",
+                "bookings_in_window",
+                "fiscal_year_expected_range80",
+                "draws",
+                "what_is_drawn"
+              ],
+              "type": "object"
+            },
+            "with_plan": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "file",
+            "order",
+            "baseline_definition",
+            "items",
+            "baseline",
+            "with_plan",
+            "difference",
+            "contributions_total",
+            "gap",
+            "cash_cost_in_twelve_months",
+            "cost_note",
+            "ranges"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "quota_productivity": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "limits": {
+              "items": {
+                "$ref": "#/$defs/Text"
+              },
+              "type": "array"
+            },
+            "unavailable": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "unavailable",
+            "limits"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "all_reps": {
+              "additionalProperties": false,
+              "properties": {
+                "attainment": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "prorated_quota": {
+                  "$ref": "#/$defs/Money"
+                },
+                "reps": {
+                  "type": "integer"
+                },
+                "spread_across_reps": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "max": {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        "median": {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        "min": {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        "p25": {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        "p75": {
+                          "$ref": "#/$defs/Decimal"
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "p25",
+                        "median",
+                        "p75",
+                        "max"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "spread_reps": {
+                  "type": "integer"
+                },
+                "wins_credited": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "reps",
+                "prorated_quota",
+                "wins_credited",
+                "attainment",
+                "spread_across_reps",
+                "spread_reps"
+              ],
+              "type": "object"
+            },
+            "by_segment": {
+              "additionalProperties": {
+                "additionalProperties": false,
+                "properties": {
+                  "attainment": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "prorated_quota": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "reps": {
+                    "type": "integer"
+                  },
+                  "spread_across_reps": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "max": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "median": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "min": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "p25": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "p75": {
+                            "$ref": "#/$defs/Decimal"
+                          }
+                        },
+                        "required": [
+                          "min",
+                          "p25",
+                          "median",
+                          "p75",
+                          "max"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "spread_reps": {
+                    "type": "integer"
+                  },
+                  "wins_credited": {
+                    "$ref": "#/$defs/Money"
+                  }
+                },
+                "required": [
+                  "reps",
+                  "prorated_quota",
+                  "wins_credited",
+                  "attainment",
+                  "spread_across_reps",
+                  "spread_reps"
+                ],
+                "type": "object"
+              },
+              "type": "object"
+            },
+            "definition": {
+              "$ref": "#/$defs/Text"
+            },
+            "limits": {
+              "items": {
+                "$ref": "#/$defs/Text"
+              },
+              "type": "array"
+            },
+            "reps_without_quota": {
+              "type": "integer"
+            },
+            "spread_min_days": {
+              "type": "integer"
+            },
+            "total_quota": {
+              "additionalProperties": false,
+              "properties": {
+                "annual_quota_of_people_employed_at_as_of": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "fiscal_year_target": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "people": {
+                  "type": "integer"
+                },
+                "quota_over_target": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "annual_quota_of_people_employed_at_as_of",
+                "fiscal_year_target",
+                "quota_over_target",
+                "people",
+                "note"
+              ],
+              "type": "object"
+            },
+            "unattributed_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "window": {
+              "$ref": "#/$defs/Text"
+            },
+            "wins_credited": {
+              "$ref": "#/$defs/Money"
+            },
+            "wins_in_window": {
+              "$ref": "#/$defs/Money"
+            },
+            "wins_unattributed": {
+              "$ref": "#/$defs/Money"
+            }
+          },
+          "required": [
+            "window",
+            "definition",
+            "spread_min_days",
+            "by_segment",
+            "all_reps",
+            "wins_in_window",
+            "wins_credited",
+            "wins_unattributed",
+            "unattributed_note",
+            "reps_without_quota",
+            "total_quota",
+            "limits"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "rates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "cohort": {
+            "$ref": "#/$defs/Text"
+          },
+          "definition": {
+            "$ref": "#/$defs/Text"
+          },
+          "denominator": {
+            "$ref": "#/$defs/Text"
+          },
+          "horizon": {
+            "$ref": "#/$defs/Text"
+          },
+          "name": {
+            "$ref": "#/$defs/Text"
+          },
+          "numerator": {
+            "$ref": "#/$defs/Text"
+          },
+          "range95": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sample_size": {
+            "type": "integer"
+          },
+          "source": {
+            "$ref": "#/$defs/Text"
+          },
+          "value": {
+            "$ref": "#/$defs/Decimal"
+          }
+        },
+        "required": [
+          "name",
+          "value",
+          "definition",
+          "numerator",
+          "denominator",
+          "cohort",
+          "horizon",
+          "sample_size",
+          "source",
+          "range95"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "reconciliation": {
+      "additionalProperties": false,
+      "properties": {
+        "bookings_by_month": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Decimal"
+          },
+          "propertyNames": {
+            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+          },
+          "type": "object"
+        },
+        "bookings_fytd": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/Check"
+          },
+          "type": "array"
+        },
+        "excluded_motions": {
+          "additionalProperties": {
+            "additionalProperties": false,
+            "properties": {
+              "arr": {
+                "$ref": "#/$defs/Decimal"
+              },
+              "rows": {
+                "type": "integer"
+              },
+              "won_fytd_arr": {
+                "$ref": "#/$defs/Decimal"
+              }
+            },
+            "required": [
+              "rows",
+              "arr",
+              "won_fytd_arr"
+            ],
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "exclusions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "arr": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "deal_id": {
+                "$ref": "#/$defs/Text"
+              },
+              "reason": {
+                "$ref": "#/$defs/Text"
+              },
+              "row": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "row",
+              "deal_id",
+              "reason",
+              "arr"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "included_rows": {
+          "type": "integer"
+        },
+        "pipeline_flow": {
+          "additionalProperties": false,
+          "properties": {
+            "created": {
+              "additionalProperties": false,
+              "properties": {
+                "arr": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "count",
+                "arr"
+              ],
+              "type": "object"
+            },
+            "lost": {
+              "additionalProperties": false,
+              "properties": {
+                "arr": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "count",
+                "arr"
+              ],
+              "type": "object"
+            },
+            "open at as-of": {
+              "additionalProperties": false,
+              "properties": {
+                "arr": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "count",
+                "arr"
+              ],
+              "type": "object"
+            },
+            "open at fiscal-year start": {
+              "additionalProperties": false,
+              "properties": {
+                "arr": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "count",
+                "arr"
+              ],
+              "type": "object"
+            },
+            "won": {
+              "additionalProperties": false,
+              "properties": {
+                "arr": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "count",
+                "arr"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "open at fiscal-year start",
+            "created",
+            "won",
+            "lost",
+            "open at as-of"
+          ],
+          "type": "object"
+        },
+        "source_arr_total": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "source_rows": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "source_rows",
+        "source_arr_total",
+        "included_rows",
+        "bookings_by_month",
+        "bookings_fytd",
+        "excluded_motions",
+        "pipeline_flow",
+        "exclusions",
+        "checks"
+      ],
+      "type": "object"
+    },
+    "required_pipeline": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "unavailable": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "unavailable"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "cap": {
+              "$ref": "#/$defs/Money"
+            },
+            "cap_rule": {
+              "$ref": "#/$defs/Text"
+            },
+            "expected_basis": {
+              "$ref": "#/$defs/Text"
+            },
+            "fiscal_year": {
+              "additionalProperties": false,
+              "properties": {
+                "headline": {
+                  "$ref": "#/$defs/Text"
+                },
+                "name": {
+                  "$ref": "#/$defs/Text"
+                },
+                "quarters_remaining": {
+                  "type": "integer"
+                },
+                "single_spread": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "headline": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/Text"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "name": {
+                      "$ref": "#/$defs/Text"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "headline"
+                  ],
+                  "type": "object"
+                },
+                "solvable_quarters": {
+                  "items": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "type": "array"
+                },
+                "solvable_total": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "too_late_quarters": {
+                  "items": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "type": "array"
+                },
+                "unreachable_quarters": {
+                  "items": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "type": "array"
+                },
+                "why_they_differ": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "name",
+                "too_late_quarters",
+                "solvable_total",
+                "solvable_quarters",
+                "unreachable_quarters",
+                "quarters_remaining",
+                "headline",
+                "single_spread",
+                "why_they_differ"
+              ],
+              "type": "object"
+            },
+            "forward_function": {
+              "$ref": "#/$defs/Text"
+            },
+            "lead_time": {
+              "additionalProperties": false,
+              "properties": {
+                "basis": {
+                  "$ref": "#/$defs/Text"
+                },
+                "cents_booked_later": {
+                  "$ref": "#/$defs/Decimal"
+                },
+                "count_outcome": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "do_not_win": {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    "meaning": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "win_within_horizon": {
+                      "$ref": "#/$defs/Decimal"
+                    }
+                  },
+                  "required": [
+                    "meaning",
+                    "win_within_horizon",
+                    "do_not_win"
+                  ],
+                  "type": "object"
+                },
+                "created_between": {
+                  "items": {
+                    "$ref": "#/$defs/Date"
+                  },
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "type": "array"
+                },
+                "quarters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cents_booked_by_quarter_end": {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      "cents_booked_in_quarter": {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      "quarter": {
+                        "$ref": "#/$defs/Text"
+                      }
+                    },
+                    "required": [
+                      "quarter",
+                      "cents_booked_in_quarter",
+                      "cents_booked_by_quarter_end"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "question": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "question",
+                "basis",
+                "created_between",
+                "quarters",
+                "cents_booked_later",
+                "count_outcome"
+              ],
+              "type": "object"
+            },
+            "meaning": {
+              "$ref": "#/$defs/Text"
+            },
+            "method": {
+              "$ref": "#/$defs/Text"
+            },
+            "per_ramped_ae_month_label": {
+              "$ref": "#/$defs/Text"
+            },
+            "per_rep_rule": {
+              "additionalProperties": false,
+              "properties": {
+                "applies": {
+                  "type": "boolean"
+                },
+                "why": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "applies",
+                "why"
+              ],
+              "type": "object"
+            },
+            "quarters": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "actual": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "bookings_under_completed_schedule": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "bookings_with_own_pipeline": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "bookings_without_own_pipeline": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "cap_left_before": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "cents_booked_in_quarter_per_dollar": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "created_between": {
+                    "items": {
+                      "$ref": "#/$defs/Date"
+                    },
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "type": "array"
+                  },
+                  "earlier_assigned_in_span": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "expected_created_pipeline": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "headline": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "in_fiscal_year": {
+                    "type": "boolean"
+                  },
+                  "outcome": {
+                    "enum": [
+                      "already covered",
+                      "feasible",
+                      "unreachable within bounds"
+                    ]
+                  },
+                  "per_day": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "expected": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "required_against_team_best": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "required_total": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "expected",
+                      "required_total",
+                      "required_against_team_best"
+                    ],
+                    "type": "object"
+                  },
+                  "per_ramped_ae_month": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "decides": {
+                        "type": "boolean"
+                      },
+                      "expected": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "required_against_team_best": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "required_total": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "expected",
+                      "required_total",
+                      "required_against_team_best",
+                      "decides"
+                    ],
+                    "type": "object"
+                  },
+                  "quarter": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "ramped_ae_months": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "required_extra_pipeline": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "enum": [
+                      "closed",
+                      "in progress",
+                      "not started"
+                    ]
+                  },
+                  "surplus_over_target": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "target": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "too_late": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "applies": {
+                        "type": "boolean"
+                      },
+                      "diagnostics": {
+                        "items": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "type": "array"
+                      },
+                      "label": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "legs": {
+                        "items": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "type": "array"
+                      },
+                      "open_pipeline": {
+                        "anyOf": [
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "expected_contribution": {
+                                "$ref": "#/$defs/Money"
+                              },
+                              "expected_share_of_open": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Decimal"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "needed_contribution": {
+                                "$ref": "#/$defs/Money"
+                              },
+                              "needed_share_of_open": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Decimal"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "open_arr": {
+                                "$ref": "#/$defs/Money"
+                              },
+                              "possible": {
+                                "type": "boolean"
+                              },
+                              "statement": {
+                                "$ref": "#/$defs/Text"
+                              }
+                            },
+                            "required": [
+                              "open_arr",
+                              "expected_contribution",
+                              "needed_contribution",
+                              "expected_share_of_open",
+                              "needed_share_of_open",
+                              "possible",
+                              "statement"
+                            ],
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "reasons": {
+                        "items": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "applies",
+                      "label",
+                      "legs",
+                      "reasons",
+                      "diagnostics",
+                      "open_pipeline"
+                    ],
+                    "type": "object"
+                  },
+                  "total_created_in_span": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Money"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "quarter",
+                  "in_fiscal_year",
+                  "status",
+                  "target",
+                  "actual",
+                  "outcome",
+                  "headline",
+                  "required_extra_pipeline",
+                  "bookings_without_own_pipeline",
+                  "bookings_with_own_pipeline",
+                  "bookings_under_completed_schedule",
+                  "surplus_over_target",
+                  "created_between",
+                  "expected_created_pipeline",
+                  "earlier_assigned_in_span",
+                  "total_created_in_span",
+                  "ramped_ae_months",
+                  "per_day",
+                  "per_ramped_ae_month",
+                  "cap_left_before",
+                  "cents_booked_in_quarter_per_dollar",
+                  "too_late"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "team_history": {
+              "additionalProperties": false,
+              "properties": {
+                "best_four_quarter_average": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "best_four_quarter_average_per_day": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "median": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Money"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "per_day_unit": {
+                  "$ref": "#/$defs/Text"
+                },
+                "quarters": {
+                  "type": "integer"
+                },
+                "unit": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "unit",
+                "quarters",
+                "median",
+                "best_four_quarter_average",
+                "best_four_quarter_average_per_day",
+                "per_day_unit",
+                "note"
+              ],
+              "type": "object"
+            },
+            "too_late_rule": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "method",
+            "forward_function",
+            "cap",
+            "cap_rule",
+            "quarters",
+            "fiscal_year",
+            "per_rep_rule",
+            "too_late_rule",
+            "lead_time",
+            "per_ramped_ae_month_label",
+            "team_history",
+            "meaning",
+            "expected_basis"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "roster_capacity": {
+      "additionalProperties": false,
+      "properties": {
+        "attrition": {
+          "additionalProperties": false,
+          "properties": {
+            "forward": {
+              "$ref": "#/$defs/Text"
+            },
+            "monthly_rate": {
+              "$ref": "#/$defs/Decimal"
+            },
+            "range95": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sample": {
+              "$ref": "#/$defs/Text"
+            },
+            "source": {
+              "$ref": "#/$defs/Text"
+            },
+            "why_not_fitted": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "monthly_rate",
+            "source",
+            "sample",
+            "range95",
+            "why_not_fitted",
+            "forward"
+          ],
+          "type": "object"
+        },
+        "creation_rate": {
+          "additionalProperties": false,
+          "properties": {
+            "deals_per_ramped_ae_month": {
+              "$ref": "#/$defs/Decimal"
+            },
+            "trailing_deals": {
+              "type": "integer"
+            },
+            "trailing_ramped_ae_months": {
+              "$ref": "#/$defs/Decimal"
+            },
+            "window": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "deals_per_ramped_ae_month",
+            "trailing_deals",
+            "trailing_ramped_ae_months",
+            "window"
+          ],
+          "type": "object"
+        },
+        "decision": {
+          "additionalProperties": false,
+          "properties": {
+            "association": {
+              "$ref": "#/$defs/Text"
+            },
+            "declared_rule": {
+              "$ref": "#/$defs/Text"
+            },
+            "forecast_uses": {
+              "$ref": "#/$defs/Text"
+            },
+            "horizons": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "folds": {
+                    "type": "integer"
+                  },
+                  "horizon_months": {
+                    "type": "integer"
+                  },
+                  "improvement": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "mean_absolute_error_capacity": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "mean_absolute_error_flat": {
+                    "$ref": "#/$defs/Money"
+                  }
+                },
+                "required": [
+                  "horizon_months",
+                  "folds",
+                  "mean_absolute_error_flat",
+                  "mean_absolute_error_capacity",
+                  "improvement"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "label": {
+              "$ref": "#/$defs/Text"
+            },
+            "outcome": {
+              "enum": [
+                "adopted",
+                "not shown",
+                "unavailable"
+              ]
+            },
+            "reason": {
+              "$ref": "#/$defs/Text"
+            },
+            "scored_on": {
+              "$ref": "#/$defs/Text"
+            },
+            "scored_period": {
+              "anyOf": [
+                {
+                  "items": {
+                    "$ref": "#/$defs/Date"
+                  },
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "staffing_variation": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Decimal"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "outcome",
+            "reason",
+            "scored_on",
+            "label",
+            "declared_rule",
+            "staffing_variation",
+            "scored_period",
+            "horizons",
+            "forecast_uses",
+            "association"
+          ],
+          "type": "object"
+        },
+        "diagnostic": {
+          "additionalProperties": false,
+          "properties": {
+            "bookings_with_capacity_projection": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            },
+            "bookings_with_flat_rate": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            },
+            "hiring_action": {
+              "$ref": "#/$defs/Text"
+            },
+            "label": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "label",
+            "bookings_with_capacity_projection",
+            "bookings_with_flat_rate",
+            "hiring_action"
+          ],
+          "type": "object"
+        },
+        "limitations": {
+          "items": {
+            "$ref": "#/$defs/Text"
+          },
+          "type": "array"
+        },
+        "months": {
+          "items": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "departures": {
+                    "type": "integer"
+                  },
+                  "headcount_target": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "heads": {
+                    "type": "integer"
+                  },
+                  "heads_with_plan": {
+                    "type": "null"
+                  },
+                  "kind": {
+                    "const": "past"
+                  },
+                  "month": {
+                    "$ref": "#/$defs/Month"
+                  },
+                  "ramped": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "month",
+                  "kind",
+                  "heads",
+                  "ramped",
+                  "departures",
+                  "headcount_target",
+                  "heads_with_plan"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "departures": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "headcount_target": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "heads": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "heads_with_plan": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "kind": {
+                    "const": "forward"
+                  },
+                  "month": {
+                    "$ref": "#/$defs/Month"
+                  },
+                  "ramped": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "month",
+                  "kind",
+                  "heads",
+                  "ramped",
+                  "departures",
+                  "headcount_target",
+                  "heads_with_plan"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "ramp": {
+          "additionalProperties": false,
+          "properties": {
+            "after": {
+              "$ref": "#/$defs/Text"
+            },
+            "deals_left_out": {
+              "additionalProperties": false,
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "why": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Text"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "count",
+                "why"
+              ],
+              "type": "object"
+            },
+            "definition": {
+              "$ref": "#/$defs/Text"
+            },
+            "fitted_through": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Text"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "limitation": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/Text"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sample": {
+              "$ref": "#/$defs/Text"
+            },
+            "source": {
+              "$ref": "#/$defs/Text"
+            },
+            "weights": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "range95": {
+                    "anyOf": [
+                      {
+                        "items": {
+                          "$ref": "#/$defs/Decimal"
+                        },
+                        "maxItems": 2,
+                        "minItems": 2,
+                        "type": "array"
+                      },
+                      {
+                        "$ref": "#/$defs/Text"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tenure_month": {
+                    "type": "integer"
+                  },
+                  "weight": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "tenure_month",
+                  "weight",
+                  "range95"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "why_not_fitted": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "source",
+            "sample",
+            "why_not_fitted",
+            "fitted_through",
+            "deals_left_out",
+            "limitation",
+            "weights",
+            "after",
+            "definition"
+          ],
+          "type": "object"
+        },
+        "roster": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "rows": {
+                  "type": "integer"
+                },
+                "unavailable": {
+                  "$ref": "#/$defs/Text"
+                }
+              },
+              "required": [
+                "unavailable",
+                "rows"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "departed_to_date": {
+                  "type": "integer"
+                },
+                "excluded": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "reason": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "role": {
+                        "$ref": "#/$defs/Text"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "role",
+                      "reason"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "headcount_target_note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "headcount_target_this_month": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "heads_at_as_of": {
+                  "type": "integer"
+                },
+                "other_roles_counted_no_capacity": {
+                  "additionalProperties": {
+                    "type": "integer"
+                  },
+                  "type": "object"
+                },
+                "quota_carrying_rows": {
+                  "type": "integer"
+                },
+                "ramped_equivalents_at_as_of": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Decimal"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "rows": {
+                  "type": "integer"
+                },
+                "signed_hires": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "segment": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "start": {
+                        "$ref": "#/$defs/Date"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "segment",
+                      "start"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "rows",
+                "quota_carrying_rows",
+                "other_roles_counted_no_capacity",
+                "excluded",
+                "heads_at_as_of",
+                "ramped_equivalents_at_as_of",
+                "headcount_target_this_month",
+                "headcount_target_note",
+                "signed_hires",
+                "departed_to_date"
+              ],
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "required": [
+        "decision",
+        "roster",
+        "limitations"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "verdicts": {
+      "additionalProperties": false,
+      "properties": {
+        "forecast_better_than_baselines": {
+          "additionalProperties": false,
+          "properties": {
+            "reason": {
+              "$ref": "#/$defs/Text"
+            },
+            "verdict": {
+              "$ref": "#/$defs/BetterVerdict"
+            }
+          },
+          "required": [
+            "verdict",
+            "reason"
+          ],
+          "type": "object"
+        },
+        "software_correct": {
+          "additionalProperties": false,
+          "properties": {
+            "checks": {
+              "items": {
+                "$ref": "#/$defs/Check"
+              },
+              "type": "array"
+            },
+            "scope": {
+              "$ref": "#/$defs/Text"
+            },
+            "summary": {
+              "$ref": "#/$defs/Text"
+            },
+            "verdict": {
+              "enum": [
+                "yes",
+                "no"
+              ]
+            }
+          },
+          "required": [
+            "verdict",
+            "summary",
+            "checks",
+            "scope"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "software_correct",
+        "forecast_better_than_baselines"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "inputs",
+    "reconciliation",
+    "history",
+    "forecasts",
+    "rates",
+    "gap",
+    "backtest",
+    "verdicts",
+    "roster_capacity",
+    "quota_productivity",
+    "required_pipeline",
+    "actions",
+    "schema_version"
+  ],
+  "title": "TieoutReport",
+  "type": "object"
+}

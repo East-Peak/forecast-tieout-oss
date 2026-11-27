@@ -20,6 +20,7 @@ from .backtest import (
     choose_fit,
     coverage_label,
 )
+from .contract import SCHEMA_VERSION
 from .figures import CENT
 from .figures import cents as _cents
 from .figures import exact as _exact
@@ -261,6 +262,7 @@ def build_report(
     if plan_section is not None:
         report["plan"] = plan_section
     report["actions"] = actions_section
+    report["schema_version"] = SCHEMA_VERSION
     return report
 
 
