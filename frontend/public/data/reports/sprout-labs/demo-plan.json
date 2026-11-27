@@ -68,6 +68,7 @@
   "backtest": {
     "candidates": {
       "ranges": {
+        "acceptance": null,
         "decision": "not adopted",
         "horizons": [
           {
@@ -79,10 +80,91 @@
             "inside_simulated": 10,
             "inside_stretched": 10,
             "lower_factor": "1.0000",
+            "lower_reason": null,
             "median_width80_simulated": "425154.60",
             "median_width80_stretched": "441783.64",
+            "scored_dates": [
+              {
+                "cutoff": "2025-09-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2025-10-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2025-11-30",
+                "inside_simulated": false,
+                "inside_stretched": false,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2025-12-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.3401"
+              },
+              {
+                "cutoff": "2026-01-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.3401"
+              },
+              {
+                "cutoff": "2026-02-28",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2026-03-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2026-04-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2026-05-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2026-06-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              },
+              {
+                "cutoff": "2026-07-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0736"
+              }
+            ],
             "scored_folds": 11,
-            "upper_factor": "1.0736"
+            "upper_factor": "1.0736",
+            "upper_reason": null
           },
           {
             "coverage_simulated": 0.8571,
@@ -93,10 +175,63 @@
             "inside_simulated": 6,
             "inside_stretched": 6,
             "lower_factor": "1.0000",
+            "lower_reason": null,
             "median_width80_simulated": "798444.50",
             "median_width80_stretched": "798444.50",
+            "scored_dates": [
+              {
+                "cutoff": "2025-11-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2025-12-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-01-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-02-28",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-03-31",
+                "inside_simulated": false,
+                "inside_stretched": false,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-04-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-05-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              }
+            ],
             "scored_folds": 7,
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "upper_reason": null
           },
           {
             "coverage_simulated": 0.0,
@@ -107,12 +242,24 @@
             "inside_simulated": 0,
             "inside_stretched": 0,
             "lower_factor": "1.3272",
+            "lower_reason": null,
             "median_width80_simulated": "1122961.40",
             "median_width80_stretched": "1495397.30",
+            "scored_dates": [
+              {
+                "cutoff": "2026-02-28",
+                "inside_simulated": false,
+                "inside_stretched": false,
+                "lower_factor": "1.6819",
+                "upper_factor": "1.0000"
+              }
+            ],
             "scored_folds": 1,
-            "upper_factor": "1.9026"
+            "upper_factor": "1.9026",
+            "upper_reason": null
           }
         ],
+        "method": "Each side's factor is the ceil(90% of n)-th smallest of the factors the n eligible past forecasts would have needed: the plain empirical rule, not a finite-sample guarantee. Six-month factors come from overlapping forecasts (each shares five of its six months with its neighbors) and are noisier: 11 past six-month forecasts to learn from, 1 scored.",
         "pooled": {
           "coverage_simulated": 0.8889,
           "coverage_stretched": 0.8889,
@@ -153,7 +300,8 @@
           "stage-weighted pipeline": "545924.13",
           "trailing run-rate": "485166.05"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "549410",
@@ -163,7 +311,8 @@
           "stage-weighted pipeline": "937199.16",
           "trailing run-rate": "463022.30"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "1294824",
@@ -173,7 +322,8 @@
           "stage-weighted pipeline": "1707806.49",
           "trailing run-rate": "370244.55"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "2168551",
@@ -183,7 +333,8 @@
           "stage-weighted pipeline": "2036703.89",
           "trailing run-rate": "1135416.61"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "805949",
@@ -193,7 +344,8 @@
           "stage-weighted pipeline": "1402390.08",
           "trailing run-rate": "311477.51"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "2650183",
@@ -203,7 +355,8 @@
           "stage-weighted pipeline": "1758010.45",
           "trailing run-rate": "944815.10"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "397099",
@@ -213,7 +366,8 @@
           "stage-weighted pipeline": "1116112.09",
           "trailing run-rate": "284605.23"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "2497872",
@@ -223,7 +377,8 @@
           "stage-weighted pipeline": "1463084.69",
           "trailing run-rate": "863302.54"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "452268",
@@ -233,7 +388,8 @@
           "stage-weighted pipeline": "794039.08",
           "trailing run-rate": "251661.70"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "1655316",
@@ -243,7 +399,8 @@
           "stage-weighted pipeline": "1277988.61",
           "trailing run-rate": "799924.68"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "3823867",
@@ -253,7 +410,8 @@
           "stage-weighted pipeline": "1731963.01",
           "trailing run-rate": "1626813.12"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "107277",
@@ -263,7 +421,8 @@
           "stage-weighted pipeline": "377043.38",
           "trailing run-rate": "254705.41"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "956644",
@@ -273,7 +432,8 @@
           "stage-weighted pipeline": "1140093.32",
           "trailing run-rate": "809599.35"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "3606827",
@@ -283,7 +443,8 @@
           "stage-weighted pipeline": "1581507.72",
           "trailing run-rate": "1646488.57"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "422871",
@@ -293,7 +454,8 @@
           "stage-weighted pipeline": "848285.91",
           "trailing run-rate": "275539.13"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "982416",
@@ -303,7 +465,8 @@
           "stage-weighted pipeline": "1211688.90",
           "trailing run-rate": "799952.30"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "3480288",
@@ -313,7 +476,8 @@
           "stage-weighted pipeline": "1642580.02",
           "trailing run-rate": "1608792.96"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "442900",
@@ -323,7 +487,8 @@
           "stage-weighted pipeline": "903296.78",
           "trailing run-rate": "232946.71"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "973048",
@@ -333,7 +498,8 @@
           "stage-weighted pipeline": "1294576.15",
           "trailing run-rate": "698840.14"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "2628364",
@@ -343,7 +509,8 @@
           "stage-weighted pipeline": "1696860.57",
           "trailing run-rate": "1405445.16"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": true
       },
       {
         "actual": "279981",
@@ -353,7 +520,8 @@
           "stage-weighted pipeline": "819726.74",
           "trailing run-rate": "231080.96"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "1145752",
@@ -363,7 +531,8 @@
           "stage-weighted pipeline": "1118668.78",
           "trailing run-rate": "708648.27"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "2102396",
@@ -373,7 +542,8 @@
           "stage-weighted pipeline": "1484722.65",
           "trailing run-rate": "1394188.45"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": true
       },
       {
         "actual": "150522",
@@ -383,7 +553,8 @@
           "stage-weighted pipeline": "686229.16",
           "trailing run-rate": "248682.33"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "873403",
@@ -393,7 +564,8 @@
           "stage-weighted pipeline": "1013105.96",
           "trailing run-rate": "754336.40"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "1855819",
@@ -403,7 +575,8 @@
           "stage-weighted pipeline": "1389586.23",
           "trailing run-rate": "1500383.38"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "593484",
@@ -413,7 +586,8 @@
           "stage-weighted pipeline": "637911.43",
           "trailing run-rate": "199902.82"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "1023987",
@@ -423,7 +597,8 @@
           "stage-weighted pipeline": "1049875.91",
           "trailing run-rate": "606371.89"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "1997035",
@@ -433,7 +608,8 @@
           "stage-weighted pipeline": "1472904.40",
           "trailing run-rate": "1206080.36"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "215854",
@@ -443,7 +619,8 @@
           "stage-weighted pipeline": "503916.77",
           "trailing run-rate": "225171.26"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "959860",
@@ -453,7 +630,8 @@
           "stage-weighted pipeline": "846295.31",
           "trailing run-rate": "668250.19"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "2105612",
@@ -463,7 +641,8 @@
           "stage-weighted pipeline": "1220838.36",
           "trailing run-rate": "1336500.38"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": true
       },
       {
         "actual": "470409",
@@ -473,7 +652,8 @@
           "stage-weighted pipeline": "675905.28",
           "trailing run-rate": "218119.40"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "1279747",
@@ -483,7 +663,8 @@
           "stage-weighted pipeline": "906885.41",
           "trailing run-rate": "668899.48"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "2153150",
@@ -493,7 +674,8 @@
           "stage-weighted pipeline": "1294940.68",
           "trailing run-rate": "1330528.32"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": true
       },
       {
         "actual": "166028",
@@ -503,7 +685,8 @@
           "stage-weighted pipeline": "527931.07",
           "trailing run-rate": "220453.15"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "852291",
@@ -513,7 +696,8 @@
           "stage-weighted pipeline": "775762.75",
           "trailing run-rate": "676056.33"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "1876278",
@@ -523,7 +707,8 @@
           "stage-weighted pipeline": "1153558.41",
           "trailing run-rate": "1344764.22"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": true
       },
       {
         "actual": "90950",
@@ -533,7 +718,8 @@
           "stage-weighted pipeline": "506575.61",
           "trailing run-rate": "218042.96"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "727387",
@@ -543,7 +729,8 @@
           "stage-weighted pipeline": "832904.10",
           "trailing run-rate": "661396.98"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "1687247",
@@ -553,7 +740,8 @@
           "stage-weighted pipeline": "1188226.03",
           "trailing run-rate": "1330062.05"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       }
     ],
     "horizons": [
@@ -800,6 +988,7 @@
       ],
       "horizons": {
         "next twelve months": {
+          "basis": null,
           "label80": "unvalidated",
           "label95": "simulated, not separately tested",
           "mean": "5612923.93",
@@ -815,6 +1004,7 @@
           "status": "unvalidated: twelve-month ranges are not back-tested (the back-test scores 1, 3, 6 months)"
         },
         "rest of fiscal year": {
+          "basis": null,
           "label80": "unvalidated",
           "label95": "simulated, not separately tested",
           "mean": "2190458.63",
@@ -1031,6 +1221,7 @@
       "gap": "1880075.16",
       "range80_label": "simulated",
       "range95_label": "simulated, not separately tested",
+      "range_basis": null,
       "target": "8000000"
     },
     "forecast_method": "fitted model (expected value)",
@@ -1111,6 +1302,7 @@
         "gap": "643356.00",
         "quarter": "Q1FY26",
         "range80_label": "closed: nothing left to range over",
+        "range_basis": null,
         "status": "closed",
         "target": "1600000"
       },
@@ -1125,6 +1317,7 @@
         "gap": "-950183.00",
         "quarter": "Q2FY26",
         "range80_label": "closed: nothing left to range over",
+        "range_basis": null,
         "status": "closed",
         "target": "1700000"
       },
@@ -1139,6 +1332,7 @@
         "gap": "1165322.34",
         "quarter": "Q3FY26",
         "range80_label": "simulated",
+        "range_basis": null,
         "status": "in progress",
         "target": "2100000"
       },
@@ -1153,6 +1347,7 @@
         "gap": "1021579.82",
         "quarter": "Q4FY26",
         "range80_label": "simulated",
+        "range_basis": null,
         "status": "not started",
         "target": "2600000"
       }
@@ -2921,7 +3116,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.2.0",
+  "schema_version": "2.3.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

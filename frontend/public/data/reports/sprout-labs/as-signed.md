@@ -211,6 +211,8 @@ Ranges stretched by the model's own past misses. Rule: adopted if there are at l
 
 **Not adopted**: pooled over 1 and 3 months, 18 scored folds: simulated 16 held (89%), stretched 16 held (89%); the stretched coverage is not closer to 80%.
 
+Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the n eligible past forecasts would have needed: the plain empirical rule, not a finite-sample guarantee. Six-month factors come from overlapping forecasts (each shares five of its six months with its neighbors) and are noisier: 11 past six-month forecasts to learn from, 1 scored.
+
 ## 7. Verdicts
 
 **The software is correct: yes.** 20 of 20 self-checks passed (runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)).

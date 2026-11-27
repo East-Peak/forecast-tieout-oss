@@ -758,8 +758,8 @@ Months: stretched by past misses; each month by the factors of the horizon it fa
 | 2027-06 | $6,510,640 | $0 to $16,244,173 | $0 to $23,383,606 |
 | 2027-07 | $6,170,153 | $0 to $14,248,527 | $0 to $20,245,818 |
 | 2027-08 | $5,795,046 | $0 to $14,270,231 | $0 to $20,683,595 |
-| rest of fiscal year (stretched by past misses; held 0 of 1 past forecasts at this horizon; 95%: stretched, not separately tested) | $32,679,736 | $8,849,384 to $45,242,810 | $0 to $53,567,376 |
-| next twelve months (stretched by past misses with the six-month factors, because this range is longer than six months; held 0 of 1 past six-month forecasts; 95%: stretched, not separately tested) | $83,620,370 | $40,303,603 to $107,009,984 | $21,792,670 to $120,188,666 |
+| rest of fiscal year (stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead; 95%: stretched, not separately tested; lower edge floored at zero) | $32,679,736 | $8,849,384 to $45,242,810 | $0 to $53,567,376 |
+| next twelve months (stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: longer than six months, so it uses the six-month factors; 95%: stretched, not separately tested) | $83,620,370 | $40,303,603 to $107,009,984 | $21,792,670 to $120,188,666 |
 
 Assumptions:
 
@@ -844,7 +844,7 @@ Forecast: fitted model (expected value). Gap = target - actual - forecast (posit
 | Q3FY26 | in progress | $22,000,000 | $2,440,779 | $12,799,166 | $15,239,945 | $6,760,055 | $6,696,242 to $22,496,550 |
 | Q4FY26 | not started | $26,000,000 | $0 | $20,392,736 | $20,392,736 | $5,607,264 | $0 to $32,331,600 |
 
-Fiscal year: target $84,000,000, actual to date $27,447,759, forecast rest of year $33,191,902, expected **$60,639,661** (80%: $36,297,143 to $72,690,569, stretched by past misses; held 0 of 1 past forecasts at this horizon; 95%: $27,447,759 to $81,015,135, stretched, not separately tested), gap **$23,360,339**.
+Fiscal year: target $84,000,000, actual to date $27,447,759, forecast rest of year $33,191,902, expected **$60,639,661** (80%: $36,297,143 to $72,690,569, stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead; 95%: $27,447,759 to $81,015,135, stretched, not separately tested; lower edge floored at zero), gap **$23,360,339**.
 
 Next twelve months (2026-09 to 2027-08): quarters with a target ending in the window (Q3FY26, Q4FY26, through 2027-01-31): target $48,000,000, actual to date $2,440,779, forecast $33,191,902, gap **$12,367,319**.
 
@@ -890,6 +890,10 @@ Ranges stretched by the model's own past misses. Rule: adopted if there are at l
 | 6 mo | 11 | 1 | 0 of 1 (0%) | 0 of 1 (0%) | $33,875,732 | $54,871,788 | 2.2960 | 1.0000 |
 
 **Adopted**: pooled over 1 and 3 months, 18 scored folds: simulated 7 held (39%), stretched 16 held (89%); the stretched coverage is closer to 80% and no horizon is more than 10 points further.
+
+What the rule accepted: The stretch was one-sided: only the lower side was stretched. On the scored past dates it held 88.9% of actuals against a target of 80%. The six-month factors rest on 11 past six-month forecasts, of which 1 could be scored. The lower edge was floored at zero for: Q4FY26.
+
+Method: Each side's factor is the ceil(90% of n)-th smallest of the factors the n eligible past forecasts would have needed: the plain empirical rule, not a finite-sample guarantee. Six-month factors come from overlapping forecasts (each shares five of its six months with its neighbors) and are noisier: 11 past six-month forecasts to learn from, 1 scored.
 
 ## 7. Verdicts
 

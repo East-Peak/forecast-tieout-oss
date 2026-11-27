@@ -57,6 +57,17 @@
   "backtest": {
     "candidates": {
       "ranges": {
+        "acceptance": {
+          "floored_at_zero": [
+            "Q4FY26"
+          ],
+          "one_sided": true,
+          "sentence": "The stretch was one-sided: only the lower side was stretched. On the scored past dates it held 88.9% of actuals against a target of 80%. The six-month factors rest on 11 past six-month forecasts, of which 1 could be scored. The lower edge was floored at zero for: Q4FY26.",
+          "six_month_eligible_folds": 11,
+          "six_month_scored_folds": 1,
+          "stretched_side": "lower",
+          "two_sided_coverage": 0.8889
+        },
         "decision": "adopted",
         "horizons": [
           {
@@ -68,10 +79,91 @@
             "inside_simulated": 6,
             "inside_stretched": 9,
             "lower_factor": "1.5613",
+            "lower_reason": null,
             "median_width80_simulated": "11341863.10",
             "median_width80_stretched": "12906369.90",
+            "scored_dates": [
+              {
+                "cutoff": "2025-09-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2025-10-31",
+                "inside_simulated": false,
+                "inside_stretched": false,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2025-11-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.5694",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2025-12-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.5694",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-01-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.5694",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-02-28",
+                "inside_simulated": false,
+                "inside_stretched": false,
+                "lower_factor": "1.0000",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-03-31",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.5613",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-04-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.5613",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-05-31",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.5613",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-06-30",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.5613",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-07-31",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.5613",
+                "upper_factor": "1.0000"
+              }
+            ],
             "scored_folds": 11,
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "upper_reason": null
           },
           {
             "coverage_simulated": 0.1429,
@@ -82,10 +174,63 @@
             "inside_simulated": 1,
             "inside_stretched": 7,
             "lower_factor": "1.6355",
+            "lower_reason": null,
             "median_width80_simulated": "22933517.90",
             "median_width80_stretched": "32210689.27",
+            "scored_dates": [
+              {
+                "cutoff": "2025-11-30",
+                "inside_simulated": true,
+                "inside_stretched": true,
+                "lower_factor": "1.9251",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2025-12-31",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.9251",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-01-31",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.9251",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-02-28",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.9251",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-03-31",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.9251",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-04-30",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.5605",
+                "upper_factor": "1.0000"
+              },
+              {
+                "cutoff": "2026-05-31",
+                "inside_simulated": false,
+                "inside_stretched": true,
+                "lower_factor": "1.6355",
+                "upper_factor": "1.0000"
+              }
+            ],
             "scored_folds": 7,
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "upper_reason": null
           },
           {
             "coverage_simulated": 0.0,
@@ -96,12 +241,24 @@
             "inside_simulated": 0,
             "inside_stretched": 0,
             "lower_factor": "2.2960",
+            "lower_reason": null,
             "median_width80_simulated": "33875731.80",
             "median_width80_stretched": "54871787.86",
+            "scored_dates": [
+              {
+                "cutoff": "2026-02-28",
+                "inside_simulated": false,
+                "inside_stretched": false,
+                "lower_factor": "2.2960",
+                "upper_factor": "1.0000"
+              }
+            ],
             "scored_folds": 1,
-            "upper_factor": "1.0000"
+            "upper_factor": "1.0000",
+            "upper_reason": null
           }
         ],
+        "method": "Each side's factor is the ceil(90% of n)-th smallest of the factors the n eligible past forecasts would have needed: the plain empirical rule, not a finite-sample guarantee. Six-month factors come from overlapping forecasts (each shares five of its six months with its neighbors) and are noisier: 11 past six-month forecasts to learn from, 1 scored.",
         "pooled": {
           "coverage_simulated": 0.3889,
           "coverage_stretched": 0.8889,
@@ -142,7 +299,8 @@
           "stage-weighted pipeline": "19869128.83",
           "trailing run-rate": "6450190.38"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "681454",
@@ -152,7 +310,8 @@
           "stage-weighted pipeline": "20295769.76",
           "trailing run-rate": "6712683.53"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "5327468",
@@ -162,7 +321,8 @@
           "stage-weighted pipeline": "19132291.45",
           "trailing run-rate": "6804136.60"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "8449701",
@@ -172,7 +332,8 @@
           "stage-weighted pipeline": "24771005.68",
           "trailing run-rate": "20866018.92"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "6158077",
@@ -182,7 +343,8 @@
           "stage-weighted pipeline": "21210252.95",
           "trailing run-rate": "7426117.97"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "12166999",
@@ -192,7 +354,8 @@
           "stage-weighted pipeline": "29313661.98",
           "trailing run-rate": "22525891.18"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "1681412",
@@ -202,7 +365,8 @@
           "stage-weighted pipeline": "24552666.52",
           "trailing run-rate": "7476665.34"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "13166957",
@@ -212,7 +376,8 @@
           "stage-weighted pipeline": "32960867.86",
           "trailing run-rate": "22679218.21"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "0",
@@ -222,7 +387,8 @@
           "stage-weighted pipeline": "20371563.61",
           "trailing run-rate": "8250423.00"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "11728649",
@@ -232,7 +398,8 @@
           "stage-weighted pipeline": "31795414.49",
           "trailing run-rate": "26224558.83"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "20178350",
@@ -242,7 +409,8 @@
           "stage-weighted pipeline": "37493268.99",
           "trailing run-rate": "53333091.55"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "7269409",
@@ -252,7 +420,8 @@
           "stage-weighted pipeline": "11032508.18",
           "trailing run-rate": "8217470.30"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "12839981",
@@ -262,7 +431,8 @@
           "stage-weighted pipeline": "32202684.78",
           "trailing run-rate": "26119816.32"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "25006980",
@@ -272,7 +442,8 @@
           "stage-weighted pipeline": "37981959.34",
           "trailing run-rate": "53120075.88"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "6433842",
@@ -282,7 +453,8 @@
           "stage-weighted pipeline": "22243933.58",
           "trailing run-rate": "8677682.30"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "17592411",
@@ -292,7 +464,8 @@
           "stage-weighted pipeline": "33363378.37",
           "trailing run-rate": "25193271.21"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "30759368",
@@ -302,7 +475,8 @@
           "stage-weighted pipeline": "39174148.81",
           "trailing run-rate": "50666467.65"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "9960487",
@@ -312,7 +486,8 @@
           "stage-weighted pipeline": "20871471.80",
           "trailing run-rate": "8550081.04"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "23663738",
@@ -322,7 +497,8 @@
           "stage-weighted pipeline": "29036340.42",
           "trailing run-rate": "25650243.12"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "35392387",
@@ -332,7 +508,8 @@
           "stage-weighted pipeline": "37377316.02",
           "trailing run-rate": "51585488.95"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "1031238",
@@ -342,7 +519,8 @@
           "stage-weighted pipeline": "18143149.75",
           "trailing run-rate": "8631786.66"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": false
       },
       {
         "actual": "17425567",
@@ -352,7 +530,8 @@
           "stage-weighted pipeline": "26375803.34",
           "trailing run-rate": "26470812.42"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "30265548",
@@ -362,7 +541,8 @@
           "stage-weighted pipeline": "32069935.44",
           "trailing run-rate": "52078446.17"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "10323131",
@@ -372,7 +552,8 @@
           "stage-weighted pipeline": "22424542.29",
           "trailing run-rate": "8221280.79"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "21314856",
@@ -382,7 +563,8 @@
           "stage-weighted pipeline": "30091518.95",
           "trailing run-rate": "24937885.08"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "35018107",
@@ -392,7 +574,8 @@
           "stage-weighted pipeline": "34293133.58",
           "trailing run-rate": "49601727.46"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "7395495",
@@ -402,7 +585,8 @@
           "stage-weighted pipeline": "29860700.18",
           "trailing run-rate": "8345330.79"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "18749864",
@@ -412,7 +596,8 @@
           "stage-weighted pipeline": "38472940.35",
           "trailing run-rate": "25314170.08"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": false
       },
       {
         "actual": "42413602",
@@ -422,7 +607,8 @@
           "stage-weighted pipeline": "44087652.11",
           "trailing run-rate": "50350162.46"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "15794617",
@@ -432,7 +618,8 @@
           "stage-weighted pipeline": "28032165.70",
           "trailing run-rate": "8352019.92"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "33513243",
@@ -442,7 +629,8 @@
           "stage-weighted pipeline": "40414250.09",
           "trailing run-rate": "24786639.75"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "50938810",
@@ -452,7 +640,8 @@
           "stage-weighted pipeline": "47416703.99",
           "trailing run-rate": "49573279.50"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "6406647",
@@ -462,7 +651,8 @@
           "stage-weighted pipeline": "25718862.07",
           "trailing run-rate": "7883001.78"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "29596759",
@@ -472,7 +662,8 @@
           "stage-weighted pipeline": "33199170.84",
           "trailing run-rate": "24174538.79"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "50911615",
@@ -482,7 +673,8 @@
           "stage-weighted pipeline": "42544715.77",
           "trailing run-rate": "48086310.86"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "6440147",
@@ -492,7 +684,8 @@
           "stage-weighted pipeline": "18703972.96",
           "trailing run-rate": "7894506.49"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "28641411",
@@ -502,7 +695,8 @@
           "stage-weighted pipeline": "27274493.32",
           "trailing run-rate": "24209819.91"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "47391275",
@@ -512,7 +706,8 @@
           "stage-weighted pipeline": "34897135.05",
           "trailing run-rate": "48156489.61"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": false
       },
       {
         "actual": "13725517",
@@ -522,7 +717,8 @@
           "stage-weighted pipeline": "24164093.60",
           "trailing run-rate": "6800543.67"
         },
-        "horizon_months": 1
+        "horizon_months": 1,
+        "inside80": true
       },
       {
         "actual": "26572311",
@@ -532,7 +728,8 @@
           "stage-weighted pipeline": "30556038.77",
           "trailing run-rate": "20628315.80"
         },
-        "horizon_months": 3
+        "horizon_months": 3,
+        "inside80": true
       },
       {
         "actual": "60085554",
@@ -542,7 +739,8 @@
           "stage-weighted pipeline": "39513133.50",
           "trailing run-rate": "41483316.39"
         },
-        "horizon_months": 6
+        "horizon_months": 6,
+        "inside80": true
       }
     ],
     "horizons": [
@@ -789,7 +987,16 @@
       ],
       "horizons": {
         "next twelve months": {
-          "label80": "stretched by past misses with the six-month factors, because this range is longer than six months; held 0 of 1 past six-month forecasts",
+          "basis": {
+            "extrapolated": true,
+            "extrapolation_reason": "longer than six months, so it uses the six-month factors",
+            "factor_horizon_months": 6,
+            "floored_at_zero_80": false,
+            "floored_at_zero_95": false,
+            "held": 0,
+            "scored": 1
+          },
+          "label80": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: longer than six months, so it uses the six-month factors",
           "label95": "stretched, not separately tested",
           "mean": "84987971.80",
           "median": "83620370.50",
@@ -801,11 +1008,20 @@
             "21792670.02",
             "120188666.22"
           ],
-          "status": "stretched by past misses with the six-month factors, because this range is longer than six months; held 0 of 1 past six-month forecasts (the simulated range alone held 0 of 1)"
+          "status": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: longer than six months, so it uses the six-month factors (the simulated range alone held 0 of 1)"
         },
         "rest of fiscal year": {
-          "label80": "stretched by past misses; held 0 of 1 past forecasts at this horizon",
-          "label95": "stretched, not separately tested",
+          "basis": {
+            "extrapolated": true,
+            "extrapolation_reason": "it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+            "factor_horizon_months": 6,
+            "floored_at_zero_80": false,
+            "floored_at_zero_95": true,
+            "held": 0,
+            "scored": 1
+          },
+          "label80": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+          "label95": "stretched, not separately tested; lower edge floored at zero",
           "mean": "33404158.88",
           "median": "32679736.00",
           "range80": [
@@ -816,7 +1032,7 @@
             "0.00",
             "53567375.62"
           ],
-          "status": "stretched by past misses; held 0 of 1 past forecasts at this horizon (the simulated range alone held 0 of 1)"
+          "status": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead (the simulated range alone held 0 of 1)"
         }
       },
       "status": "1-month back-tested (80% range held 69% of 16 folds); 3-month too narrow (80% range held 36% of 14 folds); 6-month too narrow (80% range held 9% of 11 folds)"
@@ -1018,8 +1234,17 @@
       ],
       "forecast_rest_of_year": "33191901.81",
       "gap": "23360339.19",
-      "range80_label": "stretched by past misses; held 0 of 1 past forecasts at this horizon",
-      "range95_label": "stretched, not separately tested",
+      "range80_label": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+      "range95_label": "stretched, not separately tested; lower edge floored at zero",
+      "range_basis": {
+        "extrapolated": true,
+        "extrapolation_reason": "it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+        "factor_horizon_months": 6,
+        "floored_at_zero_80": false,
+        "floored_at_zero_95": true,
+        "held": 0,
+        "scored": 1
+      },
       "target": "84000000"
     },
     "forecast_method": "fitted model (expected value)",
@@ -1100,6 +1325,7 @@
         "gap": "4160019.00",
         "quarter": "Q1FY26",
         "range80_label": "closed: nothing left to range over",
+        "range_basis": null,
         "status": "closed",
         "target": "17000000"
       },
@@ -1114,6 +1340,7 @@
         "gap": "6833001.00",
         "quarter": "Q2FY26",
         "range80_label": "closed: nothing left to range over",
+        "range_basis": null,
         "status": "closed",
         "target": "19000000"
       },
@@ -1127,7 +1354,16 @@
         "forecast": "12799165.98",
         "gap": "6760055.02",
         "quarter": "Q3FY26",
-        "range80_label": "stretched by past misses; held 7 of 7 past forecasts at this horizon",
+        "range80_label": "stretched by past misses with the three-month factors, which held 7 of 7 past three-month forecasts; extrapolated: it covers 2026-08-31 to 2026-10-31, not the cumulative forecast from the as-of date that was tested three months ahead",
+        "range_basis": {
+          "extrapolated": true,
+          "extrapolation_reason": "it covers 2026-08-31 to 2026-10-31, not the cumulative forecast from the as-of date that was tested three months ahead",
+          "factor_horizon_months": 3,
+          "floored_at_zero_80": false,
+          "floored_at_zero_95": false,
+          "held": 7,
+          "scored": 7
+        },
         "status": "in progress",
         "target": "22000000"
       },
@@ -1141,7 +1377,16 @@
         "forecast": "20392735.83",
         "gap": "5607264.17",
         "quarter": "Q4FY26",
-        "range80_label": "stretched by past misses; held 0 of 1 past forecasts at this horizon",
+        "range80_label": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-10-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead; lower edge floored at zero",
+        "range_basis": {
+          "extrapolated": true,
+          "extrapolation_reason": "it covers 2026-10-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+          "factor_horizon_months": 6,
+          "floored_at_zero_80": true,
+          "floored_at_zero_95": true,
+          "held": 0,
+          "scored": 1
+        },
         "status": "not started",
         "target": "26000000"
       }
@@ -7063,7 +7308,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.2.0",
+  "schema_version": "2.3.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

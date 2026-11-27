@@ -84,6 +84,15 @@ export type TieoutReport = {
   backtest: {
     candidates: {
       ranges: {
+        acceptance: {
+          floored_at_zero: Text[];
+          one_sided: boolean;
+          sentence: Text;
+          six_month_eligible_folds: number;
+          six_month_scored_folds: number;
+          stretched_side: "lower" | "upper" | "both" | "neither";
+          two_sided_coverage: number;
+        } | null;
         decision: "adopted" | "not adopted" | "not enough history";
         /**
          * @minItems 3
@@ -99,10 +108,19 @@ export type TieoutReport = {
             inside_simulated: number;
             inside_stretched: number;
             lower_factor: Decimal | null;
+            lower_reason: Text | null;
             median_width80_simulated: Money | null;
             median_width80_stretched: Money | null;
+            scored_dates: {
+              cutoff: Date;
+              inside_simulated: boolean;
+              inside_stretched: boolean;
+              lower_factor: Decimal | null;
+              upper_factor: Decimal | null;
+            }[];
             scored_folds: number;
             upper_factor: Decimal | null;
+            upper_reason: Text | null;
           },
           {
             coverage_simulated: number | null;
@@ -113,10 +131,19 @@ export type TieoutReport = {
             inside_simulated: number;
             inside_stretched: number;
             lower_factor: Decimal | null;
+            lower_reason: Text | null;
             median_width80_simulated: Money | null;
             median_width80_stretched: Money | null;
+            scored_dates: {
+              cutoff: Date;
+              inside_simulated: boolean;
+              inside_stretched: boolean;
+              lower_factor: Decimal | null;
+              upper_factor: Decimal | null;
+            }[];
             scored_folds: number;
             upper_factor: Decimal | null;
+            upper_reason: Text | null;
           },
           {
             coverage_simulated: number | null;
@@ -127,12 +154,22 @@ export type TieoutReport = {
             inside_simulated: number;
             inside_stretched: number;
             lower_factor: Decimal | null;
+            lower_reason: Text | null;
             median_width80_simulated: Money | null;
             median_width80_stretched: Money | null;
+            scored_dates: {
+              cutoff: Date;
+              inside_simulated: boolean;
+              inside_stretched: boolean;
+              lower_factor: Decimal | null;
+              upper_factor: Decimal | null;
+            }[];
             scored_folds: number;
             upper_factor: Decimal | null;
+            upper_reason: Text | null;
           }
         ];
+        method: Text;
         pooled: {
           coverage_simulated: number;
           coverage_stretched: number;
@@ -167,6 +204,7 @@ export type TieoutReport = {
         [k: string]: (Money | null) | undefined;
       };
       horizon_months: number;
+      inside80: boolean | null;
     }[];
     horizons: {
       folds: number;
@@ -213,6 +251,7 @@ export type TieoutReport = {
           }[];
           horizons: {
             "next twelve months": {
+              basis: RangeBasis | null;
               label80: Text;
               label95: Text;
               mean: Money;
@@ -222,6 +261,7 @@ export type TieoutReport = {
               status: Text;
             };
             "rest of fiscal year": {
+              basis: RangeBasis | null;
               label80: Text;
               label95: Text;
               mean: Money;
@@ -382,6 +422,7 @@ export type TieoutReport = {
           gap: Money;
           range80_label: Text;
           range95_label: Text;
+          range_basis: RangeBasis | null;
           target: Decimal;
         }
       | {
@@ -507,6 +548,7 @@ export type TieoutReport = {
           gap: Money;
           quarter: Quarter;
           range80_label: Text;
+          range_basis: RangeBasis | null;
           status: "closed" | "in progress" | "not started";
           target: Decimal;
         }
@@ -1031,7 +1073,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.2.0";
+  schema_version: "2.3.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];
@@ -1061,6 +1103,15 @@ export type MoneyRange = [Money, Money];
 export type Quarter = string;
 export type ComparisonOutcome = "model lower" | "baseline lower" | "tie";
 
+export interface RangeBasis {
+  extrapolated: boolean;
+  extrapolation_reason: Text | null;
+  factor_horizon_months: 1 | 3 | 6;
+  floored_at_zero_80: boolean;
+  floored_at_zero_95: boolean;
+  held: number;
+  scored: number;
+}
 export interface Check {
   detail: Text;
   name: Text;
