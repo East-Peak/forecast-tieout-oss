@@ -70,9 +70,9 @@ export const B = {
   checkNextStatus: text("check.next12.status", `/forecasts/fitted_ranges/horizons/${TWELVE}/status`),
 
   // the label beside each range of a scenario with no plan (a plan's ranges carry the plan's own status)
-  rangeLabel80: text("year.range80.label", "/gap/fiscal_year/range80_label"),
-  rangeLabel95: text("year.range95.label", "/gap/fiscal_year/range95_label"),
-  qRangeLabel: text("quarter.range80.label", "/range80_label"),
+  rangeLabel80: text("year.range80.label", "/gap/fiscal_year/label_short"),
+  rangeLabel95: text("year.range95.label", "/gap/fiscal_year/label95"),
+  qRangeLabel: text("quarter.range80.label", "/label_short"),
 
   // a row of the quarter table (the rows are SIGNED's or PLANNED's, see ROWS)
   qName: text("quarter.name", "/quarter"),

@@ -118,8 +118,8 @@ export function expectations({ company, scenario, report: r, index, comparison }
   // the label beside each range: a plan's ranges carry the plan's status; the others, the report's own labels
   const fr = r.forecasts.fitted_ranges;
   when(fa, SIGNED.bandsLabel.id, () => (planned ? plan.ranges.status : fr.by_window_label));
-  when(fa && !planned, B.rangeLabel80.id, () => ("range80_label" in fy ? fy.range80_label : ""));
-  when(fa && !planned, B.rangeLabel95.id, () => ("range95_label" in fy ? fy.range95_label : ""));
+  when(fa && !planned, B.rangeLabel80.id, () => ("label_short" in fy ? fy.label_short : ""));
+  when(fa && !planned, B.rangeLabel95.id, () => ("label95" in fy ? fy.label95 : ""));
 
   when(fa, B.checkYearStatus.id, () => horizons[REST].status);
   when(fa, B.checkNextStatus.id, () => horizons[TWELVE].status);
@@ -161,7 +161,7 @@ export function expectations({ company, scenario, report: r, index, comparison }
   many(B.qGap.id, quarters.map((x) => orWords(x.gap, fmt.usdShort)), quarters.map((_, i) => at(i)));
   many(B.qRange80Low.id, open.map(([x]) => orWords(x.expected_range80?.[0] ?? null, fmt.usdShort)), open.map(([, i]) => at(i)));
   many(B.qRange80High.id, open.map(([x]) => orWords(x.expected_range80?.[1] ?? null, fmt.usdShort)), open.map(([, i]) => at(i)));
-  whenMany(fa && !planned, B.qRangeLabel.id, () => open.map(([x]) => ("range80_label" in x ? x.range80_label : "")), () => open.map(([, i]) => at(i)));
+  whenMany(fa && !planned, B.qRangeLabel.id, () => open.map(([x]) => ("label_short" in x ? x.label_short : "")), () => open.map(([, i]) => at(i)));
   whenMany(planned, B.qSignedGap.id, () => r.gap.quarters.map((x) => orWords(x.gap, fmt.usdShort)), () => r.gap.quarters.map((_, i) => `/gap/quarters/${i}`));
 
   const cells = r.forecasts.fitted_ranges.cells;

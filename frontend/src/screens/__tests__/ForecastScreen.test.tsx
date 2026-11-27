@@ -136,16 +136,28 @@ describe("Forecast: the selected scenario governs the screen", () => {
 describe("Forecast: the label beside every range, and how the stretch was checked", () => {
   const labelsOf = (container: HTMLElement) => Array.from(container.querySelectorAll("[data-testid='range-label']")).map((el) => el.textContent);
 
-  it("a company whose ranges were stretched says so under both range cards, in the report's words", () => {
+  it("a company whose ranges were stretched says so briefly under both range cards, with no dates and no counts", () => {
     const c = caseOf("mighty-oak-holdings", "as-signed");
     const container = mount(c, c.company, c.scenario);
-    const fy = c.report.gap.fiscal_year as { range80_label: string; range95_label: string };
+    const fy = c.report.gap.fiscal_year as unknown as { label_short: string; label95: string };
     expect(c.report.backtest.candidates.ranges.decision).toBe("adopted");
-    expect(labelsOf(container)).toEqual([fy.range80_label, fy.range95_label]);
-    expect(fy.range80_label).toMatch(/^stretched by past misses with the (one|three|six)-month factors, which held \d+ of \d+ past (one|three|six)-month forecasts/);
-    expect(fy.range80_label).toContain("extrapolated: it covers");
-    expect(container.querySelector("[data-testid='range-trust']")!.textContent).toContain("stretched by past misses");
+    expect(labelsOf(container)).toEqual([fy.label_short, fy.label95]);
+    expect(fy.label_short).toBe("Stretched on the low side by past misses");
+    expect(fy.label95).toBe("Stretched the same way; not separately tested; floored at zero");
+    for (const text of labelsOf(container)) expect(text).not.toMatch(/\d/);
     expect(container.querySelector("[data-testid='stretch-decision']")!.textContent).toBe("adopted");
+  });
+
+  it("the line on how far to trust the ranges says in plain sentences what the evidence is, and that it is thin", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const container = mount(c, c.company, c.scenario);
+    const trust = container.querySelector("[data-testid='range-trust']")!.textContent!;
+    expect(trust).toContain("Stretched by the model's own past misses, using what six-month forecasts needed.");
+    expect(trust).toContain("Evidence at this length is thin: 1 past six-month forecast could be scored, and the stretched range did not hold it.");
+    expect(trust).toContain("This window (Aug 31, 2026 to Jan 31, 2027) is not exactly the six-month forecast that was tested.");
+    expect(trust).not.toContain("held 0 of 1");
+    expect(trust).not.toContain("simulated range alone");
+    expect(trust).not.toMatch(/\d{4}-\d{2}-\d{2}/);
   });
 
   it("a company whose stretch was not adopted keeps the simulated label and says so with the numbers", () => {
@@ -185,7 +197,7 @@ describe("Forecast: the label beside every range, and how the stretch was checke
     const details = Array.from(container.querySelectorAll("[data-testid='quarter-detail']")).map((el) => el.textContent ?? "");
     const q4 = details.find((t) => t.includes("$0 to"));
     expect(q4).toBeDefined();
-    expect(q4).toContain("lower edge floored at zero");
+    expect(q4).toContain("Stretched on the low side by past misses; floored at zero");
     expect(container.querySelector("[data-testid='stretch-accepted']")!.textContent).toContain("floored at zero for: Q4FY26");
   });
 
