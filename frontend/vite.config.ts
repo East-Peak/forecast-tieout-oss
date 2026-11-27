@@ -79,6 +79,7 @@ export default defineConfig({
     exclude: ["e2e/**", "node_modules/**", "dist/**"],
     globals: true,
     setupFiles: ["./src/test-setup.ts"],
+    testTimeout: 30_000, // a ceiling for a test on a busy machine, not a delay
     environment: "jsdom",
     environmentOptions: { jsdom: { url: "http://localhost/" } },
   },

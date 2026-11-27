@@ -1,4 +1,10 @@
 import "@testing-library/jest-dom";
+import { configure } from "@testing-library/react";
+
+// waitFor and findBy* give up after one second by default. The first test to open a screen also
+// pays for loading its lazily imported code, which under CPU load took longer than that. These
+// are ceilings, not delays: a test still ends the moment its condition holds.
+configure({ asyncUtilTimeout: 20_000 });
 
 // ResizeObserver is not available in jsdom. Polyfill it so recharts
 // ResponsiveContainer (which calls new ResizeObserver) doesn't throw.
