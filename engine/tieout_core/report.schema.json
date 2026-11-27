@@ -192,7 +192,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.4.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.5.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -225,6 +225,13 @@
             }
           },
           "required_pipeline": {
+            "not": {
+              "required": [
+                "unavailable"
+              ]
+            }
+          },
+          "worksheet": {
             "not": {
               "required": [
                 "unavailable"
@@ -298,6 +305,11 @@
             ]
           },
           "required_pipeline": {
+            "required": [
+              "unavailable"
+            ]
+          },
+          "worksheet": {
             "required": [
               "unavailable"
             ]
@@ -5001,7 +5013,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.4.0"
+      "const": "2.5.0"
     },
     "verdicts": {
       "additionalProperties": false,
@@ -5069,6 +5081,1327 @@
         "forecast_better_than_baselines"
       ],
       "type": "object"
+    },
+    "worksheet": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "unavailable": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "unavailable"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "actions": {
+              "additionalProperties": false,
+              "properties": {
+                "basis": {
+                  "const": "as signed"
+                },
+                "note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "rows": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "action": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "source": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "value": {
+                            "$ref": "#/$defs/Text"
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "source"
+                        ],
+                        "type": "object"
+                      },
+                      "bookings_gained": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "source": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "value": {
+                            "anyOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "next twelve months": {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  "rest of fiscal year": {
+                                    "$ref": "#/$defs/Money"
+                                  }
+                                },
+                                "required": [
+                                  "rest of fiscal year",
+                                  "next twelve months"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "source"
+                        ],
+                        "type": "object"
+                      },
+                      "closes_alone_label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "closes_alone_outcome": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "source": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "value": {
+                            "$ref": "#/$defs/Text"
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "source"
+                        ],
+                        "type": "object"
+                      },
+                      "kind": {
+                        "enum": [
+                          "hire",
+                          "program"
+                        ]
+                      },
+                      "status": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "source": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "value": {
+                            "$ref": "#/$defs/Text"
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "source"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "action",
+                      "status",
+                      "bookings_gained",
+                      "closes_alone_outcome",
+                      "closes_alone_label"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "basis",
+                "note",
+                "rows"
+              ],
+              "type": "object"
+            },
+            "bridge": {
+              "additionalProperties": false,
+              "properties": {
+                "contributions": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {
+                        "enum": [
+                          "hires",
+                          "program"
+                        ]
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "next twelve months": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "rest of fiscal year": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "valued": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "label",
+                      "kind",
+                      "valued",
+                      "rest of fiscal year",
+                      "next twelve months"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "measure": {
+                  "$ref": "#/$defs/Text"
+                },
+                "order": {
+                  "$ref": "#/$defs/Text"
+                },
+                "steps": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "change": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "from": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "kind": {
+                        "enum": [
+                          "as_signed",
+                          "hires",
+                          "program",
+                          "working_plan",
+                          "remaining_gap"
+                        ]
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "note": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "source": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "to": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "valued": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "label",
+                      "change",
+                      "from",
+                      "to",
+                      "valued",
+                      "note",
+                      "source"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "target": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "source": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "value": {
+                      "$ref": "#/$defs/Decimal"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "order",
+                "measure",
+                "target",
+                "steps",
+                "contributions"
+              ],
+              "type": "object"
+            },
+            "chain": {
+              "additionalProperties": false,
+              "properties": {
+                "basis": {
+                  "const": "as signed"
+                },
+                "note": {
+                  "$ref": "#/$defs/Text"
+                },
+                "quarters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "bookings": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "expected": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "gap": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "target": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "$ref": "#/$defs/Decimal"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "target",
+                          "expected",
+                          "gap"
+                        ],
+                        "type": "object"
+                      },
+                      "created_pipeline": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "created_between": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "items": {
+                                  "$ref": "#/$defs/Date"
+                                },
+                                "maxItems": 2,
+                                "minItems": 2,
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "expected": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "$ref": "#/$defs/Money"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "headline": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "$ref": "#/$defs/Text"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "outcome": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "enum": [
+                                  "already covered",
+                                  "feasible",
+                                  "unreachable within bounds"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "required": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "required_note": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Text"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "required",
+                          "required_note",
+                          "expected",
+                          "created_between",
+                          "outcome",
+                          "headline"
+                        ],
+                        "type": "object"
+                      },
+                      "per_ramped_ae_month": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "decides": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "expected": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "note": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Text"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "required": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "required",
+                          "expected",
+                          "decides",
+                          "note"
+                        ],
+                        "type": "object"
+                      },
+                      "quarter": {
+                        "$ref": "#/$defs/Quarter"
+                      },
+                      "status": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "source": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "value": {
+                            "enum": [
+                              "closed",
+                              "in progress",
+                              "not started"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "source"
+                        ],
+                        "type": "object"
+                      },
+                      "timing": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "applies": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "label": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "anyOf": [
+                                  {
+                                    "$ref": "#/$defs/Text"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          },
+                          "reasons": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "source": {
+                                "$ref": "#/$defs/Text"
+                              },
+                              "value": {
+                                "items": {
+                                  "$ref": "#/$defs/Text"
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "required": [
+                              "value",
+                              "source"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "applies",
+                          "label",
+                          "reasons"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "quarter",
+                      "status",
+                      "bookings",
+                      "created_pipeline",
+                      "per_ramped_ae_month",
+                      "timing"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "unavailable": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Text"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "basis",
+                "note",
+                "unavailable",
+                "quarters"
+              ],
+              "type": "object"
+            },
+            "checks": {
+              "items": {
+                "$ref": "#/$defs/Check"
+              },
+              "type": "array"
+            },
+            "definition": {
+              "$ref": "#/$defs/Text"
+            },
+            "drivers": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "applies_to": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "current": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "creation_from": {
+                        "$ref": "#/$defs/Date"
+                      },
+                      "creation_to": {
+                        "$ref": "#/$defs/Date"
+                      },
+                      "fit_in_use": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "value": {
+                        "$ref": "#/$defs/Decimal"
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "fit_in_use",
+                      "creation_from",
+                      "creation_to"
+                    ],
+                    "type": "object"
+                  },
+                  "display": {
+                    "enum": [
+                      "percent",
+                      "money",
+                      "decimal"
+                    ]
+                  },
+                  "driver": {
+                    "enum": [
+                      "win_rate",
+                      "won_arr",
+                      "productivity",
+                      "cycle_days"
+                    ]
+                  },
+                  "evidence": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "eligible_quarters": {
+                        "type": "integer"
+                      },
+                      "gate": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "gate_passed": {
+                        "type": "boolean"
+                      },
+                      "quarters": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "created": {
+                              "type": "integer"
+                            },
+                            "eligible": {
+                              "type": "boolean"
+                            },
+                            "end": {
+                              "$ref": "#/$defs/Date"
+                            },
+                            "exposure": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/$defs/Decimal"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "mature": {
+                              "type": "boolean"
+                            },
+                            "not_eligible_because": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/$defs/Text"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "quarter": {
+                              "$ref": "#/$defs/Quarter"
+                            },
+                            "start": {
+                              "$ref": "#/$defs/Date"
+                            },
+                            "value": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/$defs/Decimal"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "wins": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "quarter",
+                            "start",
+                            "end",
+                            "value",
+                            "created",
+                            "wins",
+                            "exposure",
+                            "mature",
+                            "eligible",
+                            "not_eligible_because"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "required_quarters": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "gate",
+                      "required_quarters",
+                      "eligible_quarters",
+                      "gate_passed",
+                      "quarters"
+                    ],
+                    "type": "object"
+                  },
+                  "historical": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "high": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "change": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "next twelve months": {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  "rest of fiscal year": {
+                                    "$ref": "#/$defs/Money"
+                                  }
+                                },
+                                "required": [
+                                  "rest of fiscal year",
+                                  "next twelve months"
+                                ],
+                                "type": "object"
+                              },
+                              "setting": {
+                                "$ref": "#/$defs/Decimal"
+                              }
+                            },
+                            "required": [
+                              "setting",
+                              "change"
+                            ],
+                            "type": "object"
+                          },
+                          "low": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "change": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "next twelve months": {
+                                    "$ref": "#/$defs/Money"
+                                  },
+                                  "rest of fiscal year": {
+                                    "$ref": "#/$defs/Money"
+                                  }
+                                },
+                                "required": [
+                                  "rest of fiscal year",
+                                  "next twelve months"
+                                ],
+                                "type": "object"
+                              },
+                              "setting": {
+                                "$ref": "#/$defs/Decimal"
+                              }
+                            },
+                            "required": [
+                              "setting",
+                              "change"
+                            ],
+                            "type": "object"
+                          },
+                          "maximum": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "minimum": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "rule": {
+                            "$ref": "#/$defs/Text"
+                          }
+                        },
+                        "required": [
+                          "low",
+                          "high",
+                          "minimum",
+                          "maximum",
+                          "rule"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "historical_unavailable_because": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Text"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "label": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "limitation": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Text"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "needed_alone": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "achieved_fiscal_year_bookings": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "history_label": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "inside_observed_range": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "outcome": {
+                        "enum": [
+                          "solves",
+                          "cannot_close_alone",
+                          "already_at_or_ahead"
+                        ]
+                      },
+                      "outcome_label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "overshoot": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Money"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "reason": {
+                        "anyOf": [
+                          {
+                            "enum": [
+                              "bounded_at_one",
+                              "no_effect_in_the_year",
+                              "short_even_at_zero_days"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "reason_label": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "scale": {
+                        "anyOf": [
+                          {
+                            "pattern": "^\\d+/\\d+$",
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "stepped": {
+                        "type": "boolean"
+                      },
+                      "target": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "value": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "outcome",
+                      "outcome_label",
+                      "reason",
+                      "reason_label",
+                      "value",
+                      "achieved_fiscal_year_bookings",
+                      "target",
+                      "overshoot",
+                      "stepped",
+                      "scale",
+                      "inside_observed_range",
+                      "history_label"
+                    ],
+                    "type": "object"
+                  },
+                  "unit": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "unit_label": {
+                    "$ref": "#/$defs/Text"
+                  }
+                },
+                "required": [
+                  "driver",
+                  "label",
+                  "applies_to",
+                  "unit",
+                  "unit_label",
+                  "display",
+                  "current",
+                  "evidence",
+                  "historical",
+                  "historical_unavailable_because",
+                  "needed_alone",
+                  "limitation"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "expectation_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "history_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "measured_around": {
+              "$ref": "#/$defs/Text"
+            },
+            "plan_in_force": {
+              "type": "boolean"
+            },
+            "sensitivity_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "summary": {
+              "additionalProperties": false,
+              "properties": {
+                "as_signed": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "source": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "value": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source"
+                  ],
+                  "type": "object"
+                },
+                "cash_cost_in_twelve_months": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "source": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/Money"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "source"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fiscal_year_target": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "source": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "value": {
+                      "$ref": "#/$defs/Decimal"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source"
+                  ],
+                  "type": "object"
+                },
+                "no_plan_note": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/Text"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "remaining_gap": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "source": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "value": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source"
+                  ],
+                  "type": "object"
+                },
+                "twelve_month_gain": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "source": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "value": {
+                          "$ref": "#/$defs/Money"
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "source"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "working_plan": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "source": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "value": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "fiscal_year_target",
+                "as_signed",
+                "working_plan",
+                "remaining_gap",
+                "twelve_month_gain",
+                "cash_cost_in_twelve_months",
+                "no_plan_note"
+              ],
+              "type": "object"
+            },
+            "windows": {
+              "items": {
+                "$ref": "#/$defs/Text"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "definition",
+            "plan_in_force",
+            "measured_around",
+            "windows",
+            "expectation_note",
+            "sensitivity_note",
+            "history_note",
+            "drivers",
+            "actions",
+            "bridge",
+            "summary",
+            "chain",
+            "checks"
+          ],
+          "type": "object"
+        }
+      ]
     }
   },
   "required": [
@@ -5084,6 +6417,7 @@
     "quota_productivity",
     "required_pipeline",
     "actions",
+    "worksheet",
     "schema_version"
   ],
   "title": "TieoutReport",

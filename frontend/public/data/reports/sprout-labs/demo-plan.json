@@ -3118,7 +3118,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.4.0",
+  "schema_version": "2.5.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [
@@ -3272,5 +3272,1114 @@
       "summary": "22 of 22 self-checks passed",
       "verdict": "yes"
     }
+  },
+  "worksheet": {
+    "actions": {
+      "basis": "as signed",
+      "note": "The two unit actions are measured around the roster as signed, as in the actions section, and are restated here so that one number stands for one thing.",
+      "rows": [
+        {
+          "action": {
+            "source": "/actions/comparison/0/action",
+            "value": "Hire one AE starting 2026-09-01"
+          },
+          "bookings_gained": {
+            "source": "/actions/comparison/0/bookings_gained",
+            "value": {
+              "next twelve months": "530580.61",
+              "rest of fiscal year": "55374.79"
+            }
+          },
+          "closes_alone_label": "Cannot close the gap alone within the bound on hires.",
+          "closes_alone_outcome": {
+            "source": "/actions/close_the_fiscal_year_gap/hires/outcome",
+            "value": "unreachable"
+          },
+          "kind": "hire",
+          "status": {
+            "source": "/actions/comparison/0/status",
+            "value": "valued"
+          }
+        },
+        {
+          "action": {
+            "source": "/actions/comparison/1/action",
+            "value": "Add $1,000,000 of program pipeline starting 2026-09-01"
+          },
+          "bookings_gained": {
+            "source": "/actions/comparison/1/bookings_gained",
+            "value": {
+              "next twelve months": "139780.40",
+              "rest of fiscal year": "31927.81"
+            }
+          },
+          "closes_alone_label": "Closes the gap alone with the program pipeline shown in the actions section, inside its bound.",
+          "closes_alone_outcome": {
+            "source": "/actions/close_the_fiscal_year_gap/program/outcome",
+            "value": "feasible"
+          },
+          "kind": "program",
+          "status": {
+            "source": "/actions/comparison/1/status",
+            "value": "valued"
+          }
+        }
+      ]
+    },
+    "bridge": {
+      "contributions": [
+        {
+          "kind": "hires",
+          "label": "1 Mid Market hire from 2026-10",
+          "next twelve months": "455601.05",
+          "rest of fiscal year": "23443.56",
+          "valued": true
+        },
+        {
+          "kind": "hires",
+          "label": "1 Commercial hire from 2026-12",
+          "next twelve months": "305178.63",
+          "rest of fiscal year": "1103.48",
+          "valued": true
+        },
+        {
+          "kind": "program",
+          "label": "Partner referrals",
+          "next twelve months": "83376.68",
+          "rest of fiscal year": "11714.65",
+          "valued": true
+        }
+      ],
+      "measure": "fiscal-year bookings expected",
+      "order": "Each contribution is the extra bookings from adding that item to everything above it, in the declared order (hires first, then programs, each in the plan's order), so the steps sum exactly to the working plan. Contributions depend on the order; they are not stand-alone effects.",
+      "steps": [
+        {
+          "change": null,
+          "from": null,
+          "kind": "as_signed",
+          "label": "As signed",
+          "note": null,
+          "source": "/gap/fiscal_year/expected",
+          "to": "6119924.84",
+          "valued": true
+        },
+        {
+          "change": "23443.56",
+          "from": "6119924.84",
+          "kind": "hires",
+          "label": "1 Mid Market hire from 2026-10",
+          "note": null,
+          "source": "/plan/items/0/contribution/rest of fiscal year",
+          "to": "6143368.40",
+          "valued": true
+        },
+        {
+          "change": "1103.48",
+          "from": "6143368.40",
+          "kind": "hires",
+          "label": "1 Commercial hire from 2026-12",
+          "note": null,
+          "source": "/plan/items/1/contribution/rest of fiscal year",
+          "to": "6144471.88",
+          "valued": true
+        },
+        {
+          "change": "11714.65",
+          "from": "6144471.88",
+          "kind": "program",
+          "label": "Partner referrals",
+          "note": null,
+          "source": "/plan/items/2/contribution/rest of fiscal year",
+          "to": "6156186.53",
+          "valued": true
+        },
+        {
+          "change": null,
+          "from": null,
+          "kind": "working_plan",
+          "label": "Working plan",
+          "note": null,
+          "source": "/plan/expected_fiscal_year",
+          "to": "6156186.53",
+          "valued": true
+        },
+        {
+          "change": null,
+          "from": null,
+          "kind": "remaining_gap",
+          "label": "Remaining gap to target",
+          "note": null,
+          "source": "/plan/gap/fiscal_year/gap_with_plan",
+          "to": "1843813.47",
+          "valued": true
+        }
+      ],
+      "target": {
+        "source": "/gap/fiscal_year/target",
+        "value": "8000000"
+      }
+    },
+    "chain": {
+      "basis": "as signed",
+      "note": "The chain reads the as-signed forecast: the roster as signed and nothing planned. It does not respond to the plan in force, so it is never mixed with working-plan figures.",
+      "quarters": [
+        {
+          "bookings": {
+            "expected": {
+              "source": "/gap/quarters/2/expected",
+              "value": "934677.66"
+            },
+            "gap": {
+              "source": "/gap/quarters/2/gap",
+              "value": "1165322.34"
+            },
+            "target": {
+              "source": "/gap/quarters/2/target",
+              "value": "2100000"
+            }
+          },
+          "created_pipeline": {
+            "created_between": {
+              "source": "/required_pipeline/quarters/0/created_between",
+              "value": [
+                "2026-08-31",
+                "2026-10-31"
+              ]
+            },
+            "expected": {
+              "source": "/required_pipeline/quarters/0/expected_created_pipeline",
+              "value": "7249649.90"
+            },
+            "headline": {
+              "source": "/required_pipeline/quarters/0/headline",
+              "value": "unreachable within the cap (it would take $234,427,525.59)"
+            },
+            "outcome": {
+              "source": "/required_pipeline/quarters/0/outcome",
+              "value": "unreachable within bounds"
+            },
+            "required": {
+              "source": "/required_pipeline/quarters/0/total_created_in_span",
+              "value": "241677175.49"
+            },
+            "required_note": {
+              "source": "/required_pipeline/quarters/0/total_created_note",
+              "value": null
+            }
+          },
+          "per_ramped_ae_month": {
+            "decides": {
+              "source": "/required_pipeline/quarters/0/per_ramped_ae_month/decides",
+              "value": true
+            },
+            "expected": {
+              "source": "/required_pipeline/quarters/0/per_ramped_ae_month/expected",
+              "value": "615391.29"
+            },
+            "note": {
+              "source": "/required_pipeline/quarters/0/per_ramped_ae_month/note",
+              "value": null
+            },
+            "required": {
+              "source": "/required_pipeline/quarters/0/per_ramped_ae_month/required_total",
+              "value": "20514925.52"
+            }
+          },
+          "quarter": "Q3FY26",
+          "status": {
+            "source": "/required_pipeline/quarters/0/status",
+            "value": "in progress"
+          },
+          "timing": {
+            "applies": {
+              "source": "/required_pipeline/quarters/0/too_late/applies",
+              "value": true
+            },
+            "label": {
+              "source": "/required_pipeline/quarters/0/too_late/label",
+              "value": "too late to fund with new pipeline: this quarter depends on the pipeline already open"
+            },
+            "reasons": {
+              "source": "/required_pipeline/quarters/0/too_late/reasons",
+              "value": [
+                "the requirement is over the cap",
+                "needs $3,961,920.91 of pipeline created a day in total, above the team's best four-quarter average of $99,946.49 a day",
+                "needs $20,514,926 per ramped AE-month, above the team's best four-quarter average of $729,930"
+              ]
+            }
+          }
+        },
+        {
+          "bookings": {
+            "expected": {
+              "source": "/gap/quarters/3/expected",
+              "value": "1578420.18"
+            },
+            "gap": {
+              "source": "/gap/quarters/3/gap",
+              "value": "1021579.82"
+            },
+            "target": {
+              "source": "/gap/quarters/3/target",
+              "value": "2600000"
+            }
+          },
+          "created_pipeline": {
+            "created_between": {
+              "source": "/required_pipeline/quarters/1/created_between",
+              "value": [
+                "2026-08-31",
+                "2027-01-31"
+              ]
+            },
+            "expected": {
+              "source": "/required_pipeline/quarters/1/expected_created_pipeline",
+              "value": "17643128.35"
+            },
+            "headline": {
+              "source": "/required_pipeline/quarters/1/headline",
+              "value": "required: $24,763,697.22"
+            },
+            "outcome": {
+              "source": "/required_pipeline/quarters/1/outcome",
+              "value": "feasible"
+            },
+            "required": {
+              "source": "/required_pipeline/quarters/1/total_created_in_span",
+              "value": "42406825.57"
+            },
+            "required_note": {
+              "source": "/required_pipeline/quarters/1/total_created_note",
+              "value": null
+            }
+          },
+          "per_ramped_ae_month": {
+            "decides": {
+              "source": "/required_pipeline/quarters/1/per_ramped_ae_month/decides",
+              "value": true
+            },
+            "expected": {
+              "source": "/required_pipeline/quarters/1/per_ramped_ae_month/expected",
+              "value": "615391.29"
+            },
+            "note": {
+              "source": "/required_pipeline/quarters/1/per_ramped_ae_month/note",
+              "value": null
+            },
+            "required": {
+              "source": "/required_pipeline/quarters/1/per_ramped_ae_month/required_total",
+              "value": "1479147.60"
+            }
+          },
+          "quarter": "Q4FY26",
+          "status": {
+            "source": "/required_pipeline/quarters/1/status",
+            "value": "not started"
+          },
+          "timing": {
+            "applies": {
+              "source": "/required_pipeline/quarters/1/too_late/applies",
+              "value": true
+            },
+            "label": {
+              "source": "/required_pipeline/quarters/1/too_late/label",
+              "value": "too late to fund with new pipeline: this quarter depends on the pipeline already open"
+            },
+            "reasons": {
+              "source": "/required_pipeline/quarters/1/too_late/reasons",
+              "value": [
+                "needs $277,168.79 of pipeline created a day in total, above the team's best four-quarter average of $99,946.49 a day",
+                "needs $1,479,148 per ramped AE-month, above the team's best four-quarter average of $729,930"
+              ]
+            }
+          }
+        }
+      ],
+      "unavailable": null
+    },
+    "checks": [
+      {
+        "detail": "6119924.84 plus the contributions is 6156186.53; the working plan is 6156186.53",
+        "name": "worksheet bridge steps sum to the working plan",
+        "passed": true
+      },
+      {
+        "detail": "target 8000000 less 6156186.53 is 1843813.47",
+        "name": "worksheet working plan and remaining gap close on the target",
+        "passed": true
+      },
+      {
+        "detail": "the probe's baseline 6156186.53 against the report's 6156186.53",
+        "name": "worksheet baseline is the report's own expected fiscal year",
+        "passed": true
+      },
+      {
+        "detail": "8000000.00 against 8000000.00",
+        "name": "worksheet win_rate solve lands on the target to the cent",
+        "passed": true
+      },
+      {
+        "detail": "8000000.00 against 8000000.00",
+        "name": "worksheet won_arr solve lands on the target to the cent",
+        "passed": true
+      },
+      {
+        "detail": "8000000.00 against 8000000.00",
+        "name": "worksheet productivity solve lands on the target to the cent",
+        "passed": true
+      },
+      {
+        "detail": "8000253.45 against 8000000.00",
+        "name": "worksheet cycle_days solve reaches the target and the overshoot is what it reaches beyond it",
+        "passed": true
+      }
+    ],
+    "definition": "What moves the outcome: four operating drivers, each changed alone for deals created after the as-of date, measured around the plan in force.",
+    "drivers": [
+      {
+        "applies_to": "The share of deals created after the as-of date that are won, for organic, hire-generated and program pipeline alike. Open deals and actuals are untouched.",
+        "current": {
+          "creation_from": "2024-09-01",
+          "creation_to": "2025-08-31",
+          "fit_in_use": "matured snapshots",
+          "value": "0.1566"
+        },
+        "display": "percent",
+        "driver": "win_rate",
+        "evidence": {
+          "eligible_quarters": 6,
+          "gate": "A quarter counts when its deals have had the full horizon to win and at least twenty deals were created in it.",
+          "gate_passed": true,
+          "quarters": [
+            {
+              "created": 67,
+              "eligible": true,
+              "end": "2024-04-30",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY24",
+              "start": "2024-02-01",
+              "value": "0.2388",
+              "wins": 16
+            },
+            {
+              "created": 55,
+              "eligible": true,
+              "end": "2024-07-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY24",
+              "start": "2024-05-01",
+              "value": "0.2000",
+              "wins": 11
+            },
+            {
+              "created": 73,
+              "eligible": true,
+              "end": "2024-10-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q3FY24",
+              "start": "2024-08-01",
+              "value": "0.1370",
+              "wins": 10
+            },
+            {
+              "created": 59,
+              "eligible": true,
+              "end": "2025-01-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q4FY24",
+              "start": "2024-11-01",
+              "value": "0.1525",
+              "wins": 9
+            },
+            {
+              "created": 68,
+              "eligible": true,
+              "end": "2025-04-30",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY25",
+              "start": "2025-02-01",
+              "value": "0.1765",
+              "wins": 12
+            },
+            {
+              "created": 76,
+              "eligible": true,
+              "end": "2025-07-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY25",
+              "start": "2025-05-01",
+              "value": "0.1579",
+              "wins": 12
+            },
+            {
+              "created": 95,
+              "eligible": false,
+              "end": "2025-10-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q3FY25",
+              "start": "2025-08-01",
+              "value": "0.1579",
+              "wins": 15
+            },
+            {
+              "created": 104,
+              "eligible": false,
+              "end": "2026-01-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q4FY25",
+              "start": "2025-11-01",
+              "value": "0.1635",
+              "wins": 17
+            },
+            {
+              "created": 104,
+              "eligible": false,
+              "end": "2026-04-30",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q1FY26",
+              "start": "2026-02-01",
+              "value": "0.1250",
+              "wins": 13
+            },
+            {
+              "created": 127,
+              "eligible": false,
+              "end": "2026-07-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q2FY26",
+              "start": "2026-05-01",
+              "value": "0.0236",
+              "wins": 3
+            }
+          ],
+          "required_quarters": 6
+        },
+        "historical": {
+          "high": {
+            "change": {
+              "next twelve months": "1485699.14",
+              "rest of fiscal year": "253536.80"
+            },
+            "setting": "0.2051"
+          },
+          "low": {
+            "change": {
+              "next twelve months": "-227945.45",
+              "rest of fiscal year": "-38899.23"
+            },
+            "setting": "0.1491"
+          },
+          "maximum": "0.2388",
+          "minimum": "0.1370",
+          "rule": "The low and high settings are the means of the lower and the upper half of the observed quarters; with an odd number of quarters the middle one is in neither half."
+        },
+        "historical_unavailable_because": null,
+        "label": "Win rate of new pipeline",
+        "limitation": null,
+        "needed_alone": {
+          "achieved_fiscal_year_bookings": "8000000.00",
+          "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
+          "inside_observed_range": false,
+          "outcome": "solves",
+          "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
+          "overshoot": null,
+          "reason": null,
+          "reason_label": null,
+          "scale": null,
+          "stepped": false,
+          "target": "8000000.00",
+          "value": "0.5094"
+        },
+        "unit": "fraction",
+        "unit_label": "share of created deals won"
+      },
+      {
+        "applies_to": "The mean ARR of each win among deals created after the as-of date. Creation counts and the program dollars-to-deals conversion are unchanged.",
+        "current": {
+          "creation_from": "2024-09-01",
+          "creation_to": "2025-08-31",
+          "fit_in_use": "matured snapshots",
+          "value": "69645.61"
+        },
+        "display": "money",
+        "driver": "won_arr",
+        "evidence": {
+          "eligible_quarters": 6,
+          "gate": "A quarter counts when its deals have had the full horizon to win and at least five of them were won.",
+          "gate_passed": true,
+          "quarters": [
+            {
+              "created": 67,
+              "eligible": true,
+              "end": "2024-04-30",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY24",
+              "start": "2024-02-01",
+              "value": "68580.69",
+              "wins": 16
+            },
+            {
+              "created": 55,
+              "eligible": true,
+              "end": "2024-07-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY24",
+              "start": "2024-05-01",
+              "value": "52747.27",
+              "wins": 11
+            },
+            {
+              "created": 73,
+              "eligible": true,
+              "end": "2024-10-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q3FY24",
+              "start": "2024-08-01",
+              "value": "61469.70",
+              "wins": 10
+            },
+            {
+              "created": 59,
+              "eligible": true,
+              "end": "2025-01-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q4FY24",
+              "start": "2024-11-01",
+              "value": "63576.44",
+              "wins": 9
+            },
+            {
+              "created": 68,
+              "eligible": true,
+              "end": "2025-04-30",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY25",
+              "start": "2025-02-01",
+              "value": "79010.67",
+              "wins": 12
+            },
+            {
+              "created": 76,
+              "eligible": true,
+              "end": "2025-07-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY25",
+              "start": "2025-05-01",
+              "value": "78123.75",
+              "wins": 12
+            },
+            {
+              "created": 95,
+              "eligible": false,
+              "end": "2025-10-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q3FY25",
+              "start": "2025-08-01",
+              "value": "75411.00",
+              "wins": 15
+            },
+            {
+              "created": 104,
+              "eligible": false,
+              "end": "2026-01-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q4FY25",
+              "start": "2025-11-01",
+              "value": "69824.76",
+              "wins": 17
+            },
+            {
+              "created": 104,
+              "eligible": false,
+              "end": "2026-04-30",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q1FY26",
+              "start": "2026-02-01",
+              "value": "161054.08",
+              "wins": 13
+            },
+            {
+              "created": 127,
+              "eligible": false,
+              "end": "2026-07-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q2FY26",
+              "start": "2026-05-01",
+              "value": "76063.00",
+              "wins": 3
+            }
+          ],
+          "required_quarters": 6
+        },
+        "historical": {
+          "high": {
+            "change": {
+              "next twelve months": "385115.39",
+              "rest of fiscal year": "65720.53"
+            },
+            "setting": "75238.37"
+          },
+          "low": {
+            "change": {
+              "next twelve months": "-714842.23",
+              "rest of fiscal year": "-121988.89"
+            },
+            "setting": "59264.47"
+          },
+          "maximum": "79010.67",
+          "minimum": "52747.27",
+          "rule": "The low and high settings are the means of the lower and the upper half of the observed quarters; with an odd number of quarters the middle one is in neither half."
+        },
+        "historical_unavailable_because": null,
+        "label": "Won ARR per new win",
+        "limitation": null,
+        "needed_alone": {
+          "achieved_fiscal_year_bookings": "8000000.00",
+          "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
+          "inside_observed_range": false,
+          "outcome": "solves",
+          "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
+          "overshoot": null,
+          "reason": null,
+          "reason_label": null,
+          "scale": null,
+          "stepped": false,
+          "target": "8000000.00",
+          "value": "226552.41"
+        },
+        "unit": "dollars",
+        "unit_label": "dollars of ARR per won deal"
+      },
+      {
+        "applies_to": "Deals created per ramped AE-month, for the signed roster and any planned hires, after the as-of date. Open deals and actuals are untouched.",
+        "current": {
+          "creation_from": "2025-09-01",
+          "creation_to": "2026-08-31",
+          "fit_in_use": "matured snapshots",
+          "value": "8.1836"
+        },
+        "display": "decimal",
+        "driver": "productivity",
+        "evidence": {
+          "eligible_quarters": 10,
+          "gate": "A quarter counts when at least twenty deals were created in it and there was capacity to divide by. Creation is final the day a quarter ends, so there is no waiting.",
+          "gate_passed": true,
+          "quarters": [
+            {
+              "created": 67,
+              "eligible": true,
+              "end": "2024-04-30",
+              "exposure": "5.91",
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY24",
+              "start": "2024-02-01",
+              "value": "11.3295",
+              "wins": 16
+            },
+            {
+              "created": 55,
+              "eligible": true,
+              "end": "2024-07-31",
+              "exposure": "6.05",
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY24",
+              "start": "2024-05-01",
+              "value": "9.0982",
+              "wins": 11
+            },
+            {
+              "created": 73,
+              "eligible": true,
+              "end": "2024-10-31",
+              "exposure": "6.19",
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q3FY24",
+              "start": "2024-08-01",
+              "value": "11.7978",
+              "wins": 10
+            },
+            {
+              "created": 59,
+              "eligible": true,
+              "end": "2025-01-31",
+              "exposure": "8.27",
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q4FY24",
+              "start": "2024-11-01",
+              "value": "7.1357",
+              "wins": 9
+            },
+            {
+              "created": 68,
+              "eligible": true,
+              "end": "2025-04-30",
+              "exposure": "8.77",
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY25",
+              "start": "2025-02-01",
+              "value": "7.7519",
+              "wins": 12
+            },
+            {
+              "created": 76,
+              "eligible": true,
+              "end": "2025-07-31",
+              "exposure": "7.57",
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY25",
+              "start": "2025-05-01",
+              "value": "10.0357",
+              "wins": 12
+            },
+            {
+              "created": 95,
+              "eligible": true,
+              "end": "2025-10-31",
+              "exposure": "11.67",
+              "mature": false,
+              "not_eligible_because": null,
+              "quarter": "Q3FY25",
+              "start": "2025-08-01",
+              "value": "8.1415",
+              "wins": 15
+            },
+            {
+              "created": 104,
+              "eligible": true,
+              "end": "2026-01-31",
+              "exposure": "10.40",
+              "mature": false,
+              "not_eligible_because": null,
+              "quarter": "Q4FY25",
+              "start": "2025-11-01",
+              "value": "10.0016",
+              "wins": 17
+            },
+            {
+              "created": 104,
+              "eligible": true,
+              "end": "2026-04-30",
+              "exposure": "12.46",
+              "mature": false,
+              "not_eligible_because": null,
+              "quarter": "Q1FY26",
+              "start": "2026-02-01",
+              "value": "8.3485",
+              "wins": 13
+            },
+            {
+              "created": 127,
+              "eligible": true,
+              "end": "2026-07-31",
+              "exposure": "17.22",
+              "mature": false,
+              "not_eligible_because": null,
+              "quarter": "Q2FY26",
+              "start": "2026-05-01",
+              "value": "7.3747",
+              "wins": 3
+            }
+          ],
+          "required_quarters": 6
+        },
+        "historical": {
+          "high": {
+            "change": {
+              "next twelve months": "1306559.88",
+              "rest of fiscal year": "223663.36"
+            },
+            "setting": "10.4526"
+          },
+          "low": {
+            "change": {
+              "next twelve months": "-249407.48",
+              "rest of fiscal year": "-42694.79"
+            },
+            "setting": "7.7505"
+          },
+          "maximum": "11.7978",
+          "minimum": "7.1357",
+          "rule": "The low and high settings are the means of the lower and the upper half of the observed quarters; with an odd number of quarters the middle one is in neither half."
+        },
+        "historical_unavailable_because": null,
+        "label": "Creation productivity",
+        "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter.",
+        "needed_alone": {
+          "achieved_fiscal_year_bookings": "8000000.00",
+          "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
+          "inside_observed_range": false,
+          "outcome": "solves",
+          "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
+          "overshoot": null,
+          "reason": null,
+          "reason_label": null,
+          "scale": null,
+          "stepped": false,
+          "target": "8000000.00",
+          "value": "26.8884"
+        },
+        "unit": "created deals per ramped AE-month",
+        "unit_label": "created deals per ramped AE-month"
+      },
+      {
+        "applies_to": "Days from creation to win for deals created after the as-of date. Each win-time sample is scaled and rounded up to whole days; weights, probability and size are unchanged.",
+        "current": {
+          "creation_from": "2024-09-01",
+          "creation_to": "2025-08-31",
+          "fit_in_use": "matured snapshots",
+          "value": "120.34"
+        },
+        "display": "decimal",
+        "driver": "cycle_days",
+        "evidence": {
+          "eligible_quarters": 6,
+          "gate": "A quarter counts when its deals have had the full horizon to win and at least five of them were won.",
+          "gate_passed": true,
+          "quarters": [
+            {
+              "created": 67,
+              "eligible": true,
+              "end": "2024-04-30",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY24",
+              "start": "2024-02-01",
+              "value": "119.69",
+              "wins": 16
+            },
+            {
+              "created": 55,
+              "eligible": true,
+              "end": "2024-07-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY24",
+              "start": "2024-05-01",
+              "value": "119.73",
+              "wins": 11
+            },
+            {
+              "created": 73,
+              "eligible": true,
+              "end": "2024-10-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q3FY24",
+              "start": "2024-08-01",
+              "value": "147.10",
+              "wins": 10
+            },
+            {
+              "created": 59,
+              "eligible": true,
+              "end": "2025-01-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q4FY24",
+              "start": "2024-11-01",
+              "value": "88.89",
+              "wins": 9
+            },
+            {
+              "created": 68,
+              "eligible": true,
+              "end": "2025-04-30",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q1FY25",
+              "start": "2025-02-01",
+              "value": "122.92",
+              "wins": 12
+            },
+            {
+              "created": 76,
+              "eligible": true,
+              "end": "2025-07-31",
+              "exposure": null,
+              "mature": true,
+              "not_eligible_because": null,
+              "quarter": "Q2FY25",
+              "start": "2025-05-01",
+              "value": "137.25",
+              "wins": 12
+            },
+            {
+              "created": 95,
+              "eligible": false,
+              "end": "2025-10-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q3FY25",
+              "start": "2025-08-01",
+              "value": "120.93",
+              "wins": 15
+            },
+            {
+              "created": 104,
+              "eligible": false,
+              "end": "2026-01-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q4FY25",
+              "start": "2025-11-01",
+              "value": "120.47",
+              "wins": 17
+            },
+            {
+              "created": 104,
+              "eligible": false,
+              "end": "2026-04-30",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q1FY26",
+              "start": "2026-02-01",
+              "value": "104.77",
+              "wins": 13
+            },
+            {
+              "created": 127,
+              "eligible": false,
+              "end": "2026-07-31",
+              "exposure": null,
+              "mature": false,
+              "not_eligible_because": "its deals have not had the full horizon to win",
+              "quarter": "Q2FY26",
+              "start": "2026-05-01",
+              "value": "79.00",
+              "wins": 3
+            }
+          ],
+          "required_quarters": 6
+        },
+        "historical": {
+          "high": {
+            "change": {
+              "next twelve months": "-307100.57",
+              "rest of fiscal year": "-163975.20"
+            },
+            "setting": "135.76"
+          },
+          "low": {
+            "change": {
+              "next twelve months": "208810.23",
+              "rest of fiscal year": "119737.59"
+            },
+            "setting": "109.43"
+          },
+          "maximum": "147.10",
+          "minimum": "88.89",
+          "rule": "The low and high settings are the means of the lower and the upper half of the observed quarters; with an odd number of quarters the middle one is in neither half."
+        },
+        "historical_unavailable_because": null,
+        "label": "Cycle length of new pipeline",
+        "limitation": "A quarter's cycle is the plain mean days of its wins, while the fit in use weights each day, so the two are close in kind but not the same measure.",
+        "needed_alone": {
+          "achieved_fiscal_year_bookings": "8000253.45",
+          "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
+          "inside_observed_range": false,
+          "outcome": "solves",
+          "outcome_label": "Solves mathematically, stepped: win times are whole days, so there is no exact root. This is the largest setting that reaches the target, and it overshoots by the amount shown.",
+          "overshoot": "253.45",
+          "reason": null,
+          "reason_label": null,
+          "scale": "11/113",
+          "stepped": true,
+          "target": "8000000.00",
+          "value": "12.20"
+        },
+        "unit": "days",
+        "unit_label": "days from creation to win"
+      }
+    ],
+    "expectation_note": "Every figure here is an expected value from the forward function. No simulation is run, so no range is attached to any sensitivity.",
+    "history_note": "Historical settings describe what the company has done. They are not forecasts, they are not called achievable, and nothing here says they will happen again.",
+    "measured_around": "the plan in force: its hires and program pipeline, as applied",
+    "plan_in_force": true,
+    "sensitivity_note": "Each change is a conditional change in expected bookings, measured one driver at a time around the plan in force. It is not a forecast and not a cause, and the bars are never summed: drivers act together, not alone.",
+    "summary": {
+      "as_signed": {
+        "source": "/gap/fiscal_year/expected",
+        "value": "6119924.84"
+      },
+      "cash_cost_in_twelve_months": {
+        "source": "/plan/cash_cost_in_twelve_months",
+        "value": "265222.04"
+      },
+      "fiscal_year_target": {
+        "source": "/gap/fiscal_year/target",
+        "value": "8000000"
+      },
+      "no_plan_note": null,
+      "remaining_gap": {
+        "source": "/plan/gap/fiscal_year/gap_with_plan",
+        "value": "1843813.47"
+      },
+      "twelve_month_gain": {
+        "source": "/plan/difference/next twelve months",
+        "value": "844156.36"
+      },
+      "working_plan": {
+        "source": "/plan/expected_fiscal_year",
+        "value": "6156186.53"
+      }
+    },
+    "windows": [
+      "rest of fiscal year",
+      "next twelve months"
+    ]
   }
 }

@@ -42,6 +42,9 @@ from .worksheet_rules import (
 )
 
 ZERO = Decimal(0)
+CENT = Decimal(
+    "0.01"
+)  # a target with fractions of a cent can differ from displayed figures by one
 WINDOWS = (REST_OF_FY, NEXT_12)
 
 SENSITIVITY_NOTE = (
@@ -502,7 +505,10 @@ def _bridge(
         }
     )
     sums = cents(running) == Decimal(working)
-    closes = Decimal(str(year["target"])) - Decimal(working) == Decimal(remaining)
+    closes = (
+        abs(Decimal(str(year["target"])) - Decimal(working) - Decimal(remaining))
+        <= CENT
+    )
     bridge = {
         "order": BRIDGE_ORDER_NOTE,
         "measure": "fiscal-year bookings expected",
@@ -685,7 +691,10 @@ def worksheet_section(
                 "lands on the target to the cent",
             )
         elif n["outcome"] == wd.SOLVES:
-            ok = reached >= target and Decimal(n["overshoot"]) == reached - target
+            ok = (
+                reached >= target
+                and abs(Decimal(n["overshoot"]) - (reached - target)) <= CENT
+            )
             how = "reaches the target and the overshoot is what it reaches beyond it"
         else:
             ok, how = True, "nothing to reach"

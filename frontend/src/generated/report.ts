@@ -1075,7 +1075,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.4.0";
+  schema_version: "2.5.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];
@@ -1090,6 +1090,254 @@ export type TieoutReport = {
       verdict: "yes" | "no";
     };
   };
+  worksheet:
+    | {
+        unavailable: Text;
+      }
+    | {
+        actions: {
+          basis: "as signed";
+          note: Text;
+          rows: {
+            action: {
+              source: Text;
+              value: Text;
+            };
+            bookings_gained: {
+              source: Text;
+              value: {
+                "next twelve months": Money;
+                "rest of fiscal year": Money;
+              } | null;
+            };
+            closes_alone_label: Text;
+            closes_alone_outcome: {
+              source: Text;
+              value: Text;
+            };
+            kind: "hire" | "program";
+            status: {
+              source: Text;
+              value: Text;
+            };
+          }[];
+        };
+        bridge: {
+          contributions: {
+            kind: "hires" | "program";
+            label: Text;
+            "next twelve months": Money | null;
+            "rest of fiscal year": Money | null;
+            valued: boolean;
+          }[];
+          measure: Text;
+          order: Text;
+          steps: {
+            change: Money | null;
+            from: Money | null;
+            kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+            label: Text;
+            note: Text | null;
+            source: Text;
+            to: Money;
+            valued: boolean;
+          }[];
+          target: {
+            source: Text;
+            value: Decimal;
+          };
+        };
+        chain: {
+          basis: "as signed";
+          note: Text;
+          quarters: {
+            bookings: {
+              expected: {
+                source: Text;
+                value: Money | null;
+              };
+              gap: {
+                source: Text;
+                value: Money | null;
+              };
+              target: {
+                source: Text;
+                value: Decimal;
+              };
+            };
+            created_pipeline: {
+              created_between: {
+                source: Text;
+                /**
+                 * @minItems 2
+                 * @maxItems 2
+                 */
+                value: [Date, Date];
+              };
+              expected: {
+                source: Text;
+                value: Money;
+              };
+              headline: {
+                source: Text;
+                value: Text;
+              };
+              outcome: {
+                source: Text;
+                value: "already covered" | "feasible" | "unreachable within bounds";
+              };
+              required: {
+                source: Text;
+                value: Money | null;
+              };
+              required_note: {
+                source: Text;
+                value: Text | null;
+              };
+            };
+            per_ramped_ae_month: {
+              decides: {
+                source: Text;
+                value: boolean;
+              };
+              expected: {
+                source: Text;
+                value: Money | null;
+              };
+              note: {
+                source: Text;
+                value: Text | null;
+              };
+              required: {
+                source: Text;
+                value: Money | null;
+              };
+            };
+            quarter: Quarter;
+            status: {
+              source: Text;
+              value: "closed" | "in progress" | "not started";
+            };
+            timing: {
+              applies: {
+                source: Text;
+                value: boolean;
+              };
+              label: {
+                source: Text;
+                value: Text | null;
+              };
+              reasons: {
+                source: Text;
+                value: Text[];
+              };
+            };
+          }[];
+          unavailable: Text | null;
+        };
+        checks: Check[];
+        definition: Text;
+        drivers: {
+          applies_to: Text;
+          current: {
+            creation_from: Date;
+            creation_to: Date;
+            fit_in_use: Text;
+            value: Decimal;
+          };
+          display: "percent" | "money" | "decimal";
+          driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
+          evidence: {
+            eligible_quarters: number;
+            gate: Text;
+            gate_passed: boolean;
+            quarters: {
+              created: number;
+              eligible: boolean;
+              end: Date;
+              exposure: Decimal | null;
+              mature: boolean;
+              not_eligible_because: Text | null;
+              quarter: Quarter;
+              start: Date;
+              value: Decimal | null;
+              wins: number;
+            }[];
+            required_quarters: number;
+          };
+          historical: {
+            high: {
+              change: {
+                "next twelve months": Money;
+                "rest of fiscal year": Money;
+              };
+              setting: Decimal;
+            };
+            low: {
+              change: {
+                "next twelve months": Money;
+                "rest of fiscal year": Money;
+              };
+              setting: Decimal;
+            };
+            maximum: Decimal;
+            minimum: Decimal;
+            rule: Text;
+          } | null;
+          historical_unavailable_because: Text | null;
+          label: Text;
+          limitation: Text | null;
+          needed_alone: {
+            achieved_fiscal_year_bookings: Money;
+            history_label: Text | null;
+            inside_observed_range: boolean | null;
+            outcome: "solves" | "cannot_close_alone" | "already_at_or_ahead";
+            outcome_label: Text;
+            overshoot: Money | null;
+            reason: ("bounded_at_one" | "no_effect_in_the_year" | "short_even_at_zero_days") | null;
+            reason_label: Text | null;
+            scale: string | null;
+            stepped: boolean;
+            target: Money;
+            value: Decimal | null;
+          };
+          unit: Text;
+          unit_label: Text;
+        }[];
+        expectation_note: Text;
+        history_note: Text;
+        measured_around: Text;
+        plan_in_force: boolean;
+        sensitivity_note: Text;
+        summary: {
+          as_signed: {
+            source: Text;
+            value: Money;
+          };
+          cash_cost_in_twelve_months: {
+            source: Text;
+            value: Money | null;
+          } | null;
+          fiscal_year_target: {
+            source: Text;
+            value: Decimal;
+          };
+          no_plan_note: Text | null;
+          remaining_gap: {
+            source: Text;
+            value: Money;
+          };
+          twelve_month_gain: {
+            source: Text;
+            value: Money;
+          } | null;
+          working_plan: {
+            source: Text;
+            value: Money;
+          };
+        };
+        windows: Text[];
+      };
 };
 export type Text = string;
 export type Money = string & { readonly __decimal: true };

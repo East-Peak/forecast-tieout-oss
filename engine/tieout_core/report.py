@@ -13,7 +13,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
 
-from . import actions, capacity_report, pipeline_report, stretch_report
+from . import actions, capacity_report, pipeline_report, stretch_report, worksheet
 from .backtest import (
     HORIZONS,
     MIN_FOLDS,
@@ -106,6 +106,7 @@ class Prepared:
     actions_checks: list[Check]
     required: dict
     required_checks: list[Check]
+    quarters: tuple = ()  # the worksheet's evidence: the company's past, by creation quarter
 
 
 def prepare(
@@ -251,12 +252,13 @@ def prepare(
         )  # fmt: skip
     else:
         required, required_checks = {"unavailable": fitted.unavailable_reason}, []
+    quarters = worksheet.company_quarters(ground) if ground is not None else ()
     return Prepared(
         profile_dir, data_dir, as_of, draws, seed, params, incumbent_name, profile, loaded,
         rec, pop, windows, labels, horizons, cap, bt, recency, model, forecasts, sim, ev,
         shown, floors, spans, ranged_groups, book, gap, lever_checks, roster_section,
         productivity, ground, scenario, actions_section, actions_checks, required,
-        required_checks,
+        required_checks, quarters,
     )  # fmt: skip
 
 
@@ -300,6 +302,16 @@ def finish(
     elif plan is not None:
         plan_section = actions_section
     plan_checks += actions_checks
+    if ground is not None:
+        hires, inflows = (
+            actions.plan_inputs(ground, plan) if plan is not None else ((), ())
+        )
+        worksheet_section, _ = worksheet.worksheet_section(
+            ground, state.quarters, params, plan_section if plan is not None else None,
+            hires, inflows, actions_section, gap, required,
+        )  # fmt: skip
+    else:
+        worksheet_section = {"unavailable": fitted.unavailable_reason}
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
@@ -409,6 +421,7 @@ def finish(
     if plan_section is not None:
         report["plan"] = plan_section
     report["actions"] = actions_section
+    report["worksheet"] = worksheet_section
     report["schema_version"] = SCHEMA_VERSION
     return report
 

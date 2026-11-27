@@ -969,7 +969,7 @@
       "unavailable": "no capacity.yaml in the profile"
     }
   },
-  "schema_version": "2.4.0",
+  "schema_version": "2.5.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [],
@@ -1044,5 +1044,8 @@
       "summary": "12 of 12 self-checks passed",
       "verdict": "yes"
     }
+  },
+  "worksheet": {
+    "unavailable": "no close-timing evidence for open deals in S5"
   }
 }

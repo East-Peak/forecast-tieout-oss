@@ -33,7 +33,7 @@ from .rates import rate_unit
 from .stretch import horizon_for
 from .stretch_rules import HORIZONS
 
-SCHEMA_VERSION = "2.4.0"
+SCHEMA_VERSION = "2.5.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -1080,6 +1080,12 @@ def _actions() -> dict:
     return one_of(obj({"unavailable": TEXT}), full)
 
 
+def _worksheet() -> dict:
+    from . import worksheet_contract
+
+    return worksheet_contract.schema()
+
+
 DEFS_MONTH_KEY = r"^\d{4}-(0[1-9]|1[0-2])$"
 
 DEFS["BetterVerdict"] = enum("yes", "no", "not enough history to say")
@@ -1125,6 +1131,7 @@ def _fitted_forecast_unavailable_together() -> dict:
         "then": {
             "properties": {
                 "actions": says_unavailable,
+                "worksheet": says_unavailable,
                 "required_pipeline": says_unavailable,
                 "plan": says_unavailable,
                 "gap": {
@@ -1142,6 +1149,7 @@ def _fitted_forecast_unavailable_together() -> dict:
         "else": {
             "properties": {
                 "actions": {"not": says_unavailable},
+                "worksheet": {"not": says_unavailable},
                 "required_pipeline": {"not": says_unavailable},
                 "plan": {"not": says_unavailable},
                 "gap": {
@@ -1175,6 +1183,7 @@ def schema() -> dict:
             # present only when a plan file was given
             "plan": _plan(),
             "actions": _actions(),
+            "worksheet": _worksheet(),
             "schema_version": const(SCHEMA_VERSION),
         },
         "required": [
@@ -1190,6 +1199,7 @@ def schema() -> dict:
             "quota_productivity",
             "required_pipeline",
             "actions",
+            "worksheet",
             "schema_version",
         ],
         "additionalProperties": False,
@@ -1906,4 +1916,7 @@ def _cross_rules(r: dict) -> list[str]:
                     (row["status"] == "valued") == adopted,
                     "the hire action is valued exactly when capacity is adopted",
                 )
+    from . import worksheet_contract
+
+    worksheet_contract.rules_for(r, rule)
     return found
