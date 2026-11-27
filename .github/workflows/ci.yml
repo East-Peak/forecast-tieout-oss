@@ -4,12 +4,6 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
-    inputs:
-      generate_visual_baselines:
-        description: "Generate Linux Playwright visual baselines and upload them as an artifact"
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: read
@@ -45,11 +39,14 @@ jobs:
 
       - name: Tieout core lint and format (new package only)
         run: |
-          ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py
-          ruff format --check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py
+          ruff check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py
+          ruff format --check engine/tieout_core engine/tests/tieout_core engine/scripts/synth_history.py engine/scripts/generate_data_v2.py engine/scripts/generate_app_reports.py
 
       - name: Data-v2 determinism check
         run: python -m engine.scripts.generate_data_v2 --verify
+
+      - name: App data is current (reports, scenario plan files, schema, TypeScript types)
+        run: python -m engine.scripts.generate_app_reports --verify
 
       - name: Tieout core report for the demo companies, without and with the plan
         run: |
@@ -72,11 +69,8 @@ jobs:
       - name: TypeScript check
         run: cd frontend && npx tsc --noEmit
 
-      - name: Frontend scenario golden-vector parity
-        run: cd frontend && npm test -- --run src/engine/__tests__/scenario.golden-vectors.test.ts
-
-      - name: Frontend tests (vitest)
-        run: cd frontend && npm test -- --run
+      - name: Frontend verify (knip dead-code gate, then vitest)
+        run: cd frontend && npm run verify
 
       - name: Frontend build
         run: cd frontend && npm run build
@@ -165,38 +159,3 @@ jobs:
 
       - name: Browser smoke
         run: cd frontend && npx playwright test --grep @smoke
-
-      - name: Visual regression
-        if: ${{ hashFiles('frontend/e2e/**/*-snapshots/*.png') != '' }}
-        run: cd frontend && VISUAL=1 npx playwright test --grep @visual
-
-  visual-baselines:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.generate_visual_baselines }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install Node deps
-        run: cd frontend && npm ci
-
-      - name: Install Chromium
-        run: cd frontend && npx playwright install --with-deps chromium
-
-      - name: Frontend build
-        run: cd frontend && npm run build
-
-      - name: Generate visual baselines
-        run: cd frontend && VISUAL=1 npx playwright test --grep @visual --update-snapshots
-
-      - name: Upload visual baselines
-        uses: actions/upload-artifact@v4
-        with:
-          name: forecast-tieout-playwright-baselines
-          path: frontend/e2e/**/*-snapshots/*.png
-          if-no-files-found: error
