@@ -29,10 +29,17 @@ export function usdShort(raw: string): string {
   return zero ? body : sign + body;
 }
 
+const percentHalfUp = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+  roundingMode: "halfExpand",
+  useGrouping: false,
+} as Intl.NumberFormatOptions);
+
 export function percent1(value: number | string): string {
-  const n = Number(value);
-  const shown = (Math.abs(n) * 100).toFixed(1);
-  return `${n < 0 && Number(shown) !== 0 ? "-" : ""}${shown}%`;
+  const shown = percentHalfUp.format(Math.abs(Number(value)));
+  return Number(value) < 0 && Number.parseFloat(shown) !== 0 ? `-${shown}` : shown;
 }
 
 export function count(n: number): string {
@@ -51,3 +58,14 @@ export function date(iso: string): string {
 export function month(iso: string): string {
   return new Date(`${iso}-01T00:00:00Z`).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
 }
+
+/** A count, or a decimal string at the report's own places, grouped (written with toLocaleString, not the formatter's BigInt). */
+export function quantity(raw: string | number): string {
+  if (typeof raw === "number") return raw.toLocaleString("en-US");
+  const negative = raw.startsWith("-");
+  const [whole, fraction] = (negative ? raw.slice(1) : raw).split(".");
+  const shown = `${Number(whole).toLocaleString("en-US")}${fraction === undefined ? "" : `.${fraction}`}`;
+  return negative && /[1-9]/.test(raw) ? `-${shown}` : shown;
+}
+
+export const multiple = (raw: string): string => `${quantity(raw)}x`;

@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import type { ComponentType, LazyExoticComponent } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import { fileLoaders } from "./data/reportFiles";
@@ -7,7 +8,11 @@ import type { Loaders } from "./session/ReportSession";
 import { NotBuilt } from "./shell/NotBuilt";
 import { SCREENS } from "./shell/screens";
 
-const ForecastScreen = lazy(() => import("./screens/forecast/ForecastScreen"));
+/** The screens that are built; the rest of the five are placeholders until they are. */
+const BUILT: Record<string, LazyExoticComponent<ComponentType>> = {
+  "/forecast": lazy(() => import("./screens/forecast/ForecastScreen")),
+  "/capacity": lazy(() => import("./screens/capacity/CapacityScreen")),
+};
 
 function RouteLoading() {
   return (
@@ -28,17 +33,24 @@ export default function App({ loaders = fileLoaders }: { loaders?: Loaders }) {
     <ReportSessionProvider loaders={loaders}>
       <Routes>
         <Route element={<Layout />}>
-          <Route
-            path="/forecast"
-            element={
-              <Suspense fallback={<RouteLoading />}>
-                <ForecastScreen />
-              </Suspense>
-            }
-          />
-          {SCREENS.filter((s) => s.path !== "/forecast").map((screen) => (
-            <Route key={screen.path} path={screen.path} element={<NotBuilt screen={screen} />} />
-          ))}
+          {SCREENS.map((screen) => {
+            const Built = BUILT[screen.path];
+            return (
+              <Route
+                key={screen.path}
+                path={screen.path}
+                element={
+                  Built ? (
+                    <Suspense fallback={<RouteLoading />}>
+                      <Built />
+                    </Suspense>
+                  ) : (
+                    <NotBuilt screen={screen} />
+                  )
+                }
+              />
+            );
+          })}
           <Route path="*" element={<ToForecast />} />
         </Route>
       </Routes>
