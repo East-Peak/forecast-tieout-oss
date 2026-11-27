@@ -1,8 +1,11 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 import { afterEach, describe, expect, it } from "vitest";
 import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
+import type { Editor } from "../../editor/store";
+import { YourPlanStore } from "../../editor/store";
+import type { ApplyOutcome, Facts, PlanDoc } from "../../editor/protocol";
 import { ReportSessionProvider, useSession, type Loaders } from "../ReportSession";
 import { STORAGE_KEY } from "../storage";
 
@@ -73,10 +76,10 @@ function Probe() {
   );
 }
 
-function mount(loaders: Loaders, url: string) {
+function mount(loaders: Loaders, url: string, yourPlan?: { store: YourPlanStore; desktop: boolean }) {
   return render(
     <MemoryRouter initialEntries={[url]}>
-      <ReportSessionProvider loaders={loaders}>
+      <ReportSessionProvider loaders={loaders} yourPlan={yourPlan?.store} desktop={yourPlan?.desktop}>
         <Probe />
       </ReportSessionProvider>
     </MemoryRouter>,
@@ -256,5 +259,132 @@ describe("the report-backed session", () => {
     await act(async () => pending.get("a/as-signed.json")!.resolve(report("A")));
     await waitFor(() => expect(screen.getByTestId("status").textContent).toBe("error"));
     expect(screen.getByTestId("error").textContent).toMatch(/comparison/);
+  });
+});
+
+describe("Your plan in the session", () => {
+  const DEMO: PlanDoc = { hires: [], programs: [] };
+  const mine = (tag: string, company = "a") =>
+    ({ schema_version: "1.0.0", tag, inputs: { identity: { company, scenario: "your-plan" } } }) as unknown as TieoutReport;
+  const row = (tag: string) => ({ scenario: "your-plan", label: tag });
+
+  function fakeStore(options: { fail?: string } = {}) {
+    const answers: Array<Deferred<ApplyOutcome>> = [];
+    const opened: string[] = [];
+    const editor: Editor = {
+      status: { phase: "idle" },
+      subscribe: () => () => {},
+      open: (company) => {
+        opened.push(company);
+        return Promise.resolve({ company, segments: [], months: [], max_dollars: "1", demo_plan: DEMO } as Facts);
+      },
+      apply: (company) => {
+        if (options.fail) return Promise.reject(new Error(options.fail));
+        const d = deferred<ApplyOutcome>();
+        answers.push(d);
+        void company;
+        return d.promise;
+      },
+    };
+    return { store: new YourPlanStore(editor), answers, opened };
+  }
+  const outcome = (tag: string, company = "a"): ApplyOutcome => ({ kind: "report", report: mine(tag, company), comparison: row(tag) as never });
+  const rowsOf = () => (screen.getByTestId("rows").textContent ?? "");
+
+  function Rows() {
+    const { state } = useSession();
+    return <div data-testid="rows">{state.status === "ready" ? state.comparison.rows.map((r) => r.scenario).join(",") : "-"}</div>;
+  }
+  function mountWith(loaders: Loaders, url: string, yourPlan: { store: YourPlanStore; desktop: boolean }) {
+    return render(
+      <MemoryRouter initialEntries={[url]}>
+        <ReportSessionProvider loaders={loaders} yourPlan={yourPlan.store} desktop={yourPlan.desktop}>
+          <Probe />
+          <Rows />
+        </ReportSessionProvider>
+      </MemoryRouter>,
+    );
+  }
+  const baseline = (loaders: Loaders): Loaders => ({
+    ...loaders,
+    comparison: (path) => Promise.resolve({ company: path.split("/")[0], rows: [{ scenario: "as-signed" }] } as unknown as ScenarioComparison),
+  });
+
+  it("offers Your plan on a desktop screen only", async () => {
+    const { loaders } = harness();
+    const wide = fakeStore();
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store: wide.store, desktop: true });
+    await waitFor(() => expect(text("selection")).toBe("a/your-plan"));
+    cleanup();
+    const phone = fakeStore();
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store: phone.store, desktop: false });
+    await waitFor(() => expect(text("selection")).toBe("a/as-signed"));
+    expect(text("notice")).toMatch(/your-plan/);
+    expect(phone.opened).toEqual([]);
+  });
+
+  it("loads the plan through the store, checks it like any other report, and adds the core's row to the comparison", async () => {
+    const { loaders } = harness();
+    const { store, answers } = fakeStore();
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store, desktop: true });
+    await waitFor(() => expect(answers).toHaveLength(1));
+    expect(text("status")).toBe("loading");
+    await act(async () => answers[0].resolve(outcome("first")));
+    await waitFor(() => expect(text("status")).toBe("ready"));
+    expect(text("shown")).toBe("first");
+    expect(rowsOf()).toBe("as-signed,your-plan");
+  });
+
+  it("refuses a computed report whose identity is not the visitor's plan, as it would a fetched one", async () => {
+    const { loaders } = harness();
+    const { store, answers } = fakeStore();
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store, desktop: true });
+    await waitFor(() => expect(answers).toHaveLength(1));
+    const wrong = { ...mine("x"), inputs: { identity: { company: "a", scenario: "demo-plan" } } } as unknown as TieoutReport;
+    await act(async () => answers[0].resolve({ kind: "report", report: wrong, comparison: row("x") as never }));
+    await waitFor(() => expect(text("status")).toBe("error"));
+    expect(text("error")).toMatch(/a\/demo-plan.*not a\/your-plan/);
+  });
+
+  it("swaps in a newly applied plan without loading again, and leaves it when a named scenario is chosen", async () => {
+    const { loaders, pending } = harness();
+    const { store, answers } = fakeStore();
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store, desktop: true });
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await act(async () => answers[0].resolve(outcome("first")));
+    await waitFor(() => expect(text("shown")).toBe("first"));
+    store.setDraft("a", DEMO);
+    const applying = store.apply("a");
+    await waitFor(() => expect(answers).toHaveLength(2));
+    await act(async () => answers[1].resolve(outcome("second")));
+    await applying;
+    await waitFor(() => expect(text("shown")).toBe("second"));
+    expect(text("status")).toBe("ready");
+    await act(async () => choose("a", "as-signed"));
+    await waitFor(() => expect(pending.has("a/as-signed.json")).toBe(true));
+    await act(async () => pending.get("a/as-signed.json")!.resolve(report("signed")));
+    expect(text("shown")).toBe("signed");
+    // back again: what was applied is still there, with no new request to the worker
+    await act(async () => choose("a", "your-plan"));
+    await waitFor(() => expect(text("shown")).toBe("second"));
+    expect(answers).toHaveLength(2);
+  });
+
+  it("never remembers Your plan as the choice for next time", async () => {
+    const { loaders } = harness();
+    const { store, answers } = fakeStore();
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store, desktop: true });
+    await waitFor(() => expect(answers).toHaveLength(1));
+    await act(async () => answers[0].resolve(outcome("first")));
+    await waitFor(() => expect(text("status")).toBe("ready"));
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+
+  it("a failure to compute is an error with a way to try again", async () => {
+    const { loaders } = harness();
+    const { store } = fakeStore({ fail: "no answer within the time allowed" });
+    mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store, desktop: true });
+    await waitFor(() => expect(text("status")).toBe("error"));
+    expect(text("error")).toMatch(/no answer/);
   });
 });

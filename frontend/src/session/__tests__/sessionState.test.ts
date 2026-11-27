@@ -121,4 +121,22 @@ describe("the session's states", () => {
   it("an answer before the index has arrived is ignored", () => {
     expect(reduce(initialState, { type: "loaded", requestId: 1, report: report("a"), comparison })).toBe(initialState);
   });
+  it("a retry loads the failed choice again under a new request, and a late answer to the first try is ignored", () => {
+    const loading = first("a");
+    const failed = reduce(loading, { type: "failed", requestId: id(loading), error: "no answer" });
+    const again = reduce(failed, { type: "retry" });
+    expect(again).toMatchObject({ status: "loading", selection: sel("a") });
+    expect(id(again)).toBeGreaterThan(id(loading));
+    expect(reduce(again, { type: "loaded", requestId: id(loading), report: report("old"), comparison })).toBe(again);
+    expect(reduce(ready("a"), { type: "retry" }).status).toBe("ready");
+  });
+
+  it("a replaced report swaps what a ready screen shows without loading again, for the choice it was computed for", () => {
+    const shown = ready("a");
+    const now = reduce(shown, { type: "replaced", selection: sel("a"), report: report("new"), comparison });
+    expect(now).toMatchObject({ status: "ready", report: { tag: "new" }, requestId: id(shown) });
+    // computed for a choice no longer on the screen: nothing happens
+    expect(reduce(shown, { type: "replaced", selection: sel("b"), report: report("elsewhere"), comparison })).toBe(shown);
+    expect(reduce(first("a"), { type: "replaced", selection: sel("a"), report: report("early"), comparison }).status).toBe("loading");
+  });
 });

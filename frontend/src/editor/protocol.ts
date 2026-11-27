@@ -12,12 +12,12 @@ export interface Facts {
   demo_plan: PlanDoc;
 }
 
-export interface HireDoc {
+interface HireDoc {
   segment: string;
   start: string;
   count: number;
 }
-export interface ProgramDoc {
+interface ProgramDoc {
   name: string;
   pipeline: number;
   start: string;
