@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildChart } from "../chartData";
+import { buildChart, plotExtent, plotPoint } from "../chartData";
 import type { SeriesSpec } from "../chartData";
 
 const doc = {
@@ -105,5 +105,65 @@ describe("a value the file holds as a JSON count", () => {
     const bad = { months: [{ month: "2026-07", heads: "many" }] };
     const heads: SeriesSpec = { key: "heads", label: "Heads", kind: "decimal", path: "/months/{month={period}}/heads", periods: { rowsAt: "/months", property: "month" } };
     expect(() => buildChart(bad, [heads])).toThrow(/decimal/);
+  });
+});
+
+describe("rows plotted by position, spans and gaps (the worksheet's charts)", () => {
+  const sheet = {
+    rows: [
+      { id: "z", kind: "a", to: "30.00", from: null, low: { change: "-5.50" } },
+      { id: "a", kind: "b", to: "40.00", from: "30.00", low: null },
+      { id: "m", kind: "a", to: "50.00", from: "40.00", low: { change: "7.25" } },
+    ],
+    target: { value: "60" },
+  };
+  const at = { indexesAt: "/rows" } as const;
+
+  it("keeps the file's own order: nothing is sorted by name", () => {
+    const spec: SeriesSpec = { key: "to", label: "To", kind: "decimal", path: "/rows/{period}/to", periods: at };
+    expect(buildChart(sheet, [spec]).rows.map((r) => r.period)).toEqual(["0", "1", "2"]);
+    const named: SeriesSpec = { ...spec, path: "/rows/{id={period}}/to", periods: { rowsAt: "/rows", property: "id" } };
+    expect(buildChart(sheet, [named]).rows.map((r) => r.period)).toEqual(["a", "m", "z"]);
+  });
+
+  it("a span is [start, value] from two pointers, or the bare value where the file has no start", () => {
+    const span: SeriesSpec = { key: "move", label: "Move", kind: "span", path: "/rows/{period}/to", from: "/rows/{period}/from", periods: at };
+    expect(buildChart(sheet, [span]).rows).toEqual([
+      { period: "0", move: 30 },
+      { period: "1", move: [30, 40] },
+      { period: "2", move: [40, 50] },
+    ]);
+  });
+
+  it("a series can take only the rows whose property is one of the values; the series together lay out every row in the file's order", () => {
+    const b: SeriesSpec = { key: "b", label: "B", kind: "decimal", path: "/rows/{period}/to", periods: { indexesAt: "/rows", where: ["kind", ["b"]] } };
+    const a: SeriesSpec = { key: "a", label: "A", kind: "decimal", path: "/rows/{period}/to", periods: { indexesAt: "/rows", where: ["kind", ["a"]] } };
+    expect(buildChart(sheet, [b]).rows).toEqual([{ period: "1", b: 40 }]);
+    expect(buildChart(sheet, [b, a]).rows).toEqual([
+      { period: "0", b: null, a: 30 },
+      { period: "1", b: 40, a: null },
+      { period: "2", b: null, a: 50 },
+    ]);
+  });
+
+  it("a path through a null is a gap when the series says it may be, and an error otherwise", () => {
+    const low: SeriesSpec = { key: "low", label: "Low", kind: "decimal", path: "/rows/{period}/low/change", periods: at };
+    expect(() => buildChart(sheet, [low])).toThrow(/unbound path/);
+    expect(buildChart(sheet, [{ ...low, nullable: true }]).rows.map((r) => r.low)).toEqual([-5.5, null, 7.25]);
+  });
+
+  it("the shared scale runs over every series' values, with zero and padding only when asked", () => {
+    const { rows } = buildChart(sheet, [
+      { key: "low", label: "Low", kind: "decimal", path: "/rows/{period}/low/change", periods: at, nullable: true },
+      { key: "move", label: "Move", kind: "span", path: "/rows/{period}/to", from: "/rows/{period}/from", periods: at },
+    ]);
+    expect(plotExtent(rows, ["low", "move"], { zero: false, padding: 0 })).toEqual([-5.5, 50]);
+    expect(plotExtent(rows, ["move"], { zero: true, padding: 0 })).toEqual([0, 50]);
+    expect(plotExtent(rows, ["move"], { zero: false, padding: 0.1 })).toEqual([28, 52]);
+  });
+
+  it("a reference point is one decimal read from the file", () => {
+    expect(plotPoint(sheet, "/target/value")).toBe(60);
+    expect(() => plotPoint(sheet, "/target/nope")).toThrow(/unbound path/);
   });
 });
