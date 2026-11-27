@@ -90,7 +90,7 @@ def test_a_share_is_between_zero_and_one_and_a_name_without_a_unit_is_refused(re
     for report in reports.values():
         for rate in report["rates"]:
             if rate["unit"] == "share":
-                assert Decimal("0") <= Decimal(rate["value"]) <= Decimal("1")
+                assert Decimal(0) <= Decimal(rate["value"]) <= Decimal(1)
     assert "win_within_horizon" in RATE_UNITS
     with pytest.raises(KeyError, match="no unit declared"):
         rate_unit("a_rate_nobody_declared")
