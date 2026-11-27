@@ -3,6 +3,7 @@ import { STACK } from "../../components/workbook/stack";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure } from "../../components/workbook";
 import { B, ROWS } from "./bindings";
+import { StretchEvidence } from "./StretchEvidence";
 
 /** How often the fitted forecast's ranges held in the back-test, by horizon, and what the report concludes from it. */
 export function RangeCheck() {
@@ -48,6 +49,8 @@ export function RangeCheck() {
           })}
         </TableBody>
       </Table>
+      <h4 className="mb-2 mt-5 text-sm font-semibold text-ft-brand">Stretched by the model's own past misses</h4>
+      <StretchEvidence />
     </Disclosure>
   );
 }

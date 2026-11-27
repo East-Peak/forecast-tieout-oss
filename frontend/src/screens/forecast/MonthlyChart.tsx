@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { Area, Bar, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { useBindingContext } from "../../binding/Bound";
+import { Bound, useBindingContext } from "../../binding/Bound";
 import type { SeriesSpec } from "../../binding/chartData";
 import { ChartLegend, ChartTooltip, SERIES_COLORS, usePlot } from "../../binding/ChartKit";
 import type { LegendItem } from "../../binding/ChartKit";
 import { Card } from "../../components/ui";
 import { AXIS_STYLE, CHART_COLORS, CHART_SERIES, GRID_STYLE } from "../../lib/chartTheme";
 import { formatMonthTick, formatValue } from "../../lib/format";
-import { monthlySeries } from "./bindings";
+import { PLANNED, SIGNED, monthlySeries } from "./bindings";
 
 const MONTHLY_CHART_ID = "monthly";
 
@@ -52,6 +52,12 @@ export function MonthlyChart({ available, planned }: { available: Availability; 
       <h3 className="mb-1 text-sm font-semibold text-ft-brand">Bookings by month, and the forecasts</h3>
       <p className="mb-4 text-xs text-slate-500">
         History to the left of the as-of line, forecast to the right. Only the fitted model has a range.
+        {available.fitted ? (
+          <>
+            {" "}
+            The bands are <Bound binding={planned ? PLANNED.bandsLabel : SIGNED.bandsLabel} />.
+          </>
+        ) : null}
       </p>
       <p className="-mt-3 mb-4 text-xs text-slate-500" data-testid="baseline-note">
         The two dotted lines are the simple yardsticks the fitted model is scored against. The stage-weighted line falls away because today&apos;s open deals close out first and only a thin flow of new pipeline follows them.

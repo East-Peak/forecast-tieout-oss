@@ -5,7 +5,7 @@ import { ChartTooltip } from "../../binding/ChartKit";
 import { checkBindings, openAll, unboundDigits } from "../../binding/__tests__/harness";
 import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
-import { B, LISTED_BINDINGS, PLANNED, SIGNED, monthlySeries, quarterSeries } from "../forecast/bindings";
+import { B, LISTED_BINDINGS, PLANNED, SIGNED, STRETCH, monthlySeries, quarterSeries } from "../forecast/bindings";
 import ForecastScreen from "../forecast/ForecastScreen";
 import { expectations, listFor } from "./forecastExpectations";
 import type { Case } from "./forecastExpectations";
@@ -129,6 +129,76 @@ describe("Forecast: the selected scenario governs the screen", () => {
         expect(text("year.expected")).toBe(text("scenario.expected"));
       }
       cleanup();
+    }
+  });
+});
+
+describe("Forecast: the label beside every range, and how the stretch was checked", () => {
+  const labelsOf = (container: HTMLElement) => Array.from(container.querySelectorAll("[data-testid='range-label']")).map((el) => el.textContent);
+
+  it("a company whose ranges were stretched says so under both range cards, in the report's words", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const container = mount(c, c.company, c.scenario);
+    const fy = c.report.gap.fiscal_year as { range80_label: string; range95_label: string };
+    expect(c.report.backtest.candidates.ranges.decision).toBe("adopted");
+    expect(labelsOf(container)).toEqual([fy.range80_label, fy.range95_label]);
+    expect(fy.range80_label).toMatch(/^stretched by past misses; held \d+ of \d+ past forecasts at this horizon/);
+    expect(container.querySelector("[data-testid='range-trust']")!.textContent).toContain("stretched by past misses");
+    expect(container.querySelector("[data-testid='stretch-decision']")!.textContent).toBe("adopted");
+  });
+
+  it("a company whose stretch was not adopted keeps the simulated label and says so with the numbers", () => {
+    for (const company of ["sprout-labs", "sapling-industries"]) {
+      const c = caseOf(company, "as-signed");
+      const container = mount(c, c.company, c.scenario);
+      expect(c.report.backtest.candidates.ranges.decision).toBe("not adopted");
+      expect(labelsOf(container)).toEqual(["simulated", "simulated, not separately tested"]);
+      expect(container.querySelector("[data-testid='range-trust']")!.textContent).not.toContain("stretched");
+      expect(container.querySelector("[data-testid='stretch-decision']")!.textContent).toBe("not adopted");
+      expect(container.querySelector("[data-binding='stretch.reason']")!.textContent).toBe(c.report.backtest.candidates.ranges.reason);
+      cleanup();
+    }
+  });
+
+  it("a plan's ranges are the plan's, with the plan's label and no stretch claimed beside them", () => {
+    const c = caseOf("mighty-oak-holdings", "demo-plan");
+    const container = mount(c, c.company, c.scenario);
+    expect(labelsOf(container)).toEqual([]);
+    const plan = c.report.plan as Extract<NonNullable<TieoutReport["plan"]>, { items: unknown }>;
+    expect(container.querySelector("[data-binding='bands.label']")!.textContent).toBe(plan.ranges.status);
+    expect(container.querySelector("[data-testid='range-trust']")!.textContent).toContain("include the plan");
+  });
+
+  it("the evidence has a row for each tested horizon, with the two factors as the report gives them", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const container = mount(c, c.company, c.scenario);
+    const rows = container.querySelectorAll("[data-testid='stretch-row']");
+    expect(rows.length).toBe(3);
+    const lower = Array.from(container.querySelectorAll("[data-binding='stretch.factor.lower']")).map((el) => el.textContent);
+    expect(lower).toEqual(c.report.backtest.candidates.ranges.horizons.map((h) => fmt.multiple(h.lower_factor!)));
+  });
+
+  it("a label read from the wrong place is caught", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const original = B.rangeLabel80.path;
+    (B.rangeLabel80 as { path: string }).path = B.rangeLabel95.path;
+    try {
+      const failures = allFailures(mount(c, c.company, c.scenario), c);
+      expect(failures.some((f) => f.startsWith("year.range80.label"))).toBe(true);
+    } finally {
+      (B.rangeLabel80 as { path: string }).path = original;
+    }
+  });
+
+  it("an evidence figure read from the wrong place is caught", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const original = STRETCH.coverageStretched.path;
+    (STRETCH.coverageStretched as { path: string }).path = STRETCH.coverageSimulated.path;
+    try {
+      const failures = allFailures(mount(c, c.company, c.scenario), c);
+      expect(failures.some((f) => f.startsWith("stretch.coverage.stretched"))).toBe(true);
+    } finally {
+      (STRETCH.coverageStretched as { path: string }).path = original;
     }
   });
 });

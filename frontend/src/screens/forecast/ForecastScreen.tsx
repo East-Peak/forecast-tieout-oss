@@ -33,6 +33,15 @@ function SignBadge({ binding }: { binding: Binding }) {
   );
 }
 
+/** The report's label for a range, in small print beneath it. */
+function RangeLabel({ binding }: { binding: Binding }) {
+  return (
+    <p className="mt-1 text-[11px] leading-tight text-slate-500" data-testid="range-label">
+      <Bound binding={binding} />
+    </p>
+  );
+}
+
 /**
  * Forecast: where the year lands and how sure we are, for the selected scenario. Every figure is a
  * Bound value (a named pointer into a core-produced file); the charts are built from declared
@@ -98,7 +107,9 @@ export default function ForecastScreen() {
           }
           note="Of the expected year"
           className="p-4"
-        />
+        >
+          {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel80} /> : null}
+        </MetricCard>
         <MetricCard
           label="95% range"
           value={
@@ -108,7 +119,9 @@ export default function ForecastScreen() {
           }
           note="Of the expected year"
           className="col-span-2 p-4 lg:col-span-1"
-        />
+        >
+          {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel95} /> : null}
+        </MetricCard>
       </div>
 
       {available.fitted ? (

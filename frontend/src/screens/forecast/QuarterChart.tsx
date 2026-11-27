@@ -20,7 +20,7 @@ export function QuarterChart({ fittedAvailable, planned }: { fittedAvailable: bo
     <Card className="p-4 sm:p-5" data-testid="chart-container" data-chart={QUARTER_CHART_ID}>
       <h3 className="mb-1 text-sm font-semibold text-ft-brand">Each quarter against its target</h3>
       <p className="mb-4 text-xs text-slate-500">
-        Expected bookings per quarter, with the range of each open quarter beside it. A closed quarter has no range.
+        Expected bookings per quarter, with the range of each open quarter beside it. A closed quarter has no range. Open a quarter in the table below for its range.
       </p>
       <ResponsiveContainer width="100%" height={260}>
         <ComposedChart data={rows} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barGap={2}>

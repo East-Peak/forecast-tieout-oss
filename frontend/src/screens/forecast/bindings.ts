@@ -22,6 +22,10 @@ const usd = (id: string, path: string, extra: Partial<Binding> = {}) =>
   bind({ id, path, unit: "usd", format: "usd-short", ...extra });
 const text = (id: string, path: string, extra: Partial<Binding> = {}) =>
   bind({ id, path, unit: "text", format: "text", ...extra });
+const count = (id: string, path: string, extra: Partial<Binding> = {}) =>
+  bind({ id, path, unit: "count", format: "count", ...extra });
+const share = (id: string, path: string, extra: Partial<Binding> = {}) =>
+  bind({ id, path, unit: "fraction", format: "percent1", ...extra });
 
 /** Bindings that read the same place whatever the scenario. */
 export const B = {
@@ -65,6 +69,11 @@ export const B = {
   checkYearStatus: text("check.year.status", `/forecasts/fitted_ranges/horizons/${REST}/status`),
   checkNextStatus: text("check.next12.status", `/forecasts/fitted_ranges/horizons/${TWELVE}/status`),
 
+  // the label beside each range of a scenario with no plan (a plan's ranges carry the plan's own status)
+  rangeLabel80: text("year.range80.label", "/gap/fiscal_year/range80_label"),
+  rangeLabel95: text("year.range95.label", "/gap/fiscal_year/range95_label"),
+  qRangeLabel: text("quarter.range80.label", "/range80_label"),
+
   // a row of the quarter table (the rows are SIGNED's or PLANNED's, see ROWS)
   qName: text("quarter.name", "/quarter"),
   qStatus: text("quarter.status", "/status"),
@@ -107,6 +116,33 @@ export const B = {
 } as const satisfies Record<string, Binding>;
 
 const NEXT12_PLAN = "/plan/gap/next_twelve_months";
+const STRETCH_PATH = "/backtest/candidates/ranges";
+const NOT_COMPARED = { words: "not compared" } as const;
+const NOT_SCORED = { words: "not scored" } as const;
+
+/**
+ * Goal 2D: were the simulated ranges stretched by the model's own past misses, and what did the back-test
+ * say? The Forecast screen's "how the ranges were checked" and the Trust screen show the same bindings, so
+ * the two cannot say different things.
+ */
+export const STRETCH = {
+  decision: text("stretch.decision", `${STRETCH_PATH}/decision`),
+  reason: text("stretch.reason", `${STRETCH_PATH}/reason`),
+  rule: text("stretch.rule", `${STRETCH_PATH}/rule`),
+  pooledScored: count("stretch.pooled.scored", `${STRETCH_PATH}/pooled/scored_folds`, { unavailable: NOT_COMPARED }),
+  pooledSimulated: share("stretch.pooled.simulated", `${STRETCH_PATH}/pooled/coverage_simulated`, { unavailable: NOT_COMPARED }),
+  pooledStretched: share("stretch.pooled.stretched", `${STRETCH_PATH}/pooled/coverage_stretched`, { unavailable: NOT_COMPARED }),
+  // a row of the three tested horizons (ROWS.stretch)
+  months: count("stretch.months", "/horizon_months"),
+  eligible: count("stretch.eligible", "/eligible_folds"),
+  scored: count("stretch.scored", "/scored_folds"),
+  coverageSimulated: share("stretch.coverage.simulated", "/coverage_simulated", { unavailable: NOT_SCORED }),
+  coverageStretched: share("stretch.coverage.stretched", "/coverage_stretched", { unavailable: NOT_SCORED }),
+  widthSimulated: usd("stretch.width.simulated", "/median_width80_simulated", { unavailable: NOT_SCORED }),
+  widthStretched: usd("stretch.width.stretched", "/median_width80_stretched", { unavailable: NOT_SCORED }),
+  lower: bind({ id: "stretch.factor.lower", path: "/lower_factor", unit: "quantity", format: "multiple", unavailable: { words: "no width to stretch" } }),
+  upper: bind({ id: "stretch.factor.upper", path: "/upper_factor", unit: "quantity", format: "multiple", unavailable: { words: "no width to stretch" } }),
+} as const satisfies Record<string, Binding>;
 
 /** What the headline, ranges and tables read for a scenario with no plan. */
 export const SIGNED = {
@@ -121,6 +157,7 @@ export const SIGNED = {
   nextForecast: usd("next12.forecast", "/gap/next_twelve_months/forecast", { unavailable: NO_TARGET }),
   nextGap: usd("next12.gap", "/gap/next_twelve_months/gap", { tint: "shortfall", unavailable: NO_TARGET }),
   twelveTotal: usd("next12.total", `${FITTED_METHOD}/horizons/${TWELVE}`, { unavailable: WORDS }),
+  bandsLabel: text("bands.label", "/forecasts/fitted_ranges/by_window_label"),
 } as const satisfies Record<string, Binding>;
 
 /** The same, for a scenario with a plan: the core's with-plan figures. */
@@ -136,6 +173,7 @@ export const PLANNED = {
   nextForecast: usd("next12.forecast", `${NEXT12_PLAN}/forecast_with_plan`, { unavailable: NO_TARGET }),
   nextGap: usd("next12.gap", `${NEXT12_PLAN}/gap_with_plan`, { tint: "shortfall", unavailable: NO_TARGET }),
   twelveTotal: usd("next12.total", `/plan/with_plan/${TWELVE}`),
+  bandsLabel: text("bands.label", "/plan/ranges/status"),
 } as const satisfies Record<string, Binding>;
 
 export const ROWS = {
@@ -145,10 +183,11 @@ export const ROWS = {
   cell: "/forecasts/fitted_ranges/cells",
   planItem: "/plan/items",
   betterComparisons: "/verdicts/forecast_better_than_baselines/comparisons",
+  stretch: `${STRETCH_PATH}/horizons`,
 } as const;
 
 /** Every binding on the screen, once per id and place it can read (for the committed list the tests check). */
-export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(B), ...Object.values(SIGNED), ...Object.values(PLANNED)];
+export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(B), ...Object.values(STRETCH), ...Object.values(SIGNED), ...Object.values(PLANNED)];
 
 // ---------------------------------------------------------------- charts
 

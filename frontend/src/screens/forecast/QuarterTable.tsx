@@ -84,6 +84,12 @@ export function QuarterTable({ planned }: { planned: boolean }) {
                     <TableCell colSpan={planned ? 8 : 7} className="block px-3 py-2 text-xs text-slate-600 lg:table-cell">
                       80% range of the expected figure: <Bound binding={B.qRange80Low} row={row} /> to{" "}
                       <Bound binding={B.qRange80High} row={row} />
+                      {planned || !("range80_label" in q) ? null : (
+                        <>
+                          {" "}
+                          &middot; <Bound binding={B.qRangeLabel} row={row} />
+                        </>
+                      )}
                     </TableCell>
                   </TableRow>
                 ) : null}

@@ -9,7 +9,7 @@ import type { Absent, Expectation, ExpectedChart } from "../../binding/__tests__
 import type { Binding } from "../../binding/Bound";
 import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
-import { B, PLANNED, SIGNED } from "../forecast/bindings";
+import { B, PLANNED, SIGNED, STRETCH } from "../forecast/bindings";
 import { betterVerdictExpectations } from "./expectKit";
 import * as fmt from "./independent";
 
@@ -35,7 +35,7 @@ const fullPlan = (r: TieoutReport): FullPlan | null => (r.plan && !("unavailable
 
 /** The committed bindings in force for this case (the list the provenance of every element is checked against). */
 export function listFor(r: TieoutReport): readonly Binding[] {
-  return [...Object.values(B), ...Object.values(fullPlan(r) ? PLANNED : SIGNED)];
+  return [...Object.values(B), ...Object.values(STRETCH), ...Object.values(fullPlan(r) ? PLANNED : SIGNED)];
 }
 
 export function expectations({ company, scenario, report: r, index, comparison }: Case): {
@@ -115,6 +115,12 @@ export function expectations({ company, scenario, report: r, index, comparison }
           ? { text: "Ahead", sign: "-1" }
           : { text: "On target", sign: "0" };
 
+  // the label beside each range: a plan's ranges carry the plan's status; the others, the report's own labels
+  const fr = r.forecasts.fitted_ranges;
+  when(fa, SIGNED.bandsLabel.id, () => (planned ? plan.ranges.status : fr.by_window_label));
+  when(fa && !planned, B.rangeLabel80.id, () => ("range80_label" in fy ? fy.range80_label : ""));
+  when(fa && !planned, B.rangeLabel95.id, () => ("range95_label" in fy ? fy.range95_label : ""));
+
   when(fa, B.checkYearStatus.id, () => horizons[REST].status);
   when(fa, B.checkNextStatus.id, () => horizons[TWELVE].status);
   when(!fa, B.fittedUnavailable.id, () => fitted.unavailable_reason);
@@ -155,6 +161,7 @@ export function expectations({ company, scenario, report: r, index, comparison }
   many(B.qGap.id, quarters.map((x) => orWords(x.gap, fmt.usdShort)), quarters.map((_, i) => at(i)));
   many(B.qRange80Low.id, open.map(([x]) => orWords(x.expected_range80?.[0] ?? null, fmt.usdShort)), open.map(([, i]) => at(i)));
   many(B.qRange80High.id, open.map(([x]) => orWords(x.expected_range80?.[1] ?? null, fmt.usdShort)), open.map(([, i]) => at(i)));
+  whenMany(fa && !planned, B.qRangeLabel.id, () => open.map(([x]) => ("range80_label" in x ? x.range80_label : "")), () => open.map(([, i]) => at(i)));
   whenMany(planned, B.qSignedGap.id, () => r.gap.quarters.map((x) => orWords(x.gap, fmt.usdShort)), () => r.gap.quarters.map((_, i) => `/gap/quarters/${i}`));
 
   const cells = r.forecasts.fitted_ranges.cells;
@@ -165,6 +172,26 @@ export function expectations({ company, scenario, report: r, index, comparison }
   whenMany(fa, B.cCoverage95.id, () => cells.map((c) => (c.coverage95 === null ? "not scored" : fmt.percent1(c.coverage95))), cellRows);
   whenMany(fa, B.cLabel.id, () => cells.map((c) => c.label), cellRows);
   whenMany(fa, B.cJudgment.id, () => cells.map((c) => c.coverage_judgment), cellRows);
+
+  // the stretch's decision and its evidence, in "how the ranges were checked" (shown whenever the fitted forecast is)
+  const st = r.backtest.candidates.ranges;
+  const stRows = () => st.horizons.map((_, i) => `/backtest/candidates/ranges/horizons/${i}`);
+  const stMany = (id: string, texts: () => string[]) => whenMany(fa, id, texts, stRows);
+  when(fa, STRETCH.decision.id, () => st.decision);
+  when(fa, STRETCH.reason.id, () => st.reason);
+  when(fa, STRETCH.rule.id, () => st.rule);
+  when(fa, STRETCH.pooledScored.id, () => (st.pooled === null ? "not compared" : fmt.count(st.pooled.scored_folds)));
+  when(fa, STRETCH.pooledSimulated.id, () => (st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_simulated)));
+  when(fa, STRETCH.pooledStretched.id, () => (st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_stretched)));
+  stMany(STRETCH.months.id, () => st.horizons.map((h) => fmt.count(h.horizon_months)));
+  stMany(STRETCH.eligible.id, () => st.horizons.map((h) => fmt.count(h.eligible_folds)));
+  stMany(STRETCH.scored.id, () => st.horizons.map((h) => fmt.count(h.scored_folds)));
+  stMany(STRETCH.coverageSimulated.id, () => st.horizons.map((h) => (h.coverage_simulated === null ? "not scored" : fmt.percent1(h.coverage_simulated))));
+  stMany(STRETCH.coverageStretched.id, () => st.horizons.map((h) => (h.coverage_stretched === null ? "not scored" : fmt.percent1(h.coverage_stretched))));
+  stMany(STRETCH.widthSimulated.id, () => st.horizons.map((h) => orWords(h.median_width80_simulated, fmt.usdShort, "not scored")));
+  stMany(STRETCH.widthStretched.id, () => st.horizons.map((h) => orWords(h.median_width80_stretched, fmt.usdShort, "not scored")));
+  stMany(STRETCH.lower.id, () => st.horizons.map((h) => orWords(h.lower_factor, fmt.multiple, "no width to stretch")));
+  stMany(STRETCH.upper.id, () => st.horizons.map((h) => orWords(h.upper_factor, fmt.multiple, "no width to stretch")));
 
   one(B.scenarioLabel.id, scenario_.label);
   one(B.scenarioDescription.id, scenario_.description);
