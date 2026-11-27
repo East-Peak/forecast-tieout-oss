@@ -6,9 +6,9 @@ import type { LegendItem } from "../../binding/ChartKit";
 import { Card } from "../../components/ui";
 import { AXIS_STYLE, CHART_COLORS, CHART_SERIES, GRID_STYLE } from "../../lib/chartTheme";
 import { formatMonthTick, formatValue } from "../../lib/format";
-import { MONTHLY_METHODS, MONTHLY_SERIES } from "./bindings";
+import { MONTHLY_SERIES } from "./bindings";
 
-export const MONTHLY_CHART_ID = "monthly";
+const MONTHLY_CHART_ID = "monthly";
 
 /** Which of the three forecasts the report says are available (a missing forecast is not drawn as zeros). */
 export interface Availability {
@@ -101,5 +101,3 @@ export function MonthlyChart({ available }: { available: Availability }) {
     </Card>
   );
 }
-
-export { MONTHLY_METHODS };

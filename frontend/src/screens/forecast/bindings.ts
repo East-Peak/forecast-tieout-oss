@@ -151,15 +151,6 @@ export const ROWS = {
   planItem: "/plan/items",
 } as const;
 
-/** The row bindings, by collection. */
-export const ROW_BINDINGS = {
-  quarter: [B.qName, B.qStatus, B.qTarget, B.qActual, B.qForecast, B.qExpected, B.qGap, B.qRange80Low, B.qRange80High],
-  cell: [B.cHorizon, B.cFolds, B.cCoverage80, B.cCoverage95, B.cLabel, B.cJudgement],
-  planItem: [B.pItemLabel, B.pItemDetail, B.pItemContribution, B.pItemCost],
-} as const;
-
-export type ForecastBindings = typeof B;
-
 // ---------------------------------------------------------------- charts
 
 const METHOD = (name: string) => `/forecasts/methods/{method=${name}}/by_window/{period}`;

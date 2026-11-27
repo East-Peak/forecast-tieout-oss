@@ -27,7 +27,7 @@ export interface Absent {
  *  - a period label (the tooltip's header), marked data-exempt="period-label";
  *  - the two literal range names "80% range" and "95% range" (the names of the report's two ranges).
  */
-export const RANGE_NAMES = ["80% range", "95% range"] as const;
+const RANGE_NAMES = ["80% range", "95% range"] as const;
 
 export function unboundDigits(container: HTMLElement): string[] {
   const found: string[] = [];

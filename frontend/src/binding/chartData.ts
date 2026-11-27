@@ -7,9 +7,9 @@ import { resolvePointer } from "./pointer";
  * parsed from the file's decimal strings once (decimalToNumber); a null stays null, so a gap is
  * drawn as a gap. A range is the pair [low, high] the file holds, never low plus a width.
  */
-export type SeriesKind = "decimal" | "range";
+type SeriesKind = "decimal" | "range";
 
-export type PeriodsFrom =
+type PeriodsFrom =
   | { keysAt: string } // the keys of an object
   | { arrayAt: string } // an array of strings
   | { rowsAt: string; property: string }; // a property of each row of an array of objects
@@ -23,7 +23,7 @@ export interface SeriesSpec {
   periods: PeriodsFrom;
 }
 
-export type PlotValue = number | [number, number] | null;
+type PlotValue = number | [number, number] | null;
 export type PlotRow = { period: string } & Record<string, PlotValue | string>;
 
 function periodsOf(doc: unknown, from: PeriodsFrom): string[] {

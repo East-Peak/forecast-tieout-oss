@@ -12,7 +12,7 @@ import { resolvePointer } from "./pointer";
  * one of the named formats. The browser formats; it calculates nothing.
  */
 export type SourceName = "report" | "index" | "comparison";
-export type Unit = "usd" | "fraction" | "count" | "date" | "month" | "text";
+type Unit = "usd" | "fraction" | "count" | "date" | "month" | "text";
 
 const FORMATS: Record<Unit, FormatName[]> = {
   usd: ["usd-full", "usd-short"],
@@ -76,7 +76,7 @@ export function useBindingContext(): BindingContextValue {
 }
 
 /** The pointer a binding reads: the row's, then the binding's, with the visitor's choice filled in. */
-export function expandPath(path: string, ctx: { company: string; scenario: string }): string {
+function expandPath(path: string, ctx: { company: string; scenario: string }): string {
   return path.replace(/\{company\}/g, ctx.company).replace(/\{scenario\}/g, ctx.scenario);
 }
 

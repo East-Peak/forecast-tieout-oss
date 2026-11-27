@@ -7,7 +7,7 @@ import { AXIS_STYLE, CHART_COLORS, CHART_SERIES, GRID_STYLE } from "../../lib/ch
 import { formatValue } from "../../lib/format";
 import { QUARTER_SERIES } from "./bindings";
 
-export const QUARTER_CHART_ID = "quarters";
+const QUARTER_CHART_ID = "quarters";
 
 export function QuarterChart({ fittedAvailable }: { fittedAvailable: boolean }) {
   const specs = useMemo<SeriesSpec[]>(
