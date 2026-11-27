@@ -401,3 +401,103 @@ def test_when_capacity_is_adopted_every_range_is_unvalidated_and_coverage_is_onl
     # without capacity the ordinary labels stand
     flat = not_shown["forecasts"]["fitted_ranges"]
     assert {c["label"] for c in flat["cells"]} - {"unvalidated"}
+
+
+# ---------------------------------------------------------------- Goal 2C: section 10 turned around
+
+TOO_LATE = "too late to fund with new pipeline: this quarter depends on the pipeline already open"
+
+
+def _flag_from_the_rows_own_numbers(sec, q):
+    """The rule, recomputed from what the row shows rather than from the solve."""
+    over_cap = q["outcome"] == "unreachable within bounds"
+    best = sec["team_history"]["best_four_quarter_average"]
+    total = q["per_ramped_ae_month"]["required_total"]
+    per_rep = (
+        sec["per_rep_rule"]["applies"]
+        and best is not None
+        and total is not None
+        and Decimal(total) > Decimal(best)
+    )
+    return over_cap or per_rep
+
+
+@pytest.mark.parametrize("which", ["adopted", "not_shown"])
+def test_every_row_says_cents_booked_in_quarter_and_its_too_late_flag_follows_the_rule(
+    which, request
+):
+    sec = request.getfixturevalue(which)["required_pipeline"]
+    for q in sec["quarters"]:
+        assert 0 <= Decimal(q["cents_booked_in_quarter_per_dollar"]) <= 100
+        late = q["too_late"]
+        assert late["applies"] == _flag_from_the_rows_own_numbers(sec, q), q
+        assert (late["label"] == TOO_LATE) == late["applies"]
+        assert bool(late["reasons"]) == late["applies"]
+        assert (late["open_pipeline"] is not None) == late["applies"]
+
+
+def test_the_per_rep_leg_applies_only_when_capacity_is_adopted(adopted, not_shown):
+    assert adopted["required_pipeline"]["per_rep_rule"]["applies"] is True
+    off = not_shown["required_pipeline"]["per_rep_rule"]
+    assert off["applies"] is False and "diagnostic" in off["why"]
+
+
+def test_a_quarter_nothing_can_fund_is_too_late_and_says_what_the_open_pipeline_would_have_to_do(
+    tmp_path,
+):
+    profile, data = staffed.write(
+        tmp_path,
+        rep_rate=0.0,
+        demand=18.0,
+        targets={f"Q{q}FY26": 10**10 for q in range(1, 5)},
+    )
+    r = build_report(profile, data, AS_OF, draws=DRAWS)
+    sec = r["required_pipeline"]
+    assert all(q["too_late"]["applies"] for q in sec["quarters"])
+    late = sec["quarters"][0]["too_late"]
+    op = late["open_pipeline"]
+    assert Decimal(op["needed_contribution"]) > Decimal(
+        op["open_arr"]
+    )  # $10B from a small book
+    assert op["possible"] is False and "no win rate" in op["statement"]
+    from engine.tieout_core.markdown import render
+
+    assert TOO_LATE in render(r)
+    assert r["verdicts"]["software_correct"]["verdict"] == "yes"
+
+
+def test_a_small_target_is_not_too_late_and_its_rows_are_clean(tmp_path):
+    profile, data = staffed.write(
+        tmp_path,
+        rep_rate=0.0,
+        demand=18.0,
+        targets={f"Q{q}FY26": 1 for q in range(1, 5)},
+    )
+    sec = build_report(profile, data, AS_OF, draws=DRAWS)["required_pipeline"]
+    assert not any(q["too_late"]["applies"] for q in sec["quarters"])
+    assert all(q["too_late"]["label"] is None for q in sec["quarters"])
+
+
+def test_the_lead_time_table_sums_with_the_share_never_booked_to_one(adopted):
+    lt = adopted["required_pipeline"]["lead_time"]
+    assert lt["created_between"] == ["2026-08-31", "2026-09-30"]
+    assert len(lt["quarters"]) == 4
+    total = (
+        sum(Decimal(q["booked_in_quarter"]) for q in lt["quarters"])
+        + Decimal(lt["booked_later"])
+        + Decimal(lt["never_booked"])
+    )
+    assert abs(total - 1) < Decimal("1e-9")
+    cum = [Decimal(q["booked_by_quarter_end"]) for q in lt["quarters"]]
+    assert cum == sorted(cum)
+
+
+def test_the_new_self_checks_are_in_the_report_and_pass(adopted, not_shown):
+    for r in (adopted, not_shown):
+        checks = {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}
+        for name in (
+            "quarterly requirements, run together through the forward function, meet each solvable quarter's target",
+            "cents booked in each quarter, re-derived from the solved schedule, match the stated yield",
+            "lead-time shares plus the share never booked sum to one, and never booked is the dollars that do not win",
+        ):
+            assert checks[name]["passed"], (name, checks[name]["detail"])
