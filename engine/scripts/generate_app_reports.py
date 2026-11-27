@@ -31,13 +31,13 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
 from pathlib import Path
 
 import yaml
 from jsonschema import Draft202012Validator
 
 from engine.tieout_core import contract
+from engine.tieout_core.comparison import BASELINE, comparison_rows
 from engine.tieout_core.plan import NEXT_12, REST_OF_FY
 from engine.tieout_core.report import build_report
 
@@ -93,7 +93,6 @@ SCENARIOS = (
     ),
 )
 KEEP = {"hires-only": "hires", "programme-only": "programmes"}
-BASELINE = "as-signed"
 
 
 # ---------------------------------------------------------------- scenario plan files
@@ -241,54 +240,6 @@ INDEX_SCHEMA = {
 }
 
 
-def comparison_rows(
-    reports: dict[str, dict], labels: dict[str, str] | None = None
-) -> list[dict]:
-    """One row per scenario, from the core's own figures. The baseline's change
-    fields are null. The only arithmetic is the change in the fiscal-year gap
-    (gap with the plan less the baseline gap, both the core's) and the plan's
-    expected fiscal year (bookings to date plus the core's with-plan forecast)."""
-    labels = labels or {s.id: s.label for s in SCENARIOS}
-    rows = []
-    for scenario, r in reports.items():
-        year = r["gap"]["fiscal_year"]
-        plan = r.get("plan")
-        row = {
-            "scenario": scenario,
-            "label": labels.get(scenario, scenario),
-            "expected_fiscal_year": year["expected"],
-            "fiscal_year_gap": year["gap"],
-            "bookings_change": None,
-            "fiscal_year_gap_change": None,
-            "cash_cost_in_twelve_months": None,
-        }
-        if plan is not None and "unavailable" not in plan:
-            signed = reports.get(BASELINE)
-            signed_rest = (
-                signed["gap"]["fiscal_year"].get("forecast_rest_of_year")
-                if signed
-                else None
-            )
-            if signed_rest is not None and plan["baseline"][REST_OF_FY] != signed_rest:
-                raise ValueError(
-                    f"{scenario}: the plan's baseline {plan['baseline'][REST_OF_FY]} is not the "
-                    f"as-signed forecast {signed_rest}"
-                )
-            fy = plan["gap"]["fiscal_year"]
-            to_date = Decimal(year["actual_to_date"])
-            row["expected_fiscal_year"] = (
-                f"{to_date + Decimal(plan['with_plan'][REST_OF_FY]):.2f}"
-            )
-            row["fiscal_year_gap"] = fy["gap_with_plan"]
-            row["fiscal_year_gap_change"] = (
-                f"{Decimal(fy['gap_with_plan']) - Decimal(fy['baseline_gap']):.2f}"
-            )
-            row["bookings_change"] = dict(plan["difference"])
-            row["cash_cost_in_twelve_months"] = plan["cash_cost_in_twelve_months"]
-        rows.append(row)
-    return rows
-
-
 # ---------------------------------------------------------------- building
 
 
@@ -328,7 +279,9 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
                     "company": company,
                     "as_of": AS_OF.isoformat(),
                     "baseline": BASELINE,
-                    "rows": comparison_rows(reports),
+                    "rows": comparison_rows(
+                        reports, {sc.id: sc.label for sc in SCENARIOS}
+                    ),
                 }
             )
             inputs = reports[BASELINE]["inputs"]
@@ -365,22 +318,24 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
     return files
 
 
+def _problems(validator: Draft202012Validator, doc) -> list[str]:
+    return [
+        f"{'/'.join(map(str, e.absolute_path))}: {e.message[:160]}"
+        for e in validator.iter_errors(doc)
+    ]
+
+
 def _validate_files(files: dict[str, str]) -> None:
-    report_validator = contract.validator()
     index_validator = Draft202012Validator(INDEX_SCHEMA)
     comparison_validator = Draft202012Validator(COMPARISON_SCHEMA)
     for name, text in files.items():
         doc = json.loads(text)
         if name == "index.json":
-            check = index_validator
+            problems = _problems(index_validator, doc)
         elif name.endswith("/comparison.json"):
-            check = comparison_validator
+            problems = _problems(comparison_validator, doc)
         else:
-            check = report_validator
-        problems = [
-            f"{'/'.join(map(str, e.absolute_path))}: {e.message[:160]}"
-            for e in check.iter_errors(doc)
-        ]
+            problems = contract.validate(doc)
         if problems:
             raise ValueError(
                 f"{name} does not satisfy its schema:\n" + "\n".join(problems[:8])
@@ -405,9 +360,9 @@ def types_files() -> dict[Path, str]:
     json-schema-to-typescript (``frontend/scripts/generate-types.mjs``)."""
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        schemas = {
-            "report": contract.SCHEMA_PATH,
-        }
+        # the schema as the contract module defines it now, so one run carries a contract change through
+        schemas = {"report": tmp / "report.schema.json"}
+        schemas["report"].write_text(contract.schema_text())
         for name, schema in (
             ("index", INDEX_SCHEMA),
             ("comparison", COMPARISON_SCHEMA),

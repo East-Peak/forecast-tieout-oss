@@ -6,6 +6,7 @@ files are what the generator writes."""
 import json
 import shutil
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 import yaml
@@ -72,73 +73,31 @@ def test_canonical_json_has_stable_key_order_and_one_trailing_newline():
     assert a.index('"a"') < a.index('"b"')
 
 
-# ---------------------------------------------------------------- the comparison
+# ---------------------------------------------------------------- types come from the schema in memory
 
 
-def report(expected, gap, with_plan=None, cost=None, baseline=None):
-    r = {
-        "gap": {
-            "fiscal_year": {
-                "expected": expected,
-                "gap": gap,
-                "actual_to_date": "1000.00",
-            }
-        },
-    }
-    if with_plan is not None:
-        r["plan"] = {
-            "baseline": baseline,
-            "with_plan": with_plan,
-            "difference": {
-                k: str(Decimal(with_plan[k]) - Decimal(baseline[k])) + ""
-                for k in with_plan
-            },
-            "gap": {"fiscal_year": {"baseline_gap": gap, "gap_with_plan": "1500.00"}},
-            "cash_cost_in_twelve_months": cost,
-        }
-    return r
-
-
-def test_the_comparison_reads_the_core_and_does_one_subtraction_in_python():
-    signed = report("5000.00", "3000.00")
-    base = {REST: "4000.00", TWELVE: "9000.00"}
-    plan = report(
-        "5000.00", "3000.00", with_plan={REST: "4600.00", TWELVE: "9900.00"},
-        cost="800.00", baseline=base,
-    )  # fmt: skip
-    rows = gen.comparison_rows({"as-signed": signed, "demo-plan": plan})
-    by = {r["scenario"]: r for r in rows}
-    assert by["as-signed"]["expected_fiscal_year"] == "5000.00"
-    assert by["as-signed"]["fiscal_year_gap"] == "3000.00"
-    assert (
-        by["as-signed"]["fiscal_year_gap_change"] is None
-    )  # the baseline has no change
-    assert (
-        by["demo-plan"]["expected_fiscal_year"] == "5600.00"
-    )  # to date 1000.00 + 4600.00
-    assert by["demo-plan"]["fiscal_year_gap"] == "1500.00"
-    assert by["demo-plan"]["fiscal_year_gap_change"] == "-1500.00"
-    assert by["demo-plan"]["bookings_change"] == {REST: "600.00", TWELVE: "900.00"}
-    assert by["demo-plan"]["cash_cost_in_twelve_months"] == "800.00"
-
-
-def test_a_plan_whose_baseline_is_not_the_signed_forecast_is_refused():
-    signed = report("5000.00", "3000.00")
-    signed["gap"]["fiscal_year"]["forecast_rest_of_year"] = "4000.00"
-    plan = report(
-        "5000.00", "3000.00", with_plan={REST: "4600.00", TWELVE: "9900.00"},
-        baseline={REST: "4100.00", TWELVE: "9000.00"},
-    )  # fmt: skip
-    with pytest.raises(ValueError, match="baseline"):
-        gen.comparison_rows({"as-signed": signed, "demo-plan": plan})
-
-
-def test_an_unavailable_forecast_compares_as_null_not_zero():
-    unavailable = report(None, None)
-    rows = gen.comparison_rows({"as-signed": unavailable})
-    assert (
-        rows[0]["expected_fiscal_year"] is None and rows[0]["fiscal_year_gap"] is None
+def test_types_are_generated_from_the_schema_in_memory_not_the_committed_copy(
+    monkeypatch,
+):
+    """A contract change must reach the types in one run: the schema handed to the type
+    generator is contract.schema_text() as it is now, not report.schema.json as it was."""
+    monkeypatch.setattr(
+        gen.contract, "schema_text", lambda: '{"title": "FromMemory"}\n'
     )
+    seen = []
+
+    def fake_run(args, cwd, check):
+        seen.append([Path(a).read_text() for a in args[3:]])
+        Path(args[2]).write_text("// types\n")
+
+    monkeypatch.setattr(gen.subprocess, "run", fake_run)
+    gen.types_files()
+    assert seen[0] == ['{"title": "FromMemory"}\n']
+
+
+def test_the_generator_does_no_arithmetic_on_figures():
+    source = Path(gen.__file__).read_text()
+    assert "Decimal" not in source and "comparison_rows(" in source
 
 
 # ---------------------------------------------------------------- one company, end to end
