@@ -1,4 +1,5 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
+import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { Callout, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
@@ -120,6 +121,8 @@ export default function CapacityScreen() {
           ))}
         </ul>
       </section>
+
+      <BuildYourOwnPlan />
     </div>
   );
 }

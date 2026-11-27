@@ -72,21 +72,66 @@ function open(url: string, editor: FakeEditor, desktop: boolean) {
 }
 
 describe("on a desktop screen", () => {
-  it("offers Your plan beside the four named scenarios, and nothing starts until it is chosen", async () => {
+  it("sets Build your own plan apart from the four named scenarios, and nothing starts until it is chosen", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
     const picker = await screen.findByTestId("scenario-picker");
-    expect(within(picker).getAllByRole("button").map((b) => b.textContent)).toEqual(["As signed", "Demo plan", "Hires only", "Program only", "Your plan"]);
+    const named = within(within(picker).getByRole("group", { name: "Scenario" }));
+    expect(named.getAllByRole("button").map((b) => b.textContent)).toEqual(["As signed", "Demo plan", "Hires only", "Program only"]);
+    const build = within(picker).getByRole("button", { name: "Build your own plan" });
+    expect(build).toHaveAttribute("data-scenario-id", "your-plan");
+    expect(build).toHaveAttribute("aria-pressed", "false");
+    expect(picker).toHaveTextContent("Change the hires and programs and see every screen update. Computed in your browser.");
     expect(editor.opened).toEqual([]);
     expect(screen.queryByTestId("your-plan-mark")).toBeNull();
     expect(screen.queryByTestId("plan-form")).toBeNull();
   });
 
+  it("the as-signed notice offers the same choice in a sentence, and it opens the form", async () => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    const notice = await screen.findByTestId("no-plan");
+    expect(notice).toHaveTextContent("Pick a scenario above to see what a plan buys. Or build your own plan.");
+    expect(editor.opened).toEqual([]);
+    fireEvent.click(within(notice).getByRole("button", { name: "build your own plan" }));
+    await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    expect(editor.opened).toEqual(["sprout-labs"]);
+  });
+
+  it("moves focus to the form's heading and scrolls it into view when the form opens", async () => {
+    const scrolled: Element[] = [];
+    Element.prototype.scrollIntoView = function (this: Element) {
+      scrolled.push(this);
+    };
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=your-plan", editor, true);
+    const form = await screen.findByTestId("plan-form");
+    const heading = within(form).getByRole("heading", { name: "Your plan" });
+    await waitFor(() => expect(heading).toHaveFocus());
+    expect(scrolled.some((el) => el.contains(form) || form.contains(el) || el === form.parentElement)).toBe(true);
+  });
+
+  it.each(["Forecast", "Capacity", "Pipeline", "Trust"])("%s ends with a link to the editor that opens it on the Plan screen, and starts nothing before it is clicked", async (name) => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    await screen.findByTestId("scenario-picker");
+    fireEvent.click(within(screen.getByRole("navigation", { name: "Screens" })).getByRole("link", { name }));
+    await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(name));
+    const line = await screen.findByTestId("build-your-own");
+    expect(line).toHaveTextContent("Want to try your own hires and programs? Build your own plan.");
+    expect(editor.opened).toEqual([]);
+    fireEvent.click(within(line).getByRole("link", { name: "Build your own plan" }));
+    await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    expect(document.querySelector("main h2")?.textContent).toBe("Plan");
+    expect(editor.opened).toEqual(["sprout-labs"]);
+  });
+
   it("shows what the editor is doing while it loads, then the plan screen with its form, marked as the visitor's own", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
-    fireEvent.click(await screen.findByRole("button", { name: "Your plan" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Build your own plan" }));
     await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    expect(screen.getByRole("button", { name: "Build your own plan" })).toHaveAttribute("aria-pressed", "true");
     expect(editor.opened).toEqual(["sprout-labs"]);
     expect(editor.applied).toEqual([DEMO]);
     expect(screen.getByTestId("your-plan-mark")).toHaveTextContent("Your plan, computed in your browser; ranges unvalidated");
@@ -167,8 +212,16 @@ describe("on a phone", () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, false);
     const picker = await screen.findByTestId("scenario-picker");
-    expect(within(picker).queryByRole("button", { name: "Your plan" })).toBeNull();
+    expect(within(picker).queryByRole("button", { name: "Build your own plan" })).toBeNull();
+    expect(picker).not.toHaveTextContent("Computed in your browser");
     expect(within(picker).getByText("Editing your own plan needs a larger screen.")).toBeInTheDocument();
+    expect(screen.getByTestId("no-plan")).not.toHaveTextContent("build your own plan");
+    expect(screen.queryByRole("button", { name: /build your own plan/i })).toBeNull();
+    for (const name of ["Forecast", "Capacity", "Pipeline", "Trust"]) {
+      fireEvent.click(within(screen.getByRole("navigation", { name: "Screens" })).getByRole("link", { name }));
+      await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(name));
+      expect(screen.queryByRole("link", { name: "Build your own plan" })).toBeNull();
+    }
     expect(editor.opened).toEqual([]);
   });
 });

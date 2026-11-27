@@ -1,6 +1,7 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card } from "../../components/ui";
 import { useYourPlan } from "../../editor/YourPlanContext";
+import { YOUR_PLAN } from "../../editor/yourPlan";
 import { B, ROWS } from "./bindings";
 
 /** The scenarios this company has, as buttons; the chosen one is pressed and described. Choosing one reloads the screen from that scenario's report. */
@@ -9,11 +10,14 @@ export function ScenarioPicker() {
   const yourPlan = useYourPlan();
   const entry = files.index.companies.find((c) => c.id === company);
   if (!entry) return null;
+  const editor = entry.scenarios.find((s) => s.id === YOUR_PLAN);
+  const editorChosen = scenario === YOUR_PLAN;
   return (
     <Card className="p-4" data-testid="scenario-picker">
       <p className="mb-2 text-[11px] font-semibold uppercase text-slate-500">Scenario</p>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Scenario">
         {entry.scenarios.map((s, i) => {
+          if (s.id === YOUR_PLAN) return null;
           const chosen = s.id === scenario;
           return (
             <button
@@ -31,6 +35,22 @@ export function ScenarioPicker() {
           );
         })}
       </div>
+      {editor ? (
+        <div className="mt-3 border-t border-slate-200 pt-3">
+          <button
+            type="button"
+            aria-pressed={editorChosen}
+            data-scenario-id={editor.id}
+            onClick={() => choose?.(company, editor.id)}
+            className={`rounded-ft border border-ft-accent px-3 py-1.5 text-sm font-semibold transition-colors ${
+              editorChosen ? "bg-ft-accentSoft text-ft-brand" : "bg-white text-ft-accent hover:bg-ft-accentSoft"
+            }`}
+          >
+            Build your own plan
+          </button>
+          <p className="mt-1 text-xs text-slate-600">Change the hires and programs and see every screen update. Computed in your browser.</p>
+        </div>
+      ) : null}
       <p className="mt-2 text-xs text-slate-600">
         <Bound binding={B.scenarioDescription} />
       </p>

@@ -1,5 +1,6 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card, Callout, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
+import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { SectionHeader } from "../../components/workbook";
 import { STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
@@ -70,6 +71,9 @@ export function ScenarioStrip() {
           ) : null}
         </>
       )}
+      <div className="mt-4">
+        <BuildYourOwnPlan />
+      </div>
     </Card>
   );
 }

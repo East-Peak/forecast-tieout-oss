@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import { Card } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
@@ -55,6 +56,16 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
   const facts = snap.facts[company] as Facts | undefined;
   const draft = snap.drafts[company] as PlanDoc | undefined;
   const applied = snap.applied[company];
+  const top = useRef<HTMLDivElement>(null);
+  const shown = Boolean(facts && draft);
+  // Opening the editor, from this screen or another, lands on the form: in view, with its heading focused.
+  useEffect(() => {
+    if (!shown) return;
+    const heading = top.current?.querySelector("h2");
+    heading?.setAttribute("tabindex", "-1");
+    heading?.focus({ preventScroll: true });
+    top.current?.scrollIntoView?.({ block: "start" });
+  }, [shown]);
   if (!facts || !draft) return null;
   const feedback = snap.feedback.company === company ? snap.feedback : { company: null, errors: [], problems: [], failure: null, busy: false };
   const first = facts.months[0];
@@ -85,6 +96,7 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
   };
 
   return (
+    <div ref={top} className="scroll-mt-52">
     <Card data-testid="plan-form">
       <SectionHeader
         title="Your plan"
@@ -215,6 +227,7 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
         </div>
       </form>
     </Card>
+    </div>
   );
 }
 

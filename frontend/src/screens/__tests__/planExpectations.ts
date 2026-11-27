@@ -28,8 +28,9 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   one(B.fiscalYear.id, r.inputs.fiscal_year);
   one(B.asOf.id, fmt.date(r.inputs.as_of));
 
-  // the picker: every scenario of this company, and the one chosen described
-  many(B.pickLabel.id, entry.scenarios.map((s) => s.label), entry.scenarios.map((_, i) => `${SCENARIOS}/${i}`));
+  // the picker: every named scenario of this company (the visitor's own plan has its own button, with words of its own), and the one chosen described
+  const named = entry.scenarios.map((s, i) => [s, i] as const).filter(([s]) => s.id !== "your-plan");
+  many(B.pickLabel.id, named.map(([s]) => s.label), named.map(([, i]) => `${SCENARIOS}/${i}`));
   one(B.scenarioDescription.id, entry.scenarios.find((s) => s.id === scenario)!.description);
 
   // a plan that cannot be valued says so; as signed there is no plan and nothing is shown for one

@@ -1,5 +1,6 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
+import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
@@ -209,6 +210,8 @@ export default function PipelineScreen() {
           </dl>
         </Disclosure>
       )}
+
+      <BuildYourOwnPlan />
     </div>
   );
 }

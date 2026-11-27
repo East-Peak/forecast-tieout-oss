@@ -1,6 +1,7 @@
 import { Bound, readBinding, useBindingContext } from "../../binding/Bound";
 import { YOUR_PLAN } from "../../editor/yourPlan";
 import type { Binding } from "../../binding/Bound";
+import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
@@ -307,6 +308,8 @@ export default function TrustScreen() {
           <Bound binding={B.runRanges} /> from <Bound binding={B.runDraws} /> draws at seed <Bound binding={B.runSeed} /> · measure: <Bound binding={B.runMeasure} />
         </p>
       </Callout>
+
+      <BuildYourOwnPlan />
     </div>
   );
 }
