@@ -33,7 +33,7 @@ from .rates import rate_unit
 from .stretch import horizon_for
 from .stretch_rules import HORIZONS
 
-SCHEMA_VERSION = "2.3.0"
+SCHEMA_VERSION = "2.4.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -129,8 +129,13 @@ DEFS: dict = {
             "factor_horizon_months": enum(1, 3, 6),
             "held": INT,
             "scored": INT,
+            "stretched_side": enum("lower", "upper", "both", "neither"),
+            "window_start": DATE,
+            "window_end": DATE,
             "extrapolated": BOOL,
-            "extrapolation_reason": maybe(TEXT),
+            "extrapolated_because": maybe(
+                enum("longer_than_six_months", "not_the_tested_shape")
+            ),
             "floored_at_zero_80": BOOL,
             "floored_at_zero_95": BOOL,
         }
@@ -262,8 +267,11 @@ def _forecasts() -> dict:
     horizon_spread = obj(
         {
             "status": TEXT,
-            "label80": TEXT,
+            # a short label (cards, opened rows) and a full one (the line on how far to trust
+            # the ranges), both built from the basis; the 95% range's label is short
+            "label_short": TEXT,
             "label95": TEXT,
+            "label_full": TEXT,
             "basis": maybe(ref("RangeBasis")),
             **SPREAD["properties"],
         }
@@ -371,7 +379,7 @@ def _gap() -> dict:
             "expected": MONEY,
             "gap": MONEY,
             "expected_range80": ref("MoneyRange"),
-            "range80_label": TEXT,
+            "label_short": TEXT,
             "range_basis": maybe(ref("RangeBasis")),
         }
     )
@@ -396,8 +404,8 @@ def _gap() -> dict:
             "gap": MONEY,
             "expected_range80": ref("MoneyRange"),
             "expected_range95": ref("MoneyRange"),
-            "range80_label": TEXT,
-            "range95_label": TEXT,
+            "label_short": TEXT,
+            "label95": TEXT,
             "range_basis": maybe(ref("RangeBasis")),
         }
     )
@@ -1436,14 +1444,24 @@ def _basis_of(b: dict | None):
         b["factor_horizon_months"],
         b["held"],
         b["scored"],
-        b["extrapolated"],
-        b["extrapolation_reason"],
+        b["stretched_side"],
+        date.fromisoformat(b["window_start"]),
+        date.fromisoformat(b["window_end"]),
+        b["extrapolated_because"],
         b["floored_at_zero_80"],
         b["floored_at_zero_95"],
     )
 
 
 SIMULATED_95 = "simulated, not separately tested"
+
+
+class _Factors:
+    """The two factors of an evidence row, as stretch_report reads them to name a side."""
+
+    def __init__(self, lower: str | None, upper: str | None):
+        self.lower = None if lower is None else float(lower)
+        self.upper = None if upper is None else float(upper)
 
 
 def _label_rules(
@@ -1461,18 +1479,18 @@ def _label_rules(
         "the months' label does not agree with the decision",
     )
 
-    def check(name, label80, label95, basis, horizon=None, closed=False) -> None:
+    def check(name, short, label95, basis, horizon=None, closed=False) -> None:
         b = _basis_of(basis)
         if closed:
             rule(
-                basis is None and label80.startswith("closed"),
+                basis is None and short.startswith("closed"),
                 f"{name}: a closed range has no basis",
             )
             return
         if b is None:
             rule(
-                not label80.startswith("stretched")
-                and not label95.startswith("stretched"),
+                not short.startswith("Stretched")
+                and not label95.startswith("Stretched"),
                 f"{name}: labeled stretched but nothing stands behind it",
             )
             rule(
@@ -1499,17 +1517,39 @@ def _label_rules(
             f"{name}: stretched with factors that were not learned",
         )
         rule(
-            b.extrapolated == (b.extrapolation_reason is not None),
+            basis["extrapolated"] == (b.extrapolated_because is not None),
             f"{name}: extrapolated exactly when a reason is given",
+        )
+        # the window decides the horizon whose factors it uses and whether its shape was tested
+        h2, beyond = horizon_for(as_of, b.window_end)
+        tested = b.window_start == as_of and b.window_end == add_months(as_of, h2)
+        want = (
+            "longer_than_six_months"
+            if beyond
+            else None
+            if tested
+            else "not_the_tested_shape"
+        )
+        rule(
+            b.factor_horizon_months == h2 and b.extrapolated_because == want,
+            f"{name}: not the tested horizon its window belongs to, or the wrong account of its shape",
         )
         if horizon is not None:
             rule(
                 b.factor_horizon_months == horizon,
-                f"{name}: not the tested horizon its window belongs to",
+                f"{name}: not the horizon of its months",
             )
+        side_row = by_h[b.factor_horizon_months]
         rule(
-            label80 == stretch_report.label80(b),
-            f"{name}: the 80% label is not what its basis says",
+            b.stretched_side
+            == stretch_report.side_of(
+                _Factors(side_row["lower_factor"], side_row["upper_factor"])
+            ),
+            f"{name}: the side it says was stretched is not what the factors say",
+        )
+        rule(
+            short == stretch_report.label_short(b),
+            f"{name}: the short label is not what its basis says",
         )
         rule(
             label95 == stretch_report.label95(b),
@@ -1525,7 +1565,7 @@ def _label_rules(
             horizon = horizon_for(as_of, month_end(date(y, mo, 1)))[0]
         check(
             f"the {h} range",
-            v["label80"],
+            v["label_short"],
             v["label95"],
             v["basis"],
             horizon,
@@ -1533,21 +1573,32 @@ def _label_rules(
         )
         if v["basis"] is not None:
             rule(
-                v["label80"] in v["status"],
-                f"the {h} range's status does not carry its label",
+                v["label_full"] == stretch_report.label_full(_basis_of(v["basis"])),
+                f"the {h} range's full label is not what its basis says",
             )
-        elif not adopted and months:
             rule(
-                v["label80"] == v["status"].split(":")[0],
-                f"the {h} range's label is not its back-test label",
+                v["label_full"] in v["status"],
+                f"the {h} range's status does not carry its full label",
             )
+        else:
+            if months:
+                rule(
+                    v["label_full"] in v["status"]
+                    and (adopted or v["label_full"] == v["status"]),
+                    f"the {h} range's full label is not its status",
+                )
+            if not adopted and months:
+                rule(
+                    v["label_short"] == v["status"].split(":")[0],
+                    f"the {h} range's label is not its back-test label",
+                )
     for q in r["gap"]["quarters"]:
-        if "range80_label" not in q:
+        if "label_short" not in q:
             continue
         b = _basis_of(q["range_basis"])
         check(
             q["quarter"],
-            q["range80_label"],
+            q["label_short"],
             stretch_report.label95(b) if b else SIMULATED_95,
             q["range_basis"],
             None,
@@ -1555,15 +1606,15 @@ def _label_rules(
         )
         if not adopted and q["status"] != "closed":
             rule(
-                q["range80_label"] == "simulated",
+                q["label_short"] == "simulated",
                 f"{q['quarter']}: an unstretched range is labeled simulated",
             )
     year = r["gap"]["fiscal_year"]
-    if "range80_label" in year:
+    if "label_short" in year:
         check(
             "the fiscal year",
-            year["range80_label"],
-            year["range95_label"],
+            year["label_short"],
+            year["label95"],
             year["range_basis"],
             None,
             not windows["rest of fiscal year"],

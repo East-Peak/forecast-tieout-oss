@@ -92,7 +92,7 @@ def stretched(world):
 
 RANGE_KEYS = {
     "range80", "range95", "expected_range80", "expected_range95", "range80_label",
-    "range95_label", "label80", "label95", "by_window_label", "fitted_ranges", "basis", "range_basis",
+    "range95_label", "label_short", "label_full", "label95", "by_window_label", "fitted_ranges", "basis", "range_basis",
 }  # fmt: skip
 
 
@@ -118,59 +118,81 @@ def test_the_report_carries_the_decision_with_its_evidence_per_horizon(decided):
     assert "scored folds" in c["reason"] or "pooled" in c["reason"]
 
 
-def test_every_range_is_labeled_with_the_horizon_whose_factors_it_uses(stretched):
+def test_every_range_has_a_short_and_a_full_label_built_from_its_basis(stretched):
     f = stretched["forecasts"]["fitted_ranges"]
     assert f["by_window_label"].startswith("stretched by past misses")
     for h in f["horizons"].values():
-        assert h["label80"].startswith("stretched by past misses with the ")
-        assert (
-            " factors, which held " in h["label80"]
-            or "could be scored yet" in h["label80"]
+        assert h["label_short"].startswith(
+            ("Stretched on ", "Checked against past misses")
         )
-        assert h["label95"] == "stretched, not separately tested"
+        assert h["label_full"].startswith(
+            "Stretched by the model's own past misses, using what "
+        )
+        assert h["label95"].startswith("Stretched the same way; not separately tested")
         assert h["basis"]["factor_horizon_months"] in (1, 3, 6)
+        assert h["label_full"] in h["status"]
     year = stretched["gap"]["fiscal_year"]
-    assert year["range80_label"].startswith("stretched by past misses with the ")
-    assert year["range95_label"] == "stretched, not separately tested"
+    assert year["label_short"].startswith(
+        ("Stretched on ", "Checked against past misses")
+    )
+    assert year["label95"].startswith("Stretched the same way")
     for q in stretched["gap"]["quarters"]:
-        assert q["range80_label"].startswith(("stretched", "closed"))
+        assert q["label_short"].startswith(("Stretched", "Checked against", "closed"))
 
 
-def test_a_window_that_is_not_the_tested_cumulative_shape_says_it_is_extrapolated(
+def test_no_short_label_carries_a_date_or_a_count_and_the_full_label_never_prints_held_zero_of_one(
+    stretched,
+):
+    texts = [stretched["gap"]["fiscal_year"]["label_short"]] + [
+        q["label_short"] for q in stretched["gap"]["quarters"]
+    ]
+    horizons = stretched["forecasts"]["fitted_ranges"]["horizons"].values()
+    texts += [h["label_short"] for h in horizons]
+    assert not [t for t in texts if any(ch.isdigit() for ch in t)]
+    for h in horizons:
+        assert "held 0 of 1" not in h["label_full"] and "held 0 of 1" not in h["status"]
+        assert (
+            "2026-" not in h["label_full"] and "2027-" not in h["label_full"]
+        )  # dates as the app writes them
+
+
+def test_a_window_that_is_not_the_tested_cumulative_shape_says_it_is_not_exactly_the_tested_forecast(
     stretched,
 ):
     f = stretched["forecasts"]["fitted_ranges"]["horizons"]
     rest = f["rest of fiscal year"]
     assert rest["basis"]["extrapolated"] is True  # five months out, tested at six
-    assert "extrapolated: it covers" in rest["label80"]
+    assert rest["basis"]["extrapolated_because"] == "not_the_tested_shape"
+    assert "is not exactly the six-month forecast that was tested" in rest["label_full"]
     nxt = f["next twelve months"]
-    assert nxt["basis"]["extrapolation_reason"].startswith("longer than six months")
-    assert "extrapolated: longer than six months" in nxt["label80"]
+    assert nxt["basis"]["extrapolated_because"] == "longer_than_six_months"
+    assert (
+        "is longer than six months, so it uses the six-month factors"
+        in nxt["label_full"]
+    )
     quarters = [q for q in stretched["gap"]["quarters"] if q.get("range_basis")]
     assert quarters and all(q["range_basis"]["extrapolated"] for q in quarters)
 
 
-def test_the_labels_name_the_tested_horizon_and_what_it_held(stretched):
+def test_the_full_label_names_the_tested_horizon_and_the_evidence_at_it(stretched):
     ev = stretched["backtest"]["candidates"]["ranges"]["horizons"]
     six = next(h for h in ev if h["horizon_months"] == 6)
     nxt = stretched["forecasts"]["fitted_ranges"]["horizons"]["next twelve months"]
-    assert "with the six-month factors" in nxt["label80"]
-    assert (
-        f"which held {six['inside_stretched']} of {six['scored_folds']} past six-month forecasts"
-        in nxt["label80"]
-    )
+    assert "using what six-month forecasts needed" in nxt["label_full"]
     assert nxt["basis"]["held"] == six["inside_stretched"]
+    assert nxt["basis"]["scored"] == six["scored_folds"]
+    if six["scored_folds"] < 6:
+        assert "Evidence at this length is thin" in nxt["label_full"]
 
 
 def test_not_adopted_keeps_the_simulated_labels(unstretched):
     f = unstretched["forecasts"]["fitted_ranges"]
     assert not f["by_window_label"].startswith("stretched")
     for h in f["horizons"].values():
-        assert not h["label80"].startswith("stretched")
+        assert not h["label_short"].startswith("Stretched")
         assert h["label95"] == "simulated, not separately tested"
-    assert not unstretched["gap"]["fiscal_year"]["range80_label"].startswith(
-        "stretched"
-    )
+        assert h["label_full"] == h["status"]
+    assert not unstretched["gap"]["fiscal_year"]["label_short"].startswith("Stretched")
 
 
 def test_stretching_moves_only_ranges(stretched, unstretched):
@@ -215,8 +237,8 @@ def test_a_range_never_runs_below_zero(stretched):
 def test_the_markdown_states_the_decision_and_the_labels(stretched):
     text = render(stretched)
     assert "Ranges stretched by the model's own past misses" in text
-    assert "stretched by past misses with the" in text
-    assert "extrapolated" in text
+    assert "Stretched by the model's own past misses, using what" in text
+    assert "is not exactly the" in text
     assert "plain empirical rule" in text
     assert "Lower factor" in text
 
@@ -279,7 +301,7 @@ def test_a_stretched_label_on_a_range_that_was_not_stretched_is_refused(unstretc
     problems = broken(
         unstretched,
         lambda r: r["gap"]["fiscal_year"].update(
-            range80_label="stretched by past misses; held 1 of 2"
+            label_short="Stretched on the low side by past misses"
         ),
     )
     assert any("labeled stretched but nothing stands behind it" in p for p in problems)
@@ -287,9 +309,9 @@ def test_a_stretched_label_on_a_range_that_was_not_stretched_is_refused(unstretc
 
 def test_a_range_not_labeled_stretched_after_adoption_is_refused(stretched):
     problems = broken(
-        stretched, lambda r: r["gap"]["fiscal_year"].update(range80_label="simulated")
+        stretched, lambda r: r["gap"]["fiscal_year"].update(label_short="simulated")
     )
-    assert any("80% label is not what its basis says" in p for p in problems)
+    assert any("short label is not what its basis says" in p for p in problems)
 
 
 def test_the_files_exist_in_a_short_history_report(tmp_path):
@@ -316,10 +338,18 @@ def horizon_range(r, name="rest of fiscal year"):
 def test_a_label_with_a_fabricated_count_is_refused(stretched):
     def edit(r):
         v = horizon_range(r)
-        v["label80"] = v["label80"].replace("held ", "held 9", 1)
+        v["label_full"] = v["label_full"].replace(
+            "could be scored", "could be scored, 9 held", 1
+        )
+
+    def short(r):
+        horizon_range(r)["label_short"] += " and then some"
 
     assert any(
-        "80% label is not what its basis says" in p for p in broken(stretched, edit)
+        "full label is not what its basis says" in p for p in broken(stretched, edit)
+    )
+    assert any(
+        "short label is not what its basis says" in p for p in broken(stretched, short)
     )
 
 
@@ -363,12 +393,11 @@ def test_the_window_must_use_the_horizon_it_belongs_to(stretched):
 
 def test_an_extrapolated_range_must_give_its_reason(stretched):
     def edit(r):
-        horizon_range(r)["basis"]["extrapolation_reason"] = None
+        horizon_range(r)["basis"]["extrapolated_because"] = None
 
-    assert any(
-        "extrapolated exactly when a reason is given" in p
-        for p in broken(stretched, edit)
-    )
+    problems = broken(stretched, edit)
+    assert any("wrong account of its shape" in p for p in problems)
+    assert any("extrapolated exactly when a reason is given" in p for p in problems)
 
 
 def test_the_scored_dates_are_every_fold_with_enough_earlier_folds(stretched):
@@ -481,12 +510,12 @@ def test_a_lower_edge_floored_at_zero_says_so_in_words_and_in_the_acceptance(wor
         if v["basis"] and v["basis"]["floored_at_zero_80"]
     ]
     assert flagged, "the deep shift should floor at least one range"
-    texts = [q["range80_label"] for q in flagged if isinstance(q, dict)] + [
-        r["forecasts"]["fitted_ranges"]["horizons"][n]["label80"]
+    texts = [q["label_short"] for q in flagged if isinstance(q, dict)] + [
+        r["forecasts"]["fitted_ranges"]["horizons"][n]["label_short"]
         for n in flagged
         if isinstance(n, str)
     ]
-    assert all("lower edge floored at zero" in t for t in texts)
+    assert all(t.endswith("; floored at zero") for t in texts)
     assert r["backtest"]["candidates"]["ranges"]["acceptance"]["floored_at_zero"]
     assert (
         "floored at zero for:"

@@ -127,10 +127,13 @@
         "extrapolated": {
           "type": "boolean"
         },
-        "extrapolation_reason": {
+        "extrapolated_because": {
           "anyOf": [
             {
-              "$ref": "#/$defs/Text"
+              "enum": [
+                "longer_than_six_months",
+                "not_the_tested_shape"
+              ]
             },
             {
               "type": "null"
@@ -155,14 +158,31 @@
         },
         "scored": {
           "type": "integer"
+        },
+        "stretched_side": {
+          "enum": [
+            "lower",
+            "upper",
+            "both",
+            "neither"
+          ]
+        },
+        "window_end": {
+          "$ref": "#/$defs/Date"
+        },
+        "window_start": {
+          "$ref": "#/$defs/Date"
         }
       },
       "required": [
         "factor_horizon_months",
         "held",
         "scored",
+        "stretched_side",
+        "window_start",
+        "window_end",
         "extrapolated",
-        "extrapolation_reason",
+        "extrapolated_because",
         "floored_at_zero_80",
         "floored_at_zero_95"
       ],
@@ -172,7 +192,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.3.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.4.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -1361,10 +1381,13 @@
                             }
                           ]
                         },
-                        "label80": {
+                        "label95": {
                           "$ref": "#/$defs/Text"
                         },
-                        "label95": {
+                        "label_full": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "label_short": {
                           "$ref": "#/$defs/Text"
                         },
                         "mean": {
@@ -1385,8 +1408,9 @@
                       },
                       "required": [
                         "status",
-                        "label80",
+                        "label_short",
                         "label95",
+                        "label_full",
                         "basis",
                         "mean",
                         "median",
@@ -1408,10 +1432,13 @@
                             }
                           ]
                         },
-                        "label80": {
+                        "label95": {
                           "$ref": "#/$defs/Text"
                         },
-                        "label95": {
+                        "label_full": {
+                          "$ref": "#/$defs/Text"
+                        },
+                        "label_short": {
                           "$ref": "#/$defs/Text"
                         },
                         "mean": {
@@ -1432,8 +1459,9 @@
                       },
                       "required": [
                         "status",
-                        "label80",
+                        "label_short",
                         "label95",
+                        "label_full",
                         "basis",
                         "mean",
                         "median",
@@ -1755,10 +1783,10 @@
                 "gap": {
                   "$ref": "#/$defs/Money"
                 },
-                "range80_label": {
+                "label95": {
                   "$ref": "#/$defs/Text"
                 },
-                "range95_label": {
+                "label_short": {
                   "$ref": "#/$defs/Text"
                 },
                 "range_basis": {
@@ -1783,8 +1811,8 @@
                 "gap",
                 "expected_range80",
                 "expected_range95",
-                "range80_label",
-                "range95_label",
+                "label_short",
+                "label95",
                 "range_basis"
               ],
               "type": "object"
@@ -2328,11 +2356,11 @@
                   "gap": {
                     "$ref": "#/$defs/Money"
                   },
+                  "label_short": {
+                    "$ref": "#/$defs/Text"
+                  },
                   "quarter": {
                     "$ref": "#/$defs/Quarter"
-                  },
-                  "range80_label": {
-                    "$ref": "#/$defs/Text"
                   },
                   "range_basis": {
                     "anyOf": [
@@ -2364,7 +2392,7 @@
                   "expected",
                   "gap",
                   "expected_range80",
-                  "range80_label",
+                  "label_short",
                   "range_basis"
                 ],
                 "type": "object"
@@ -4973,7 +5001,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.3.0"
+      "const": "2.4.0"
     },
     "verdicts": {
       "additionalProperties": false,

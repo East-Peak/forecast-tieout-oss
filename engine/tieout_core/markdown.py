@@ -169,6 +169,9 @@ def _forecasts(s: dict) -> list[str]:
     fr = s["fitted_ranges"]
     out += [f"Fitted-model ranges ({fr['status']}):", ""]
     out += [f"Months: {fr['by_window_label']}.", ""]
+    out += [f"- {h}: {v['status']}" for h, v in fr["horizons"].items()] + (
+        [""] if fr["horizons"] else []
+    )
     out += _table(
         ["Month", "Median", "80% range", "95% range"],
         [
@@ -176,7 +179,7 @@ def _forecasts(s: dict) -> list[str]:
             for w, v in fr["by_window"].items()
         ]
         + [
-            (f"{h} ({v['label80']}; 95%: {v['label95']})", _usd(v["median"]),
+            (f"{h} ({v['label_short']}; 95%: {v['label95']})", _usd(v["median"]),
              _rng(v["range80"]), _rng(v["range95"]))
             for h, v in fr["horizons"].items()
         ],
@@ -275,8 +278,8 @@ def _gap(s: dict) -> list[str]:
         (
             f"Fiscal year: target {_usd(fy['target'])}, actual to date {_usd(fy['actual_to_date'])}, "
             f"forecast rest of year {_usd(fy['forecast_rest_of_year'])}, expected **{_usd(fy['expected'])}** "
-            f"(80%: {_rng(fy['expected_range80'])}{_labeled(fy.get('range80_label'))}; "
-            f"95%: {_rng(fy['expected_range95'])}{_labeled(fy.get('range95_label'))}), "
+            f"(80%: {_rng(fy['expected_range80'])}{_labeled(fy.get('label_short'))}; "
+            f"95%: {_rng(fy['expected_range95'])}{_labeled(fy.get('label95'))}), "
             f"gap **{_usd(fy['gap'])}**."
         ),
         "",

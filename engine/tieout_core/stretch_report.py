@@ -118,28 +118,48 @@ def stretched(
 
 @dataclass(frozen=True)
 class Basis:
-    """What stands behind a stretched range: the tested horizon whose factors it uses, how
-    many past forecasts at that horizon held and were scored, whether the range's shape is
-    one that was tested, and whether a lower edge was floored at zero."""
+    """What stands behind a stretched range: the tested horizon whose factors it uses, which
+    side those factors stretch, how many past forecasts at that horizon held and were scored,
+    the window it covers and whether that is a shape that was tested, and whether a lower edge
+    was floored at zero. Both lengths of label are built from these fields and nothing else."""
 
     factor_horizon_months: int
     held: int
     scored: int
-    extrapolated: bool
-    extrapolation_reason: str | None
+    stretched_side: str  # lower, upper, both or neither
+    window_start: date
+    window_end: date
+    extrapolated_because: (
+        str | None
+    )  # longer_than_six_months, not_the_tested_shape or None
     floored80: bool
     floored95: bool
+
+    @property
+    def extrapolated(self) -> bool:
+        return self.extrapolated_because is not None
 
     def as_json(self) -> dict:
         return {
             "factor_horizon_months": self.factor_horizon_months,
             "held": self.held,
             "scored": self.scored,
+            "stretched_side": self.stretched_side,
+            "window_start": self.window_start.isoformat(),
+            "window_end": self.window_end.isoformat(),
             "extrapolated": self.extrapolated,
-            "extrapolation_reason": self.extrapolation_reason,
+            "extrapolated_because": self.extrapolated_because,
             "floored_at_zero_80": self.floored80,
             "floored_at_zero_95": self.floored95,
         }
+
+
+def side_of(factors) -> str:
+    lower = factors.lower is not None and factors.lower > 1
+    upper = factors.upper is not None and factors.upper > 1
+    return {(True, True): "both", (True, False): "lower", (False, True): "upper"}.get(
+        (lower, upper), "neither"
+    )
 
 
 def basis(
@@ -159,63 +179,97 @@ def basis(
     s = ev.horizons[h]
     if not s.factors.learned:
         return None
-    reason = None
+    because = None
     if beyond:
-        reason = "longer than six months, so it uses the six-month factors"
+        because = "longer_than_six_months"
     elif start != as_of or end != add_months(as_of, h):
-        reason = (
-            f"it covers {start} to {end}, not the cumulative forecast from the as-of date "
-            f"that was tested {_AHEAD[h]} ahead"
-        )
+        because = "not_the_tested_shape"
     return Basis(
-        h,
-        s.inside_stretched,
-        s.scored,
-        reason is not None,
-        reason,
-        floors[0],
-        floors[1],
-    )
+        h, s.inside_stretched, s.scored, side_of(s.factors), start, end, because,
+        floors[0], floors[1],
+    )  # fmt: skip
 
 
 _AHEAD = {1: "one month", 3: "three months", 6: "six months"}
-_FLOORED = "lower edge floored at zero"
+_SIDE = {"lower": "the low side", "upper": "the high side", "both": "both sides"}
+_THIN_BELOW = MIN_SCORED_FOLDS  # fewer scored past forecasts than this is called thin
 
 
-def label80(b: Basis) -> str:
-    word = _WORDS[b.factor_horizon_months]
-    text = f"{STRETCHED} with the {word} factors, " + (
-        f"which held {b.held} of {b.scored} past {word} forecasts"
-        if b.scored
-        else f"and no past {word} forecast could be scored yet"
+def _date(d: date) -> str:
+    """A date as the app writes it: Aug 31, 2026."""
+    return f"{d:%b} {d.day}, {d.year}"
+
+
+def label_short(b: Basis) -> str:
+    """For cards and opened quarter rows: which side was stretched, no dates."""
+    text = (
+        f"Stretched on {_SIDE[b.stretched_side]} by past misses"
+        if b.stretched_side in _SIDE
+        else "Checked against past misses; no stretch needed"
     )
-    if b.extrapolated:
-        text += f"; extrapolated: {b.extrapolation_reason}"
-    return f"{text}; {_FLOORED}" if b.floored80 else text
+    return f"{text}; floored at zero" if b.floored80 else text
 
 
 def label95(b: Basis) -> str:
-    text = f"stretched, {NOT_SEPARATELY_TESTED}"
-    return f"{text}; {_FLOORED}" if b.floored95 else text
+    text = f"Stretched the same way; {NOT_SEPARATELY_TESTED}"
+    return f"{text}; floored at zero" if b.floored95 else text
 
 
-def unlearned_label(as_of: date, end: date) -> str | None:
-    """The label of a range whose horizon has too few past forecasts to stretch from."""
+def label_full(b: Basis) -> str:
+    """For the line on how far to trust the ranges and the checks section: plain sentences."""
+    word = _WORDS[b.factor_horizon_months]
+    parts = [
+        f"Stretched by the model's own past misses, using what {word} forecasts needed."
+    ]
+    n = b.scored
+    if n == 0:
+        parts.append(
+            f"No past {word} forecast could be scored yet, so the stretch is untested at this length."
+        )
+    elif n < _THIN_BELOW:
+        held = (
+            "held it" if (b.held, n) == (1, 1)
+            else "did not hold it" if (b.held, n) == (0, 1)
+            else "held all of them" if b.held == n
+            else "held none of them" if b.held == 0
+            else f"held {b.held} of them"
+        )  # fmt: skip
+        parts.append(
+            f"Evidence at this length is thin: {n} past {word} forecast{'s' if n > 1 else ''} "
+            f"could be scored, and the stretched range {held}."
+        )
+    else:
+        parts.append(f"The stretched range held {b.held} of {n} past {word} forecasts.")
+    window = f"({_date(b.window_start)} to {_date(b.window_end)})"
+    if b.extrapolated_because == "longer_than_six_months":
+        parts.append(
+            f"This window {window} is longer than six months, so it uses the six-month factors."
+        )
+    elif b.extrapolated_because == "not_the_tested_shape":
+        parts.append(
+            f"This window {window} is not exactly the {word} forecast that was tested."
+        )
+    if b.floored80:
+        parts.append("The lower edge of this range was floored at zero.")
+    return " ".join(parts)
+
+
+def unlearned_short() -> str:
+    return "Simulated: too few past forecasts to stretch from"
+
+
+def unlearned_full(as_of: date, end: date) -> str:
     h, _ = horizon_for(as_of, end)
     return (
-        f"{SIMULATED}: fewer than {MIN_ELIGIBLE_FOLDS} past {_WORDS[h]} forecasts "
-        "to stretch from"
+        f"{SIMULATED.capitalize()}: fewer than {MIN_ELIGIBLE_FOLDS} past {_WORDS[h]} "
+        "forecasts to stretch from."
     )
 
 
 def status_text(label: str, b: Basis, ev: Evaluation) -> str:
-    """A window's long status: its label and what the simulated range alone held."""
-    s = ev.horizons[b.factor_horizon_months]
-    if not s.scored:
-        return label
-    return (
-        f"{label} (the simulated range alone held {s.inside_simulated} of {s.scored})"
-    )
+    """A window's long status: its full label (what the simulated range alone held is in the
+    evidence table)."""
+    return label
 
 
 BY_WINDOW_LABEL = (

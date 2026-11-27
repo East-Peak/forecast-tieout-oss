@@ -548,21 +548,20 @@ def _forecasts(
     }
     # when the stretch is adopted each range's label is the stretch's, with what the simulated
     # range alone held; otherwise the range keeps its back-test label and is called simulated
-    range_labels, bases = {}, {}
+    range_labels, fulls, bases = {}, {}, {}
     for h in horizons:
         got = _stretch_labels(ev, as_of, h, spans, floors)
         if h not in spans:
             range_labels[h] = (_NOTHING_LEFT, _NOTHING_LEFT)
-            bases[h] = None
+            fulls[h], bases[h] = statuses[h], None
         elif got is None:
             range_labels[h] = (statuses[h].split(":")[0], _SIMULATED_95)
-            bases[h] = None
+            fulls[h], bases[h] = statuses[h], None
         else:
-            range_labels[h], bases[h] = (got[0], got[1]), got[2]
-            said = stretch_report.status_text(got[0], got[2], ev) if got[2] else got[0]
+            range_labels[h], fulls[h], bases[h] = (got[0], got[1]), got[2], got[3]
             # a range that includes the capacity term stays unvalidated; what the stretch held is
             # a statistic beside that, not a validation of it
-            statuses[h] = f"{statuses[h]}; {said}" if capacity else said
+            statuses[h] = f"{statuses[h]}; {got[2]}" if capacity else got[2]
 
     def totals(f: Forecast) -> dict:
         # The sum of the rounded months, so a shown total adds up to the months shown.
@@ -598,8 +597,9 @@ def _forecasts(
             "horizons": {
                 h: {
                     "status": statuses[h],
-                    "label80": range_labels[h][0],
+                    "label_short": range_labels[h][0],
                     "label95": range_labels[h][1],
+                    "label_full": fulls[h],
                     "basis": bases[h].as_json() if bases[h] else None,
                     **_spread(sim.by_group[h]),
                 }
@@ -623,16 +623,26 @@ _NOTHING_LEFT = "closed: nothing left to range over"
 
 
 def _stretch_labels(ev, as_of: date, name: str, spans, floors):
-    """(80% label, 95% label, basis) of the named range once the stretch is adopted: stretched,
-    with its basis, or simulated when its horizon has too few past forecasts to learn from.
-    None when the stretch is not adopted or the range has no months."""
+    """(short 80% label, 95% label, full label, basis) of the named range once the stretch is
+    adopted: stretched, with its basis, or simulated when its horizon has too few past
+    forecasts to learn from. None when the stretch is not adopted or the range has no months."""
     if not ev.adopted or name not in spans:
         return None
     start, end = spans[name]
     b = stretch_report.basis(ev, as_of, start, end, floors.get(name, (False, False)))
     if b is None:
-        return stretch_report.unlearned_label(as_of, end), _SIMULATED_95, None
-    return stretch_report.label80(b), stretch_report.label95(b), b
+        return (
+            stretch_report.unlearned_short(),
+            _SIMULATED_95,
+            stretch_report.unlearned_full(as_of, end),
+            None,
+        )
+    return (
+        stretch_report.label_short(b),
+        stretch_report.label95(b),
+        stretch_report.label_full(b),
+        b,
+    )
 
 
 def _label_gap_ranges(gap: dict, ev, as_of: date, spans, floors) -> None:
@@ -642,21 +652,21 @@ def _label_gap_ranges(gap: dict, ev, as_of: date, spans, floors) -> None:
         if q["expected_range80"] is None:
             continue
         got = _stretch_labels(ev, as_of, q["quarter"], spans, floors)
-        q["range80_label"] = (
+        q["label_short"] = (
             got[0] if got else _NOTHING_LEFT if q["status"] == "closed" else "simulated"
         )
-        q["range_basis"] = got[2].as_json() if got and got[2] else None
+        q["range_basis"] = got[3].as_json() if got and got[3] else None
     year = gap["fiscal_year"]
     if year["expected_range80"] is None:
         return
     if REST_OF_FY not in spans:
-        year["range80_label"] = year["range95_label"] = _NOTHING_LEFT
+        year["label_short"] = year["label95"] = _NOTHING_LEFT
         year["range_basis"] = None
         return
     got = _stretch_labels(ev, as_of, REST_OF_FY, spans, floors)
-    year["range80_label"] = got[0] if got else "simulated"
-    year["range95_label"] = got[1] if got else _SIMULATED_95
-    year["range_basis"] = got[2].as_json() if got and got[2] else None
+    year["label_short"] = got[0] if got else "simulated"
+    year["label95"] = got[1] if got else _SIMULATED_95
+    year["range_basis"] = got[3].as_json() if got and got[3] else None
 
 
 def _window_status(months: int, cells: list[dict]) -> str:
