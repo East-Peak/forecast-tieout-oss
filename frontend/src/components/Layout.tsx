@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router";
 import { BindingProvider, Bound, bind } from "../binding/Bound";
 import { ReportOutlet } from "../shell/ReportOutlet";
 import { SCREENS } from "../shell/screens";

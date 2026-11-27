@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 import { Analytics } from "@vercel/analytics/react";
 import App from "./App";
 import faviconUrl from "./assets/favicon.svg";
@@ -27,12 +27,7 @@ const isLocalHost = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.ho
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true,
-      }}
-    >
+    <BrowserRouter>
       <App />
       {!isLocalHost && <Analytics />}
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef } from "react";
 import type { ReactNode } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import type { ReportIndex, ScenarioComparison } from "../generated/appFiles";
 import type { TieoutReport } from "../generated/report";
 import { initialState, reduce, resolveSelection } from "./sessionState";

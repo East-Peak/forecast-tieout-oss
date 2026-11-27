@@ -23,7 +23,7 @@ function manualChunks(id: string): string | undefined {
     return "react-core";
   }
 
-  if (pkg === "react-router" || pkg === "react-router-dom") {
+  if (pkg === "react-router") {
     return "router";
   }
 

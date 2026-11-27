@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import type { ComponentType, LazyExoticComponent, ReactNode } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 import Layout from "./components/Layout";
 import { fileLoaders } from "./data/reportFiles";
 import { ReportSessionProvider } from "./session/ReportSession";
