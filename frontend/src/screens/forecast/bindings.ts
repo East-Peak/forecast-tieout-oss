@@ -129,6 +129,8 @@ export const STRETCH = {
   decision: text("stretch.decision", `${STRETCH_PATH}/decision`),
   reason: text("stretch.reason", `${STRETCH_PATH}/reason`),
   rule: text("stretch.rule", `${STRETCH_PATH}/rule`),
+  method: text("stretch.method", `${STRETCH_PATH}/method`),
+  accepted: text("stretch.accepted", `${STRETCH_PATH}/acceptance/sentence`),
   pooledScored: count("stretch.pooled.scored", `${STRETCH_PATH}/pooled/scored_folds`, { unavailable: NOT_COMPARED }),
   pooledSimulated: share("stretch.pooled.simulated", `${STRETCH_PATH}/pooled/coverage_simulated`, { unavailable: NOT_COMPARED }),
   pooledStretched: share("stretch.pooled.stretched", `${STRETCH_PATH}/pooled/coverage_stretched`, { unavailable: NOT_COMPARED }),
@@ -140,8 +142,8 @@ export const STRETCH = {
   coverageStretched: share("stretch.coverage.stretched", "/coverage_stretched", { unavailable: NOT_SCORED }),
   widthSimulated: usd("stretch.width.simulated", "/median_width80_simulated", { unavailable: NOT_SCORED }),
   widthStretched: usd("stretch.width.stretched", "/median_width80_stretched", { unavailable: NOT_SCORED }),
-  lower: bind({ id: "stretch.factor.lower", path: "/lower_factor", unit: "quantity", format: "multiple", unavailable: { words: "no width to stretch" } }),
-  upper: bind({ id: "stretch.factor.upper", path: "/upper_factor", unit: "quantity", format: "multiple", unavailable: { words: "no width to stretch" } }),
+  lower: bind({ id: "stretch.factor.lower", path: "/lower_factor", unit: "quantity", format: "multiple", unavailable: { reason: "/lower_reason" } }),
+  upper: bind({ id: "stretch.factor.upper", path: "/upper_factor", unit: "quantity", format: "multiple", unavailable: { reason: "/upper_reason" } }),
 } as const satisfies Record<string, Binding>;
 
 /** What the headline, ranges and tables read for a scenario with no plan. */

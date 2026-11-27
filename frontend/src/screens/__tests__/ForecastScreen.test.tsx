@@ -142,7 +142,8 @@ describe("Forecast: the label beside every range, and how the stretch was checke
     const fy = c.report.gap.fiscal_year as { range80_label: string; range95_label: string };
     expect(c.report.backtest.candidates.ranges.decision).toBe("adopted");
     expect(labelsOf(container)).toEqual([fy.range80_label, fy.range95_label]);
-    expect(fy.range80_label).toMatch(/^stretched by past misses; held \d+ of \d+ past forecasts at this horizon/);
+    expect(fy.range80_label).toMatch(/^stretched by past misses with the (one|three|six)-month factors, which held \d+ of \d+ past (one|three|six)-month forecasts/);
+    expect(fy.range80_label).toContain("extrapolated: it covers");
     expect(container.querySelector("[data-testid='range-trust']")!.textContent).toContain("stretched by past misses");
     expect(container.querySelector("[data-testid='stretch-decision']")!.textContent).toBe("adopted");
   });
@@ -176,6 +177,41 @@ describe("Forecast: the label beside every range, and how the stretch was checke
     expect(rows.length).toBe(3);
     const lower = Array.from(container.querySelectorAll("[data-binding='stretch.factor.lower']")).map((el) => el.textContent);
     expect(lower).toEqual(c.report.backtest.candidates.ranges.horizons.map((h) => fmt.multiple(h.lower_factor!)));
+  });
+
+  it("Mighty Oak's fourth quarter says in words, beside its range, that the lower edge was floored at zero", () => {
+    const c = caseOf("mighty-oak-holdings", "as-signed");
+    const container = mount(c, c.company, c.scenario);
+    const details = Array.from(container.querySelectorAll("[data-testid='quarter-detail']")).map((el) => el.textContent ?? "");
+    const q4 = details.find((t) => t.includes("$0 to"));
+    expect(q4).toBeDefined();
+    expect(q4).toContain("lower edge floored at zero");
+    expect(container.querySelector("[data-testid='stretch-accepted']")!.textContent).toContain("floored at zero for: Q4FY26");
+  });
+
+  it("what the rule accepted and how the factors are chosen are on the page, and absent when nothing was adopted", () => {
+    const adopted = caseOf("mighty-oak-holdings", "as-signed");
+    const a = mount(adopted, adopted.company, adopted.scenario);
+    expect(a.querySelector("[data-binding='stretch.accepted']")!.textContent).toContain("one-sided");
+    expect(a.querySelector("[data-binding='stretch.method']")!.textContent).toContain("plain empirical rule, not a finite-sample guarantee");
+    cleanup();
+    const declined = caseOf("sprout-labs", "as-signed");
+    const d = mount(declined, declined.company, declined.scenario);
+    expect(d.querySelector("[data-binding='stretch.accepted']")).toBeNull();
+    expect(d.querySelector("[data-binding='stretch.method']")!.textContent).toContain("noisier");
+  });
+
+  it("a factor with no finite value shows the report's reason on the page, not words of the browser's own", () => {
+    const c = caseOf("sapling-industries", "as-signed");
+    const edited = structuredClone(c.report);
+    const row = edited.backtest.candidates.ranges.horizons[1];
+    row.upper_factor = null;
+    row.upper_reason = "a reason the report gives";
+    const container = mount({ ...c, report: edited }, c.company, c.scenario);
+    const cells = container.querySelectorAll("[data-binding='stretch.factor.upper']");
+    expect(cells[1].textContent).toBe("unavailable: a reason the report gives");
+    expect(cells[1].getAttribute("data-unavailable")).toBe("true");
+    expect(container.textContent).not.toContain("no width to stretch");
   });
 
   it("a label read from the wrong place is caught", () => {

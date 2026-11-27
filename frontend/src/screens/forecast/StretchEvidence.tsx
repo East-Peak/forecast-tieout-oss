@@ -33,6 +33,12 @@ export function StretchEvidence() {
       <p className="text-sm leading-6 text-slate-700">
         <Bound binding={STRETCH.reason} />
       </p>
+      {evidence.acceptance !== null ? (
+        <p className="mt-2 text-sm leading-6 text-slate-700" data-testid="stretch-accepted">
+          <span className="font-semibold text-ft-brand">What the rule accepted: </span>
+          <Bound binding={STRETCH.accepted} />
+        </p>
+      ) : null}
       <Table className={`${STACK_LG.table} mt-3`}>
         <TableHead className={STACK_LG.head}>
           <TableRow>
@@ -67,6 +73,10 @@ export function StretchEvidence() {
         </TableBody>
       </Table>
       <p className="mt-3 text-xs text-slate-600">
+        <span className="font-semibold text-ft-brand">How the factors are chosen: </span>
+        <Bound binding={STRETCH.method} />
+      </p>
+      <p className="mt-2 text-xs text-slate-600">
         <span className="font-semibold text-ft-brand">The rule, declared before the scoring: </span>
         <Bound binding={STRETCH.rule} />
       </p>

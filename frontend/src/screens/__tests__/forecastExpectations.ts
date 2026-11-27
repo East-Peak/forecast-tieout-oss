@@ -180,6 +180,8 @@ export function expectations({ company, scenario, report: r, index, comparison }
   when(fa, STRETCH.decision.id, () => st.decision);
   when(fa, STRETCH.reason.id, () => st.reason);
   when(fa, STRETCH.rule.id, () => st.rule);
+  when(fa, STRETCH.method.id, () => st.method);
+  when(fa && st.acceptance !== null, STRETCH.accepted.id, () => st.acceptance?.sentence ?? "");
   when(fa, STRETCH.pooledScored.id, () => (st.pooled === null ? "not compared" : fmt.count(st.pooled.scored_folds)));
   when(fa, STRETCH.pooledSimulated.id, () => (st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_simulated)));
   when(fa, STRETCH.pooledStretched.id, () => (st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_stretched)));
@@ -190,8 +192,8 @@ export function expectations({ company, scenario, report: r, index, comparison }
   stMany(STRETCH.coverageStretched.id, () => st.horizons.map((h) => (h.coverage_stretched === null ? "not scored" : fmt.percent1(h.coverage_stretched))));
   stMany(STRETCH.widthSimulated.id, () => st.horizons.map((h) => orWords(h.median_width80_simulated, fmt.usdShort, "not scored")));
   stMany(STRETCH.widthStretched.id, () => st.horizons.map((h) => orWords(h.median_width80_stretched, fmt.usdShort, "not scored")));
-  stMany(STRETCH.lower.id, () => st.horizons.map((h) => orWords(h.lower_factor, fmt.multiple, "no width to stretch")));
-  stMany(STRETCH.upper.id, () => st.horizons.map((h) => orWords(h.upper_factor, fmt.multiple, "no width to stretch")));
+  stMany(STRETCH.lower.id, () => st.horizons.map((h) => (h.lower_factor === null ? `unavailable: ${h.lower_reason}` : fmt.multiple(h.lower_factor))));
+  stMany(STRETCH.upper.id, () => st.horizons.map((h) => (h.upper_factor === null ? `unavailable: ${h.upper_reason}` : fmt.multiple(h.upper_factor))));
 
   one(B.scenarioLabel.id, scenario_.label);
   one(B.scenarioDescription.id, scenario_.description);

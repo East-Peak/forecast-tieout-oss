@@ -90,6 +90,9 @@ export function build({ report: r, index, company, scenario }: Case): Built {
   one(STRETCH.decision.id, st.decision);
   one(STRETCH.reason.id, st.reason);
   one(STRETCH.rule.id, st.rule);
+  one(STRETCH.method.id, st.method);
+  if (st.acceptance !== null) one(STRETCH.accepted.id, st.acceptance.sentence);
+  else absent.push({ id: STRETCH.accepted.id });
   one(STRETCH.pooledScored.id, st.pooled === null ? "not compared" : fmt.count(st.pooled.scored_folds));
   one(STRETCH.pooledSimulated.id, st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_simulated));
   one(STRETCH.pooledStretched.id, st.pooled === null ? "not compared" : fmt.percent1(st.pooled.coverage_stretched));
@@ -100,8 +103,8 @@ export function build({ report: r, index, company, scenario }: Case): Built {
   many(STRETCH.coverageStretched.id, st.horizons.map((h) => (h.coverage_stretched === null ? "not scored" : fmt.percent1(h.coverage_stretched))), sRows);
   many(STRETCH.widthSimulated.id, st.horizons.map((h) => orWords(h.median_width80_simulated, fmt.usdShort, "not scored")), sRows);
   many(STRETCH.widthStretched.id, st.horizons.map((h) => orWords(h.median_width80_stretched, fmt.usdShort, "not scored")), sRows);
-  many(STRETCH.lower.id, st.horizons.map((h) => orWords(h.lower_factor, fmt.multiple, "no width to stretch")), sRows);
-  many(STRETCH.upper.id, st.horizons.map((h) => orWords(h.upper_factor, fmt.multiple, "no width to stretch")), sRows);
+  many(STRETCH.lower.id, st.horizons.map((h) => (h.lower_factor === null ? `unavailable: ${h.lower_reason}` : fmt.multiple(h.lower_factor))), sRows);
+  many(STRETCH.upper.id, st.horizons.map((h) => (h.upper_factor === null ? `unavailable: ${h.upper_reason}` : fmt.multiple(h.upper_factor))), sRows);
 
   // every rate, once, with its definition, sample and source; the value as its own unit says
   const rates = r.rates;
