@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import math
+from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
@@ -17,6 +18,8 @@ from .backtest import (
     HORIZONS,
     MIN_FOLDS,
     UNVALIDATED,
+    Backtest,
+    Comparison,
     choose_fit,
     coverage_label,
 )
@@ -27,9 +30,10 @@ from .figures import exact as _exact
 from .figures import money as _money
 from .figures import opt_money as _opt_money
 from .fiscal import Window, add_months, month_windows
-from .fit import DEFAULT_PARAMS, PARAMETER_RANGES, RECENCY, FitParams, fit
+from .fit import DEFAULT_PARAMS, PARAMETER_RANGES, RECENCY, FitParams, Model, fit
 from .forecast import (
     Forecast,
+    Simulation,
     existing_pipeline_conservation,
     model_forecast,
     run_rate,
@@ -38,12 +42,13 @@ from .forecast import (
 )
 from .history import creation_amounts, latest_known_date
 from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
-from .load import load_company, load_profile
+from .load import LoadedCompany, load_company, load_profile
 from .markdown import render as render_markdown
-from .plan import NEXT_12, REST_OF_FY, load_plan
+from .plan import NEXT_12, REST_OF_FY, Plan, load_plan
 from .rates import DEFAULT, Rate, RateBook, rate_unit
-from .reconcile import reconcile
-from .records import Check
+from .reconcile import Reconciliation, reconcile
+from .records import Check, Dataset, Profile
+from .stretch_report import Evaluation
 
 SECTIONS = (
     "reconciliation",
@@ -59,24 +64,62 @@ NO_TARGET = "no target in this window"
 LEVER_CAP_MULTIPLE = 3
 
 
-def build_report(
+@dataclass(frozen=True)
+class Prepared:
+    """What ``prepare`` leaves for ``finish``: every part of a report a plan does not change."""
+
+    profile_dir: Path
+    data_dir: Path
+    as_of: date
+    draws: int
+    seed: int
+    params: (
+        FitParams  # the fit in use, after the declared rule chose between candidates
+    )
+    incumbent_name: str
+    profile: Profile
+    loaded: LoadedCompany
+    rec: Reconciliation
+    pop: Dataset
+    windows: list[Window]
+    labels: list[str]
+    horizons: dict[str, list[str]]
+    cap: capacity_report.Capacity
+    bt: Backtest
+    recency: Comparison
+    model: Model
+    forecasts: list[Forecast]
+    sim: Simulation | None
+    ev: Evaluation
+    shown: Simulation | None
+    floors: dict[str, tuple[bool, bool]]
+    spans: dict[str, tuple[date, date]]
+    ranged_groups: dict[str, list[str]]
+    book: RateBook
+    gap: dict
+    lever_checks: list[Check]
+    roster_section: dict
+    productivity: dict
+    ground: actions.Ground | None
+    scenario: actions.Scenario | None
+    actions_section: dict
+    actions_checks: list[Check]
+    required: dict
+    required_checks: list[Check]
+
+
+def prepare(
     profile_dir: Path,
     data_dir: Path,
     as_of: date,
     draws: int = 2000,
     seed: int = 0,
     params: FitParams = DEFAULT_PARAMS,
-    plan_path: Path | None = None,
-    company: str | None = None,
-    scenario: str | None = None,
-) -> dict:
-    """``plan_path`` (plan.yaml) adds section 11; without it sections 8 to 10 and 12 stand.
-    ``company`` and ``scenario`` name the report (a viewer that loads it checks it is the one asked
-    for); by default the profile folder's name and the plan file's stem, or "as-signed"."""
-    identity = {
-        "company": company or Path(profile_dir).name,
-        "scenario": scenario or (Path(plan_path).stem if plan_path else "as-signed"),
-    }
+) -> Prepared:
+    """Everything in a report that does not depend on a plan: the reconciliation, the fit and
+    back-test, the forecasts and ranges, the gap, the capacity reading, the actions and the
+    required pipeline. It is the slow part; ``finish`` is the fast one and may be run many
+    times on one result."""
     profile = load_profile(Path(profile_dir))
     loaded = load_company(Path(data_dir), profile)
     rec = reconcile(Path(data_dir), loaded, profile, as_of)
@@ -177,9 +220,8 @@ def build_report(
         cap, as_of, windows, Path(profile_dir), diagnostic
     )
     productivity = capacity_report.quota_productivity(cap, pop, as_of, fy_target)
-    plan = None if plan_path is None else load_plan(Path(plan_path), as_of, cap.members)
-    plan_section = actions_section = None
-    plan_checks: list[Check] = []
+    ground = scenario = None
+    actions_checks: list[Check] = []
     if fitted.available:
         _, through, targeted, _, goal12, actual12 = twelve_month_scope(
             rec, as_of, windows, targets
@@ -195,17 +237,10 @@ def build_report(
             ),
         )  # fmt: skip
         scenario = actions.Scenario(ground)
-        if plan is not None:
-            plan_section, c = actions.plan_section(
-                ground, scenario, plan, Path(plan_path)
-            )
-            plan_checks += c
-        actions_section, c = actions.actions_section(ground, scenario)
-        plan_checks += c
+        actions_section, actions_checks = actions.actions_section(ground, scenario)
     else:
-        unavailable = {"unavailable": fitted.unavailable_reason}
-        plan_section = unavailable if plan is not None else None
-        actions_section = unavailable
+        actions_section = {"unavailable": fitted.unavailable_reason}
+
     if fitted.available:
         required, required_checks, _ = pipeline_report.required_pipeline(
             cap, model, pop, as_of, windows, targets,
@@ -216,6 +251,55 @@ def build_report(
         )  # fmt: skip
     else:
         required, required_checks = {"unavailable": fitted.unavailable_reason}, []
+    return Prepared(
+        profile_dir, data_dir, as_of, draws, seed, params, incumbent_name, profile, loaded,
+        rec, pop, windows, labels, horizons, cap, bt, recency, model, forecasts, sim, ev,
+        shown, floors, spans, ranged_groups, book, gap, lever_checks, roster_section,
+        productivity, ground, scenario, actions_section, actions_checks, required,
+        required_checks,
+    )  # fmt: skip
+
+
+def finish(
+    state: Prepared,
+    plan: Plan | None = None,
+    plan_file: Path | str | None = None,
+    company: str | None = None,
+    scenario: str | None = None,
+) -> dict:
+    """The report for ``state`` with ``plan`` (already loaded; ``plan_file`` is only the name the
+    report gives it). Without a plan, sections 8 to 10 and 12 stand. Changes nothing in ``state``."""
+    identity = {
+        "company": company or Path(state.profile_dir).name,
+        "scenario": scenario or (Path(plan_file).stem if plan_file else "as-signed"),
+    }
+    (
+        profile_dir, data_dir, as_of, draws, seed, params, incumbent_name, profile, loaded,
+        rec, pop, windows, labels, horizons, cap, bt, recency, model, forecasts, sim, ev,
+        shown, floors, spans, ranged_groups, book, gap, lever_checks, roster_section,
+        productivity, ground, actions_section, actions_checks, required, required_checks,
+    ) = (
+        state.profile_dir, state.data_dir, state.as_of, state.draws, state.seed, state.params,
+        state.incumbent_name, state.profile, state.loaded, state.rec, state.pop, state.windows,
+        state.labels, state.horizons, state.cap, state.bt, state.recency, state.model,
+        state.forecasts, state.sim, state.ev, state.shown, state.floors, state.spans,
+        state.ranged_groups, state.book, state.gap, state.lever_checks, state.roster_section,
+        state.productivity, state.ground, state.actions_section, state.actions_checks,
+        state.required, state.required_checks,
+    )  # fmt: skip
+    fitted = forecasts[2]
+    fy = profile.fiscal_year
+    plan_section = None
+    plan_checks: list[Check] = []
+    if ground is not None:
+        if plan is not None:
+            plan_section, c = actions.plan_section(
+                ground, state.scenario, plan, Path(str(plan_file))
+            )
+            plan_checks += c
+    elif plan is not None:
+        plan_section = actions_section
+    plan_checks += actions_checks
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
@@ -327,6 +411,29 @@ def build_report(
     report["actions"] = actions_section
     report["schema_version"] = SCHEMA_VERSION
     return report
+
+
+def build_report(
+    profile_dir: Path,
+    data_dir: Path,
+    as_of: date,
+    draws: int = 2000,
+    seed: int = 0,
+    params: FitParams = DEFAULT_PARAMS,
+    plan_path: Path | None = None,
+    company: str | None = None,
+    scenario: str | None = None,
+) -> dict:
+    """``plan_path`` (plan.yaml) adds section 11; without it sections 8 to 10 and 12 stand.
+    ``company`` and ``scenario`` name the report (a viewer that loads it checks it is the one asked
+    for); by default the profile folder's name and the plan file's stem, or "as-signed"."""
+    state = prepare(profile_dir, data_dir, as_of, draws, seed, params)
+    plan = (
+        None
+        if plan_path is None
+        else load_plan(Path(plan_path), as_of, state.cap.members)
+    )
+    return finish(state, plan, plan_path, company, scenario)
 
 
 def write_report(report: dict, out_dir: Path) -> tuple[Path, Path]:
