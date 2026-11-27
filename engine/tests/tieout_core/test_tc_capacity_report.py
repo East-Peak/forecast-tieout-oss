@@ -316,8 +316,11 @@ def test_required_pipeline_has_a_row_per_open_quarter_and_its_checks_pass(
         "already covered", "feasible", "unreachable within bounds"
     }  # fmt: skip
     checks = {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}
-    name = "quarterly requirements, run together through the forward function, meet each solvable quarter's target"
-    assert checks[name]["passed"], checks[name]["detail"]
+    for name in (
+        "each solvable quarter meets its target under the schedules solved up to and including it",
+        "the completed schedule books each quarter's stated bookings and surplus over target",
+    ):
+        assert checks[name]["passed"], checks[name]["detail"]
     total = sum(
         Decimal(q["required_extra_pipeline"])
         for q in sec["quarters"]
@@ -408,38 +411,65 @@ def test_when_capacity_is_adopted_every_range_is_unvalidated_and_coverage_is_onl
 TOO_LATE = "too late to fund with new pipeline: this quarter depends on the pipeline already open"
 
 
-def _flag_from_the_rows_own_numbers(sec, q):
+def _legs_from_the_rows_own_numbers(sec, q):
     """The rule, recomputed from what the row shows rather than from the solve."""
-    over_cap = q["outcome"] == "unreachable within bounds"
-    best = sec["team_history"]["best_four_quarter_average"]
-    total = q["per_ramped_ae_month"]["required_total"]
-    per_rep = (
+    legs = []
+    if q["outcome"] == "unreachable within bounds":
+        legs.append(
+            "over_cap"
+            if "would take" in q["headline"]
+            else "cap_used_up"
+            if "used up" in q["headline"]
+            else "no_yield"
+        )
+    hist = sec["team_history"]
+    day, ae = q["per_day"]["required_total"], q["per_ramped_ae_month"]["required_total"]
+    best_day = hist["best_four_quarter_average_per_day"]
+    best_ae = hist["best_four_quarter_average"]
+    if day is not None and best_day is not None and Decimal(day) > Decimal(best_day):
+        legs.append("total_rate")
+    if (
         sec["per_rep_rule"]["applies"]
-        and best is not None
-        and total is not None
-        and Decimal(total) > Decimal(best)
-    )
-    return over_cap or per_rep
+        and ae is not None
+        and best_ae is not None
+        and Decimal(ae) > Decimal(best_ae)
+    ):
+        legs.append("per_rep")
+    return legs
 
 
 @pytest.mark.parametrize("which", ["adopted", "not_shown"])
-def test_every_row_says_cents_booked_in_quarter_and_its_too_late_flag_follows_the_rule(
+def test_every_row_says_cents_booked_in_quarter_and_its_legs_follow_the_rule(
     which, request
 ):
     sec = request.getfixturevalue(which)["required_pipeline"]
     for q in sec["quarters"]:
         assert 0 <= Decimal(q["cents_booked_in_quarter_per_dollar"]) <= 100
         late = q["too_late"]
-        assert late["applies"] == _flag_from_the_rows_own_numbers(sec, q), q
+        # recomputed from rounded cents, so a leg sitting exactly on its threshold may
+        # differ; the unreachable leg and decisive legs must agree
+        assert late["legs"] == _legs_from_the_rows_own_numbers(sec, q), q
+        assert late["applies"] == bool(late["legs"])
         assert (late["label"] == TOO_LATE) == late["applies"]
-        assert bool(late["reasons"]) == late["applies"]
+        assert len(late["reasons"]) == len(late["legs"])
         assert (late["open_pipeline"] is not None) == late["applies"]
+        # the completed schedule only adds to a quarter
+        if q["outcome"] != "unreachable within bounds":
+            assert Decimal(q["surplus_over_target"]) >= Decimal("-0.01")
 
 
 def test_the_per_rep_leg_applies_only_when_capacity_is_adopted(adopted, not_shown):
     assert adopted["required_pipeline"]["per_rep_rule"]["applies"] is True
     off = not_shown["required_pipeline"]["per_rep_rule"]
     assert off["applies"] is False and "diagnostic" in off["why"]
+    # the total-rate leg is in force in both branches, and the per-rep one is never named
+    # as a deciding leg when it is off
+    for sec in (adopted["required_pipeline"], not_shown["required_pipeline"]):
+        assert "per day" in sec["too_late_rule"]
+        assert sec["team_history"]["best_four_quarter_average_per_day"] is not None
+    for q in not_shown["required_pipeline"]["quarters"]:
+        assert "per_rep" not in q["too_late"]["legs"]
+        assert q["per_ramped_ae_month"]["decides"] is False
 
 
 def test_a_quarter_nothing_can_fund_is_too_late_and_says_what_the_open_pipeline_would_have_to_do(
@@ -478,26 +508,25 @@ def test_a_small_target_is_not_too_late_and_its_rows_are_clean(tmp_path):
     assert all(q["too_late"]["label"] is None for q in sec["quarters"])
 
 
-def test_the_lead_time_table_sums_with_the_share_never_booked_to_one(adopted):
+def test_the_lead_time_table_is_cents_booked_and_the_count_outcome_sums_to_one(adopted):
     lt = adopted["required_pipeline"]["lead_time"]
     assert lt["created_between"] == ["2026-08-31", "2026-09-30"]
-    assert len(lt["quarters"]) == 4
-    total = (
-        sum(Decimal(q["booked_in_quarter"]) for q in lt["quarters"])
-        + Decimal(lt["booked_later"])
-        + Decimal(lt["never_booked"])
-    )
-    assert abs(total - 1) < Decimal("1e-9")
-    cum = [Decimal(q["booked_by_quarter_end"]) for q in lt["quarters"]]
-    assert cum == sorted(cum)
+    assert len(lt["quarters"]) == 4 and "never_booked" not in lt
+    cum = [Decimal(q["cents_booked_by_quarter_end"]) for q in lt["quarters"]]
+    assert cum == sorted(cum) and Decimal(lt["cents_booked_later"]) >= 0
+    co = lt["count_outcome"]
+    assert abs(
+        Decimal(co["win_within_horizon"]) + Decimal(co["do_not_win"]) - 1
+    ) < Decimal("1e-6")
 
 
 def test_the_new_self_checks_are_in_the_report_and_pass(adopted, not_shown):
     for r in (adopted, not_shown):
         checks = {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}
         for name in (
-            "quarterly requirements, run together through the forward function, meet each solvable quarter's target",
+            "each solvable quarter meets its target under the schedules solved up to and including it",
+            "the completed schedule books each quarter's stated bookings and surplus over target",
             "cents booked in each quarter, re-derived from the solved schedule, match the stated yield",
-            "lead-time shares plus the share never booked sum to one, and never booked is the dollars that do not win",
+            "lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one",
         ):
             assert checks[name]["passed"], (name, checks[name]["detail"])

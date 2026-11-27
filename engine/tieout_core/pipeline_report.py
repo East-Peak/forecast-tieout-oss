@@ -4,6 +4,7 @@ pipeline per ramped AE-month to hold it against; and the lead-time table."""
 
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import date, timedelta
 from decimal import Decimal
 
@@ -11,17 +12,21 @@ from .capacity_report import Capacity
 from .figures import CENT, exact, money, number
 from .fiscal import FiscalYear, Window, add_months
 from .fit import Model
-from .forecast import ADDED, Creation, model_forecast
+from .forecast import ADDED, Creation, Inflow, model_forecast
 from .history import creation_amounts
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .records import Check, Dataset
 from .requirement import (
+    PROBE,
     History,
     LeadTimes,
     QuarterResult,
+    best_four_per_day,
     close_with_open_pipeline,
     lead_times,
+    lead_windows,
     next_quarters,
+    per_rep_excess,
     schedule,
     solve_quarters,
     summarise_history,
@@ -38,13 +43,14 @@ TOO_LATE = "too late to fund with new pipeline: this quarter depends on the pipe
 def observed_history(
     cap: Capacity, pop: Dataset, as_of: date, fy_start: date
 ) -> History:
-    """Created pipeline dollars per ramped AE-month in each complete fiscal
-    quarter the files cover, with today's roster and ramp (a stated limit)."""
-    if cap.fit is None or not pop.deals:
+    """Created pipeline in each complete fiscal quarter the files cover: per day (an
+    observed fact, no roster needed) and, where a ramp is fitted, per ramped AE-month
+    with today's roster and ramp (a stated limit)."""
+    if not pop.deals:
         return History(0, None, None)
     first = min(d.created for d in pop.deals)
     amounts = creation_amounts(pop)
-    rows = []
+    by_ae, by_day = [], []
     k = -40
     while True:
         start = add_months(fy_start, 3 * k)
@@ -62,11 +68,20 @@ def observed_history(
             ),
             ZERO,
         )
-        months = ramped_ae_months(
-            cap.members, cap.fit.curve, start - timedelta(days=1), end
-        )
-        rows.append((created, months))
-    return summarise_history(rows)
+        by_day.append((created, (end - start).days + 1))
+        if cap.fit is not None:
+            by_ae.append(
+                (
+                    created,
+                    ramped_ae_months(
+                        cap.members, cap.fit.curve, start - timedelta(days=1), end
+                    ),
+                )
+            )
+    per_day = best_four_per_day(by_day)
+    if cap.fit is None:
+        return History(len(by_day), None, None, per_day)
+    return replace(summarise_history(by_ae), best_four_per_day=per_day)
 
 
 def required_pipeline(
@@ -90,9 +105,7 @@ def required_pipeline(
     )
     history = observed_history(cap, pop, as_of, fy_start)
     per_rep = cap.adopted
-    rows = [
-        _row(r, r.quarter in fy_quarters, history.best_four, per_rep) for r in results
-    ]
+    rows = [_row(r, r.quarter in fy_quarters, history, per_rep) for r in results]
     fy = fy or FiscalYear(fy_start)
     lead = lead_times(model, pop, as_of, next_quarters(fy, as_of))
     out = {
@@ -113,10 +126,12 @@ def required_pipeline(
             results, fy_quarters, single_spread_lever, _late_quarters(rows)
         ),
         "per_rep_rule": _per_rep_rule(cap),
-        "too_late_rule": "a quarter is too late to fund with new pipeline when what it needs is over "
-        "the cap (or no pipeline created in time can book inside it), or, where the per-ramped-AE-month "
-        "comparison applies, when its requirement per ramped AE-month is above the team's best "
-        "four-quarter average",
+        "too_late_rule": "a quarter is too late to fund with new pipeline when its requirement is over the "
+        "cap (or the cap is used up, or no pipeline created in time can book inside it), or when "
+        "everything created in its span (expected, earlier quarters' assignments and its own "
+        "requirement) per day is above the team's best four-quarter average of total created "
+        "pipeline per day, or, only where capacity is the forecast's basis, when that total per "
+        "ramped AE-month is above the team's best; the reason names exactly the legs that fired",
         "lead_time": _lead_time(lead),
         "per_ramped_ae_month_label": PER_BASIS_ADOPTED
         if cap.adopted
@@ -133,35 +148,51 @@ def required_pipeline(
             results, model, pop, as_of, windows, creation, actual, targets, lever_cap
         ),
         yield_check(results, model, pop, as_of, windows, targets),
-        lead_check(lead, model),
+        lead_check(lead, model, pop, as_of, next_quarters(fy, as_of)),
     ]
     return out, checks, results
 
 
-def _row(r: QuarterResult, in_fy: bool, best_four, per_rep_applies: bool) -> dict:
+def _row(
+    r: QuarterResult, in_fy: bool, history: History, per_rep_applies: bool
+) -> dict:
     needed = r.required if r.outcome == FEASIBLE else None
-    total = None if needed is None else r.expected_created + needed
-    months = r.ramped_ae_months
+    # an over-the-cap quarter shows what it would take: the rule compares that total
+    total = None if r.outcome == COVERED else r.total_in_span
+    months, days = r.ramped_ae_months, r.span_days
+    best_ae, best_day = history.best_four, history.best_four_per_day
 
-    def per(x):
-        return None if x is None or not months else money(x / months)
+    def per(x, n):
+        return None if x is None or not n else money(x / n)
+
+    def against(x, n, best):
+        return None if x is None or not n or not best else number(x / n / best, 2)
 
     if r.outcome == UNREACHABLE:
-        headline = (
-            "unreachable: pipeline created in time cannot book inside the quarter"
-            if r.required is None
-            else f"unreachable within the cap (it would take ${r.required:,.2f})"
-        )
+        if r.required is not None:
+            headline = f"unreachable within the cap (it would take ${r.required:,.2f})"
+        elif r.yield_per_dollar > 0:
+            headline = (
+                "unreachable: the cap is used up by earlier quarters' assignments"
+            )
+        else:
+            headline = (
+                "unreachable: pipeline created in time cannot book inside the quarter"
+            )
     else:
         headline = (
             "already covered"
             if r.outcome == COVERED
             else f"required: ${r.required:,.2f}"
         )
-    reasons = too_late(r, best_four, per_rep_applies)
-    versus = None
-    if total is not None and months and best_four:
-        versus = number(total / months / best_four, 2)
+    reasons = too_late(r, best_ae, best_day, per_rep_applies)
+    diagnostics = []
+    excess = per_rep_excess(r, best_ae)
+    if excess is not None and not per_rep_applies and r.outcome != COVERED:
+        diagnostics.append(
+            f"per ramped AE-month it would need ${excess:,.0f}, above the team's best of "
+            f"${best_ae:,.0f}: a diagnostic here, it does not decide"
+        )
     return {
         "quarter": r.quarter,
         "in_fiscal_year": in_fy,
@@ -173,21 +204,34 @@ def _row(r: QuarterResult, in_fy: bool, best_four, per_rep_applies: bool) -> dic
         "required_extra_pipeline": None if needed is None else money(needed),
         "bookings_without_own_pipeline": money(r.forecast_without),
         "bookings_with_own_pipeline": money(r.forecast_with),
+        "bookings_under_completed_schedule": None
+        if r.full_bookings is None
+        else money(r.full_bookings),
+        "surplus_over_target": None if r.surplus is None else money(r.surplus),
         "created_between": [r.piece[0].isoformat(), r.piece[1].isoformat()],
         "expected_created_pipeline": money(r.expected_created),
-        "required_total_created_pipeline": None if total is None else money(total),
+        "earlier_assigned_in_span": money(r.earlier_assigned),
+        "total_created_in_span": None if total is None else money(total),
         "ramped_ae_months": None if months is None else number(months, 1),
+        "per_day": {
+            "expected": per(r.expected_created, days),
+            "required_total": per(total, days),
+            "required_against_team_best": against(total, days, best_day),
+        },
         "per_ramped_ae_month": {
-            "expected": per(r.expected_created),
-            "required_total": per(total),
-            "required_against_team_best": versus,
+            "expected": per(r.expected_created, months),
+            "required_total": per(total, months),
+            "required_against_team_best": against(total, months, best_ae),
+            "decides": per_rep_applies,
         },
         "cap_left_before": money(r.cap_left),
         "cents_booked_in_quarter_per_dollar": number(r.yield_per_dollar * 100, 2),
         "too_late": {
             "applies": bool(reasons),
             "label": TOO_LATE if reasons else None,
-            "reasons": list(reasons),
+            "legs": [c for c, _ in reasons],
+            "reasons": [t for _, t in reasons],
+            "diagnostics": diagnostics,
             "open_pipeline": _open_pipeline(r) if reasons else None,
         },
     }
@@ -238,22 +282,24 @@ def _per_rep_rule(cap: Capacity) -> dict:
         return {
             "applies": True,
             "why": "capacity is the forecast's basis, so the team's best per ramped AE-month is a "
-            "fair ceiling on what the team can create",
+            "third leg beside the cap and the total rate",
         }
     return {
         "applies": False,
         "why": "capacity was not shown to explain pipeline in this history, so the per-ramped-AE-month "
-        "comparison is a diagnostic only and the cap decides alone",
+        "comparison is a diagnostic only and does not decide; the cap and the total rate do",
     }
 
 
 def _lead_time(lt: LeadTimes) -> dict:
     cumulative = dict(lt.cumulative)
     return {
-        "question": "of a dollar of pipeline created next month, the share booked by the end of each "
-        "of the next four quarters",
+        "question": "of a dollar of pipeline created next month (at its first recorded amount), the "
+        "cents booked by the end of each of the next four quarters",
         "basis": "the production forward function's own timing, on a probe dollar-amount created "
-        "evenly through the month; independent of the capacity decision",
+        "evenly through the month; independent of the capacity decision. These are dollar yields, "
+        "not probabilities: amounts change between creation and win, so they can exceed or fall "
+        "short of what the deal counts imply and are not forced to sum to one",
         "created_between": [
             lt.created_between[0].isoformat(),
             lt.created_between[1].isoformat(),
@@ -261,14 +307,17 @@ def _lead_time(lt: LeadTimes) -> dict:
         "quarters": [
             {
                 "quarter": k,
-                "booked_in_quarter": number(v, 6),
-                "booked_by_quarter_end": number(cumulative[k], 6),
+                "cents_booked_in_quarter": number(v * 100, 2),
+                "cents_booked_by_quarter_end": number(cumulative[k] * 100, 2),
             }
             for k, v in lt.booked
         ],
-        "booked_later": number(lt.later, 6),
-        "never_booked": number(lt.never, 6),
-        "never_booked_meaning": "lost, or never closing",
+        "cents_booked_later": number(lt.later * 100, 2),
+        "count_outcome": {
+            "meaning": "of the deals created, from the fit in use; counts, so these sum to one",
+            "win_within_horizon": number(lt.win_share, 6),
+            "do_not_win": number(lt.not_win_share, 6),
+        },
     }
 
 
@@ -280,10 +329,15 @@ def _history(h: History, cap: Capacity) -> dict:
         "best_four_quarter_average": None
         if h.best_four is None
         else money(h.best_four),
+        "best_four_quarter_average_per_day": None
+        if h.best_four_per_day is None
+        else money(h.best_four_per_day),
+        "per_day_unit": "total created pipeline dollars per day, over four consecutive complete "
+        "fiscal quarters (observed; needs no roster)",
         "note": "Observed over the complete fiscal quarters in the files, with today's roster and "
         "ramp; fewer than four quarters has no four-quarter average"
         if cap.fit is not None
-        else "unavailable: no usable roster history",
+        else "per ramped AE-month unavailable: no usable roster history",
     }
 
 
@@ -334,11 +388,19 @@ def summarise_fiscal_year(
 def quarter_checks(
     results, model, pop, as_of, windows, creation, actual, targets, cap
 ) -> list[Check]:
-    """Independent of the solve's own arithmetic. The solved schedule is run
-    through the production forward function once: each solvable quarter's
-    bookings meet its stated target to the cent (covered ones already do). Each
-    unreachable quarter is shown to be genuinely over the cap, or to be beyond
-    the selling window (no pipeline created in time books inside it)."""
+    """Independent of the solve's own arithmetic, in two checks.
+
+    First: the schedules up to and including each quarter's own are run through the
+    production forward function and each solvable quarter's bookings meet its stated
+    target to the cent (covered ones already do). Each unreachable quarter is shown
+    to be genuinely over the cap, to have had the cap used up by earlier quarters
+    (while a probe that ignores the cap does book in it), or to be beyond the
+    selling window (the probe books nothing in it).
+
+    Second: the completed schedule, every quarter's pipeline created together, books
+    in each quarter what the report states, rebuilt by adding each quarter's own
+    schedule to the no-pipeline forecast (the forward function is linear in it); a
+    solvable quarter is never below target, only above it."""
     bad = []
 
     def quarter_total(forecast, quarter):
@@ -377,10 +439,22 @@ def quarter_checks(
             gain = quarter_total(with_cap, r.quarter) - quarter_total(
                 without, r.quarter
             )
-            if r.required is None:
-                if gain > CENT:  # something created in time does book in the quarter
+            probe = model_forecast(
+                model, pop, as_of, windows, creation=creation,
+                inflows=(*earlier, *schedule(as_of, r.piece[1], PROBE)),
+            )  # fmt: skip
+            probe_gain = quarter_total(probe, r.quarter) - quarter_total(
+                without, r.quarter
+            )
+            if r.required is None and r.yield_per_dollar > 0:
+                if room > 0 or probe_gain <= CENT:
                     bad.append(
-                        f"{r.quarter}: called beyond the selling window but the cap books {gain:.2f}"
+                        f"{r.quarter}: called cap-used-up but ${room:,.2f} is left and a probe books {probe_gain:.2f}"
+                    )
+            elif r.required is None:
+                if gain > CENT or probe_gain > CENT:  # something created in time books
+                    bad.append(
+                        f"{r.quarter}: called beyond the selling window but a probe books {probe_gain:.2f}"
                     )
             elif not (
                 r.required > room and quarter_total(with_cap, r.quarter) < r.target
@@ -393,13 +467,48 @@ def quarter_checks(
     solvable = sum(1 for r in results if r.outcome != UNREACHABLE)
     return [
         Check(
-            "quarterly requirements, run together through the forward function, meet each solvable quarter's target",
+            "each solvable quarter meets its target under the schedules solved up to and including it",
             not bad,
-            f"{solvable} solvable quarters re-run as one schedule; "
-            f"{len(results) - solvable} unreachable checked against the cap and the selling window"
+            f"{solvable} solvable quarters re-run through the forward function, each with the "
+            f"schedules solved up to and including its own; {len(results) - solvable} unreachable "
+            "checked against the cap, the cap left and the selling window"
             + ("" if not bad else "; " + "; ".join(bad)),
-        )
+        ),
+        _completed_check(
+            results, model, pop, as_of, windows, creation, actual, targets
+        ),
     ]
+
+
+def _completed_check(
+    results, model, pop, as_of, windows, creation, actual, targets
+) -> Check:
+    base = model_forecast(model, pop, as_of, windows, creation=creation)
+    own = [
+        model_forecast(model, pop, as_of, windows, creation=creation, inflows=r.inflows)
+        for r in results
+    ]
+    bad = []
+    for r in results:
+        labels = [w.label for w in windows if targets[r.quarter][0].contains(w.end)]
+        total = actual.get(r.quarter, ZERO) + sum(
+            (base.window_total(m) for m in labels), ZERO
+        )
+        for f in own:
+            if ADDED in f.components:
+                total += sum((f.components[ADDED][m] for m in labels), ZERO)
+        if r.full_bookings is None or abs(total - r.full_bookings) > CENT:
+            bad.append(
+                f"{r.quarter}: rebuilt {total:.2f} against stated {r.full_bookings}"
+            )
+        elif r.outcome != UNREACHABLE and total < r.target - CENT:
+            bad.append(f"{r.quarter}: {total:.2f} under its target {r.target}")
+    return Check(
+        "the completed schedule books each quarter's stated bookings and surplus over target",
+        not bad,
+        f"{len(results)} quarters rebuilt by adding each quarter's own schedule to the "
+        "no-pipeline forecast" + ("" if not bad else "; " + "; ".join(bad)),
+    )
 
 
 def yield_check(results, model, pop, as_of, windows, targets) -> Check:
@@ -427,27 +536,42 @@ def yield_check(results, model, pop, as_of, windows, targets) -> Check:
     )
 
 
-def lead_check(lt: LeadTimes, model: Model) -> Check:
-    """The lead-time shares and the share never booked sum to one, and the share
-    never booked equals the dollars that do not win, worked out from the fitted
-    win rate and deal sizes rather than from the forward function."""
-    new = model.new_pipeline
-    wins = (
-        new.win_rate * new.mean_won_arr / new.mean_created_arr
-        if new.mean_created_arr
-        else ZERO
-    )
-    total = sum((v for _, v in lt.booked), ZERO) + lt.later + lt.never
+def lead_check(lt: LeadTimes, model: Model, pop, as_of, quarters) -> Check:
+    """Each quarter's yield is checked against an independent run of the forward
+    function on a different probe: another dollar amount, created through the month
+    as two inflows split at its middle. The count shares (deals expected to win,
+    and not) sum to one and the win share is the fitted win rate."""
+    windows, first, last = lead_windows(model, as_of, quarters)
+    n, a0 = (last - first).days, (first - as_of).days
+    half = n // 2
+    amount = Decimal(250_000)
+    f = model_forecast(
+        model, pop, as_of, windows,
+        inflows=(
+            Inflow(a0, a0 + half, amount * half / n),
+            Inflow(a0 + half, a0 + n, amount * (n - half) / n),
+        ),
+    )  # fmt: skip
     bad = []
-    if abs(total - 1) > Decimal("1e-9"):
-        bad.append(f"shares sum to {total:.9f}")
-    if abs(lt.never - (1 - wins)) > Decimal("1e-9"):
+    for (k, got), (_, qw) in zip(lt.booked, quarters):
+        probe = (
+            sum(
+                (f.components[ADDED][w.label] for w in windows if qw.contains(w.end)),
+                ZERO,
+            )
+            / amount
+        )
+        if abs(probe - got) > Decimal("1e-9"):
+            bad.append(f"{k}: probe {probe:.6f} against stated {got:.6f}")
+    total = lt.win_share + lt.not_win_share
+    if abs(total - 1) > Decimal("1e-12") or lt.win_share != model.new_pipeline.win_rate:
         bad.append(
-            f"never booked {lt.never:.6f} against {1 - wins:.6f} from the win rate"
+            f"count shares {lt.win_share} + {lt.not_win_share} against the fitted win rate"
         )
     return Check(
-        "lead-time shares plus the share never booked sum to one, and never booked is the dollars that do not win",
+        "lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one",
         not bad,
-        f"never booked {lt.never:.4f}, booked later {lt.later:.4f}"
+        f"{len(lt.booked)} quarters checked on a ${amount:,.0f} probe in two parts; win share "
+        f"{lt.win_share:.4f}, not {lt.not_win_share:.4f}"
         + ("" if not bad else "; " + "; ".join(bad)),
     )

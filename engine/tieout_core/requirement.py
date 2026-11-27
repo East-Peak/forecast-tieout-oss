@@ -25,10 +25,11 @@ relationship this history did not support; the cap leg then decides alone.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, timedelta
 from decimal import Decimal
 from statistics import median
+from typing import NamedTuple
 
 from .fiscal import FiscalYear, Window, month_end, month_windows
 from .fit import Model
@@ -65,6 +66,27 @@ class QuarterResult:
     yield_per_dollar: Decimal = ZERO
     open_arr: Decimal = ZERO  # dollars of pipeline open at the as-of date
     open_expected: Decimal = ZERO  # what the open pipeline is expected to book in it
+    # Review round: earlier quarters' assignments are created inside this quarter's
+    # span too, so every total and benchmark comparison includes them
+    earlier_assigned: Decimal = ZERO
+    # the quarter's bookings when every quarter's schedule is created together
+    full_bookings: Decimal | None = None
+
+    @property
+    def total_in_span(self) -> Decimal | None:
+        """Everything created in the span: what the forward function expects, what
+        earlier quarters were assigned and this quarter's own requirement."""
+        if self.required is None:
+            return None
+        return self.expected_created + self.earlier_assigned + self.required
+
+    @property
+    def span_days(self) -> int:
+        return (self.piece[1] - self.piece[0]).days
+
+    @property
+    def surplus(self) -> Decimal | None:
+        return None if self.full_bookings is None else self.full_bookings - self.target
 
 
 def _status(window: Window, as_of: date) -> str:
@@ -87,6 +109,7 @@ def solve_quarters(
     """``targets`` maps a quarter to its window and bookings target, in
     chronological order; ``actual`` its bookings to date."""
     out: list[QuarterResult] = []
+    month_labels: list[list[str]] = []
     assigned: list[Inflow] = []
     spent = ZERO
     new = model.new_pipeline
@@ -131,11 +154,28 @@ def solve_quarters(
                 yield_per_dollar(model, data, as_of, windows, qw.end, labels),
                 open_arr,
                 sum((earlier.components[EXISTING][m] for m in labels), ZERO),
+                spent,
             )
         )  # fmt: skip
         assigned.extend(mine)
+        month_labels.append(labels)
         spent += amount
-    return out
+    return _complete(out, month_labels, model, data, as_of, windows, creation)
+
+
+def _complete(out, month_labels, model, data, as_of, windows, creation):
+    """Each quarter's bookings, and so its surplus over target, when every quarter's
+    schedule is created together (the solve itself stays sequential)."""
+    if not out:
+        return out
+    f = model_forecast(
+        model, data, as_of, windows, creation=creation,
+        inflows=tuple(i for r in out for i in r.inflows),
+    )  # fmt: skip
+    return [
+        replace(r, full_bookings=r.actual + sum((f.window_total(m) for m in ls), ZERO))
+        for r, ls in zip(out, month_labels)
+    ]
 
 
 def schedule(as_of: date, end: date, amount: Decimal) -> tuple[Inflow, ...]:
@@ -171,31 +211,80 @@ def yield_per_dollar(model, data, as_of, windows, end, labels) -> Decimal:
 # ------------------------------------------------- too late, and the open pipeline
 
 
+class Reason(NamedTuple):
+    code: str  # over_cap, cap_used_up, no_yield, total_rate or per_rep
+    text: str
+
+
+def per_rep_excess(r: QuarterResult, best_per_ae: Decimal | None) -> Decimal | None:
+    """The requirement per ramped AE-month when it is above the team's best, else
+    None. Whether it decides is the caller's rule; it is always worth showing."""
+    total, months = r.total_in_span, r.ramped_ae_months
+    if total is None or not months or best_per_ae is None:
+        return None
+    per = total / months
+    return per if per > best_per_ae else None
+
+
 def too_late(
-    r: QuarterResult, best_four: Decimal | None, per_rep_applies: bool
-) -> tuple[str, ...]:
-    """The reasons a quarter is too late to fund with new pipeline; empty when it is
-    not. A covered quarter asks nothing, so it is never too late. The per-rep leg
-    needs the rule to apply (capacity adopted), a best four-quarter average on
-    record and a positive expected ramped AE-months in the quarter's piece."""
+    r: QuarterResult,
+    best_per_ae: Decimal | None,
+    best_per_day: Decimal | None,
+    per_rep_applies: bool,
+) -> tuple[Reason, ...]:
+    """The legs that make a quarter too late to fund with new pipeline, each named;
+    empty when none fires. A covered quarter asks nothing, so it is never too late.
+
+    - the cap: the requirement is over the cap, or what is left of the cap is none
+      (earlier quarters used it up), or nothing created in time books inside the
+      quarter (told apart by the yield, a probe that does not depend on the cap);
+    - the total rate: everything created in the span (expected, earlier assignments
+      and this requirement) per day, above the team's best four-quarter average of
+      total created pipeline per day (observed, no roster needed);
+    - per ramped AE-month, above the team's best, only where capacity is the
+      forecast's basis; elsewhere it is a diagnostic and decides nothing.
+    The per-ramped-AE-month totals include earlier assignments, as every total does."""
     if r.outcome == COVERED:
         return ()
-    reasons: list[str] = []
+    out: list[Reason] = []
     if r.outcome == UNREACHABLE:
-        reasons.append(
-            "no pipeline created in time books inside it"
-            if r.required is None
-            else "over the cap"
-        )
-    months = r.ramped_ae_months
-    if per_rep_applies and best_four is not None and months and r.required is not None:
-        per = (r.expected_created + r.required) / months
-        if per > best_four:
-            reasons.append(
-                f"needs ${per:,.0f} per ramped AE-month, above the team's best "
-                f"four-quarter average of ${best_four:,.0f}"
+        if r.required is not None:
+            out.append(Reason("over_cap", "the requirement is over the cap"))
+        elif r.yield_per_dollar > 0:
+            out.append(
+                Reason(
+                    "cap_used_up",
+                    "earlier quarters' assignments used up the cap, although pipeline "
+                    f"created now books {r.yield_per_dollar * 100:.2f} cents of each "
+                    "dollar inside it",
+                )
             )
-    return tuple(reasons)
+        else:
+            out.append(
+                Reason("no_yield", "no pipeline created in time books inside it")
+            )
+    total = r.total_in_span
+    if total is not None and best_per_day is not None and r.span_days > 0:
+        per_day = total / r.span_days
+        if per_day > best_per_day:
+            out.append(
+                Reason(
+                    "total_rate",
+                    f"needs ${per_day:,.2f} of pipeline created a day in total, above the "
+                    f"team's best four-quarter average of ${best_per_day:,.2f} a day",
+                )
+            )
+    if per_rep_applies:
+        per = per_rep_excess(r, best_per_ae)
+        if per is not None:
+            out.append(
+                Reason(
+                    "per_rep",
+                    f"needs ${per:,.0f} per ramped AE-month, above the team's best "
+                    f"four-quarter average of ${best_per_ae:,.0f}",
+                )
+            )
+    return tuple(out)
 
 
 @dataclass(frozen=True)
@@ -227,14 +316,18 @@ def close_with_open_pipeline(r: QuarterResult) -> OpenPipelineClose:
 
 @dataclass(frozen=True)
 class LeadTimes:
-    """Of a dollar of pipeline created next month, the share booked in each of the
-    next four quarters, after them, and never (lost, or never closing)."""
+    """Of a dollar of pipeline created next month (at its first recorded amount), the
+    dollars booked in each of the next four quarters and after them. These are
+    dollar yields, not probabilities: amounts change between creation and win, so
+    they can exceed or fall short of what the deal counts imply. The count outcome,
+    of the deals created, is separate and does sum to one."""
 
     created_between: tuple[date, date]
     booked: tuple[tuple[str, Decimal], ...]  # booked inside each quarter
     cumulative: tuple[tuple[str, Decimal], ...]  # booked by the end of each quarter
     later: Decimal  # booked after the last of the four
-    never: Decimal  # the rest: 1 less everything the forward function books
+    win_share: Decimal  # of deals created, expected to win within the horizon
+    not_win_share: Decimal  # ... and not
 
 
 def next_quarters(
@@ -250,16 +343,22 @@ def next_quarters(
     return out
 
 
+def lead_windows(model: Model, as_of: date, quarters: list[tuple[str, Window]]):
+    """The month windows long enough for every close the timing curve allows, and
+    the first and last day (as dates) of the next calendar month."""
+    first = month_end(as_of)
+    last = month_end(first + timedelta(days=1))
+    reach = max(quarters[-1][1].end, last + timedelta(days=model.params.horizon_days))
+    return month_windows(as_of, reach), first, last
+
+
 def lead_times(
     model: Model, data: Dataset, as_of: date, quarters: list[tuple[str, Window]]
 ) -> LeadTimes:
     """From the production forward function: one probe amount created evenly through
     the next calendar month, the bookings that come from it window by window, over
     a horizon long enough for every close the timing curve allows."""
-    first = month_end(as_of)
-    last = month_end(first + timedelta(days=1))
-    reach = max(quarters[-1][1].end, last + timedelta(days=model.params.horizon_days))
-    windows = month_windows(as_of, reach)
+    windows, first, last = lead_windows(model, as_of, quarters)
     f = model_forecast(
         model, data, as_of, windows,
         inflows=(Inflow((first - as_of).days, (last - as_of).days, PROBE),),
@@ -275,9 +374,8 @@ def lead_times(
     for k, v in booked:
         running += v
         cumulative.append((k, running))
-    return LeadTimes(
-        (first, last), booked, tuple(cumulative), later, 1 - through - later
-    )
+    win = model.new_pipeline.win_rate
+    return LeadTimes((first, last), booked, tuple(cumulative), later, win, 1 - win)
 
 
 # ------------------------------------------------- the team's own history
@@ -288,6 +386,7 @@ class History:
     quarters: int
     median: Decimal | None  # created dollars per ramped AE-month, across quarters
     best_four: Decimal | None  # the best average over four consecutive quarters
+    best_four_per_day: Decimal | None = None  # total created per day, same rule
 
 
 def summarise_history(quarters: list[tuple[Decimal, Decimal]]) -> History:
@@ -302,3 +401,15 @@ def summarise_history(quarters: list[tuple[Decimal, Decimal]]) -> History:
         value = sum((c for c, _ in block), ZERO) / sum((m for _, m in block), ZERO)
         best = value if best is None or value > best else best
     return History(len(usable), med, best)
+
+
+def best_four_per_day(quarters: list[tuple[Decimal, int]]) -> Decimal | None:
+    """From (created dollars, days) per complete fiscal quarter, oldest first: the best
+    total created pipeline per day over four consecutive quarters. Observed; needs no
+    roster. None with fewer than four quarters."""
+    best = None
+    for i in range(len(quarters) - 3):
+        block = quarters[i : i + 4]
+        value = sum((c for c, _ in block), ZERO) / sum(d for _, d in block)
+        best = value if best is None or value > best else best
+    return best

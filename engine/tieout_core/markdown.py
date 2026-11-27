@@ -618,21 +618,36 @@ def _required(s: dict) -> list[str]:
         ),
         "",
     ]
+    out += ["**The requirement.**", ""]
     out += _table(
         ["Quarter", "Target", "Actual", "Created between", "Result", "Cents booked in the quarter per dollar created",
-         "Bookings without own pipeline", "Expected created", "Required total created", "Ramped AE-months",
-         f"Expected per ramped AE-month ({s['per_ramped_ae_month_label']})",
-         f"Required per ramped AE-month ({s['per_ramped_ae_month_label']})", "Required against the team's best",
-         "Too late?"],
+         "Bookings without own pipeline", "Bookings under the completed schedule", "Surplus over target"],
         [
             (q["quarter"] + ("" if q["in_fiscal_year"] else " (next year)"), _usd(q["target"]),
              _usd(q["actual"]), " to ".join(q["created_between"]), q["headline"],
              f"{q['cents_booked_in_quarter_per_dollar']}c",
-             _usd(q["bookings_without_own_pipeline"]), _usd(q["expected_created_pipeline"]),
-             _usd(q["required_total_created_pipeline"]), q["ramped_ae_months"] or "n/a",
-             _usd(q["per_ramped_ae_month"]["expected"]), _usd(q["per_ramped_ae_month"]["required_total"]),
-             _times(q["per_ramped_ae_month"]["required_against_team_best"]),
-             "too late" if q["too_late"]["applies"] else "no")
+             _usd(q["bookings_without_own_pipeline"]), _usd(q["bookings_under_completed_schedule"]),
+             _usd(q["surplus_over_target"]))
+            for q in s["quarters"]
+        ],
+    )  # fmt: skip
+    label = s["per_ramped_ae_month_label"]
+    out += [
+        "**Against the team's record.** Everything created in the span includes what earlier quarters were assigned.",
+        "",
+    ]
+    out += _table(
+        ["Quarter", "Extra pipeline required", "Expected created", "Earlier quarters' assignments in the span",
+         "Total created in the span", "Per day", "Against the team's best per day",
+         f"Per ramped AE-month ({label})", "Against the team's best per ramped AE-month", "Too late, and why"],
+        [
+            (q["quarter"], _usd(q["required_extra_pipeline"]), _usd(q["expected_created_pipeline"]),
+             _usd(q["earlier_assigned_in_span"]), _usd(q["total_created_in_span"]),
+             _usd(q["per_day"]["required_total"]), _times(q["per_day"]["required_against_team_best"]),
+             _usd(q["per_ramped_ae_month"]["required_total"]),
+             _times(q["per_ramped_ae_month"]["required_against_team_best"])
+             + ("" if q["per_ramped_ae_month"]["decides"] else " (diagnostic)"),
+             ("too late: " + "; ".join(q["too_late"]["legs"])) if q["too_late"]["applies"] else "no")
             for q in s["quarters"]
         ],
     )  # fmt: skip
@@ -646,6 +661,8 @@ def _required(s: dict) -> list[str]:
     ]
     for q in s["quarters"]:
         late = q["too_late"]
+        for note in late["diagnostics"]:
+            out += [f"{q['quarter']}: {note}.", ""]
         if not late["applies"]:
             continue
         op = late["open_pipeline"]
@@ -663,16 +680,21 @@ def _required(s: dict) -> list[str]:
         "",
     ]
     out += _table(
-        ["Quarter", "Booked inside the quarter", "Booked by its end"],
+        ["Quarter", "Cents booked inside the quarter", "Cents booked by its end"],
         [
-            (q["quarter"], _share(q["booked_in_quarter"]), _share(q["booked_by_quarter_end"]))
+            (q["quarter"], f"{q['cents_booked_in_quarter']}c", f"{q['cents_booked_by_quarter_end']}c")
             for q in lt["quarters"]
         ]
-        + [
-            ("After the fourth quarter", _share(lt["booked_later"]), ""),
-            (f"Never booked ({lt['never_booked_meaning']})", _share(lt["never_booked"]), ""),
-        ],
+        + [("After the fourth quarter", f"{lt['cents_booked_later']}c", "")],
     )  # fmt: skip
+    co = lt["count_outcome"]
+    out += [
+        (
+            f"Count outcome, {co['meaning']}: {_share(co['win_within_horizon'])} expected to win "
+            f"within the horizon, {_share(co['do_not_win'])} not."
+        ),
+        "",
+    ]
     fy, h = s["fiscal_year"], s["team_history"]
     out += [
         (
@@ -682,7 +704,8 @@ def _required(s: dict) -> list[str]:
         "",
         (
             f"The team's own record ({h['quarters']} complete quarters, {h['unit']}): median "
-            f"{_usd(h['median'])}, best four-quarter average {_usd(h['best_four_quarter_average'])}. {h['note']}."
+            f"{_usd(h['median'])}, best four-quarter average {_usd(h['best_four_quarter_average'])}; best "
+            f"four-quarter average of total created pipeline {_usd(h['best_four_quarter_average_per_day'])} a day. {h['note']}."
         ),
         "",
         f"_{_up(s['meaning'])}. {_up(s['expected_basis'])}._",
