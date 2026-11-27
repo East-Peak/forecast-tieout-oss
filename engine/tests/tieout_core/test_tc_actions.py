@@ -98,3 +98,21 @@ def test_actions_rank_by_gain_per_dollar_and_unvalued_ones_are_not_ranked():
         ("a", 2),
         ("c", None),
     ]
+
+
+def test_starts_paying_needs_one_percent_of_the_twelve_month_gain_not_a_cent():
+    from engine.tieout_core.actions import first_paying_month
+
+    # A small early tail: 50 cents and a dollar, then real money. The twelve-month
+    # gain is 7,001.50, so 1% is 70.015 and the first month at or over it is "c".
+    gains = [
+        ("a", Decimal("0.50")),
+        ("b", Decimal(1)),
+        ("c", Decimal(2000)),
+        ("d", Decimal(5000)),
+    ]
+    assert first_paying_month(gains) == "c"
+    assert first_paying_month([("a", Decimal(0)), ("b", Decimal(0))]) is None
+    assert (
+        first_paying_month([("a", Decimal(70)), ("b", Decimal(6930))]) == "a"
+    )  # exactly 1%

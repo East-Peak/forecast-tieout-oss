@@ -116,9 +116,11 @@ def test_a_malformed_plan_is_refused_with_the_reason(tmp_path):
         )
 
 
-def programme(pipeline, start="2026-09-01", ramp=None, months=None, cost=None):
+def programme(
+    pipeline, start="2026-09-01", ramp=None, months=None, cost=None, payments=None
+):
     return PlanProgramme(
-        "P", Decimal(pipeline), date.fromisoformat(start), ramp, months, cost
+        "P", Decimal(pipeline), date.fromisoformat(start), ramp, months, cost, payments
     )
 
 
@@ -247,3 +249,51 @@ def test_a_partial_final_month_takes_its_share_of_the_days_inside_the_window():
         Decimal(1_150_000)
     )
     assert flows[-1].dollars == pytest.approx(Decimal(50_000))
+
+
+def test_only_the_cost_that_falls_in_the_window_is_counted_cost_follows_the_pipeline():
+    # $2.4M over 24 months at 5 cents a dollar costs $120,000, paid in step with the
+    # pipeline it creates: half of it falls in the first twelve months.
+    from engine.tieout_core.plan import programme_cost_in_window
+
+    p = programme(2_400_000, "2026-07-01", ramp=1, months=24)
+    flows = programme_inflows(p, WINDOWS, AS_OF, FY_END, 3)
+    assert programme_cost_in_window(
+        p, Decimal("0.05"), flows, WINDOWS[-1].end
+    ) == pytest.approx(Decimal(60_000))
+    assert programme_cost_in_window(p, None, flows, WINDOWS[-1].end) is None
+
+
+def test_a_programme_that_starts_late_pays_only_for_what_it_creates_in_the_window():
+    from engine.tieout_core.plan import programme_cost_in_window
+
+    # Starts 2027-04 for 6 months at ramp 1: April, May, June 2027 are in the window
+    # (half the programme), so half of a $60,000 cost.
+    p = programme(600_000, "2027-04-01", ramp=1, months=6, cost=Decimal(60_000))
+    flows = programme_inflows(p, WINDOWS, AS_OF, FY_END, 3)
+    assert programme_cost_in_window(p, None, flows, WINDOWS[-1].end) == pytest.approx(
+        Decimal(30_000)
+    )
+
+
+def test_a_payment_schedule_in_the_plan_overrides_the_default():
+    from engine.tieout_core.plan import programme_cost_in_window
+
+    p = programme(600_000, "2026-10-01", ramp=1, months=24,
+                  payments=((date(2026, 10, 1), Decimal(40_000)), (date(2028, 1, 1), Decimal(10_000))))  # fmt: skip
+    flows = programme_inflows(p, WINDOWS, AS_OF, FY_END, 3)
+    assert programme_cost_in_window(
+        p, Decimal("0.5"), flows, WINDOWS[-1].end
+    ) == Decimal(40_000)
+
+
+def test_a_plan_loads_payments_and_refuses_a_payment_before_the_as_of(tmp_path):
+    ok = write(tmp_path, {"programmes": [{"name": "x", "pipeline": 100, "start": "2026-09",
+                                          "payments": [{"month": "2026-09", "amount": 5}]}]})  # fmt: skip
+    assert load_plan(ok, AS_OF, ()).programmes[0].payments == (
+        (date(2026, 9, 1), Decimal(5)),
+    )
+    bad = write(tmp_path, {"programmes": [{"name": "x", "pipeline": 100, "start": "2026-09",
+                                           "payments": [{"month": "2026-05", "amount": 5}]}]})  # fmt: skip
+    with pytest.raises(ValueError, match="payments"):
+        load_plan(bad, AS_OF, ())

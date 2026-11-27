@@ -54,6 +54,9 @@ class PlanProgramme:
     ramp_months: int | None = None
     months: int | None = None
     cost: Decimal | None = None
+    # (month, amount) payments, when the plan gives them; otherwise the cost is
+    # paid in step with the pipeline the programme creates.
+    payments: tuple[tuple[date, Decimal], ...] | None = None
 
     @property
     def label(self) -> str:
@@ -110,6 +113,7 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
         if pipeline <= 0:
             raise ValueError(f"{where}: pipeline must be more than 0")
         cost = raw.get("cost")
+        payments = _payments(raw.get("payments"), as_of, where)
         programmes.append(
             PlanProgramme(
                 str(raw.get("name") or f"programme {i}"),
@@ -120,6 +124,7 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
                 None
                 if cost is None
                 else _non_negative(_decimal(cost, "cost", where), "cost", where),
+                payments,
             )
         )
     return Plan(tuple(hires), tuple(programmes))
@@ -128,9 +133,30 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
 def programme_cost(p: PlanProgramme, per_dollar: Decimal | None) -> Decimal | None:
     """Its own cost if given, else pipeline times the cost per dollar of pipeline
     in capacity.yaml, else None: cost not entered."""
+    if p.payments is not None:
+        return sum((amount for _, amount in p.payments), Decimal(0))
     if p.cost is not None:
         return p.cost
     return None if per_dollar is None else p.pipeline * per_dollar
+
+
+def programme_cost_in_window(
+    p: PlanProgramme,
+    per_dollar: Decimal | None,
+    flows: tuple[Inflow, ...],
+    window_end: date,
+) -> Decimal | None:
+    """The part of the cost that falls inside the report's twelve months. With a
+    payment schedule in the plan, the payments dated in the window; otherwise
+    the cost is paid in step with the pipeline created, so the share of the
+    programme's pipeline created in the window carries that share of the cost."""
+    total = programme_cost(p, per_dollar)
+    if total is None:
+        return None
+    if p.payments is not None:
+        return sum((a for m, a in p.payments if m <= window_end), Decimal(0))
+    created = sum((f.dollars for f in flows), Decimal(0))
+    return total * created / p.pipeline
 
 
 def programme_inflows(
@@ -196,6 +222,18 @@ def _decimal(value, name: str, where: str) -> Decimal:
     if not out.is_finite():
         raise ValueError(f"{where}: {name} must be a finite number")
     return out
+
+
+def _payments(raw, as_of: date, where: str):
+    if raw is None:
+        return None
+    out = []
+    for k, item in enumerate(raw, start=1):
+        at = f"{where}: payments[{k}]"
+        month = _month(item.get("month"), as_of, at + " month")
+        amount = _non_negative(_decimal(item.get("amount"), "amount", at), "amount", at)
+        out.append((month, amount))
+    return tuple(out)
 
 
 def _non_negative(value: Decimal, name: str, where: str) -> Decimal:

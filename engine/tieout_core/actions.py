@@ -32,6 +32,7 @@ from .plan import (
     PlanProgramme,
     next_month_start,
     programme_cost,
+    programme_cost_in_window,
     programme_inflows,
 )
 from .records import Check, Dataset
@@ -182,6 +183,14 @@ def solve_hires(
     return HiresSolve("unreachable", None, None, previous, None, bound)
 
 
+def first_paying_month(gains: list[tuple[str, Decimal]]) -> str | None:
+    """The first month whose gain is at least PAYING_SHARE of the total gain."""
+    total = sum((g for _, g in gains), ZERO)
+    if total <= 0:
+        return None
+    return next((m for m, g in gains if g >= PAYING_SHARE * total), None)
+
+
 def rank(rows: list[dict]) -> list[dict]:
     """Rows with a gain per dollar, best first, then the rest unranked."""
     valued = sorted(
@@ -213,6 +222,7 @@ def plan_section(
         cfg.programme_ramp_months if cfg else None
     ) or DEFAULT_PROGRAMME_RAMP_MONTHS
     for index, item in enumerate(plan.items()):
+        total = None
         if isinstance(item, PlanHire):
             people = plan.members_for(index)
             cost = (
@@ -222,6 +232,7 @@ def plan_section(
                 * employed_months(item.start, g.windows, g.as_of, survival)
                 * item.count
             )
+            total = cost
             row = {
                 "kind": "hires",
                 "label": item.label,
@@ -232,10 +243,11 @@ def plan_section(
             else:
                 row |= {"valued": False, "note": f"hiring is {UNSUPPORTED}: not valued"}
         else:
-            cost = programme_cost(item, cfg.programme_cost_per_dollar if cfg else None)
-            inflows.extend(
-                programme_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
-            )
+            flows = programme_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
+            per_dollar = cfg.programme_cost_per_dollar if cfg else None
+            cost = programme_cost_in_window(item, per_dollar, flows, g.windows[-1].end)
+            total = programme_cost(item, per_dollar)
+            inflows.extend(flows)
             row = {
                 "kind": "programme",
                 "label": item.label,
@@ -252,6 +264,13 @@ def plan_section(
         else:
             row["contribution"] = None
         row["cash_cost_in_twelve_months"] = None if cost is None else money(cost)
+        row["cash_cost_total"] = None if total is None else money(total)
+        if row["kind"] == "programme":
+            row["payment_schedule"] = (
+                "the plan's payments"
+                if item.payments is not None
+                else "paid in step with the pipeline it creates"
+            )
         if cost is None:
             cost_missing = True
         else:
@@ -304,7 +323,9 @@ def plan_section(
         "cash_cost_in_twelve_months": None if cost_missing else money(total_cost),
         "cost_note": "a missing cost is shown as 'cost not entered' and left out of the total"
         if cost_missing
-        else "hires at loaded cost per AE-month over expected months employed; programmes at their cost",
+        else "hires at loaded cost per AE-month over expected months employed; programmes at their cost, "
+        "paid in step with the pipeline they create (or on the plan's own payment schedule), counting "
+        "only what falls inside the twelve months",
         "unvalidated": "ranges that include a plan are unvalidated; the plan changes the expectation only",
     }
     check = Check(
@@ -343,13 +364,11 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
             }  # fmt: skip
         now = scen.bookings(forecast)
         gained = {h: now[h] - base_book[h] for h in now}
-        paying = next(
-            (
-                w.label
+        paying = first_paying_month(
+            [
+                (w.label, forecast.window_total(w.label) - base.window_total(w.label))
                 for w in g.windows
-                if forecast.window_total(w.label) - base.window_total(w.label) >= CENT
-            ),
-            None,
+            ]
         )
         gpd = None if cost is None or not cost else gained[NEXT_12] / cost
         out |= {
@@ -386,8 +405,11 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         )
     # --- one million dollars of programme pipeline
     flows = programme_inflows(programme, g.windows, g.as_of, g.fy_end, ramp_default)
-    prog_cost = programme_cost(
-        programme, cfg.programme_cost_per_dollar if cfg else None
+    prog_cost = programme_cost_in_window(
+        programme,
+        cfg.programme_cost_per_dollar if cfg else None,
+        flows,
+        g.windows[-1].end,
     )
     prog_row = row(
         f"Add ${ACTION_PROGRAMME_DOLLARS:,.0f} of programme pipeline starting {start}",
@@ -495,7 +517,20 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         else number((solved_p.achieved - solved_p.base) / solved_p.required, 3),
         "cash_cost_in_twelve_months": None
         if cost_per_dollar is None or solved_p.outcome != FEASIBLE
-        else money(solved_p.required * cost_per_dollar),
+        else money(
+            programme_cost_in_window(
+                PlanProgramme("solve", solved_p.required, start),
+                cost_per_dollar,
+                programme_inflows(
+                    PlanProgramme("solve", solved_p.required, start),
+                    g.windows,
+                    g.as_of,
+                    g.fy_end,
+                    ramp_default,
+                ),
+                g.windows[-1].end,
+            )
+        ),
         "cost_status": "entered" if cost_per_dollar is not None else "cost not entered",
     }
     fresh = (
