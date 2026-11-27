@@ -163,3 +163,5 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for how the parts fit together.
 ## License
 
 Apache 2.0. See [LICENSE](LICENSE).
+
+The app bundles two typefaces through fontsource, both under the SIL Open Font License 1.1: Inter (latin subset, three weights) and Space Grotesk. The font files are in the built site, not fetched from a third party.

@@ -1,3 +1,7 @@
+/* Inter, latin subset, at the three weights the app uses (normal, medium, semibold); both families are bundled, not borrowed from the visitor's machine. */
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
 @import "@fontsource/space-grotesk/600.css";
 
 @tailwind base;

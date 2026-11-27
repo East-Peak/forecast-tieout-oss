@@ -226,6 +226,26 @@ test.describe("at tablet widths, with a wide fallback font @smoke", () => {
   }
 });
 
+test.describe("fonts are bundled, not borrowed from the visitor's machine @smoke", () => {
+  test("the built CSS declares Inter and Space Grotesk, and the browser has Inter loaded", async ({ page }) => {
+    await open(page, "forecast", "sapling-industries", "as-signed");
+    const css = await page.evaluate(async () => {
+      const sheets = Array.from(document.querySelectorAll<HTMLLinkElement>("link[rel='stylesheet']")).map((l) => l.href);
+      return (await Promise.all(sheets.map((href) => fetch(href).then((r) => r.text())))).join("\n");
+    });
+    for (const family of ["Inter", "Space Grotesk"]) {
+      expect(css, `an @font-face for ${family}`).toMatch(new RegExp(`@font-face\\{[^}]*font-family:"?${family}"?`));
+    }
+    for (const weight of [400, 500, 600]) {
+      expect(css, `Inter at weight ${weight}`).toMatch(new RegExp(`font-family:"?Inter"?[^}]*font-weight:${weight}\\b`));
+    }
+    await page.evaluate(() => document.fonts.ready);
+    // check() is true when the face is loaded or nothing is left to load for it; load() makes the first true
+    expect(await page.evaluate(() => document.fonts.load("16px Inter").then((faces) => faces.length))).toBeGreaterThan(0);
+    expect(await page.evaluate(() => document.fonts.check("16px Inter")), "Inter is available").toBe(true);
+  });
+});
+
 test.describe("the old app's addresses @smoke", () => {
   const MOVED = [
     ["/bookings", "/forecast"],

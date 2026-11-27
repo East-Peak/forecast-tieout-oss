@@ -16,6 +16,7 @@
     "verify": "knip && vitest run"
   },
   "dependencies": {
+    "@fontsource/inter": "5.3.0",
     "@fontsource/space-grotesk": "^5.2.10",
     "@vercel/analytics": "^2.0.1",
     "react": "^18.3.1",
