@@ -60,11 +60,13 @@ export function QuarterTable() {
                     <Bound binding={B.qName} row={row} />
                     {q.in_fiscal_year ? null : <span className="ml-1 text-xs font-normal text-slate-500">(next fiscal year)</span>}
                     <Badge size="xs" color="slate" className="ml-2 align-middle"><Bound binding={B.qStatus} row={row} /></Badge>
-                    <div className="mt-0.5 text-xs font-normal text-slate-600 sm:whitespace-normal">
-                      <Bound binding={B.qOutcome} row={row} />
+                    <div className="mt-1 text-xs font-normal text-slate-600 sm:whitespace-normal">
+                      <Badge size="xs" color={q.outcome === "feasible" ? "green" : q.outcome === "already covered" ? "slate" : "amber"}>
+                        <Bound binding={B.qOutcome} row={row} />
+                      </Badge>
                       {q.would_take !== null ? (
                         <>
-                          {": it would take "}
+                          {" it would take "}
                           <Bound binding={B.qWouldTake} row={row} />
                           {" of extra pipeline"}
                         </>

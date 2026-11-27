@@ -76,7 +76,7 @@ export function ActionsCard() {
           subtitle="Each action on its own, to close the gap to the year's target; 'feasible' means inside the model's bounds, not operationally achievable."
         />
         <p className="mb-3 text-xs text-slate-600">
-          The gap to close: <Bound binding={B.closeGap} />. <Bound binding={B.closeBasis} />.
+          The gap to close: <Bound binding={B.closeGap} />. Basis: <Bound binding={B.closeBasis} />.
         </p>
         <div className="grid gap-4 md:grid-cols-2">
           <section data-testid="close-hires">
