@@ -45,6 +45,7 @@ class FitParams:
     ranges: str = OUTCOME_RANGES  # what the simulation draws
 
 
+NEW_PIPELINE_LABEL = "Deals created, won within the horizon"
 DEFAULT_PARAMS = FitParams()
 
 AGE_GROUPS = ((90, "0-90d"), (180, "91-180d"))
@@ -250,6 +251,7 @@ def fit(
                 source=source,
                 low95=low,
                 high95=high,
+                label=profile.stage_name(code),
             )
         )
 
@@ -396,6 +398,7 @@ def _fit_recency(
                 source=source,
                 low95=low,
                 high95=high,
+                label=profile.stage_name(code),
             )
         )
 
@@ -514,6 +517,7 @@ def _new_pipeline_recency(
                 name=name, value=value, definition=definition, numerator=num,
                 denominator=den, cohort=cohort_text, horizon=horizon_text,
                 sample_size=size, source=source, low95=rng[0], high95=rng[1],
+                label=NEW_PIPELINE_LABEL if name == "new_pipeline_win_rate" else None,
             )
         )  # fmt: skip
     book.add(
@@ -611,6 +615,7 @@ def _new_pipeline(
                 name=name, value=value, definition=definition, numerator=num,
                 denominator=den, cohort=cohort_text, horizon=horizon_text,
                 sample_size=size, source=source, low95=rng[0], high95=rng[1],
+                label=NEW_PIPELINE_LABEL if name == "new_pipeline_win_rate" else None,
             )
         )  # fmt: skip
     book.add(

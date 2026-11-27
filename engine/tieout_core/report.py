@@ -41,7 +41,7 @@ from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .load import load_company, load_profile
 from .markdown import render as render_markdown
 from .plan import NEXT_12, REST_OF_FY, load_plan
-from .rates import DEFAULT, Rate, RateBook
+from .rates import DEFAULT, Rate, RateBook, rate_unit
 from .reconcile import reconcile
 from .records import Check
 
@@ -67,8 +67,16 @@ def build_report(
     seed: int = 0,
     params: FitParams = DEFAULT_PARAMS,
     plan_path: Path | None = None,
+    company: str | None = None,
+    scenario: str | None = None,
 ) -> dict:
-    """``plan_path`` (plan.yaml) adds section 11; without it sections 8 to 10 and 12 stand."""
+    """``plan_path`` (plan.yaml) adds section 11; without it sections 8 to 10 and 12 stand.
+    ``company`` and ``scenario`` name the report (a viewer that loads it checks it is the one asked
+    for); by default the profile folder's name and the plan file's stem, or "as-signed"."""
+    identity = {
+        "company": company or Path(profile_dir).name,
+        "scenario": scenario or (Path(plan_path).stem if plan_path else "as-signed"),
+    }
     profile = load_profile(Path(profile_dir))
     loaded = load_company(Path(data_dir), profile)
     rec = reconcile(Path(data_dir), loaded, profile, as_of)
@@ -211,6 +219,7 @@ def build_report(
 
     report = {
         "inputs": {
+            "identity": identity,
             "profile": str(profile_dir),
             "data": str(data_dir),
             "as_of": as_of.isoformat(),
@@ -1005,63 +1014,10 @@ def _month_end(label: str) -> date:
     return nxt - timedelta(days=1)
 
 
-# What a rate's value is, so a screen can say it right: a share (shown as a percent), dollars,
-# or a plain number (its definition says what it counts). Keyed by the name before any ":".
-RATE_UNITS = {
-    **dict.fromkeys(
-        (
-            "win_within_horizon",
-            "new_pipeline_win_rate",
-            "stage_probability",
-            "ramp_weight",
-            "attrition_per_ae_month",
-            "capacity_min_staffing_variation",
-            "capacity_min_improvement",
-        ),
-        "share",
-    ),
-    **dict.fromkeys(
-        (
-            "mean_won_arr",
-            "mean_created_arr",
-            "trailing_bookings_per_day",
-            "created_arr_per_day",
-            "loaded_cost_per_ae_month",
-        ),
-        "dollars",
-    ),
-    **dict.fromkeys(
-        (
-            "created_deals_per_day",
-            "created_deals_per_ramped_ae_month",
-            "median_won_cycle_days",
-            "horizon_days",
-            "smoothing_pseudo_observations",
-            "min_timing_samples",
-            "trailing_days",
-            "recency_months",
-            "lever_cap_multiple",
-            "simulation_draws",
-            "programme_cost_per_dollar_of_pipeline",
-            "programme_ramp_months",
-            "capacity_min_folds",
-            "days_per_ae_month",
-        ),
-        "number",
-    ),
-}
-
-
-def rate_unit(name: str) -> str:
-    key = name.split(":")[0]
-    if key not in RATE_UNITS:
-        raise KeyError(f"no unit declared for rate '{name}'")
-    return RATE_UNITS[key]
-
-
 def _rate(r: Rate) -> dict:
     return {
         "name": r.name,
+        "label": r.label,
         "unit": rate_unit(r.name),
         "value": _rate_value(r.value),
         "definition": r.definition,

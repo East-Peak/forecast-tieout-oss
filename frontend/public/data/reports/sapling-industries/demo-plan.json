@@ -7,6 +7,7 @@
         "bound": 10,
         "bound_basis": "the most the company has started in one fiscal quarter",
         "cash_cost_in_twelve_months": null,
+        "cash_cost_note": "no cost: no number of hires closes the gap within the bound",
         "cost_status": "entered",
         "count": null,
         "fiscal_year_bookings_one_fewer": null,
@@ -18,6 +19,7 @@
         "cap": "729997731.00",
         "cap_rule": "the Goal 1 cap: three times the new-business pipeline created in the trailing 365 days",
         "cash_cost_in_twelve_months": "2724284.50",
+        "cash_cost_note": null,
         "cost_status": "entered",
         "dollars": "45404741.70",
         "fiscal_year_bookings_with": "60000000.00",
@@ -1127,6 +1129,10 @@
     "fiscal_year_end": "2027-01-31",
     "fiscal_year_start": "2026-02-01",
     "fit": "cumulative incidence",
+    "identity": {
+      "company": "sapling-industries",
+      "scenario": "demo-plan"
+    },
     "measure": "new-business ARR bookings (type = new_business, the arr column)",
     "profile": "engine/config/profiles/sapling-industries",
     "ranges": "deal outcomes only",
@@ -1177,9 +1183,9 @@
           "next twelve months": "1191483.93",
           "rest of fiscal year": "76526.10"
         },
-        "detail": "2 AE(s), segment mid_market, starting 2026-10-01",
+        "detail": "2 AE(s), segment Mid Market, starting 2026-10-01",
         "kind": "hires",
-        "label": "2 mid_market hires from 2026-10",
+        "label": "2 Mid Market hires from 2026-10",
         "valued": true
       },
       {
@@ -1189,9 +1195,9 @@
           "next twelve months": "482884.06",
           "rest of fiscal year": "12822.02"
         },
-        "detail": "1 AE(s), segment enterprise, starting 2026-11-01",
+        "detail": "1 AE(s), segment Enterprise, starting 2026-11-01",
         "kind": "hires",
-        "label": "1 enterprise hire from 2026-11",
+        "label": "1 Enterprise hire from 2026-11",
         "valued": true
       },
       {
@@ -1550,6 +1556,7 @@
       "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Discovery (losses compete; deals still open are counted for the days observed)",
       "denominator": "571 deals open in S1 at their first snapshot in the trailing 24 months (73 still open at the cutoff)",
       "horizon": "365 days",
+      "label": "Discovery",
       "name": "win_within_horizon:S1",
       "numerator": "92 wins observed within 365 days",
       "range95": [
@@ -1566,6 +1573,7 @@
       "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Qualification (losses compete; deals still open are counted for the days observed)",
       "denominator": "396 deals open in S2 at their first snapshot in the trailing 24 months (53 still open at the cutoff)",
       "horizon": "365 days",
+      "label": "Qualification",
       "name": "win_within_horizon:S2",
       "numerator": "121 wins observed within 365 days",
       "range95": [
@@ -1582,6 +1590,7 @@
       "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Technical Evaluation (losses compete; deals still open are counted for the days observed)",
       "denominator": "280 deals open in S3 at their first snapshot in the trailing 24 months (33 still open at the cutoff)",
       "horizon": "365 days",
+      "label": "Technical Evaluation",
       "name": "win_within_horizon:S3",
       "numerator": "128 wins observed within 365 days",
       "range95": [
@@ -1598,6 +1607,7 @@
       "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Business Case (losses compete; deals still open are counted for the days observed)",
       "denominator": "185 deals open in S4 at their first snapshot in the trailing 24 months (12 still open at the cutoff)",
       "horizon": "365 days",
+      "label": "Business Case",
       "name": "win_within_horizon:S4",
       "numerator": "119 wins observed within 365 days",
       "range95": [
@@ -1614,6 +1624,7 @@
       "definition": "cumulative incidence of a win within 365 days of a snapshot for deals open in Negotiation (losses compete; deals still open are counted for the days observed)",
       "denominator": "96 deals open in S5 at their first snapshot in the trailing 24 months (2 still open at the cutoff)",
       "horizon": "365 days",
+      "label": "Negotiation",
       "name": "win_within_horizon:S5",
       "numerator": "79 wins observed within 365 days",
       "range95": [
@@ -1630,6 +1641,7 @@
       "definition": "stage S1 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "569 deals open in S1 aged 0-90d (469.0 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S1:0-90d",
       "numerator": "92 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1643,6 +1655,7 @@
       "definition": "stage S1 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "15 deals open in S1 aged 181d+ (9.3 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S1:181d+",
       "numerator": "2 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1656,6 +1669,7 @@
       "definition": "stage S1 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "32 deals open in S1 aged 91-180d (22.1 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S1:91-180d",
       "numerator": "5 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1669,6 +1683,7 @@
       "definition": "stage S2 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "373 deals open in S2 aged 0-90d (321.7 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S2:0-90d",
       "numerator": "114 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1682,6 +1697,7 @@
       "definition": "stage S2 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "22 deals open in S2 aged 181d+ (18.9 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S2:181d+",
       "numerator": "3 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1695,6 +1711,7 @@
       "definition": "stage S2 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "75 deals open in S2 aged 91-180d (66.9 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S2:91-180d",
       "numerator": "20 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1708,6 +1725,7 @@
       "definition": "stage S3 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "213 deals open in S3 aged 0-90d (184.6 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S3:0-90d",
       "numerator": "103 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1721,6 +1739,7 @@
       "definition": "stage S3 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "27 deals open in S3 aged 181d+ (20.6 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S3:181d+",
       "numerator": "10 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1734,6 +1753,7 @@
       "definition": "stage S3 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "106 deals open in S3 aged 91-180d (87.2 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S3:91-180d",
       "numerator": "37 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1747,6 +1767,7 @@
       "definition": "stage S4 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "91 deals open in S4 aged 0-90d (80.1 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S4:0-90d",
       "numerator": "62 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1760,6 +1781,7 @@
       "definition": "stage S4 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "33 deals open in S4 aged 181d+ (30.3 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S4:181d+",
       "numerator": "17 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1773,6 +1795,7 @@
       "definition": "stage S4 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "97 deals open in S4 aged 91-180d (88.8 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S4:91-180d",
       "numerator": "60 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1786,6 +1809,7 @@
       "definition": "stage S5 cumulative incidence for deals aged 0-90d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "33 deals open in S5 aged 0-90d (33.0 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S5:0-90d",
       "numerator": "29 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1799,6 +1823,7 @@
       "definition": "stage S5 cumulative incidence for deals aged 181d+, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "24 deals open in S5 aged 181d+ (22.2 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S5:181d+",
       "numerator": "20 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1812,6 +1837,7 @@
       "definition": "stage S5 cumulative incidence for deals aged 91-180d, shrunk toward the stage rate with 20 pseudo-observations",
       "denominator": "54 deals open in S5 aged 91-180d (54.0 effective after censoring, +20)",
       "horizon": "365 days",
+      "label": null,
       "name": "win_within_horizon:S5:91-180d",
       "numerator": "43 wins observed within 365 days (+20 x stage rate)",
       "range95": null,
@@ -1825,6 +1851,7 @@
       "definition": "cumulative incidence of a win within 365 days of creation (losses compete; deals still open are counted for the days observed)",
       "denominator": "1068 deals created (158 still open at the cutoff)",
       "horizon": "365 days",
+      "label": "Deals created, won within the horizon",
       "name": "new_pipeline_win_rate",
       "numerator": "181 wins observed within 365 days",
       "range95": [
@@ -1841,6 +1868,7 @@
       "definition": "mean booked ARR of a created deal that is won, each win weighted by its day's incidence increment",
       "denominator": "181 wins observed",
       "horizon": "365 days",
+      "label": null,
       "name": "mean_won_arr",
       "numerator": "booked ARR of those wins",
       "range95": null,
@@ -1854,6 +1882,7 @@
       "definition": "mean ARR of a created deal (first recorded amount)",
       "denominator": "1068 deals with a known amount",
       "horizon": "at creation",
+      "label": null,
       "name": "mean_created_arr",
       "numerator": "ARR of created deals",
       "range95": null,
@@ -1867,6 +1896,7 @@
       "definition": "new-business deals created per day",
       "denominator": "365 days",
       "horizon": "trailing",
+      "label": null,
       "name": "created_deals_per_day",
       "numerator": "630 deals created",
       "range95": null,
@@ -1880,6 +1910,7 @@
       "definition": "new-business ARR booked per day",
       "denominator": "365 days",
       "horizon": "trailing",
+      "label": null,
       "name": "trailing_bookings_per_day",
       "numerator": "47003397.00 ARR booked",
       "range95": null,
@@ -1893,6 +1924,7 @@
       "definition": "probability that a deal in Discovery is won (stages.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "stage_probability:S1",
       "numerator": "",
       "range95": null,
@@ -1906,6 +1938,7 @@
       "definition": "probability that a deal in Qualification is won (stages.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "stage_probability:S2",
       "numerator": "",
       "range95": null,
@@ -1919,6 +1952,7 @@
       "definition": "probability that a deal in Technical Evaluation is won (stages.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "stage_probability:S3",
       "numerator": "",
       "range95": null,
@@ -1932,6 +1966,7 @@
       "definition": "probability that a deal in Business Case is won (stages.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "stage_probability:S4",
       "numerator": "",
       "range95": null,
@@ -1945,6 +1980,7 @@
       "definition": "probability that a deal in Negotiation is won (stages.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "stage_probability:S5",
       "numerator": "",
       "range95": null,
@@ -1958,6 +1994,7 @@
       "definition": "new-business ARR created per day",
       "denominator": "365 days",
       "horizon": "trailing",
+      "label": null,
       "name": "created_arr_per_day",
       "numerator": "243332577.00 ARR created (first recorded amount)",
       "range95": null,
@@ -1971,6 +2008,7 @@
       "definition": "median days from creation to close of a won deal",
       "denominator": "129 wins",
       "horizon": "trailing",
+      "label": null,
       "name": "median_won_cycle_days",
       "numerator": "median of days to close",
       "range95": null,
@@ -1984,6 +2022,7 @@
       "definition": "days within which a win counts for a win rate",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "horizon_days",
       "numerator": "",
       "range95": null,
@@ -1997,6 +2036,7 @@
       "definition": "pull of an age-group cell toward its stage rate",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "smoothing_pseudo_observations",
       "numerator": "",
       "range95": null,
@@ -2010,6 +2050,7 @@
       "definition": "wins a stage needs for its own close timing",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "min_timing_samples",
       "numerator": "",
       "range95": null,
@@ -2023,6 +2064,7 @@
       "definition": "window for trailing rates",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "trailing_days",
       "numerator": "",
       "range95": null,
@@ -2036,6 +2078,7 @@
       "definition": "trailing months of snapshots for the cumulative-incidence fit",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "recency_months",
       "numerator": "",
       "range95": null,
@@ -2049,6 +2092,7 @@
       "definition": "cap on added pipeline, times trailing created pipeline",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "lever_cap_multiple",
       "numerator": "",
       "range95": null,
@@ -2062,6 +2106,7 @@
       "definition": "Monte Carlo draws behind the ranges",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "simulation_draws",
       "numerator": "",
       "range95": null,
@@ -2075,6 +2120,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 1",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:1",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2091,6 +2137,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 2",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:2",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2107,6 +2154,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 3",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:3",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2123,6 +2171,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 4",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:4",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2139,6 +2188,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 5",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:5",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2155,6 +2205,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 6",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:6",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2171,6 +2222,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 7",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:7",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2187,6 +2239,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 8",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:8",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2203,6 +2256,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 9",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:9",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2219,6 +2273,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 10",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:10",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2235,6 +2290,7 @@
       "definition": "share of a tenured rep's created deals in tenure month 11",
       "denominator": "deals the same reps would have created at the tenured reps' rate in the same calendar months",
       "horizon": "per tenure month",
+      "label": null,
       "name": "ramp_weight:11",
       "numerator": "deals created by reps in this tenure month",
       "range95": [
@@ -2251,6 +2307,7 @@
       "definition": "departures per AE-month (monthly attrition)",
       "denominator": "687.9 AE-months employed",
       "horizon": "per AE-month",
+      "label": null,
       "name": "attrition_per_ae_month",
       "numerator": "5 departures",
       "range95": [
@@ -2267,6 +2324,7 @@
       "definition": "new-business deals created per ramped AE-month",
       "denominator": "304.91 ramped AE-months",
       "horizon": "per ramped AE-month",
+      "label": null,
       "name": "created_deals_per_ramped_ae_month",
       "numerator": "630 deals created",
       "range95": null,
@@ -2280,6 +2338,7 @@
       "definition": "cash cost of one AE for one month (capacity.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "loaded_cost_per_ae_month",
       "numerator": "",
       "range95": null,
@@ -2293,6 +2352,7 @@
       "definition": "cash cost per dollar of programme pipeline created (capacity.yaml)",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "programme_cost_per_dollar_of_pipeline",
       "numerator": "",
       "range95": null,
@@ -2306,6 +2366,7 @@
       "definition": "months a programme takes to reach its full monthly pipeline",
       "denominator": "",
       "horizon": "unstated",
+      "label": null,
       "name": "programme_ramp_months",
       "numerator": "",
       "range95": null,
@@ -2319,6 +2380,7 @@
       "definition": "ramped AE-months must vary by this much across the scored period for capacity to be testable",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "capacity_min_staffing_variation",
       "numerator": "",
       "range95": null,
@@ -2332,6 +2394,7 @@
       "definition": "capacity's created-pipeline error must be this much lower than the flat rate's at both horizons",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "capacity_min_improvement",
       "numerator": "",
       "range95": null,
@@ -2345,6 +2408,7 @@
       "definition": "folds needed at each scored horizon",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "capacity_min_folds",
       "numerator": "",
       "range95": null,
@@ -2358,6 +2422,7 @@
       "definition": "days in one AE-month",
       "denominator": "",
       "horizon": "",
+      "label": null,
       "name": "days_per_ae_month",
       "numerator": "",
       "range95": null,
@@ -2943,7 +3008,9 @@
       "quarters_remaining": 2,
       "single_spread": {
         "headline": "feasible: $32,444,653.50",
-        "name": "pipeline to meet the fiscal-year total, spread evenly to year end (section 5)"
+        "name": "pipeline to meet the fiscal-year total, spread evenly to year end (section 5)",
+        "outcome": "feasible",
+        "required": "32444653.50"
       },
       "solvable_quarters": [
         "Q3FY26",
@@ -3019,12 +3086,14 @@
         "outcome": "already covered",
         "per_day": {
           "expected": "887834.67",
+          "note": "no extra pipeline is required: the quarter is already covered",
           "required_against_team_best": null,
           "required_total": null
         },
         "per_ramped_ae_month": {
           "decides": true,
           "expected": "808925.88",
+          "note": "no extra pipeline is required: the quarter is already covered",
           "required_against_team_best": null,
           "required_total": null
         },
@@ -3043,7 +3112,9 @@
           "open_pipeline": null,
           "reasons": []
         },
-        "total_created_in_span": null
+        "total_created_in_span": null,
+        "total_created_note": "no extra pipeline is required: the quarter is already covered",
+        "would_take": null
       },
       {
         "actual": "0",
@@ -3063,12 +3134,14 @@
         "outcome": "feasible",
         "per_day": {
           "expected": "935154.78",
+          "note": null,
           "required_against_team_best": "1.85",
           "required_total": "1176848.06"
         },
         "per_ramped_ae_month": {
           "decides": true,
           "expected": "808925.88",
+          "note": null,
           "required_against_team_best": "0.98",
           "required_total": "1017994.95"
         },
@@ -3099,7 +3172,9 @@
             "needs $1,176,848.06 of pipeline created a day in total, above the team's best four-quarter average of $635,022.36 a day"
           ]
         },
-        "total_created_in_span": "180057752.58"
+        "total_created_in_span": "180057752.58",
+        "total_created_note": null,
+        "would_take": null
       }
     ],
     "team_history": {
@@ -3502,7 +3577,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 1,944,676 vs trailing run-rate 1,942,333; 3m: model 1,944,676 vs stage-weighted pipeline 1,776,756",

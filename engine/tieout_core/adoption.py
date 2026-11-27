@@ -13,17 +13,26 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date, timedelta
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 
 from . import capacity_rules as rules
 from .backtest import fold_cutoffs
 from .capacity import CapacityFit, fit_capacity
 from .capacity_config import CapacityConfig
+from .figures import number
 from .fiscal import add_months, month_windows
 from .fit import DEFAULT_PARAMS, FitParams
 from .history import as_known_at, creation_amounts
 from .records import Dataset
 from .roster import RampCurve, ramped_ae_months
+
+
+def _percent1(share) -> str:
+    """A share as a percent to one place, from the figure the report states (four places), half
+    away from zero: the same words the screen reads out of that figure."""
+    shown = Decimal(number(share, 4)) * 100
+    return f"{shown.quantize(Decimal('0.1'), ROUND_HALF_UP)}%"
+
 
 ADOPTED, NOT_SHOWN, UNAVAILABLE = "adopted", "not shown", "unavailable"
 PLACES = Decimal("1e-10")
@@ -146,13 +155,13 @@ def decide(folds: list[AdoptionFold], variation: Decimal) -> Adoption:
             return Adoption(
                 NOT_SHOWN,
                 f"at {h} months the capacity rate's mean absolute error {s.mae_capacity:,.0f} is "
-                f"{s.improvement:.1%} below the flat rate's {s.mae_flat:,.0f}; at least "
+                f"{_percent1(s.improvement)} below the flat rate's {s.mae_flat:,.0f}; at least "
                 f"{rules.MIN_IMPROVEMENT:.0%} lower is needed at both horizons",
                 variation, None, tuple(folds), scores,
             )  # fmt: skip
     text = "; ".join(
         f"{h} months {scores[h].mae_capacity:,.0f} against {scores[h].mae_flat:,.0f} "
-        f"({scores[h].improvement:.1%} lower)"
+        f"({_percent1(scores[h].improvement)} lower)"
         for h in rules.SCORED_HORIZONS
     )
     return Adoption(

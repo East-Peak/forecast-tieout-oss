@@ -10,6 +10,7 @@
       "fiscal_year_gap": "23360339.19",
       "fiscal_year_gap_change": null,
       "label": "As signed",
+      "note": null,
       "scenario": "as-signed"
     },
     {
@@ -22,18 +23,17 @@
       "fiscal_year_gap": "23277043.79",
       "fiscal_year_gap_change": "-83295.40",
       "label": "Demo plan",
+      "note": "the figures leave out what cannot be valued: 4 Mid-Market hires from 2026-10 (hiring is unsupported by this history: not valued); 2 Enterprise hires from 2026-11 (hiring is unsupported by this history: not valued)",
       "scenario": "demo-plan"
     },
     {
-      "bookings_change": {
-        "next twelve months": "0.00",
-        "rest of fiscal year": "0.00"
-      },
+      "bookings_change": null,
       "cash_cost_in_twelve_months": "966208.69",
       "expected_fiscal_year": "60639660.81",
       "fiscal_year_gap": "23360339.19",
-      "fiscal_year_gap_change": "0.00",
+      "fiscal_year_gap_change": null,
       "label": "Hires only",
+      "note": "no item in this plan is valued: hiring is unsupported by this history: not valued",
       "scenario": "hires-only"
     },
     {
@@ -46,6 +46,7 @@
       "fiscal_year_gap": "23277043.79",
       "fiscal_year_gap_change": "-83295.40",
       "label": "Programme only",
+      "note": null,
       "scenario": "programme-only"
     }
   ]

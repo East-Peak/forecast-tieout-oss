@@ -11,7 +11,8 @@ from engine.scripts import generate_app_reports as gen
 from engine.tieout_core import contract
 from engine.tieout_core.markdown import render as render_markdown
 from engine.tieout_core.pipeline_report import surplus_statement
-from engine.tieout_core.report import RATE_UNITS, build_report, rate_unit
+from engine.tieout_core.rates import RATE_UNITS, rate_unit
+from engine.tieout_core.report import build_report
 
 AS_OF = gen.AS_OF
 COMPANIES = gen.COMPANIES
@@ -100,7 +101,7 @@ def test_a_share_is_between_zero_and_one_and_a_name_without_a_unit_is_refused(re
 
 
 def test_the_schema_version_is_bumped_and_the_schema_requires_the_new_fields(reports):
-    assert contract.SCHEMA_VERSION == "1.2.0"
+    assert contract.SCHEMA_VERSION == "1.3.0"
     report = json.loads(json.dumps(reports["sprout-labs"]))
     assert contract.validate(report) == []
     del report["required_pipeline"]["quarters"][0]["surplus_statement"]
@@ -130,3 +131,60 @@ def test_each_scenario_has_its_report_md_and_the_index_points_to_it():
             profile, Path("engine/data-v2/sprout-labs"), AS_OF, draws=100
         )
     assert built["sprout-labs/as-signed.md"] == render_markdown(signed)
+
+
+# ---------------------------------------------------------------- the contract refuses a report that disagrees with itself
+
+
+def _copy(report):
+    return json.loads(json.dumps(report))
+
+
+def test_a_rate_whose_unit_is_not_its_names_unit_is_refused(reports):
+    report = _copy(reports["sprout-labs"])
+    rate = next(x for x in report["rates"] if x["name"] == "mean_won_arr")
+    rate["unit"] = "share"
+    problems = contract.validate(report)
+    assert any("mean_won_arr" in p and "unit" in p for p in problems), problems
+
+
+def test_a_rate_with_a_name_nobody_declared_is_refused(reports):
+    report = _copy(reports["sprout-labs"])
+    report["rates"][0]["name"] = "a_rate_nobody_declared"
+    assert any("a_rate_nobody_declared" in p for p in contract.validate(report))
+
+
+def test_a_range_on_a_rate_that_is_not_a_share_is_refused(reports):
+    report = _copy(reports["sprout-labs"])
+    rate = next(x for x in report["rates"] if x["name"] == "mean_won_arr")
+    rate["range95"] = [0.1, 0.2]
+    problems = contract.validate(report)
+    assert any("mean_won_arr" in p and "range" in p for p in problems), problems
+
+
+def test_a_surplus_statement_that_disagrees_with_its_surplus_is_refused(reports):
+    base = reports["sprout-labs"]
+    quarters = base["required_pipeline"]["quarters"]
+    assert any(
+        q["surplus_over_target"] and Decimal(q["surplus_over_target"]) < 0
+        for q in quarters
+    )
+    # the wrong sign: a shortfall said as a surplus
+    report = _copy(base)
+    q = next(
+        x
+        for x in report["required_pipeline"]["quarters"]
+        if Decimal(x["surplus_over_target"]) < 0
+    )
+    q["surplus_statement"] = q["surplus_statement"].replace(
+        "still short of", "ahead of"
+    )
+    assert any("surplus" in p for p in contract.validate(report))
+    # a statement with no surplus behind it, and a surplus with no statement
+    report = _copy(base)
+    q = report["required_pipeline"]["quarters"][0]
+    q["surplus_over_target"] = None
+    assert any("surplus" in p for p in contract.validate(report))
+    report = _copy(base)
+    report["required_pipeline"]["quarters"][0]["surplus_statement"] = None
+    assert any("surplus" in p for p in contract.validate(report))

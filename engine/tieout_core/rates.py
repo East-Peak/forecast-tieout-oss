@@ -24,6 +24,7 @@ class Rate:
     source: str  # FITTED, ENTERED or DEFAULT
     low95: float | None = None
     high95: float | None = None
+    label: str | None = None  # a short name for a screen row, where the name is a code
 
 
 class RateBook:
@@ -46,6 +47,60 @@ class RateBook:
 
     def __iter__(self):
         return iter(self._rates.values())
+
+
+# What a rate's value is, so a screen can say it right: a share (shown as a percent), dollars,
+# or a plain number (its definition says what it counts). Keyed by the name before any ":".
+RATE_UNITS = {
+    **dict.fromkeys(
+        (
+            "win_within_horizon",
+            "new_pipeline_win_rate",
+            "stage_probability",
+            "ramp_weight",
+            "attrition_per_ae_month",
+            "capacity_min_staffing_variation",
+            "capacity_min_improvement",
+        ),
+        "share",
+    ),
+    **dict.fromkeys(
+        (
+            "mean_won_arr",
+            "mean_created_arr",
+            "trailing_bookings_per_day",
+            "created_arr_per_day",
+            "loaded_cost_per_ae_month",
+        ),
+        "dollars",
+    ),
+    **dict.fromkeys(
+        (
+            "created_deals_per_day",
+            "created_deals_per_ramped_ae_month",
+            "median_won_cycle_days",
+            "horizon_days",
+            "smoothing_pseudo_observations",
+            "min_timing_samples",
+            "trailing_days",
+            "recency_months",
+            "lever_cap_multiple",
+            "simulation_draws",
+            "programme_cost_per_dollar_of_pipeline",
+            "programme_ramp_months",
+            "capacity_min_folds",
+            "days_per_ae_month",
+        ),
+        "number",
+    ),
+}
+
+
+def rate_unit(name: str) -> str:
+    key = name.split(":")[0]
+    if key not in RATE_UNITS:
+        raise KeyError(f"no unit declared for rate '{name}'")
+    return RATE_UNITS[key]
 
 
 def wilson(successes: int, n: int, z: float = 1.959964) -> tuple[float, float]:

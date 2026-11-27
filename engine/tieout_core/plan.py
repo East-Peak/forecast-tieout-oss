@@ -34,6 +34,11 @@ REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
 
 
+def segment_words(segment: str) -> str:
+    """A segment key as words: ``mid_market`` reads "Mid Market"."""
+    return " ".join(w[:1].upper() + w[1:] for w in segment.replace("_", " ").split())
+
+
 @dataclass(frozen=True)
 class PlanHire:
     segment: str
@@ -43,7 +48,9 @@ class PlanHire:
     @property
     def label(self) -> str:
         noun = "hire" if self.count == 1 else "hires"
-        return f"{self.count} {self.segment} {noun} from {self.start:%Y-%m}"
+        return (
+            f"{self.count} {segment_words(self.segment)} {noun} from {self.start:%Y-%m}"
+        )
 
 
 @dataclass(frozen=True)

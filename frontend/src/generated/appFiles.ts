@@ -46,6 +46,7 @@ export interface ScenarioComparison {
     fiscal_year_gap: Money | null;
     fiscal_year_gap_change: Money | null;
     label: string;
+    note: string | null;
     scenario: string;
   }[];
 }

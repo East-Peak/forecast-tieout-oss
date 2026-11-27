@@ -59,7 +59,7 @@ def test_hires_come_first_in_the_plan_whatever_the_file_order(with_plan):
         "hires",
         "programme",
     ]  # the file lists programmes first
-    assert items[0]["label"] == "3 mid_market hires from 2026-10"
+    assert items[0]["label"] == "3 Mid Market hires from 2026-10"
 
 
 def test_contributions_are_incremental_and_sum_to_the_difference_exactly(with_plan):

@@ -10,6 +10,7 @@
       "fiscal_year_gap": "1880075.16",
       "fiscal_year_gap_change": null,
       "label": "As signed",
+      "note": null,
       "scenario": "as-signed"
     },
     {
@@ -22,6 +23,7 @@
       "fiscal_year_gap": "1843813.47",
       "fiscal_year_gap_change": "-36261.69",
       "label": "Demo plan",
+      "note": null,
       "scenario": "demo-plan"
     },
     {
@@ -34,6 +36,7 @@
       "fiscal_year_gap": "1855528.12",
       "fiscal_year_gap_change": "-24547.04",
       "label": "Hires only",
+      "note": null,
       "scenario": "hires-only"
     },
     {
@@ -46,6 +49,7 @@
       "fiscal_year_gap": "1868360.51",
       "fiscal_year_gap_change": "-11714.65",
       "label": "Programme only",
+      "note": null,
       "scenario": "programme-only"
     }
   ]

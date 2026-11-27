@@ -64,8 +64,8 @@ def test_a_plan_is_hires_then_programmes_in_file_order(tmp_path):
         ("ent", date(2026, 8, 1), 1),
     ]
     assert [i.label for i in plan.items()] == [
-        "2 mm hires from 2026-09",
-        "1 ent hire from 2026-08",
+        "2 Mm hires from 2026-09",
+        "1 Ent hire from 2026-08",
         "P1",
     ]
     members = plan.hire_members()

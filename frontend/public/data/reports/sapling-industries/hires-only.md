@@ -480,8 +480,8 @@ Plan file `engine/config/profiles/sapling-industries/plan-hires-only.yaml`. Hire
 
 | Item | What |  | Adds, rest of fiscal year | Adds, next twelve months | Cash cost in twelve months |
 |---|---|---|---|---|---|
-| 2 mid_market hires from 2026-10 | 2 AE(s), segment mid_market, starting 2026-10-01 | valued | $76,526 | $1,191,484 | $296,014 |
-| 1 enterprise hire from 2026-11 | 1 AE(s), segment enterprise, starting 2026-11-01 | valued | $12,822 | $482,884 | $135,057 |
+| 2 Mid Market hires from 2026-10 | 2 AE(s), segment Mid Market, starting 2026-10-01 | valued | $76,526 | $1,191,484 | $296,014 |
+| 1 Enterprise hire from 2026-11 | 1 AE(s), segment Enterprise, starting 2026-11-01 | valued | $12,822 | $482,884 | $135,057 |
 
 | Bookings | rest of fiscal year | next twelve months |
 |---|---|---|

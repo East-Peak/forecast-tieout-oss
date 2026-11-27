@@ -16,6 +16,7 @@ from this module and a test keeps the two equal.
 from __future__ import annotations
 
 import json
+from decimal import Decimal
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
@@ -23,8 +24,9 @@ from jsonschema import Draft202012Validator
 from .adoption import ADOPTED, NOT_SHOWN, UNAVAILABLE
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
+from .rates import rate_unit
 
-SCHEMA_VERSION = "1.2.0"
+SCHEMA_VERSION = "1.3.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -124,6 +126,7 @@ DEFS: dict = {
 def _inputs() -> dict:
     return obj(
         {
+            "identity": obj({"company": TEXT, "scenario": TEXT}),
             "profile": TEXT,
             "data": TEXT,
             "as_of": DATE,
@@ -267,6 +270,7 @@ def _rates() -> dict:
         obj(
             {
                 "name": TEXT,
+                "label": maybe(TEXT),
                 "unit": enum("share", "dollars", "number"),
                 "value": DECIMAL,
                 "definition": TEXT,
@@ -678,12 +682,15 @@ def _required_pipeline() -> dict:
             "expected_created_pipeline": MONEY,
             "earlier_assigned_in_span": MONEY,
             "total_created_in_span": MONEY_OR_NULL,
+            "total_created_note": maybe(TEXT),
+            "would_take": MONEY_OR_NULL,
             "ramped_ae_months": DECIMAL_OR_NULL,
             "per_day": obj(
                 {
                     "expected": MONEY_OR_NULL,
                     "required_total": MONEY_OR_NULL,
                     "required_against_team_best": DECIMAL_OR_NULL,
+                    "note": maybe(TEXT),
                 }
             ),
             "per_ramped_ae_month": obj(
@@ -691,6 +698,7 @@ def _required_pipeline() -> dict:
                     "expected": MONEY_OR_NULL,
                     "required_total": MONEY_OR_NULL,
                     "required_against_team_best": DECIMAL_OR_NULL,
+                    "note": maybe(TEXT),
                     "decides": BOOL,
                 }
             ),
@@ -717,7 +725,14 @@ def _required_pipeline() -> dict:
             "unreachable_quarters": arr(ref("Quarter")),
             "quarters_remaining": INT,
             "headline": TEXT,
-            "single_spread": obj({"name": TEXT, "headline": maybe(TEXT)}),
+            "single_spread": obj(
+                {
+                    "name": TEXT,
+                    "headline": maybe(TEXT),
+                    "outcome": maybe(TEXT),
+                    "required": DECIMAL_OR_NULL,
+                }
+            ),
             "why_they_differ": TEXT,
         }
     )
@@ -906,6 +921,7 @@ def _actions() -> dict:
             "bound_basis": TEXT,
             "cash_cost_in_twelve_months": MONEY_OR_NULL,
             "cost_status": COST_STATUS,
+            "cash_cost_note": maybe(TEXT),
         }
     )
     hires_not_valued = obj({"outcome": TEXT, "count": NULL, "note": TEXT})
@@ -921,6 +937,7 @@ def _actions() -> dict:
             "share_booking_in_fiscal_year": DECIMAL_OR_NULL,
             "cash_cost_in_twelve_months": MONEY_OR_NULL,
             "cost_status": COST_STATUS,
+            "cash_cost_note": maybe(TEXT),
         }
     )
     full = obj(
@@ -1227,8 +1244,68 @@ def _cross_rules(r: dict) -> list[str]:
                     item["valued"] == adopted,
                     "hires are valued exactly when capacity is adopted",
                 )
+    for rate in r["rates"]:
+        try:
+            unit = rate_unit(rate["name"])
+        except KeyError:
+            rule(False, f"rate '{rate['name']}' has no unit declared")
+            continue
+        rule(
+            rate["unit"] == unit,
+            f"rate '{rate['name']}' says its unit is {rate['unit']}, the name's unit is {unit}",
+        )
+        rule(
+            rate["range95"] is None or rate["unit"] == "share",
+            f"rate '{rate['name']}' carries a range but is not a share",
+        )
+    required = r["required_pipeline"]
+    for q in required.get("quarters", []):
+        surplus, said = q["surplus_over_target"], q["surplus_statement"]
+        where = f"required_pipeline quarter {q['quarter']}"
+        rule(
+            (surplus is None) == (said is None),
+            f"{where}: the surplus and its statement are present together",
+        )
+        rule(
+            (q["total_created_in_span"] is None)
+            == (q["total_created_note"] is not None),
+            f"{where}: the total created and its note are present together",
+        )
+        for part in ("per_day", "per_ramped_ae_month"):
+            p = q[part]
+            missing = (
+                p["required_total"] is None or p["required_against_team_best"] is None
+            )
+            rule(
+                missing == (p["note"] is not None),
+                f"{where}: {part} has a note exactly when one of its figures is missing",
+            )
+        if surplus is not None and said is not None:
+            sign = Decimal(surplus)
+            start = (
+                "ahead of"
+                if sign > 0
+                else "still short of"
+                if sign < 0
+                else "exactly on"
+            )
+            rule(
+                said.startswith(start),
+                f"{where}: the surplus statement does not agree in sign with the surplus {surplus}",
+            )
     actions = r["actions"]
     if "unavailable" not in actions:
+        closing = actions["close_the_fiscal_year_gap"]
+        for kind, part in (
+            ("hires", closing["hires"]),
+            ("programme", closing["programme"]),
+        ):
+            if "cash_cost_note" in part:
+                rule(
+                    (part["cash_cost_in_twelve_months"] is None)
+                    == (part["cash_cost_note"] is not None),
+                    f"the {kind} cost and its note are present together",
+                )
         hires = actions["close_the_fiscal_year_gap"]["hires"]
         rule(
             ("bound" in hires) == adopted,

@@ -153,6 +153,37 @@ def required_pipeline(
     return out, checks, results
 
 
+NO_EXTRA = "no extra pipeline is required: the quarter is already covered"
+FEW_QUARTERS = (
+    "unavailable: the team has fewer than four complete quarters to compare with"
+)
+NO_RAMP = "unavailable: no ramp is fitted, so there are no ramped AE-months"
+NO_DAYS = "unavailable: the span has no days"
+
+
+def quarter_notes(outcome, total, months, days, best_day, best_ae) -> dict:
+    """Why a requirement figure is missing, so a screen can tell 'nothing is required' from 'unavailable'.
+    Each entry is None when its figures are all there."""
+    per_day = per_ae = None
+    if total is None:
+        per_day = NO_EXTRA
+    elif not days:
+        per_day = NO_DAYS
+    elif best_day is None:
+        per_day = FEW_QUARTERS
+    if not months:
+        per_ae = NO_RAMP
+    elif total is None:
+        per_ae = NO_EXTRA
+    elif best_ae is None:
+        per_ae = FEW_QUARTERS
+    return {
+        "total": NO_EXTRA if total is None else None,
+        "per_day": per_day,
+        "per_ae": per_ae,
+    }
+
+
 def surplus_statement(surplus: Decimal | None) -> str | None:
     """A quarter's surplus over target in words: a negative one is a shortfall that
     remains, never a negative requirement."""
@@ -200,6 +231,9 @@ def _row(
             if r.outcome == COVERED
             else f"required: ${r.required:,.2f}"
         )
+    notes = quarter_notes(
+        r.outcome, total, months, days, best_day=best_day, best_ae=best_ae
+    )
     reasons = too_late(r, best_ae, best_day, per_rep_applies)
     diagnostics = []
     excess = per_rep_excess(r, best_ae)
@@ -228,17 +262,23 @@ def _row(
         "expected_created_pipeline": money(r.expected_created),
         "earlier_assigned_in_span": money(r.earlier_assigned),
         "total_created_in_span": None if total is None else money(total),
+        "total_created_note": notes["total"],
+        "would_take": money(r.required)
+        if r.outcome == UNREACHABLE and r.required is not None
+        else None,
         "ramped_ae_months": None if months is None else number(months, 1),
         "per_day": {
             "expected": per(r.expected_created, days),
             "required_total": per(total, days),
             "required_against_team_best": against(total, days, best_day),
+            "note": notes["per_day"],
         },
         "per_ramped_ae_month": {
             "expected": per(r.expected_created, months),
             "required_total": per(total, months),
             "required_against_team_best": against(total, months, best_ae),
             "decides": per_rep_applies,
+            "note": notes["per_ae"],
         },
         "cap_left_before": money(r.cap_left),
         "cents_booked_in_quarter_per_dollar": number(r.yield_per_dollar * 100, 2),
@@ -394,6 +434,10 @@ def summarise_fiscal_year(
             "headline": None
             if single_spread is None
             else single_spread.get("headline"),
+            "outcome": None if single_spread is None else single_spread.get("outcome"),
+            "required": None
+            if single_spread is None
+            else single_spread.get("required"),
         },
         "why_they_differ": "Meeting every quarter's own target is stricter than meeting the year's "
         "total: a quarter that is ahead cannot lend its surplus to one that is behind, and pipeline "

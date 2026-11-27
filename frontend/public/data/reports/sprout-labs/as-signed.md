@@ -47,7 +47,7 @@ What cannot be reconstructed or relied on:
 - 15 deals have no stage history, so they never appear in a win-rate snapshot; 4 of them are open: today's forecasts use their current stage from deals.csv, but at past cutoffs their stage is unknown and back-test folds leave them out
 - win rates learn only from snapshots at least 365 days old, so a change in conversion shows up a year late (the recency fit was not adopted: mean absolute error not lower at both 1 and 3 months (1m: 140,113 vs 96,781; 3m: 299,207 vs 269,872))
 - the model is pooled across segments; a segment split is not evaluated in this report
-- roles on team_members.csv: ae 8, founder 2, sdr 2, se 1; the capacity term is adopted (created-pipeline error with realised staffing: 3 months 1,130,288 against 2,448,980 (53.8% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%)
+- roles on team_members.csv: ae 8, founder 2, sdr 2, se 1; the capacity term is adopted (created-pipeline error with realised staffing: 3 months 1,130,288 against 2,448,980 (53.9% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%)
 - team_members.csv holds no history of role, segment, quota or deal ownership: today's values stand in for every past date, and a deal's owner is its current owner
 
 ## 3. Three forecasts, side by side
@@ -230,7 +230,7 @@ Recency candidate (cumulative incidence) against the Goal 1 fit (matured snapsho
 
 ## 8. Roster and capacity
 
-**Capacity term: adopted.** created-pipeline error with realised staffing: 3 months 1,130,288 against 2,448,980 (53.8% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%.
+**Capacity term: adopted.** created-pipeline error with realised staffing: 3 months 1,130,288 against 2,448,980 (53.9% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%.
 
 Scored on created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred. Conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts.
 Declared rule: adopted only if ramped AE-months varied by at least 20% across the scored period, the capacity rate's mean absolute error is at least 10% lower than the flat trailing rate's at both 3 and 6 months, and there are at least 6 folds at each.

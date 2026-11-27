@@ -154,6 +154,7 @@ COMPARISON_ROW = {
         "bookings_change": {"anyOf": [PER_WINDOW, {"type": "null"}]},
         "fiscal_year_gap_change": MONEY_OR_NULL,
         "cash_cost_in_twelve_months": MONEY_OR_NULL,
+        "note": {"type": ["string", "null"]},
     },
     "required": [
         "scenario",
@@ -163,6 +164,7 @@ COMPARISON_ROW = {
         "bookings_change",
         "fiscal_year_gap_change",
         "cash_cost_in_twelve_months",
+        "note",
     ],
     "additionalProperties": False,
 }
@@ -273,8 +275,9 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
             for sc in SCENARIOS:
                 plan = None if sc.plan is None else profile / sc.plan
                 reports[sc.id] = build_report(
-                    profile, data, AS_OF, draws=draws, seed=seed, plan_path=plan
-                )
+                    profile, data, AS_OF, draws=draws, seed=seed, plan_path=plan,
+                    company=company, scenario=sc.id,
+                )  # fmt: skip
                 files[f"{company}/{sc.id}.json"] = canonical(reports[sc.id])
                 files[f"{company}/{sc.id}.md"] = render_markdown(reports[sc.id])
             require_correct({f"{company}/{k}.json": v for k, v in reports.items()})

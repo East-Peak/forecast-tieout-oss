@@ -22,6 +22,7 @@ export type TieoutReport = {
                 bound: number;
                 bound_basis: Text;
                 cash_cost_in_twelve_months: Money | null;
+                cash_cost_note: Text | null;
                 cost_status: "entered" | "cost not entered";
                 count: number | null;
                 fiscal_year_bookings_one_fewer: Money | null;
@@ -38,6 +39,7 @@ export type TieoutReport = {
             cap: Money;
             cap_rule: Text;
             cash_cost_in_twelve_months: Money | null;
+            cash_cost_note: Text | null;
             cost_status: "entered" | "cost not entered";
             dollars: Money | null;
             fiscal_year_bookings_with: Money;
@@ -479,6 +481,10 @@ export type TieoutReport = {
     fiscal_year_end: Date;
     fiscal_year_start: Date;
     fit: Text;
+    identity: {
+      company: Text;
+      scenario: Text;
+    };
     measure: Text;
     profile: Text;
     ranges: Text;
@@ -670,6 +676,7 @@ export type TieoutReport = {
     definition: Text;
     denominator: Text;
     horizon: Text;
+    label: Text | null;
     name: Text;
     numerator: Text;
     range95: [number, number] | null;
@@ -740,6 +747,8 @@ export type TieoutReport = {
           single_spread: {
             headline: Text | null;
             name: Text;
+            outcome: Text | null;
+            required: Decimal | null;
           };
           solvable_quarters: Quarter[];
           solvable_total: Money | null;
@@ -794,12 +803,14 @@ export type TieoutReport = {
           outcome: "already covered" | "feasible" | "unreachable within bounds";
           per_day: {
             expected: Money | null;
+            note: Text | null;
             required_against_team_best: Decimal | null;
             required_total: Money | null;
           };
           per_ramped_ae_month: {
             decides: boolean;
             expected: Money | null;
+            note: Text | null;
             required_against_team_best: Decimal | null;
             required_total: Money | null;
           };
@@ -827,6 +838,8 @@ export type TieoutReport = {
             reasons: Text[];
           };
           total_created_in_span: Money | null;
+          total_created_note: Text | null;
+          would_take: Money | null;
         }[];
         team_history: {
           best_four_quarter_average: Money | null;
@@ -951,7 +964,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "1.2.0";
+  schema_version: "1.3.0";
   verdicts: {
     forecast_better_than_baselines: {
       reason: Text;

@@ -34,6 +34,7 @@ from .plan import (
     programme_cost,
     programme_cost_in_window,
     programme_inflows,
+    segment_words,
 )
 from .records import Check, Dataset
 from .roster import Member
@@ -146,6 +147,21 @@ def _days_in_month(d: date) -> int:
     return (add_months(date(d.year, d.month, 1), 1) - date(d.year, d.month, 1)).days
 
 
+def closing_cost_note(kind: str, outcome: str, cost_status: str, cost) -> str | None:
+    """Why a closing action shows no cost, from its own outcome and cost status; None when there is a cost."""
+    if cost is not None:
+        return None
+    if cost_status != "entered":
+        return "cost not entered"
+    if outcome == "already covered":
+        return "no cost: the gap is already covered, so nothing needs adding"
+    if outcome == "unreachable":
+        what = "number of hires" if kind == "hires" else "amount of pipeline"
+        where = "within the bound" if kind == "hires" else "within the cap"
+        return f"no cost: no {what} closes the gap {where}"
+    return "no cost to show"
+
+
 def hires_bound(members, fy_start: date, as_of: date, entered: int | None):
     """The most whole hires the solve will try, and why."""
     if entered is not None:
@@ -242,7 +258,7 @@ def plan_section(
             row = {
                 "kind": "hires",
                 "label": item.label,
-                "detail": f"{item.count} AE(s), segment {item.segment}, starting {item.start}",
+                "detail": f"{item.count} AE(s), segment {segment_words(item.segment)}, starting {item.start}",
             }
             if adopted:
                 hires.extend(people)
@@ -555,6 +571,12 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
             else money(per_hire * solved.count),
             "cost_status": "entered" if per_hire is not None else "cost not entered",
         }
+        closing["hires"]["cash_cost_note"] = closing_cost_note(
+            "hires",
+            solved.outcome,
+            closing["hires"]["cost_status"],
+            closing["hires"]["cash_cost_in_twelve_months"],
+        )
         smallest = solved.outcome != FEASIBLE_HIRES or (
             solved.forecast_with >= g.fy_target
             and (solved.forecast_one_fewer or ZERO) < g.fy_target
@@ -628,6 +650,12 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         ),
         "cost_status": "entered" if cost_per_dollar is not None else "cost not entered",
     }
+    closing["programme"]["cash_cost_note"] = closing_cost_note(
+        "programme",
+        closing["programme"]["outcome"],
+        closing["programme"]["cost_status"],
+        closing["programme"]["cash_cost_in_twelve_months"],
+    )
     fresh = (
         forward_programme(solved_p.required) if solved_p.outcome == FEASIBLE else None
     )
