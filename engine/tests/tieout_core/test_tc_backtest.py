@@ -11,8 +11,10 @@ from engine.tieout_core.backtest import (
     STAGE_WEIGHTED,
     HorizonScore,
     backtest,
+    comparisons,
     fold,
     verdict,
+    verdict_in_words,
 )
 from engine.tieout_core.load import load_profile
 from engine.tieout_core.records import Dataset, Deal, Observation, Transition
@@ -182,3 +184,100 @@ def test_folds_are_never_scored_past_the_last_observed_date(profile):
     r = backtest(regular_history(), date(2026, 12, 31), profile, draws=20)
     assert r.folds
     assert max(add_months(f.cutoff, f.horizon) for f in r.folds) <= AS_OF
+
+
+def _by(cs):
+    return {
+        (c.horizon, m): (c.model_error, e, o)
+        for c in cs
+        for m, (e, o) in c.against.items()
+    }
+
+
+def test_comparisons_say_per_horizon_and_baseline_which_error_is_lower():
+    cs = comparisons([_score(1, 6, 1, 2, 5), _score(3, 6, 3, 2, 3)])
+    assert [c.horizon for c in cs] == [1, 3]
+    assert _by(cs) == {
+        (1, RUN_RATE): (Decimal(1), Decimal(2), "model lower"),
+        (1, STAGE_WEIGHTED): (Decimal(1), Decimal(5), "model lower"),
+        (3, RUN_RATE): (Decimal(3), Decimal(2), "baseline lower"),
+        (3, STAGE_WEIGHTED): (Decimal(3), Decimal(3), "tie"),
+    }
+
+
+def test_there_are_no_comparisons_when_the_verdict_is_not_enough_history():
+    assert comparisons([_score(1, 6, 1, 2, 2), _score(3, 5, 1, 2, 2)]) == []
+    unscored = HorizonScore(
+        1, 9, {MODEL: None, RUN_RATE: Decimal(1), STAGE_WEIGHTED: None}, {}, None, None
+    )
+    assert comparisons([unscored, _score(3, 9, 1, 2, 2)]) == []
+
+
+def test_a_verdict_of_no_is_exactly_a_comparison_that_is_not_model_lower():
+    for scores in (
+        [_score(1, 6, 1, 2, 2), _score(3, 6, 1, 2, 2)],
+        [_score(1, 6, 1, 2, 2), _score(3, 6, 2, 3, 2)],
+        [_score(1, 9, 3, 2, 4), _score(3, 9, 1, 2, 2)],
+    ):
+        all_lower = all(
+            o == "model lower" for *_, o in _by(comparisons(scores)).values()
+        )
+        assert (verdict(scores)[0] == "yes") is all_lower
+
+
+def words(scores, result=None, observed=True):
+    return verdict_in_words(result or verdict(scores)[0], scores, observed)
+
+
+def test_in_words_for_a_yes_names_both_horizons():
+    text = words([_score(1, 6, 1, 2, 2), _score(3, 6, 1, 2, 2)])
+    assert text == (
+        "The fitted model's average miss is smaller than both simple yardsticks, "
+        "one month ahead and three months ahead."
+    )
+
+
+def test_in_words_for_a_no_names_only_the_horizons_that_lost():
+    assert words([_score(1, 6, 1, 2, 2), _score(3, 6, 2, 3, 2)]) == (
+        "The fitted model's average miss is not smaller than both simple yardsticks "
+        "three months ahead."
+    )
+    assert words([_score(1, 9, 3, 2, 4), _score(3, 9, 5, 2, 2)]) == (
+        "The fitted model's average miss is not smaller than both simple yardsticks "
+        "one month ahead and three months ahead."
+    )
+
+
+def test_in_words_for_too_few_past_dates_says_how_many_are_needed():
+    assert words([_score(1, 6, 1, 2, 2), _score(3, 5, 1, 2, 2)]) == (
+        "Not enough past forecast dates to compare: the back-test needs at least six "
+        "at both one month and three months ahead."
+    )
+
+
+def test_in_words_for_a_method_that_cannot_be_scored_in_dollars():
+    unscored = HorizonScore(
+        1, 9, {MODEL: None, RUN_RATE: Decimal(1), STAGE_WEIGHTED: None}, {}, None, None
+    )
+    scores = [unscored, _score(3, 9, 1, 2, 2)]
+    assert words(scores) == (
+        "Not every method could be scored in dollars on the past, so there is nothing to compare."
+    )
+    assert words(scores, observed=False) == (
+        "The past cannot be scored in dollars without a record of past open deals, "
+        "so there is nothing to compare."
+    )
+
+
+def test_every_in_words_sentence_is_free_of_digits():
+    unscored = HorizonScore(
+        1, 9, {MODEL: None, RUN_RATE: Decimal(1), STAGE_WEIGHTED: None}, {}, None, None
+    )
+    for scores in (
+        [_score(1, 6, 1, 2, 2), _score(3, 6, 1, 2, 2)],
+        [_score(1, 6, 1, 2, 2), _score(3, 6, 2, 3, 2)],
+        [_score(1, 6, 1, 2, 2), _score(3, 5, 1, 2, 2)],
+        [unscored, _score(3, 9, 1, 2, 2)],
+    ):
+        for observed in (True, False):
+            assert not any(ch.isdigit() for ch in words(scores, observed=observed))

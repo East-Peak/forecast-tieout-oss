@@ -73,12 +73,24 @@ class HorizonScore:
 
 
 @dataclass(frozen=True)
+class HorizonComparison:
+    """The fitted model's error at one verdict horizon against each baseline's, with
+    which is lower decided here so no reader has to compare numbers."""
+
+    horizon: int
+    model_error: Decimal
+    against: dict[str, tuple[Decimal, str]]  # baseline: (its error, outcome)
+
+
+@dataclass(frozen=True)
 class Backtest:
     folds: tuple[Fold, ...]
     scores: tuple[HorizonScore, ...]
     verdict: str
     verdict_reason: str
     notes: tuple[str, ...]
+    comparisons: tuple[HorizonComparison, ...] = ()
+    in_words: str = ""
 
 
 def fold(
@@ -185,7 +197,15 @@ def backtest(
     result, reason = verdict(scores)
     if population.observations is None and result == TOO_SHORT:
         reason = notes[0]
-    return Backtest(tuple(folds), scores, result, reason, tuple(notes))
+    return Backtest(
+        tuple(folds),
+        scores,
+        result,
+        reason,
+        tuple(notes),
+        tuple(comparisons(scores)),
+        verdict_in_words(result, scores, population.observations is not None),
+    )
 
 
 def fit_snapshots(known: Dataset, cutoff: date, params: FitParams) -> int:
@@ -229,26 +249,65 @@ def coverage_label(inside: int, folds: int) -> str:
     return TOO_NARROW if high < NOMINAL80 else TOO_WIDE
 
 
-def verdict(scores) -> tuple[str, str]:
+BASELINES = (RUN_RATE, STAGE_WEIGHTED)
+MODEL_LOWER, BASELINE_LOWER, TIE = "model lower", "baseline lower", "tie"
+
+
+def _too_short(scores) -> tuple[str, int, int] | None:
+    """Why the verdict cannot be given: ('folds', horizon, folds) when a verdict horizon
+    has under MIN_FOLDS folds, ('unscored', horizon, 0) when a method cannot be scored in
+    dollars there; None when every method is scored at every verdict horizon."""
     by_h = {s.horizon: s for s in scores}
     for h in VERDICT_HORIZONS:
         s = by_h.get(h)
         if s is None or s.folds < MIN_FOLDS:
-            n = 0 if s is None else s.folds
+            return "folds", h, 0 if s is None else s.folds
+        if any(s.mae[m] is None for m in METHODS):
+            return "unscored", h, 0
+    return None
+
+
+def _outcome(model: Decimal, baseline: Decimal) -> str:
+    if model < baseline:
+        return MODEL_LOWER
+    return BASELINE_LOWER if model > baseline else TIE
+
+
+def comparisons(scores) -> list[HorizonComparison]:
+    """For each verdict horizon, the model's error and each baseline's with the outcome;
+    empty when the verdict is 'not enough history to say'."""
+    if _too_short(scores) is not None:
+        return []
+    by_h = {s.horizon: s for s in scores}
+    return [
+        HorizonComparison(
+            h,
+            by_h[h].mae[MODEL],
+            {
+                m: (by_h[h].mae[m], _outcome(by_h[h].mae[MODEL], by_h[h].mae[m]))
+                for m in BASELINES
+            },
+        )
+        for h in VERDICT_HORIZONS
+    ]
+
+
+def verdict(scores) -> tuple[str, str]:
+    short = _too_short(scores)
+    if short is not None:
+        kind, h, n = short
+        if kind == "folds":
             return (
                 TOO_SHORT,
                 f"{n} folds at {h} month(s); at least {MIN_FOLDS} are needed",
             )
-        if any(s.mae[m] is None for m in METHODS):
-            return (
-                TOO_SHORT,
-                f"not every method could be scored in dollars at {h} month(s)",
-            )
+        return TOO_SHORT, f"not every method could be scored in dollars at {h} month(s)"
+    by_h = {s.horizon: s for s in scores}
     losses = [
-        f"{h}m: model {by_h[h].mae[MODEL]:,.0f} vs {m} {by_h[h].mae[m]:,.0f}"
-        for h in VERDICT_HORIZONS
-        for m in (RUN_RATE, STAGE_WEIGHTED)
-        if not by_h[h].mae[MODEL] < by_h[h].mae[m]
+        f"{c.horizon}m: model {c.model_error:,.0f} vs {m} {by_h[c.horizon].mae[m]:,.0f}"
+        for c in comparisons(scores)
+        for m in BASELINES
+        if c.against[m][1] != MODEL_LOWER
     ]
     if losses:
         return (
@@ -259,6 +318,48 @@ def verdict(scores) -> tuple[str, str]:
     return (
         YES,
         "the model's mean absolute error is lower than both baselines at 1 and 3 months",
+    )
+
+
+_MIN_FOLDS_IN_WORDS = {6: "six"}[
+    MIN_FOLDS
+]  # a change to MIN_FOLDS must reword the sentence
+_AHEAD = {1: "one month", 3: "three months"}  # the verdict horizons, in words
+
+
+def _horizons_in_words(horizons) -> str:
+    return " and ".join(f"{_AHEAD[h]} ahead" for h in horizons)
+
+
+def verdict_in_words(result: str, scores, observed: bool = True) -> str:
+    """The verdict's reason as one sentence with no digits (the report's own sentence
+    carries the figures). ``observed`` is whether past open-deal amounts exist."""
+    if result == YES:
+        return (
+            "The fitted model's average miss is smaller than both simple yardsticks, "
+            f"{_horizons_in_words(VERDICT_HORIZONS)}."
+        )
+    if result == NO:
+        lost = [
+            c.horizon
+            for c in comparisons(scores)
+            if any(outcome != MODEL_LOWER for _, outcome in c.against.values())
+        ]
+        return (
+            "The fitted model's average miss is not smaller than both simple yardsticks "
+            f"{_horizons_in_words(lost)}."
+        )
+    if not observed:
+        return (
+            "The past cannot be scored in dollars without a record of past open deals, "
+            "so there is nothing to compare."
+        )
+    short = _too_short(scores)
+    if short is not None and short[0] == "unscored":
+        return "Not every method could be scored in dollars on the past, so there is nothing to compare."
+    return (
+        "Not enough past forecast dates to compare: the back-test needs at least "
+        f"{_MIN_FOLDS_IN_WORDS} at both {' and '.join(_AHEAD[h] for h in VERDICT_HORIZONS)} ahead."
     )
 
 
