@@ -13,3 +13,12 @@ export const STACK = {
   /** a cell that carries no label of its own (the row's title) */
   title: "block px-0 py-1 font-medium sm:table-cell sm:px-3 sm:py-3",
 } as const;
+
+/**
+ * The same stacking, but the columns appear only from the large breakpoint: for tables with so many columns
+ * that they cannot fit a tablet's width in any font (a wider font or looser spacing must never make one
+ * scroll inside its card). Derived from STACK so the two cannot drift apart.
+ */
+export const STACK_LG = Object.fromEntries(
+  Object.entries(STACK).map(([name, classes]) => [name, classes.replace(/sm:/g, "lg:")]),
+) as unknown as typeof STACK;

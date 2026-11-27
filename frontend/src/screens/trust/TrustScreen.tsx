@@ -3,7 +3,7 @@ import type { Binding } from "../../binding/Bound";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
-import { STACK } from "../../components/workbook/stack";
+import { STACK, STACK_LG } from "../../components/workbook/stack";
 import { Verdicts } from "../forecast/Verdicts";
 import { B, HORIZON_WORDS, ROWS } from "./bindings";
 
@@ -137,8 +137,8 @@ export default function TrustScreen() {
           title="How the forecast did on the past"
           subtitle="Each past forecast date re-run on what was known then, against the two simple baselines: mean absolute error in dollars, lower is better."
         />
-        <Table className={STACK.table}>
-          <TableHead className={STACK.head}>
+        <Table className={STACK_LG.table}>
+          <TableHead className={STACK_LG.head}>
             <TableRow>
               <TableHeaderCell>Months ahead</TableHeaderCell>
               <TableHeaderCell className="text-right">Past dates scored</TableHeaderCell>
@@ -151,20 +151,20 @@ export default function TrustScreen() {
               <TableHeaderCell className="text-right">Inside the 95% range</TableHeaderCell>
             </TableRow>
           </TableHead>
-          <TableBody className={STACK.body}>
+          <TableBody className={STACK_LG.body}>
             {r.backtest.horizons.map((_, i) => {
               const row = `${ROWS.horizons}/${i}`;
               return (
-                <TableRow key={i} className={STACK.row} data-testid="backtest-row">
-                  <TableCell className={STACK.cell} data-label="Months ahead"><Bound binding={B.btMonths} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Past dates scored"><Bound binding={B.btFolds} row={row} /></TableCell>
-                  <TableCell className={`${STACK.cell} font-medium`} data-label="Fitted model"><Bound binding={B.btFitted} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Stage-weighted pipeline"><Bound binding={B.btStage} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Last twelve months' pace"><Bound binding={B.btRunRate} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Fitted model's bias"><Bound binding={B.btBias} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Dates with a range"><Bound binding={B.btRangeFolds} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Inside the 80% range"><Bound binding={B.btCover80} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Inside the 95% range"><Bound binding={B.btCover95} row={row} /></TableCell>
+                <TableRow key={i} className={STACK_LG.row} data-testid="backtest-row">
+                  <TableCell className={STACK_LG.cell} data-label="Months ahead"><Bound binding={B.btMonths} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Past dates scored"><Bound binding={B.btFolds} row={row} /></TableCell>
+                  <TableCell className={`${STACK_LG.cell} font-medium`} data-label="Fitted model"><Bound binding={B.btFitted} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Stage-weighted pipeline"><Bound binding={B.btStage} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Last twelve months' pace"><Bound binding={B.btRunRate} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Fitted model's bias"><Bound binding={B.btBias} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Dates with a range"><Bound binding={B.btRangeFolds} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Inside the 80% range"><Bound binding={B.btCover80} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Inside the 95% range"><Bound binding={B.btCover95} row={row} /></TableCell>
                 </TableRow>
               );
             })}

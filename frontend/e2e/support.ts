@@ -55,3 +55,12 @@ export async function unboundDigits(page: Page, periodLabels: string[]): Promise
   );
 }
 
+
+/**
+ * A deterministic stress for layout: the bundled Inter stays in place (no font-family is overridden, so every
+ * platform measures the same glyphs) and the text is spread. Measured with Inter loaded on a 140-character
+ * sample of the screens' own wording and figures: letter-spacing 0.10em makes it 1.21 times as wide as plain
+ * Inter, where Verdana measures 1.09 and DejaVu Sans, the usual Linux fallback, is about 1.10. Word spacing
+ * adds a little more. Nothing that fits here depends on which font a visitor's machine supplies.
+ */
+export const STRETCH = "* { letter-spacing: 0.1em !important; word-spacing: 0.1em !important; }";

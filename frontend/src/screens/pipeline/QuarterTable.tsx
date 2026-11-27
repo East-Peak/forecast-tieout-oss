@@ -3,7 +3,7 @@ import { Bound, useBindingContext } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
 import { Badge, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { STACK } from "../../components/workbook/stack";
+import { STACK_LG } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 /** The requirement, quarter by quarter, and the plain sentences for why a quarter is too late. A quarter opens to the team's record. */
@@ -28,8 +28,8 @@ export function QuarterTable() {
         title="Required against expected, quarter by quarter"
         subtitle="The extra pipeline that must be created, spread evenly from tomorrow to the quarter's end, so that the quarter meets its target. Yield is the cents of each created dollar that book inside the quarter. 'Before this quarter's extra pipeline' is what the quarter books from the deals already open and the pipeline the model expects to be created, counting what earlier quarters were assigned and leaving out only this quarter's own extra."
       />
-      <Table className={STACK.table}>
-        <TableHead className={STACK.head}>
+      <Table className={STACK_LG.table}>
+        <TableHead className={STACK_LG.head}>
           <TableRow>
             <TableHeaderCell>Quarter</TableHeaderCell>
             <TableHeaderCell className="text-right">Target</TableHeaderCell>
@@ -40,14 +40,14 @@ export function QuarterTable() {
             <TableHeaderCell className="text-right">Yield per dollar</TableHeaderCell>
           </TableRow>
         </TableHead>
-        <TableBody className={STACK.body}>
+        <TableBody className={STACK_LG.body}>
           {required.quarters.map((q, i) => {
             const row = `${ROWS.quarters}/${i}`;
             const expanded = open.has(i);
             return (
               <Fragment key={i}>
-                <TableRow className={STACK.row} data-testid="requirement-row">
-                  <TableCell className={`${STACK.title} sm:whitespace-nowrap`}>
+                <TableRow className={STACK_LG.row} data-testid="requirement-row">
+                  <TableCell className={`${STACK_LG.title} lg:whitespace-nowrap`}>
                     <button
                       type="button"
                       aria-expanded={expanded}
@@ -60,7 +60,7 @@ export function QuarterTable() {
                     <Bound binding={B.qName} row={row} />
                     {q.in_fiscal_year ? null : <span className="ml-1 text-xs font-normal text-slate-500">(next fiscal year)</span>}
                     <Badge size="xs" color="slate" className="ml-2 align-middle"><Bound binding={B.qStatus} row={row} /></Badge>
-                    <div className="mt-1 text-xs font-normal text-slate-600 sm:whitespace-normal">
+                    <div className="mt-1 text-xs font-normal text-slate-600 lg:whitespace-normal">
                       <Badge size="xs" color={q.outcome === "feasible" ? "green" : q.outcome === "already covered" ? "slate" : "amber"}>
                         <Bound binding={B.qOutcome} row={row} />
                       </Badge>
@@ -73,15 +73,15 @@ export function QuarterTable() {
                       ) : null}
                     </div>
                   </TableCell>
-                  <TableCell className={STACK.cell} data-label="Target"><Bound binding={B.qTarget} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Booked so far"><Bound binding={B.qActual} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Before this quarter's extra pipeline"><Bound binding={B.qWithout} row={row} /></TableCell>
-                  <TableCell className={`${STACK.cell} font-medium`} data-label="Extra required"><Bound binding={requiredBinding(q.outcome)} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Expected to be created"><Bound binding={B.qExpected} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Yield per dollar"><Bound binding={B.qYield} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Target"><Bound binding={B.qTarget} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Booked so far"><Bound binding={B.qActual} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Before this quarter's extra pipeline"><Bound binding={B.qWithout} row={row} /></TableCell>
+                  <TableCell className={`${STACK_LG.cell} font-medium`} data-label="Extra required"><Bound binding={requiredBinding(q.outcome)} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Expected to be created"><Bound binding={B.qExpected} row={row} /></TableCell>
+                  <TableCell className={STACK_LG.cell} data-label="Yield per dollar"><Bound binding={B.qYield} row={row} /></TableCell>
                 </TableRow>
-                <TableRow className="block border-b border-slate-100 pb-2 sm:table-row" data-testid="requirement-note">
-                  <TableCell colSpan={7} className="block px-0 pb-2 pt-0 text-xs text-slate-600 sm:table-cell sm:px-3">
+                <TableRow className="block border-b border-slate-100 pb-2 lg:table-row" data-testid="requirement-note">
+                  <TableCell colSpan={7} className="block px-0 pb-2 pt-0 text-xs text-slate-600 lg:table-cell lg:px-3">
                     <Bound binding={B.qSurplus} row={row} />
                     {q.too_late.applies ? (
                       <div className="mt-2 rounded-ft border border-amber-200 bg-amber-50/70 px-3 py-2 text-amber-900" data-testid="too-late">
@@ -102,8 +102,8 @@ export function QuarterTable() {
                   </TableCell>
                 </TableRow>
                 {expanded ? (
-                  <TableRow className="block bg-slate-50 sm:table-row" data-testid="requirement-detail">
-                    <TableCell colSpan={7} className="block px-3 py-2 text-xs leading-5 text-slate-600 sm:table-cell">
+                  <TableRow className="block bg-slate-50 lg:table-row" data-testid="requirement-detail">
+                    <TableCell colSpan={7} className="block px-3 py-2 text-xs leading-5 text-slate-600 lg:table-cell">
                       Everything created in the span: <Bound binding={B.qTotal} row={row} />: what the model expects, what earlier quarters were
                       assigned (<Bound binding={B.qEarlier} row={row} />) and this quarter's own requirement. The cap left before this
                       quarter: <Bound binding={B.qCapLeft} row={row} />.

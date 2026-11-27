@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { month, quantity, usdShort } from "../src/screens/__tests__/independent";
-import { BAD_TEXT, COMPANIES, collectBrowserIssues, unboundDigits } from "./support";
+import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } from "./support";
 
 /**
  * Browser smoke for the screens beyond Forecast: Capacity, Pipeline, Plan and Trust for every company, as
@@ -172,18 +172,16 @@ test.describe("at phone width, with device emulation @smoke", () => {
       "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
   });
 
-  // No font is relied on: the page must fit as shipped, and again with a deliberately wide fallback face
-  // and extra letter spacing, so whether a web font has loaded can never decide the result.
-  const FONTS = {
-    "as shipped": "",
-    "a wide fallback font": `* { font-family: Verdana, "DejaVu Sans", sans-serif !important; letter-spacing: 0.04em !important; }`,
-  } as const;
+  // The page must fit as shipped, and again with the text spread well past what any fallback font would
+  // need (see STRETCH), so no font's metrics can decide the result.
+  const FONTS = { "as shipped": "", "stretched text": STRETCH } as const;
   for (const [fontName, css] of Object.entries(FONTS)) {
     for (const company of COMPANIES) {
       for (const screen of ALL_SCREENS) {
         test(`${screen}: ${company} does not scroll sideways in ${fontName}, opened or closed @smoke`, async ({ page }) => {
           const issues = collectBrowserIssues(page);
           await open(page, screen, company, "demo-plan");
+          await page.evaluate(() => document.fonts.ready);
           if (css) await page.addStyleTag({ content: css });
           const sideways = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
           expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
@@ -205,20 +203,26 @@ test.describe("at phone width, with device emulation @smoke", () => {
   }
 });
 
-test.describe("at tablet widths, with a wide fallback font @smoke", () => {
+test.describe("at tablet widths, with stretched text @smoke", () => {
   for (const width of [768, 1024]) {
     test.describe(`${width} wide`, () => {
       test.use({ viewport: { width, height: 900 } });
       for (const company of COMPANIES) {
-        for (const screen of ["forecast", "trust"] as const) {
-          test(`${screen}: ${company} does not scroll sideways @smoke`, async ({ page }) => {
+        for (const screen of ALL_SCREENS) {
+          test(`${screen}: ${company} does not scroll sideways, opened or closed @smoke`, async ({ page }) => {
             await open(page, screen, company, "demo-plan");
-            await page.addStyleTag({ content: `* { font-family: Verdana, "DejaVu Sans", sans-serif !important; letter-spacing: 0.04em !important; }` });
+            await page.evaluate(() => document.fonts.ready);
+            await page.addStyleTag({ content: STRETCH });
+            const sideways = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+            expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
             await openAll(page);
-            const sideways = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-            expect(sideways, "the page does not scroll sideways").toBeLessThanOrEqual(0);
-            const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => el.scrollWidth > el.clientWidth + 1).length);
-            expect(scrolling, "no table scrolls sideways inside its card").toBe(0);
+            expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
+            const scrolling = await page.evaluate(() =>
+              Array.from(document.querySelectorAll(".overflow-x-auto"))
+                .filter((el) => el.scrollWidth > el.clientWidth + 1)
+                .map((el) => `${el.tagName}: ${(el.textContent ?? "").slice(0, 50)}`),
+            );
+            expect(scrolling, "no table scrolls sideways inside its card").toEqual([]);
           });
         }
       }
