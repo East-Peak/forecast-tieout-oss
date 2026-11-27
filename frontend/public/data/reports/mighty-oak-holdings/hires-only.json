@@ -989,15 +989,19 @@
         "next twelve months": {
           "basis": {
             "extrapolated": true,
-            "extrapolation_reason": "longer than six months, so it uses the six-month factors",
+            "extrapolated_because": "longer_than_six_months",
             "factor_horizon_months": 6,
             "floored_at_zero_80": false,
             "floored_at_zero_95": false,
             "held": 0,
-            "scored": 1
+            "scored": 1,
+            "stretched_side": "lower",
+            "window_end": "2027-08-31",
+            "window_start": "2026-08-31"
           },
-          "label80": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: longer than six months, so it uses the six-month factors",
-          "label95": "stretched, not separately tested",
+          "label95": "Stretched the same way; not separately tested",
+          "label_full": "Stretched by the model's own past misses, using what six-month forecasts needed. Evidence at this length is thin: 1 past six-month forecast could be scored, and the stretched range did not hold it. This window (Aug 31, 2026 to Aug 31, 2027) is longer than six months, so it uses the six-month factors.",
+          "label_short": "Stretched on the low side by past misses",
           "mean": "84987971.80",
           "median": "83620370.50",
           "range80": [
@@ -1008,20 +1012,24 @@
             "21792670.02",
             "120188666.22"
           ],
-          "status": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: longer than six months, so it uses the six-month factors (the simulated range alone held 0 of 1)"
+          "status": "Stretched by the model's own past misses, using what six-month forecasts needed. Evidence at this length is thin: 1 past six-month forecast could be scored, and the stretched range did not hold it. This window (Aug 31, 2026 to Aug 31, 2027) is longer than six months, so it uses the six-month factors."
         },
         "rest of fiscal year": {
           "basis": {
             "extrapolated": true,
-            "extrapolation_reason": "it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+            "extrapolated_because": "not_the_tested_shape",
             "factor_horizon_months": 6,
             "floored_at_zero_80": false,
             "floored_at_zero_95": true,
             "held": 0,
-            "scored": 1
+            "scored": 1,
+            "stretched_side": "lower",
+            "window_end": "2027-01-31",
+            "window_start": "2026-08-31"
           },
-          "label80": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
-          "label95": "stretched, not separately tested; lower edge floored at zero",
+          "label95": "Stretched the same way; not separately tested; floored at zero",
+          "label_full": "Stretched by the model's own past misses, using what six-month forecasts needed. Evidence at this length is thin: 1 past six-month forecast could be scored, and the stretched range did not hold it. This window (Aug 31, 2026 to Jan 31, 2027) is not exactly the six-month forecast that was tested.",
+          "label_short": "Stretched on the low side by past misses",
           "mean": "33404158.88",
           "median": "32679736.00",
           "range80": [
@@ -1032,7 +1040,7 @@
             "0.00",
             "53567375.62"
           ],
-          "status": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead (the simulated range alone held 0 of 1)"
+          "status": "Stretched by the model's own past misses, using what six-month forecasts needed. Evidence at this length is thin: 1 past six-month forecast could be scored, and the stretched range did not hold it. This window (Aug 31, 2026 to Jan 31, 2027) is not exactly the six-month forecast that was tested."
         }
       },
       "status": "1-month back-tested (80% range held 69% of 16 folds); 3-month too narrow (80% range held 36% of 14 folds); 6-month too narrow (80% range held 9% of 11 folds)"
@@ -1234,16 +1242,19 @@
       ],
       "forecast_rest_of_year": "33191901.81",
       "gap": "23360339.19",
-      "range80_label": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
-      "range95_label": "stretched, not separately tested; lower edge floored at zero",
+      "label95": "Stretched the same way; not separately tested; floored at zero",
+      "label_short": "Stretched on the low side by past misses",
       "range_basis": {
         "extrapolated": true,
-        "extrapolation_reason": "it covers 2026-08-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+        "extrapolated_because": "not_the_tested_shape",
         "factor_horizon_months": 6,
         "floored_at_zero_80": false,
         "floored_at_zero_95": true,
         "held": 0,
-        "scored": 1
+        "scored": 1,
+        "stretched_side": "lower",
+        "window_end": "2027-01-31",
+        "window_start": "2026-08-31"
       },
       "target": "84000000"
     },
@@ -1323,8 +1334,8 @@
         ],
         "forecast": "0.00",
         "gap": "4160019.00",
+        "label_short": "closed: nothing left to range over",
         "quarter": "Q1FY26",
-        "range80_label": "closed: nothing left to range over",
         "range_basis": null,
         "status": "closed",
         "target": "17000000"
@@ -1338,8 +1349,8 @@
         ],
         "forecast": "0.00",
         "gap": "6833001.00",
+        "label_short": "closed: nothing left to range over",
         "quarter": "Q2FY26",
-        "range80_label": "closed: nothing left to range over",
         "range_basis": null,
         "status": "closed",
         "target": "19000000"
@@ -1353,16 +1364,19 @@
         ],
         "forecast": "12799165.98",
         "gap": "6760055.02",
+        "label_short": "Stretched on the low side by past misses",
         "quarter": "Q3FY26",
-        "range80_label": "stretched by past misses with the three-month factors, which held 7 of 7 past three-month forecasts; extrapolated: it covers 2026-08-31 to 2026-10-31, not the cumulative forecast from the as-of date that was tested three months ahead",
         "range_basis": {
           "extrapolated": true,
-          "extrapolation_reason": "it covers 2026-08-31 to 2026-10-31, not the cumulative forecast from the as-of date that was tested three months ahead",
+          "extrapolated_because": "not_the_tested_shape",
           "factor_horizon_months": 3,
           "floored_at_zero_80": false,
           "floored_at_zero_95": false,
           "held": 7,
-          "scored": 7
+          "scored": 7,
+          "stretched_side": "lower",
+          "window_end": "2026-10-31",
+          "window_start": "2026-08-31"
         },
         "status": "in progress",
         "target": "22000000"
@@ -1376,16 +1390,19 @@
         ],
         "forecast": "20392735.83",
         "gap": "5607264.17",
+        "label_short": "Stretched on the low side by past misses; floored at zero",
         "quarter": "Q4FY26",
-        "range80_label": "stretched by past misses with the six-month factors, which held 0 of 1 past six-month forecasts; extrapolated: it covers 2026-10-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead; lower edge floored at zero",
         "range_basis": {
           "extrapolated": true,
-          "extrapolation_reason": "it covers 2026-10-31 to 2027-01-31, not the cumulative forecast from the as-of date that was tested six months ahead",
+          "extrapolated_because": "not_the_tested_shape",
           "factor_horizon_months": 6,
           "floored_at_zero_80": true,
           "floored_at_zero_95": true,
           "held": 0,
-          "scored": 1
+          "scored": 1,
+          "stretched_side": "lower",
+          "window_end": "2027-01-31",
+          "window_start": "2026-10-31"
         },
         "status": "not started",
         "target": "26000000"
@@ -7308,7 +7325,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.3.0",
+  "schema_version": "2.4.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

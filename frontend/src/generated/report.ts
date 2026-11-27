@@ -252,8 +252,9 @@ export type TieoutReport = {
           horizons: {
             "next twelve months": {
               basis: RangeBasis | null;
-              label80: Text;
               label95: Text;
+              label_full: Text;
+              label_short: Text;
               mean: Money;
               median: Money;
               range80: MoneyRange;
@@ -262,8 +263,9 @@ export type TieoutReport = {
             };
             "rest of fiscal year": {
               basis: RangeBasis | null;
-              label80: Text;
               label95: Text;
+              label_full: Text;
+              label_short: Text;
               mean: Money;
               median: Money;
               range80: MoneyRange;
@@ -420,8 +422,8 @@ export type TieoutReport = {
           expected_range95: MoneyRange;
           forecast_rest_of_year: Money;
           gap: Money;
-          range80_label: Text;
-          range95_label: Text;
+          label95: Text;
+          label_short: Text;
           range_basis: RangeBasis | null;
           target: Decimal;
         }
@@ -546,8 +548,8 @@ export type TieoutReport = {
           expected_range80: MoneyRange;
           forecast: Money;
           gap: Money;
+          label_short: Text;
           quarter: Quarter;
-          range80_label: Text;
           range_basis: RangeBasis | null;
           status: "closed" | "in progress" | "not started";
           target: Decimal;
@@ -1073,7 +1075,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.3.0";
+  schema_version: "2.4.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];
@@ -1105,12 +1107,15 @@ export type ComparisonOutcome = "model lower" | "baseline lower" | "tie";
 
 export interface RangeBasis {
   extrapolated: boolean;
-  extrapolation_reason: Text | null;
+  extrapolated_because: ("longer_than_six_months" | "not_the_tested_shape") | null;
   factor_horizon_months: 1 | 3 | 6;
   floored_at_zero_80: boolean;
   floored_at_zero_95: boolean;
   held: number;
   scored: number;
+  stretched_side: "lower" | "upper" | "both" | "neither";
+  window_end: Date;
+  window_start: Date;
 }
 export interface Check {
   detail: Text;

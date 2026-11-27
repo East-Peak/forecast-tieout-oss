@@ -989,8 +989,9 @@
       "horizons": {
         "next twelve months": {
           "basis": null,
-          "label80": "unvalidated",
           "label95": "simulated, not separately tested",
+          "label_full": "unvalidated: twelve-month ranges are not back-tested (the back-test scores 1, 3, 6 months)",
+          "label_short": "unvalidated",
           "mean": "5612923.93",
           "median": "5585774.50",
           "range80": [
@@ -1005,8 +1006,9 @@
         },
         "rest of fiscal year": {
           "basis": null,
-          "label80": "unvalidated",
           "label95": "simulated, not separately tested",
+          "label_full": "unvalidated: the ranges include the capacity term, so the back-test coverage is shown as a statistic and not as a validation",
+          "label_short": "unvalidated",
           "mean": "2190458.63",
           "median": "2154154.00",
           "range80": [
@@ -1219,8 +1221,8 @@
       ],
       "forecast_rest_of_year": "2188780.84",
       "gap": "1880075.16",
-      "range80_label": "simulated",
-      "range95_label": "simulated, not separately tested",
+      "label95": "simulated, not separately tested",
+      "label_short": "simulated",
       "range_basis": null,
       "target": "8000000"
     },
@@ -1300,8 +1302,8 @@
         ],
         "forecast": "0.00",
         "gap": "643356.00",
+        "label_short": "closed: nothing left to range over",
         "quarter": "Q1FY26",
-        "range80_label": "closed: nothing left to range over",
         "range_basis": null,
         "status": "closed",
         "target": "1600000"
@@ -1315,8 +1317,8 @@
         ],
         "forecast": "0.00",
         "gap": "-950183.00",
+        "label_short": "closed: nothing left to range over",
         "quarter": "Q2FY26",
-        "range80_label": "closed: nothing left to range over",
         "range_basis": null,
         "status": "closed",
         "target": "1700000"
@@ -1330,8 +1332,8 @@
         ],
         "forecast": "610360.66",
         "gap": "1165322.34",
+        "label_short": "simulated",
         "quarter": "Q3FY26",
-        "range80_label": "simulated",
         "range_basis": null,
         "status": "in progress",
         "target": "2100000"
@@ -1345,8 +1347,8 @@
         ],
         "forecast": "1578420.18",
         "gap": "1021579.82",
+        "label_short": "simulated",
         "quarter": "Q4FY26",
-        "range80_label": "simulated",
         "range_basis": null,
         "status": "not started",
         "target": "2600000"
@@ -3116,7 +3118,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.3.0",
+  "schema_version": "2.4.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

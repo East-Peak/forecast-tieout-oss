@@ -174,6 +174,9 @@ Fitted-model ranges (1-month unvalidated (the coverage statistics read back-test
 
 Months: simulated; see how the ranges were checked.
 
+- rest of fiscal year: unvalidated: the ranges include the capacity term, so the back-test coverage is shown as a statistic and not as a validation
+- next twelve months: unvalidated: twelve-month ranges are not back-tested (the back-test scores 1, 3, 6 months)
+
 | Month | Median | 80% range | 95% range |
 |---|---|---|---|
 | 2026-09 | $5,544,060 | $3,388,877 to $7,850,931 | $2,461,072 to $9,023,987 |
