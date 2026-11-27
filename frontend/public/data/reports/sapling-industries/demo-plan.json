@@ -67,6 +67,60 @@
   },
   "backtest": {
     "candidates": {
+      "ranges": {
+        "decision": "not adopted",
+        "horizons": [
+          {
+            "coverage_simulated": 1.0,
+            "coverage_stretched": 1.0,
+            "eligible_folds": 16,
+            "factors_learned": true,
+            "horizon_months": 1,
+            "inside_simulated": 11,
+            "inside_stretched": 11,
+            "lower_factor": "1.0000",
+            "median_width80_simulated": "4945587.30",
+            "median_width80_stretched": "5401220.70",
+            "scored_folds": 11,
+            "upper_factor": "1.0000"
+          },
+          {
+            "coverage_simulated": 0.7143,
+            "coverage_stretched": 0.7143,
+            "eligible_folds": 14,
+            "factors_learned": true,
+            "horizon_months": 3,
+            "inside_simulated": 5,
+            "inside_stretched": 5,
+            "lower_factor": "1.0658",
+            "median_width80_simulated": "8153597.40",
+            "median_width80_stretched": "8153597.40",
+            "scored_folds": 7,
+            "upper_factor": "1.0000"
+          },
+          {
+            "coverage_simulated": 1.0,
+            "coverage_stretched": 1.0,
+            "eligible_folds": 11,
+            "factors_learned": true,
+            "horizon_months": 6,
+            "inside_simulated": 1,
+            "inside_stretched": 1,
+            "lower_factor": "1.0000",
+            "median_width80_simulated": "11943783.00",
+            "median_width80_stretched": "11943783.00",
+            "scored_folds": 1,
+            "upper_factor": "1.0000"
+          }
+        ],
+        "pooled": {
+          "coverage_simulated": 0.8889,
+          "coverage_stretched": 0.8889,
+          "scored_folds": 18
+        },
+        "reason": "pooled over 1 and 3 months, 18 scored folds: simulated 16 held (89%), stretched 16 held (89%); the stretched coverage is not closer to 80%",
+        "rule": "adopted if there are at least 6 scored folds at 1 and at 3 months, pooled 80% coverage over 1 and 3 months is closer to 80% than the simulated range's on the same folds, and no horizon (1, 3 or 6 months) moves more than 10 points further from 80%; each side's factor is the smallest, never below 1, that would have put at least 90% of the eligible past folds inside on that side (a fold is eligible once its whole horizon has ended; at least 5 are needed)"
+      },
       "recency": {
         "adopted": true,
         "candidate": "cumulative incidence",
@@ -714,6 +768,7 @@
           ]
         }
       },
+      "by_window_label": "simulated; see how the ranges were checked",
       "cells": [
         {
           "coverage80": 0.9375,
@@ -745,6 +800,8 @@
       ],
       "horizons": {
         "next twelve months": {
+          "label80": "unvalidated",
+          "label95": "simulated, not separately tested",
           "mean": "76717596.17",
           "median": "76393742.50",
           "range80": [
@@ -758,6 +815,8 @@
           "status": "unvalidated: twelve-month ranges are not back-tested (the back-test scores 1, 3, 6 months)"
         },
         "rest of fiscal year": {
+          "label80": "unvalidated",
+          "label95": "simulated, not separately tested",
           "mean": "28361692.02",
           "median": "28122170.50",
           "range80": [
@@ -970,6 +1029,8 @@
       ],
       "forecast_rest_of_year": "28389964.29",
       "gap": "1910275.71",
+      "range80_label": "simulated",
+      "range95_label": "simulated, not separately tested",
       "target": "60000000"
     },
     "forecast_method": "fitted model (expected value)",
@@ -1049,6 +1110,7 @@
         "forecast": "0.00",
         "gap": "1383335.00",
         "quarter": "Q1FY26",
+        "range80_label": "closed: nothing left to range over",
         "status": "closed",
         "target": "10000000"
       },
@@ -1062,6 +1124,7 @@
         "forecast": "0.00",
         "gap": "-554281.00",
         "quarter": "Q2FY26",
+        "range80_label": "closed: nothing left to range over",
         "status": "closed",
         "target": "13000000"
       },
@@ -1075,6 +1138,7 @@
         "forecast": "10492482.76",
         "gap": "-1021296.76",
         "quarter": "Q3FY26",
+        "range80_label": "simulated",
         "status": "in progress",
         "target": "17000000"
       },
@@ -1088,6 +1152,7 @@
         "forecast": "17897481.53",
         "gap": "2102518.47",
         "quarter": "Q4FY26",
+        "range80_label": "simulated",
         "status": "not started",
         "target": "20000000"
       }
@@ -3577,7 +3642,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.1.0",
+  "schema_version": "2.2.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

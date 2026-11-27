@@ -83,6 +83,64 @@ export type TieoutReport = {
       };
   backtest: {
     candidates: {
+      ranges: {
+        decision: "adopted" | "not adopted" | "not enough history";
+        /**
+         * @minItems 3
+         * @maxItems 3
+         */
+        horizons: [
+          {
+            coverage_simulated: number | null;
+            coverage_stretched: number | null;
+            eligible_folds: number;
+            factors_learned: boolean;
+            horizon_months: 1 | 3 | 6;
+            inside_simulated: number;
+            inside_stretched: number;
+            lower_factor: Decimal | null;
+            median_width80_simulated: Money | null;
+            median_width80_stretched: Money | null;
+            scored_folds: number;
+            upper_factor: Decimal | null;
+          },
+          {
+            coverage_simulated: number | null;
+            coverage_stretched: number | null;
+            eligible_folds: number;
+            factors_learned: boolean;
+            horizon_months: 1 | 3 | 6;
+            inside_simulated: number;
+            inside_stretched: number;
+            lower_factor: Decimal | null;
+            median_width80_simulated: Money | null;
+            median_width80_stretched: Money | null;
+            scored_folds: number;
+            upper_factor: Decimal | null;
+          },
+          {
+            coverage_simulated: number | null;
+            coverage_stretched: number | null;
+            eligible_folds: number;
+            factors_learned: boolean;
+            horizon_months: 1 | 3 | 6;
+            inside_simulated: number;
+            inside_stretched: number;
+            lower_factor: Decimal | null;
+            median_width80_simulated: Money | null;
+            median_width80_stretched: Money | null;
+            scored_folds: number;
+            upper_factor: Decimal | null;
+          }
+        ];
+        pooled: {
+          coverage_simulated: number;
+          coverage_stretched: number;
+          scored_folds: number;
+        } | null;
+        reason: Text;
+        rule: Text;
+      };
       recency: {
         adopted: boolean;
         candidate: Text;
@@ -143,6 +201,7 @@ export type TieoutReport = {
                 }
               | undefined;
           };
+          by_window_label: Text;
           cells: {
             coverage80: number | null;
             coverage95: number | null;
@@ -154,6 +213,8 @@ export type TieoutReport = {
           }[];
           horizons: {
             "next twelve months": {
+              label80: Text;
+              label95: Text;
               mean: Money;
               median: Money;
               range80: MoneyRange;
@@ -161,6 +222,8 @@ export type TieoutReport = {
               status: Text;
             };
             "rest of fiscal year": {
+              label80: Text;
+              label95: Text;
               mean: Money;
               median: Money;
               range80: MoneyRange;
@@ -172,6 +235,7 @@ export type TieoutReport = {
         }
       | {
           by_window: {};
+          by_window_label: Text;
           cells: {
             coverage80: number | null;
             coverage95: number | null;
@@ -316,6 +380,8 @@ export type TieoutReport = {
           expected_range95: MoneyRange;
           forecast_rest_of_year: Money;
           gap: Money;
+          range80_label: Text;
+          range95_label: Text;
           target: Decimal;
         }
       | {
@@ -440,6 +506,7 @@ export type TieoutReport = {
           forecast: Money;
           gap: Money;
           quarter: Quarter;
+          range80_label: Text;
           status: "closed" | "in progress" | "not started";
           target: Decimal;
         }
@@ -964,7 +1031,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.1.0";
+  schema_version: "2.2.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];

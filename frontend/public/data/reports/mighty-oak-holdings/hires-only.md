@@ -742,22 +742,24 @@ Two windows:
 
 Fitted-model ranges (1-month back-tested (80% range held 69% of 16 folds); 3-month too narrow (80% range held 36% of 14 folds); 6-month too narrow (80% range held 9% of 11 folds)):
 
+Months: stretched by past misses; each month by the factors of the horizon it falls in, and months beyond six use the six-month factors.
+
 | Month | Median | 80% range | 95% range |
 |---|---|---|---|
-| 2026-09 | $6,666,620 | $3,546,189 to $13,988,174 | $2,057,444 to $17,400,307 |
-| 2026-10 | $4,140,650 | $1,083,731 to $11,152,674 | $323,466 to $14,975,942 |
-| 2026-11 | $4,979,140 | $1,466,734 to $12,531,748 | $467,118 to $17,789,957 |
-| 2026-12 | $6,914,100 | $2,209,397 to $16,544,945 | $824,908 to $22,752,950 |
-| 2027-01 | $4,898,006 | $1,194,762 to $12,297,307 | $335,356 to $18,217,536 |
-| 2027-02 | $5,170,530 | $1,213,246 to $12,881,535 | $184,862 to $20,214,494 |
-| 2027-03 | $6,520,718 | $1,831,773 to $14,354,789 | $578,704 to $20,727,478 |
-| 2027-04 | $6,529,105 | $1,865,330 to $14,481,491 | $557,844 to $21,640,587 |
-| 2027-05 | $6,801,498 | $1,746,680 to $15,625,326 | $371,172 to $22,559,945 |
-| 2027-06 | $6,510,640 | $1,725,952 to $16,244,173 | $285,234 to $23,383,606 |
-| 2027-07 | $6,170,153 | $1,256,517 to $14,248,527 | $0 to $20,245,818 |
-| 2027-08 | $5,795,046 | $1,371,903 to $14,270,231 | $127,269 to $20,683,595 |
-| rest of fiscal year (too narrow) | $32,679,736 | $22,300,648 to $45,242,810 | $17,990,874 to $53,567,376 |
-| next twelve months (unvalidated) | $83,620,370 | $64,754,157 to $107,009,984 | $56,691,892 to $120,188,666 |
+| 2026-09 | $6,666,620 | $1,794,616 to $13,988,174 | $0 to $17,400,307 |
+| 2026-10 | $4,140,650 | $0 to $11,152,674 | $0 to $14,975,942 |
+| 2026-11 | $4,979,140 | $0 to $12,531,748 | $0 to $17,789,957 |
+| 2026-12 | $6,914,100 | $0 to $16,544,945 | $0 to $22,752,950 |
+| 2027-01 | $4,898,006 | $0 to $12,297,307 | $0 to $18,217,536 |
+| 2027-02 | $5,170,530 | $0 to $12,881,535 | $0 to $20,214,494 |
+| 2027-03 | $6,520,718 | $0 to $14,354,789 | $0 to $20,727,478 |
+| 2027-04 | $6,529,105 | $0 to $14,481,491 | $0 to $21,640,587 |
+| 2027-05 | $6,801,498 | $0 to $15,625,326 | $0 to $22,559,945 |
+| 2027-06 | $6,510,640 | $0 to $16,244,173 | $0 to $23,383,606 |
+| 2027-07 | $6,170,153 | $0 to $14,248,527 | $0 to $20,245,818 |
+| 2027-08 | $5,795,046 | $0 to $14,270,231 | $0 to $20,683,595 |
+| rest of fiscal year (stretched by past misses; held 0 of 1 past forecasts at this horizon; 95%: stretched, not separately tested) | $32,679,736 | $8,849,384 to $45,242,810 | $0 to $53,567,376 |
+| next twelve months (stretched by past misses with the six-month factors, because this range is longer than six months; held 0 of 1 past six-month forecasts; 95%: stretched, not separately tested) | $83,620,370 | $40,303,603 to $107,009,984 | $21,792,670 to $120,188,666 |
 
 Assumptions:
 
@@ -839,10 +841,10 @@ Forecast: fitted model (expected value). Gap = target - actual - forecast (posit
 |---|---|---|---|---|---|---|---|
 | Q1FY26 | closed | $17,000,000 | $12,839,981 | $0 | $12,839,981 | $4,160,019 | $12,839,981 to $12,839,981 |
 | Q2FY26 | closed | $19,000,000 | $12,166,999 | $0 | $12,166,999 | $6,833,001 | $12,166,999 to $12,166,999 |
-| Q3FY26 | in progress | $22,000,000 | $2,440,779 | $12,799,166 | $15,239,945 | $6,760,055 | $9,531,658 to $22,496,550 |
-| Q4FY26 | not started | $26,000,000 | $0 | $20,392,736 | $20,392,736 | $5,607,264 | $10,598,149 to $32,331,600 |
+| Q3FY26 | in progress | $22,000,000 | $2,440,779 | $12,799,166 | $15,239,945 | $6,760,055 | $6,696,242 to $22,496,550 |
+| Q4FY26 | not started | $26,000,000 | $0 | $20,392,736 | $20,392,736 | $5,607,264 | $0 to $32,331,600 |
 
-Fiscal year: target $84,000,000, actual to date $27,447,759, forecast rest of year $33,191,902, expected **$60,639,661** (80%: $49,748,408 to $72,690,569; 95%: $45,438,633 to $81,015,135), gap **$23,360,339**.
+Fiscal year: target $84,000,000, actual to date $27,447,759, forecast rest of year $33,191,902, expected **$60,639,661** (80%: $36,297,143 to $72,690,569, stretched by past misses; held 0 of 1 past forecasts at this horizon; 95%: $27,447,759 to $81,015,135, stretched, not separately tested), gap **$23,360,339**.
 
 Next twelve months (2026-09 to 2027-08): quarters with a target ending in the window (Q3FY26, Q4FY26, through 2027-01-31): target $48,000,000, actual to date $2,440,779, forecast $33,191,902, gap **$12,367,319**.
 
@@ -878,6 +880,16 @@ Recency candidate (cumulative incidence) against the Goal 1 fit (matured snapsho
 | 3m | 14 | $12,417,199 | $11,625,581 |
 
 **Adopted**: lower mean absolute error at 1 and 3 months (1m: 3,234,094 vs 4,398,197; 3m: 11,625,581 vs 12,417,199). The forecast, rates, ranges and verdict use the cumulative incidence fit.
+
+Ranges stretched by the model's own past misses. Rule: adopted if there are at least 6 scored folds at 1 and at 3 months, pooled 80% coverage over 1 and 3 months is closer to 80% than the simulated range's on the same folds, and no horizon (1, 3 or 6 months) moves more than 10 points further from 80%; each side's factor is the smallest, never below 1, that would have put at least 90% of the eligible past folds inside on that side (a fold is eligible once its whole horizon has ended; at least 5 are needed).
+
+| Horizon | Eligible folds | Scored folds | Simulated 80% coverage | Stretched 80% coverage | Median 80% width, simulated | Median 80% width, stretched | Lower factor | Upper factor |
+|---|---|---|---|---|---|---|---|---|
+| 1 mo | 16 | 11 | 6 of 11 (55%) | 9 of 11 (82%) | $11,341,863 | $12,906,370 | 1.5613 | 1.0000 |
+| 3 mo | 14 | 7 | 1 of 7 (14%) | 7 of 7 (100%) | $22,933,518 | $32,210,689 | 1.6355 | 1.0000 |
+| 6 mo | 11 | 1 | 0 of 1 (0%) | 0 of 1 (0%) | $33,875,732 | $54,871,788 | 2.2960 | 1.0000 |
+
+**Adopted**: pooled over 1 and 3 months, 18 scored folds: simulated 7 held (39%), stretched 16 held (89%); the stretched coverage is closer to 80% and no horizon is more than 10 points further.
 
 ## 7. Verdicts
 

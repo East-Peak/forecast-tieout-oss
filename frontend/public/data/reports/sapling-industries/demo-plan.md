@@ -172,6 +172,8 @@ Two windows:
 
 Fitted-model ranges (1-month unvalidated (the coverage statistics read back-tested) (80% range held 94% of 16 folds); 3-month unvalidated (the coverage statistics read back-tested) (80% range held 86% of 14 folds); 6-month unvalidated (the coverage statistics read back-tested) (80% range held 100% of 11 folds)):
 
+Months: simulated; see how the ranges were checked.
+
 | Month | Median | 80% range | 95% range |
 |---|---|---|---|
 | 2026-09 | $5,544,060 | $3,388,877 to $7,850,931 | $2,461,072 to $9,023,987 |
@@ -186,8 +188,8 @@ Fitted-model ranges (1-month unvalidated (the coverage statistics read back-test
 | 2027-06 | $6,472,968 | $3,213,156 to $10,511,318 | $2,190,545 to $13,232,718 |
 | 2027-07 | $7,126,705 | $3,902,520 to $11,396,015 | $2,734,483 to $14,173,094 |
 | 2027-08 | $7,181,820 | $3,935,230 to $11,694,179 | $2,529,702 to $14,474,253 |
-| rest of fiscal year (unvalidated) | $28,122,170 | $22,636,891 to $34,387,378 | $20,285,726 to $38,339,258 |
-| next twelve months (unvalidated) | $76,393,742 | $65,680,445 to $88,236,076 | $60,433,871 to $94,448,822 |
+| rest of fiscal year (unvalidated; 95%: simulated, not separately tested) | $28,122,170 | $22,636,891 to $34,387,378 | $20,285,726 to $38,339,258 |
+| next twelve months (unvalidated; 95%: simulated, not separately tested) | $76,393,742 | $65,680,445 to $88,236,076 | $60,433,871 to $94,448,822 |
 
 Assumptions:
 
@@ -272,7 +274,7 @@ Forecast: fitted model (expected value). Gap = target - actual - forecast (posit
 | Q3FY26 | in progress | $17,000,000 | $7,528,814 | $10,492,483 | $18,021,297 | -$1,021,297 | $15,267,195 to $21,014,585 |
 | Q4FY26 | not started | $20,000,000 | $0 | $17,897,482 | $17,897,482 | $2,102,518 | $12,461,322 to $23,521,983 |
 
-Fiscal year: target $60,000,000, actual to date $29,699,760, forecast rest of year $28,389,964, expected **$58,089,724** (80%: $52,336,651 to $64,087,138; 95%: $49,985,486 to $68,039,018), gap **$1,910,276**.
+Fiscal year: target $60,000,000, actual to date $29,699,760, forecast rest of year $28,389,964, expected **$58,089,724** (80%: $52,336,651 to $64,087,138, simulated; 95%: $49,985,486 to $68,039,018, simulated, not separately tested), gap **$1,910,276**.
 
 Next twelve months (2026-09 to 2027-08): quarters with a target ending in the window (Q3FY26, Q4FY26, through 2027-01-31): target $37,000,000, actual to date $7,528,814, forecast $28,389,964, gap **$1,081,222**.
 
@@ -308,6 +310,16 @@ Recency candidate (cumulative incidence) against the Goal 1 fit (matured snapsho
 | 3m | 14 | $2,261,995 | $1,944,676 |
 
 **Adopted**: lower mean absolute error at 1 and 3 months (1m: 998,999 vs 1,384,619; 3m: 1,944,676 vs 2,261,995). The forecast, rates, ranges and verdict use the cumulative incidence fit.
+
+Ranges stretched by the model's own past misses. Rule: adopted if there are at least 6 scored folds at 1 and at 3 months, pooled 80% coverage over 1 and 3 months is closer to 80% than the simulated range's on the same folds, and no horizon (1, 3 or 6 months) moves more than 10 points further from 80%; each side's factor is the smallest, never below 1, that would have put at least 90% of the eligible past folds inside on that side (a fold is eligible once its whole horizon has ended; at least 5 are needed).
+
+| Horizon | Eligible folds | Scored folds | Simulated 80% coverage | Stretched 80% coverage | Median 80% width, simulated | Median 80% width, stretched | Lower factor | Upper factor |
+|---|---|---|---|---|---|---|---|---|
+| 1 mo | 16 | 11 | 11 of 11 (100%) | 11 of 11 (100%) | $4,945,587 | $5,401,221 | 1.0000 | 1.0000 |
+| 3 mo | 14 | 7 | 5 of 7 (71%) | 5 of 7 (71%) | $8,153,597 | $8,153,597 | 1.0658 | 1.0000 |
+| 6 mo | 11 | 1 | 1 of 1 (100%) | 1 of 1 (100%) | $11,943,783 | $11,943,783 | 1.0000 | 1.0000 |
+
+**Not adopted**: pooled over 1 and 3 months, 18 scored folds: simulated 16 held (89%), stretched 16 held (89%); the stretched coverage is not closer to 80%.
 
 ## 7. Verdicts
 
