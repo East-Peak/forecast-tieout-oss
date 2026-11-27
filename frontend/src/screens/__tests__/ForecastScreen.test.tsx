@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { BindingProvider } from "../../binding/Bound";
 import { ChartTooltip } from "../../binding/ChartKit";
 import { checkBindings, openAll, unboundDigits } from "../../binding/__tests__/harness";
@@ -11,6 +11,12 @@ import { expectations, listFor } from "./forecastExpectations";
 import type { Case } from "./forecastExpectations";
 import * as files from "./files";
 import * as fmt from "./independent";
+
+// recharts draws nothing without a measured box (jsdom has none): its container is given a size, and the as-of line's label then exists
+vi.mock("recharts", async (importOriginal) => {
+  const { withCapture } = await import("./rechartsCapture");
+  return withCapture(await importOriginal<typeof import("recharts")>(), []);
+});
 
 afterEach(cleanup);
 
@@ -82,23 +88,26 @@ describe("Forecast: every binding (with its provenance), every digit", () => {
     ]) expect(ids.has(id), id).toBe(true);
   });
 
-  it("names the baselines for what they are, with no range", () => {
+  it("the monthly chart draws no yardstick: no series and no legend entry, and the verdict card still names them", () => {
     const c = caseOf("sapling-industries", "as-signed");
     const container = mount(c, c.company, c.scenario);
-    expect(container.textContent).toContain("Stage-weighted pipeline (no range)");
-    expect(container.textContent).toContain("Last twelve months' pace (no range)");
+    const chart = container.querySelector("[data-chart='monthly']")!;
+    expect(chart.textContent).not.toMatch(/Stage-weighted|Last twelve months' pace|dotted/);
+    expect(chart.querySelectorAll("[data-testid='chart-legend'] li")).toHaveLength(4);
+    expect(Array.from(chart.querySelectorAll("[data-testid='chart-legend'] li")).map((li) => li.textContent)).toEqual([
+      "Actual bookings", "Expected bookings", "80% range", "95% range",
+    ]);
+    expect(container.querySelector("[data-binding='verdict.better.stage']")).not.toBeNull();
     expect(container.textContent).not.toContain("point forecast");
-    expect(container.textContent).not.toContain("Trailing run-rate");
   });
 
-  it("says under the monthly chart what the two dotted lines are and why the stage-weighted one falls away", () => {
+  it("says under the monthly chart where the yardsticks went and what the ranges are for, in words with no digit", () => {
     const c = caseOf("sapling-industries", "as-signed");
     const container = mount(c, c.company, c.scenario);
     const note = container.querySelector("[data-testid='baseline-note']");
-    expect(note?.textContent).toBe(
-      "The two dotted lines are the simple yardsticks the fitted model is scored against. The stage-weighted line falls away because today's open deals close out first and only a thin flow of new pipeline follows them.",
-    );
+    expect(note?.textContent).toBe("Compare with the stage-weighted pipeline and the last twelve months' pace in the verdict above and on Trust.");
     expect(note?.textContent).not.toMatch(/\d/);
+    expect(container.querySelector("[data-chart='monthly']")!.textContent).toContain("The ranges are for each month's bookings taken alone, not for the twelve months together.");
   });
 });
 
@@ -267,8 +276,10 @@ describe("Forecast: tooltip content and expanded rows are held to the same rule"
       );
       expect(unboundDigits(container, [fmt.month(period)])).toEqual([]);
       const text = (key: string) => container.querySelector(`[data-tooltip-row="${key}"] .font-medium`)?.textContent;
-      expect(text("stage")).toBe(fmt.usdShort((r.forecasts.methods.find((m) => m.method === "stage-weighted pipeline")!.by_window as Record<string, string>)[period]));
-      expect(text("runRate")).toBe(fmt.usdShort((r.forecasts.methods.find((m) => m.method === "trailing run-rate")!.by_window as Record<string, string>)[period]));
+      const spreads = (planned ? (r.plan as { ranges: { by_window: unknown } }).ranges.by_window : r.forecasts.fitted_ranges.by_window) as Record<string, { range80: string[]; range95: string[] }>;
+      const spread = spreads[period];
+      expect(text("band80")).toBe(`${fmt.usdShort(spread.range80[0])} to ${fmt.usdShort(spread.range80[1])}`);
+      expect(text("band95")).toBe(`${fmt.usdShort(spread.range95[0])} to ${fmt.usdShort(spread.range95[1])}`);
       const signed = (fitted.by_window as Record<string, string>)[period];
       expect(text(planned ? "signed" : "fitted")).toBe(fmt.usdShort(signed));
       cleanup();

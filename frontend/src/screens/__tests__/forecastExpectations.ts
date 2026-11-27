@@ -72,6 +72,8 @@ export function expectations({ company, scenario, report: r, index, comparison }
 
   one(B.fiscalYear.id, r.inputs.fiscal_year, 2); // the caption, and the window table
   one(B.asOf.id, fmt.date(r.inputs.as_of));
+  // the as-of line is drawn only where there are forecast months on the chart
+  when(methodOf(r, "fitted model").available, B.asOfMarker.id, () => fmt.date(r.inputs.as_of));
   one(B.measure.id, r.inputs.measure);
   one(B.yearTarget.id, fmt.usdShort(fy.target), 2); // the card, and the window table
   one(B.yearActual.id, fmt.usdShort(fy.actual_to_date));
@@ -124,8 +126,6 @@ export function expectations({ company, scenario, report: r, index, comparison }
   when(fa, B.checkYearStatus.id, () => horizons[REST].status);
   when(fa, B.checkNextStatus.id, () => horizons[TWELVE].status);
   when(!fa, B.fittedUnavailable.id, () => fitted.unavailable_reason);
-  when(!methodOf(r, "stage-weighted pipeline").available, B.stageUnavailable.id, () => methodOf(r, "stage-weighted pipeline").unavailable_reason);
-  when(!methodOf(r, "trailing run-rate").available, B.runRateUnavailable.id, () => methodOf(r, "trailing run-rate").unavailable_reason);
 
   one(B.softwareVerdict.id, r.verdicts.software_correct.verdict);
   one(B.softwareSummary.id, r.verdicts.software_correct.summary);
@@ -224,12 +224,11 @@ export function expectations({ company, scenario, report: r, index, comparison }
 /** What each chart must have been given, from typed accessors (not from the screen's declared paths). */
 export function expectedCharts(r: TieoutReport): { monthly: ExpectedChart; quarters: ExpectedChart } {
   const fitted = methodOf(r, "fitted model");
-  const stage = methodOf(r, "stage-weighted pipeline");
-  const runRate = methodOf(r, "trailing run-rate");
   const plan = fullPlan(r);
   const booked = r.reconciliation.bookings_by_month;
   const windows = r.forecasts.windows;
-  const months = [...new Set([...Object.keys(booked), ...windows])].sort();
+  // with no fitted forecast only the booked months are drawn: the forecast months have no series to stand on
+  const months = [...new Set([...Object.keys(booked), ...(fitted.available ? windows : [])])].sort();
   const num = (v: string | undefined | null) => (v === undefined || v === null ? null : Number(v));
   const pair = (v: readonly [string, string] | undefined | null) => (v ? [Number(v[0]), Number(v[1])] : null);
   type Spread = { range80: [string, string]; range95: [string, string] };
@@ -245,18 +244,14 @@ export function expectedCharts(r: TieoutReport): { monthly: ExpectedChart; quart
       if (plan) row.signed = num(signedMonths[period]);
       row.fitted = num(fittedMonths[period]);
     }
-    if (stage.available) row.stage = num((stage.by_window as Record<string, string>)[period]);
-    if (runRate.available) row.runRate = num((runRate.by_window as Record<string, string>)[period]);
     return row;
   });
   const series = [{ type: "Bar", dataKey: "booked" }];
   if (fitted.available) {
-    series.push({ type: "Area", dataKey: "band95" }, { type: "Area", dataKey: "band80" });
+    series.push({ type: "Bar", dataKey: "band95" }, { type: "Bar", dataKey: "band80" });
     if (plan) series.push({ type: "Line", dataKey: "signed" });
     series.push({ type: "Line", dataKey: "fitted" });
   }
-  if (stage.available) series.push({ type: "Line", dataKey: "stage" });
-  if (runRate.available) series.push({ type: "Line", dataKey: "runRate" });
 
   const quarterRows = (plan ? plan.with_plan_quarters : r.gap.quarters).map((x) => {
     const row: Record<string, unknown> = { period: x.quarter, target: Number(x.target) };
@@ -270,7 +265,7 @@ export function expectedCharts(r: TieoutReport): { monthly: ExpectedChart; quart
     ? [{ type: "Bar", dataKey: "expected" }, { type: "Bar", dataKey: "range80" }, { type: "Line", dataKey: "target" }]
     : [{ type: "Line", dataKey: "target" }];
   return {
-    monthly: { data: monthly, xKey: "period", series, referenceX: [r.inputs.as_of.slice(0, 7)] },
+    monthly: { data: monthly, xKey: "period", series, referenceX: fitted.available ? [r.forecasts.windows[0]] : [] },
     quarters: {
       data: [...quarterRows].sort((a, b) => String(a.period).localeCompare(String(b.period))),
       xKey: "period",

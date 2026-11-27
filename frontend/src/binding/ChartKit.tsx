@@ -19,7 +19,9 @@ export function usePlot(specs: readonly SeriesSpec[]): { periods: string[]; rows
 export interface LegendItem {
   label: string;
   color: string;
-  kind: "bar" | "line" | "dash" | "band";
+  /** a band's thin edge, where it has one */
+  outline?: string;
+  kind: "bar" | "line" | "dash" | "band" | "tick";
 }
 
 export function ChartLegend({ items }: { items: LegendItem[] }) {
@@ -34,12 +36,14 @@ export function ChartLegend({ items }: { items: LegendItem[] }) {
               item.kind === "bar"
                 ? { width: 10, height: 10, borderRadius: 2, background: item.color }
                 : item.kind === "band"
-                  ? { width: 14, height: 10, borderRadius: 2, background: item.color }
-                  : {
-                      width: 16,
-                      height: 0,
-                      borderTop: `2px ${item.kind === "dash" ? "dashed" : "solid"} ${item.color}`,
-                    }
+                  ? { width: 14, height: 10, borderRadius: 2, background: item.color, border: `1px solid ${item.outline ?? item.color}` }
+                  : item.kind === "tick"
+                    ? { width: 14, height: 3, background: item.color }
+                    : {
+                        width: 16,
+                        height: 0,
+                        borderTop: `2px ${item.kind === "dash" ? "dashed" : "solid"} ${item.color}`,
+                      }
             }
           />
           {item.label}
@@ -66,6 +70,7 @@ const unitOf = (spec: SeriesSpec) => (spec.format === "quantity" ? "quantity" : 
 export function ChartTooltip({ chartId, specs, active, label, payload, periodFormat, extra }: TooltipProps) {
   if (!active || !payload || label === undefined) return null;
   const period = String(label);
+  const more = extra?.(period);
   const shown = payload.filter((p) => typeof p.dataKey === "string" && p.value !== null && p.value !== undefined);
   const seen = new Set<string>();
   const lines: ReactNode[] = [];
@@ -102,16 +107,22 @@ export function ChartTooltip({ chartId, specs, active, label, payload, periodFor
         {periodFormat(period)}
       </div>
       <div className="space-y-0.5">{lines}</div>
-      {extra ? <div className="mt-1 border-t border-slate-100 pt-1 text-slate-500" data-testid="tooltip-extra">{extra(period)}</div> : null}
+      {more ? <div className="mt-1 border-t border-slate-100 pt-1 text-slate-500" data-testid="tooltip-extra">{more}</div> : null}
     </div>
   );
 }
 
 export const SERIES_COLORS = {
   booked: CHART_COLORS.positive,
-  fitted: CHART_COLORS.accent,
-  stage: CHART_COLORS.slate,
-  runRate: CHART_COLORS.gray,
+  fitted: CHART_COLORS.brand,
   band: CHART_COLORS.accent,
   target: CHART_COLORS.brand,
+} as const;
+
+/** The two ranges, the same on every chart that draws them: a mid green at moderate opacity, and a lighter one behind it with a thin pale edge. */
+export const RANGE_STYLE = {
+  range80: { fill: CHART_COLORS.accent, fillOpacity: 0.5 },
+  range95: { fill: CHART_COLORS.accent, fillOpacity: 0.18, stroke: CHART_COLORS.accentTint, strokeWidth: 1 },
+  legend80: "rgba(46,158,99,0.5)",
+  legend95: "rgba(46,158,99,0.18)",
 } as const;

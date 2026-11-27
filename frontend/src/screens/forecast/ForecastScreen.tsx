@@ -16,7 +16,7 @@ import { WindowTable } from "./WindowTable";
 
 function availability(methods: ReadonlyArray<{ method: string; available: boolean }>): Availability {
   const is = (name: string) => methods.find((m) => m.method === name)?.available === true;
-  return { fitted: is(MONTHLY_METHODS.fitted), stage: is(MONTHLY_METHODS.stage), runRate: is(MONTHLY_METHODS.runRate) };
+  return { fitted: is(MONTHLY_METHODS.fitted) };
 }
 
 /** Shortfall or ahead, in a plain badge, from the sign of the report's gap (target less expected). */
@@ -134,16 +134,6 @@ export default function ForecastScreen() {
       <Verdicts />
 
       <MonthlyChart available={available} planned={planned} />
-      {!available.stage ? (
-        <p className="-mt-3 text-xs text-slate-500">
-          Stage-weighted pipeline: <Bound binding={B.stageUnavailable} />
-        </p>
-      ) : null}
-      {!available.runRate ? (
-        <p className="-mt-3 text-xs text-slate-500">
-          Last twelve months' pace: <Bound binding={B.runRateUnavailable} />
-        </p>
-      ) : null}
 
       <QuarterChart fittedAvailable={available.fitted} planned={planned} />
       <QuarterTable planned={planned} />

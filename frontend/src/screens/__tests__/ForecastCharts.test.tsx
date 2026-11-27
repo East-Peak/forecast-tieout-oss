@@ -84,7 +84,7 @@ describe("Forecast charts: the data and series each chart is given", () => {
 
   it("a plan's charts are the with-plan series, and also show the as-signed fitted line", () => {
     const got = draw("sprout-labs", "demo-plan");
-    expect(got.monthly.series.map((s) => s.dataKey)).toEqual(["booked", "band95", "band80", "signed", "fitted", "stage", "runRate"]);
+    expect(got.monthly.series.map((s) => s.dataKey)).toEqual(["booked", "band95", "band80", "signed", "fitted"]);
     const rows = got.monthly.data as Array<Record<string, unknown>>;
     const withPlan = files.report("sprout-labs", "demo-plan").plan as { with_plan_by_window: Record<string, string> };
     const first = [...rows].reverse().find((r) => r.fitted !== null && r.fitted !== undefined)!; // a month after the plan starts
@@ -113,7 +113,7 @@ describe("Forecast charts: the checks fail when the chart is wrong (mutations at
 
   it("a series drawn from a different dataKey is caught", () => {
     const { got, want } = good();
-    got.monthly.series.find((s) => s.dataKey === "fitted")!.dataKey = "stage";
+    got.monthly.series.find((s) => s.dataKey === "fitted")!.dataKey = "band80";
     expect(failuresFor(got, want).some((f) => f.startsWith("monthly: series"))).toBe(true);
   });
 
@@ -152,5 +152,43 @@ describe("Forecast charts: the checks fail when the chart is wrong (mutations at
     (fitted.by_window as Record<string, string>)[key] = `-${(fitted.by_window as Record<string, string>)[key]}`;
     const got = draw("sapling-industries", "as-signed", report);
     expect(failuresFor(got, expectedCharts(files.report("sapling-industries", "as-signed"))).some((f) => f.includes("data given"))).toBe(true);
+  });
+
+  const forecastRow = (got: { monthly: CapturedChart }) => (got.monthly.data as Array<Record<string, unknown>>).find((r) => Array.isArray(r.band80))!;
+
+  it("a range's low and high swapped is caught", () => {
+    const { got, want } = good();
+    const row = forecastRow(got);
+    const [low, high] = row.band80 as [number, number];
+    row.band80 = [high, low];
+    expect(failuresFor(got, want).some((f) => f.includes("data given to the chart"))).toBe(true);
+  });
+
+  it("the 80% and 95% ranges swapped are caught", () => {
+    const { got, want } = good();
+    const row = forecastRow(got);
+    [row.band80, row.band95] = [row.band95, row.band80];
+    expect(failuresFor(got, want).some((f) => f.includes("data given to the chart"))).toBe(true);
+  });
+
+  it("an expected-value tick bound to the simulation's mean rather than the model's expected value is caught", () => {
+    const { got, want } = good();
+    const rows = got.monthly.data as Array<Record<string, unknown>>;
+    const spreads = files.report("sapling-industries", "demo-plan").plan as { ranges: { by_window: Record<string, { mean: string }> } };
+    const row = rows.find((r) => Array.isArray(r.band80))!;
+    row.fitted = Number(spreads.ranges.by_window[row.period as string].mean);
+    expect(failuresFor(got, want).some((f) => f.includes("data given to the chart"))).toBe(true);
+  });
+
+  it("a range drawn as a column from zero (a low of zero where the file has none) is caught", () => {
+    const { got, want } = good();
+    const row = forecastRow(got);
+    row.band95 = [0, (row.band95 as [number, number])[1]];
+    expect(failuresFor(got, want).some((f) => f.includes("data given to the chart"))).toBe(true);
+  });
+
+  it("the ranges are drawn overlapped, never stacked: no series carries a stack id", () => {
+    const { got } = good();
+    expect(got.monthly.series.filter((s) => s.stackId !== undefined)).toEqual([]);
   });
 });

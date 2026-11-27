@@ -74,17 +74,22 @@ async function yScale(page: Page, chart: string): Promise<(pixel: number) => num
   return (pixel: number) => (zero.y - pixel) * perPixel;
 }
 
-/** Pixel coordinates of a path's vertices (a monotone line's segment ends), in the svg's own units. */
-function vertices(d: string): Array<[number, number]> {
-  const pairs = (d.match(/-?\d+(?:\.\d+)?(?:e-?\d+)?,-?\d+(?:\.\d+)?(?:e-?\d+)?/g) ?? []).map((p) => p.split(",").map(Number) as [number, number]);
-  return pairs.filter((_, i) => i === 0 || i % 3 === 0);
-}
-
-const barCenters = (page: Page, chart: string) =>
-  page.locator(`[data-chart='${chart}'] .recharts-bar-rectangle path`).evaluateAll((els) =>
+/** The bars of one series of a chart (they are drawn in series order, one group each), as boxes in the svg's own units. */
+const barBoxes = (page: Page, chart: string, series: number) =>
+  page.locator(`[data-chart='${chart}'] .recharts-bar`).nth(series).locator(".recharts-bar-rectangle path").evaluateAll((els) =>
     els.map((el) => {
       const b = (el as unknown as SVGGraphicsElement).getBBox();
-      return { x: b.x + b.width / 2, top: b.y };
+      return { x: b.x + b.width / 2, top: b.y, bottom: b.y + b.height };
+    }),
+  );
+const barCenters = (page: Page, chart: string) => barBoxes(page, chart, 0);
+
+/** The expected-value ticks of the monthly chart: where each is centered, in the svg's own units. */
+const tickPoints = (page: Page) =>
+  page.locator("[data-chart='monthly'] [data-testid='expected-tick']").evaluateAll((els) =>
+    els.map((el) => {
+      const m = /translate\(([-\d.e]+)[ ,]([-\d.e]+)\)/.exec(el.getAttribute("transform") ?? "")!;
+      return { x: Number(m[1]), y: Number(m[2]) };
     }),
   );
 
@@ -106,16 +111,30 @@ async function expectDrawnMatchesReport(page: Page, r: Report, planned: boolean,
   });
   const step = bars[1].x - bars[0].x;
 
-  const lines = await page.locator("[data-chart='monthly'] .recharts-line .recharts-line-curve").evaluateAll((els) => els.map((el) => el.getAttribute("d") ?? ""));
   const fitted = r.forecasts.methods.find((m) => m.method === "fitted model")!;
   const wanted = (planned ? r.plan!.with_plan_by_window! : fitted.by_window) as Record<string, string>;
-  const points = vertices(lines[planned ? 1 : 0]);
-  expect(points.length, `${label}: the fitted line has a point per forecast month`).toBe(r.forecasts.windows.length);
-  points.forEach(([x, y], k) => {
+  const at = (period: string) => bars[0].x + months.indexOf(period) * step;
+  // the expected value: one tick a month, at its month, at the bound dollar value
+  const ticks = await tickPoints(page);
+  expect(ticks.length, `${label}: a tick per forecast month (and one more row of them for the as-signed value under a plan)`).toBe(r.forecasts.windows.length * (planned ? 2 : 1));
+  const own = ticks.slice(-r.forecasts.windows.length);
+  own.forEach(({ x, y }, k) => {
     const period = r.forecasts.windows[k];
-    expect(Math.abs(x - (bars[0].x + months.indexOf(period) * step)), `${label}: ${period} point is at its month`).toBeLessThanOrEqual(2);
-    expect(Math.abs(toDollars(y) - Number(wanted[period])), `${label}: ${period} point maps to its bound value`).toBeLessThanOrEqual(tolerance);
+    expect(Math.abs(x - at(period)), `${label}: ${period} tick is at its month`).toBeLessThanOrEqual(2);
+    expect(Math.abs(toDollars(y) - Number(wanted[period])), `${label}: ${period} tick maps to its bound value`).toBeLessThanOrEqual(tolerance);
   });
+  // the ranges: a floating bar a month, its top the bound high and its bottom the bound low, the 95% behind the 80%
+  const spreads = (planned ? r.plan!.ranges!.by_window : r.forecasts.fitted_ranges.by_window) as Record<string, { range80: [string, string]; range95: [string, string] }>;
+  for (const [series, key] of [[1, "range95"], [2, "range80"]] as const) {
+    const boxes = await barBoxes(page, "monthly", series);
+    expect(boxes.length, `${label}: a ${key} bar per forecast month`).toBe(r.forecasts.windows.length);
+    boxes.forEach((box, k) => {
+      const period = r.forecasts.windows[k];
+      expect(Math.abs(box.x - at(period)), `${label}: ${period} ${key} bar is at its month`).toBeLessThanOrEqual(2);
+      expect(Math.abs(toDollars(box.top) - Number(spreads[period][key][1])), `${label}: ${period} ${key} top is its bound high`).toBeLessThanOrEqual(tolerance);
+      expect(Math.abs(toDollars(box.bottom) - Number(spreads[period][key][0])), `${label}: ${period} ${key} bottom is its bound low`).toBeLessThanOrEqual(tolerance);
+    });
+  }
 }
 
 /** Hover the chart at x (svg units) and return the tooltip's header and rows. */
@@ -147,7 +166,7 @@ async function expectTooltipsMatchReport(page: Page, r: Report, spreads: Record<
   const past = booked[2];
   const hp = await hoverAt(page, "monthly", bars[0].x + months.indexOf(past) * step);
   expect(hp.header, `${label} ${past}`).toBe(month(past));
-  expect(hp.rows, `${label} ${past}: only the booked figure`).toEqual([["Booked", usdShort(r.reconciliation.bookings_by_month[past])]]);
+  expect(hp.rows, `${label} ${past}: only the booked figure`).toEqual([["Actual bookings", usdShort(r.reconciliation.bookings_by_month[past])]]);
 
   const future = r.forecasts.windows[3];
   const hf = await hoverAt(page, "monthly", bars[0].x + months.indexOf(future) * step);
@@ -156,12 +175,14 @@ async function expectTooltipsMatchReport(page: Page, r: Report, spreads: Record<
   const want: Array<[string, string]> = [
     ["95% range", `${usdShort(spread.range95[0])} to ${usdShort(spread.range95[1])}`],
     ["80% range", `${usdShort(spread.range80[0])} to ${usdShort(spread.range80[1])}`],
-    ...(planned ? [["Fitted model, as signed", usdShort(method("fitted model").by_window[future])] as [string, string]] : []),
-    [planned ? "Fitted model, with this scenario" : "Fitted model", usdShort(fittedValue)],
-    ["Stage-weighted pipeline (no range)", usdShort(method("stage-weighted pipeline").by_window[future])],
-    ["Last twelve months' pace (no range)", usdShort(method("trailing run-rate").by_window[future])],
+    ...(planned ? [["Expected bookings, as signed", usdShort(method("fitted model").by_window[future])] as [string, string]] : []),
+    [planned ? "Expected bookings, with this scenario" : "Expected bookings", usdShort(fittedValue)],
   ];
   expect(hf.header, `${label} ${future}`).toBe(month(future));
+  // and the report's own label for the ranges of this scenario, under the rows
+  expect(await page.locator("[data-testid='chart-tooltip'][data-chart='monthly'] [data-testid='tooltip-extra']").innerText(), `${label} ${future}: the range label`).toBe(
+    planned ? r.plan!.ranges!.status : r.forecasts.fitted_ranges.by_window_label,
+  );
   expect(hf.rows, `${label} ${future}: every forecast, with its value`).toEqual(want);
   expect(await unboundDigits(page, periodLabels), `${label}: tooltip digits`).toEqual([]);
 
@@ -186,7 +207,7 @@ test.describe("Forecast, every company and scenario @smoke", () => {
         const issues = collectBrowserIssues(page);
         await openForecast(page, company, scenario);
 
-        await expectChartGeometry(page, "monthly", [".recharts-bar-rectangle path", ".recharts-line-curve", ".recharts-area-area"]);
+        await expectChartGeometry(page, "monthly", [".recharts-bar-rectangle path", "[data-testid='expected-tick'] line"]);
         await expectChartGeometry(page, "quarters", [".recharts-bar-rectangle path", ".recharts-line-curve"]);
         const body = await reportOf(page, company, scenario);
         const r = body as Report & { forecasts: { fitted_ranges: { by_window: Record<string, Spread> } }; plan?: { ranges?: { by_window: Record<string, Spread> } } };
@@ -266,7 +287,7 @@ test.describe("switching, and a phone @smoke", () => {
         await openForecast(page, company, "demo-plan");
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         expect(overflow, "the page does not scroll sideways").toBeLessThanOrEqual(0);
-        await expectChartGeometry(page, "monthly", [".recharts-bar-rectangle path", ".recharts-line-curve"]);
+        await expectChartGeometry(page, "monthly", [".recharts-bar-rectangle path", "[data-testid='expected-tick'] line"]);
         await expectCleanPage(page, `${company} phone`, periodLabelsOf(await reportOf(page, company, "demo-plan")));
         const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => el.scrollWidth > el.clientWidth + 1).length);
         expect(scrolling, "no table scrolls sideways inside its card").toBe(0);

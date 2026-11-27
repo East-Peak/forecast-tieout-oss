@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import type { SeriesSpec } from "../../binding/chartData";
-import { ChartLegend, ChartTooltip, SERIES_COLORS, usePlot } from "../../binding/ChartKit";
+import { ChartLegend, ChartTooltip, RANGE_STYLE, SERIES_COLORS, usePlot } from "../../binding/ChartKit";
 import { Card } from "../../components/ui";
-import { AXIS_STYLE, CHART_COLORS, CHART_SERIES, GRID_STYLE } from "../../lib/chartTheme";
+import { AXIS_STYLE, CHART_SERIES, GRID_STYLE } from "../../lib/chartTheme";
 import { formatValue } from "../../lib/format";
 import { quarterSeries } from "./bindings";
 
@@ -31,7 +31,7 @@ export function QuarterChart({ fittedAvailable, planned }: { fittedAvailable: bo
           {fittedAvailable ? (
             <>
               <Bar dataKey="expected" fill={SERIES_COLORS.fitted} fillOpacity={0.85} radius={[2, 2, 0, 0]} maxBarSize={44} isAnimationActive={false} />
-              <Bar dataKey="range80" fill={CHART_COLORS.brand} fillOpacity={0.55} radius={2} maxBarSize={10} isAnimationActive={false} />
+              <Bar dataKey="range80" {...RANGE_STYLE.range80} radius={2} maxBarSize={10} isAnimationActive={false} />
             </>
           ) : null}
           <Line dataKey="target" {...CHART_SERIES.planLine} strokeDasharray="4 3" dot={{ r: 3, fill: SERIES_COLORS.target }} type="linear" />
@@ -42,7 +42,7 @@ export function QuarterChart({ fittedAvailable, planned }: { fittedAvailable: bo
           ...(fittedAvailable
             ? [
                 { label: "Expected", color: SERIES_COLORS.fitted, kind: "bar" as const },
-                { label: "80% range", color: "rgba(18,61,43,0.55)", kind: "bar" as const },
+                { label: "80% range", color: RANGE_STYLE.legend80, kind: "band" as const },
               ]
             : []),
           { label: "Target", color: SERIES_COLORS.target, kind: "dash" },

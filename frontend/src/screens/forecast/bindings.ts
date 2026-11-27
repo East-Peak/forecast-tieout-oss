@@ -38,8 +38,8 @@ export const B = {
   yearTarget: usd("year.target", "/gap/fiscal_year/target"),
   yearActual: usd("year.actual", "/gap/fiscal_year/actual_to_date"),
   fittedUnavailable: text("fitted.unavailable-reason", `${FITTED_METHOD}/unavailable_reason`),
-  stageUnavailable: text("stage.unavailable-reason", "/forecasts/methods/{method=stage-weighted pipeline}/unavailable_reason"),
-  runRateUnavailable: text("run-rate.unavailable-reason", "/forecasts/methods/{method=trailing run-rate}/unavailable_reason"),
+  /** the as-of date, printed on the line that divides the booked months from the forecast ones */
+  asOfMarker: bind({ id: "monthly.as-of", path: "/inputs/as_of", unit: "date", format: "date" }),
 
   // both verdicts, each with its reason (the report's own words; the better-than-baselines reason has no figures)
   softwareVerdict: text("verdict.software", "/verdicts/software_correct/verdict"),
@@ -196,25 +196,19 @@ export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(B), ...Obje
 const METHOD = (name: string) => `/forecasts/methods/{method=${name}}/by_window/{period}`;
 const WINDOWS = { arrayAt: "/forecasts/windows" } as const;
 
-export const MONTHLY_METHODS = {
-  fitted: "fitted model",
-  stage: "stage-weighted pipeline",
-  runRate: "trailing run-rate",
-} as const;
+export const MONTHLY_METHODS = { fitted: "fitted model" } as const;
 
-/** Each plotted series: where its points come from. A plan's fitted line and bands are the with-plan ones. */
+/** Each plotted series: where its points come from. A plan's expected value and ranges are the with-plan ones. */
 export function monthlySeries(planned: boolean) {
   const fitted: SeriesSpec = planned
-    ? { key: "fitted", label: "Fitted model, with this scenario", kind: "decimal", path: "/plan/with_plan_by_window/{period}", periods: WINDOWS }
-    : { key: "fitted", label: "Fitted model", kind: "decimal", path: METHOD("fitted model"), periods: WINDOWS };
+    ? { key: "fitted", label: "Expected bookings, with this scenario", kind: "decimal", path: "/plan/with_plan_by_window/{period}", periods: WINDOWS }
+    : { key: "fitted", label: "Expected bookings", kind: "decimal", path: METHOD("fitted model"), periods: WINDOWS };
   const range = (key: "range80" | "range95"): string =>
     planned ? `/plan/ranges/by_window/{period}/${key}` : `/forecasts/fitted_ranges/by_window/{period}/${key}`;
   return {
-    booked: { key: "booked", label: "Booked", kind: "decimal", path: "/reconciliation/bookings_by_month/{period}", periods: { keysAt: "/reconciliation/bookings_by_month" } },
-    signed: { key: "signed", label: "Fitted model, as signed", kind: "decimal", path: METHOD("fitted model"), periods: WINDOWS },
+    booked: { key: "booked", label: "Actual bookings", kind: "decimal", path: "/reconciliation/bookings_by_month/{period}", periods: { keysAt: "/reconciliation/bookings_by_month" } },
+    signed: { key: "signed", label: "Expected bookings, as signed", kind: "decimal", path: METHOD("fitted model"), periods: WINDOWS },
     fitted,
-    stage: { key: "stage", label: "Stage-weighted pipeline (no range)", kind: "decimal", path: METHOD("stage-weighted pipeline"), periods: WINDOWS },
-    runRate: { key: "runRate", label: "Last twelve months' pace (no range)", kind: "decimal", path: METHOD("trailing run-rate"), periods: WINDOWS },
     band80: { key: "band80", label: "80% range", kind: "range", path: range("range80"), periods: WINDOWS },
     band95: { key: "band95", label: "95% range", kind: "range", path: range("range95"), periods: WINDOWS },
   } as const satisfies Record<string, SeriesSpec>;
