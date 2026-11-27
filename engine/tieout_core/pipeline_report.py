@@ -14,10 +14,18 @@ from .forecast import Creation, model_forecast
 from .history import creation_amounts
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .records import Check, Dataset
-from .requirement import History, QuarterResult, solve_quarters, summarise_history
+from .requirement import (
+    History,
+    QuarterResult,
+    solve_quarters,
+    spread_over,
+    summarise_history,
+)
 from .roster import ramped_ae_months
 
 ZERO = Decimal(0)
+PER_BASIS_ADOPTED = "the forecast's basis"
+PER_BASIS_DIAGNOSTIC = "diagnostic, not the forecast's basis"
 
 
 def observed_history(
@@ -74,8 +82,6 @@ def required_pipeline(
     )
     history = observed_history(cap, pop, as_of, fy_start)
     rows = [_row(r, r.quarter in fy_quarters) for r in results]
-    fy = [r for r in results if r.quarter in fy_quarters]
-    feasible = [r for r in fy if r.outcome == FEASIBLE]
     out = {
         "method": "one deterministic solve in quarter order; each quarter's pipeline is spread "
         "evenly over the months from the as-of date (or the previous quarter's end) to its end, "
@@ -88,15 +94,10 @@ def required_pipeline(
         "cap_rule": "one cap across the quarters: three times the new-business pipeline created in "
         "the trailing 365 days, less what earlier quarters were assigned",
         "quarters": rows,
-        "fiscal_year": {
-            "sum_of_quarters": money(sum((r.required for r in feasible), ZERO)),
-            "quarters_needing_pipeline": [r.quarter for r in feasible],
-            "quarters_unreachable": [r.quarter for r in fy if r.outcome == UNREACHABLE],
-            "single_spread_lever": single_spread_lever.get("headline"),
-            "relation": "The fiscal-year lever, quarter by quarter: the sum of the quarters' "
-            "requirements, each quarter's target met on its own. The single-spread lever in "
-            "section 5 meets only the year's total with one even spread to year end.",
-        },
+        "fiscal_year": summarise_fiscal_year(results, fy_quarters, single_spread_lever),
+        "per_ramped_ae_month_label": PER_BASIS_ADOPTED
+        if cap.adopted
+        else PER_BASIS_DIAGNOSTIC,
         "team_history": _history(history, cap),
         "meaning": "'required' means achievable inside the model's bounds (fitted conversion and "
         "timing, the cap above), not operationally achievable",
@@ -104,8 +105,8 @@ def required_pipeline(
         "ramped AE-months beside it are the roster's expected ones"
         + ("" if cap.adopted else " (a diagnostic here: capacity was not adopted)"),
     }
-    checks = _checks(
-        results, fy_quarters, model, pop, as_of, windows, creation, actual, targets
+    checks = quarter_checks(
+        results, model, pop, as_of, windows, creation, actual, targets, lever_cap
     )
     return out, checks, results
 
@@ -171,47 +172,108 @@ def _history(h: History, cap: Capacity) -> dict:
     }
 
 
-def _checks(
-    results, fy_quarters, model, pop, as_of, windows, creation, actual, targets
+def summarise_fiscal_year(
+    results: list[QuarterResult], fy_quarters, single_spread=None
+) -> dict:
+    """The total for meeting every remaining quarter's target, honestly named:
+    when a quarter is unreachable it is a partial total, never a bare number."""
+    fy = [r for r in results if r.quarter in fy_quarters]
+    solvable = [r for r in fy if r.outcome != UNREACHABLE]
+    unreachable = [r.quarter for r in fy if r.outcome == UNREACHABLE]
+    total = sum((r.required for r in solvable if r.outcome == FEASIBLE), ZERO)
+    if not fy:
+        headline = "no remaining quarter in the fiscal year has a target"
+    elif not unreachable:
+        headline = (
+            f"${total:,.2f} of extra pipeline to meet every remaining quarter's target"
+        )
+    else:
+        headline = (
+            f"partial: {len(solvable)} of {len(fy)} quarters solvable "
+            f"(unreachable: {', '.join(unreachable)})"
+            + (f"; ${total:,.2f} covers only the solvable ones" if solvable else "")
+        )
+    return {
+        "name": "pipeline to meet every remaining quarter's target",
+        "solvable_total": money(total) if solvable else None,
+        "solvable_quarters": [r.quarter for r in solvable],
+        "unreachable_quarters": unreachable,
+        "quarters_remaining": len(fy),
+        "headline": headline,
+        "single_spread": {
+            "name": "pipeline to meet the fiscal-year total, spread evenly to year end (section 5)",
+            "headline": None
+            if single_spread is None
+            else single_spread.get("headline"),
+        },
+        "why_they_differ": "Meeting every quarter's own target is stricter than meeting the year's "
+        "total: a quarter that is ahead cannot lend its surplus to one that is behind, and pipeline "
+        "created in a quarter mostly books after it.",
+    }
+
+
+def quarter_checks(
+    results, model, pop, as_of, windows, creation, actual, targets, cap
 ) -> list[Check]:
-    """The quarterly solve, put back through the forward function once, as one
-    schedule: every feasible quarter meets its target to the cent and every
-    covered one already does; the fiscal-year total is the sum of the pieces."""
+    """Independent of the solve's own arithmetic. The solved schedule is run
+    through the production forward function once: each solvable quarter's
+    bookings meet its stated target to the cent (covered ones already do). Each
+    unreachable quarter is shown to be genuinely over the cap, or to be beyond
+    the selling window (no pipeline created in time books inside it)."""
     inflows = tuple(f for r in results for f in r.inflows)
     f = model_forecast(model, pop, as_of, windows, creation=creation, inflows=inflows)
     bad = []
-    for r in results:
-        # a quarter's own months, not the months of the piece it was spread over
-        qw = targets[r.quarter][0]
+
+    def quarter_total(forecast, quarter):
+        qw = targets[quarter][0]
         months = [w.label for w in windows if qw.contains(w.end)]
-        got = actual.get(r.quarter, ZERO) + sum(
-            (f.window_total(m) for m in months), ZERO
+        return actual.get(quarter, ZERO) + sum(
+            (forecast.window_total(m) for m in months), ZERO
         )
+
+    spent = ZERO
+    earlier: tuple = ()
+    for r in results:
+        got = quarter_total(f, r.quarter)
         if r.outcome == FEASIBLE and abs(got - r.target) > CENT:
             bad.append(f"{r.quarter}: {got:.2f} against target {r.target}")
         if r.outcome == COVERED and got < r.target:
             bad.append(f"{r.quarter}: covered but {got:.2f} < {r.target}")
-    fy_sum = sum(
-        (
-            r.required
-            for r in results
-            if r.quarter in fy_quarters and r.outcome == FEASIBLE
-        ),
-        ZERO,
-    )
-    schedule = sum(
-        (i.dollars for r in results if r.quarter in fy_quarters for i in r.inflows),
-        ZERO,
-    )
-    tie = abs(fy_sum - schedule) < Decimal("1e-9")
-    if not tie:
-        bad.append(f"sum of quarters {fy_sum} against schedule {schedule}")
-    n = sum(1 for r in results if r.outcome == FEASIBLE)
+        if r.outcome == UNREACHABLE:
+            room = cap - spent
+            piece = [
+                w for w in windows if r.piece[0] <= w.start and w.end <= r.piece[1]
+            ]
+            without = model_forecast(
+                model, pop, as_of, windows, creation=creation, inflows=earlier
+            )
+            with_cap = model_forecast(
+                model, pop, as_of, windows, creation=creation,
+                inflows=(*earlier, *spread_over(piece, as_of, room)) if piece and room > 0 else earlier,
+            )  # fmt: skip
+            gain = quarter_total(with_cap, r.quarter) - quarter_total(
+                without, r.quarter
+            )
+            if r.required is None:
+                if gain > CENT:  # something created in time does book in the quarter
+                    bad.append(
+                        f"{r.quarter}: called beyond the selling window but the cap books {gain:.2f}"
+                    )
+            elif not (
+                r.required > room and quarter_total(with_cap, r.quarter) < r.target
+            ):
+                bad.append(
+                    f"{r.quarter}: called over the cap but ${room:,.2f} of cap reaches it"
+                )
+        earlier = (*earlier, *r.inflows)
+        spent += r.assigned
+    solvable = sum(1 for r in results if r.outcome != UNREACHABLE)
     return [
         Check(
-            "quarterly requirements agree with the forward function and sum to the fiscal-year lever",
+            "quarterly requirements, run together through the forward function, meet each solvable quarter's target",
             not bad,
-            f"{n} feasible quarters re-run together as one schedule; fiscal-year total {fy_sum:.2f}"
+            f"{solvable} solvable quarters re-run as one schedule; "
+            f"{len(results) - solvable} unreachable checked against the cap and the selling window"
             + ("" if not bad else "; " + "; ".join(bad)),
         )
     ]

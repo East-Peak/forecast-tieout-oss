@@ -88,7 +88,9 @@ def solve_quarters(
         )
         solved = solve_added_pipeline(forward, target, room)
         mine = (
-            _spread(piece, as_of, solved.required) if solved.outcome == FEASIBLE else ()
+            spread_over(piece, as_of, solved.required)
+            if solved.outcome == FEASIBLE
+            else ()
         )
         amount = solved.required if solved.outcome == FEASIBLE else ZERO
         first, last = (start - as_of).days, (qw.end - as_of).days
@@ -112,7 +114,9 @@ def solve_quarters(
     return out
 
 
-def _spread(piece: list[Window], as_of: date, amount: Decimal) -> tuple[Inflow, ...]:
+def spread_over(
+    piece: list[Window], as_of: date, amount: Decimal
+) -> tuple[Inflow, ...]:
     """``amount`` created in equal parts over the month windows of a piece."""
     return tuple(
         Inflow((w.start - as_of).days, (w.end - as_of).days, amount / len(piece))
@@ -125,7 +129,7 @@ def _bookings(model, data, as_of, windows, creation, assigned, piece, labels, do
     after what earlier quarters were assigned."""
 
     def forward(added: Decimal) -> Decimal:
-        extra = _spread(piece, as_of, added) if piece else ()
+        extra = spread_over(piece, as_of, added) if piece else ()
         f = model_forecast(
             model, data, as_of, windows, creation=creation, inflows=(*assigned, *extra)
         )

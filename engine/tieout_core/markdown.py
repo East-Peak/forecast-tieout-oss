@@ -291,8 +291,11 @@ def _gap(s: dict) -> list[str]:
             f"{' to '.join([u['months'][0], u['months'][-1]])}: forecast {_usd(u['forecast'])} ({u['note']}).",
             "",
         ]
-    out += _lever("Lever (fiscal year)", s["lever"])
-    out += _lever("Lever (next twelve months)", s["lever_next_twelve_months"])
+    out += _lever("Pipeline to meet the fiscal-year total, spread evenly", s["lever"])
+    out += _lever(
+        "Pipeline to meet the next-twelve-months targets, spread evenly",
+        s["lever_next_twelve_months"],
+    )
     return out
 
 
@@ -609,8 +612,8 @@ def _required(s: dict) -> list[str]:
     ]
     out += _table(
         ["Quarter", "Target", "Actual", "Created between", "Result", "Bookings without own pipeline",
-         "Expected created", "Required total created", "Ramped AE-months", "Expected per ramped AE-month",
-         "Required per ramped AE-month", "Share of its pipeline booking in the quarter"],
+         "Expected created", "Required total created", "Ramped AE-months", f"Expected per ramped AE-month ({s['per_ramped_ae_month_label']})",
+         f"Required per ramped AE-month ({s['per_ramped_ae_month_label']})", "Share of its pipeline booking in the quarter"],
         [
             (q["quarter"] + ("" if q["in_fiscal_year"] else " (next year)"), _usd(q["target"]),
              _usd(q["actual"]), " to ".join(q["created_between"]), q["headline"],
@@ -624,14 +627,8 @@ def _required(s: dict) -> list[str]:
     fy, h = s["fiscal_year"], s["team_history"]
     out += [
         (
-            f"Fiscal year, quarter by quarter: **{_usd(fy['sum_of_quarters'])}** of extra pipeline across "
-            f"{', '.join(fy['quarters_needing_pipeline']) or 'no quarters'}"
-            + (
-                f"; unreachable: {', '.join(fy['quarters_unreachable'])}"
-                if fy["quarters_unreachable"]
-                else ""
-            )
-            + f". {fy['relation']} Single-spread lever: {fy['single_spread_lever']}."
+            f"Fiscal year, {fy['name']}: **{fy['headline']}**. Section 5's {fy['single_spread']['name']}: "
+            f"{fy['single_spread']['headline']}. {fy['why_they_differ']}"
         ),
         "",
         (

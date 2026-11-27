@@ -316,14 +316,21 @@ def test_required_pipeline_has_a_row_per_open_quarter_and_its_checks_pass(
         "already covered", "feasible", "unreachable within bounds"
     }  # fmt: skip
     checks = {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}
-    name = "quarterly requirements agree with the forward function and sum to the fiscal-year lever"
+    name = "quarterly requirements, run together through the forward function, meet each solvable quarter's target"
     assert checks[name]["passed"], checks[name]["detail"]
     total = sum(
         Decimal(q["required_extra_pipeline"])
         for q in sec["quarters"]
         if q["required_extra_pipeline"]
     )
-    assert Decimal(sec["fiscal_year"]["sum_of_quarters"]) == total
+    fy = sec["fiscal_year"]
+    if fy["solvable_total"] is None:
+        assert fy["headline"].startswith("partial: 0 of")
+    else:
+        assert Decimal(fy["solvable_total"]) == total
+    assert fy["quarters_remaining"] == 2
+    assert ("partial" in fy["headline"]) == bool(fy["unreachable_quarters"])
+    assert "stricter" in fy["why_they_differ"]
     assert sec["team_history"]["quarters"] > 0
 
 
@@ -353,5 +360,19 @@ def test_a_target_the_pipeline_cannot_reach_is_unreachable_and_assigned_nothing(
     r = build_report(profile, data, AS_OF, draws=DRAWS)
     sec = r["required_pipeline"]
     assert all(q["outcome"] == "unreachable within bounds" for q in sec["quarters"])
-    assert sec["fiscal_year"]["sum_of_quarters"] == "0.00"
+    fy = sec["fiscal_year"]
+    assert fy["solvable_total"] is None and fy["solvable_quarters"] == []
+    assert fy["headline"].startswith("partial: 0 of 2 quarters solvable")
+    assert "Q3FY26" in fy["headline"] and "Q4FY26" in fy["headline"]
     assert r["verdicts"]["software_correct"]["verdict"] == "yes"
+
+
+def test_per_ramped_ae_month_columns_are_labelled_by_the_branch(adopted, not_shown):
+    assert adopted["required_pipeline"]["per_ramped_ae_month_label"] == "the forecast's basis"
+    assert not_shown["required_pipeline"]["per_ramped_ae_month_label"] == (
+        "diagnostic, not the forecast's basis"
+    )
+    from engine.tieout_core.markdown import render
+
+    assert "diagnostic, not the forecast's basis" in render(not_shown)
+    assert "diagnostic, not the forecast's basis" not in render(adopted)

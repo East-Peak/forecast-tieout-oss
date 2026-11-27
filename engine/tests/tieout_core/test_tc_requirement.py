@@ -155,3 +155,100 @@ def test_fewer_than_four_quarters_has_a_median_but_no_best_four():
     s = summarise_history([(Decimal(10), Decimal(1)), (Decimal(30), Decimal(1))])
     assert s.median == Decimal(20) and s.best_four is None
     assert summarise_history([]).median is None
+
+
+# ---------------------------------------------------------------- review round: one total, honestly named
+
+
+def _fake(quarter, outcome, required, target=1000):
+    from engine.tieout_core.requirement import QuarterResult
+
+    return QuarterResult(
+        quarter, "not started", Decimal(target), Decimal(0), outcome, required,
+        required or Decimal(0), Decimal(10**9), Decimal(0), Decimal(0),
+        (date(2026, 7, 31), date(2026, 10, 31)), (), Decimal(0), None,
+    )  # fmt: skip
+
+
+def test_the_total_is_for_every_quarter_when_all_are_solvable():
+    from engine.tieout_core.pipeline_report import summarise_fiscal_year
+
+    s = summarise_fiscal_year(
+        [_fake("Q3FY26", COVERED, Decimal(0)), _fake("Q4FY26", FEASIBLE, Decimal(500))],
+        ("Q3FY26", "Q4FY26"),
+    )
+    assert s["solvable_total"] == "500.00" and s["unreachable_quarters"] == []
+    assert s["headline"].startswith(
+        "$500.00 of extra pipeline to meet every remaining quarter"
+    )
+
+
+def test_a_partial_total_names_the_unreachable_quarters_and_never_reads_as_solved():
+    from engine.tieout_core.pipeline_report import summarise_fiscal_year
+
+    s = summarise_fiscal_year(
+        [_fake("Q3FY26", UNREACHABLE, None), _fake("Q4FY26", FEASIBLE, Decimal(500))],
+        ("Q3FY26", "Q4FY26"),
+    )
+    assert s["headline"].startswith(
+        "partial: 1 of 2 quarters solvable (unreachable: Q3FY26)"
+    )
+    none = summarise_fiscal_year(
+        [
+            _fake("Q3FY26", UNREACHABLE, None),
+            _fake("Q4FY26", UNREACHABLE, Decimal(10**12)),
+        ],
+        ("Q3FY26", "Q4FY26"),
+    )
+    assert none["solvable_total"] is None
+    assert none["headline"].startswith("partial: 0 of 2 quarters solvable")
+
+
+def test_the_check_catches_a_schedule_that_does_not_meet_its_target(world):
+    import dataclasses
+
+    from engine.tieout_core.pipeline_report import quarter_checks
+
+    data, model, windows = world
+    targets = quarters(Q2FY26=1, Q3FY26=3 * 10**6, Q4FY26=6 * 10**6)
+    results = solve_quarters(
+        model, data, AS_OF, windows, targets, {}, None, Decimal(10**9)
+    )
+    good = quarter_checks(
+        results, model, data, AS_OF, windows, None, {}, targets, Decimal(10**9)
+    )
+    assert good[0].passed, good[0].detail
+    # halve one quarter's pipeline: the schedule no longer meets its stated target
+    broken = [
+        dataclasses.replace(r, inflows=tuple(dataclasses.replace(i, dollars=i.dollars / 2) for i in r.inflows))
+        if r.quarter == "Q3FY26" else r
+        for r in results
+    ]  # fmt: skip
+    bad = quarter_checks(
+        broken, model, data, AS_OF, windows, None, {}, targets, Decimal(10**9)
+    )
+    assert not bad[0].passed and "Q3FY26" in bad[0].detail
+
+
+def test_an_unreachable_label_is_checked_against_the_cap_and_the_selling_window(world):
+    import dataclasses
+
+    from engine.tieout_core.pipeline_report import quarter_checks
+
+    data, model, windows = world
+    cap = Decimal(10**9)
+    targets = quarters(Q2FY26=10**12, Q3FY26=3 * 10**6)
+    results = solve_quarters(model, data, AS_OF, windows, targets, {}, None, cap)
+    assert (
+        results[0].outcome == UNREACHABLE and results[0].required is None
+    )  # beyond the selling window
+    assert quarter_checks(results, model, data, AS_OF, windows, None, {}, targets, cap)[
+        0
+    ].passed
+    # claim Q3 is unreachable although a small amount reaches it and the cap is ample
+    wrong = [
+        results[0],
+        dataclasses.replace(results[1], outcome=UNREACHABLE, required=None, inflows=()),
+    ]
+    bad = quarter_checks(wrong, model, data, AS_OF, windows, None, {}, targets, cap)
+    assert not bad[0].passed and "Q3FY26" in bad[0].detail
