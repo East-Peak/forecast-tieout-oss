@@ -521,3 +521,87 @@ def test_a_diagnostic_belongs_only_to_a_report_that_did_not_adopt_capacity(good)
         ),
     )
     assert errors(carried) != []
+
+
+# ---------------------------------------------------------------- the better-than-baselines verdict's comparisons
+
+STAGE, RATE = "stage-weighted pipeline", "trailing run-rate"
+
+
+@pytest.fixture(scope="module")
+def beaten():
+    r = demo("sapling-industries", draws=50)
+    assert r["verdicts"]["forecast_better_than_baselines"]["verdict"] == "no"
+    return r
+
+
+def better(r):
+    return r["verdicts"]["forecast_better_than_baselines"]
+
+
+def test_the_verdict_carries_its_comparisons_at_one_and_three_months(good, beaten):
+    for r in (good, beaten):
+        assert errors(r) == []
+        assert [c["horizon_months"] for c in better(r)["comparisons"]] == [1, 3]
+        assert set(better(r)["comparisons"][0]["against"]) == {STAGE, RATE}
+    assert not any(ch.isdigit() for ch in better(good)["in_words"])
+
+
+def test_the_comparisons_agree_with_the_back_test_table(beaten):
+    for h, c in enumerate(better(beaten)["comparisons"]):
+        row = next(
+            x for x in beaten["backtest"]["horizons"]
+            if x["horizon_months"] == c["horizon_months"]
+        )  # fmt: skip
+        assert c["model_error"] == row["mean_absolute_error"]["fitted model"]
+        for method, against in c["against"].items():
+            assert against["baseline_error"] == row["mean_absolute_error"][method]
+
+
+@pytest.mark.parametrize(
+    "edit",
+    [
+        lambda c: c.update(model_error="1.00"),
+        lambda c: c["against"][STAGE].update(baseline_error="1.00"),
+        lambda c: c["against"][RATE].update(outcome="tie"),
+        lambda c: c["against"][RATE].update(outcome="model lower"),
+        lambda c: c["against"][STAGE].update(outcome="tie"),
+        lambda c: c["against"][STAGE].update(outcome="better"),
+        lambda c: c.update(horizon_months=6),
+    ],
+)
+def test_a_comparison_that_disagrees_with_the_table_is_refused(beaten, edit):
+    assert (
+        beaten["verdicts"]["forecast_better_than_baselines"]["comparisons"][1][
+            "against"
+        ][RATE]["outcome"]
+        == "baseline lower"
+    )
+    changed = copy.deepcopy(beaten)
+    edit(better(changed)["comparisons"][1])
+    assert errors(changed) != []
+
+
+def test_the_verdict_must_agree_with_the_outcomes(good, beaten):
+    yes = copy.deepcopy(beaten)
+    better(yes)["verdict"] = "yes"
+    assert errors(yes) != []
+    no = copy.deepcopy(good)
+    better(no)["verdict"] = "no"
+    assert errors(no) != []
+    unsure = copy.deepcopy(good)
+    better(unsure)["verdict"] = "not enough history to say"
+    assert errors(unsure) != []
+
+
+def test_comparisons_are_present_exactly_when_there_is_a_verdict(
+    good, unavailable_report
+):
+    assert better(unavailable_report)["comparisons"] == []
+    assert better(unavailable_report)["verdict"] == "not enough history to say"
+    hollow = copy.deepcopy(good)
+    better(hollow)["comparisons"] = []
+    assert errors(hollow) != []
+    filled = copy.deepcopy(unavailable_report)
+    better(filled)["comparisons"] = better(good)["comparisons"]
+    assert errors(filled) != []

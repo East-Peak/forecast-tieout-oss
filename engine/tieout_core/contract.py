@@ -22,11 +22,12 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 from .adoption import ADOPTED, NOT_SHOWN, UNAVAILABLE
+from .backtest import BASELINE_LOWER, BASELINES, MODEL_LOWER, TIE, VERDICT_HORIZONS
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
 from .rates import rate_unit
 
-SCHEMA_VERSION = "2.0.0"
+SCHEMA_VERSION = "2.1.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -477,7 +478,15 @@ def _verdicts() -> dict:
                 }
             ),
             "forecast_better_than_baselines": obj(
-                {"verdict": ref("BetterVerdict"), "reason": TEXT}
+                {
+                    "verdict": ref("BetterVerdict"),
+                    "reason": TEXT,
+                    # the reason in words with no figures, and the evidence behind the verdict:
+                    # each verdict horizon's errors with which is lower (empty when the verdict
+                    # is 'not enough history to say')
+                    "in_words": TEXT,
+                    "comparisons": arr(ref("HorizonComparison")),
+                }
             ),
         }
     )
@@ -962,6 +971,17 @@ def _actions() -> dict:
 DEFS_MONTH_KEY = r"^\d{4}-(0[1-9]|1[0-2])$"
 
 DEFS["BetterVerdict"] = enum("yes", "no", "not enough history to say")
+DEFS["ComparisonOutcome"] = enum(MODEL_LOWER, BASELINE_LOWER, TIE)
+_AGAINST_A_BASELINE = obj(
+    {"baseline_error": MONEY, "outcome": ref("ComparisonOutcome")}
+)
+DEFS["HorizonComparison"] = obj(
+    {
+        "horizon_months": INT,
+        "model_error": MONEY,
+        "against": obj({m: _AGAINST_A_BASELINE for m in BASELINES}),
+    }
+)
 
 
 def _fitted_forecast_unavailable_together() -> dict:
@@ -1091,6 +1111,53 @@ def validate(report: dict) -> list[str]:
     return found or _cross_rules(report)
 
 
+def _better_than_baselines_rules(r: dict, rule) -> None:
+    """The verdict's comparisons are the back-test table's figures, each outcome is what
+    the two errors say, and the verdict is what the outcomes say."""
+    v = r["verdicts"]["forecast_better_than_baselines"]
+    cs = v["comparisons"]
+    rule(
+        [c["horizon_months"] for c in cs] in ([], list(VERDICT_HORIZONS)),
+        f"the verdict's comparisons are at the verdict horizons {list(VERDICT_HORIZONS)} or absent",
+    )
+    rule(
+        bool(cs) == (v["verdict"] != "not enough history to say"),
+        "the verdict's comparisons are present exactly when the verdict is not 'not enough history to say'",
+    )
+    table = {
+        h["horizon_months"]: h["mean_absolute_error"] for h in r["backtest"]["horizons"]
+    }
+    for c in cs:
+        errors_at = table.get(c["horizon_months"], {})
+        rule(
+            c["model_error"] == errors_at.get("fitted model"),
+            f"{c['horizon_months']}m: the model's error is not the back-test table's",
+        )
+        for method, a in c["against"].items():
+            rule(
+                a["baseline_error"] == errors_at.get(method),
+                f"{c['horizon_months']}m: the {method} error is not the back-test table's",
+            )
+            model, base = Decimal(c["model_error"]), Decimal(a["baseline_error"])
+            # the table is rounded to the cent: equal figures may be a tie or a smaller difference
+            rule(
+                not model < base or a["outcome"] == MODEL_LOWER,
+                f"{c['horizon_months']}m: the model's error is lower than {method}'s, which the outcome does not say",
+            )
+            rule(
+                not model > base or a["outcome"] == BASELINE_LOWER,
+                f"{c['horizon_months']}m: {method}'s error is lower than the model's, which the outcome does not say",
+            )
+    if cs:
+        all_lower = all(
+            a["outcome"] == MODEL_LOWER for c in cs for a in c["against"].values()
+        )
+        rule(
+            (v["verdict"] == "yes") == all_lower,
+            "the verdict is 'yes' exactly when the model's error is lower than both baselines at every verdict horizon",
+        )
+
+
 def _cross_rules(r: dict) -> list[str]:
     found: list[str] = []
 
@@ -1128,6 +1195,8 @@ def _cross_rules(r: dict) -> list[str]:
             not ranges["by_window"] and not ranges["horizons"],
             "an unavailable fitted forecast has no ranges",
         )
+
+    _better_than_baselines_rules(r, rule)
 
     gap = r["gap"]
     for q in gap["quarters"]:

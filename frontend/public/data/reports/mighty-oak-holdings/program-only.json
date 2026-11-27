@@ -6991,9 +6991,40 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "verdicts": {
     "forecast_better_than_baselines": {
+      "comparisons": [
+        {
+          "against": {
+            "stage-weighted pipeline": {
+              "baseline_error": "15347334.58",
+              "outcome": "model lower"
+            },
+            "trailing run-rate": {
+              "baseline_error": "3711490.86",
+              "outcome": "model lower"
+            }
+          },
+          "horizon_months": 1,
+          "model_error": "3234093.72"
+        },
+        {
+          "against": {
+            "stage-weighted pipeline": {
+              "baseline_error": "11938496.97",
+              "outcome": "model lower"
+            },
+            "trailing run-rate": {
+              "baseline_error": "8100540.86",
+              "outcome": "baseline lower"
+            }
+          },
+          "horizon_months": 3,
+          "model_error": "11625580.86"
+        }
+      ],
+      "in_words": "The fitted model's average miss is not smaller than both simple yardsticks three months ahead.",
       "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 11,625,581 vs trailing run-rate 8,100,541",
       "verdict": "no"
     },

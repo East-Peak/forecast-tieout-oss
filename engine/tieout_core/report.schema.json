@@ -27,6 +27,13 @@
       ],
       "type": "object"
     },
+    "ComparisonOutcome": {
+      "enum": [
+        "model lower",
+        "baseline lower",
+        "tie"
+      ]
+    },
     "Date": {
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
       "type": "string"
@@ -34,6 +41,65 @@
     "Decimal": {
       "pattern": "^-?\\d+(\\.\\d+)?$",
       "type": "string"
+    },
+    "HorizonComparison": {
+      "additionalProperties": false,
+      "properties": {
+        "against": {
+          "additionalProperties": false,
+          "properties": {
+            "stage-weighted pipeline": {
+              "additionalProperties": false,
+              "properties": {
+                "baseline_error": {
+                  "$ref": "#/$defs/Money"
+                },
+                "outcome": {
+                  "$ref": "#/$defs/ComparisonOutcome"
+                }
+              },
+              "required": [
+                "baseline_error",
+                "outcome"
+              ],
+              "type": "object"
+            },
+            "trailing run-rate": {
+              "additionalProperties": false,
+              "properties": {
+                "baseline_error": {
+                  "$ref": "#/$defs/Money"
+                },
+                "outcome": {
+                  "$ref": "#/$defs/ComparisonOutcome"
+                }
+              },
+              "required": [
+                "baseline_error",
+                "outcome"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "trailing run-rate",
+            "stage-weighted pipeline"
+          ],
+          "type": "object"
+        },
+        "horizon_months": {
+          "type": "integer"
+        },
+        "model_error": {
+          "$ref": "#/$defs/Money"
+        }
+      },
+      "required": [
+        "horizon_months",
+        "model_error",
+        "against"
+      ],
+      "type": "object"
     },
     "Money": {
       "pattern": "^-?\\d+\\.\\d{2}$",
@@ -59,7 +125,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.0.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.1.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -4474,7 +4540,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.0.0"
+      "const": "2.1.0"
     },
     "verdicts": {
       "additionalProperties": false,
@@ -4482,6 +4548,15 @@
         "forecast_better_than_baselines": {
           "additionalProperties": false,
           "properties": {
+            "comparisons": {
+              "items": {
+                "$ref": "#/$defs/HorizonComparison"
+              },
+              "type": "array"
+            },
+            "in_words": {
+              "$ref": "#/$defs/Text"
+            },
             "reason": {
               "$ref": "#/$defs/Text"
             },
@@ -4491,7 +4566,9 @@
           },
           "required": [
             "verdict",
-            "reason"
+            "reason",
+            "in_words",
+            "comparisons"
           ],
           "type": "object"
         },

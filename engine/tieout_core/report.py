@@ -266,6 +266,21 @@ def build_report(
             "forecast_better_than_baselines": {
                 "verdict": bt.verdict,
                 "reason": bt.verdict_reason,
+                "in_words": bt.in_words,
+                "comparisons": [
+                    {
+                        "horizon_months": c.horizon,
+                        "model_error": _opt_money(c.model_error),
+                        "against": {
+                            m: {
+                                "baseline_error": _opt_money(error),
+                                "outcome": outcome,
+                            }
+                            for m, (error, outcome) in c.against.items()
+                        },
+                    }
+                    for c in bt.comparisons
+                ],
             },
         },
         "roster_capacity": roster_section,

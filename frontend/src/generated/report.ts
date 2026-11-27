@@ -964,9 +964,11 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.0.0";
+  schema_version: "2.1.0";
   verdicts: {
     forecast_better_than_baselines: {
+      comparisons: HorizonComparison[];
+      in_words: Text;
       reason: Text;
       verdict: BetterVerdict;
     };
@@ -990,9 +992,24 @@ export type BetterVerdict = "yes" | "no" | "not enough history to say";
  */
 export type MoneyRange = [Money, Money];
 export type Quarter = string;
+export type ComparisonOutcome = "model lower" | "baseline lower" | "tie";
 
 export interface Check {
   detail: Text;
   name: Text;
   passed: boolean;
+}
+export interface HorizonComparison {
+  against: {
+    "stage-weighted pipeline": {
+      baseline_error: Money;
+      outcome: ComparisonOutcome;
+    };
+    "trailing run-rate": {
+      baseline_error: Money;
+      outcome: ComparisonOutcome;
+    };
+  };
+  horizon_months: number;
+  model_error: Money;
 }

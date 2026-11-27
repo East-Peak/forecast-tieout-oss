@@ -907,9 +907,11 @@
       "unavailable": "no capacity.yaml in the profile"
     }
   },
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "verdicts": {
     "forecast_better_than_baselines": {
+      "comparisons": [],
+      "in_words": "The past cannot be scored in dollars without a record of past open deals, so there is nothing to compare.",
       "reason": "no deal_observations.csv: past open-deal amounts and expected close dates are not recorded, so the fitted model and the stage-weighted baseline cannot be scored in dollars",
       "verdict": "not enough history to say"
     },
