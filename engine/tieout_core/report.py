@@ -160,6 +160,10 @@ def build_report(
             rec.bookings_fytd, fy_target, fy.start, fy.end, goal12 if through else None, actual12,
             LEVER_CAP_MULTIPLE * _trailing_created_arr(pop, as_of, model.params.trailing_days),
             (horizon_end - as_of).days, draws, seed,
+            tuple(
+                (q, _status(qw, as_of), target, _quarter_actual(rec, qw), tuple(quarter_labels[q]))
+                for q, (qw, target) in targets.items()
+            ),
         )  # fmt: skip
         scenario = actions.Scenario(ground)
         if plan is not None:

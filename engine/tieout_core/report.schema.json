@@ -59,7 +59,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-1.0.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-1.1.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -2165,6 +2165,9 @@
               ],
               "type": "object"
             },
+            "expected_fiscal_year": {
+              "$ref": "#/$defs/Money"
+            },
             "file": {
               "$ref": "#/$defs/Text"
             },
@@ -2206,6 +2209,9 @@
                         "baseline_gap": {
                           "$ref": "#/$defs/Money"
                         },
+                        "forecast_with_plan": {
+                          "$ref": "#/$defs/Money"
+                        },
                         "gap_with_plan": {
                           "$ref": "#/$defs/Money"
                         },
@@ -2221,6 +2227,7 @@
                         "actual_to_date",
                         "baseline_gap",
                         "gap_with_plan",
+                        "forecast_with_plan",
                         "note"
                       ],
                       "type": "object"
@@ -2484,10 +2491,43 @@
                   ],
                   "type": "object"
                 },
+                "by_window": {
+                  "additionalProperties": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "mean": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "median": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "range80": {
+                        "$ref": "#/$defs/MoneyRange"
+                      },
+                      "range95": {
+                        "$ref": "#/$defs/MoneyRange"
+                      }
+                    },
+                    "required": [
+                      "mean",
+                      "median",
+                      "range80",
+                      "range95"
+                    ],
+                    "type": "object"
+                  },
+                  "propertyNames": {
+                    "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                  },
+                  "type": "object"
+                },
                 "draws": {
                   "type": "integer"
                 },
                 "fiscal_year_expected_range80": {
+                  "$ref": "#/$defs/MoneyRange"
+                },
+                "fiscal_year_expected_range95": {
                   "$ref": "#/$defs/MoneyRange"
                 },
                 "status": {
@@ -2501,6 +2541,8 @@
                 "status",
                 "bookings_in_window",
                 "fiscal_year_expected_range80",
+                "fiscal_year_expected_range95",
+                "by_window",
                 "draws",
                 "what_is_drawn"
               ],
@@ -2521,6 +2563,62 @@
                 "next twelve months"
               ],
               "type": "object"
+            },
+            "with_plan_by_window": {
+              "additionalProperties": {
+                "$ref": "#/$defs/Money"
+              },
+              "propertyNames": {
+                "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+              },
+              "type": "object"
+            },
+            "with_plan_quarters": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "actual": {
+                    "$ref": "#/$defs/Decimal"
+                  },
+                  "expected": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "expected_range80": {
+                    "$ref": "#/$defs/MoneyRange"
+                  },
+                  "forecast": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "gap": {
+                    "$ref": "#/$defs/Money"
+                  },
+                  "quarter": {
+                    "$ref": "#/$defs/Quarter"
+                  },
+                  "status": {
+                    "enum": [
+                      "closed",
+                      "in progress",
+                      "not started"
+                    ]
+                  },
+                  "target": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "quarter",
+                  "status",
+                  "target",
+                  "actual",
+                  "forecast",
+                  "expected",
+                  "gap",
+                  "expected_range80"
+                ],
+                "type": "object"
+              },
+              "type": "array"
             }
           },
           "required": [
@@ -2532,6 +2630,9 @@
             "with_plan",
             "difference",
             "contributions_total",
+            "with_plan_by_window",
+            "expected_fiscal_year",
+            "with_plan_quarters",
             "gap",
             "cash_cost_in_twelve_months",
             "cost_note",
@@ -4238,7 +4339,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "verdicts": {
       "additionalProperties": false,

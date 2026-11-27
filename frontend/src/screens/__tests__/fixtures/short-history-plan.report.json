@@ -847,7 +847,7 @@
       "unavailable": "no capacity.yaml in the profile"
     }
   },
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "no deal_observations.csv: past open-deal amounts and expected close dates are not recorded, so the fitted model and the stage-weighted baseline cannot be scored in dollars",

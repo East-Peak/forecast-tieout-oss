@@ -32,10 +32,7 @@ PLAN = {
 
 
 def errors(report) -> list[str]:
-    return [
-        f"{'/'.join(map(str, e.absolute_path))}: {e.message[:120]}"
-        for e in contract.validator().iter_errors(report)
-    ]
+    return contract.validate(report)
 
 
 def plan_file(tmp_path, doc=PLAN) -> Path:
@@ -375,3 +372,152 @@ def test_the_committed_frontend_fixtures_for_an_unavailable_forecast_satisfy_the
         assert errors(r) == []
         assert not r["forecasts"]["methods"][2]["available"]
         assert ("plan" in r) is plan
+
+
+# ---------------------------------------------------------------- cross-field rules (3A review)
+
+
+def swap(report, edit):
+    r = copy.deepcopy(report)
+    edit(r)
+    return r
+
+
+def fitted(r):
+    return next(m for m in r["forecasts"]["methods"] if m["method"] == "fitted model")
+
+
+@pytest.fixture(scope="module")
+def unavailable_report():
+    return json.loads(
+        Path(
+            "frontend/src/screens/__tests__/fixtures/short-history.report.json"
+        ).read_text()
+    )
+
+
+def test_three_copies_of_one_method_are_refused(good):
+    def edit(r):
+        r["forecasts"]["methods"][1] = copy.deepcopy(r["forecasts"]["methods"][2])
+
+    assert errors(swap(good, edit)) != []
+
+
+def test_an_available_method_missing_a_month_the_report_lists_is_refused(good):
+    def edit(r):
+        del fitted(r)["by_window"][r["forecasts"]["windows"][3]]
+
+    assert errors(swap(good, edit)) != []
+
+
+def test_ranges_must_cover_every_window_when_the_fitted_forecast_is_available(good):
+    def edit(r):
+        del r["forecasts"]["fitted_ranges"]["by_window"][r["forecasts"]["windows"][0]]
+
+    assert errors(swap(good, edit)) != []
+
+
+def test_an_available_forecast_with_ranges_declared_unavailable_is_refused(good):
+    def edit(r):
+        ranges = r["forecasts"]["fitted_ranges"]
+        ranges["status"] = "unavailable: made up"
+        ranges["by_window"], ranges["horizons"] = {}, {}
+
+    assert errors(swap(good, edit)) != []
+
+
+def test_an_available_forecast_with_a_quarter_missing_its_range_is_refused(good):
+    def edit(r):
+        q = r["gap"]["quarters"][-1]
+        q["expected_range80"] = None
+        q["forecast"] = q["expected"] = q["gap"] = None
+
+    assert errors(swap(good, edit)) != []
+
+
+def test_an_available_forecast_with_no_fiscal_year_range_or_window_gap_is_refused(good):
+    def year(r):
+        r["gap"]["fiscal_year"].update(expected_range80=None, expected_range95=None)
+
+    def window(r):
+        r["gap"]["next_twelve_months"].update(forecast=None, gap=None)
+
+    assert errors(swap(good, year)) != []
+    assert errors(swap(good, window)) != []
+
+
+def test_an_unavailable_forecast_may_not_carry_a_forecast_figure(unavailable_report):
+    assert errors(unavailable_report) == []
+
+    def edit(r):
+        open_quarter = next(q for q in r["gap"]["quarters"] if q["status"] != "closed")
+        open_quarter["forecast"] = "1.00"
+
+    assert errors(swap(unavailable_report, edit)) != []
+
+
+def test_plan_figures_must_cover_every_window_and_quarter(good):
+    def months(r):
+        del r["plan"]["with_plan_by_window"][r["forecasts"]["windows"][0]]
+
+    def quarters(r):
+        r["plan"]["with_plan_quarters"].pop()
+
+    assert errors(swap(good, months)) != []
+    assert errors(swap(good, quarters)) != []
+
+
+def test_an_adopted_report_must_carry_its_ramp_attrition_creation_rate_and_months(good):
+    assert good["roster_capacity"]["decision"]["outcome"] == "adopted"
+    for key in ("ramp", "attrition", "creation_rate", "months"):
+        assert errors(swap(good, lambda r, k=key: r["roster_capacity"].pop(k))) != [], (
+            key
+        )
+
+
+def test_the_capacity_outcome_must_agree_everywhere_it_is_stated(good):
+    def inputs(r):
+        r["inputs"]["capacity"]["decision"] = "not shown"
+
+    def uses(r):
+        r["inputs"]["capacity"]["forecast_uses"] = "flat trailing creation rate"
+
+    def unavailable_with_ramp(r):
+        r["roster_capacity"]["decision"]["outcome"] = "unavailable"
+        r["inputs"]["capacity"]["decision"] = "unavailable"
+
+    for edit in (inputs, uses, unavailable_with_ramp):
+        assert errors(swap(good, edit)) != [], edit.__name__
+
+
+def test_hires_are_valued_exactly_when_capacity_is_adopted(good):
+    def unvalue(r):
+        item = next(i for i in r["plan"]["items"] if i["kind"] == "hires")
+        item.update(
+            valued=False,
+            contribution=None,
+            note="hiring is unsupported by this history: not valued",
+        )
+
+    assert errors(swap(good, unvalue)) != []
+    not_shown = demo("mighty-oak-holdings", plan=True, draws=50)
+    assert errors(not_shown) == []
+
+    def value(r):
+        item = next(i for i in r["plan"]["items"] if i["kind"] == "hires")
+        item.pop("note")
+        item.update(valued=True, contribution={REST: "1.00", TWELVE: "1.00"})
+
+    assert errors(swap(not_shown, value)) != []
+
+
+def test_a_diagnostic_belongs_only_to_a_report_that_did_not_adopt_capacity(good):
+    not_shown = demo("mighty-oak-holdings", draws=50)
+    assert "diagnostic" in not_shown["roster_capacity"]
+    carried = swap(
+        good,
+        lambda r: r["roster_capacity"].update(
+            diagnostic=not_shown["roster_capacity"]["diagnostic"]
+        ),
+    )
+    assert errors(carried) != []

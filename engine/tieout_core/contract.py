@@ -24,7 +24,7 @@ from .adoption import ADOPTED, NOT_SHOWN, UNAVAILABLE
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
 
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -793,7 +793,20 @@ def _plan() -> dict:
             "actual_to_date": DECIMAL,
             "baseline_gap": MONEY,
             "gap_with_plan": MONEY,
+            "forecast_with_plan": MONEY,
             "note": TEXT,
+        }
+    )
+    plan_quarter = obj(
+        {
+            "quarter": ref("Quarter"),
+            "status": enum("closed", "in progress", "not started"),
+            "target": DECIMAL,
+            "actual": DECIMAL,
+            "forecast": MONEY,
+            "expected": MONEY,
+            "gap": MONEY,
+            "expected_range80": ref("MoneyRange"),
         }
     )
     full = obj(
@@ -806,6 +819,10 @@ def _plan() -> dict:
             "with_plan": PER_WINDOW,
             "difference": PER_WINDOW,
             "contributions_total": PER_WINDOW,
+            # 1.1.0: the with-plan figures a screen shows, by month, by quarter and for the year
+            "with_plan_by_window": record(MONEY, DEFS_MONTH_KEY),
+            "expected_fiscal_year": MONEY,
+            "with_plan_quarters": arr(plan_quarter),
             "gap": obj(
                 {
                     "fiscal_year": obj(
@@ -837,6 +854,8 @@ def _plan() -> dict:
                         }
                     ),
                     "fiscal_year_expected_range80": ref("MoneyRange"),
+                    "fiscal_year_expected_range95": ref("MoneyRange"),
+                    "by_window": record(SPREAD, DEFS_MONTH_KEY),
                     "draws": INT,
                     "what_is_drawn": TEXT,
                 }
@@ -1035,3 +1054,188 @@ def schema_text() -> str:
 
 def validator() -> Draft202012Validator:
     return Draft202012Validator(schema())
+
+
+# ---------------------------------------------------------------- cross-field rules
+
+METHOD_NAMES = ("trailing run-rate", "stage-weighted pipeline", "fitted model")
+
+
+def validate(report: dict) -> list[str]:
+    """Every problem with ``report``: the schema's, then the rules a schema cannot say
+    (one of each method, month completeness, availability agreeing across sections,
+    the capacity outcome's payload). Empty when the report satisfies the contract."""
+    found = [
+        f"{'/'.join(map(str, e.absolute_path))}: {e.message[:200]}"
+        for e in validator().iter_errors(report)
+    ]
+    return found or _cross_rules(report)
+
+
+def _cross_rules(r: dict) -> list[str]:
+    found: list[str] = []
+
+    def rule(ok: bool, message: str) -> None:
+        if not ok:
+            found.append(message)
+
+    f = r["forecasts"]
+    windows = f["windows"]
+    names = sorted(m["method"] for m in f["methods"])
+    rule(
+        names == sorted(METHOD_NAMES),
+        f"forecasts.methods must hold each method once, not {names}",
+    )
+    for m in f["methods"]:
+        if m["available"]:
+            rule(
+                list(m["by_window"]) == windows,
+                f"{m['method']} is available but its months are not the report's windows",
+            )
+    fit = next((m for m in f["methods"] if m["method"] == "fitted model"), None)
+    fa = bool(fit and fit["available"])
+    ranges = f["fitted_ranges"]
+    if fa:
+        rule(
+            list(ranges["by_window"]) == windows,
+            "fitted ranges must cover every window",
+        )
+        rule(
+            bool(ranges["horizons"]),
+            "an available fitted forecast needs its horizon ranges",
+        )
+    else:
+        rule(
+            not ranges["by_window"] and not ranges["horizons"],
+            "an unavailable fitted forecast has no ranges",
+        )
+
+    gap = r["gap"]
+    for q in gap["quarters"]:
+        open_quarter = q["status"] != "closed"
+        if fa:
+            rule(
+                all(
+                    q[k] is not None
+                    for k in ("forecast", "expected", "gap", "expected_range80")
+                ),
+                f"{q['quarter']}: the fitted forecast is available, so the quarter needs its figures and range",
+            )
+        elif open_quarter:
+            rule(
+                all(
+                    q[k] is None
+                    for k in ("forecast", "expected", "gap", "expected_range80")
+                ),
+                f"{q['quarter']}: the fitted forecast is unavailable, so an open quarter carries no figure",
+            )
+    year = gap["fiscal_year"]
+    year_keys = (
+        "forecast_rest_of_year",
+        "expected",
+        "gap",
+        "expected_range80",
+        "expected_range95",
+    )
+    rule(
+        all((year[k] is not None) == fa for k in year_keys),
+        "the fiscal year's figures are present exactly when the fitted forecast is available",
+    )
+    nxt = gap["next_twelve_months"]
+    rule(
+        (nxt["untargeted"]["forecast"] is not None) == fa,
+        "the twelve months' untargeted forecast is present exactly when the fitted forecast is available",
+    )
+    if nxt["targets_through"] is not None:
+        rule(
+            all((nxt[k] is not None) == fa for k in ("forecast", "gap")),
+            "the twelve months' forecast and gap are present exactly when the fitted forecast is available",
+        )
+    for lever in (gap["lever"], gap["lever_next_twelve_months"]):
+        rule(
+            (lever["outcome"] != "unavailable") or not fa,
+            "a lever cannot be unavailable while the fitted forecast is available",
+        )
+    rule(
+        (gap["lever"]["outcome"] == "unavailable") == (not fa),
+        "the fiscal-year lever is unavailable exactly when the fitted forecast is",
+    )
+
+    plan = r.get("plan")
+    if plan is not None and "unavailable" not in plan:
+        rule(
+            list(plan["with_plan_by_window"]) == windows,
+            "plan figures must cover every window",
+        )
+        rule(
+            list(plan["ranges"]["by_window"]) == windows,
+            "plan ranges must cover every window",
+        )
+        rule(
+            [q["quarter"] for q in plan["with_plan_quarters"]]
+            == [q["quarter"] for q in gap["quarters"]],
+            "plan quarters must be the report's quarters",
+        )
+
+    decision = r["roster_capacity"]["decision"]
+    outcome = decision["outcome"]
+    rc = r["roster_capacity"]
+    rule(
+        r["inputs"]["capacity"]["decision"] == outcome,
+        "inputs.capacity.decision disagrees with the decision's outcome",
+    )
+    adopted = outcome == "adopted"
+    rule(
+        r["inputs"]["capacity"]["forecast_uses"].startswith("capacity term") == adopted,
+        "inputs.capacity.forecast_uses disagrees with the outcome",
+    )
+    rule(
+        decision["forecast_uses"].startswith("the capacity term") == adopted,
+        "the decision's forecast_uses disagrees with the outcome",
+    )
+    fitted_parts = [k in rc for k in ("ramp", "attrition", "creation_rate")]
+    rule(
+        all(fitted_parts) or not any(fitted_parts),
+        "ramp, attrition and creation_rate come together",
+    )
+    rule(
+        ("months" in rc) == all(fitted_parts),
+        "the roster's months are present exactly when the capacity fit is",
+    )
+    if adopted:
+        rule(
+            all(fitted_parts) and "months" in rc,
+            "an adopted report carries the ramp, attrition, creation rate and months",
+        )
+        rule("diagnostic" not in rc, "an adopted report has no diagnostic")
+    if "diagnostic" in rc:
+        rule(
+            not adopted and all(fitted_parts),
+            "a diagnostic belongs to a fitted capacity that was not adopted",
+        )
+    rule(
+        r["required_pipeline"].get("per_rep_rule", {}).get("applies", adopted)
+        == adopted,
+        "the per-rep rule applies exactly when capacity is adopted",
+    )
+    if plan is not None and "unavailable" not in plan:
+        for item in plan["items"]:
+            if item["kind"] == "hires":
+                rule(
+                    item["valued"] == adopted,
+                    "hires are valued exactly when capacity is adopted",
+                )
+    actions = r["actions"]
+    if "unavailable" not in actions:
+        hires = actions["close_the_fiscal_year_gap"]["hires"]
+        rule(
+            ("bound" in hires) == adopted,
+            "the hires solve is present exactly when capacity is adopted",
+        )
+        for row in actions["comparison"]:
+            if row["kind"] == "hire":
+                rule(
+                    (row["status"] == "valued") == adopted,
+                    "the hire action is valued exactly when capacity is adopted",
+                )
+    return found

@@ -69,6 +69,8 @@ class Ground:
     horizon_days: int
     draws: int = 2000
     seed: int = 0
+    # (quarter, status, target, booked, month labels) for each quarter with a target
+    quarters: tuple = ()
 
 
 class Scenario:
@@ -290,9 +292,10 @@ def plan_section(
         for h in baseline
     }
     fy_gap = lambda total: g.fy_target - g.fytd - total
+    quarter_labels = {q: list(labels) for q, _, _, _, labels in g.quarters}
     sim = simulate(
         g.model, g.pop, g.as_of, g.windows, draws=g.draws, seed=g.seed,
-        groups={REST_OF_FY: g.rest_labels, NEXT_12: g.twelve_labels},
+        groups={**quarter_labels, REST_OF_FY: g.rest_labels, NEXT_12: g.twelve_labels},
         creation=scen.creation(tuple(hires)), inflows=tuple(inflows),
     )  # fmt: skip
     expected_total = float(final.total())
@@ -352,6 +355,7 @@ def plan_section(
                     "range95": [f"{spread.p2_5:.2f}", f"{spread.p97_5:.2f}"],
                 }
                 for h, spread in sim.by_group.items()
+                if h in (REST_OF_FY, NEXT_12)
             },
             "fiscal_year_expected_range80": [
                 f"{float(g.fytd) + sim.by_group[REST_OF_FY].p10:.2f}",
@@ -363,6 +367,26 @@ def plan_section(
             + ", with the planned hires and programme pipeline in the scenario",
         },
     }
+    # Goal 3A: the with-plan figures a screen shows, by month, by quarter and for the year
+    section["with_plan_by_window"] = {
+        w.label: money(final.window_total(w.label)) for w in g.windows
+    }
+    section["expected_fiscal_year"] = money(g.fytd + with_plan[REST_OF_FY])
+    section["with_plan_quarters"] = [
+        _plan_quarter(final, scen, sim, q, status, target, booked, labels)
+        for q, status, target, booked, labels in g.quarters
+    ]
+    section["ranges"]["by_window"] = {
+        label: _spread(s) for label, s in sim.by_window.items()
+    }
+    section["ranges"]["fiscal_year_expected_range95"] = [
+        f"{float(g.fytd) + sim.by_group[REST_OF_FY].p2_5:.2f}",
+        f"{float(g.fytd) + sim.by_group[REST_OF_FY].p97_5:.2f}",
+    ]
+    if section["gap"]["next_twelve_months"] is not None:
+        section["gap"]["next_twelve_months"]["forecast_with_plan"] = money(
+            scen.shown(final, g.targeted_labels)
+        )
     check = Check(
         "plan contributions sum to the difference",
         summed == diff,
@@ -377,6 +401,34 @@ def plan_section(
         f"simulated mean {sim.total.mean:,.2f} vs expected {expected_total:,.2f} ({g.draws} draws)",
     )
     return section, [check, sim_check]
+
+
+def _spread(s) -> dict:
+    return {
+        "mean": f"{s.mean:.2f}",
+        "median": f"{s.p50:.2f}",
+        "range80": [f"{s.p10:.2f}", f"{s.p90:.2f}"],
+        "range95": [f"{s.p2_5:.2f}", f"{s.p97_5:.2f}"],
+    }
+
+
+def _plan_quarter(final, scen, sim, quarter, status, target, booked, labels) -> dict:
+    """One quarter with the plan: the same arithmetic as the gap table's rows."""
+    forecast = scen.shown(final, list(labels))
+    spread = sim.by_group[quarter]
+    return {
+        "quarter": quarter,
+        "status": status,
+        "target": str(target),
+        "actual": str(booked),
+        "forecast": money(forecast),
+        "expected": money(booked + cents(forecast)),
+        "gap": money(target - booked - cents(forecast)),
+        "expected_range80": [
+            f"{float(booked) + spread.p10:.2f}",
+            f"{float(booked) + spread.p90:.2f}",
+        ],
+    }
 
 
 # ---------------------------------------------------------------- section 12

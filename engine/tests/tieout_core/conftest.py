@@ -8,15 +8,11 @@ history; missing costs and targets) is a validation run of the schema."""
 from engine.tieout_core import contract, report
 
 _build_report = report.build_report
-_validator = contract.validator()
 
 
 def checked_build_report(*args, **kwargs):
     built = _build_report(*args, **kwargs)
-    problems = [
-        f"{'/'.join(map(str, e.absolute_path))}: {e.message[:200]}"
-        for e in _validator.iter_errors(built)
-    ]
+    problems = contract.validate(built)
     assert not problems, "report does not satisfy the contract:\n" + "\n".join(
         problems[:10]
     )
