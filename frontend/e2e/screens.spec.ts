@@ -206,6 +206,34 @@ test.describe("at phone width, with device emulation @smoke", () => {
   }
 });
 
+test.describe("at desktop widths the wide tables are tables, not stacked rows @smoke", () => {
+  // The wide tables once stayed stacked at every width (their classes were never generated) and
+  // every other check passed: nothing said a header row had to be there. Rows named here are the
+  // ones that live in a wide table.
+  const WIDE_ROWS = { forecast: "quarter-row", pipeline: "requirement-row", trust: "backtest-row" } as const;
+  for (const width of [1280, 1440]) {
+    test.describe(`${width} wide`, () => {
+      test.use({ viewport: { width, height: 900 } });
+      for (const company of COMPANIES) {
+        for (const [screen, rowId] of Object.entries(WIDE_ROWS)) {
+          test(`${screen}: ${company} shows its tables with a header row @smoke`, async ({ page }) => {
+            await open(page, screen, company, "as-signed");
+            await openAll(page);
+            const header = page.getByTestId(rowId).first().locator("xpath=ancestor::table[1]/thead");
+            await expect(header, "the wide table has a visible header row").toBeVisible();
+            const stacked = await page.evaluate(() =>
+              Array.from(document.querySelectorAll("main table"))
+                .filter((t) => getComputedStyle(t).display !== "table" || getComputedStyle(t.querySelector("thead")!).display !== "table-header-group")
+                .map((t) => (t.textContent ?? "").slice(0, 40)),
+            );
+            expect(stacked, "no table on the page is laid out as stacked rows").toEqual([]);
+          });
+        }
+      }
+    });
+  }
+});
+
 test.describe("at tablet widths, with stretched text @smoke", () => {
   for (const width of [768, 1024]) {
     test.describe(`${width} wide`, () => {
