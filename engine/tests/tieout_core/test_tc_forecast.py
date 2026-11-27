@@ -2,12 +2,15 @@ from dataclasses import replace
 from datetime import date
 from decimal import Decimal
 
+import numpy as np
 import pytest
 
 from engine.tests.tieout_core.builders import write_profile
+from engine.tieout_core import forecast as forecast_module
 from engine.tieout_core.fiscal import month_windows
 from engine.tieout_core.fit import FitParams, Model, NewPipeline, Timing
 from engine.tieout_core.forecast import (
+    Inflow,
     existing_pipeline_conservation,
     model_forecast,
     run_rate,
@@ -212,3 +215,36 @@ def test_no_matured_creation_cohort_is_unavailable_not_zero():
     empty = replace(MODEL, new_pipeline=replace(MODEL.new_pipeline, cohort_size=0))
     f = model_forecast(empty, ONLY_X, CUT, WINDOWS)
     assert f.available is False and "creation cohort" in f.unavailable_reason
+
+
+class _Wasm32Numpy:
+    """numpy as a 32-bit WebAssembly build has it: the platform integer is 32 bits and
+    ``repeat`` refuses a count array that cannot be cast to it without loss."""
+
+    intp = np.int32
+
+    def __getattr__(self, name):
+        return getattr(np, name)
+
+    @staticmethod
+    def repeat(a, repeats, axis=None):
+        counts = np.asarray(repeats)
+        if not np.can_cast(counts.dtype, np.int32, "safe"):
+            raise TypeError(
+                f"Cannot cast array data from {counts.dtype} to dtype('int32') according to the rule 'safe'"
+            )
+        return np.repeat(a, counts, axis)
+
+
+@pytest.mark.parametrize(
+    "inflows",
+    [(), (Inflow(0, 30, Decimal(100000)),)],
+    ids=["flat creation rate", "created pipeline added"],
+)
+def test_the_simulation_runs_where_the_platform_integer_is_32_bits(
+    monkeypatch, inflows
+):
+    native = simulate(MODEL, ONLY_X, CUT, WINDOWS, draws=500, seed=7, inflows=inflows)
+    monkeypatch.setattr(forecast_module, "np", _Wasm32Numpy())
+    wasm = simulate(MODEL, ONLY_X, CUT, WINDOWS, draws=500, seed=7, inflows=inflows)
+    assert wasm == native

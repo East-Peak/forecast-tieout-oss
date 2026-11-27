@@ -512,7 +512,8 @@ def simulate(
                 )
             counts = rng.poisson(lam, draws)
             total = int(counts.sum())
-            rows = np.repeat(draw_index, counts)
+            # counts are cast to the platform integer: 32-bit WebAssembly refuses a wider count array
+            rows = np.repeat(draw_index, counts.astype(np.intp))
             created = rng.integers(1, span + 1, total)
         else:
             if creation is None:
@@ -530,8 +531,8 @@ def simulate(
             cell = rng.poisson(deals * win_rate)
             row_of, day_of = np.nonzero(cell)
             repeats = cell[row_of, day_of]
-            rows = np.repeat(row_of, repeats)
-            created = np.repeat(day_of + 1, repeats)
+            rows = np.repeat(row_of, repeats.astype(np.intp))
+            created = np.repeat(day_of + 1, repeats.astype(np.intp))
             total = len(rows)
         days = _draw_days(rng, new.timing, total)
         pool = np.asarray([float(x) for x in new.won_arr_samples])
