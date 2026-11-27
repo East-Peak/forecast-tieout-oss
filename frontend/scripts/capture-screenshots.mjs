@@ -14,42 +14,22 @@ const docsScreenshotDir = path.resolve(repoRoot, "docs/screenshots");
 const publicScreenshotDir = path.resolve(frontendRoot, "public/docs/screenshots");
 const fixedBrowserTime = new Date("2026-07-04T19:00:00-07:00");
 
+// README screenshots (full page, 1440 wide) and the Open Graph image: the top of Forecast, laid out at
+// 1295 x 680 and captured at a device scale of 1200/1295, so the file is 1200 x 630 and the cut falls
+// below the verdict cards, not through a card or a chart.
 const captures = [
+  { file: "forecast-sapling.png", route: "/forecast", company: "sapling-industries", scenario: "as-signed", fullPage: true },
+  { file: "capacity-sapling.png", route: "/capacity", company: "sapling-industries", scenario: "as-signed", fullPage: true },
+  { file: "pipeline-sapling.png", route: "/pipeline", company: "sapling-industries", scenario: "as-signed", fullPage: true },
+  { file: "plan-sapling.png", route: "/plan", company: "sapling-industries", scenario: "demo-plan", fullPage: true },
+  { file: "trust-sapling.png", route: "/trust", company: "sapling-industries", scenario: "as-signed", fullPage: true },
   {
-    file: "hero-bookings-sapling.png",
-    route: "/bookings",
-    profile: "sapling-industries",
-    fullPage: true,
-  },
-  {
-    file: "capacity-sapling.png",
-    route: "/capacity",
-    profile: "sapling-industries",
-    fullPage: true,
-  },
-  {
-    file: "funnel-mighty-oak.png",
-    route: "/funnel",
-    profile: "mighty-oak-holdings",
-    fullPage: true,
-  },
-  {
-    file: "targets-sprout.png",
-    route: "/targets",
-    profile: "sprout-labs",
-    fullPage: true,
-  },
-  {
-    file: "scenario-sapling.png",
-    route: "/scenario",
-    profile: "sapling-industries",
-    fullPage: true,
-  },
-  {
-    file: "picker-personas.png",
-    route: "/bookings",
-    profile: "sapling-industries",
-    selector: ".sticky.top-0",
+    file: "og-forecast-sapling.png",
+    route: "/forecast",
+    company: "sapling-industries",
+    scenario: "as-signed",
+    viewport: { width: 1295, height: 680 },
+    deviceScaleFactor: 1200 / 1295,
   },
 ];
 
@@ -180,7 +160,7 @@ async function isHealthy(baseUrl) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 1_500);
   try {
-    const response = await fetch(`${baseUrl}/bookings?profile=sapling-industries`, {
+    const response = await fetch(`${baseUrl}/forecast?company=sapling-industries`, {
       signal: controller.signal,
     });
     if (!response.ok) return false;
@@ -196,44 +176,40 @@ async function isHealthy(baseUrl) {
 async function captureAll(baseUrl) {
   const browser = await chromium.launch();
   try {
-    const context = await browser.newContext({
-      colorScheme: "light",
-      deviceScaleFactor: 1,
-      locale: "en-US",
-      reducedMotion: "reduce",
-      timezoneId: "America/Los_Angeles",
-      viewport: { width: 1440, height: 900 },
-    });
-
     for (const capture of captures) {
+      const context = await browser.newContext({
+        colorScheme: "light",
+        deviceScaleFactor: capture.deviceScaleFactor ?? 1,
+        locale: "en-US",
+        reducedMotion: "reduce",
+        timezoneId: "America/Los_Angeles",
+        viewport: capture.viewport ?? { width: 1440, height: 900 },
+      });
       const page = await context.newPage();
       await page.clock.setFixedTime(fixedBrowserTime);
-      await page.goto(`${baseUrl}${capture.route}?profile=${capture.profile}`, {
+      await page.goto(`${baseUrl}${capture.route}?company=${capture.company}&scenario=${capture.scenario}`, {
         waitUntil: "networkidle",
       });
       await page.addStyleTag({ content: disableAnimationsCss });
       await page.evaluate(() => document.fonts?.ready);
-      await page.locator("main").waitFor({ state: "visible" });
-      await page.locator("#org-profile-selector").waitFor({ state: "visible" });
+      await page.locator("main h2").first().waitFor({ state: "visible" });
+      await page.locator("#company-selector").waitFor({ state: "visible" });
+      // charts draw after the report loads: wait until every chart container holds its drawn geometry
+      await page.waitForFunction(() =>
+        [...document.querySelectorAll("[data-chart]")].every((c) => c.querySelector("svg path, svg rect")),
+      );
 
       const docsPath = path.join(docsScreenshotDir, capture.file);
       const publicPath = path.join(publicScreenshotDir, capture.file);
 
-      if (capture.selector) {
-        await page.locator(capture.selector).first().screenshot({
-          animations: "disabled",
-          path: docsPath,
-        });
-      } else {
-        await page.screenshot({
-          animations: "disabled",
-          fullPage: capture.fullPage,
-          path: docsPath,
-        });
-      }
+      await page.screenshot({
+        animations: "disabled",
+        fullPage: capture.fullPage ?? false,
+        path: docsPath,
+      });
 
       await cp(docsPath, publicPath);
-      await page.close();
+      await context.close();
       console.log(`captured ${path.relative(repoRoot, docsPath)}`);
     }
   } finally {
