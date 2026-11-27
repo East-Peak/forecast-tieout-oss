@@ -46,15 +46,15 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
   const actionSpecs = useMemo(() => actionSeries(window), [window]);
   const drivers = usePlot(useMemo(() => [driverSpecs.low, driverSpecs.high], [driverSpecs]));
   const actions = usePlot(useMemo(() => [actionSpecs.gain], [actionSpecs]));
-  // one scale for both groups and both bars, so that a bar's length means the same dollars wherever it is drawn
   const driverOrder = byRank(sheet.drivers.map((d) => d.rank[window]));
   const actionOrder = byRank(sheet.actions.rows.map((a) => a.rank[window]));
+  // one scale for both groups and every bar, so that a bar's length means the same dollars wherever it is drawn
   const domain = useMemo(() => plotExtent([...drivers.rows, ...actions.rows], ["low", "high", "gain"], { zero: true, padding: 0.04 }), [drivers.rows, actions.rows]);
 
   return (
     <Card className="p-4 sm:p-5" data-testid="tornado" data-window={window}>
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <SectionHeader title="What moves the outcome" subtitle={undefined} />
+        <SectionHeader title="What moves the outcome" />
         <div role="group" aria-label="Window" className="flex gap-2">
           {WINDOWS.map((w) => (
             <button
@@ -72,12 +72,12 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
           ))}
         </div>
       </div>
-      <Text className="-mt-3 text-xs text-slate-600">
+      <Text className="mt-1 text-xs text-slate-600">
         <Bound binding={WS.definition} /> Measured around <Bound binding={WS.measuredAround} />.
       </Text>
       <p className="mt-3 text-xs text-slate-500">
-        The bars show the change in bookings against the plan in force, on one scale for both groups: green is more booked, red is less. Each driver has two
-        bars, the upper at its historical low setting and the lower at its historical high setting.
+        The bars show the change in bookings against the plan in force, on one scale for both groups: green is more booked, red is less. A single unit of an action is small
+        beside a driver's whole historical swing, so its bar is short; its figure is beside it. Each driver has two bars, the upper at its historical low setting and the lower at its historical high setting.
       </p>
 
       <Group title="Operating assumptions" subtitle="Each driver is changed alone, for deals created after the as-of date.">

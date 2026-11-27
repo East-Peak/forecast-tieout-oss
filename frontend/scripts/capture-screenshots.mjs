@@ -14,9 +14,8 @@ const docsScreenshotDir = path.resolve(repoRoot, "docs/screenshots");
 const publicScreenshotDir = path.resolve(frontendRoot, "public/docs/screenshots");
 const fixedBrowserTime = new Date("2026-07-04T19:00:00-07:00");
 
-// README screenshots (full page, 1440 wide) and the Open Graph image: the top of Forecast, laid out at
-// 1680 x 882 and captured at a device scale of 1200/1680, so the file is 1200 x 630 and the cut falls
-// below the verdict cards, not through a card or a chart.
+// README screenshots (full page, 1440 wide) and the Open Graph image: the top of Plan, the landing screen, laid out at
+// 1680 x 882 and captured at a device scale of 1200/1680, so the file is 1200 x 630.
 const captures = [
   { file: "forecast-sapling.png", route: "/forecast", company: "sapling-industries", scenario: "as-signed", fullPage: true },
   { file: "capacity-sapling.png", route: "/capacity", company: "sapling-industries", scenario: "as-signed", fullPage: true },
@@ -24,10 +23,10 @@ const captures = [
   { file: "plan-sapling.png", route: "/plan", company: "sapling-industries", scenario: "demo-plan", fullPage: true },
   { file: "trust-sapling.png", route: "/trust", company: "sapling-industries", scenario: "as-signed", fullPage: true },
   {
-    file: "og-forecast-sapling.png",
-    route: "/forecast",
+    file: "og-plan-sapling.png",
+    route: "/plan",
     company: "sapling-industries",
-    scenario: "as-signed",
+    scenario: "demo-plan",
     viewport: { width: 1680, height: 882 },
     deviceScaleFactor: 1200 / 1680,
   },
@@ -196,7 +195,7 @@ async function captureAll(baseUrl) {
       await page.locator("#company-selector").waitFor({ state: "visible" });
       // charts draw after the report loads: wait until every chart container holds its drawn geometry
       await page.waitForFunction(() =>
-        [...document.querySelectorAll("[data-chart]")].every((c) => c.querySelector("svg path, svg rect")),
+        [...document.querySelectorAll("[data-chart], [data-testid='bar-cell']")].every((c) => c.querySelector("svg path, svg rect")),
       );
 
       const docsPath = path.join(docsScreenshotDir, capture.file);

@@ -18,8 +18,8 @@ describe("screenshots and the Open Graph image", () => {
   it("the Open Graph and Twitter images are the 1200 x 630 capture of Forecast", () => {
     const html = read(resolve(frontend, "index.html"));
     const images = named(html);
-    expect(images).toEqual(["og-forecast-sapling.png", "og-forecast-sapling.png"]);
-    expect(pngSize(resolve(publicDir, "og-forecast-sapling.png"))).toEqual([1200, 630]);
+    expect(images).toEqual(["og-plan-sapling.png", "og-plan-sapling.png"]);
+    expect(pngSize(resolve(publicDir, "og-plan-sapling.png"))).toEqual([1200, 630]);
   });
 
   it("every picture the README shows exists, and the site serves the same bytes", () => {

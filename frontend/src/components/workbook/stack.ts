@@ -41,7 +41,7 @@ export const STACK_XL = {
   body: "block xl:table-row-group",
   row: "block border-b border-slate-100 py-3 last:border-0 xl:table-row xl:border-b-0 xl:py-0",
   cell:
-    "flex min-w-0 items-baseline justify-between gap-4 [overflow-wrap:anywhere] px-0 py-1 text-right before:text-left before:text-[11px] before:font-semibold before:uppercase before:text-ft-brand before:content-[attr(data-label)] xl:table-cell xl:px-3 xl:py-3 xl:text-left xl:before:hidden",
+    "flex min-w-0 items-baseline justify-between gap-4 [overflow-wrap:anywhere] px-0 py-1 text-right before:shrink-0 before:text-left before:text-[11px] before:font-semibold before:uppercase before:text-ft-brand before:content-[attr(data-label)] xl:table-cell xl:px-3 xl:py-3 xl:text-left xl:before:hidden",
   /** a cell that carries no label of its own (the row's title) */
   title: "block px-0 py-1 font-medium xl:table-cell xl:px-3 xl:py-3",
 } as const;
