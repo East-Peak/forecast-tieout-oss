@@ -131,7 +131,7 @@ runScreenChecks({
         const container = mountScreen(PlanScreen, c, c.company, c.scenario);
         expect(container.querySelector("[data-binding='close.programme.cost']")!.textContent).toMatch(/^no cost: no amount of pipeline closes the gap/);
         const programme = container.querySelector("[data-testid='close-programme']")!.textContent!;
-        expect(programme).toMatch(/Over the cap: closing it would take \$3007\.3M, against a cap of \$2390\.3M/);
+        expect(programme).toMatch(/Over the cap: closing it would take \$3\.0B, against a cap of \$2\.4B/);
         expect(programme).not.toMatch(/not over the cap/);
         cleanup();
         const sprout = caseOf("sprout-labs", "as-signed");

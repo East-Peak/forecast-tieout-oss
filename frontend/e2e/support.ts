@@ -17,7 +17,7 @@ export function collectBrowserIssues(page: Page): string[] {
   return issues;
 }
 
-const TICK_SOURCES = ["^-?\\$\\d[\\d.,]*[KM]?$", "^-?\\d[\\d,.]*$", "^[A-Z][a-z]{2} '\\d{2}$", "^Q[1-4]FY\\d{2}$"];
+const TICK_SOURCES = ["^-?\\$\\d[\\d.,]*[KMB]?$", "^-?\\d[\\d,.]*$", "^[A-Z][a-z]{2} '\\d{2}$", "^Q[1-4]FY\\d{2}$"];
 
 /**
  * Text nodes with a digit that sit in no bound element. The stated exceptions are checked by content: an axis

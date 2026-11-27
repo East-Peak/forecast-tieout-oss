@@ -34,6 +34,18 @@ describe("usd-short: one rule, millions to one decimal, thousands to whole, else
     ["-0.30", "$0"],
     ["0.00", "$0"],
     ["84000000", "$84.0M"],
+    // a billion or more: one decimal and B
+    ["1000000000", "$1.0B"],
+    ["2018192885.26", "$2.0B"],
+    ["6609519382.53", "$6.6B"],
+    ["3007281482.38", "$3.0B"],
+    ["999949999.99", "$999.9M"],
+    ["999950000.00", "$1.0B"], // would round to $1000.0M: it is $1.0B
+    ["999999999.99", "$1.0B"],
+    ["-2018192885.26", "-$2.0B"],
+    ["-999950000", "-$1.0B"],
+    ["-999949999", "-$999.9M"],
+    ["12345678901.00", "$12.3B"],
   ];
   it.each(cases)("%s -> %s", (raw, shown) => {
     expect(formatValue("usd-short", raw)).toBe(shown);

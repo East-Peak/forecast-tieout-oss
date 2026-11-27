@@ -7,7 +7,7 @@
  *
  * The named formats (design call 5):
  *   usd-full   whole dollars, grouped, half away from zero:  $6,119,925
- *   usd-short  one fixed rule: millions to one decimal, thousands to whole,
+ *   usd-short  one fixed rule: a billion or more to one decimal and B, millions to one decimal, thousands to whole,
  *              else whole dollars, rounded into the next unit when it rounds up:  $58.1M  $612K  $12
  *   percent1   a fraction as a percent to one decimal:  83.3%
  *   count      a whole number, grouped
@@ -87,6 +87,11 @@ function usdShort(raw: unknown): string {
   const thousands = roundedAbs(d, 3);
   if (dollars >= 1_000_000n || thousands >= 1000n) {
     const tenths = roundedAbs(d, 5);
+    if (tenths >= 10_000n) {
+      // a billion or more, or what would round up to "1000.0M"
+      const billions = roundedAbs(d, 8);
+      return signed(d.negative, billions, `$${billions / 10n}.${billions % 10n}B`);
+    }
     return signed(d.negative, tenths, `$${tenths / 10n}.${tenths % 10n}M`);
   }
   if (dollars >= 1000n) return signed(d.negative, thousands, `$${thousands}K`);

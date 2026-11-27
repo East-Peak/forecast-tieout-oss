@@ -16,7 +16,9 @@ export function usdShort(raw: string): string {
   const sign = n < 0 ? "-" : "";
   let body: string;
   let zero = false;
-  if (Math.round(a) >= 1_000_000 || Math.round(a / 1000) >= 1000) {
+  if (Math.round(a / 100_000) >= 10_000) {
+    body = `$${(Math.round(a / 100_000_000) / 10).toFixed(1)}B`;
+  } else if (Math.round(a) >= 1_000_000 || Math.round(a / 1000) >= 1000) {
     const tenths = Math.round(a / 100_000);
     body = `$${(tenths / 10).toFixed(1)}M`;
     zero = tenths === 0;

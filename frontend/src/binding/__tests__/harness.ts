@@ -36,7 +36,7 @@ export interface Absent {
  *  - the two literal range names "80% range" and "95% range".
  */
 const RANGE_NAMES = ["80% range", "95% range"] as const;
-const TICK = [/^-?\$\d[\d.,]*[KM]?$/, /^-?\d[\d,.]*$/, /^[A-Z][a-z]{2} '\d{2}$/, /^Q[1-4]FY\d{2}$/];
+const TICK = [/^-?\$\d[\d.,]*[KMB]?$/, /^-?\d[\d,.]*$/, /^[A-Z][a-z]{2} '\d{2}$/, /^Q[1-4]FY\d{2}$/];
 
 export function unboundDigits(container: HTMLElement, periodLabels: readonly string[] = []): string[] {
   const found: string[] = [];
