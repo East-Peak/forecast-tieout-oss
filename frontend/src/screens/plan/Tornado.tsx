@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { Bound } from "../../binding/Bound";
+import { Bound, useBindingContext } from "../../binding/Bound";
 import { plotExtent } from "../../binding/chartData";
 import { usePlot } from "../../binding/ChartKit";
 import { Badge, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Text } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
+import { useYourPlan } from "../../editor/YourPlanContext";
+import { YOUR_PLAN } from "../../editor/yourPlan";
 import { STACK, STACK_XL } from "../../components/workbook/stack";
 import type { TieoutReport } from "../../generated/report";
 import { AxisHeader, BarCell } from "./BarCell";
@@ -124,6 +126,23 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
   );
 }
 
+/** Where the editor can be opened (a wide screen), a click on a row or its bar opens it; a button inside the row keeps its own click. */
+function useOpenEditor() {
+  const { company, choose } = useBindingContext();
+  const yourPlan = useYourPlan();
+  const wide = yourPlan?.desktop === true;
+  return {
+    wide,
+    rowProps: wide
+      ? { onClick: () => choose?.(company, YOUR_PLAN), className: "cursor-pointer hover:bg-slate-50", title: "Open the editor" }
+      : { className: "" },
+    addToPlan: (kind: "hire" | "program") => {
+      yourPlan?.store.append(company, kind);
+      choose?.(company, YOUR_PLAN);
+    },
+  };
+}
+
 function Group({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
     <section className="mt-6" aria-label={title}>
@@ -138,11 +157,12 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
   const [open, setOpen] = useState(false);
   const path = `${WS_ROWS.drivers}/${index}`;
   const { display } = driver;
+  const editor = useOpenEditor();
   const needed = driver.needed_alone;
   const solves = needed !== null && needed.outcome === "solves";
   return (
     <>
-      <TableRow className={STACK_XL.row} data-testid="driver-row" data-driver={driver.driver}>
+      <TableRow className={`${STACK_XL.row} ${editor.rowProps.className}`} onClick={editor.rowProps.onClick} data-testid="driver-row" data-driver={driver.driver}>
         <TableCell className={STACK_XL.title}>
           <div className="font-medium"><Bound binding={DRIVER.label} row={path} /></div>
           <div className="text-xs font-normal text-slate-500"><Bound binding={DRIVER.unitLabel} row={path} /></div>
@@ -150,7 +170,10 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
             type="button"
             aria-expanded={open}
             aria-controls={`driver-detail-${driver.driver}`}
-            onClick={() => setOpen((v) => !v)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen((v) => !v);
+            }}
             className="mt-1 text-xs font-medium text-ft-brand underline"
           >
             {open ? "Hide the quarters" : "Show the quarters"}
@@ -270,8 +293,9 @@ function Observations({ driver, path }: { driver: Driver; path: string }) {
 
 function ActionRow({ row, index, window, domain, kind, supported }: { row: Parameters<typeof BarCell>[0]["row"]; index: number; window: Window; domain: [number, number]; kind: string; supported: boolean }) {
   const path = `${WS_ROWS.actions}/${index}`;
+  const editor = useOpenEditor();
   return (
-    <TableRow className={STACK_XL.row} data-testid="worksheet-action-row" data-kind={kind}>
+    <TableRow className={`${STACK_XL.row} ${editor.rowProps.className}`} onClick={editor.rowProps.onClick} data-testid="worksheet-action-row" data-kind={kind}>
       <TableCell className={STACK_XL.title}>
         <Bound binding={ACTION.name} row={path} />
       </TableCell>
@@ -289,6 +313,18 @@ function ActionRow({ row, index, window, domain, kind, supported }: { row: Param
       </TableCell>
       <TableCell className={STACK_XL.cell} data-label="Closes the gap alone">
         <span className="text-xs"><Bound binding={ACTION.closes} row={path} /></span>
+        {editor.wide ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              editor.addToPlan(kind === "hire" ? "hire" : "program");
+            }}
+            className="mt-2 block rounded-ft border border-ft-accent bg-white px-3 py-1 text-xs font-semibold text-ft-accent hover:bg-ft-accentSoft"
+          >
+            Add to plan
+          </button>
+        ) : null}
       </TableCell>
     </TableRow>
   );

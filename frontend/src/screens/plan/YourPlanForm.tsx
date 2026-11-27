@@ -4,9 +4,8 @@ import { Card } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
 import { useYourPlan, useYourPlanSnapshot } from "../../editor/YourPlanContext";
 import type { Facts, HireDoc, PlanDoc, PlanError, ProgramDoc } from "../../editor/protocol";
+import { MAX_ITEMS } from "../../editor/yourPlan";
 
-/** Most items a plan may hold, hires and programs together. */
-const MAX_ITEMS = 8;
 const MAX_HIRES_EACH = 20;
 const MONTH_NAMES: Record<string, string> = {
   "01": "January",

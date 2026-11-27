@@ -208,6 +208,56 @@ describe("on a desktop screen", () => {
   });
 });
 
+describe("the tornado opens the editor in place", () => {
+  it("Add to plan on an action opens the form with that item appended, and applies nothing more", async () => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    const row = await waitFor(() => {
+      const el = document.querySelector("[data-testid='worksheet-action-row'][data-kind='hire']");
+      if (!el) throw new Error("not yet");
+      return el as HTMLElement;
+    });
+    expect(editor.opened).toEqual([]);
+    fireEvent.click(within(row).getByRole("button", { name: "Add to plan" }));
+    await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    expect(screen.getAllByTestId("hire-row")).toHaveLength(2);
+    expect(screen.getAllByTestId("program-row")).toHaveLength(1);
+    expect(screen.getByTestId("plan-unapplied")).toBeInTheDocument();
+    expect(editor.applied).toEqual([DEMO]);
+  });
+
+  it("the program action appends a program, and clicking a driver's row opens the editor as it is", async () => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    const program = await waitFor(() => {
+      const el = document.querySelector("[data-testid='worksheet-action-row'][data-kind='program']");
+      if (!el) throw new Error("not yet");
+      return el as HTMLElement;
+    });
+    fireEvent.click(within(program).getByRole("button", { name: "Add to plan" }));
+    await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    expect(screen.getAllByTestId("program-row")).toHaveLength(2);
+    fireEvent.click(screen.getByRole("button", { name: "As signed" }));
+    await waitFor(() => expect(screen.queryByTestId("plan-form")).toBeNull());
+    fireEvent.click(document.querySelector("[data-testid='driver-row']")!);
+    await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    expect(screen.getAllByTestId("program-row")).toHaveLength(2);
+  });
+
+  it("opening a driver's quarters does not open the editor", async () => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    const toggle = await waitFor(() => {
+      const el = document.querySelector("[data-testid='driver-row'] button[aria-expanded]");
+      if (!el) throw new Error("not yet");
+      return el as HTMLElement;
+    });
+    fireEvent.click(toggle);
+    expect(screen.getByTestId("driver-detail")).toHaveTextContent("assumption to discuss");
+    expect(editor.opened).toEqual([]);
+  });
+});
+
 describe("on a phone", () => {
   it("has no Edit plan, says editing needs a larger screen, and never touches the editor", async () => {
     const editor = new FakeEditor();
@@ -216,7 +266,7 @@ describe("on a phone", () => {
     expect(within(summary).queryByRole("button", { name: "Edit plan" })).toBeNull();
     expect(within(summary).getByText(/Editing your own plan needs a larger screen\./)).toBeInTheDocument();
     expect(screen.getByTestId("no-plan")).not.toHaveTextContent("Build a plan");
-    expect(screen.queryByRole("button", { name: /build a plan|edit plan|build your own plan/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /build a plan|edit plan|build your own plan|add to plan/i })).toBeNull();
     for (const name of ["Forecast", "Capacity", "Pipeline", "Trust"]) {
       fireEvent.click(within(screen.getByRole("navigation", { name: "Screens" })).getByRole("link", { name }));
       await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(name));

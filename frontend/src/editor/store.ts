@@ -2,6 +2,8 @@ import type { TieoutReport } from "../generated/report";
 import { EditorFailure } from "./client";
 import type { EditorStatus } from "./client";
 import type { ApplyOutcome, ComparisonRow, Facts, PlanDoc, PlanError } from "./protocol";
+import { withUnit } from "./yourPlan";
+import type { UnitKind } from "./yourPlan";
 
 /** What the store needs of the client (the page's client, or a stand-in in tests). */
 export interface Editor {
@@ -48,6 +50,8 @@ const copy = <T>(value: T): T => structuredClone(value);
 export class YourPlanStore {
   snapshot: Snapshot = { facts: {}, drafts: {}, applied: {}, feedback: CLEAN };
   private readonly listeners = new Set<() => void>();
+  /** an item asked for before the company's form existed: added to it when it does */
+  private readonly queued: Record<string, UnitKind[]> = {};
   /** the Apply in hand: an earlier one that ends late changes nothing it no longer owns */
   private latest: object = {};
 
@@ -74,13 +78,23 @@ export class YourPlanStore {
       throw new Error(outcome.kind === "invalid" ? outcome.errors.map((e) => e.message).join("; ") : outcome.problems.join("; "));
     }
     const applied = { report: outcome.report, comparison: outcome.comparison, plan };
+    const draft = (this.queued[company] ?? []).reduce((p, kind) => withUnit(p, facts, kind), copy(plan));
+    delete this.queued[company];
     this.change({
       facts: { ...this.snapshot.facts, [company]: facts },
-      drafts: { ...this.snapshot.drafts, [company]: copy(plan) },
+      drafts: { ...this.snapshot.drafts, [company]: draft },
       applied: { ...this.snapshot.applied, [company]: applied },
       feedback: CLEAN,
     });
     return applied;
+  }
+
+  /** Add one unit of an action (one hire, or one program of the action's size) to the company's form; not applied until the visitor applies it. */
+  append(company: string, kind: UnitKind) {
+    const facts = this.snapshot.facts[company];
+    const draft = this.snapshot.drafts[company];
+    if (facts && draft) this.setDraft(company, withUnit(draft, facts, kind));
+    else this.queued[company] = [...(this.queued[company] ?? []), kind];
   }
 
   setDraft(company: string, plan: PlanDoc) {

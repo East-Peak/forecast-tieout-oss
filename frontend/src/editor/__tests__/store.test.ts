@@ -175,3 +175,34 @@ describe("the choice and the rows", () => {
     expect(twice.rows.slice(-1)[0]?.label).toBe("two");
   });
 });
+
+describe("adding one unit of an action to the plan (from the tornado)", () => {
+  it("asked before the editor has loaded, the item is appended to the form once it has, and not applied", async () => {
+    const { editor, store } = make();
+    store.append("acme", "hire");
+    await store.load("acme");
+    expect(store.snapshot.drafts.acme.hires).toEqual([...DEMO.hires, { segment: "mid_market", start: "2026-09", count: 1 }]);
+    expect(editor.applied).toEqual([DEMO]);
+  });
+
+  it("asked with the editor already loaded, it is appended to the form as it stands", async () => {
+    const { store } = make();
+    await store.load("acme");
+    store.append("acme", "program");
+    expect(store.snapshot.drafts.acme.programs).toEqual([...DEMO.programs, { name: "Program pipeline", pipeline: 1000000, start: "2026-09" }]);
+  });
+
+  it("is asked for one company and leaves another's form alone", async () => {
+    const { store } = make();
+    store.append("acme", "hire");
+    await store.load("other");
+    expect(store.snapshot.drafts.other).toEqual(DEMO);
+  });
+
+  it("a full plan takes no more items", async () => {
+    const { store } = make();
+    await store.load("acme");
+    for (let n = 0; n < 12; n++) store.append("acme", "hire");
+    expect(store.snapshot.drafts.acme.hires.length + store.snapshot.drafts.acme.programs.length).toBe(8);
+  });
+});
