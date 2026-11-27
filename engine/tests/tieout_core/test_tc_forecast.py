@@ -129,7 +129,7 @@ def test_existing_pipeline_dollars_are_conserved():
     assert check.passed, check.detail
 
 
-def test_simulation_is_seeded_and_centred_on_the_expectation():
+def test_simulation_is_seeded_and_centered_on_the_expectation():
     a = simulate(MODEL, ONLY_X, CUT, WINDOWS, draws=20000, seed=7)
     b = simulate(MODEL, ONLY_X, CUT, WINDOWS, draws=20000, seed=7)
     assert a == b

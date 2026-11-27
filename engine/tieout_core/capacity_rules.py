@@ -2,7 +2,7 @@
 declared here before any score is computed.
 
 The adoption test (design doc, Goal 2B) asks whether headcount explains
-created pipeline, conditional on realised staffing. It is scored on created
+created pipeline, conditional on realized staffing. It is scored on created
 pipeline dollars, at 3 and 6 months, on the same folds as the back-test. The
 per-rep rate is fitted only from data before each cutoff, then applied to the
 ramped AE-months that actually occurred. Capacity is adopted only if all of:
@@ -47,9 +47,9 @@ Builder calls (the spec's "left to the builder"), each with its reason:
 6. Expected attrition is a constant daily hazard: the monthly rate r (per
    AE-month) gives a daily survival of (1 - r) ** (1 / DAYS_PER_AE_MONTH).
    Departures in the ranges are geometric draws from the same hazard, so the
-   draws are centred on the expectation.
+   draws are centered on the expectation.
 7. Defaults, used only where neither history nor capacity.yaml supplies a
-   value, are labelled "default": a linear six-month ramp and an attrition of
+   value, are labeled "default": a linear six-month ramp and an attrition of
    1.5% per AE-month (about 17% a year, a round figure in line with public
    sales-headcount commentary; no company's figure).
 
@@ -90,7 +90,7 @@ RAMP_MIN_REPS = 8
 RAMP_MIN_TENURED = 3
 MIN_DEPARTURES = 5
 
-# Defaults, labelled as such wherever used.
+# Defaults, labeled as such wherever used.
 DEFAULT_RAMP = tuple(Decimal(2 * k - 1) / 12 for k in range(1, 7))
 DEFAULT_MONTHLY_ATTRITION = Decimal("0.015")
 

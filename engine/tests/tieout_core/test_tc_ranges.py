@@ -3,8 +3,8 @@ rates from their uncertainty as well as the deal outcomes. Coverage and median
 range width are reported per company and horizon with fold counts. Adopted if
 pooled 80% coverage at 1 and 3 months moves closer to 80% and no
 company-and-horizon cell moves more than 10 points further from it; otherwise
-the Goal 1 ranges stay. Each cell is labelled back-tested, too narrow or too
-wide; twelve-month ranges are labelled unvalidated."""
+the Goal 1 ranges stay. Each cell is labeled back-tested, too narrow or too
+wide; twelve-month ranges are labeled unvalidated."""
 
 from dataclasses import replace
 from datetime import date
@@ -48,7 +48,7 @@ UNCERTAIN = replace(
 )
 
 
-def test_parameter_draws_widen_the_range_and_keep_the_centre():
+def test_parameter_draws_widen_the_range_and_keep_the_center():
     plain = simulate(UNCERTAIN, CROWD, CUT, WINDOWS, draws=8000, seed=1)
     wide = simulate(
         UNCERTAIN, CROWD, CUT, WINDOWS, draws=8000, seed=1, parameter_uncertainty=True

@@ -2,7 +2,7 @@ import { expect, type Page } from "@playwright/test";
 
 /** What every browser smoke spec shares: console hygiene and the digit rule, checked in the real page. */
 export const COMPANIES = ["sprout-labs", "sapling-industries", "mighty-oak-holdings"] as const;
-export const SCENARIOS = ["as-signed", "demo-plan", "hires-only", "programme-only"] as const;
+export const SCENARIOS = ["as-signed", "demo-plan", "hires-only", "program-only"] as const;
 export const BAD_TEXT = /\bNaN\b|\bundefined\b|\[object|\bInfinity\b|\bnull\b/;
 
 export function collectBrowserIssues(page: Page): string[] {

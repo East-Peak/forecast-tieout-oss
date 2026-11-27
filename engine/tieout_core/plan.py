@@ -1,19 +1,19 @@
-"""``plan.yaml``: the only source of further hires and of programme pipeline.
+"""``plan.yaml``: the only source of further hires and of program pipeline.
 
 A hire is a segment, a start month and a count; it starts on the first day of
 that month and must not repeat a signed hire on ``team_members.csv`` (same
-segment, same start month). A programme is dollars of created pipeline, a start
+segment, same start month). A program is dollars of created pipeline, a start
 month, an optional ramp in months, an optional length in months and an
-optional cost. Items are applied in the order hires first, then programmes,
+optional cost. Items are applied in the order hires first, then programs,
 each in file order.
 
-Programme arithmetic: a programme running N months (default: through the
+Program arithmetic: a program running N months (default: through the
 fiscal-year end) creates its dollars in the calendar months from its start
 month, month j at a weight of min(1, j / ramp); the dollars of the whole
-programme are split in proportion to those weights and spread evenly over each
+program are split in proportion to those weights and spread evenly over each
 month's days. Only then is the schedule clipped to the report's twelve months
 (a partial final month keeps its share of the days), so the dollars in the
-window never exceed the programme's pipeline.
+window never exceed the program's pipeline.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ from .fiscal import Window, add_months
 from .forecast import Inflow
 from .roster import Member
 
-DEFAULT_PROGRAMME_RAMP_MONTHS = 3
+DEFAULT_PROGRAM_RAMP_MONTHS = 3
 REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
 
@@ -54,7 +54,7 @@ class PlanHire:
 
 
 @dataclass(frozen=True)
-class PlanProgramme:
+class PlanProgram:
     name: str
     pipeline: Decimal
     start: date
@@ -62,7 +62,7 @@ class PlanProgramme:
     months: int | None = None
     cost: Decimal | None = None
     # (month, amount) payments, when the plan gives them; otherwise the cost is
-    # paid in step with the pipeline the programme creates.
+    # paid in step with the pipeline the program creates.
     payments: tuple[tuple[date, Decimal], ...] | None = None
 
     @property
@@ -73,10 +73,10 @@ class PlanProgramme:
 @dataclass(frozen=True)
 class Plan:
     hires: tuple[PlanHire, ...]
-    programmes: tuple[PlanProgramme, ...]
+    programs: tuple[PlanProgram, ...]
 
-    def items(self) -> list[PlanHire | PlanProgramme]:
-        return [*self.hires, *self.programmes]
+    def items(self) -> list[PlanHire | PlanProgram]:
+        return [*self.hires, *self.programs]
 
     def members_for(self, index: int) -> tuple[Member, ...]:
         """The people hire ``index`` adds."""
@@ -113,17 +113,17 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
                 "on team_members.csv; plan.yaml lists only further hires"
             )
         hires.append(PlanHire(segment, start, count))
-    programmes = []
-    for i, raw in enumerate(doc.get("programmes") or (), start=1):
-        where = f"{path}: programmes[{i}]"
+    programs = []
+    for i, raw in enumerate(doc.get("programs") or (), start=1):
+        where = f"{path}: programs[{i}]"
         pipeline = _decimal(raw.get("pipeline"), "pipeline", where)
         if pipeline <= 0:
             raise ValueError(f"{where}: pipeline must be more than 0")
         cost = raw.get("cost")
         payments = _payments(raw.get("payments"), as_of, where)
-        programmes.append(
-            PlanProgramme(
-                str(raw.get("name") or f"programme {i}"),
+        programs.append(
+            PlanProgram(
+                str(raw.get("name") or f"program {i}"),
                 pipeline,
                 _month(raw.get("start"), as_of, where),
                 _opt_int(raw.get("ramp_months"), "ramp_months", where),
@@ -134,10 +134,10 @@ def load_plan(path: Path, as_of: date, members) -> Plan:
                 payments,
             )
         )
-    return Plan(tuple(hires), tuple(programmes))
+    return Plan(tuple(hires), tuple(programs))
 
 
-def programme_cost(p: PlanProgramme, per_dollar: Decimal | None) -> Decimal | None:
+def program_cost(p: PlanProgram, per_dollar: Decimal | None) -> Decimal | None:
     """Its own cost if given, else pipeline times the cost per dollar of pipeline
     in capacity.yaml, else None: cost not entered."""
     if p.payments is not None:
@@ -147,8 +147,8 @@ def programme_cost(p: PlanProgramme, per_dollar: Decimal | None) -> Decimal | No
     return None if per_dollar is None else p.pipeline * per_dollar
 
 
-def programme_cost_in_window(
-    p: PlanProgramme,
+def program_cost_in_window(
+    p: PlanProgram,
     per_dollar: Decimal | None,
     flows: tuple[Inflow, ...],
     window_end: date,
@@ -156,8 +156,8 @@ def programme_cost_in_window(
     """The part of the cost that falls inside the report's twelve months. With a
     payment schedule in the plan, the payments dated in the window; otherwise
     the cost is paid in step with the pipeline created, so the share of the
-    programme's pipeline created in the window carries that share of the cost."""
-    total = programme_cost(p, per_dollar)
+    program's pipeline created in the window carries that share of the cost."""
+    total = program_cost(p, per_dollar)
     if total is None:
         return None
     if p.payments is not None:
@@ -166,14 +166,14 @@ def programme_cost_in_window(
     return total * created / p.pipeline
 
 
-def programme_inflows(
-    p: PlanProgramme,
+def program_inflows(
+    p: PlanProgram,
     windows: list[Window],
     as_of: date,
     fiscal_year_end: date,
     default_ramp_months: int,
 ) -> tuple[Inflow, ...]:
-    """The dollars a programme creates in each month window, as exact inflows."""
+    """The dollars a program creates in each month window, as exact inflows."""
     ramp = p.ramp_months or default_ramp_months
     horizon = (windows[-1].end - as_of).days if windows else 0
     starts = f"{p.start:%Y-%m}"
@@ -188,7 +188,7 @@ def programme_inflows(
         )
     else:
         length = sum(1 for w in windows if w.label >= starts)
-    # The whole programme is normalised first; only then is it clipped to the
+    # The whole program is normalized first; only then is it clipped to the
     # report's window (a partial final month keeps its share of the days).
     weights = [Decimal(min(j, ramp)) / Decimal(ramp) for j in range(1, length + 1)]
     total = sum(weights, Decimal(0))

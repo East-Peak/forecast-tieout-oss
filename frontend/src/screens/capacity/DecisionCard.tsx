@@ -14,7 +14,7 @@ export function DecisionCard() {
     <Card>
       <SectionHeader
         title="Does headcount explain pipeline?"
-        subtitle="Scored on the back-test's past dates: would the created pipeline have been closer with realised staffing than with a flat rate?"
+        subtitle="Scored on the back-test's past dates: would the created pipeline have been closer with realized staffing than with a flat rate?"
       />
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Badge color={color} className="text-sm">
@@ -38,7 +38,7 @@ export function DecisionCard() {
             <TableRow>
               <TableHeaderCell>Months ahead</TableHeaderCell>
               <TableHeaderCell className="text-right">Past dates scored</TableHeaderCell>
-              <TableHeaderCell className="text-right">Error with realised staffing</TableHeaderCell>
+              <TableHeaderCell className="text-right">Error with realized staffing</TableHeaderCell>
               <TableHeaderCell className="text-right">Error with a flat rate</TableHeaderCell>
               <TableHeaderCell className="text-right">Staffing's improvement</TableHeaderCell>
             </TableRow>
@@ -50,7 +50,7 @@ export function DecisionCard() {
                 <TableRow key={i} className={STACK.row} data-testid="horizon-row">
                   <TableCell className={STACK.cell} data-label="Months ahead"><Bound binding={B.hMonths} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Past dates scored"><Bound binding={B.hFolds} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Error with realised staffing"><Bound binding={B.hCapacity} row={row} /></TableCell>
+                  <TableCell className={STACK.cell} data-label="Error with realized staffing"><Bound binding={B.hCapacity} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Error with a flat rate"><Bound binding={B.hFlat} row={row} /></TableCell>
                   <TableCell className={`${STACK.cell} font-medium`} data-label="Staffing's improvement"><Bound binding={B.hImprovement} row={row} /></TableCell>
                 </TableRow>

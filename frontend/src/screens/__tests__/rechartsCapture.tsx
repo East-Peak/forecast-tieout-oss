@@ -1,7 +1,7 @@
 /**
  * Test-only. recharts is wrapped, not replaced: ResponsiveContainer is given a size (jsdom has none) and
  * ComposedChart records the data and the series elements it is handed before drawing them. What a test then
- * checks is what the chart component received, not a copy serialised beside it.
+ * checks is what the chart component received, not a copy serialized beside it.
  */
 import { Children, Fragment, cloneElement, createElement, isValidElement } from "react";
 import type { ReactElement, ReactNode } from "react";

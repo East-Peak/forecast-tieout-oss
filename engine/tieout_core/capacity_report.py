@@ -27,7 +27,7 @@ from .figures import exact, money, number
 from .fiscal import Window, add_months, month_windows
 from .fit import FitParams
 from .forecast import Creation
-from .plan import DEFAULT_PROGRAMME_RAMP_MONTHS
+from .plan import DEFAULT_PROGRAM_RAMP_MONTHS
 from .rates import DEFAULT, ENTERED, FITTED, Rate
 from .records import Check, Dataset
 from .roster import (
@@ -173,8 +173,8 @@ def rates(cap: Capacity) -> list[Rate]:
         entered = (
             ("loaded_cost_per_ae_month", cfg.loaded_cost_per_ae_month,
              "cash cost of one AE for one month (capacity.yaml)"),
-            ("programme_cost_per_dollar_of_pipeline", cfg.programme_cost_per_dollar,
-             "cash cost per dollar of programme pipeline created (capacity.yaml)"),
+            ("program_cost_per_dollar_of_pipeline", cfg.program_cost_per_dollar,
+             "cash cost per dollar of program pipeline created (capacity.yaml)"),
         )  # fmt: skip
         for name, value, definition in entered:
             if value is not None:
@@ -191,12 +191,12 @@ def rates(cap: Capacity) -> list[Rate]:
                         ENTERED,
                     )
                 )
-        ramp_months = cfg.programme_ramp_months
+        ramp_months = cfg.program_ramp_months
         out.append(
             Rate(
-                "programme_ramp_months",
-                Decimal(DEFAULT_PROGRAMME_RAMP_MONTHS if ramp_months is None else ramp_months),
-                "months a programme takes to reach its full monthly pipeline",
+                "program_ramp_months",
+                Decimal(DEFAULT_PROGRAM_RAMP_MONTHS if ramp_months is None else ramp_months),
+                "months a program takes to reach its full monthly pipeline",
                 "", "", "capacity.yaml", "unstated", 0,
                 DEFAULT if ramp_months is None else ENTERED,
             )
@@ -232,7 +232,7 @@ def roster_capacity(
             "scored_on": "created-pipeline dollars at 3 and 6 months on the back-test's folds; the "
             "per-rep rate is fitted only from data before each cutoff and applied to the ramped "
             "AE-months that actually occurred",
-            "label": "conditional on realised staffing: it asks whether headcount explains pipeline, "
+            "label": "conditional on realized staffing: it asks whether headcount explains pipeline, "
             "not how well it forecasts",
             "declared_rule": f"adopted only if ramped AE-months varied by at least "
             f"{rules.MIN_STAFFING_VARIATION:.0%} across the scored period, the capacity rate's mean "

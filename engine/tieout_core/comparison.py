@@ -1,7 +1,7 @@
 """How each named scenario compares with the as-signed baseline: the figures behind
 ``comparison.json``. Every figure is the core's (the plan section's own with-plan numbers);
 the one difference taken here, the change in the fiscal-year gap, is taken in decimals.
-The generator only serialises this; the browser shows it and subtracts nothing."""
+The generator only serializes this; the browser shows it and subtracts nothing."""
 
 from __future__ import annotations
 

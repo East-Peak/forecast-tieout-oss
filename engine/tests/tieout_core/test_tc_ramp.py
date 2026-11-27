@@ -2,7 +2,7 @@
 
 Ramp is created deals per rep by tenure month relative to reps with twelve or
 more months' tenure in the same calendar month. Attrition is departures over
-AE-months. Each is labelled fitted, entered or default, with its sample."""
+AE-months. Each is labeled fitted, entered or default, with its sample."""
 
 from datetime import date, timedelta
 from decimal import Decimal

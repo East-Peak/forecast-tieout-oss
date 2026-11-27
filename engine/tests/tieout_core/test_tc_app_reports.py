@@ -25,20 +25,20 @@ PLAN = """\
 # header comment
 hires:
   - {segment: mid_market, start: 2026-10, count: 2}
-programmes:
+programs:
   - {name: Referrals, pipeline: 600000, start: 2026-10}
 """
 
 
-def test_hires_only_keeps_the_hires_and_drops_the_programmes():
+def test_hires_only_keeps_the_hires_and_drops_the_programs():
     doc = yaml.safe_load(gen.filter_plan(PLAN, "hires-only"))
     assert doc == {"hires": [{"segment": "mid_market", "start": "2026-10", "count": 2}]}
 
 
-def test_programme_only_keeps_the_programmes_and_drops_the_hires():
-    doc = yaml.safe_load(gen.filter_plan(PLAN, "programme-only"))
+def test_program_only_keeps_the_programs_and_drops_the_hires():
+    doc = yaml.safe_load(gen.filter_plan(PLAN, "program-only"))
     assert doc == {
-        "programmes": [{"name": "Referrals", "pipeline": 600000, "start": "2026-10"}]
+        "programs": [{"name": "Referrals", "pipeline": 600000, "start": "2026-10"}]
     }
 
 
@@ -57,7 +57,7 @@ def test_an_unknown_scenario_filter_is_refused():
 def test_the_committed_scenario_plan_files_are_the_filtered_demo_plan(company):
     profile = gen.PROFILES / company
     demo = (profile / "plan.yaml").read_text()
-    for scenario in ("hires-only", "programme-only"):
+    for scenario in ("hires-only", "program-only"):
         committed = (profile / f"plan-{scenario}.yaml").read_text()
         assert committed == gen.filter_plan(demo, scenario)
 
@@ -118,8 +118,8 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
         f"{COMPANY}/demo-plan.md",
         f"{COMPANY}/hires-only.json",
         f"{COMPANY}/hires-only.md",
-        f"{COMPANY}/programme-only.json",
-        f"{COMPANY}/programme-only.md",
+        f"{COMPANY}/program-only.json",
+        f"{COMPANY}/program-only.md",
     ]
 
 
@@ -134,7 +134,7 @@ def test_each_report_validates_is_correct_and_carries_its_scenarios_plan(built):
         "as-signed": None,
         "demo-plan": "plan.yaml",
         "hires-only": "plan-hires-only.yaml",
-        "programme-only": "plan-programme-only.yaml",
+        "program-only": "plan-program-only.yaml",
     }
     for scenario, plan_name in expected_plan.items():
         r = json.loads(built[f"{COMPANY}/{scenario}.json"])
@@ -160,11 +160,11 @@ def test_paths_inside_the_files_are_repo_relative(built):
 def test_the_scenarios_differ_only_where_the_plan_does(built):
     signed = json.loads(built[f"{COMPANY}/as-signed.json"])
     hires = json.loads(built[f"{COMPANY}/hires-only.json"])
-    programme = json.loads(built[f"{COMPANY}/programme-only.json"])
-    for r in (hires, programme):
+    program = json.loads(built[f"{COMPANY}/program-only.json"])
+    for r in (hires, program):
         assert r["gap"] == signed["gap"] and r["forecasts"] == signed["forecasts"]
     assert {i["kind"] for i in hires["plan"]["items"]} == {"hires"}
-    assert {i["kind"] for i in programme["plan"]["items"]} == {"programme"}
+    assert {i["kind"] for i in program["plan"]["items"]} == {"program"}
 
 
 def test_the_index_describes_the_company_and_lists_its_scenarios(built):
@@ -175,7 +175,7 @@ def test_the_index_describes_the_company_and_lists_its_scenarios(built):
     assert company["description"]
     assert company["as_of"] == "2026-08-31"
     assert [s["id"] for s in company["scenarios"]] == [
-        "as-signed", "demo-plan", "hires-only", "programme-only"
+        "as-signed", "demo-plan", "hires-only", "program-only"
     ]  # fmt: skip
     assert company["scenarios"][0]["report"] == f"{COMPANY}/as-signed.json"
     assert company["comparison"] == f"{COMPANY}/comparison.json"

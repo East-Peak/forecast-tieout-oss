@@ -161,7 +161,7 @@ export function expectations({ company, scenario, report: r, index, comparison }
   whenMany(fa, B.cCoverage80.id, () => cells.map((c) => (c.coverage80 === null ? "not scored" : fmt.percent1(c.coverage80))), cellRows);
   whenMany(fa, B.cCoverage95.id, () => cells.map((c) => (c.coverage95 === null ? "not scored" : fmt.percent1(c.coverage95))), cellRows);
   whenMany(fa, B.cLabel.id, () => cells.map((c) => c.label), cellRows);
-  whenMany(fa, B.cJudgement.id, () => cells.map((c) => c.coverage_judgement), cellRows);
+  whenMany(fa, B.cJudgment.id, () => cells.map((c) => c.coverage_judgment), cellRows);
 
   one(B.scenarioLabel.id, scenario_.label);
   one(B.scenarioDescription.id, scenario_.description);

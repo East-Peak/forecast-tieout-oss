@@ -4,7 +4,7 @@ Scored on created-pipeline dollars, at 3 and 6 months, on the same folds as
 the back-test. The per-rep rate is fitted only from data before each cutoff
 (deals created and the roster known then) and applied to the ramped AE-months
 that actually occurred. It asks whether headcount explains pipeline,
-conditional on realised staffing; it is not a forecast back-test.
+conditional on realized staffing; it is not a forecast back-test.
 
 Three outcomes: adopted, not shown, unavailable.
 """
@@ -45,7 +45,7 @@ class AdoptionFold:
     actual: Decimal  # pipeline dollars created in the window
     flat: Decimal  # trailing created dollars per day times the window's days
     capacity: (
-        Decimal  # trailing dollars per ramped AE-month times realised ramped AE-months
+        Decimal  # trailing dollars per ramped AE-month times realized ramped AE-months
     )
 
 
@@ -99,10 +99,10 @@ def score_fold(
     trailing = _created(known.deals, creation_amounts(known), trailing_start, cutoff)
     flat = trailing / Decimal(rules.TRAILING_DAYS) * Decimal((end - cutoff).days)
     per_ramped_month = trailing / fit.trailing_ramped_months
-    # Realised staffing: the whole roster as it turned out, the ramp known at the cutoff.
-    realised = ramped_ae_months(members, fit.curve, cutoff, end)
+    # Realized staffing: the whole roster as it turned out, the ramp known at the cutoff.
+    realized = ramped_ae_months(members, fit.curve, cutoff, end)
     actual = _created(population.deals, creation_amounts(population), cutoff, end)
-    return AdoptionFold(cutoff, horizon, actual, flat, per_ramped_month * realised)
+    return AdoptionFold(cutoff, horizon, actual, flat, per_ramped_month * realized)
 
 
 def staffing_variation(members, curve: RampCurve, first: date, last: date) -> Decimal:
@@ -166,7 +166,7 @@ def decide(folds: list[AdoptionFold], variation: Decimal) -> Adoption:
     )
     return Adoption(
         ADOPTED,
-        f"created-pipeline error with realised staffing: {text}; ramped AE-months varied "
+        f"created-pipeline error with realized staffing: {text}; ramped AE-months varied "
         f"{variation:.0%}",
         variation, None, tuple(folds), scores,
     )  # fmt: skip

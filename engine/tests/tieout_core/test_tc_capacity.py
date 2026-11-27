@@ -140,7 +140,7 @@ def test_with_no_ramped_months_in_the_trailing_year_capacity_is_unavailable():
     assert "no ramped AE-months" in cap.unavailable
 
 
-def test_random_departures_in_the_ranges_are_centred_on_the_expectation():
+def test_random_departures_in_the_ranges_are_centered_on_the_expectation():
     members = [ae(f"A{i}", "2020-01-01") for i in range(6)]
     cfg = replace(CFG, attrition=Decimal("0.05"))
     cap = capacity(members, cfg)
@@ -152,7 +152,7 @@ def test_random_departures_in_the_ranges_are_centred_on_the_expectation():
     assert mat.std(axis=0)[-1] > 0  # the draws differ: departures are random
 
 
-def test_the_simulation_with_capacity_stays_centred_on_its_expectation(setup):
+def test_the_simulation_with_capacity_stays_centered_on_its_expectation(setup):
     data, model, windows = setup
     members = [ae(f"A{i}", "2020-01-01") for i in range(5)]
     cap = capacity(members, replace(CFG, attrition=Decimal("0.03")))
@@ -167,7 +167,7 @@ def test_the_simulation_with_capacity_stays_centred_on_its_expectation(setup):
 # ---------------------------------------------------------------- review round: a plan with its error
 
 
-def test_the_simulation_with_programme_inflows_is_centred_on_the_forecast_with_them(
+def test_the_simulation_with_program_inflows_is_centered_on_the_forecast_with_them(
     setup,
 ):
     from engine.tieout_core.forecast import Inflow

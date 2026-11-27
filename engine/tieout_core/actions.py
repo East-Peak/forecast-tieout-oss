@@ -3,7 +3,7 @@
 Everything goes through the one forward function (``Scenario.forecast``). When
 the capacity term was adopted a hire raises the roster's ramped AE-months;
 when it was not, a hire is "unsupported by this history" and not valued, and
-only programme pipeline (which enters through created pipeline, as the lever
+only program pipeline (which enters through created pipeline, as the lever
 does) is. A missing cost is "cost not entered" and the action is not ranked.
 """
 
@@ -24,16 +24,16 @@ from .fit import Model
 from .forecast import Forecast, Inflow, model_forecast, simulate
 from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .plan import (
-    DEFAULT_PROGRAMME_RAMP_MONTHS,
+    DEFAULT_PROGRAM_RAMP_MONTHS,
     NEXT_12,
     REST_OF_FY,
     Plan,
     PlanHire,
-    PlanProgramme,
+    PlanProgram,
     next_month_start,
-    programme_cost,
-    programme_cost_in_window,
-    programme_inflows,
+    program_cost,
+    program_cost_in_window,
+    program_inflows,
     segment_words,
 )
 from .records import Check, Dataset
@@ -41,7 +41,7 @@ from .roster import Member
 
 ZERO = Decimal(0)
 FEASIBLE_HIRES = "feasible"
-ACTION_PROGRAMME_DOLLARS = Decimal(1_000_000)
+ACTION_PROGRAM_DOLLARS = Decimal(1_000_000)
 UNSUPPORTED = "unsupported by this history"
 PAYING_SHARE = Decimal(
     "0.01"
@@ -241,8 +241,8 @@ def plan_section(
     items, total_cost, cost_missing = [], ZERO, False
     survival = daily_survival(g.cap.fit.attrition.rate) if g.cap.fit else Decimal(1)
     ramp_default = (
-        cfg.programme_ramp_months if cfg else None
-    ) or DEFAULT_PROGRAMME_RAMP_MONTHS
+        cfg.program_ramp_months if cfg else None
+    ) or DEFAULT_PROGRAM_RAMP_MONTHS
     for index, item in enumerate(plan.items()):
         total = None
         if isinstance(item, PlanHire):
@@ -265,13 +265,13 @@ def plan_section(
             else:
                 row |= {"valued": False, "note": f"hiring is {UNSUPPORTED}: not valued"}
         else:
-            flows = programme_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
-            per_dollar = cfg.programme_cost_per_dollar if cfg else None
-            cost = programme_cost_in_window(item, per_dollar, flows, g.windows[-1].end)
-            total = programme_cost(item, per_dollar)
+            flows = program_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
+            per_dollar = cfg.program_cost_per_dollar if cfg else None
+            cost = program_cost_in_window(item, per_dollar, flows, g.windows[-1].end)
+            total = program_cost(item, per_dollar)
             inflows.extend(flows)
             row = {
-                "kind": "programme",
+                "kind": "program",
                 "label": item.label,
                 "detail": f"${item.pipeline:,.0f} of created pipeline from {item.start:%Y-%m}",
             }
@@ -287,7 +287,7 @@ def plan_section(
             row["contribution"] = None
         row["cash_cost_in_twelve_months"] = None if cost is None else money(cost)
         row["cash_cost_total"] = None if total is None else money(total)
-        if row["kind"] == "programme":
+        if row["kind"] == "program":
             row["payment_schedule"] = (
                 "the plan's payments"
                 if item.payments is not None
@@ -322,10 +322,10 @@ def plan_section(
         sum((x - sim.total.mean) ** 2 for x in sim.samples_total)
         / max(1, sim.draws - 1)
     ) ** 0.5 / sim.draws**0.5
-    centred = abs(sim.total.mean - expected_total) <= 4 * sd_mean + 0.01
+    centered = abs(sim.total.mean - expected_total) <= 4 * sd_mean + 0.01
     section = {
         "file": str(path),
-        "order": "hires first, then programmes, each in the plan file's order; each contribution is "
+        "order": "hires first, then programs, each in the plan file's order; each contribution is "
         "the extra bookings from adding that item to everything above it, so they sum to the difference",
         "baseline_definition": "the roster as signed and nothing planned"
         + (
@@ -360,7 +360,7 @@ def plan_section(
         "cash_cost_in_twelve_months": None if cost_missing else money(total_cost),
         "cost_note": "a missing cost is shown as 'cost not entered' and left out of the total"
         if cost_missing
-        else "hires at loaded cost per AE-month over expected months employed; programmes at their cost, "
+        else "hires at loaded cost per AE-month over expected months employed; programs at their cost, "
         "paid in step with the pipeline they create (or on the plan's own payment schedule), counting "
         "only what falls inside the twelve months",
         "ranges": {
@@ -383,7 +383,7 @@ def plan_section(
             "draws": g.draws,
             "what_is_drawn": "deal outcomes"
             + (", future departures" if adopted else "")
-            + ", with the planned hires and programme pipeline in the scenario",
+            + ", with the planned hires and program pipeline in the scenario",
         },
     }
     # Goal 3A: the with-plan figures a screen shows, by month, by quarter and for the year
@@ -415,8 +415,8 @@ def plan_section(
         ),
     )
     sim_check = Check(
-        "plan simulation centred on its expectation",
-        centred,
+        "plan simulation centered on its expectation",
+        centered,
         f"simulated mean {sim.total.mean:,.2f} vs expected {expected_total:,.2f} ({g.draws} draws)",
     )
     return section, [check, sim_check]
@@ -460,10 +460,10 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
     base_book = scen.bookings(base)
     survival = daily_survival(cap.fit.attrition.rate) if cap.fit else Decimal(1)
     ramp_default = (
-        cfg.programme_ramp_months if cfg else None
-    ) or DEFAULT_PROGRAMME_RAMP_MONTHS
+        cfg.program_ramp_months if cfg else None
+    ) or DEFAULT_PROGRAM_RAMP_MONTHS
     hire = Member("ACTION-HIRE", "ae", "", start, None, None)
-    programme = PlanProgramme("programme pipeline", ACTION_PROGRAMME_DOLLARS, start)
+    program = PlanProgram("program pipeline", ACTION_PROGRAM_DOLLARS, start)
 
     def row(action, kind, forecast, cost, unsupported=""):
         out = {"action": action, "kind": kind, "not_ranked_because": None}
@@ -514,17 +514,17 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         hire_row = row(
             f"Hire one AE starting {start}", "hire", None, None, unsupported=why
         )
-    # --- one million dollars of programme pipeline
-    flows = programme_inflows(programme, g.windows, g.as_of, g.fy_end, ramp_default)
-    prog_cost = programme_cost_in_window(
-        programme,
-        cfg.programme_cost_per_dollar if cfg else None,
+    # --- one million dollars of program pipeline
+    flows = program_inflows(program, g.windows, g.as_of, g.fy_end, ramp_default)
+    prog_cost = program_cost_in_window(
+        program,
+        cfg.program_cost_per_dollar if cfg else None,
         flows,
         g.windows[-1].end,
     )
     prog_row = row(
-        f"Add ${ACTION_PROGRAMME_DOLLARS:,.0f} of programme pipeline starting {start}",
-        "programme", scen.forecast(inflows=flows), prog_cost,
+        f"Add ${ACTION_PROGRAM_DOLLARS:,.0f} of program pipeline starting {start}",
+        "program", scen.forecast(inflows=flows), prog_cost,
     )  # fmt: skip
     ranked = rank([hire_row, prog_row])
     for r in ranked:  # numbers for the report dict
@@ -601,17 +601,17 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
             "note": "the hiring action is not valued, so there is no number of hires to solve for",
         }
 
-    # programme dollars
-    def forward_programme(dollars: Decimal) -> Decimal:
-        p = PlanProgramme("solve", dollars, start)
+    # program dollars
+    def forward_program(dollars: Decimal) -> Decimal:
+        p = PlanProgram("solve", dollars, start)
         f = scen.forecast(
-            inflows=programme_inflows(p, g.windows, g.as_of, g.fy_end, ramp_default)
+            inflows=program_inflows(p, g.windows, g.as_of, g.fy_end, ramp_default)
         )
         return scen.fiscal_year(f)
 
-    solved_p = solve_added_pipeline(forward_programme, g.fy_target, g.lever_cap)
-    cost_per_dollar = cfg.programme_cost_per_dollar if cfg else None
-    closing["programme"] = {
+    solved_p = solve_added_pipeline(forward_program, g.fy_target, g.lever_cap)
+    cost_per_dollar = cfg.program_cost_per_dollar if cfg else None
+    closing["program"] = {
         "outcome": {
             COVERED: "already covered",
             FEASIBLE: "feasible",
@@ -635,11 +635,11 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         "cash_cost_in_twelve_months": None
         if cost_per_dollar is None or solved_p.outcome != FEASIBLE
         else money(
-            programme_cost_in_window(
-                PlanProgramme("solve", solved_p.required, start),
+            program_cost_in_window(
+                PlanProgram("solve", solved_p.required, start),
                 cost_per_dollar,
-                programme_inflows(
-                    PlanProgramme("solve", solved_p.required, start),
+                program_inflows(
+                    PlanProgram("solve", solved_p.required, start),
                     g.windows,
                     g.as_of,
                     g.fy_end,
@@ -650,15 +650,13 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         ),
         "cost_status": "entered" if cost_per_dollar is not None else "cost not entered",
     }
-    closing["programme"]["cash_cost_note"] = closing_cost_note(
-        "programme",
-        closing["programme"]["outcome"],
-        closing["programme"]["cost_status"],
-        closing["programme"]["cash_cost_in_twelve_months"],
+    closing["program"]["cash_cost_note"] = closing_cost_note(
+        "program",
+        closing["program"]["outcome"],
+        closing["program"]["cost_status"],
+        closing["program"]["cash_cost_in_twelve_months"],
     )
-    fresh = (
-        forward_programme(solved_p.required) if solved_p.outcome == FEASIBLE else None
-    )
+    fresh = forward_program(solved_p.required) if solved_p.outcome == FEASIBLE else None
     ok = (
         abs(fresh - g.fy_target) <= CENT
         if fresh is not None
@@ -670,7 +668,7 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
     )
     checks.append(
         Check(
-            "programme solve agrees with the forward function",
+            "program solve agrees with the forward function",
             ok,
             f"{solved_p.outcome}: forward({money(solved_p.required) if solved_p.required is not None else 'cap'}) "
             f"= {money(fresh if fresh is not None else solved_p.achieved)} against {g.fy_target}",
@@ -678,11 +676,11 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
     )
     section = {
         "definition": "Two unit actions through the same forward function, the roster as signed: hire one "
-        f"AE starting {start}; add ${ACTION_PROGRAMME_DOLLARS:,.0f} of programme pipeline starting {start}. "
+        f"AE starting {start}; add ${ACTION_PROGRAM_DOLLARS:,.0f} of program pipeline starting {start}. "
         "Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the "
         f"same twelve months. An action starts paying in the first month it adds at least "
         f"{PAYING_SHARE:.0%} of its twelve-month gain.",
-        "programme_shape": f"created from {start:%Y-%m} to the fiscal-year end, ramping up over the entered "
+        "program_shape": f"created from {start:%Y-%m} to the fiscal-year end, ramping up over the entered "
         f"ramp ({ramp_default} months unless capacity.yaml says otherwise)",
         "comparison": ranked,
         "close_the_fiscal_year_gap": closing,

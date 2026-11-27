@@ -17,7 +17,7 @@ to fund with new pipeline when its requirement is over the cap, or when its
 requirement per ramped AE-month is above the team's best four-quarter average.
 Builder's call on the second leg, declared before any demo result was computed:
 it applies only when capacity is the forecast's basis (adopted). When capacity
-was not shown to explain pipeline, the per-rep comparison stays a labelled
+was not shown to explain pipeline, the per-rep comparison stays a labeled
 diagnostic (as in 2B), because a ceiling derived from headcount would rest on a
 relationship this history did not support; the cap leg then decides alone.
 """
@@ -389,7 +389,7 @@ class History:
     best_four_per_day: Decimal | None = None  # total created per day, same rule
 
 
-def summarise_history(quarters: list[tuple[Decimal, Decimal]]) -> History:
+def summarize_history(quarters: list[tuple[Decimal, Decimal]]) -> History:
     """From (created dollars, ramped AE-months) per complete fiscal quarter, oldest first."""
     usable = [(c, m) for c, m in quarters if m > 0]
     if not usable:

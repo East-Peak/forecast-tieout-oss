@@ -12,7 +12,7 @@ import * as files from "./files";
 /**
  * The charts' real props. recharts is wrapped, not replaced: ResponsiveContainer is given a size
  * (jsdom has none) and ComposedChart records the data and the series elements it is handed before
- * drawing them. What is checked is what the chart component received, not a copy serialised beside it.
+ * drawing them. What is checked is what the chart component received, not a copy serialized beside it.
  */
 const captured = vi.hoisted(() => [] as unknown[]);
 

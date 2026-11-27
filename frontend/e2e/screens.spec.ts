@@ -147,7 +147,7 @@ test.describe("Plan: switching scenario @smoke", () => {
     const issues = collectBrowserIssues(page);
     await open(page, "plan", "sapling-industries", "as-signed");
     await expect(page.getByTestId("no-plan")).toContainText("There is no plan in this scenario");
-    for (const scenario of ["demo-plan", "hires-only", "programme-only"] as const) {
+    for (const scenario of ["demo-plan", "hires-only", "program-only"] as const) {
       await page.locator(`[data-scenario-id='${scenario}']`).click();
       await expect(page).toHaveURL(new RegExp(`scenario=${scenario}`));
       await expect(page.locator(`[data-scenario-id='${scenario}']`)).toHaveAttribute("aria-pressed", "true");

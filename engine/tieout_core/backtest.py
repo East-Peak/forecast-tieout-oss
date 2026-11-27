@@ -93,7 +93,7 @@ def fold(
 ) -> list[Fold]:
     """Forecast each horizon from ``cutoff`` using only what was known then."""
     known = as_known_at(population, cutoff)
-    if latest_known_date(known) > cutoff:  # defence in depth; as_known_at guarantees it
+    if latest_known_date(known) > cutoff:  # defense in depth; as_known_at guarantees it
         raise AssertionError(f"fold at {cutoff} can see {latest_known_date(known)}")
     model = fit(known, cutoff, profile, params)
     folds = []

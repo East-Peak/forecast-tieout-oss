@@ -21,7 +21,7 @@ from engine.tieout_core.forecast import EXISTING, Inflow, model_forecast
 from engine.tieout_core.history import as_known_at
 from engine.tieout_core.lever import COVERED, FEASIBLE, UNREACHABLE
 from engine.tieout_core.load import load_profile
-from engine.tieout_core.requirement import solve_quarters, summarise_history
+from engine.tieout_core.requirement import solve_quarters, summarize_history
 
 FY = FiscalYear(date(2026, 2, 1))
 CENT = Decimal("0.01")
@@ -196,14 +196,14 @@ def test_history_by_ramped_ae_month_gives_the_median_and_the_best_four_quarter_a
     # Four-quarter averages: (100+200+300+400)/40 = 25; (200+300+400+50)/40 = 23.75;
     # (300+400+50+60)/40 = 20.25. The best is 25.
     quarters_ = [(Decimal(c), Decimal(10)) for c in (100, 200, 300, 400, 50, 60)]
-    s = summarise_history(quarters_)
+    s = summarize_history(quarters_)
     assert s.quarters == 6 and s.median == Decimal(15) and s.best_four == Decimal(25)
 
 
 def test_fewer_than_four_quarters_has_a_median_but_no_best_four():
-    s = summarise_history([(Decimal(10), Decimal(1)), (Decimal(30), Decimal(1))])
+    s = summarize_history([(Decimal(10), Decimal(1)), (Decimal(30), Decimal(1))])
     assert s.median == Decimal(20) and s.best_four is None
-    assert summarise_history([]).median is None
+    assert summarize_history([]).median is None
 
 
 # ---------------------------------------------------------------- review round: one total, honestly named
@@ -220,9 +220,9 @@ def _fake(quarter, outcome, required, target=1000):
 
 
 def test_the_total_is_for_every_quarter_when_all_are_solvable():
-    from engine.tieout_core.pipeline_report import summarise_fiscal_year
+    from engine.tieout_core.pipeline_report import summarize_fiscal_year
 
-    s = summarise_fiscal_year(
+    s = summarize_fiscal_year(
         [_fake("Q3FY26", COVERED, Decimal(0)), _fake("Q4FY26", FEASIBLE, Decimal(500))],
         ("Q3FY26", "Q4FY26"),
     )
@@ -233,16 +233,16 @@ def test_the_total_is_for_every_quarter_when_all_are_solvable():
 
 
 def test_a_partial_total_names_the_unreachable_quarters_and_never_reads_as_solved():
-    from engine.tieout_core.pipeline_report import summarise_fiscal_year
+    from engine.tieout_core.pipeline_report import summarize_fiscal_year
 
-    s = summarise_fiscal_year(
+    s = summarize_fiscal_year(
         [_fake("Q3FY26", UNREACHABLE, None), _fake("Q4FY26", FEASIBLE, Decimal(500))],
         ("Q3FY26", "Q4FY26"),
     )
     assert s["headline"].startswith(
         "partial: 1 of 2 quarters solvable (unreachable: Q3FY26)"
     )
-    none = summarise_fiscal_year(
+    none = summarize_fiscal_year(
         [
             _fake("Q3FY26", UNREACHABLE, None),
             _fake("Q4FY26", UNREACHABLE, Decimal(10**12)),

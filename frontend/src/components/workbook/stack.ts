@@ -1,6 +1,6 @@
 /**
  * Class names that let one table read as a table from the small breakpoint up and as stacked rows
- * (each cell its own labelled line, from the cell's data-label) on a phone, so nothing scrolls sideways.
+ * (each cell its own labeled line, from the cell's data-label) on a phone, so nothing scrolls sideways.
  * One DOM, two layouts: the bound figures are in the page once.
  */
 export const STACK = {

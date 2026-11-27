@@ -42,7 +42,7 @@ export function RangeCheck() {
                 <TableCell className={STACK.cell} data-label="Inside the 80% range"><Bound binding={B.cCoverage80} row={row} /></TableCell>
                 <TableCell className={STACK.cell} data-label="Inside the 95% range"><Bound binding={B.cCoverage95} row={row} /></TableCell>
                 <TableCell className={STACK.cell} data-label="Label"><Bound binding={B.cLabel} row={row} /></TableCell>
-                <TableCell className={STACK.cell} data-label="Coverage reads"><Bound binding={B.cJudgement} row={row} /></TableCell>
+                <TableCell className={STACK.cell} data-label="Coverage reads"><Bound binding={B.cJudgment} row={row} /></TableCell>
               </TableRow>
             );
           })}

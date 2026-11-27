@@ -5,7 +5,7 @@ import { STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 /**
- * The two unit actions through the same forward function, compared (a hire and a programme), and what each
+ * The two unit actions through the same forward function, compared (a hire and a program), and what each
  * would have to be to close the year's gap alone. An action that cannot be valued says why, in the report's words.
  */
 export function ActionsCard() {
@@ -24,7 +24,7 @@ export function ActionsCard() {
   return (
     <>
       <Card>
-        <SectionHeader title="One hire against one programme" subtitle="Each action alone, on the roster as signed: what it gains, what it costs, and when it starts to pay." />
+        <SectionHeader title="One hire against one program" subtitle="Each action alone, on the roster as signed: what it gains, what it costs, and when it starts to pay." />
         {best >= 0 ? (
           <p className="mb-3 text-sm text-slate-700" data-testid="better-per-dollar">
             <span className="font-semibold text-ft-brand">Better per dollar: </span>
@@ -92,23 +92,23 @@ export function ActionsCard() {
               <p className="mt-1 text-xs text-slate-600"><Bound binding={B.hiresNote} /></p>
             )}
           </section>
-          <section data-testid="close-programme">
-            <h3 className="text-sm font-semibold text-ft-brand">Programme pipeline</h3>
-            <p className="mt-1 text-lg font-semibold text-slate-900"><Bound binding={B.programmeOutcome} /></p>
+          <section data-testid="close-program">
+            <h3 className="text-sm font-semibold text-ft-brand">Program pipeline</h3>
+            <p className="mt-1 text-lg font-semibold text-slate-900"><Bound binding={B.programOutcome} /></p>
             <ul className="mt-1 space-y-1 text-xs text-slate-600">
-              <li>Pipeline needed: <Bound binding={B.programmeDollars} /></li>
+              <li>Pipeline needed: <Bound binding={B.programDollars} /></li>
               <li>
-                {close.programme.needed_but_over_the_cap !== null ? (
+                {close.program.needed_but_over_the_cap !== null ? (
                   <>
-                    Over the cap: closing it would take <Bound binding={B.programmeOver} />, against a cap of <Bound binding={B.programmeCap} />
+                    Over the cap: closing it would take <Bound binding={B.programOver} />, against a cap of <Bound binding={B.programCap} />
                   </>
                 ) : (
                   <>
-                    Within the cap of <Bound binding={B.programmeCap} />
+                    Within the cap of <Bound binding={B.programCap} />
                   </>
                 )}
               </li>
-              <li>Cash cost, next twelve months: <Bound binding={B.programmeCost} /></li>
+              <li>Cash cost, next twelve months: <Bound binding={B.programCost} /></li>
             </ul>
           </section>
         </div>

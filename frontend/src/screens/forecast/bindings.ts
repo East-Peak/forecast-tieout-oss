@@ -7,7 +7,7 @@ import type { SeriesSpec } from "../../binding/chartData";
  * file, pointer, unit and format it is read through. The selected scenario governs the screen: for
  * a plan, the headline, ranges, charts and both tables read the plan's with-plan figures (SIGNED and
  * PLANNED hold the bindings whose pointer differs, under the same ids), and the as-signed figure sits
- * beside the headline as a labelled comparison. A row binding is read from each row of a collection
+ * beside the headline as a labeled comparison. A row binding is read from each row of a collection
  * (ROWS). `{scenario}` and `{company}` in a pointer stand for the visitor's current choice.
  * The tests assert this list against independently written expectations.
  */
@@ -75,7 +75,7 @@ export const B = {
   cCoverage80: bind({ id: "cell.coverage80", path: "/coverage80", unit: "fraction", format: "percent1", unavailable: { words: "not scored" } }),
   cCoverage95: bind({ id: "cell.coverage95", path: "/coverage95", unit: "fraction", format: "percent1", unavailable: { words: "not scored" } }),
   cLabel: text("cell.label", "/label"),
-  cJudgement: text("cell.judgement", "/coverage_judgement"),
+  cJudgment: text("cell.judgment", "/coverage_judgment"),
 
   // this scenario (index, comparison; a plan's items from the report)
   scenarioLabel: text("scenario.label", "/companies/{id={company}}/scenarios/{id={scenario}}/label", { source: "index" }),
@@ -93,7 +93,7 @@ export const B = {
   pItemContribution: usd("plan.item.contribution", `/contribution/${REST}`, { unavailable: { reason: "/note" } }),
   pItemCost: usd("plan.item.cost", "/cash_cost_in_twelve_months", { unavailable: { words: "cost not entered" } }),
 
-  // beside a plan's headline: the same figure as signed, a labelled comparison
+  // beside a plan's headline: the same figure as signed, a labeled comparison
   signedExpected: usd("year.expected.signed", "/gap/fiscal_year/expected"),
   signedGap: usd("year.gap.signed", "/gap/fiscal_year/gap", { tint: "shortfall" }),
   qSignedGap: usd("quarter.gap.signed", "/gap", { tint: "shortfall", unavailable: WORDS }),

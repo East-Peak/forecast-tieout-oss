@@ -28,7 +28,7 @@ def main(argv=None) -> int:
     rep.add_argument("--seed", type=int, default=0, help="simulation seed (default 0)")
     rep.add_argument(
         "--plan",
-        help="plan.yaml: further hires and programme pipeline (adds section 11)",
+        help="plan.yaml: further hires and program pipeline (adds section 11)",
     )
     sub.add_parser("candidates", help="score the Goal 2A candidates on the demo data")
     args = parser.parse_args(argv)

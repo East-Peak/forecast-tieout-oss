@@ -26,7 +26,7 @@ attrition:
   monthly_per_ae: 0.01
 costs:
   loaded_cost_per_ae_month: 12000
-  programme_cost_per_dollar_of_pipeline: 0.05
+  program_cost_per_dollar_of_pipeline: 0.05
 """
 
 

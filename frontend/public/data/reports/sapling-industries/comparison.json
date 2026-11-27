@@ -48,9 +48,9 @@
       "expected_fiscal_year": "58235665.34",
       "fiscal_year_gap": "1764334.66",
       "fiscal_year_gap_change": "-145941.05",
-      "label": "Programme only",
+      "label": "Program only",
       "note": null,
-      "scenario": "programme-only"
+      "scenario": "program-only"
     }
   ]
 }

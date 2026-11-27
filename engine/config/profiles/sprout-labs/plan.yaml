@@ -1,6 +1,6 @@
-# Demo plan for Sprout Labs (synthetic): further hires and programme pipeline.
+# Demo plan for Sprout Labs (synthetic): further hires and program pipeline.
 # Hires are further to any signed hire on team_members.csv; a hire starts on the
-# first day of its month. A programme is dollars of created pipeline; it runs from
+# first day of its month. A program is dollars of created pipeline; it runs from
 # its start month to the fiscal-year end unless `months` says otherwise.
 hires:
   - segment: mid_market
@@ -9,7 +9,7 @@ hires:
   - segment: commercial
     start: 2026-12
     count: 1
-programmes:
+programs:
   - name: Partner referrals
     pipeline: 600000
     start: 2026-10

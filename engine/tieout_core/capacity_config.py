@@ -19,7 +19,7 @@ import yaml
 from .load import parse_date, parse_money
 from .roster import Member
 
-DEFAULT_PROGRAMME_RAMP_MONTHS = 3
+DEFAULT_PROGRAM_RAMP_MONTHS = 3
 
 
 @dataclass(frozen=True)
@@ -29,8 +29,8 @@ class CapacityConfig:
     ramp: tuple[Decimal, ...] | None = None  # entered
     attrition: Decimal | None = None  # entered, per AE-month
     loaded_cost_per_ae_month: Decimal | None = None
-    programme_cost_per_dollar: Decimal | None = None
-    programme_ramp_months: int | None = None  # entered; None means the default
+    program_cost_per_dollar: Decimal | None = None
+    program_ramp_months: int | None = None  # entered; None means the default
     hires_bound: int | None = None
 
 
@@ -62,13 +62,13 @@ def load_capacity(profile_dir: Path) -> CapacityConfig | None:
             "loaded_cost_per_ae_month",
             Decimal(0),
         ),
-        programme_cost_per_dollar=_opt(
-            costs.get("programme_cost_per_dollar_of_pipeline"),
-            "programme_cost_per_dollar_of_pipeline",
+        program_cost_per_dollar=_opt(
+            costs.get("program_cost_per_dollar_of_pipeline"),
+            "program_cost_per_dollar_of_pipeline",
             Decimal(0),
         ),
-        programme_ramp_months=_opt_int(
-            (doc.get("programme") or {}).get("ramp_months"), "ramp_months", 1
+        program_ramp_months=_opt_int(
+            (doc.get("program") or {}).get("ramp_months"), "ramp_months", 1
         ),
         hires_bound=_opt_int(
             (doc.get("hires") or {}).get("max_in_one_quarter"), "max_in_one_quarter", 0

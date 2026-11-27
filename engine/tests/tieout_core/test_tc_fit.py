@@ -135,7 +135,7 @@ def test_close_timing_follows_the_same_stage_and_age_as_the_win_rate(tmp_path):
     )  # no evidence for that age: the stage's timing
 
 
-def test_rates_without_evidence_are_labelled_default_not_fitted(tmp_path):
+def test_rates_without_evidence_are_labeled_default_not_fitted(tmp_path):
     profile = load_profile(write_profile(tmp_path / "p"))
     # Every deal is younger than the 365-day horizon: no matured creation cohort.
     m = fit(DATA, date(2025, 9, 1), profile)

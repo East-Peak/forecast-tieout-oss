@@ -1,6 +1,6 @@
 """Goal 2B: the adoption test for the capacity term, declared in
 ``capacity_rules`` before this code existed. Scored on created-pipeline
-dollars, conditional on realised staffing: the per-rep rate is fitted only from
+dollars, conditional on realized staffing: the per-rep rate is fitted only from
 data before each cutoff, then applied to the ramped AE-months that occurred."""
 
 from datetime import date, timedelta

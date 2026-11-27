@@ -9,7 +9,7 @@ Reconcile the revenue plan against pipeline reality.
 Forecast Tieout reads a company's deals, stage history and roster, and writes one
 report that ties out: the bookings to date, a forecast for the rest of the year with
 its range, the gap to the plan's targets, whether the team has the capacity to close
-that gap, what must be created and by when, and what a hiring or programme plan buys.
+that gap, what must be created and by when, and what a hiring or program plan buys.
 Every figure comes with its sample, its source and its error, and the report checks
 itself against the source files before it says anything.
 
@@ -34,7 +34,7 @@ Each screen answers one question, for one company and one scenario at a time.
 | Forecast (`/forecast`) | Where does the year land, and how sure are we? | Bookings by month; the fitted forecast with 80% and 95% ranges and two baselines marked as point forecasts; the gap by quarter and for both windows; two verdicts |
 | Capacity (`/capacity`) | Can this team carry the number? | Heads and ramped equivalents by month; ramp and attrition with their source and sample; whether headcount explains pipeline; quota against observed attainment |
 | Pipeline (`/pipeline`) | What must be created, by when, and is it too late? | The year's pipeline flow; required against expected pipeline by quarter; a lead-time table; stage win rates with samples |
-| Plan (`/plan`) | What do the actions buy, and which is cheaper? | Each scenario against the roster as signed; each item's gain and cost; one hire against one programme; what closes the gap alone |
+| Plan (`/plan`) | What do the actions buy, and which is cheaper? | Each scenario against the roster as signed; each item's gain and cost; one hire against one program; what closes the gap alone |
 | Trust (`/trust`) | Why should anyone believe any of this? | Reconciliation checks and excluded rows; the back-test against two baselines; what the history cannot support; every rate once; links to the report files |
 
 Sapling Industries, as signed (Plan shows the demo plan):
@@ -56,9 +56,9 @@ say in words that its history cannot support a hiring recommendation.
 Each company has four complete reports, each computed by the core:
 
 - **As signed**: the roster as signed and nothing planned.
-- **Demo plan**: the company's `plan.yaml`, further hires and programme pipeline together.
+- **Demo plan**: the company's `plan.yaml`, further hires and program pipeline together.
 - **Hires only**: the plan's hires alone.
-- **Programme only**: the plan's programme pipeline alone.
+- **Program only**: the plan's program pipeline alone.
 
 Sapling's demo plan, for example, moves the expected year from $58,089,724 to
 $58,325,013 and closes $235,289 of the gap, at a cash cost of $791,071 over the next
@@ -107,7 +107,7 @@ The profile directory describes your company: copy one of the three under
 | `field_mappings.yaml` | Maps your stage names to the core's stage codes (`opportunity.stage.stage_mapping`) |
 | `targets.yaml` | Fiscal-year start and the quarterly bookings targets |
 | `capacity.yaml` | Which roles carry quota, and ramp, attrition and cost where your history cannot supply them (optional) |
-| `plan.yaml` | Further hires and programme pipeline, passed with `--plan` (optional) |
+| `plan.yaml` | Further hires and program pipeline, passed with `--plan` (optional) |
 
 Rows the core cannot read are not dropped silently: each is listed on the Trust screen
 with its reason, and a check fails if included and excluded rows do not add up to the

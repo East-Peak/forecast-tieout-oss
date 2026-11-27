@@ -32,7 +32,7 @@ runScreenChecks({
   listFor: () => LISTED_BINDINGS,
   fullList: LISTED_BINDINGS,
   build,
-  swap: { binding: B.closeGap, to: B.programmeCap.path },
+  swap: { binding: B.closeGap, to: B.programCap.path },
   flip: (report) => {
     const flipped = structuredClone(report);
     const row = flipped.actions;
@@ -126,16 +126,16 @@ runScreenChecks({
         expect(said).toMatch(/already covered/);
       });
 
-      it("a programme that cannot close the gap says no amount does, and Mighty Oak's says it is over the cap", () => {
+      it("a program that cannot close the gap says no amount does, and Mighty Oak's says it is over the cap", () => {
         const c = caseOf("mighty-oak-holdings", "as-signed");
         const container = mountScreen(PlanScreen, c, c.company, c.scenario);
-        expect(container.querySelector("[data-binding='close.programme.cost']")!.textContent).toMatch(/^no cost: no amount of pipeline closes the gap/);
-        const programme = container.querySelector("[data-testid='close-programme']")!.textContent!;
-        expect(programme).toMatch(/Over the cap: closing it would take \$3\.0B, against a cap of \$2\.4B/);
-        expect(programme).not.toMatch(/not over the cap/);
+        expect(container.querySelector("[data-binding='close.program.cost']")!.textContent).toMatch(/^no cost: no amount of pipeline closes the gap/);
+        const program = container.querySelector("[data-testid='close-program']")!.textContent!;
+        expect(program).toMatch(/Over the cap: closing it would take \$3\.0B, against a cap of \$2\.4B/);
+        expect(program).not.toMatch(/not over the cap/);
         cleanup();
         const sprout = caseOf("sprout-labs", "as-signed");
-        const ok = mountScreen(PlanScreen, sprout, sprout.company, sprout.scenario).querySelector("[data-testid='close-programme']")!.textContent!;
+        const ok = mountScreen(PlanScreen, sprout, sprout.company, sprout.scenario).querySelector("[data-testid='close-program']")!.textContent!;
         expect(ok).toMatch(/Within the cap of \$111\.7M/);
       });
     });
@@ -162,7 +162,7 @@ runScreenChecks({
         expect(container.querySelector("[data-testid='unvalued-note']")!.textContent).toMatch(/leave out what cannot be valued: 4 Mid-Market hires/);
       });
 
-      it("the baseline line under the headline is labelled, and segment names read as words", () => {
+      it("the baseline line under the headline is labeled, and segment names read as words", () => {
         const c = caseOf("sprout-labs", "demo-plan");
         const container = mountScreen(PlanScreen, c, c.company, c.scenario);
         expect(container.textContent).toContain("Compared against:");
@@ -209,7 +209,7 @@ runScreenChecks({
         expect(hires.length).toBeGreaterThan(0);
         for (const row of hires) expect(row.textContent).toContain("unsupported by this history");
         expect(container.querySelector("[data-binding='close.hires.outcome']")!.textContent).toBe("unsupported by this history");
-        expect(container.querySelector("[data-binding='close.programme.outcome']")!.textContent).toBe("unreachable");
+        expect(container.querySelector("[data-binding='close.program.outcome']")!.textContent).toBe("unreachable");
         const unsupported = Array.from(container.querySelectorAll("[data-testid='action-row']")).find((row) => /Hire/.test(row.textContent ?? ""))!;
         expect(unsupported.textContent).toContain("unsupported by this history");
         expect(unsupported.textContent).not.toMatch(/\$0(?![\d.,KM])/);

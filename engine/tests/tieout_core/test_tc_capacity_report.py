@@ -370,7 +370,7 @@ def test_a_target_the_pipeline_cannot_reach_is_unreachable_and_assigned_nothing(
     assert r["verdicts"]["software_correct"]["verdict"] == "yes"
 
 
-def test_per_ramped_ae_month_columns_are_labelled_by_the_branch(adopted, not_shown):
+def test_per_ramped_ae_month_columns_are_labeled_by_the_branch(adopted, not_shown):
     assert (
         adopted["required_pipeline"]["per_ramped_ae_month_label"]
         == "the forecast's basis"
@@ -393,7 +393,7 @@ def test_when_capacity_is_adopted_every_range_is_unvalidated_and_coverage_is_onl
         c["coverage80"] is not None for c in fr["cells"]
     )  # the statistic is still shown
     assert all(
-        c["coverage_judgement"]
+        c["coverage_judgment"]
         in ("back-tested", "too narrow", "too wide", "unvalidated")
         for c in fr["cells"]
     )

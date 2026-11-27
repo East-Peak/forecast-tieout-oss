@@ -50,7 +50,7 @@ class Forecast:
 class Creation:
     """Pipeline not yet created, by day: the deals created on each day after the
     cutoff (offsets 1..H). ``draws``, when given, returns a (draws, H) matrix of
-    the same quantity with future departures drawn at random, centred on
+    the same quantity with future departures drawn at random, centered on
     ``per_day``; the headline uses ``per_day`` and the ranges use the draws."""
 
     per_day: tuple[Decimal, ...]
@@ -224,7 +224,7 @@ def model_forecast(
 ) -> Forecast:
     """``added_pipeline`` is created in equal parts in each window that ends by
     ``added_through`` (every window by default) and books in any window.
-    ``inflows`` are further dollars created over given day ranges (programmes,
+    ``inflows`` are further dollars created over given day ranges (programs,
     quarterly requirements). ``creation``, when given, replaces the flat
     trailing creation rate of pipeline not yet created."""
     method = "fitted model"
@@ -442,7 +442,7 @@ def simulate(
     each win rate from a beta with the fitted mean and its effective sample
     (shared by every deal using that rate in the draw), the creation rate from
     a gamma on its count, and the mean win size by bootstrap. All keep their
-    means, so the simulation stays centred on the expectation. Close timing is
+    means, so the simulation stays centered on the expectation. Close timing is
     not drawn. With ``creation`` the creation rate is the given day-by-day one
     (departures drawn at random when it can) instead of the flat trailing rate,
     and its own count-based uncertainty is not drawn."""
@@ -487,7 +487,7 @@ def simulate(
     new = model.new_pipeline
     if new.timing.samples and new.won_arr_samples:
         span = int(ends[-1])
-        extra = np.zeros(span)  # deals created per day by programme inflows
+        extra = np.zeros(span)  # deals created per day by program inflows
         if inflows and new.mean_created_arr:
             for flow in inflows:
                 lo, hi = max(flow.start, 0), min(flow.end, span)

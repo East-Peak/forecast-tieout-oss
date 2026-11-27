@@ -59,7 +59,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-1.3.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.0.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -315,7 +315,7 @@
                     }
                   ]
                 },
-                "programme": {
+                "program": {
                   "additionalProperties": false,
                   "properties": {
                     "cap": {
@@ -421,7 +421,7 @@
                 "fiscal_year_gap",
                 "basis",
                 "hires",
-                "programme"
+                "program"
               ],
               "type": "object"
             },
@@ -479,7 +479,7 @@
                       "kind": {
                         "enum": [
                           "hire",
-                          "programme"
+                          "program"
                         ]
                       },
                       "not_ranked_because": {
@@ -548,7 +548,7 @@
                       "kind": {
                         "enum": [
                           "hire",
-                          "programme"
+                          "program"
                         ]
                       },
                       "not_ranked_because": {
@@ -588,13 +588,13 @@
             "meaning": {
               "$ref": "#/$defs/Text"
             },
-            "programme_shape": {
+            "program_shape": {
               "$ref": "#/$defs/Text"
             }
           },
           "required": [
             "definition",
-            "programme_shape",
+            "program_shape",
             "comparison",
             "close_the_fiscal_year_gap",
             "meaning"
@@ -887,7 +887,7 @@
                           }
                         ]
                       },
-                      "coverage_judgement": {
+                      "coverage_judgment": {
                         "$ref": "#/$defs/Text"
                       },
                       "folds_with_a_range": {
@@ -917,7 +917,7 @@
                       "coverage95",
                       "median_width80",
                       "label",
-                      "coverage_judgement"
+                      "coverage_judgment"
                     ],
                     "type": "object"
                   },
@@ -1037,7 +1037,7 @@
                           }
                         ]
                       },
-                      "coverage_judgement": {
+                      "coverage_judgment": {
                         "$ref": "#/$defs/Text"
                       },
                       "folds_with_a_range": {
@@ -1067,7 +1067,7 @@
                       "coverage95",
                       "median_width80",
                       "label",
-                      "coverage_judgement"
+                      "coverage_judgment"
                     ],
                     "type": "object"
                   },
@@ -2446,7 +2446,7 @@
                         "$ref": "#/$defs/Text"
                       },
                       "kind": {
-                        "const": "programme"
+                        "const": "program"
                       },
                       "label": {
                         "$ref": "#/$defs/Text"
@@ -4474,7 +4474,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "1.3.0"
+      "const": "2.0.0"
     },
     "verdicts": {
       "additionalProperties": false,

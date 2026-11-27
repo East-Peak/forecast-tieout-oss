@@ -1,5 +1,5 @@
-"""Goal 2B: plan.yaml (the only source of further hires and of programme
-pipeline) and the arithmetic of a programme's ramp."""
+"""Goal 2B: plan.yaml (the only source of further hires and of program
+pipeline) and the arithmetic of a program's ramp."""
 
 import tempfile
 from datetime import date
@@ -22,11 +22,11 @@ from engine.tieout_core.history import as_known_at
 from engine.tieout_core.load import load_profile
 from engine.tieout_core.plan import (
     Plan,
-    PlanProgramme,
+    PlanProgram,
     load_plan,
     next_month_start,
-    programme_cost,
-    programme_inflows,
+    program_cost,
+    program_inflows,
 )
 from engine.tieout_core.roster import Member
 
@@ -47,11 +47,11 @@ def test_the_next_month_starts_on_the_first_day_after_the_as_of_month():
     assert next_month_start(date(2026, 12, 15)) == date(2027, 1, 1)
 
 
-def test_a_plan_is_hires_then_programmes_in_file_order(tmp_path):
+def test_a_plan_is_hires_then_programs_in_file_order(tmp_path):
     path = write(
         tmp_path,
         {
-            "programmes": [{"name": "P1", "pipeline": 1000, "start": "2026-08"}],
+            "programs": [{"name": "P1", "pipeline": 1000, "start": "2026-08"}],
             "hires": [
                 {"segment": "mm", "start": "2026-09", "count": 2},
                 {"segment": "ent", "start": "2026-08", "count": 1},
@@ -109,28 +109,28 @@ def test_a_malformed_plan_is_refused_with_the_reason(tmp_path):
         load_plan(
             write(
                 tmp_path,
-                {"programmes": [{"name": "x", "pipeline": -5, "start": "2026-09"}]},
+                {"programs": [{"name": "x", "pipeline": -5, "start": "2026-09"}]},
             ),
             AS_OF,
             (),
         )
 
 
-def programme(
+def program(
     pipeline, start="2026-09-01", ramp=None, months=None, cost=None, payments=None
 ):
-    return PlanProgramme(
+    return PlanProgram(
         "P", Decimal(pipeline), date.fromisoformat(start), ramp, months, cost, payments
     )
 
 
-def test_programme_ramp_arithmetic_by_hand_over_four_months():
+def test_program_ramp_arithmetic_by_hand_over_four_months():
     # $900,000 over four months (July to October) with a three-month ramp: month j
     # runs at min(1, j/3) of full rate, so the weights are 1/3, 2/3, 1, 1, which
     # add to 3, and the months get 1/9, 2/9, 3/9, 3/9 of the dollars:
     # $100,000, $200,000, $300,000, $300,000.
-    flows = programme_inflows(
-        programme(900_000, "2026-07-01", ramp=3, months=4), WINDOWS, AS_OF, FY_END, 3
+    flows = program_inflows(
+        program(900_000, "2026-07-01", ramp=3, months=4), WINDOWS, AS_OF, FY_END, 3
     )
     assert [round(f.dollars) for f in flows] == [100_000, 200_000, 300_000, 300_000]
     assert sum((f.dollars for f in flows), Decimal(0)) == pytest.approx(
@@ -140,11 +140,11 @@ def test_programme_ramp_arithmetic_by_hand_over_four_months():
     assert [(f.start, f.end) for f in flows] == [(0, 31), (31, 62), (62, 92), (92, 123)]
 
 
-def test_a_programme_runs_to_the_fiscal_year_end_unless_it_says_otherwise():
+def test_a_program_runs_to_the_fiscal_year_end_unless_it_says_otherwise():
     # Starting 2026-09 with a two-month ramp, through January 2027: five months with
     # weights 1/2, 1, 1, 1, 1 (4.5): the first month gets 1/9 of the dollars.
-    flows = programme_inflows(
-        programme(900_000, "2026-09-01", ramp=2), WINDOWS, AS_OF, FY_END, 3
+    flows = program_inflows(
+        program(900_000, "2026-09-01", ramp=2), WINDOWS, AS_OF, FY_END, 3
     )
     assert len(flows) == 5
     assert flows[0].dollars == pytest.approx(Decimal(100_000))
@@ -153,18 +153,16 @@ def test_a_programme_runs_to_the_fiscal_year_end_unless_it_says_otherwise():
 
 def test_the_configured_ramp_is_used_when_the_plan_gives_none():
     # Ramp 3 over three months: weights 1/3, 2/3, 1 add to 2, so 1/6, 1/3, 1/2 of $300,000.
-    flows = programme_inflows(
-        programme(300_000, "2026-09-01", months=3), WINDOWS, AS_OF, FY_END, 3
+    flows = program_inflows(
+        program(300_000, "2026-09-01", months=3), WINDOWS, AS_OF, FY_END, 3
     )
     assert [round(f.dollars) for f in flows] == [50_000, 100_000, 150_000]
 
 
-def test_a_programmes_cost_is_its_own_or_pipeline_times_the_rate_or_not_entered():
-    assert programme_cost(
-        programme(1000, cost=Decimal(70)), Decimal("0.05")
-    ) == Decimal(70)
-    assert programme_cost(programme(1000), Decimal("0.05")) == Decimal(50)
-    assert programme_cost(programme(1000), None) is None
+def test_a_programs_cost_is_its_own_or_pipeline_times_the_rate_or_not_entered():
+    assert program_cost(program(1000, cost=Decimal(70)), Decimal("0.05")) == Decimal(70)
+    assert program_cost(program(1000), Decimal("0.05")) == Decimal(50)
+    assert program_cost(program(1000), None) is None
 
 
 # ---------------------------------------------------------------- ordered contributions
@@ -172,7 +170,7 @@ def test_a_programmes_cost_is_its_own_or_pipeline_times_the_rate_or_not_entered(
 
 def test_ordered_plan_contributions_by_hand():
     # A world where every created deal books exactly 45 days later at its full size
-    # (win rate 1), so a programme's dollars book on the day they are created plus 45.
+    # (win rate 1), so a program's dollars book on the day they are created plus 45.
     # Fiscal year ends 2027-01-31; the as-of is 2026-06-30.
     #   A: $360,000 over July, August, September (ramp 1: equal thirds). Everything
     #      is created by 09-30 and booked by 11-14, inside the year: it adds $360,000
@@ -189,8 +187,8 @@ def test_ordered_plan_contributions_by_hand():
     plan = Plan(
         (),
         (
-            PlanProgramme("A", Decimal(360_000), date(2026, 7, 1), 1, 3, None),
-            PlanProgramme("B", Decimal(240_000), date(2026, 12, 1), 1, 2, None),
+            PlanProgram("A", Decimal(360_000), date(2026, 7, 1), 1, 3, None),
+            PlanProgram("B", Decimal(240_000), date(2026, 12, 1), 1, 2, None),
         ),
     )
     cap = Capacity(
@@ -224,11 +222,11 @@ def test_ordered_plan_contributions_by_hand():
 # ---------------------------------------------------------------- review round: full schedule first
 
 
-def test_a_programme_longer_than_the_window_is_normalised_over_its_whole_length():
+def test_a_program_longer_than_the_window_is_normalized_over_its_whole_length():
     # $2.4M over 24 months with a one-month ramp is $100,000 a month: the first
     # twelve months carry $1.2M, not all $2.4M.
-    flows = programme_inflows(
-        programme(2_400_000, "2026-07-01", ramp=1, months=24), WINDOWS, AS_OF, FY_END, 3
+    flows = program_inflows(
+        program(2_400_000, "2026-07-01", ramp=1, months=24), WINDOWS, AS_OF, FY_END, 3
     )
     assert len(flows) == 12
     assert sum((f.dollars for f in flows), Decimal(0)) == pytest.approx(
@@ -237,13 +235,13 @@ def test_a_programme_longer_than_the_window_is_normalised_over_its_whole_length(
 
 
 def test_a_partial_final_month_takes_its_share_of_the_days_inside_the_window():
-    # As of 2026-06-15 the window ends 2027-06-15. A 12-month programme of $1.2M
+    # As of 2026-06-15 the window ends 2027-06-15. A 12-month program of $1.2M
     # (ramp 1, $100,000 a month) from July has June 2027 as its last month, of which
     # 15 of 30 days fall inside: 11 x 100,000 + 50,000.
     as_of = date(2026, 6, 15)
     windows = month_windows(as_of, date(2027, 6, 15))
-    flows = programme_inflows(
-        programme(1_200_000, "2026-07-01", ramp=1, months=12), windows, as_of, FY_END, 3
+    flows = program_inflows(
+        program(1_200_000, "2026-07-01", ramp=1, months=12), windows, as_of, FY_END, 3
     )
     assert sum((f.dollars for f in flows), Decimal(0)) == pytest.approx(
         Decimal(1_150_000)
@@ -254,46 +252,46 @@ def test_a_partial_final_month_takes_its_share_of_the_days_inside_the_window():
 def test_only_the_cost_that_falls_in_the_window_is_counted_cost_follows_the_pipeline():
     # $2.4M over 24 months at 5 cents a dollar costs $120,000, paid in step with the
     # pipeline it creates: half of it falls in the first twelve months.
-    from engine.tieout_core.plan import programme_cost_in_window
+    from engine.tieout_core.plan import program_cost_in_window
 
-    p = programme(2_400_000, "2026-07-01", ramp=1, months=24)
-    flows = programme_inflows(p, WINDOWS, AS_OF, FY_END, 3)
-    assert programme_cost_in_window(
+    p = program(2_400_000, "2026-07-01", ramp=1, months=24)
+    flows = program_inflows(p, WINDOWS, AS_OF, FY_END, 3)
+    assert program_cost_in_window(
         p, Decimal("0.05"), flows, WINDOWS[-1].end
     ) == pytest.approx(Decimal(60_000))
-    assert programme_cost_in_window(p, None, flows, WINDOWS[-1].end) is None
+    assert program_cost_in_window(p, None, flows, WINDOWS[-1].end) is None
 
 
-def test_a_programme_that_starts_late_pays_only_for_what_it_creates_in_the_window():
-    from engine.tieout_core.plan import programme_cost_in_window
+def test_a_program_that_starts_late_pays_only_for_what_it_creates_in_the_window():
+    from engine.tieout_core.plan import program_cost_in_window
 
     # Starts 2027-04 for 6 months at ramp 1: April, May, June 2027 are in the window
-    # (half the programme), so half of a $60,000 cost.
-    p = programme(600_000, "2027-04-01", ramp=1, months=6, cost=Decimal(60_000))
-    flows = programme_inflows(p, WINDOWS, AS_OF, FY_END, 3)
-    assert programme_cost_in_window(p, None, flows, WINDOWS[-1].end) == pytest.approx(
+    # (half the program), so half of a $60,000 cost.
+    p = program(600_000, "2027-04-01", ramp=1, months=6, cost=Decimal(60_000))
+    flows = program_inflows(p, WINDOWS, AS_OF, FY_END, 3)
+    assert program_cost_in_window(p, None, flows, WINDOWS[-1].end) == pytest.approx(
         Decimal(30_000)
     )
 
 
 def test_a_payment_schedule_in_the_plan_overrides_the_default():
-    from engine.tieout_core.plan import programme_cost_in_window
+    from engine.tieout_core.plan import program_cost_in_window
 
-    p = programme(600_000, "2026-10-01", ramp=1, months=24,
+    p = program(600_000, "2026-10-01", ramp=1, months=24,
                   payments=((date(2026, 10, 1), Decimal(40_000)), (date(2028, 1, 1), Decimal(10_000))))  # fmt: skip
-    flows = programme_inflows(p, WINDOWS, AS_OF, FY_END, 3)
-    assert programme_cost_in_window(
-        p, Decimal("0.5"), flows, WINDOWS[-1].end
-    ) == Decimal(40_000)
+    flows = program_inflows(p, WINDOWS, AS_OF, FY_END, 3)
+    assert program_cost_in_window(p, Decimal("0.5"), flows, WINDOWS[-1].end) == Decimal(
+        40_000
+    )
 
 
 def test_a_plan_loads_payments_and_refuses_a_payment_before_the_as_of(tmp_path):
-    ok = write(tmp_path, {"programmes": [{"name": "x", "pipeline": 100, "start": "2026-09",
+    ok = write(tmp_path, {"programs": [{"name": "x", "pipeline": 100, "start": "2026-09",
                                           "payments": [{"month": "2026-09", "amount": 5}]}]})  # fmt: skip
-    assert load_plan(ok, AS_OF, ()).programmes[0].payments == (
+    assert load_plan(ok, AS_OF, ()).programs[0].payments == (
         (date(2026, 9, 1), Decimal(5)),
     )
-    bad = write(tmp_path, {"programmes": [{"name": "x", "pipeline": 100, "start": "2026-09",
+    bad = write(tmp_path, {"programs": [{"name": "x", "pipeline": 100, "start": "2026-09",
                                            "payments": [{"month": "2026-05", "amount": 5}]}]})  # fmt: skip
     with pytest.raises(ValueError, match="payments"):
         load_plan(bad, AS_OF, ())

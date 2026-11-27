@@ -35,7 +35,7 @@ of deal outcomes at a fixed seed.
 
 The report carries two verdicts. *Is the software correct* is a list of self-checks
 (rows partition, bookings tie to source, pipeline flow, the solved levers agree with
-the forward function, the simulation is centred on the expectation, and others); a
+the forward function, the simulation is centered on the expectation, and others); a
 failed check makes the command exit 1. *Is the fitted forecast better than the
 baselines* is a result, not a fault: it is often no.
 
@@ -49,7 +49,7 @@ report the core's tests build is validated against it.
   demo companies to `engine/data-v2/` from a fixed seed. `--verify` fails if a file is
   stale.
 - `engine/scripts/generate_app_reports.py` runs the core for each company and each of
-  four scenarios (as signed, demo plan, hires only, programme only) and writes the
+  four scenarios (as signed, demo plan, hires only, program only) and writes the
   reports, an `index.json`, a `comparison.json` per company, the scenario plan files, the
   JSON Schema and the TypeScript types into the repository. `--verify` regenerates all of
   it into a temporary directory and compares byte for byte. Paths inside the files are

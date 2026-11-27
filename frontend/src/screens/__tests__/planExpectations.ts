@@ -79,8 +79,8 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   many(B.iRest.id, items.map((x) => (x.contribution === null ? `unavailable: ${"note" in x ? x.note : ""}` : fmt.usdShort(x.contribution[REST]))), iRows);
   many(B.iNext.id, items.map((x) => (x.contribution === null ? "not valued" : fmt.usdShort(x.contribution[TWELVE]))), iRows);
   many(B.iCost.id, items.map((x) => orWords(x.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered")), iRows);
-  const programmes = items.map((x, i) => [x, i] as const).filter(([x]) => x.kind === "programme");
-  many(B.iSchedule.id, programmes.map(([x]) => ("payment_schedule" in x ? x.payment_schedule : "")), programmes.map(([, i]) => `/plan/items/${i}`));
+  const programs = items.map((x, i) => [x, i] as const).filter(([x]) => x.kind === "program");
+  many(B.iSchedule.id, programs.map(([x]) => ("payment_schedule" in x ? x.payment_schedule : "")), programs.map(([, i]) => `/plan/items/${i}`));
   when(plan !== null, B.itemsCost.id, () => orWords(plan!.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
   when(plan !== null, B.itemsRest.id, () => orWords(me.bookings_change?.[REST] ?? null, fmt.usdShort, "not valued"));
   when(plan !== null, B.itemsNext.id, () => orWords(me.bookings_change?.[TWELVE] ?? null, fmt.usdShort, "not valued"));
@@ -93,7 +93,7 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   const aRows = rows.map((_, i) => `/actions/comparison/${i}`);
   when(actions !== null, B.actionsDefinition.id, () => actions!.definition);
   when(actions !== null, B.actionsMeaning.id, () => actions!.meaning);
-  when(actions !== null, B.actionsShape.id, () => actions!.programme_shape);
+  when(actions !== null, B.actionsShape.id, () => actions!.program_shape);
   const best = rows.map((x, i) => [x, i] as const).filter(([x]) => x.rank === 1);
   many(B.bestAction.id, best.map(([x]) => x.action), best.map(([, i]) => `/actions/comparison/${i}`));
   many(B.bestPerDollar.id, best.map(([x]) => fmt.multiple(x.gain_per_dollar!)), best.map(([, i]) => `/actions/comparison/${i}`));
@@ -119,12 +119,12 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   when(hiresFull !== null, B.hiresBound.id, () => fmt.quantity(hiresFull!.bound));
   when(hiresFull !== null, B.hiresBoundBasis.id, () => hiresFull!.bound_basis);
   when(hiresFull !== null, B.hiresCost.id, () => orWords(hiresFull!.cash_cost_in_twelve_months, fmt.usdShort, hiresFull!.cash_cost_note ?? "unavailable"));
-  const programme = close?.programme;
-  when(actions !== null, B.programmeOutcome.id, () => programme!.outcome);
-  when(actions !== null, B.programmeDollars.id, () => orWords(programme!.dollars, fmt.usdShort, "no amount closes it within the cap"));
-  when(actions !== null, B.programmeCap.id, () => fmt.usdShort(programme!.cap));
-  when(actions !== null && programme!.needed_but_over_the_cap !== null, B.programmeOver.id, () => fmt.usdShort(programme!.needed_but_over_the_cap!));
-  when(actions !== null, B.programmeCost.id, () => orWords(programme!.cash_cost_in_twelve_months, fmt.usdShort, programme!.cash_cost_note ?? "unavailable"));
+  const program = close?.program;
+  when(actions !== null, B.programOutcome.id, () => program!.outcome);
+  when(actions !== null, B.programDollars.id, () => orWords(program!.dollars, fmt.usdShort, "no amount closes it within the cap"));
+  when(actions !== null, B.programCap.id, () => fmt.usdShort(program!.cap));
+  when(actions !== null && program!.needed_but_over_the_cap !== null, B.programOver.id, () => fmt.usdShort(program!.needed_but_over_the_cap!));
+  when(actions !== null, B.programCost.id, () => orWords(program!.cash_cost_in_twelve_months, fmt.usdShort, program!.cash_cost_note ?? "unavailable"));
 
   // every scenario side by side, from comparison.json
   const cRows = comparison.rows.map((_, i) => `/rows/${i}`);

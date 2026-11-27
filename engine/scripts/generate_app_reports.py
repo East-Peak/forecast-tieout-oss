@@ -9,7 +9,7 @@ as-of date, 2000 draws and seed 0. Four scenarios per company:
     as-signed        the roster as signed, nothing planned (no plan file)
     demo-plan        the company's committed ``plan.yaml``
     hires-only       ``plan.yaml``'s hires alone  (``plan-hires-only.yaml``)
-    programme-only   ``plan.yaml``'s programmes alone  (``plan-programme-only.yaml``)
+    program-only   ``plan.yaml``'s programs alone  (``plan-program-only.yaml``)
 
 The last two plan files are committed beside ``plan.yaml``; this script writes
 them by filtering ``plan.yaml``'s items and ``--verify`` fails if they drift.
@@ -77,7 +77,7 @@ SCENARIOS = (
     Scenario(
         "demo-plan",
         "Demo plan",
-        "The company's demo plan: further hires and programme pipeline together.",
+        "The company's demo plan: further hires and program pipeline together.",
         "plan.yaml",
     ),
     Scenario(
@@ -87,13 +87,13 @@ SCENARIOS = (
         "plan-hires-only.yaml",
     ),
     Scenario(
-        "programme-only",
-        "Programme only",
-        "Only the demo plan's programme pipeline.",
-        "plan-programme-only.yaml",
+        "program-only",
+        "Program only",
+        "Only the demo plan's program pipeline.",
+        "plan-program-only.yaml",
     ),
 )
-KEEP = {"hires-only": "hires", "programme-only": "programmes"}
+KEEP = {"hires-only": "hires", "program-only": "programs"}
 
 
 # ---------------------------------------------------------------- scenario plan files

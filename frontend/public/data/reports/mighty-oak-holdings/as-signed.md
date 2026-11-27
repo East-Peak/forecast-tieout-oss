@@ -824,8 +824,8 @@ Each rate has one definition, used everywhere it appears.
 | `attrition_per_ae_month` | 0.010978 (95%: 0.0074-0.0158) | 29 departures / 2641.7 AE-months employed | 2024-02-01 to 2026-08-31 | per AE-month | 29 | fitted |
 | `created_deals_per_ramped_ae_month` | 0.419963 | 442 deals created / 1052.47 ramped AE-months | trailing 365 days to 2026-08-31 | per ramped AE-month | 442 | fitted |
 | `loaded_cost_per_ae_month` | 16000 | cash cost of one AE for one month (capacity.yaml) | capacity.yaml | unstated | 0 | entered |
-| `programme_cost_per_dollar_of_pipeline` | 0.050000 | cash cost per dollar of programme pipeline created (capacity.yaml) | capacity.yaml | unstated | 0 | entered |
-| `programme_ramp_months` | 3 | months a programme takes to reach its full monthly pipeline | capacity.yaml | unstated | 0 | entered |
+| `program_cost_per_dollar_of_pipeline` | 0.050000 | cash cost per dollar of program pipeline created (capacity.yaml) | capacity.yaml | unstated | 0 | entered |
+| `program_ramp_months` | 3 | months a program takes to reach its full monthly pipeline | capacity.yaml | unstated | 0 | entered |
 | `capacity_min_staffing_variation` | 0.200000 | ramped AE-months must vary by this much across the scored period for capacity to be testable |  |  | 0 | default |
 | `capacity_min_improvement` | 0.100000 | capacity's created-pipeline error must be this much lower than the flat rate's at both horizons |  |  | 0 | default |
 | `capacity_min_folds` | 6 | folds needed at each scored horizon |  |  | 0 | default |
@@ -892,7 +892,7 @@ Recency candidate (cumulative incidence) against the Goal 1 fit (matured snapsho
 | existing pipeline conserved | pass | open 201970221.00 = won in window 44531331.26 + won later 0.00 + not won 157438889.74 |
 | lever agrees with forward function | pass | forward($2,018,192,885.26) = 84000000.0001 against target 84000000 |
 | twelve-month lever agrees with forward function | pass | forward($1,068,462,037.02) = 48000000.0001 against target 48000000 |
-| simulation centred on the expectation | pass | simulated mean 84,987,971.80 vs expected 85,003,210.25 (tolerance 1,486,624.72, 2000 draws) |
+| simulation centered on the expectation | pass | simulated mean 84,987,971.80 vs expected 85,003,210.25 (tolerance 1,486,624.72, 2000 draws) |
 | forecast parts add up | pass | each method's total equals the sum of its months (largest difference 2.00E-20) |
 | folds saw nothing after their cutoff | pass | 16 cutoffs rebuilt with as_known_at; each fold asserts its latest fact is on or before its cutoff |
 | every rate defined once | pass | 59 rates in one registry |
@@ -903,7 +903,7 @@ Recency candidate (cumulative incidence) against the Goal 1 fit (matured snapsho
 | the completed schedule books each quarter's stated bookings and surplus over target | pass | 2 quarters rebuilt by adding each quarter's own schedule to the no-pipeline forecast |
 | cents booked in each quarter, re-derived from the solved schedule, match the stated yield | pass | 1 solved schedules re-run on their own |
 | lead-time yields match an independent forward run on a probe schedule, and the count shares sum to one | pass | 4 quarters checked on a $250,000 probe in two parts; win share 0.0910, not 0.9090 |
-| programme solve agrees with the forward function | pass | unreachable within bounds: forward(3007281482.38) = 79207625.42 against 84000000 |
+| program solve agrees with the forward function | pass | unreachable within bounds: forward(3007281482.38) = 79207625.42 against 84000000 |
 
 **The forecast is better than the baselines: no.** the model's mean absolute error is not lower than every baseline: 3m: model 11,625,581 vs trailing run-rate 8,100,541.
 
@@ -911,7 +911,7 @@ Recency candidate (cumulative incidence) against the Goal 1 fit (matured snapsho
 
 **Capacity term: not shown.** ramped AE-months varied 14% across the scored period; at least 20% is needed for headcount to be testable.
 
-Scored on created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred. Conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts.
+Scored on created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred. Conditional on realized staffing: it asks whether headcount explains pipeline, not how well it forecasts.
 Declared rule: adopted only if ramped AE-months varied by at least 20% across the scored period, the capacity rate's mean absolute error is at least 10% lower than the flat trailing rate's at both 3 and 6 months, and there are at least 6 folds at each.
 The forecast, gap, plan and actions use the the flat trailing creation rate. An association in the history, not a promise: that a new hire adds pipeline at this rate is an assumption.
 
@@ -1051,16 +1051,16 @@ _'required' means achievable inside the model's bounds (fitted conversion and ti
 
 ## 12. Two actions, compared
 
-Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of programme pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Programme shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
+Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
 
 | Action | Rank | Gains, rest of fiscal year | Gains, next twelve months | Starts paying | Cash cost inside the twelve months | Gain per dollar |
 |---|---|---|---|---|---|---|
-| Add $1,000,000 of programme pipeline starting 2026-09-01 | 1 | $7,768 | $83,385 | 2026-12 | $50,000 | 1.67 |
+| Add $1,000,000 of program pipeline starting 2026-09-01 | 1 | $7,768 | $83,385 | 2026-12 | $50,000 | 1.67 |
 | Hire one AE starting 2026-09-01 | unsupported by this history |  |  |  |  |  |
 
 Closing the fiscal-year gap of $23,360,339: the baseline forecast (the roster as signed, nothing planned), each action alone.
 
 - **Hires:** unsupported by this history: the hiring action is not valued, so there is no number of hires to solve for.
-- **Programme pipeline:** unreachable within the cap of $2,390,337,558 (the Goal 1 cap: three times the new-business pipeline created in the trailing 365 days); it would take $3,007,281,482.38.
+- **Program pipeline:** unreachable within the cap of $2,390,337,558 (the Goal 1 cap: three times the new-business pipeline created in the trailing 365 days); it would take $3,007,281,482.38.
 
 _'feasible' means achievable inside the model's bounds, not operationally achievable; that a new hire adds pipeline at the fitted rate is an assumption._

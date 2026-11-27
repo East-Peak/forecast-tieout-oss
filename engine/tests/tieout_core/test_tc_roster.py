@@ -168,8 +168,8 @@ def test_capacity_yaml_is_optional_and_its_entries_are_exact_decimals(tmp_path):
         "roles: {quota_carrying: [ae], other: [sdr]}\n"
         "ramp: {months: [0.25, 0.5]}\n"
         "attrition: {monthly_per_ae: 0.02}\n"
-        "costs: {loaded_cost_per_ae_month: 12000, programme_cost_per_dollar_of_pipeline: 0.05}\n"
-        "programme: {ramp_months: 4}\n"
+        "costs: {loaded_cost_per_ae_month: 12000, program_cost_per_dollar_of_pipeline: 0.05}\n"
+        "program: {ramp_months: 4}\n"
         "hires: {max_in_one_quarter: 7}\n"
     )
     c = load_capacity(tmp_path)
@@ -177,8 +177,8 @@ def test_capacity_yaml_is_optional_and_its_entries_are_exact_decimals(tmp_path):
     assert c.ramp == (Decimal("0.25"), Decimal("0.5"))
     assert c.attrition == Decimal("0.02")
     assert c.loaded_cost_per_ae_month == Decimal(12000)
-    assert c.programme_cost_per_dollar == Decimal("0.05")
-    assert c.programme_ramp_months == 4 and c.hires_bound == 7
+    assert c.program_cost_per_dollar == Decimal("0.05")
+    assert c.program_ramp_months == 4 and c.hires_bound == 7
 
 
 def test_a_capacity_yaml_with_no_quota_roles_is_refused(tmp_path):

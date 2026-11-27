@@ -6,9 +6,9 @@ The app now runs on a new calculation core, and the old engine is retired (git t
 `pre-rebuild` is the archive).
 
 ### Added
-- `engine/tieout_core`: one core that reads a company's deals, stage history and roster and writes a tied-out `report.json` and `report.md`: reconciliation to the source files, a fitted forecast with 80% and 95% ranges against two baselines, a back-test, the gap to target, capacity, required pipeline, a hiring and programme plan, and two verdicts. Run it with `python -m engine.tieout_core report`.
-- A declared report contract (`report.schema.json`, schema version 1.3.0) with cross-field rules, and generated TypeScript types.
-- Four named scenarios per company (as signed, demo plan, hires only, programme only), each a complete report computed by the core, with a core-computed comparison file.
+- `engine/tieout_core`: one core that reads a company's deals, stage history and roster and writes a tied-out `report.json` and `report.md`: reconciliation to the source files, a fitted forecast with 80% and 95% ranges against two baselines, a back-test, the gap to target, capacity, required pipeline, a hiring and program plan, and two verdicts. Run it with `python -m engine.tieout_core report`.
+- A declared report contract (`report.schema.json`, schema version 2.0.0) with cross-field rules, and generated TypeScript types.
+- Four named scenarios per company (as signed, demo plan, hires only, program only), each a complete report computed by the core, with a core-computed comparison file.
 - `engine/scripts/generate_app_reports.py`, with `--verify` that compares every generated file byte for byte; `generate_data_v2.py` with rebuilt demo data with about two and a half years of history.
 - Five screens in place of nine: Forecast, Capacity, Pipeline, Plan and Trust, each answering one question and showing its error or its limits beside its number.
 - A binding component, tests that check every bound value against an independent expectation, a stray-digit rule, chart-series checks, mutation tests, and a gate that finds arithmetic in `frontend/src`.
@@ -17,6 +17,7 @@ The app now runs on a new calculation core, and the old engine is retired (git t
 - CI runs `npm run verify` and both `--verify` commands.
 
 ### Changed
+- American English throughout. The report contract changes with it (schema version 2.0.0): every key, plan file and the scenario id now say `program` (scenario `program-only`); no figure changed (every report compared before and after under the same renaming). Tests keep the old spellings out.
 - Company descriptions state the fiscal-year target, the expected total, the gap and what the report finds about headcount; a test checks each figure against the report.
 - Demo company data is rebuilt (`engine/data-v2`); the demo companies remain synthetic.
 

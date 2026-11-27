@@ -457,14 +457,14 @@ def _forecasts(
             "label": UNVALIDATED
             if capacity
             else coverage_label(s.inside80, s.range_folds),
-            "coverage_judgement": coverage_label(s.inside80, s.range_folds),
+            "coverage_judgment": coverage_label(s.inside80, s.range_folds),
         }
         for s in bt.scores
     ]
     status = "; ".join(
         f"{c['horizon_months']}-month {c['label']}"
         + (
-            f" (the coverage statistics read {c['coverage_judgement']})"
+            f" (the coverage statistics read {c['coverage_judgment']})"
             if capacity
             else ""
         )
@@ -719,7 +719,7 @@ def _next_twelve_months(rec, as_of, windows, fitted, targets, lever):
 def _diagnostic(
     cap, model, pop, as_of, windows, horizons, flat: Forecast
 ) -> dict | None:
-    """The capacity projection when it was not adopted: shown once, labelled."""
+    """The capacity projection when it was not adopted: shown once, labeled."""
     projected = model_forecast(model, pop, as_of, windows, creation=cap.projection)
     if not projected.available:
         return None
@@ -919,7 +919,7 @@ def _no_windows_check() -> Check:
 def _simulation_check(fitted: Forecast, sim) -> Check:
     if sim is None:
         return Check(
-            "simulation centred on the expectation", True,
+            "simulation centered on the expectation", True,
             f"not applicable: {fitted.unavailable_reason}",
         )  # fmt: skip
     expected = float(fitted.total())
@@ -929,7 +929,7 @@ def _simulation_check(fitted: Forecast, sim) -> Check:
     sd = math.sqrt(sum((x - mean) ** 2 for x in samples) / max(1, n - 1))
     tolerance = 4 * sd / math.sqrt(n) + 0.01
     return Check(
-        "simulation centred on the expectation",
+        "simulation centered on the expectation",
         abs(mean - expected) <= tolerance,
         f"simulated mean {mean:,.2f} vs expected {expected:,.2f} (tolerance {tolerance:,.2f}, {n} draws)",
     )

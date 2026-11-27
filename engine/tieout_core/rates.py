@@ -86,8 +86,8 @@ RATE_UNITS = {
             "recency_months",
             "lever_cap_multiple",
             "simulation_draws",
-            "programme_cost_per_dollar_of_pipeline",
-            "programme_ramp_months",
+            "program_cost_per_dollar_of_pipeline",
+            "program_ramp_months",
             "capacity_min_folds",
             "days_per_ae_month",
         ),
@@ -116,6 +116,6 @@ def wilson_interval(p: float, n: float, z: float = 1.959964) -> tuple[float, flo
     if n <= 0:
         return (0.0, 1.0)
     denom = 1 + z * z / n
-    centre = (p + z * z / (2 * n)) / denom
+    center = (p + z * z / (2 * n)) / denom
     margin = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
-    return (max(0.0, centre - margin), min(1.0, centre + margin))
+    return (max(0.0, center - margin), min(1.0, center + margin))

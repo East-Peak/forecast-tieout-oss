@@ -95,7 +95,7 @@ def test_the_targeted_forecast_with_plan_closes_the_window_gap(planned):
 
 
 def test_a_plan_that_adds_nothing_changes_no_point_figure(tmp_path):
-    r = make("sprout-labs", tmp_path, {"hires": [], "programmes": []})
+    r = make("sprout-labs", tmp_path, {"hires": [], "programs": []})
     fitted = next(m for m in r["forecasts"]["methods"] if m["method"] == "fitted model")
     p = r["plan"]
     assert p["with_plan_by_window"] == fitted["by_window"]

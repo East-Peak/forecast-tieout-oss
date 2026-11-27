@@ -24,8 +24,8 @@ REST, TWELVE = "rest of fiscal year", "next twelve months"
 DEMO_AS_OF = date(2026, 8, 31)
 COMPANIES = ("sprout-labs", "sapling-industries", "mighty-oak-holdings")
 PLAN = {
-    "programmes": [
-        {"name": "Referral programme", "pipeline": 2_000_000, "start": "2026-10"}
+    "programs": [
+        {"name": "Referral program", "pipeline": 2_000_000, "start": "2026-10"}
     ],
     "hires": [{"segment": "mid_market", "start": "2026-10", "count": 3}],
 }
@@ -176,11 +176,11 @@ VARIANTS = {
             and "months" in r["roster_capacity"]
         ),
     ),
-    "capacity adopted, plan of hires and a programme": (
+    "capacity adopted, plan of hires and a program": (
         lambda follows, demand, tmp: _plan_on(follows, tmp),
         lambda r: (
             _capacity(r) == "adopted"
-            and _item_kinds(r) == {("hires", True), ("programme", True)}
+            and _item_kinds(r) == {("hires", True), ("program", True)}
         ),
     ),
     "capacity not shown, no plan": (
@@ -230,7 +230,7 @@ VARIANTS = {
     "missing costs, with a plan": (
         lambda follows, demand, tmp: _plan_on(
             _without_cost(
-                follows, tmp, ["loaded_cost_per_ae_month", "programme_cost_per_dollar"]
+                follows, tmp, ["loaded_cost_per_ae_month", "program_cost_per_dollar"]
             ),
             tmp,
         ),

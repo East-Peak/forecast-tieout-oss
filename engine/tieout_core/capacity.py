@@ -9,7 +9,7 @@ beats the flat trailing rate is decided by ``adoption``; when it does not, the
 forward function keeps the flat rate.
 
 Forward attrition is an expectation in ``per_day`` (a constant daily hazard)
-and a geometric draw per departure in ``draws``, which are centred on it.
+and a geometric draw per departure in ``draws``, which are centered on it.
 """
 
 from __future__ import annotations

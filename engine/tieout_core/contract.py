@@ -26,7 +26,7 @@ from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
 from .rates import rate_unit
 
-SCHEMA_VERSION = "1.3.0"
+SCHEMA_VERSION = "2.0.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -235,7 +235,7 @@ def _forecasts() -> dict:
             "coverage95": maybe(FRACTION),
             "median_width80": MONEY_OR_NULL,
             "label": TEXT,
-            "coverage_judgement": TEXT,
+            "coverage_judgment": TEXT,
         }
     )
     horizon_spread = obj({"status": TEXT, **SPREAD["properties"]})
@@ -800,8 +800,8 @@ def _plan() -> dict:
         {"kind": const("hires"), "label": TEXT, "detail": TEXT, "valued": const(False),
          "note": TEXT, "contribution": NULL, **cost}
     )  # fmt: skip
-    programme = obj(
-        {"kind": const("programme"), "label": TEXT, "detail": TEXT, "valued": const(True),
+    program = obj(
+        {"kind": const("program"), "label": TEXT, "detail": TEXT, "valued": const(True),
          "contribution": PER_WINDOW, **cost, "payment_schedule": TEXT}
     )  # fmt: skip
     twelve = obj(
@@ -831,7 +831,7 @@ def _plan() -> dict:
             "file": TEXT,
             "order": TEXT,
             "baseline_definition": TEXT,
-            "items": arr(one_of(hires_valued, hires_not_valued, programme)),
+            "items": arr(one_of(hires_valued, hires_not_valued, program)),
             "baseline": PER_WINDOW,
             "with_plan": PER_WINDOW,
             "difference": PER_WINDOW,
@@ -886,7 +886,7 @@ def _actions() -> dict:
     valued = obj(
         {
             "action": TEXT,
-            "kind": enum("hire", "programme"),
+            "kind": enum("hire", "program"),
             "not_ranked_because": maybe(const("cost not entered")),
             "status": const("valued"),
             "bookings_gained": PER_WINDOW,
@@ -900,7 +900,7 @@ def _actions() -> dict:
     not_valued = obj(
         {
             "action": TEXT,
-            "kind": enum("hire", "programme"),
+            "kind": enum("hire", "program"),
             "not_ranked_because": TEXT,
             "status": {"type": "string", "pattern": r"^(?!valued$)"},
             "bookings_gained": NULL,
@@ -925,7 +925,7 @@ def _actions() -> dict:
         }
     )
     hires_not_valued = obj({"outcome": TEXT, "count": NULL, "note": TEXT})
-    programme = obj(
+    program = obj(
         {
             "outcome": enum("already covered", "feasible", "unreachable"),
             "dollars": MONEY_OR_NULL,
@@ -943,14 +943,14 @@ def _actions() -> dict:
     full = obj(
         {
             "definition": TEXT,
-            "programme_shape": TEXT,
+            "program_shape": TEXT,
             "comparison": arr(one_of(valued, not_valued)),
             "close_the_fiscal_year_gap": obj(
                 {
                     "fiscal_year_gap": MONEY,
                     "basis": TEXT,
                     "hires": one_of(hires_solved, hires_not_valued),
-                    "programme": programme,
+                    "program": program,
                 }
             ),
             "meaning": TEXT,
@@ -1298,7 +1298,7 @@ def _cross_rules(r: dict) -> list[str]:
         closing = actions["close_the_fiscal_year_gap"]
         for kind, part in (
             ("hires", closing["hires"]),
-            ("programme", closing["programme"]),
+            ("program", closing["program"]),
         ):
             if "cash_cost_note" in part:
                 rule(

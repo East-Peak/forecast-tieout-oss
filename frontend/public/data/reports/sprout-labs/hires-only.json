@@ -15,7 +15,7 @@
         "outcome": "unreachable",
         "overshoot": null
       },
-      "programme": {
+      "program": {
         "cap": "111728112.00",
         "cap_rule": "the Goal 1 cap: three times the new-business pipeline created in the trailing 365 days",
         "cash_cost_in_twelve_months": "4710815.58",
@@ -46,7 +46,7 @@
         "status": "valued"
       },
       {
-        "action": "Add $1,000,000 of programme pipeline starting 2026-09-01",
+        "action": "Add $1,000,000 of program pipeline starting 2026-09-01",
         "bookings_gained": {
           "next twelve months": "139780.40",
           "rest of fiscal year": "31927.81"
@@ -54,16 +54,16 @@
         "cash_cost_in_twelve_months": "80000.00",
         "cost_status": "entered",
         "gain_per_dollar": "1.75",
-        "kind": "programme",
+        "kind": "program",
         "not_ranked_because": null,
         "rank": 2,
         "starts_paying": "2026-11",
         "status": "valued"
       }
     ],
-    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of programme pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
+    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
     "meaning": "'feasible' means achievable inside the model's bounds, not operationally achievable; that a new hire adds pipeline at the fitted rate is an assumption",
-    "programme_shape": "created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise)"
+    "program_shape": "created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise)"
   },
   "backtest": {
     "candidates": {
@@ -718,7 +718,7 @@
         {
           "coverage80": 0.875,
           "coverage95": 1.0,
-          "coverage_judgement": "back-tested",
+          "coverage_judgment": "back-tested",
           "folds_with_a_range": 16,
           "horizon_months": 1,
           "label": "unvalidated",
@@ -727,7 +727,7 @@
         {
           "coverage80": 0.9286,
           "coverage95": 1.0,
-          "coverage_judgement": "back-tested",
+          "coverage_judgment": "back-tested",
           "folds_with_a_range": 14,
           "horizon_months": 3,
           "label": "unvalidated",
@@ -736,7 +736,7 @@
         {
           "coverage80": 0.4545,
           "coverage95": 0.6364,
-          "coverage_judgement": "too narrow",
+          "coverage_judgment": "too narrow",
           "folds_with_a_range": 11,
           "horizon_months": 6,
           "label": "unvalidated",
@@ -1114,7 +1114,7 @@
       "15 deals have no stage history, so they never appear in a win-rate snapshot; 4 of them are open: today's forecasts use their current stage from deals.csv, but at past cutoffs their stage is unknown and back-test folds leave them out",
       "win rates learn only from snapshots at least 365 days old, so a change in conversion shows up a year late (the recency fit was not adopted: mean absolute error not lower at both 1 and 3 months (1m: 140,113 vs 96,781; 3m: 299,207 vs 269,872))",
       "the model is pooled across segments; a segment split is not evaluated in this report",
-      "roles on team_members.csv: ae 8, founder 2, sdr 2, se 1; the capacity term is adopted (created-pipeline error with realised staffing: 3 months 1,130,288 against 2,448,980 (53.9% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%)",
+      "roles on team_members.csv: ae 8, founder 2, sdr 2, se 1; the capacity term is adopted (created-pipeline error with realized staffing: 3 months 1,130,288 against 2,448,980 (53.9% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%)",
       "team_members.csv holds no history of role, segment, quota or deal ownership: today's values stand in for every past date, and a deal's owner is its current owner"
     ]
   },
@@ -1152,7 +1152,7 @@
       "next twelve months": "760779.68",
       "rest of fiscal year": "24547.04"
     },
-    "cost_note": "hires at loaded cost per AE-month over expected months employed; programmes at their cost, paid in step with the pipeline they create (or on the plan's own payment schedule), counting only what falls inside the twelve months",
+    "cost_note": "hires at loaded cost per AE-month over expected months employed; programs at their cost, paid in step with the pipeline they create (or on the plan's own payment schedule), counting only what falls inside the twelve months",
     "difference": {
       "next twelve months": "760779.68",
       "rest of fiscal year": "24547.04"
@@ -1201,7 +1201,7 @@
         "valued": true
       }
     ],
-    "order": "hires first, then programmes, each in the plan file's order; each contribution is the extra bookings from adding that item to everything above it, so they sum to the difference",
+    "order": "hires first, then programs, each in the plan file's order; each contribution is the extra bookings from adding that item to everything above it, so they sum to the difference",
     "ranges": {
       "bookings_in_window": {
         "next twelve months": {
@@ -1383,7 +1383,7 @@
         "6999731.55"
       ],
       "status": "unvalidated: these ranges include the plan and the capacity term; they have not been back-tested",
-      "what_is_drawn": "deal outcomes, future departures, with the planned hires and programme pipeline in the scenario"
+      "what_is_drawn": "deal outcomes, future departures, with the planned hires and program pipeline in the scenario"
     },
     "with_plan": {
       "next twelve months": "6361897.77",
@@ -2174,11 +2174,11 @@
     },
     {
       "cohort": "capacity.yaml",
-      "definition": "cash cost per dollar of programme pipeline created (capacity.yaml)",
+      "definition": "cash cost per dollar of program pipeline created (capacity.yaml)",
       "denominator": "",
       "horizon": "unstated",
       "label": null,
-      "name": "programme_cost_per_dollar_of_pipeline",
+      "name": "program_cost_per_dollar_of_pipeline",
       "numerator": "",
       "range95": null,
       "sample_size": 0,
@@ -2188,11 +2188,11 @@
     },
     {
       "cohort": "capacity.yaml",
-      "definition": "months a programme takes to reach its full monthly pipeline",
+      "definition": "months a program takes to reach its full monthly pipeline",
       "denominator": "",
       "horizon": "unstated",
       "label": null,
-      "name": "programme_ramp_months",
+      "name": "program_ramp_months",
       "numerator": "",
       "range95": null,
       "sample_size": 0,
@@ -2563,9 +2563,9 @@
           "mean_absolute_error_flat": "6001441.51"
         }
       ],
-      "label": "conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts",
+      "label": "conditional on realized staffing: it asks whether headcount explains pipeline, not how well it forecasts",
       "outcome": "adopted",
-      "reason": "created-pipeline error with realised staffing: 3 months 1,130,288 against 2,448,980 (53.9% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%",
+      "reason": "created-pipeline error with realized staffing: 3 months 1,130,288 against 2,448,980 (53.9% lower); 6 months 1,624,304 against 6,001,442 (72.9% lower); ramped AE-months varied 93%",
       "scored_on": "created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred",
       "scored_period": [
         "2025-04-30",
@@ -2843,7 +2843,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "1.3.0",
+  "schema_version": "2.0.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "the model's mean absolute error is lower than both baselines at 1 and 3 months",
@@ -2888,7 +2888,7 @@
         },
         {
           "detail": "simulated mean 5,612,923.93 vs expected 5,601,118.09 (tolerance 72,157.75, 2000 draws)",
-          "name": "simulation centred on the expectation",
+          "name": "simulation centered on the expectation",
           "passed": true
         },
         {
@@ -2948,7 +2948,7 @@
         },
         {
           "detail": "simulated mean 6,367,705.85 vs expected 6,361,897.78 (2000 draws)",
-          "name": "plan simulation centred on its expectation",
+          "name": "plan simulation centered on its expectation",
           "passed": true
         },
         {
@@ -2958,7 +2958,7 @@
         },
         {
           "detail": "feasible: forward(58885194.74) = 8000000.00 against 8000000",
-          "name": "programme solve agrees with the forward function",
+          "name": "program solve agrees with the forward function",
           "passed": true
         }
       ],

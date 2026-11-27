@@ -26,7 +26,7 @@ export function ItemsCard({ plan, note }: { plan: { items: ReadonlyArray<{ kind:
                 <TableCell className={STACK.title}>
                   <div className="font-medium"><Bound binding={B.iLabel} row={row} /></div>
                   <div className="text-xs font-normal text-slate-500"><Bound binding={B.iDetail} row={row} /></div>
-                  {item.kind === "programme" ? (
+                  {item.kind === "program" ? (
                     <div className="text-xs font-normal text-slate-500"><Bound binding={B.iSchedule} row={row} /></div>
                   ) : null}
                 </TableCell>

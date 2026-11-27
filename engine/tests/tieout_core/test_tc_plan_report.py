@@ -25,8 +25,8 @@ def plan_file(tmp_path, doc, name="plan.yaml") -> Path:
 
 
 PLAN = {
-    "programmes": [
-        {"name": "Referral programme", "pipeline": 2_000_000, "start": "2026-10"}
+    "programs": [
+        {"name": "Referral program", "pipeline": 2_000_000, "start": "2026-10"}
     ],
     "hires": [{"segment": "mid_market", "start": "2026-10", "count": 3}],
 }
@@ -57,8 +57,8 @@ def test_hires_come_first_in_the_plan_whatever_the_file_order(with_plan):
     items = with_plan["plan"]["items"]
     assert [i["kind"] for i in items] == [
         "hires",
-        "programme",
-    ]  # the file lists programmes first
+        "program",
+    ]  # the file lists programs first
     assert items[0]["label"] == "3 Mid Market hires from 2026-10"
 
 
@@ -91,7 +91,7 @@ def test_the_plan_closes_part_of_the_gap_and_its_cost_is_the_entered_costs(with_
 def test_two_actions_are_compared_with_gain_per_dollar_and_rank(follows):
     r = build_report(*follows, AS_OF, draws=DRAWS)
     rows = {a["kind"]: a for a in r["actions"]["comparison"]}
-    assert rows["hire"]["status"] == rows["programme"]["status"] == "valued"
+    assert rows["hire"]["status"] == rows["program"]["status"] == "valued"
     for a in rows.values():
         assert (
             Decimal(a["bookings_gained"][TWELVE])
@@ -104,21 +104,15 @@ def test_two_actions_are_compared_with_gain_per_dollar_and_rank(follows):
     assert best["rank"] == 1
 
 
-def test_the_programme_solve_runs_back_through_the_report_to_the_cent(
-    follows, tmp_path
-):
+def test_the_program_solve_runs_back_through_the_report_to_the_cent(follows, tmp_path):
     base = build_report(*follows, AS_OF, draws=DRAWS)
-    closing = base["actions"]["close_the_fiscal_year_gap"]["programme"]
+    closing = base["actions"]["close_the_fiscal_year_gap"]["program"]
     assert closing["outcome"] == "feasible", closing
     dollars = Decimal(closing["dollars"])
-    # the same programme as a plan item, starting next month through the fiscal year end
+    # the same program as a plan item, starting next month through the fiscal year end
     path = plan_file(
         tmp_path,
-        {
-            "programmes": [
-                {"name": "solve", "pipeline": str(dollars), "start": "2026-09"}
-            ]
-        },
+        {"programs": [{"name": "solve", "pipeline": str(dollars), "start": "2026-09"}]},
     )
     again = build_report(*follows, AS_OF, draws=DRAWS, plan_path=path)
     gap = Decimal(again["plan"]["gap"]["fiscal_year"]["gap_with_plan"])
@@ -195,16 +189,16 @@ def test_when_capacity_is_not_shown_hiring_is_unsupported_and_not_valued(
 ):
     path = plan_file(tmp_path, PLAN)
     r = build_report(*demand, AS_OF, draws=DRAWS, plan_path=path)
-    hires, programme = r["plan"]["items"]
+    hires, program = r["plan"]["items"]
     assert hires["valued"] is False and hires["contribution"] is None
     assert "unsupported by this history" in hires["note"]
-    assert programme["valued"] and Decimal(programme["contribution"][TWELVE]) > 0
-    # the plan's difference is the programme's alone
+    assert program["valued"] and Decimal(program["contribution"][TWELVE]) > 0
+    # the plan's difference is the program's alone
     assert r["plan"]["difference"] == r["plan"]["contributions_total"]
     rows = {a["kind"]: a for a in r["actions"]["comparison"]}
     assert rows["hire"]["status"] == "unsupported by this history"
     assert rows["hire"]["rank"] is None and rows["hire"]["bookings_gained"] is None
-    assert rows["programme"]["status"] == "valued" and rows["programme"]["rank"] == 1
+    assert rows["program"]["status"] == "valued" and rows["program"]["rank"] == 1
     assert (
         r["actions"]["close_the_fiscal_year_gap"]["hires"]["outcome"]
         == "unsupported by this history"
@@ -229,7 +223,7 @@ def test_a_missing_cost_is_cost_not_entered_and_the_action_is_not_ranked(
     )
     assert rows["hire"]["gain_per_dollar"] is None and rows["hire"]["rank"] is None
     assert rows["hire"]["not_ranked_because"] == "cost not entered"
-    assert rows["programme"]["rank"] == 1
+    assert rows["program"]["rank"] == 1
 
 
 def test_a_plan_that_repeats_a_signed_hire_is_refused(follows, tmp_path):
@@ -283,7 +277,7 @@ def test_every_demo_company_runs_with_and_without_its_plan(company):
     assert with_["plan"]["difference"] == with_["plan"]["contributions_total"]
 
 
-def test_the_plan_has_simulated_ranges_labelled_unvalidated_and_centred(with_plan):
+def test_the_plan_has_simulated_ranges_labeled_unvalidated_and_centered(with_plan):
     r = with_plan["plan"]["ranges"]
     assert r["status"].startswith("unvalidated") and "plan" in r["status"]
     for h in (REST, TWELVE):
@@ -295,13 +289,13 @@ def test_the_plan_has_simulated_ranges_labelled_unvalidated_and_centred(with_pla
     exp = float(with_plan["plan"]["with_plan"][TWELVE])
     assert abs(float(r["bookings_in_window"][TWELVE]["median"]) - exp) < 0.15 * exp
     checks = {c["name"]: c for c in with_plan["verdicts"]["software_correct"]["checks"]}
-    assert checks["plan simulation centred on its expectation"]["passed"]
+    assert checks["plan simulation centered on its expectation"]["passed"]
 
 
-def test_a_programme_only_plan_in_the_flat_branch_also_has_ranges(demand, tmp_path):
+def test_a_program_only_plan_in_the_flat_branch_also_has_ranges(demand, tmp_path):
     path = plan_file(
         tmp_path,
-        {"programmes": [{"name": "P", "pipeline": 3_000_000, "start": "2026-10"}]},
+        {"programs": [{"name": "P", "pipeline": 3_000_000, "start": "2026-10"}]},
     )
     r = build_report(*demand, AS_OF, draws=DRAWS, plan_path=path)
     base = r["plan"]["ranges"]["bookings_in_window"][TWELVE]

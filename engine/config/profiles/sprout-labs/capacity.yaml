@@ -12,6 +12,6 @@ attrition:
   monthly_per_ae: 0.02          # departures per AE-month
 costs:
   loaded_cost_per_ae_month: 12000              # cash cost of one AE for one month
-  programme_cost_per_dollar_of_pipeline: 0.08  # cash cost per dollar of programme pipeline created
-programme:
-  ramp_months: 3                       # a programme reaches its full monthly run-rate after this many months
+  program_cost_per_dollar_of_pipeline: 0.08  # cash cost per dollar of program pipeline created
+program:
+  ramp_months: 3                       # a program reaches its full monthly run-rate after this many months

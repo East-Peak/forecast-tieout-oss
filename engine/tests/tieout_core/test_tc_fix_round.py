@@ -54,7 +54,7 @@ def test_a_report_carries_its_company_and_scenario(reports):
 
 def test_the_generator_names_each_report_by_the_scenario_it_is_filed_under():
     built = gen.build(["mighty-oak-holdings"], draws=100)
-    for scenario in ("as-signed", "demo-plan", "hires-only", "programme-only"):
+    for scenario in ("as-signed", "demo-plan", "hires-only", "program-only"):
         report = json.loads(built[f"mighty-oak-holdings/{scenario}.json"])
         assert report["inputs"]["identity"] == {
             "company": "mighty-oak-holdings",
@@ -78,16 +78,16 @@ def test_the_contract_requires_the_identity(reports):
         ("hires", "unreachable", "entered", None, "no number of hires closes the gap"),
         ("hires", "already covered", "entered", None, "already covered"),
         ("hires", "feasible", "cost not entered", None, "cost not entered"),
-        ("programme", "feasible", "entered", "1000.00", None),
+        ("program", "feasible", "entered", "1000.00", None),
         (
-            "programme",
+            "program",
             "unreachable",
             "entered",
             None,
             "no amount of pipeline closes the gap",
         ),
-        ("programme", "already covered", "entered", None, "already covered"),
-        ("programme", "feasible", "cost not entered", None, "cost not entered"),
+        ("program", "already covered", "entered", None, "already covered"),
+        ("program", "feasible", "cost not entered", None, "cost not entered"),
     ],
 )
 def test_the_cost_of_a_closing_action_says_why_it_is_missing(
@@ -105,7 +105,7 @@ def test_every_closing_action_with_no_cost_carries_a_note_and_every_cost_has_non
 ):
     for scenarios in reports.values():
         close = scenarios["as-signed"]["actions"]["close_the_fiscal_year_gap"]
-        rows = [close["programme"]] + (
+        rows = [close["program"]] + (
             [close["hires"]] if "bound" in close["hires"] else []
         )
         for row in rows:
@@ -291,7 +291,7 @@ UNVALUED = {
     "valued": False,
     "note": "hiring is unsupported by this history: not valued",
 }
-VALUED = {"label": "A programme", "valued": True, "note": None}
+VALUED = {"label": "A program", "valued": True, "note": None}
 
 
 def test_a_plan_with_no_valued_item_has_no_change_figures_and_says_why():

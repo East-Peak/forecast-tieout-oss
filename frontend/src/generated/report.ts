@@ -35,7 +35,7 @@ export type TieoutReport = {
                 note: Text;
                 outcome: Text;
               };
-          programme: {
+          program: {
             cap: Money;
             cap_rule: Text;
             cash_cost_in_twelve_months: Money | null;
@@ -59,7 +59,7 @@ export type TieoutReport = {
               cash_cost_in_twelve_months: Money | null;
               cost_status: "entered" | "cost not entered";
               gain_per_dollar: Decimal | null;
-              kind: "hire" | "programme";
+              kind: "hire" | "program";
               not_ranked_because: "cost not entered" | null;
               rank: number | null;
               starts_paying: Month | null;
@@ -70,7 +70,7 @@ export type TieoutReport = {
               bookings_gained: null;
               cash_cost_in_twelve_months: null;
               gain_per_dollar: null;
-              kind: "hire" | "programme";
+              kind: "hire" | "program";
               not_ranked_because: Text;
               rank: null;
               starts_paying: null;
@@ -79,7 +79,7 @@ export type TieoutReport = {
         )[];
         definition: Text;
         meaning: Text;
-        programme_shape: Text;
+        program_shape: Text;
       };
   backtest: {
     candidates: {
@@ -146,7 +146,7 @@ export type TieoutReport = {
           cells: {
             coverage80: number | null;
             coverage95: number | null;
-            coverage_judgement: Text;
+            coverage_judgment: Text;
             folds_with_a_range: number;
             horizon_months: number;
             label: Text;
@@ -175,7 +175,7 @@ export type TieoutReport = {
           cells: {
             coverage80: number | null;
             coverage95: number | null;
-            coverage_judgement: Text;
+            coverage_judgment: Text;
             folds_with_a_range: number;
             horizon_months: number;
             label: Text;
@@ -562,7 +562,7 @@ export type TieoutReport = {
                 "rest of fiscal year": Money;
               };
               detail: Text;
-              kind: "programme";
+              kind: "program";
               label: Text;
               payment_schedule: Text;
               valued: true;
@@ -964,7 +964,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "1.3.0";
+  schema_version: "2.0.0";
   verdicts: {
     forecast_better_than_baselines: {
       reason: Text;

@@ -74,12 +74,12 @@ def test_a_hire_starting_beyond_the_horizon_is_skipped_not_a_crash():
         ("attrition: {monthly_per_ae: .nan}", "monthly_per_ae"),
         ("costs: {loaded_cost_per_ae_month: -5}", "loaded_cost_per_ae_month"),
         (
-            "costs: {programme_cost_per_dollar_of_pipeline: .inf}",
-            "programme_cost_per_dollar_of_pipeline",
+            "costs: {program_cost_per_dollar_of_pipeline: .inf}",
+            "program_cost_per_dollar_of_pipeline",
         ),
         ("hires: {max_in_one_quarter: 2.9}", "max_in_one_quarter"),
         ("hires: {max_in_one_quarter: -1}", "max_in_one_quarter"),
-        ("programme: {ramp_months: 0}", "ramp_months"),
+        ("program: {ramp_months: 0}", "ramp_months"),
         ("ramp: {months: [0.5, 1.5]}", "ramp"),
         ("ramp: {months: [-0.1]}", "ramp"),
     ],
@@ -115,19 +115,19 @@ def test_a_negative_quota_excludes_the_row_with_a_reason(tmp_path):
     [
         (
             {
-                "programmes": [
+                "programs": [
                     {"name": "x", "pipeline": 100, "start": "2026-10", "cost": -1}
                 ]
             },
             "cost",
         ),
         (
-            {"programmes": [{"name": "x", "pipeline": "nan", "start": "2026-10"}]},
+            {"programs": [{"name": "x", "pipeline": "nan", "start": "2026-10"}]},
             "pipeline",
         ),
         (
             {
-                "programmes": [
+                "programs": [
                     {"name": "x", "pipeline": 100, "start": "2026-10", "months": 2.5}
                 ]
             },

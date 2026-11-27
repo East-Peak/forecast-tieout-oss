@@ -101,7 +101,7 @@
         {
           "coverage80": null,
           "coverage95": null,
-          "coverage_judgement": "unvalidated",
+          "coverage_judgment": "unvalidated",
           "folds_with_a_range": 0,
           "horizon_months": 1,
           "label": "unvalidated",
@@ -110,7 +110,7 @@
         {
           "coverage80": null,
           "coverage95": null,
-          "coverage_judgement": "unvalidated",
+          "coverage_judgment": "unvalidated",
           "folds_with_a_range": 0,
           "horizon_months": 3,
           "label": "unvalidated",
@@ -119,7 +119,7 @@
         {
           "coverage80": null,
           "coverage95": null,
-          "coverage_judgement": "unvalidated",
+          "coverage_judgment": "unvalidated",
           "folds_with_a_range": 0,
           "horizon_months": 6,
           "label": "unvalidated",
@@ -887,7 +887,7 @@
       "declared_rule": "adopted only if ramped AE-months varied by at least 20% across the scored period, the capacity rate's mean absolute error is at least 10% lower than the flat trailing rate's at both 3 and 6 months, and there are at least 6 folds at each",
       "forecast_uses": "the flat trailing creation rate",
       "horizons": [],
-      "label": "conditional on realised staffing: it asks whether headcount explains pipeline, not how well it forecasts",
+      "label": "conditional on realized staffing: it asks whether headcount explains pipeline, not how well it forecasts",
       "outcome": "unavailable",
       "reason": "no capacity.yaml in the profile",
       "scored_on": "created-pipeline dollars at 3 and 6 months on the back-test's folds; the per-rep rate is fitted only from data before each cutoff and applied to the ramped AE-months that actually occurred",
@@ -904,7 +904,7 @@
       "unavailable": "no capacity.yaml in the profile"
     }
   },
-  "schema_version": "1.3.0",
+  "schema_version": "2.0.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "no deal_observations.csv: past open-deal amounts and expected close dates are not recorded, so the fitted model and the stage-weighted baseline cannot be scored in dollars",
@@ -949,7 +949,7 @@
         },
         {
           "detail": "not applicable: no close-timing evidence for open deals in S5",
-          "name": "simulation centred on the expectation",
+          "name": "simulation centered on the expectation",
           "passed": true
         },
         {

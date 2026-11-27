@@ -174,7 +174,7 @@ class NewPipeline:
     created_count: int = 0  # deals behind created_per_day
     created_days: int = 0  # ... over this many days
     # Weight of each won_arr_sample (None: equal). Recency weights each win by
-    # its day's incidence increment, so censoring does not favour quick wins.
+    # its day's incidence increment, so censoring does not favor quick wins.
     won_arr_weights: tuple[Decimal, ...] | None = None
 
 

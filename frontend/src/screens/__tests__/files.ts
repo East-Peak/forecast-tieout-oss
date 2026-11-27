@@ -8,7 +8,7 @@ const ROOT = resolve(__dirname, "../../../public/data/reports");
 const read = <T>(path: string): T => JSON.parse(readFileSync(resolve(ROOT, path), "utf8")) as T;
 
 export const COMPANIES = ["sprout-labs", "sapling-industries", "mighty-oak-holdings"] as const;
-export const SCENARIOS = ["as-signed", "demo-plan", "hires-only", "programme-only"] as const;
+export const SCENARIOS = ["as-signed", "demo-plan", "hires-only", "program-only"] as const;
 
 export const index = (): ReportIndex => read<ReportIndex>("index.json");
 export const comparison = (company: string): ScenarioComparison => read<ScenarioComparison>(`${company}/comparison.json`);

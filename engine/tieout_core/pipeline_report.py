@@ -29,7 +29,7 @@ from .requirement import (
     per_rep_excess,
     schedule,
     solve_quarters,
-    summarise_history,
+    summarize_history,
     too_late,
 )
 from .roster import ramped_ae_months
@@ -81,7 +81,7 @@ def observed_history(
     per_day = best_four_per_day(by_day)
     if cap.fit is None:
         return History(len(by_day), None, None, per_day)
-    return replace(summarise_history(by_ae), best_four_per_day=per_day)
+    return replace(summarize_history(by_ae), best_four_per_day=per_day)
 
 
 def required_pipeline(
@@ -122,7 +122,7 @@ def required_pipeline(
         "cap_rule": "one cap across the quarters: three times the new-business pipeline created in "
         "the trailing 365 days, less what earlier quarters were assigned",
         "quarters": rows,
-        "fiscal_year": summarise_fiscal_year(
+        "fiscal_year": summarize_fiscal_year(
             results, fy_quarters, single_spread_lever, _late_quarters(rows)
         ),
         "per_rep_rule": _per_rep_rule(cap),
@@ -397,7 +397,7 @@ def _history(h: History, cap: Capacity) -> dict:
     }
 
 
-def summarise_fiscal_year(
+def summarize_fiscal_year(
     results: list[QuarterResult], fy_quarters, single_spread=None, late=()
 ) -> dict:
     """The total for meeting every remaining quarter's target, honestly named:

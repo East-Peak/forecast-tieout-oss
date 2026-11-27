@@ -805,7 +805,7 @@ def _actions(s: dict) -> list[str]:
     out = [
         "## 12. Two actions, compared",
         "",
-        f"{s['definition']} Programme shape: {s['programme_shape']}.",
+        f"{s['definition']} Program shape: {s['program_shape']}.",
         "",
     ]
     rows = []
@@ -837,7 +837,7 @@ def _actions(s: dict) -> list[str]:
         f"Closing the fiscal-year gap of {_usd(c['fiscal_year_gap'])}: {c['basis']}.",
         "",
     ]
-    h, p = c["hires"], c["programme"]
+    h, p = c["hires"], c["program"]
     if h["count"] is None and "bound" not in h:
         out += [f"- **Hires:** {h['outcome']}: {h['note']}."]
     elif h["outcome"] == "feasible":
@@ -862,14 +862,14 @@ def _actions(s: dict) -> list[str]:
     if p["outcome"] == "feasible":
         out += [
             (
-                f"- **Programme pipeline:** feasible: {_usd(p['dollars'], True)} of created pipeline closes "
+                f"- **Program pipeline:** feasible: {_usd(p['dollars'], True)} of created pipeline closes "
                 f"it (overshoot {_usd(p['overshoot'], True)}); cash cost "
                 f"{_cost(p['cash_cost_in_twelve_months'])}; {_pct_str(p['share_booking_in_fiscal_year'])} "
                 "of those dollars book by the fiscal-year end."
             )
         ]
     elif p["outcome"] == "already covered":
-        out += ["- **Programme pipeline:** already covered: nothing needed."]
+        out += ["- **Program pipeline:** already covered: nothing needed."]
     else:
         over = (
             f"; it would take {_usd(p['needed_but_over_the_cap'], True)}"
@@ -877,7 +877,7 @@ def _actions(s: dict) -> list[str]:
             else ""
         )
         out += [
-            f"- **Programme pipeline:** unreachable within the cap of {_usd(p['cap'])} ({p['cap_rule']}){over}."
+            f"- **Program pipeline:** unreachable within the cap of {_usd(p['cap'])} ({p['cap_rule']}){over}."
         ]
     out += ["", f"_{_up(s['meaning'])}._", ""]
     return out
