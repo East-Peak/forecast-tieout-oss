@@ -38,7 +38,7 @@ runScreenChecks({
           const cards = container.querySelectorAll("[data-testid='verdict-card']");
           expect(cards.length).toBe(2);
           expect(cards[0].textContent).toContain(c.report.verdicts.software_correct.verdict);
-          expect(cards[1].textContent).toContain(c.report.verdicts.forecast_better_than_baselines.reason);
+          expect(cards[1].textContent).toContain(c.report.verdicts.forecast_better_than_baselines.in_words);
           cleanup();
         }
       });
@@ -47,7 +47,7 @@ runScreenChecks({
         const c = caseOf("mighty-oak-holdings", "as-signed");
         const container = mountScreen(TrustScreen, c, c.company, c.scenario);
         expect(container.querySelector("[data-binding='verdict.better']")!.textContent).toBe("no");
-        expect(container.querySelector("[data-binding='verdict.better.reason']")!.textContent).toMatch(/not lower than every baseline/);
+        expect(container.querySelector("[data-binding='verdict.better.reason']")!.textContent).toMatch(/not smaller than both simple yardsticks/);
       });
 
       it("every rate in the report is shown once, each with its definition, sample and source", () => {

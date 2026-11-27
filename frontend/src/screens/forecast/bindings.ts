@@ -37,11 +37,18 @@ export const B = {
   stageUnavailable: text("stage.unavailable-reason", "/forecasts/methods/{method=stage-weighted pipeline}/unavailable_reason"),
   runRateUnavailable: text("run-rate.unavailable-reason", "/forecasts/methods/{method=trailing run-rate}/unavailable_reason"),
 
-  // both verdicts, each with its reason (the reason is the report's own sentence)
+  // both verdicts, each with its reason (the report's own words; the better-than-baselines reason has no figures)
   softwareVerdict: text("verdict.software", "/verdicts/software_correct/verdict"),
   softwareSummary: text("verdict.software.summary", "/verdicts/software_correct/summary"),
   betterVerdict: text("verdict.better", "/verdicts/forecast_better_than_baselines/verdict"),
-  betterReason: text("verdict.better.reason", "/verdicts/forecast_better_than_baselines/reason"),
+  betterReason: text("verdict.better.reason", "/verdicts/forecast_better_than_baselines/in_words"),
+  // a row per verdict horizon (ROWS.betterComparisons): the model's error, each baseline's, which is lower
+  cmpMonths: bind({ id: "verdict.better.months", path: "/horizon_months", unit: "count", format: "count" }),
+  cmpModel: usd("verdict.better.model", "/model_error"),
+  cmpStage: usd("verdict.better.stage", "/against/stage-weighted pipeline/baseline_error"),
+  cmpStageOutcome: text("verdict.better.stage.outcome", "/against/stage-weighted pipeline/outcome"),
+  cmpRunRate: usd("verdict.better.run-rate", "/against/trailing run-rate/baseline_error"),
+  cmpRunRateOutcome: text("verdict.better.run-rate.outcome", "/against/trailing run-rate/outcome"),
 
   // the quarters with a target, and the twelve months
   nextTarget: usd("next12.target", "/gap/next_twelve_months/target", { unavailable: NO_TARGET }),
@@ -137,6 +144,7 @@ export const ROWS = {
   signedQuarters: "/gap/quarters",
   cell: "/forecasts/fitted_ranges/cells",
   planItem: "/plan/items",
+  betterComparisons: "/verdicts/forecast_better_than_baselines/comparisons",
 } as const;
 
 /** Every binding on the screen, once per id and place it can read (for the committed list the tests check). */

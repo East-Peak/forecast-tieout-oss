@@ -10,6 +10,7 @@ import type { Binding } from "../../binding/Bound";
 import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
 import { B, PLANNED, SIGNED } from "../forecast/bindings";
+import { betterVerdictExpectations } from "./expectKit";
 import * as fmt from "./independent";
 
 type Row = ScenarioComparison["rows"][number];
@@ -122,8 +123,10 @@ export function expectations({ company, scenario, report: r, index, comparison }
 
   one(B.softwareVerdict.id, r.verdicts.software_correct.verdict);
   one(B.softwareSummary.id, r.verdicts.software_correct.summary);
-  one(B.betterVerdict.id, r.verdicts.forecast_better_than_baselines.verdict);
-  one(B.betterReason.id, r.verdicts.forecast_better_than_baselines.reason);
+  betterVerdictExpectations(r, {
+    one,
+    many: (id, texts, rows) => (texts.length > 0 ? many(id, texts, rows) : absent.push({ id })),
+  });
 
   // the two windows, each row for what it covers
   one(B.nextTarget.id, orWords(nx.target, fmt.usdShort, noTarget));

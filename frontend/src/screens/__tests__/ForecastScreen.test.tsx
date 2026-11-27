@@ -78,7 +78,7 @@ describe("Forecast: every binding (with its provenance), every digit", () => {
       "year.target", "year.actual", "year.expected", "year.gap", "year.range80.low", "year.range80.high",
       "year.range95.low", "year.range95.high", "year.range.status", "check.next12.status", "cell.label",
       "quarter.gap", "next12.gap", "next12.total", "verdict.software", "verdict.software.summary",
-      "verdict.better", "verdict.better.reason",
+      "verdict.better", "verdict.better.reason", "verdict.better.model", "verdict.better.stage",
     ]) expect(ids.has(id), id).toBe(true);
   });
 

@@ -27,6 +27,12 @@ export const VERDICTS = {
   softwareSummary: FORECAST.softwareSummary,
   better: FORECAST.betterVerdict,
   betterReason: FORECAST.betterReason,
+  months: FORECAST.cmpMonths,
+  model: FORECAST.cmpModel,
+  stage: FORECAST.cmpStage,
+  stageOutcome: FORECAST.cmpStageOutcome,
+  runRate: FORECAST.cmpRunRate,
+  runRateOutcome: FORECAST.cmpRunRateOutcome,
 } as const;
 
 export const B = {

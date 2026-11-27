@@ -3,7 +3,7 @@
  * accessors on the generated report types. Texts come from independent.ts, not from src/lib/format.ts.
  */
 import { B, VERDICTS } from "../trust/bindings";
-import { kit, orWords } from "./expectKit";
+import { betterVerdictExpectations, kit, orWords } from "./expectKit";
 import * as fmt from "./independent";
 import type { Built, Case } from "./screenChecks";
 
@@ -21,8 +21,7 @@ export function build({ report: r, index, company, scenario }: Case): Built {
   // the two verdicts, each with its reason (the Forecast screen's own bindings)
   one(VERDICTS.software.id, r.verdicts.software_correct.verdict);
   one(VERDICTS.softwareSummary.id, r.verdicts.software_correct.summary);
-  one(VERDICTS.better.id, r.verdicts.forecast_better_than_baselines.verdict);
-  one(VERDICTS.betterReason.id, r.verdicts.forecast_better_than_baselines.reason);
+  betterVerdictExpectations(r, { one, many });
 
   const checks = r.verdicts.software_correct.checks;
   one(B.softwareScope.id, r.verdicts.software_correct.scope);
