@@ -22,6 +22,15 @@ runScreenChecks({
   probe: "recon.source-rows",
   more: () => {
     describe("Trust: the screen's own claims", () => {
+      it("the back-test headings name the two baselines the way Forecast does", () => {
+        const c = caseOf("sapling-industries", "as-signed");
+        const container = mountScreen(TrustScreen, c, c.company, c.scenario);
+        const heads = [...container.querySelectorAll("th")].map((h) => h.textContent);
+        expect(heads).toContain("Stage-weighted pipeline");
+        expect(heads).toContain("Last twelve months' pace");
+        expect(heads).not.toContain("Trailing run-rate");
+      });
+
       it("both verdicts lead, with their reasons, as the report words them", () => {
         for (const company of files.COMPANIES) {
           const c = caseOf(company, "as-signed");

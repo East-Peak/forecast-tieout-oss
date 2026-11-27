@@ -144,7 +144,7 @@ export default function TrustScreen() {
               <TableHeaderCell className="text-right">Past dates scored</TableHeaderCell>
               <TableHeaderCell className="text-right">Fitted model</TableHeaderCell>
               <TableHeaderCell className="text-right">Stage-weighted pipeline</TableHeaderCell>
-              <TableHeaderCell className="text-right">Trailing run-rate</TableHeaderCell>
+              <TableHeaderCell className="text-right">Last twelve months' pace</TableHeaderCell>
               <TableHeaderCell className="text-right">Fitted model's bias</TableHeaderCell>
               <TableHeaderCell className="text-right">Dates with a range</TableHeaderCell>
               <TableHeaderCell className="text-right">Inside the 80% range</TableHeaderCell>
@@ -160,7 +160,7 @@ export default function TrustScreen() {
                   <TableCell className={STACK.cell} data-label="Past dates scored"><Bound binding={B.btFolds} row={row} /></TableCell>
                   <TableCell className={`${STACK.cell} font-medium`} data-label="Fitted model"><Bound binding={B.btFitted} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Stage-weighted pipeline"><Bound binding={B.btStage} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Trailing run-rate"><Bound binding={B.btRunRate} row={row} /></TableCell>
+                  <TableCell className={STACK.cell} data-label="Last twelve months' pace"><Bound binding={B.btRunRate} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Fitted model's bias"><Bound binding={B.btBias} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Dates with a range"><Bound binding={B.btRangeFolds} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Inside the 80% range"><Bound binding={B.btCover80} row={row} /></TableCell>

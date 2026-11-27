@@ -164,8 +164,8 @@ export function monthlySeries(planned: boolean) {
     booked: { key: "booked", label: "Booked", kind: "decimal", path: "/reconciliation/bookings_by_month/{period}", periods: { keysAt: "/reconciliation/bookings_by_month" } },
     signed: { key: "signed", label: "Fitted model, as signed", kind: "decimal", path: METHOD("fitted model"), periods: WINDOWS },
     fitted,
-    stage: { key: "stage", label: "Stage-weighted (point forecast, no range)", kind: "decimal", path: METHOD("stage-weighted pipeline"), periods: WINDOWS },
-    runRate: { key: "runRate", label: "Trailing run-rate (point forecast, no range)", kind: "decimal", path: METHOD("trailing run-rate"), periods: WINDOWS },
+    stage: { key: "stage", label: "Stage-weighted pipeline (no range)", kind: "decimal", path: METHOD("stage-weighted pipeline"), periods: WINDOWS },
+    runRate: { key: "runRate", label: "Last twelve months' pace (no range)", kind: "decimal", path: METHOD("trailing run-rate"), periods: WINDOWS },
     band80: { key: "band80", label: "80% range", kind: "range", path: range("range80"), periods: WINDOWS },
     band95: { key: "band95", label: "95% range", kind: "range", path: range("range95"), periods: WINDOWS },
   } as const satisfies Record<string, SeriesSpec>;

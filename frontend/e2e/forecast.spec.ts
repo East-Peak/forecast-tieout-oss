@@ -158,8 +158,8 @@ async function expectTooltipsMatchReport(page: Page, r: Report, spreads: Record<
     ["80% range", `${usdShort(spread.range80[0])} to ${usdShort(spread.range80[1])}`],
     ...(planned ? [["Fitted model, as signed", usdShort(method("fitted model").by_window[future])] as [string, string]] : []),
     [planned ? "Fitted model, with this scenario" : "Fitted model", usdShort(fittedValue)],
-    ["Stage-weighted (point forecast, no range)", usdShort(method("stage-weighted pipeline").by_window[future])],
-    ["Trailing run-rate (point forecast, no range)", usdShort(method("trailing run-rate").by_window[future])],
+    ["Stage-weighted pipeline (no range)", usdShort(method("stage-weighted pipeline").by_window[future])],
+    ["Last twelve months' pace (no range)", usdShort(method("trailing run-rate").by_window[future])],
   ];
   expect(hf.header, `${label} ${future}`).toBe(month(future));
   expect(hf.rows, `${label} ${future}: every forecast, with its value`).toEqual(want);

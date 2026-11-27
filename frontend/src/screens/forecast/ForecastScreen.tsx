@@ -127,7 +127,7 @@ export default function ForecastScreen() {
       ) : null}
       {!available.runRate ? (
         <p className="-mt-3 text-xs text-slate-500">
-          Trailing run-rate: <Bound binding={B.runRateUnavailable} />
+          Last twelve months' pace: <Bound binding={B.runRateUnavailable} />
         </p>
       ) : null}
 

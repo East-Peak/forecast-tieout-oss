@@ -82,11 +82,23 @@ describe("Forecast: every binding (with its provenance), every digit", () => {
     ]) expect(ids.has(id), id).toBe(true);
   });
 
-  it("shows the baselines as point forecasts with no range", () => {
+  it("names the baselines for what they are, with no range", () => {
     const c = caseOf("sapling-industries", "as-signed");
     const container = mount(c, c.company, c.scenario);
-    expect(container.textContent).toContain("Stage-weighted (point forecast, no range)");
-    expect(container.textContent).toContain("Trailing run-rate (point forecast, no range)");
+    expect(container.textContent).toContain("Stage-weighted pipeline (no range)");
+    expect(container.textContent).toContain("Last twelve months' pace (no range)");
+    expect(container.textContent).not.toContain("point forecast");
+    expect(container.textContent).not.toContain("Trailing run-rate");
+  });
+
+  it("says under the monthly chart what the two dotted lines are and why the stage-weighted one falls away", () => {
+    const c = caseOf("sapling-industries", "as-signed");
+    const container = mount(c, c.company, c.scenario);
+    const note = container.querySelector("[data-testid='baseline-note']");
+    expect(note?.textContent).toBe(
+      "The two dotted lines are the simple yardsticks the fitted model is scored against. The stage-weighted line falls away because today's open deals close out first and only a thin flow of new pipeline follows them.",
+    );
+    expect(note?.textContent).not.toMatch(/\d/);
   });
 });
 

@@ -53,6 +53,9 @@ export function MonthlyChart({ available, planned }: { available: Availability; 
       <p className="mb-4 text-xs text-slate-500">
         History to the left of the as-of line, forecast to the right. Only the fitted model has a range.
       </p>
+      <p className="-mt-3 mb-4 text-xs text-slate-500" data-testid="baseline-note">
+        The two dotted lines are the simple yardsticks the fitted model is scored against. The stage-weighted line falls away because today&apos;s open deals close out first and only a thin flow of new pipeline follows them.
+      </p>
       <ResponsiveContainer width="100%" height={320}>
         <ComposedChart data={rows} margin={{ top: 16, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid horizontal={GRID_STYLE.horizontal} vertical={GRID_STYLE.vertical} stroke={GRID_STYLE.stroke} strokeDasharray={GRID_STYLE.strokeDasharray} />
