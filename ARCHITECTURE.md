@@ -52,6 +52,16 @@ baselines* is a result, not a fault: it is often no.
 cross-field rules (for example, ranges present exactly when a fit was used). Every
 report the core's tests build is validated against it.
 
+The `worksheet` section (what moves the outcome) is written by `finish` for every scenario from
+`Prepared` and the plan in force, in `worksheet.py`. Its rules are `worksheet_rules.py`
+(definitions and gates, fixed before any company was scored) and its evidence
+`worksheet_evidence.py` (a company's past by fiscal creation quarter, computed once in `prepare`).
+A driver is a pure function from the fitted records to an adjusted copy (`worksheet_drivers.py`:
+nothing in `Prepared` is touched, so one prepared company serves any number of worksheets, and the
+same functions can carry a visitor's own assumption into a plan later). A figure that exists
+elsewhere in the report is carried as `{value, source}` with a JSON pointer, and
+`worksheet_contract.py` checks that the value is what the pointer finds.
+
 ## The generators
 
 - `engine/scripts/synth_history.py` and `generate_data_v2.py` write the three synthetic
