@@ -1,11 +1,11 @@
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { BindingProvider } from "../../binding/Bound";
+import { BindingProvider, Bound } from "../../binding/Bound";
 import { ChartTooltip } from "../../binding/ChartKit";
 import { checkChart, unboundDigits } from "../../binding/__tests__/harness";
 import type { CapturedChart, ExpectedChart } from "../../binding/__tests__/harness";
 import type { TieoutReport } from "../../generated/report";
-import { SERIES } from "../pipeline/bindings";
+import { HOVER, ROWS, SERIES } from "../pipeline/bindings";
 import PipelineScreen from "../pipeline/PipelineScreen";
 import * as files from "./files";
 import * as fmt from "./independent";
@@ -115,12 +115,20 @@ describe("Pipeline chart: a hover's rows are read back from the file", () => {
             label={q.quarter}
             payload={Object.keys(SERIES).map((key) => ({ dataKey: key, value: key === "required" && q.required_extra_pipeline === null ? null : 1 }))}
             periodFormat={(p) => p}
+            extra={(period) => (
+              <>
+                <Bound binding={HOVER.from} row={`${ROWS.quarters}/{quarter=${period}}`} /> to <Bound binding={HOVER.to} row={`${ROWS.quarters}/{quarter=${period}}`} />
+              </>
+            )}
           />
         </BindingProvider>,
       );
       expect(unboundDigits(container, [q.quarter])).toEqual([]);
       const text = (key: string) => container.querySelector(`[data-tooltip-row="${key}"] .font-medium`)?.textContent;
       expect(text("expected")).toBe(fmt.usdShort(q.expected_created_pipeline));
+      const span = container.querySelector("[data-testid='tooltip-extra']")!;
+      expect(span.querySelector("[data-binding='pipeline-quarters.created.from']")!.textContent).toBe(fmt.date(q.created_between[0]));
+      expect(span.querySelector("[data-binding='pipeline-quarters.created.to']")!.textContent).toBe(fmt.date(q.created_between[1]));
       expect(text("required")).toBe(q.required_extra_pipeline === null ? undefined : fmt.usdShort(q.required_extra_pipeline));
       cleanup();
     }

@@ -26,7 +26,7 @@ export function QuarterTable() {
     <Card>
       <SectionHeader
         title="Required against expected, quarter by quarter"
-        subtitle="The extra pipeline that must be created, spread evenly from tomorrow to the quarter's end, so that the quarter meets its target. Yield is the cents of each created dollar that book inside the quarter."
+        subtitle="The extra pipeline that must be created, spread evenly from tomorrow to the quarter's end, so that the quarter meets its target. Yield is the cents of each created dollar that book inside the quarter. 'Before this quarter's extra pipeline' is what the quarter books from the deals already open and the pipeline the model expects to be created, counting what earlier quarters were assigned and leaving out only this quarter's own extra."
       />
       <Table className={STACK.table}>
         <TableHead className={STACK.head}>
@@ -34,7 +34,7 @@ export function QuarterTable() {
             <TableHeaderCell>Quarter</TableHeaderCell>
             <TableHeaderCell className="text-right">Target</TableHeaderCell>
             <TableHeaderCell className="text-right">Booked so far</TableHeaderCell>
-            <TableHeaderCell className="text-right">Without new pipeline</TableHeaderCell>
+            <TableHeaderCell className="text-right">Before this quarter's extra pipeline</TableHeaderCell>
             <TableHeaderCell className="text-right">Extra required</TableHeaderCell>
             <TableHeaderCell className="text-right">Expected to be created</TableHeaderCell>
             <TableHeaderCell className="text-right">Yield per dollar</TableHeaderCell>
@@ -60,11 +60,20 @@ export function QuarterTable() {
                     <Bound binding={B.qName} row={row} />
                     {q.in_fiscal_year ? null : <span className="ml-1 text-xs font-normal text-slate-500">(next fiscal year)</span>}
                     <Badge size="xs" color="slate" className="ml-2 align-middle"><Bound binding={B.qStatus} row={row} /></Badge>
-                    <div className="mt-0.5 text-xs font-normal text-slate-600 sm:whitespace-normal"><Bound binding={B.qHeadline} row={row} /></div>
+                    <div className="mt-0.5 text-xs font-normal text-slate-600 sm:whitespace-normal">
+                      <Bound binding={B.qOutcome} row={row} />
+                      {q.would_take !== null ? (
+                        <>
+                          {": it would take "}
+                          <Bound binding={B.qWouldTake} row={row} />
+                          {" of extra pipeline"}
+                        </>
+                      ) : null}
+                    </div>
                   </TableCell>
                   <TableCell className={STACK.cell} data-label="Target"><Bound binding={B.qTarget} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Booked so far"><Bound binding={B.qActual} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Without new pipeline"><Bound binding={B.qWithout} row={row} /></TableCell>
+                  <TableCell className={STACK.cell} data-label="Before this quarter's extra pipeline"><Bound binding={B.qWithout} row={row} /></TableCell>
                   <TableCell className={`${STACK.cell} font-medium`} data-label="Extra required"><Bound binding={requiredBinding(q.outcome)} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Expected to be created"><Bound binding={B.qExpected} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Yield per dollar"><Bound binding={B.qYield} row={row} /></TableCell>

@@ -70,3 +70,9 @@ export function quantity(raw: string | number): string {
 
 export const multiple = (raw: string): string => `${quantity(raw)}x`;
 export const cents = (raw: string): string => `${quantity(raw)}¢`;
+
+const twoPlaces = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2, roundingMode: "halfExpand" } as Intl.NumberFormatOptions);
+export function decimal2(raw: string): string {
+  const shown = twoPlaces.format(Math.abs(Number(raw)));
+  return Number(raw) < 0 && Number(shown.split(",").join("")) !== 0 ? `-${shown}` : shown;
+}

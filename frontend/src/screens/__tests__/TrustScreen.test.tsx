@@ -56,6 +56,23 @@ runScreenChecks({
         }
       });
 
+      it("a rate with no range says so in words on every such row, not with a bare dash", () => {
+        for (const [company, scenario] of [["sprout-labs", "as-signed"], ["mighty-oak-holdings", "as-signed"]] as const) {
+          const c = caseOf(company, scenario);
+          const container = mountScreen(TrustScreen, c, c.company, c.scenario);
+          const rows = Array.from(container.querySelectorAll("[data-testid='rate-row']"));
+          const without = c.report.rates.map((r, i) => [r, i] as const).filter(([r]) => r.range95 === null);
+          expect(without.length).toBeGreaterThan(0);
+          for (const [, i] of without) {
+            const cell = rows[i].querySelector("[data-binding='rate.range95.none']")!;
+            expect(cell.textContent).toBe("no range reported");
+            expect(cell.getAttribute("data-unavailable")).toBe("true");
+          }
+          expect(container.textContent).not.toContain("\u2014");
+          cleanup();
+        }
+      });
+
       it("a rate says its value in its own unit: a share as a percent, dollars as dollars, a number as a number", () => {
         const c = caseOf("sprout-labs", "as-signed");
         const container = mountScreen(TrustScreen, c, c.company, c.scenario);

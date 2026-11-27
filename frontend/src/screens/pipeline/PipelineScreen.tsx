@@ -1,6 +1,6 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
-import { Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
+import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
 import { STACK } from "../../components/workbook/stack";
@@ -48,10 +48,14 @@ export default function PipelineScreen() {
             />
             <MetricCard
               label="Extra pipeline, the year as one total"
-              value={<span className="text-xl"><Bound binding={B.fySpread} /></span>}
+              value={<Bound binding={B.spreadRequired} />}
               note="Spread evenly to the year's end"
               className="p-4"
-            />
+            >
+              <p className="mt-1 text-[11px] leading-tight text-slate-500" data-testid="spread-outcome">
+                <Badge color="slate" size="xs"><Bound binding={B.spreadOutcome} /></Badge>
+              </p>
+            </MetricCard>
             <MetricCard
               label="Open pipeline now"
               value={<Bound binding={B.openArr} />}
@@ -164,7 +168,8 @@ export default function PipelineScreen() {
               return (
                 <TableRow key={i} className={STACK.row} data-testid="win-rate-row">
                   <TableCell className={STACK.title}>
-                    <Bound binding={B.rDefinition} row={row} />
+                    <Bound binding={B.rLabel} row={row} />
+                    <div className="text-xs font-normal text-slate-600"><Bound binding={B.rDefinition} row={row} /></div>
                     <div className="text-xs font-normal text-slate-500">
                       <Bound binding={B.rNumerator} row={row} /> of <Bound binding={B.rDenominator} row={row} />
                     </div>

@@ -32,6 +32,14 @@ runScreenChecks({
         expect(container.querySelector("[data-binding='decision.forecast-uses']")!.textContent).toBe("the flat trailing creation rate");
       });
 
+      it("the deals created per ramped AE-month are shown to two places, not as six", () => {
+        const c = caseOf("sprout-labs", "as-signed");
+        const container = mountScreen(CapacityScreen, c, c.company, c.scenario);
+        expect(container.querySelector("[data-binding='creation.rate']")!.textContent).toBe("8.18");
+        const m = caseOf("mighty-oak-holdings", "as-signed");
+        expect(mountScreen(CapacityScreen, m, m.company, m.scenario).querySelector("[data-binding='creation.rate']")!.textContent).toBe("0.42");
+      });
+
       it("a company where capacity is adopted shows no not-adopted banner", () => {
         for (const company of ["sprout-labs", "sapling-industries"]) {
           const c = caseOf(company, "as-signed");

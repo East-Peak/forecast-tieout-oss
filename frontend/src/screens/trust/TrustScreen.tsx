@@ -244,7 +244,7 @@ export default function TrustScreen() {
                         <Bound binding={B.rLow} row={row} /> to <Bound binding={B.rHigh} row={row} />
                       </>
                     ) : (
-                      <span className="text-slate-400">&mdash;</span>
+                      <Bound binding={B.rNoRange} row={row} />
                     )}
                   </TableCell>
                   <TableCell className={STACK.cell} data-label="Sample"><Bound binding={B.rSample} row={row} /></TableCell>

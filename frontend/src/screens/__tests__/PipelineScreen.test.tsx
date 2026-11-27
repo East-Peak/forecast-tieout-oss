@@ -78,6 +78,58 @@ runScreenChecks({
         expect(container.querySelector("[data-binding='flow.count']")).not.toBeNull(); // the year's flow is still shown
       });
 
+      it("a covered quarter says no extra pipeline is required, not that nothing is to be created, and keeps its expected creation", () => {
+        const c = caseOf("sapling-industries", "as-signed");
+        const container = mountScreen(PipelineScreen, c, c.company, c.scenario);
+        const q3 = quarterOf(c.report, "Q3FY26");
+        expect(q3.outcome).toBe("already covered");
+        expect(Number(q3.expected_created_pipeline)).toBeGreaterThan(50_000_000);
+        const total = container.querySelector("[data-binding='quarter.total-created']")!;
+        expect(total.textContent).toMatch(/^no extra pipeline is required/);
+        expect(total.textContent).not.toMatch(/nothing to create|unavailable/);
+        const perDay = container.querySelector("[data-binding='quarter.per-day']")!;
+        expect(perDay.textContent).toMatch(/^no extra pipeline is required/);
+      });
+
+      it("an unavailable comparison says so and why, apart from nothing being required", () => {
+        const c = caseOf("sapling-industries", "as-signed");
+        const report = structuredClone(c.report);
+        const rp = report.required_pipeline;
+        if ("unavailable" in rp) throw new Error("unavailable");
+        const q = rp.quarters.find((x) => x.outcome === "feasible")!;
+        q.per_day.required_against_team_best = null;
+        q.per_day.note = "unavailable: the team has fewer than four complete quarters to compare with";
+        const container = mountScreen(PipelineScreen, { ...c, report }, c.company, c.scenario);
+        const shown = Array.from(container.querySelectorAll("[data-binding='quarter.per-day.vs-best']")).map((el) => el.textContent);
+        expect(shown).toContain("unavailable: the team has fewer than four complete quarters to compare with");
+      });
+
+      it("a quarter's outcome and what it would take are figures beside a word, not a sentence with raw cents", () => {
+        const c = caseOf("sprout-labs", "as-signed");
+        const container = mountScreen(PipelineScreen, c, c.company, c.scenario);
+        expect(container.querySelector("[data-binding='quarter.would-take']")!.textContent).toBe("$234.4M");
+        expect(container.textContent).not.toContain("$234,427,525.59");
+        expect(container.querySelector("[data-binding='required.single-spread.required']")!.textContent).toBe("$43.2M");
+        expect(container.querySelector("[data-binding='required.single-spread.outcome']")!.textContent).toBe("feasible");
+        expect(container.textContent).not.toContain("required: $");
+      });
+
+      it("the column that includes expected creation is not called 'without new pipeline'", () => {
+        const c = caseOf("sprout-labs", "as-signed");
+        const container = mountScreen(PipelineScreen, c, c.company, c.scenario);
+        expect(container.textContent).not.toMatch(/without new pipeline/i);
+        expect(container.textContent).toContain("Before this quarter's extra pipeline");
+      });
+
+      it("a stage win rate has the stage's name as its row label and the definition beneath", () => {
+        const c = caseOf("sapling-industries", "as-signed");
+        const container = mountScreen(PipelineScreen, c, c.company, c.scenario);
+        const first = container.querySelector("[data-testid='win-rate-row']")!;
+        const label = first.querySelector("[data-binding='rate.label']")!.textContent!;
+        expect(label.length).toBeLessThan(30);
+        expect(first.querySelector("[data-binding='rate.definition']")!.textContent).toContain(label);
+      });
+
       it("the stage win rates carry their sample sizes, and no age-group cell is shown as a stage", () => {
         const c = caseOf("sapling-industries", "as-signed");
         const container = mountScreen(PipelineScreen, c, c.company, c.scenario);

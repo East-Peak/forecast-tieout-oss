@@ -28,12 +28,15 @@ export function CompareTable() {
             const path = `${ROWS.compare}/${i}`;
             return (
               <TableRow key={row.scenario} className={STACK.row} data-testid="compare-row">
-                <TableCell className={STACK.title}><Bound binding={B.sLabel} row={path} /></TableCell>
+                <TableCell className={STACK.title}>
+                  <Bound binding={B.sLabel} row={path} />
+                  {row.note !== null ? <div className="text-xs font-normal text-slate-500"><Bound binding={B.sNote} row={path} /></div> : null}
+                </TableCell>
                 <TableCell className={STACK.cell} data-label="Expected year"><Bound binding={B.sExpected} row={path} /></TableCell>
                 <TableCell className={STACK.cell} data-label="Gap to target"><Bound binding={B.sGap} row={path} /></TableCell>
-                <TableCell className={`${STACK.cell} font-medium`} data-label="Gap changes by"><Bound binding={B.sGapChange} row={path} /></TableCell>
-                <TableCell className={STACK.cell} data-label="More booked, rest of year"><Bound binding={B.sRest} row={path} /></TableCell>
-                <TableCell className={STACK.cell} data-label="More booked, next twelve months"><Bound binding={B.sNext} row={path} /></TableCell>
+                <TableCell className={`${STACK.cell} font-medium`} data-label="Gap changes by"><Bound binding={row.scenario === baseline ? B.sGapChange : B.sGapChangeNv} row={path} /></TableCell>
+                <TableCell className={STACK.cell} data-label="More booked, rest of year"><Bound binding={row.scenario === baseline ? B.sRest : B.sRestNv} row={path} /></TableCell>
+                <TableCell className={STACK.cell} data-label="More booked, next twelve months"><Bound binding={row.scenario === baseline ? B.sNext : B.sNextNv} row={path} /></TableCell>
                 <TableCell className={STACK.cell} data-label="Cash cost, next twelve months">
                   <Bound binding={row.scenario === baseline ? B.sCostNone : B.sCost} row={path} />
                 </TableCell>

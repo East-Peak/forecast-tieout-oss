@@ -8,8 +8,8 @@ import type { Binding } from "../../binding/Bound";
  * scenarios are read from comparison.json, which the core's generator writes: the browser subtracts nothing.
  * The tests assert this list against independently written expectations.
  */
-export const REST = "rest of fiscal year";
-export const TWELVE = "next twelve months";
+const REST = "rest of fiscal year";
+const TWELVE = "next twelve months";
 const PLAN = "/plan";
 const CLOSE = "/actions/close_the_fiscal_year_gap";
 const ME = "/rows/{scenario={scenario}}";
@@ -21,6 +21,8 @@ const count = (id: string, path: string, extra: Partial<Binding> = {}) => bind({
 const multiple = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "quantity", format: "multiple", ...extra });
 const words = (w: string) => ({ words: w }) as const;
 const cmp = { source: "comparison" } as const;
+/** A missing figure says why in the report's own sentence for it, or in these words where it gives none. */
+const why = (reason: string, fallback: string) => ({ reason, sentence: true, words: fallback }) as const;
 
 export const B = {
   fiscalYear: text("fiscal-year", "/inputs/fiscal_year"),
@@ -34,8 +36,9 @@ export const B = {
   planUnavailable: text("plan.unavailable", `${PLAN}/unavailable`),
   planExpected: usd("plan.expected", `${PLAN}/expected_fiscal_year`),
   planGap: usd("plan.gap", `${PLAN}/gap/fiscal_year/gap_with_plan`, { tint: "shortfall" }),
-  cmpGapChange: usd("plan.gap-change", `${ME}/fiscal_year_gap_change`, { ...cmp, tint: "shortfall", unavailable: words("unavailable") }),
-  cmpMoreNext: usd("plan.more-booked.next12", `${ME}/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("unavailable") }),
+  cmpGapChange: usd("plan.gap-change", `${ME}/fiscal_year_gap_change`, { ...cmp, tint: "shortfall", unavailable: words("not valued") }),
+  cmpMoreNext: usd("plan.more-booked.next12", `${ME}/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("not valued") }),
+  cmpNote: text("plan.note", `${ME}/note`, cmp),
   cmpCost: usd("plan.cost", `${ME}/cash_cost_in_twelve_months`, { ...cmp, unavailable: words("cost not entered") }),
   planDefinition: text("plan.baseline-definition", `${PLAN}/baseline_definition`),
   planFile: text("plan.file", `${PLAN}/file`),
@@ -58,8 +61,8 @@ export const B = {
   iCost: usd("item.cost", "/cash_cost_in_twelve_months", { unavailable: words("cost not entered") }),
   iSchedule: text("item.schedule", "/payment_schedule"),
   itemsCost: usd("items.cost", `${PLAN}/cash_cost_in_twelve_months`, { unavailable: words("cost not entered") }),
-  itemsRest: usd("items.total.rest", `${PLAN}/contributions_total/${REST}`),
-  itemsNext: usd("items.total.next12", `${PLAN}/contributions_total/${TWELVE}`),
+  itemsRest: usd("items.total.rest", `${ME}/bookings_change/${REST}`, { ...cmp, unavailable: words("not valued") }),
+  itemsNext: usd("items.total.next12", `${ME}/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("not valued") }),
   itemsOrder: text("items.order", `${PLAN}/order`),
   itemsCostNote: text("items.cost-note", `${PLAN}/cost_note`),
 
@@ -87,20 +90,24 @@ export const B = {
   hiresCount: count("close.hires.count", `${CLOSE}/hires/count`, { unavailable: words("no number of hires closes it") }),
   hiresBound: count("close.hires.bound", `${CLOSE}/hires/bound`),
   hiresBoundBasis: text("close.hires.bound-basis", `${CLOSE}/hires/bound_basis`),
-  hiresCost: usd("close.hires.cost", `${CLOSE}/hires/cash_cost_in_twelve_months`, { unavailable: words("cost not entered") }),
+  hiresCost: usd("close.hires.cost", `${CLOSE}/hires/cash_cost_in_twelve_months`, { unavailable: why(`${CLOSE}/hires/cash_cost_note`, "unavailable") }),
   programmeOutcome: text("close.programme.outcome", `${CLOSE}/programme/outcome`),
   programmeDollars: usd("close.programme.dollars", `${CLOSE}/programme/dollars`, { unavailable: words("no amount closes it within the cap") }),
   programmeCap: usd("close.programme.cap", `${CLOSE}/programme/cap`),
-  programmeOver: usd("close.programme.over-cap", `${CLOSE}/programme/needed_but_over_the_cap`, { unavailable: words("not over the cap") }),
-  programmeCost: usd("close.programme.cost", `${CLOSE}/programme/cash_cost_in_twelve_months`, { unavailable: words("no cost without an amount") }),
+  programmeOver: usd("close.programme.over-cap", `${CLOSE}/programme/needed_but_over_the_cap`),
+  programmeCost: usd("close.programme.cost", `${CLOSE}/programme/cash_cost_in_twelve_months`, { unavailable: why(`${CLOSE}/programme/cash_cost_note`, "unavailable") }),
 
   // every scenario side by side (a row of comparison.json)
   sLabel: text("compare.label", "/label", cmp),
   sExpected: usd("compare.expected", "/expected_fiscal_year", { ...cmp, unavailable: words("unavailable") }),
   sGap: usd("compare.gap", "/fiscal_year_gap", { ...cmp, tint: "shortfall", unavailable: words("unavailable") }),
-  sGapChange: usd("compare.gap-change", "/fiscal_year_gap_change", { ...cmp, tint: "shortfall", unavailable: words("no plan valued") }),
-  sRest: usd("compare.more.rest", `/bookings_change/${REST}`, { ...cmp, unavailable: words("no plan valued") }),
-  sNext: usd("compare.more.next12", `/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("no plan valued") }),
+  sGapChange: usd("compare.gap-change", "/fiscal_year_gap_change", { ...cmp, tint: "shortfall", unavailable: words("no plan") }),
+  sRest: usd("compare.more.rest", `/bookings_change/${REST}`, { ...cmp, unavailable: words("no plan") }),
+  sNext: usd("compare.more.next12", `/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("no plan") }),
+  sGapChangeNv: usd("compare.gap-change.not-valued", "/fiscal_year_gap_change", { ...cmp, tint: "shortfall", unavailable: words("not valued") }),
+  sRestNv: usd("compare.more.rest.not-valued", `/bookings_change/${REST}`, { ...cmp, unavailable: words("not valued") }),
+  sNextNv: usd("compare.more.next12.not-valued", `/bookings_change/${TWELVE}`, { ...cmp, unavailable: words("not valued") }),
+  sNote: text("compare.note", "/note", cmp),
   sCost: usd("compare.cost", "/cash_cost_in_twelve_months", { ...cmp, unavailable: words("cost not entered") }),
   sCostNone: usd("compare.cost.none", "/cash_cost_in_twelve_months", { ...cmp, unavailable: words("no plan, no cost") }),
 } as const satisfies Record<string, Binding>;
@@ -111,7 +118,7 @@ function forWindow(key: string, window: string) {
   return {
     asSigned: usd(`window.${key}.as-signed`, `${PLAN}/baseline/${window}`),
     withPlan: usd(`window.${key}.with-plan`, `${PLAN}/with_plan/${window}`),
-    gain: usd(`window.${key}.gain`, `${ME}/bookings_change/${window}`, { ...cmp, unavailable: words("unavailable") }),
+    gain: usd(`window.${key}.gain`, `${ME}/bookings_change/${window}`, { ...cmp, unavailable: words("not valued") }),
     base80Low: range("as-signed.range80.low", `/forecasts/fitted_ranges/horizons/${window}/range80/0`),
     base80High: range("as-signed.range80.high", `/forecasts/fitted_ranges/horizons/${window}/range80/1`),
     base95Low: range("as-signed.range95.low", `/forecasts/fitted_ranges/horizons/${window}/range95/0`),

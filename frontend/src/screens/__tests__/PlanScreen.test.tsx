@@ -5,7 +5,7 @@ import App from "../../App";
 import { unboundDigits } from "../../binding/__tests__/harness";
 import type { TieoutReport } from "../../generated/report";
 import type { Loaders } from "../../session/ReportSession";
-import { B, LISTED_BINDINGS } from "../plan/bindings";
+import { B, LISTED_BINDINGS, W } from "../plan/bindings";
 import PlanScreen from "../plan/PlanScreen";
 import * as files from "./files";
 import * as fmt from "./independent";
@@ -55,6 +55,119 @@ runScreenChecks({
           }
           cleanup();
         }
+      });
+    });
+
+    describe("Plan: the two windows swapped in the bindings is caught", () => {
+      it("a screen that reads the next twelve months where it says the rest of the year fails", () => {
+        const c = caseOf("sapling-industries", "demo-plan");
+        const keys = Object.keys(W.rest) as Array<keyof typeof W.rest>;
+        const swap = () => {
+          for (const key of keys) {
+            const a = W.rest[key] as { path: string };
+            const b = W.next12[key] as { path: string };
+            [a.path, b.path] = [b.path, a.path];
+          }
+        };
+        swap();
+        try {
+          const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+          const failures = build(c).expected
+            .filter((e) => e.id.startsWith("window.rest.as-signed") || e.id.startsWith("window.next12.with-plan"))
+            .map((e) => container.querySelector(`[data-binding='${e.id}']`)?.textContent === e.texts[0]);
+          expect(failures.includes(false), "the swapped windows show the wrong figure").toBe(true);
+        } finally {
+          swap();
+        }
+      });
+    });
+
+    describe("Plan: a missing cost says why, from the report's own outcome and cost status", () => {
+      const costText = (company: string, id: string, edit?: (r: TieoutReport) => void) => {
+        const c = caseOf(company, "as-signed");
+        const report = structuredClone(c.report);
+        edit?.(report);
+        const container = mountScreen(PlanScreen, { ...c, report }, c.company, c.scenario);
+        const text = container.querySelector(`[data-binding='${id}']`)!.textContent;
+        cleanup();
+        return text;
+      };
+      const closing = (r: TieoutReport) => {
+        if ("unavailable" in r.actions) throw new Error("unavailable");
+        return r.actions.close_the_fiscal_year_gap;
+      };
+
+      it("unreachable hires whose cost was entered do not say the cost was missing", () => {
+        for (const company of ["sprout-labs", "sapling-industries"]) {
+          const said = costText(company, "close.hires.cost");
+          expect(said, company).toMatch(/^no cost: no number of hires closes the gap/);
+          expect(said).not.toMatch(/not entered/);
+        }
+      });
+
+      it("a cost that was not entered says so", () => {
+        const said = costText("sprout-labs", "close.hires.cost", (r) => {
+          const h = closing(r).hires;
+          if (!("bound" in h)) throw new Error("hires not solved");
+          h.cost_status = "cost not entered";
+          h.cash_cost_note = "cost not entered";
+        });
+        expect(said).toBe("cost not entered");
+      });
+
+      it("hires already covered say nothing needs adding", () => {
+        const said = costText("sprout-labs", "close.hires.cost", (r) => {
+          const h = closing(r).hires;
+          if (!("bound" in h)) throw new Error("hires not solved");
+          h.outcome = "already covered";
+          h.count = 0 as never;
+          h.cash_cost_note = "no cost: the gap is already covered, so nothing needs adding";
+        });
+        expect(said).toMatch(/already covered/);
+      });
+
+      it("a programme that cannot close the gap says no amount does, and Mighty Oak's says it is over the cap", () => {
+        const c = caseOf("mighty-oak-holdings", "as-signed");
+        const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+        expect(container.querySelector("[data-binding='close.programme.cost']")!.textContent).toMatch(/^no cost: no amount of pipeline closes the gap/);
+        const programme = container.querySelector("[data-testid='close-programme']")!.textContent!;
+        expect(programme).toMatch(/Over the cap: closing it would take \$3007\.3M, against a cap of \$2390\.3M/);
+        expect(programme).not.toMatch(/not over the cap/);
+        cleanup();
+        const sprout = caseOf("sprout-labs", "as-signed");
+        const ok = mountScreen(PlanScreen, sprout, sprout.company, sprout.scenario).querySelector("[data-testid='close-programme']")!.textContent!;
+        expect(ok).toMatch(/Within the cap of \$111\.7M/);
+      });
+    });
+
+    describe("Plan: what could not be valued is not a zero", () => {
+      it("Mighty Oak's hires-only scenario shows words, not $0, with the reason once and the table saying so too", () => {
+        const c = caseOf("mighty-oak-holdings", "hires-only");
+        const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+        const text = (id: string) => container.querySelector(`[data-binding='${id}']`)!.textContent;
+        expect(text("plan.gap-change")).toBe("not valued");
+        expect(text("plan.more-booked.next12")).toBe("not valued");
+        expect(text("window.rest.gain")).toBe("not valued");
+        expect(text("items.total.rest")).toBe("not valued");
+        expect(container.querySelector("[data-testid='unvalued-note']")!.textContent).toMatch(/^no item in this plan is valued: hiring is unsupported by this history/);
+        const row = Array.from(container.querySelectorAll("[data-testid='compare-row']")).find((r) => r.textContent?.includes("Hires only"))!;
+        expect(row.textContent).toContain("not valued");
+        expect(row.textContent).not.toMatch(/\$0(?![\d.,KM])/);
+      });
+
+      it("a partly valued plan keeps its figure and names what it leaves out", () => {
+        const c = caseOf("mighty-oak-holdings", "demo-plan");
+        const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+        expect(container.querySelector("[data-binding='plan.more-booked.next12']")!.textContent).toBe("$1.6M");
+        expect(container.querySelector("[data-testid='unvalued-note']")!.textContent).toMatch(/leave out what cannot be valued: 4 Mid-Market hires/);
+      });
+
+      it("the baseline line under the headline is labelled, and segment names read as words", () => {
+        const c = caseOf("sprout-labs", "demo-plan");
+        const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+        expect(container.textContent).toContain("Compared against:");
+        expect(container.textContent).not.toMatch(/mid_market|_market/);
+        expect(container.textContent).toMatch(/Mid Market/);
       });
     });
 

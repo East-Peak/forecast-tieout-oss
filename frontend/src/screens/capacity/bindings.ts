@@ -109,7 +109,7 @@ export const B = {
   attritionHigh: share("attrition.range95.high", `${RC}/attrition/range95/1`, { unavailable: words("no range: not fitted") }),
   attritionWhyNot: text("attrition.why-not-fitted", `${RC}/attrition/why_not_fitted`),
   attritionForward: text("attrition.forward", `${RC}/attrition/forward`),
-  creationRate: qty("creation.rate", `${RC}/creation_rate/deals_per_ramped_ae_month`),
+  creationRate: bind({ id: "creation.rate", path: `${RC}/creation_rate/deals_per_ramped_ae_month`, unit: "quantity", format: "decimal2" }),
   creationDeals: count("creation.deals", `${RC}/creation_rate/trailing_deals`),
   creationMonths: qty("creation.ae-months", `${RC}/creation_rate/trailing_ramped_ae_months`),
   creationWindow: text("creation.window", `${RC}/creation_rate/window`),

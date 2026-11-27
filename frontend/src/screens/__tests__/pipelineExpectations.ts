@@ -3,13 +3,17 @@
  * accessors on the generated report types. Texts come from independent.ts, not from src/lib/format.ts.
  */
 import type { TieoutReport } from "../../generated/report";
-import { B, FLOW_KEYS, NEW_PIPELINE_WIN_RATE, STAGE_WIN_RATE } from "../pipeline/bindings";
+import { B } from "../pipeline/bindings";
 import { kit, orWords } from "./expectKit";
 import * as fmt from "./independent";
 import type { Built, Case } from "./screenChecks";
 
 type Required = Extract<TieoutReport["required_pipeline"], { cap: unknown }>;
 const RP = "/required_pipeline";
+// the flow's five stages and which rates are stage win rates, written here (not taken from the screen)
+const FLOW_KEYS = ["open at fiscal-year start", "created", "won", "lost", "open at as-of"] as const;
+const STAGE_WIN_RATE = /^win_within_horizon:[^:]+$/;
+const NEW_PIPELINE_WIN_RATE = "new_pipeline_win_rate";
 
 export function build({ report: r }: Case): Built {
   const { expected, absent, one, many, when } = kit();
@@ -31,7 +35,8 @@ export function build({ report: r }: Case): Built {
     const fy = rp.fiscal_year;
     one(B.fyHeadline.id, fy.headline);
     one(B.fySolvableTotal.id, orWords(fy.solvable_total, fmt.usdShort, "no quarter can be solved"));
-    one(B.fySpread.id, fy.single_spread.headline ?? "unavailable");
+    one(B.spreadOutcome.id, fy.single_spread.outcome ?? "unavailable");
+    one(B.spreadRequired.id, orWords(fy.single_spread.required, fmt.usdShort, "no amount is required or none helps"));
     one(B.fyWhyDiffer.id, fy.why_they_differ);
 
     // the quarters
@@ -43,7 +48,9 @@ export function build({ report: r }: Case): Built {
     many(B.qTarget.id, q.map((x) => fmt.usdShort(x.target)), rowsAll);
     many(B.qActual.id, q.map((x) => fmt.usdShort(x.actual)), rowsAll);
     many(B.qWithout.id, q.map((x) => fmt.usdShort(x.bookings_without_own_pipeline)), rowsAll);
-    many(B.qHeadline.id, q.map((x) => x.headline), rowsAll);
+    many(B.qOutcome.id, q.map((x) => x.outcome), rowsAll);
+    const wouldTake = q.map((x, i) => [x, i] as const).filter(([x]) => x.would_take !== null);
+    many(B.qWouldTake.id, wouldTake.map(([x]) => fmt.usdShort(x.would_take!)), wouldTake.map(([, i]) => qRow(i)));
     const byOutcome = (outcome: "feasible" | "already covered" | "unreachable within bounds") =>
       q.map((x, i) => [x, i] as const).filter(([x]) => x.outcome === outcome);
     const feasible = byOutcome("feasible");
@@ -68,13 +75,13 @@ export function build({ report: r }: Case): Built {
 
     // each quarter opened: against the team's record
     many(B.qEarlier.id, q.map((x) => fmt.usdShort(x.earlier_assigned_in_span)), rowsAll);
-    many(B.qTotal.id, q.map((x) => orWords(x.total_created_in_span, fmt.usdShort, "nothing to create")), rowsAll);
+    many(B.qTotal.id, q.map((x) => orWords(x.total_created_in_span, fmt.usdShort, x.total_created_note ?? "unavailable")), rowsAll);
     many(B.qCapLeft.id, q.map((x) => fmt.usdShort(x.cap_left_before)), rowsAll);
-    many(B.qPerDay.id, q.map((x) => orWords(x.per_day.required_total, fmt.usdShort, "not needed")), rowsAll);
-    many(B.qPerDayVs.id, q.map((x) => orWords(x.per_day.required_against_team_best, fmt.multiple, "not needed")), rowsAll);
-    many(B.qPerAe.id, q.map((x) => orWords(x.per_ramped_ae_month.required_total, fmt.usdShort, "not needed")), rowsAll);
-    many(B.qPerAeVs.id, q.map((x) => orWords(x.per_ramped_ae_month.required_against_team_best, fmt.multiple, "not needed")), rowsAll);
-    many(B.qRamped.id, q.map((x) => orWords(x.ramped_ae_months, fmt.quantity, "no ramp fitted")), rowsAll);
+    many(B.qPerDay.id, q.map((x) => orWords(x.per_day.required_total, fmt.usdShort, x.per_day.note ?? "unavailable")), rowsAll);
+    many(B.qPerDayVs.id, q.map((x) => orWords(x.per_day.required_against_team_best, fmt.multiple, x.per_day.note ?? "unavailable")), rowsAll);
+    many(B.qPerAe.id, q.map((x) => orWords(x.per_ramped_ae_month.required_total, fmt.usdShort, x.per_ramped_ae_month.note ?? "unavailable")), rowsAll);
+    many(B.qPerAeVs.id, q.map((x) => orWords(x.per_ramped_ae_month.required_against_team_best, fmt.multiple, x.per_ramped_ae_month.note ?? "unavailable")), rowsAll);
+    many(B.qRamped.id, q.map((x) => orWords(x.ramped_ae_months, fmt.quantity, x.per_ramped_ae_month.note ?? "unavailable")), rowsAll);
 
     const h = rp.team_history;
     one(B.bestQuarter.id, orWords(h.best_four_quarter_average, fmt.usdShort, "fewer than four complete quarters"));
@@ -107,12 +114,13 @@ export function build({ report: r }: Case): Built {
     one(B.perRepWhy.id, rp.per_rep_rule.why);
     one(B.meaning.id, rp.meaning);
   } else {
-    for (const b of [B.fyHeadline, B.fySolvableTotal, B.fySpread, B.fyWhyDiffer, B.qName, B.ltLater, B.cap, B.bestQuarter]) absent.push({ id: b.id });
+    for (const b of [B.fyHeadline, B.fySolvableTotal, B.spreadOutcome, B.fyWhyDiffer, B.qName, B.ltLater, B.cap, B.bestQuarter]) absent.push({ id: b.id });
   }
 
   // the stage win rates and the new-pipeline win rate, with their samples
   const picked = r.rates.map((x, i) => [x, i] as const).filter(([x]) => STAGE_WIN_RATE.test(x.name) || x.name === NEW_PIPELINE_WIN_RATE);
   const rRows = picked.map(([, i]) => `/rates/${i}`);
+  many(B.rLabel.id, picked.map(([x]) => x.label ?? ""), rRows);
   many(B.rDefinition.id, picked.map(([x]) => x.definition), rRows);
   many(B.rValue.id, picked.map(([x]) => fmt.percent1(x.value)), rRows);
   many(B.rLow.id, picked.map(([x]) => (x.range95 === null ? "no range" : fmt.percent1(x.range95[0]))), rRows);

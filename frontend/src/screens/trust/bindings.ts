@@ -91,6 +91,7 @@ export const B = {
   rNumber: bind({ id: "rate.value.number", path: "/value", unit: "quantity", format: "quantity" }),
   rLow: share("rate.range95.low", "/range95/0"),
   rHigh: share("rate.range95.high", "/range95/1"),
+  rNoRange: text("rate.range95.none", "/range95", { unavailable: words("no range reported") }),
   rSample: count("rate.sample", "/sample_size"),
   rNumerator: text("rate.numerator", "/numerator"),
   rDenominator: text("rate.denominator", "/denominator"),

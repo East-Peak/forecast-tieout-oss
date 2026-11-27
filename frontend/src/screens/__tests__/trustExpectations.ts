@@ -99,6 +99,8 @@ export function build({ report: r, index, company, scenario }: Case): Built {
   const ranged = rates.map((x, i) => [x, i] as const).filter(([x]) => x.range95 !== null);
   many(B.rLow.id, ranged.map(([x]) => fmt.percent1(x.range95![0])), ranged.map(([, i]) => `/rates/${i}`));
   many(B.rHigh.id, ranged.map(([x]) => fmt.percent1(x.range95![1])), ranged.map(([, i]) => `/rates/${i}`));
+  const unranged = rates.map((x, i) => [x, i] as const).filter(([x]) => x.range95 === null);
+  many(B.rNoRange.id, unranged.map(() => "no range reported"), unranged.map(([, i]) => `/rates/${i}`));
   many(B.rSample.id, rates.map((x) => fmt.quantity(x.sample_size)), rRows);
   const withText = (pick: (x: (typeof rates)[number]) => string) => rates.map((x, i) => [pick(x), i] as const).filter(([t]) => t !== "");
   many(B.rNumerator.id, withText((x) => x.numerator).map(([t]) => t), withText((x) => x.numerator).map(([, i]) => `/rates/${i}`));

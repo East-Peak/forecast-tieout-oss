@@ -18,6 +18,8 @@ const multiple = (id: string, path: string, extra: Partial<Binding> = {}) => bin
 const share = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "fraction", format: "percent1", ...extra });
 const date = (id: string, path: string) => bind({ id, path, unit: "date", format: "date" });
 const words = (w: string) => ({ words: w }) as const;
+/** A missing figure says why in the report's own sentence for it. */
+const why = (reason: string) => ({ reason, sentence: true, words: "unavailable" }) as const;
 
 export const B = {
   fiscalYear: text("fiscal-year", "/inputs/fiscal_year"),
@@ -27,7 +29,8 @@ export const B = {
   requiredUnavailable: text("required.unavailable", `${RP}/unavailable`),
   fyHeadline: text("required.headline", `${RP}/fiscal_year/headline`),
   fySolvableTotal: usd("required.solvable-total", `${RP}/fiscal_year/solvable_total`, { unavailable: words("no quarter can be solved") }),
-  fySpread: text("required.single-spread", `${RP}/fiscal_year/single_spread/headline`, { unavailable: words("unavailable") }),
+  spreadOutcome: text("required.single-spread.outcome", `${RP}/fiscal_year/single_spread/outcome`, { unavailable: words("unavailable") }),
+  spreadRequired: usd("required.single-spread.required", `${RP}/fiscal_year/single_spread/required`, { unavailable: words("no amount is required or none helps") }),
   fyWhyDiffer: text("required.why-differ", `${RP}/fiscal_year/why_they_differ`),
 
   // the open pipeline, beside the headline
@@ -44,7 +47,8 @@ export const B = {
   qTarget: usd("quarter.target", "/target"),
   qActual: usd("quarter.actual", "/actual"),
   qWithout: usd("quarter.without-own", "/bookings_without_own_pipeline"),
-  qHeadline: text("quarter.headline", "/headline"),
+  qOutcome: text("quarter.outcome", "/outcome"),
+  qWouldTake: usd("quarter.would-take", "/would_take"),
   qRequired: usd("quarter.required", "/required_extra_pipeline"),
   qRequiredCovered: usd("quarter.required.covered", "/required_extra_pipeline", { unavailable: words("none needed: already covered") }),
   qRequiredNone: usd("quarter.required.none", "/required_extra_pipeline", { unavailable: words("no amount helps within the cap") }),
@@ -58,13 +62,13 @@ export const B = {
   lateOpen: text("late.open-pipeline", "/too_late/open_pipeline/statement"),
   // a quarter opened: against the team's record
   qEarlier: usd("quarter.earlier-assigned", "/earlier_assigned_in_span"),
-  qTotal: usd("quarter.total-created", "/total_created_in_span", { unavailable: words("nothing to create") }),
+  qTotal: usd("quarter.total-created", "/total_created_in_span", { unavailable: { reason: "/total_created_note", sentence: true, words: "unavailable" } }),
   qCapLeft: usd("quarter.cap-left", "/cap_left_before"),
-  qPerDay: usd("quarter.per-day", "/per_day/required_total", { unavailable: words("not needed") }),
-  qPerDayVs: multiple("quarter.per-day.vs-best", "/per_day/required_against_team_best", { unavailable: words("not needed") }),
-  qPerAe: usd("quarter.per-ae", "/per_ramped_ae_month/required_total", { unavailable: words("not needed") }),
-  qPerAeVs: multiple("quarter.per-ae.vs-best", "/per_ramped_ae_month/required_against_team_best", { unavailable: words("not needed") }),
-  qRamped: bind({ id: "quarter.ramped-ae-months", path: "/ramped_ae_months", unit: "quantity", format: "quantity", unavailable: words("no ramp fitted") }),
+  qPerDay: usd("quarter.per-day", "/per_day/required_total", { unavailable: why("/per_day/note") }),
+  qPerDayVs: multiple("quarter.per-day.vs-best", "/per_day/required_against_team_best", { unavailable: why("/per_day/note") }),
+  qPerAe: usd("quarter.per-ae", "/per_ramped_ae_month/required_total", { unavailable: why("/per_ramped_ae_month/note") }),
+  qPerAeVs: multiple("quarter.per-ae.vs-best", "/per_ramped_ae_month/required_against_team_best", { unavailable: why("/per_ramped_ae_month/note") }),
+  qRamped: bind({ id: "quarter.ramped-ae-months", path: "/ramped_ae_months", unit: "quantity", format: "quantity", unavailable: why("/per_ramped_ae_month/note") }),
 
   // the team's own record, which a requirement is held against
   bestQuarter: usd("team.best-quarter", `${RP}/team_history/best_four_quarter_average`, { unavailable: words("fewer than four complete quarters") }),
@@ -98,6 +102,7 @@ export const B = {
   meaning: text("notes.meaning", `${RP}/meaning`),
 
   // a row of the stage win rates (the report's rates, each once)
+  rLabel: text("rate.label", "/label"),
   rDefinition: text("rate.definition", "/definition"),
   rValue: share("rate.value", "/value"),
   rLow: share("rate.range95.low", "/range95/0", { unavailable: words("no range") }),
@@ -106,6 +111,12 @@ export const B = {
   rNumerator: text("rate.numerator", "/numerator"),
   rDenominator: text("rate.denominator", "/denominator"),
   rSource: text("rate.source", "/source"),
+} as const satisfies Record<string, Binding>;
+
+/** What a bar's hover adds under its rows: the span the bar covers. Checked with the chart's hover, not on the page. */
+export const HOVER = {
+  from: date("pipeline-quarters.created.from", "/created_between/0"),
+  to: date("pipeline-quarters.created.to", "/created_between/1"),
 } as const satisfies Record<string, Binding>;
 
 export const ROWS = {
@@ -129,8 +140,11 @@ export const LISTED_BINDINGS: readonly Binding[] = Object.values(B);
 const QUARTERS = { rowsAt: ROWS.quarters, property: "quarter" } as const;
 const at = (field: string) => `${ROWS.quarters}/{quarter={period}}/${field}`;
 
-/** Pipeline expected to be created in each remaining quarter, and the extra that must be created on top (a gap where no amount helps). */
+/**
+ * Pipeline expected to be created from the as-of date through the end of each remaining quarter (the spans
+ * overlap: each runs from the same start), and the extra that must be created on top (a gap where no amount helps).
+ */
 export const SERIES = {
-  expected: { key: "expected", label: "Expected to be created", kind: "decimal", path: at("expected_created_pipeline"), periods: QUARTERS },
-  required: { key: "required", label: "Extra required", kind: "decimal", path: at("required_extra_pipeline"), periods: QUARTERS },
+  expected: { key: "expected", label: "Expected to be created, from the as-of date through the quarter's end", kind: "decimal", path: at("expected_created_pipeline"), periods: QUARTERS },
+  required: { key: "required", label: "Extra required, from the as-of date through the quarter's end", kind: "decimal", path: at("required_extra_pipeline"), periods: QUARTERS },
 } as const satisfies Record<string, SeriesSpec>;

@@ -4,7 +4,7 @@
  * Texts come from independent.ts, not from src/lib/format.ts.
  */
 import type { TieoutReport } from "../../generated/report";
-import { B, REST, TWELVE, W } from "../plan/bindings";
+import { B, W } from "../plan/bindings";
 import { kit, orWords } from "./expectKit";
 import * as fmt from "./independent";
 import type { Built, Case } from "./screenChecks";
@@ -13,6 +13,9 @@ type FullPlan = Extract<NonNullable<TieoutReport["plan"]>, { items: unknown }>;
 type Actions = Extract<TieoutReport["actions"], { comparison: unknown }>;
 type Ranged = { range80: [string, string]; range95: [string, string] };
 
+// the windows, written here: the screen's own constants are what a mutation swaps
+const REST = "rest of fiscal year";
+const TWELVE = "next twelve months";
 const SCENARIOS = "/companies/{id={company}}/scenarios";
 
 export function build({ report: r, index, comparison, company, scenario }: Case): Built {
@@ -33,8 +36,9 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   when(r.plan !== undefined && plan === null, B.planUnavailable.id, () => (r.plan && "unavailable" in r.plan ? r.plan.unavailable : ""));
   when(plan !== null, B.planExpected.id, () => fmt.usdShort(plan!.expected_fiscal_year));
   when(plan !== null, B.planGap.id, () => fmt.usdShort(plan!.gap.fiscal_year.gap_with_plan));
-  when(plan !== null, B.cmpGapChange.id, () => orWords(me.fiscal_year_gap_change, fmt.usdShort));
-  when(plan !== null, B.cmpMoreNext.id, () => orWords(me.bookings_change?.[TWELVE] ?? null, fmt.usdShort));
+  when(plan !== null, B.cmpGapChange.id, () => orWords(me.fiscal_year_gap_change, fmt.usdShort, "not valued"));
+  when(plan !== null && me.note !== null, B.cmpNote.id, () => me.note!);
+  when(plan !== null, B.cmpMoreNext.id, () => orWords(me.bookings_change?.[TWELVE] ?? null, fmt.usdShort, "not valued"));
   when(plan !== null, B.cmpCost.id, () => orWords(me.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
   when(plan !== null, B.planDefinition.id, () => plan!.baseline_definition);
   when(plan !== null, B.planFile.id, () => plan!.file);
@@ -46,7 +50,7 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
     const w = W[key];
     when(plan !== null, w.asSigned.id, () => fmt.usdShort(plan!.baseline[window]));
     when(plan !== null, w.withPlan.id, () => fmt.usdShort(plan!.with_plan[window]));
-    when(plan !== null, w.gain.id, () => orWords(me.bookings_change?.[window] ?? null, fmt.usdShort));
+    when(plan !== null, w.gain.id, () => orWords(me.bookings_change?.[window] ?? null, fmt.usdShort, "not valued"));
     when(plan !== null, w.base80Low.id, () => fmt.usdShort(horizons[window].range80[0]));
     when(plan !== null, w.base80High.id, () => fmt.usdShort(horizons[window].range80[1]));
     when(plan !== null, w.base95Low.id, () => fmt.usdShort(horizons[window].range95[0]));
@@ -78,8 +82,8 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   const programmes = items.map((x, i) => [x, i] as const).filter(([x]) => x.kind === "programme");
   many(B.iSchedule.id, programmes.map(([x]) => ("payment_schedule" in x ? x.payment_schedule : "")), programmes.map(([, i]) => `/plan/items/${i}`));
   when(plan !== null, B.itemsCost.id, () => orWords(plan!.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
-  when(plan !== null, B.itemsRest.id, () => fmt.usdShort(plan!.contributions_total[REST]));
-  when(plan !== null, B.itemsNext.id, () => fmt.usdShort(plan!.contributions_total[TWELVE]));
+  when(plan !== null, B.itemsRest.id, () => orWords(me.bookings_change?.[REST] ?? null, fmt.usdShort, "not valued"));
+  when(plan !== null, B.itemsNext.id, () => orWords(me.bookings_change?.[TWELVE] ?? null, fmt.usdShort, "not valued"));
   when(plan !== null, B.itemsOrder.id, () => plan!.order);
   when(plan !== null, B.itemsCostNote.id, () => plan!.cost_note);
 
@@ -114,13 +118,13 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   when(hiresFull !== null, B.hiresCount.id, () => (hiresFull!.count === null ? "no number of hires closes it" : fmt.quantity(hiresFull!.count)));
   when(hiresFull !== null, B.hiresBound.id, () => fmt.quantity(hiresFull!.bound));
   when(hiresFull !== null, B.hiresBoundBasis.id, () => hiresFull!.bound_basis);
-  when(hiresFull !== null, B.hiresCost.id, () => orWords(hiresFull!.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered"));
+  when(hiresFull !== null, B.hiresCost.id, () => orWords(hiresFull!.cash_cost_in_twelve_months, fmt.usdShort, hiresFull!.cash_cost_note ?? "unavailable"));
   const programme = close?.programme;
   when(actions !== null, B.programmeOutcome.id, () => programme!.outcome);
   when(actions !== null, B.programmeDollars.id, () => orWords(programme!.dollars, fmt.usdShort, "no amount closes it within the cap"));
   when(actions !== null, B.programmeCap.id, () => fmt.usdShort(programme!.cap));
-  when(actions !== null, B.programmeOver.id, () => orWords(programme!.needed_but_over_the_cap, fmt.usdShort, "not over the cap"));
-  when(actions !== null, B.programmeCost.id, () => orWords(programme!.cash_cost_in_twelve_months, fmt.usdShort, "no cost without an amount"));
+  when(actions !== null && programme!.needed_but_over_the_cap !== null, B.programmeOver.id, () => fmt.usdShort(programme!.needed_but_over_the_cap!));
+  when(actions !== null, B.programmeCost.id, () => orWords(programme!.cash_cost_in_twelve_months, fmt.usdShort, programme!.cash_cost_note ?? "unavailable"));
 
   // every scenario side by side, from comparison.json
   const cRows = comparison.rows.map((_, i) => `/rows/${i}`);
@@ -128,10 +132,17 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   many(B.sLabel.id, comparison.rows.map((x) => x.label), cRows);
   many(B.sExpected.id, comparison.rows.map((x) => orWords(x.expected_fiscal_year, fmt.usdShort)), cRows);
   many(B.sGap.id, comparison.rows.map((x) => orWords(x.fiscal_year_gap, fmt.usdShort)), cRows);
-  many(B.sGapChange.id, comparison.rows.map((x) => orWords(x.fiscal_year_gap_change, fmt.usdShort, "no plan valued")), cRows);
-  many(B.sRest.id, comparison.rows.map((x) => orWords(x.bookings_change?.[REST] ?? null, fmt.usdShort, "no plan valued")), cRows);
-  many(B.sNext.id, comparison.rows.map((x) => orWords(x.bookings_change?.[TWELVE] ?? null, fmt.usdShort, "no plan valued")), cRows);
   const rowsBy = (pick: boolean) => comparison.rows.map((x, i) => [x, i] as const).filter(([x]) => baselineRow(x) === pick);
+  const change = (id: string, pick: (x: (typeof comparison.rows)[number]) => string | null, isBaseline: boolean, words: string) =>
+    many(id, rowsBy(isBaseline).map(([x]) => orWords(pick(x), fmt.usdShort, words)), rowsBy(isBaseline).map(([, i]) => `/rows/${i}`));
+  change(B.sGapChange.id, (x) => x.fiscal_year_gap_change, true, "no plan");
+  change(B.sGapChangeNv.id, (x) => x.fiscal_year_gap_change, false, "not valued");
+  change(B.sRest.id, (x) => x.bookings_change?.[REST] ?? null, true, "no plan");
+  change(B.sRestNv.id, (x) => x.bookings_change?.[REST] ?? null, false, "not valued");
+  change(B.sNext.id, (x) => x.bookings_change?.[TWELVE] ?? null, true, "no plan");
+  change(B.sNextNv.id, (x) => x.bookings_change?.[TWELVE] ?? null, false, "not valued");
+  const noted = comparison.rows.map((x, i) => [x, i] as const).filter(([x]) => x.note !== null);
+  many(B.sNote.id, noted.map(([x]) => x.note!), noted.map(([, i]) => `/rows/${i}`));
   many(B.sCostNone.id, rowsBy(true).map(() => "no plan, no cost"), rowsBy(true).map(([, i]) => `/rows/${i}`));
   many(B.sCost.id, rowsBy(false).map(([x]) => orWords(x.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered")), rowsBy(false).map(([, i]) => `/rows/${i}`));
 

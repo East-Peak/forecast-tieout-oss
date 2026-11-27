@@ -97,7 +97,17 @@ export function ActionsCard() {
             <p className="mt-1 text-lg font-semibold text-slate-900"><Bound binding={B.programmeOutcome} /></p>
             <ul className="mt-1 space-y-1 text-xs text-slate-600">
               <li>Pipeline needed: <Bound binding={B.programmeDollars} /></li>
-              <li>Needed but over the cap: <Bound binding={B.programmeOver} /> (the cap is <Bound binding={B.programmeCap} />)</li>
+              <li>
+                {close.programme.needed_but_over_the_cap !== null ? (
+                  <>
+                    Over the cap: closing it would take <Bound binding={B.programmeOver} />, against a cap of <Bound binding={B.programmeCap} />
+                  </>
+                ) : (
+                  <>
+                    Within the cap of <Bound binding={B.programmeCap} />
+                  </>
+                )}
+              </li>
               <li>Cash cost, next twelve months: <Bound binding={B.programmeCost} /></li>
             </ul>
           </section>

@@ -5,7 +5,7 @@ import { STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 /** Each item of the plan: what it adds to bookings and what it costs, in the order the plan file lists them. */
-export function ItemsCard({ plan }: { plan: { items: ReadonlyArray<{ kind: string; valued: boolean }> } }) {
+export function ItemsCard({ plan, note }: { plan: { items: ReadonlyArray<{ kind: string }> }; note: boolean }) {
   return (
     <Card>
       <SectionHeader title="What each item contributes, and costs" subtitle="Each contribution is the extra bookings from adding that item to everything above it." />
@@ -44,9 +44,9 @@ export function ItemsCard({ plan }: { plan: { items: ReadonlyArray<{ kind: strin
           </TableRow>
         </TableBody>
       </Table>
-      {plan.items.some((item) => !item.valued) ? (
+      {note ? (
         <p className="mt-3 text-xs text-slate-700" data-testid="unvalued-note">
-          An item the history cannot value adds nothing to the totals above and is listed with its cost: the totals are for the items that can be valued.
+          <Bound binding={B.cmpNote} />
         </p>
       ) : null}
       <p className="mt-3 text-xs text-slate-500"><Bound binding={B.itemsOrder} /></p>

@@ -17,9 +17,10 @@ import { WindowTable } from "./WindowTable";
  * the year, then both windows with ranges, each item, the two unit actions compared, and what closes the gap alone.
  */
 export default function PlanScreen() {
-  const { files } = useBindingContext();
+  const { files, scenario } = useBindingContext();
   const plan = files.report.plan;
   const full = plan !== undefined && !("unavailable" in plan) ? plan : null;
+  const note = files.comparison.rows.find((r) => r.scenario === scenario)?.note != null;
 
   return (
     <div className="flex max-w-6xl flex-col gap-6">
@@ -54,7 +55,8 @@ export default function PlanScreen() {
             </MetricCard>
           </div>
           <p className="-mt-2 text-xs text-slate-500">
-            <Bound binding={B.planDefinition} />. The plan file is <Bound binding={B.planFile} />.
+            <span className="font-semibold text-slate-600">Compared against:</span> <Bound binding={B.planDefinition} />. The plan file is{" "}
+            <Bound binding={B.planFile} />.
           </p>
           <WindowTable />
           <Card>
@@ -90,7 +92,7 @@ export default function PlanScreen() {
               </TableBody>
             </Table>
           </Card>
-          <ItemsCard plan={full} />
+          <ItemsCard plan={full} note={note} />
         </>
       ) : null}
 

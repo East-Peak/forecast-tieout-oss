@@ -131,7 +131,7 @@ export function build({ report: r, index: _index }: Case): Built {
   when(a !== undefined && a.why_not_fitted !== "", B.attritionWhyNot.id, () => a!.why_not_fitted);
   when(a !== undefined, B.attritionForward.id, () => a!.forward);
   const c = rc.creation_rate;
-  when(c !== undefined, B.creationRate.id, () => fmt.quantity(c!.deals_per_ramped_ae_month));
+  when(c !== undefined, B.creationRate.id, () => fmt.decimal2(c!.deals_per_ramped_ae_month));
   when(c !== undefined, B.creationDeals.id, () => fmt.quantity(c!.trailing_deals));
   when(c !== undefined, B.creationMonths.id, () => fmt.quantity(c!.trailing_ramped_ae_months));
   when(c !== undefined, B.creationWindow.id, () => c!.window);
