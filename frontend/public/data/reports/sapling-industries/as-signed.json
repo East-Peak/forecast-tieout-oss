@@ -3111,7 +3111,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 1,944,676 vs trailing run-rate 1,942,333; 3m: model 1,944,676 vs stage-weighted pipeline 1,776,756",

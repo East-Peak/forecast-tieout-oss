@@ -507,6 +507,7 @@ export type TieoutReport = {
           "next twelve months": Money;
           "rest of fiscal year": Money;
         };
+        expected_fiscal_year: Money;
         file: Text;
         gap: {
           fiscal_year: {
@@ -518,6 +519,7 @@ export type TieoutReport = {
           next_twelve_months: {
             actual_to_date: Decimal;
             baseline_gap: Money;
+            forecast_with_plan: Money;
             gap_with_plan: Money;
             note: Text;
             target: Decimal;
@@ -574,8 +576,19 @@ export type TieoutReport = {
               range95: MoneyRange;
             };
           };
+          by_window: {
+            [k: string]:
+              | {
+                  mean: Money;
+                  median: Money;
+                  range80: MoneyRange;
+                  range95: MoneyRange;
+                }
+              | undefined;
+          };
           draws: number;
           fiscal_year_expected_range80: MoneyRange;
+          fiscal_year_expected_range95: MoneyRange;
           status: Text;
           what_is_drawn: Text;
         };
@@ -583,6 +596,19 @@ export type TieoutReport = {
           "next twelve months": Money;
           "rest of fiscal year": Money;
         };
+        with_plan_by_window: {
+          [k: string]: Money;
+        };
+        with_plan_quarters: {
+          actual: Decimal;
+          expected: Money;
+          expected_range80: MoneyRange;
+          forecast: Money;
+          gap: Money;
+          quarter: Quarter;
+          status: "closed" | "in progress" | "not started";
+          target: Decimal;
+        }[];
       };
   quota_productivity:
     | {
@@ -923,7 +949,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "1.0.0";
+  schema_version: "1.1.0";
   verdicts: {
     forecast_better_than_baselines: {
       reason: Text;

@@ -1151,6 +1151,7 @@
       "next twelve months": "1305120.17",
       "rest of fiscal year": "145941.05"
     },
+    "expected_fiscal_year": "58235665.34",
     "file": "engine/config/profiles/sapling-industries/plan-programme-only.yaml",
     "gap": {
       "fiscal_year": {
@@ -1162,6 +1163,7 @@
       "next_twelve_months": {
         "actual_to_date": "7528814",
         "baseline_gap": "1081221.71",
+        "forecast_with_plan": "28535905.34",
         "gap_with_plan": "935280.66",
         "note": "against the quarters with a target that end in the window; later months are bookings alone",
         "target": "37000000"
@@ -1208,10 +1210,160 @@
           ]
         }
       },
+      "by_window": {
+        "2026-09": {
+          "mean": "5578711.32",
+          "median": "5544060.50",
+          "range80": [
+            "3388877.30",
+            "7850931.40"
+          ],
+          "range95": [
+            "2461071.55",
+            "9023986.57"
+          ]
+        },
+        "2026-10": {
+          "mean": "4973106.46",
+          "median": "4775155.50",
+          "range80": [
+            "2648223.00",
+            "7484396.80"
+          ],
+          "range95": [
+            "1636237.55",
+            "9786427.37"
+          ]
+        },
+        "2026-11": {
+          "mean": "5612455.14",
+          "median": "5262069.50",
+          "range80": [
+            "2831558.90",
+            "8826438.90"
+          ],
+          "range95": [
+            "2001812.38",
+            "11411621.50"
+          ]
+        },
+        "2026-12": {
+          "mean": "5754506.62",
+          "median": "5358810.00",
+          "range80": [
+            "2813367.20",
+            "9081806.50"
+          ],
+          "range95": [
+            "1717254.57",
+            "11772978.42"
+          ]
+        },
+        "2027-01": {
+          "mean": "6530920.70",
+          "median": "6181659.00",
+          "range80": [
+            "3380880.20",
+            "10138717.60"
+          ],
+          "range95": [
+            "2226093.88",
+            "12608600.17"
+          ]
+        },
+        "2027-02": {
+          "mean": "6316802.64",
+          "median": "5886634.50",
+          "range80": [
+            "3194996.90",
+            "9897595.20"
+          ],
+          "range95": [
+            "2165977.88",
+            "12829847.17"
+          ]
+        },
+        "2027-03": {
+          "mean": "6731841.13",
+          "median": "6461120.50",
+          "range80": [
+            "3408793.50",
+            "10492836.60"
+          ],
+          "range95": [
+            "2152125.60",
+            "13312399.07"
+          ]
+        },
+        "2027-04": {
+          "mean": "7116095.64",
+          "median": "6795099.50",
+          "range80": [
+            "3638771.60",
+            "11041447.50"
+          ],
+          "range95": [
+            "2409621.90",
+            "13995307.25"
+          ]
+        },
+        "2027-05": {
+          "mean": "7240137.75",
+          "median": "6951505.50",
+          "range80": [
+            "3690181.50",
+            "11166643.60"
+          ],
+          "range95": [
+            "2378306.77",
+            "13936843.78"
+          ]
+        },
+        "2027-06": {
+          "mean": "7005519.99",
+          "median": "6693446.50",
+          "range80": [
+            "3557764.50",
+            "10833878.60"
+          ],
+          "range95": [
+            "2427975.75",
+            "13537854.50"
+          ]
+        },
+        "2027-07": {
+          "mean": "7530382.83",
+          "median": "7208756.50",
+          "range80": [
+            "3989645.00",
+            "11434881.50"
+          ],
+          "range95": [
+            "2746041.38",
+            "14269316.88"
+          ]
+        },
+        "2027-08": {
+          "mean": "7652664.42",
+          "median": "7299642.50",
+          "range80": [
+            "4146567.30",
+            "11720087.70"
+          ],
+          "range95": [
+            "2669148.52",
+            "13957796.62"
+          ]
+        }
+      },
       "draws": 2000,
       "fiscal_year_expected_range80": [
         "52688195.80",
         "64346187.00"
+      ],
+      "fiscal_year_expected_range95": [
+        "49898790.00",
+        "67548158.38"
       ],
       "status": "unvalidated: these ranges include the plan and the capacity term; they have not been back-tested",
       "what_is_drawn": "deal outcomes, future departures, with the planned hires and programme pipeline in the scenario"
@@ -1219,7 +1371,75 @@
     "with_plan": {
       "next twelve months": "77978126.98",
       "rest of fiscal year": "28535905.34"
-    }
+    },
+    "with_plan_by_window": {
+      "2026-09": "5609666.34",
+      "2026-10": "4882861.44",
+      "2026-11": "5642366.83",
+      "2026-12": "5822574.57",
+      "2027-01": "6578436.16",
+      "2027-02": "6305040.71",
+      "2027-03": "6855432.37",
+      "2027-04": "7074711.27",
+      "2027-05": "7250796.29",
+      "2027-06": "6902707.64",
+      "2027-07": "7498376.59",
+      "2027-08": "7555156.77"
+    },
+    "with_plan_quarters": [
+      {
+        "actual": "8616665",
+        "expected": "8616665.00",
+        "expected_range80": [
+          "8616665.00",
+          "8616665.00"
+        ],
+        "forecast": "0.00",
+        "gap": "1383335.00",
+        "quarter": "Q1FY26",
+        "status": "closed",
+        "target": "10000000"
+      },
+      {
+        "actual": "13554281",
+        "expected": "13554281.00",
+        "expected_range80": [
+          "13554281.00",
+          "13554281.00"
+        ],
+        "forecast": "0.00",
+        "gap": "-554281.00",
+        "quarter": "Q2FY26",
+        "status": "closed",
+        "target": "13000000"
+      },
+      {
+        "actual": "7528814",
+        "expected": "18021341.78",
+        "expected_range80": [
+          "15288012.40",
+          "21046439.20"
+        ],
+        "forecast": "10492527.78",
+        "gap": "-1021341.78",
+        "quarter": "Q3FY26",
+        "status": "in progress",
+        "target": "17000000"
+      },
+      {
+        "actual": "0",
+        "expected": "18043377.56",
+        "expected_range80": [
+          "12530769.70",
+          "23846929.00"
+        ],
+        "forecast": "18043377.56",
+        "gap": "1956622.44",
+        "quarter": "Q4FY26",
+        "status": "not started",
+        "target": "20000000"
+      }
+    ]
   },
   "quota_productivity": {
     "all_reps": {
@@ -3197,7 +3417,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "the model's mean absolute error is not lower than every baseline: 3m: model 1,944,676 vs trailing run-rate 1,942,333; 3m: model 1,944,676 vs stage-weighted pipeline 1,776,756",
