@@ -1,0 +1,915 @@
+{
+ "as_of": "2026-08-31",
+ "companies": {
+  "mighty-oak-holdings": {
+   "baseline": {
+    "expected": "60639660.81",
+    "gap": "23360339.19",
+    "ntm": "85003210.23",
+    "target": "84000000"
+   },
+   "capacity_adopted": false,
+   "drivers": {
+    "cycle_days": {
+     "current": "180.1371364623933379795949573",
+     "eligible_quarters": 6,
+     "high": "186.3757122507122507122507122",
+     "high_delta": {
+      "fy": "-341552.22",
+      "ntm": "-1486379.32"
+     },
+     "low": "164.9152046783625730994152047",
+     "low_delta": {
+      "fy": "753293.98",
+      "ntm": "3216669.22"
+     },
+     "max": "197.4444444444444444444444444",
+     "min": "159.75",
+     "needed": {
+      "achieved": "84002858.69",
+      "extrapolation": true,
+      "outcome": "solves mathematically; stepped",
+      "overshoot": "2858.69",
+      "realized_mean_days": "28.03991423646698918126399291",
+      "scale": "37/242",
+      "value": "27.54162830210146076547526207"
+     }
+    },
+    "productivity": {
+     "current": "1.210958904109589041095890411",
+     "eligible_quarters": 10,
+     "high": "1.223058133854421104054714216",
+     "high_delta": {
+      "fy": "39907.98",
+      "ntm": "404372.59"
+     },
+     "low": "1.046699777452097921076914726",
+     "low_delta": {
+      "fy": "-541790.53",
+      "ntm": "-5489761.41"
+     },
+     "max": "1.336956521739130434782608696",
+     "min": "0.9782608695652173913043478261",
+     "needed": {
+      "achieved": "84000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "8.293306483891813908244910833"
+     }
+    },
+    "win_rate": {
+     "current": "0.09101763561084709582029011702",
+     "eligible_quarters": 6,
+     "high": "0.1656084656084656084656084656",
+     "high_delta": {
+      "fy": "3273340.64",
+      "ntm": "33167539.72"
+     },
+     "low": "0.09685212643996398680062920553",
+     "low_delta": {
+      "fy": "256040.54",
+      "ntm": "2594363.26"
+     },
+     "max": "0.2",
+     "min": "0.08163265306122448979591836735",
+     "needed": {
+      "achieved": "84000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "0.6233383684601320080335544279"
+     }
+    },
+    "won_arr": {
+     "current": "1986317.813547407390279924175",
+     "eligible_quarters": 6,
+     "high": "2223167.499287749287749287749",
+     "high_delta": {
+      "fy": "476272.37",
+      "ntm": "4825890.29"
+     },
+     "low": "1739802.400219298245614035088",
+     "low_delta": {
+      "fy": "-495708.83",
+      "ntm": "-5022832.64"
+     },
+     "max": "2343061.692307692307692307692",
+     "min": "1565157.263157894736842105263",
+     "needed": {
+      "achieved": "84000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "13603386.82531520712293638942"
+     }
+    }
+   },
+   "observations": [
+    {
+     "created": 95,
+     "exposure": "90",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q1FY24",
+     "values": {
+      "cycle_days": "172.5789473684210526315789474",
+      "productivity": "1.055555555555555555555555556",
+      "win_rate": "0.2",
+      "won_arr": "1565157.263157894736842105263"
+     },
+     "wins": 19
+    },
+    {
+     "created": 90,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q2FY24",
+     "values": {
+      "cycle_days": "173.3076923076923076923076923",
+      "productivity": "0.9782608695652173913043478261",
+      "win_rate": "0.1444444444444444444444444444",
+      "won_arr": "2343061.692307692307692307692"
+     },
+     "wins": 13
+    },
+    {
+     "created": 105,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q3FY24",
+     "values": {
+      "cycle_days": "159.75",
+      "productivity": "1.141304347826086956521739130",
+      "win_rate": "0.1523809523809523809523809524",
+      "won_arr": "2044468.1875"
+     },
+     "wins": 16
+    },
+    {
+     "created": 93,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q4FY24",
+     "values": {
+      "cycle_days": "197.4444444444444444444444444",
+      "productivity": "1.010869565217391304347826087",
+      "win_rate": "0.09677419354838709677419354839",
+      "won_arr": "2172941.555555555555555555556"
+     },
+     "wins": 9
+    },
+    {
+     "created": 107,
+     "exposure": "89",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q1FY25",
+     "values": {
+      "cycle_days": "162.4166666666666666666666667",
+      "productivity": "1.202247191011235955056179775",
+      "win_rate": "0.1121495327102803738317757009",
+      "won_arr": "2153499.25"
+     },
+     "wins": 12
+    },
+    {
+     "created": 98,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q2FY25",
+     "values": {
+      "cycle_days": "188.375",
+      "productivity": "1.065217391304347826086956522",
+      "win_rate": "0.08163265306122448979591836735",
+      "won_arr": "1609781.75"
+     },
+     "wins": 8
+    },
+    {
+     "created": 123,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q3FY25",
+     "values": {
+      "cycle_days": "162",
+      "productivity": "1.336956521739130434782608696",
+      "win_rate": "0.08130081300813008130081300813",
+      "won_arr": "2023673.5"
+     },
+     "wins": 10
+    },
+    {
+     "created": 117,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q4FY25",
+     "values": {
+      "cycle_days": "196.4285714285714285714285714",
+      "productivity": "1.271739130434782608695652174",
+      "win_rate": "0.05982905982905982905982905983",
+      "won_arr": "1208812.428571428571428571429"
+     },
+     "wins": 7
+    },
+    {
+     "created": 100,
+     "exposure": "89",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q1FY26",
+     "values": {
+      "cycle_days": "51",
+      "productivity": "1.123595505617977528089887640",
+      "win_rate": "0.01",
+      "won_arr": "745569"
+     },
+     "wins": 1
+    },
+    {
+     "created": 107,
+     "exposure": "92",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q2FY26",
+     "values": {
+      "cycle_days": null,
+      "productivity": "1.163043478260869565217391304",
+      "win_rate": "0",
+      "won_arr": null
+     },
+     "wins": 0
+    }
+   ]
+  },
+  "sapling-industries": {
+   "baseline": {
+    "expected": "58089724.29",
+    "gap": "1910275.71",
+    "ntm": "76673006.81",
+    "target": "60000000"
+   },
+   "capacity_adopted": true,
+   "drivers": {
+    "cycle_days": {
+     "current": "132.7436249466493149697525407",
+     "eligible_quarters": 6,
+     "high": "149.8543956043956043956043956",
+     "high_delta": {
+      "fy": "-1630640.51",
+      "ntm": "-4150215.78"
+     },
+     "low": "126.5466666666666666666666667",
+     "low_delta": {
+      "fy": "573647.42",
+      "ntm": "1343576.28"
+     },
+     "max": "155.3846153846153846153846154",
+     "min": "119.2",
+     "needed": {
+      "achieved": "60001174.28",
+      "extrapolation": true,
+      "outcome": "solves mathematically; stepped",
+      "overshoot": "1174.28",
+      "realized_mean_days": "115.9698979307647678201059763",
+      "scale": "67/77",
+      "value": "115.5041931353961571814729900"
+     }
+    },
+    "productivity": {
+     "current": "2.066174432640611608858141071",
+     "eligible_quarters": 10,
+     "high": "2.405582572414229805588730164",
+     "high_delta": {
+      "fy": "1317078.39",
+      "ntm": "8588548.50"
+     },
+     "low": "2.03419211105906638978074690",
+     "low_delta": {
+      "fy": "-124107.88",
+      "ntm": "-809296.21"
+     },
+     "max": "2.729680050287688882235617354",
+     "min": "1.791695937255524100728058099",
+     "needed": {
+      "achieved": "60000000.00",
+      "extrapolation": false,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "2.558448189708161494251210342"
+     }
+    },
+    "win_rate": {
+     "current": "0.2193058011269118594582291544",
+     "eligible_quarters": 6,
+     "high": "0.2220042860775126221350477643",
+     "high_delta": {
+      "fy": "98656.63",
+      "ntm": "643330.88"
+     },
+     "low": "0.1754346182917611489040060469",
+     "low_delta": {
+      "fy": "-1603930.61",
+      "ntm": "-10459085.81"
+     },
+     "max": "0.2380952380952380952380952381",
+     "min": "0.1555555555555555555555555556",
+     "needed": {
+      "achieved": "60000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "0.2715562253708517768490401434"
+     }
+    },
+    "won_arr": {
+     "current": "413835.7300629216771957097530",
+     "eligible_quarters": 6,
+     "high": "605308.5726495726495726495727",
+     "high_delta": {
+      "fy": "3709672.34",
+      "ntm": "24190436.36"
+     },
+     "low": "363367.248095238095238095238",
+     "low_delta": {
+      "fy": "-977796.80",
+      "ntm": "-6376124.07"
+     },
+     "max": "856538.7333333333333333333333",
+     "min": "311796.6071428571428571428571",
+     "needed": {
+      "achieved": "60000000.00",
+      "extrapolation": false,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "512433.6346873187979203670339"
+     }
+    }
+   },
+   "observations": [
+    {
+     "created": 78,
+     "exposure": "31.58498291214644081290903722",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q1FY24",
+     "values": {
+      "cycle_days": "155.3846153846153846153846154",
+      "productivity": "2.469528010097609525364927606",
+      "win_rate": "0.1666666666666666666666666667",
+      "won_arr": "533486.3846153846153846153846"
+     },
+     "wins": 13
+    },
+    {
+     "created": 90,
+     "exposure": "32.97089708023276921142543970",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q2FY24",
+     "values": {
+      "cycle_days": "153.8571428571428571428571429",
+      "productivity": "2.729680050287688882235617354",
+      "win_rate": "0.1555555555555555555555555556",
+      "won_arr": "365093.8571428571428571428571"
+     },
+     "wins": 14
+    },
+    {
+     "created": 69,
+     "exposure": "38.51099874998461397765105942",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q3FY24",
+     "values": {
+      "cycle_days": "136.2",
+      "productivity": "1.791695937255524100728058099",
+      "win_rate": "0.2173913043478260869565217391",
+      "won_arr": "856538.7333333333333333333333"
+     },
+     "wins": 15
+    },
+    {
+     "created": 98,
+     "exposure": "41.88510062197626157305705840",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q4FY24",
+     "values": {
+      "cycle_days": "119.2",
+      "productivity": "2.339734142803548392726954164",
+      "win_rate": "0.2040816326530612244897959184",
+      "won_arr": "425900.6"
+     },
+     "wins": 20
+    },
+    {
+     "created": 105,
+     "exposure": "48.53909303532022617764998042",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q1FY25",
+     "values": {
+      "cycle_days": "124.24",
+      "productivity": "2.163204819743852990785479992",
+      "win_rate": "0.2380952380952380952380952381",
+      "won_arr": "413211.28"
+     },
+     "wins": 25
+    },
+    {
+     "created": 133,
+     "exposure": "57.18546457336744641729595203",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q2FY25",
+     "values": {
+      "cycle_days": "140.3214285714285714285714286",
+      "productivity": "2.325765839138449236830671701",
+      "win_rate": "0.2105263157894736842105263158",
+      "won_arr": "311796.6071428571428571428571"
+     },
+     "wins": 28
+    },
+    {
+     "created": 132,
+     "exposure": "63.08163145780629019765579890",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q3FY25",
+     "values": {
+      "cycle_days": "131.34375",
+      "productivity": "2.092526730040130074964238904",
+      "win_rate": "0.2424242424242424242424242424",
+      "won_arr": "480796.78125"
+     },
+     "wins": 32
+    },
+    {
+     "created": 146,
+     "exposure": "67.86585852231174990241401012",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q4FY25",
+     "values": {
+      "cycle_days": "116.8709677419354838709677419",
+      "productivity": "2.151302631086596712407176321",
+      "win_rate": "0.2123287671232876712328767123",
+      "won_arr": "318077.5806451612903225806452"
+     },
+     "wins": 31
+    },
+    {
+     "created": 157,
+     "exposure": "73.70240610571371677313257373",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q1FY26",
+     "values": {
+      "cycle_days": "120.4444444444444444444444444",
+      "productivity": "2.130188257013073384940337256",
+      "win_rate": "0.1719745222929936305732484076",
+      "won_arr": "348585.5925925925925925925926"
+     },
+     "wins": 27
+    },
+    {
+     "created": 177,
+     "exposure": "88.26842778412144002308528312",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q2FY26",
+     "values": {
+      "cycle_days": "80.375",
+      "productivity": "2.005246999900007675863923920",
+      "win_rate": "0.04519774011299435028248587571",
+      "won_arr": "353345.75"
+     },
+     "wins": 8
+    }
+   ]
+  },
+  "sprout-labs": {
+   "baseline": {
+    "expected": "6119924.84",
+    "gap": "1880075.16",
+    "ntm": "5601118.09",
+    "target": "8000000"
+   },
+   "capacity_adopted": true,
+   "drivers": {
+    "cycle_days": {
+     "current": "120.3409090909090909090909091",
+     "eligible_quarters": 6,
+     "high": "135.7555555555555555555555556",
+     "high_delta": {
+      "fy": "-154447.33",
+      "ntm": "-232650.67"
+     },
+     "low": "109.4345538720538720538720539",
+     "low_delta": {
+      "fy": "112204.44",
+      "ntm": "158991.72"
+     },
+     "max": "147.1",
+     "min": "88.88888888888888888888888889",
+     "needed": {
+      "achieved": "7896411.68",
+      "extrapolation": true,
+      "outcome": "cannot close: zero-day timing bound; insufficient in-year creation",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": "0",
+      "value": "0"
+     }
+    },
+    "productivity": {
+     "current": "8.183580646715785827059916126",
+     "eligible_quarters": 10,
+     "high": "10.45256034539141321295219222",
+     "high_delta": {
+      "fy": "216857.45",
+      "ntm": "1095626.10"
+     },
+     "low": "7.750458119430083260143329458",
+     "low_delta": {
+      "fy": "-41395.63",
+      "ntm": "-209142.62"
+     },
+     "max": "11.79784393912523588387026892",
+     "min": "7.135703381230187017862578070",
+     "needed": {
+      "achieved": "8000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "27.85480914633488630519980701"
+     }
+    },
+    "win_rate": {
+     "current": "0.1565836298932384341637010676",
+     "eligible_quarters": 6,
+     "high": "0.2050921861281826163301141352",
+     "high_delta": {
+      "fy": "242303.18",
+      "ntm": "1224185.18"
+     },
+     "low": "0.1491411370311080696866382348",
+     "low_delta": {
+      "fy": "-37175.69",
+      "ntm": "-187822.30"
+     },
+     "max": "0.2388059701492537313432835821",
+     "min": "0.1369863013698630136986301370",
+     "needed": {
+      "achieved": "8000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "0.5329705069707944951363123816"
+     }
+    },
+    "won_arr": {
+     "current": "69645.61363636363636363636364",
+     "eligible_quarters": 6,
+     "high": "75238.36805555555555555555557",
+     "high_delta": {
+      "fy": "62808.60",
+      "ntm": "317327.06"
+     },
+     "low": "59264.47239057239057239057237",
+     "low_delta": {
+      "fy": "-116583.85",
+      "ntm": "-589015.13"
+     },
+     "max": "79010.66666666666666666666667",
+     "min": "52747.27272727272727272727273",
+     "needed": {
+      "achieved": "8000000.00",
+      "extrapolation": true,
+      "outcome": "solves mathematically",
+      "overshoot": null,
+      "realized_mean_days": null,
+      "scale": null,
+      "value": "237055.8022787775084992086954"
+     }
+    }
+   },
+   "observations": [
+    {
+     "created": 67,
+     "exposure": "5.913757700205338809034907598",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q1FY24",
+     "values": {
+      "cycle_days": "119.6875",
+      "productivity": "11.32951388888888888888888889",
+      "win_rate": "0.2388059701492537313432835821",
+      "won_arr": "68580.6875"
+     },
+     "wins": 16
+    },
+    {
+     "created": 55,
+     "exposure": "6.045174537987679671457905544",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q2FY24",
+     "values": {
+      "cycle_days": "119.7272727272727272727272727",
+      "productivity": "9.098165760869565217391304348",
+      "win_rate": "0.2",
+      "won_arr": "52747.27272727272727272727273"
+     },
+     "wins": 11
+    },
+    {
+     "created": 73,
+     "exposure": "6.187571252566735112936344969",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q3FY24",
+     "values": {
+      "cycle_days": "147.1",
+      "productivity": "11.79784393912523588387026892",
+      "win_rate": "0.1369863013698630136986301370",
+      "won_arr": "61469.7"
+     },
+     "wins": 10
+    },
+    {
+     "created": 59,
+     "exposure": "8.268280903490759753593429158",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q4FY24",
+     "values": {
+      "cycle_days": "88.88888888888888888888888889",
+      "productivity": "7.135703381230187017862578070",
+      "win_rate": "0.1525423728813559322033898305",
+      "won_arr": "63576.44444444444444444444444"
+     },
+     "wins": 9
+    },
+    {
+     "created": 68,
+     "exposure": "8.772073921971252566735112936",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q1FY25",
+     "values": {
+      "cycle_days": "122.9166666666666666666666667",
+      "productivity": "7.751872659176029962546816480",
+      "win_rate": "0.1764705882352941176470588235",
+      "won_arr": "79010.66666666666666666666667"
+     },
+     "wins": 12
+    },
+    {
+     "created": 76,
+     "exposure": "7.572960985626283367556468172",
+     "gates": {
+      "cycle_days": true,
+      "productivity": true,
+      "win_rate": true,
+      "won_arr": true
+     },
+     "mature": true,
+     "quarter": "Q2FY25",
+     "values": {
+      "cycle_days": "137.25",
+      "productivity": "10.03570467935202297593947124",
+      "win_rate": "0.1578947368421052631578947368",
+      "won_arr": "78123.75"
+     },
+     "wins": 12
+    },
+    {
+     "created": 95,
+     "exposure": "11.66865215605749486652977413",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q3FY25",
+     "values": {
+      "cycle_days": "120.9333333333333333333333333",
+      "productivity": "8.141471588103093607865198275",
+      "win_rate": "0.1578947368421052631578947368",
+      "won_arr": "75411"
+     },
+     "wins": 15
+    },
+    {
+     "created": 104,
+     "exposure": "10.39836386036960985626283368",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q4FY25",
+     "values": {
+      "cycle_days": "120.4705882352941176470588235",
+      "productivity": "10.00157345872135309867102769",
+      "win_rate": "0.1634615384615384615384615385",
+      "won_arr": "69824.76470588235294117647059"
+     },
+     "wins": 17
+    },
+    {
+     "created": 104,
+     "exposure": "12.45727802874743326488706366",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q1FY26",
+     "values": {
+      "cycle_days": "104.7692307692307692307692308",
+      "productivity": "8.348533263847936695146536470",
+      "win_rate": "0.125",
+      "won_arr": "161054.0769230769230769230769"
+     },
+     "wins": 13
+    },
+    {
+     "created": 127,
+     "exposure": "17.22101683778234086242299795",
+     "gates": {
+      "cycle_days": false,
+      "productivity": true,
+      "win_rate": false,
+      "won_arr": false
+     },
+     "mature": false,
+     "quarter": "Q2FY26",
+     "values": {
+      "cycle_days": "79",
+      "productivity": "7.374709704793169017295517991",
+      "win_rate": "0.02362204724409448818897637795",
+      "won_arr": "76063"
+     },
+     "wins": 3
+    }
+   ]
+  }
+ },
+ "provenance": "Known answers from a separately written script (a second model's reference implementation) that refits outside prepare and was checked against the committed as-signed reports to the cent. The worksheet's tests pin the core to these where the conventions agree; where they differ, the test says so."
+}

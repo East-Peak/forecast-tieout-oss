@@ -224,6 +224,27 @@ def rank(rows: list[dict]) -> list[dict]:
     return out + [{**r, "rank": None} for r in rows if r["gain_per_dollar"] is None]
 
 
+def plan_inputs(g: Ground, plan: Plan) -> tuple[tuple[Member, ...], tuple[Inflow, ...]]:
+    """The people and the pipeline a plan puts into the forward function: planned hires (only
+    where the capacity term is adopted, since otherwise hiring is not valued) and each
+    program's dollars by month. ``plan_section`` forecasts exactly these."""
+    cfg = g.cap.cfg
+    ramp_default = (
+        cfg.program_ramp_months if cfg else None
+    ) or DEFAULT_PROGRAM_RAMP_MONTHS
+    hires: list[Member] = []
+    inflows: list[Inflow] = []
+    for index, item in enumerate(plan.items()):
+        if isinstance(item, PlanHire):
+            if g.cap.adopted:
+                hires.extend(plan.members_for(index))
+        else:
+            inflows.extend(
+                program_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
+            )
+    return tuple(hires), tuple(inflows)
+
+
 # ---------------------------------------------------------------- section 11
 
 
