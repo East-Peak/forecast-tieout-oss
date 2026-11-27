@@ -1,7 +1,7 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { STACK } from "../../components/workbook/stack";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import { QUARTER, WS_ROWS } from "./worksheetBindings";
 
 /**

@@ -4,7 +4,7 @@ import { plotExtent, plotPoint } from "../../binding/chartData";
 import { usePlot } from "../../binding/ChartKit";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Text } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { STACK } from "../../components/workbook/stack";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import type { TieoutReport } from "../../generated/report";
 import { CHART_COLORS } from "../../lib/chartTheme";
 import { AxisHeader, BarCell, direction } from "./BarCell";
@@ -56,7 +56,7 @@ export function Bridge({ sheet }: { sheet: Sheet }) {
                       <Bound binding={STEP.label} row={path} />
                       {step.note === null ? null : <div className="text-xs font-normal text-slate-500"><Bound binding={STEP.note} row={path} /></div>}
                     </TableCell>
-                    <TableCell className="block px-0 py-1 sm:relative sm:table-cell sm:w-[34%] sm:min-w-[200px] sm:p-0">
+                    <TableCell className="hidden sm:relative sm:table-cell sm:w-[34%] sm:min-w-[200px] sm:p-0">
                       <BarCell row={rows[i]} keys={KEYS} domain={domain} label={step.label} fill={fill} reference={target} />
                     </TableCell>
                     <TableCell className={STACK.cell} data-label="Change">

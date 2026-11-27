@@ -114,6 +114,7 @@ export const ACTION = {
     "next twelve months": usd("action.worksheet.gain.next12", "/bookings_gained/value/next twelve months", { unavailable: { reason: "/status/value", sentence: true, words: "unsupported by this history" } }),
   },
   closes: text("action.worksheet.closes", "/closes_alone_label"),
+  outcome: text("action.worksheet.outcome", "/closes_alone_outcome/value"),
 } as const;
 
 /** One step of the bridge, read from `/worksheet/bridge/steps/{i}`. */
@@ -163,15 +164,15 @@ export const WS_ROWS = {
 export function driverSeries(window: Window): { low: SeriesSpec; high: SeriesSpec } {
   const periods = { indexesAt: `${SHEET}/drivers` } as const;
   return {
-    low: { key: "low", label: "At its historical low", kind: "decimal", path: `${SHEET}/drivers/{period}/historical/low/change/${window}`, periods, nullable: true },
-    high: { key: "high", label: "At its historical high", kind: "decimal", path: `${SHEET}/drivers/{period}/historical/high/change/${window}`, periods, nullable: true },
+    low: { key: "low", label: "At its historical low", kind: "bar", path: `${SHEET}/drivers/{period}/historical/low/change/${window}`, periods, nullable: true },
+    high: { key: "high", label: "At its historical high", kind: "bar", path: `${SHEET}/drivers/{period}/historical/high/change/${window}`, periods, nullable: true },
   };
 }
 
 /** The one bar of each action, in a window; an action the history does not support has none. */
 export function actionSeries(window: Window): { gain: SeriesSpec } {
   return {
-    gain: { key: "gain", label: "One unit", kind: "decimal", path: `${SHEET}/actions/rows/{period}/bookings_gained/value/${window}`, periods: { indexesAt: `${SHEET}/actions/rows` }, nullable: true },
+    gain: { key: "gain", label: "One unit", kind: "bar", path: `${SHEET}/actions/rows/{period}/bookings_gained/value/${window}`, periods: { indexesAt: `${SHEET}/actions/rows` }, nullable: true },
   };
 }
 

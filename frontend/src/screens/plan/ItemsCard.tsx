@@ -1,7 +1,7 @@
 import { Bound } from "../../binding/Bound";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { STACK } from "../../components/workbook/stack";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 /** Each item of the plan: what it adds to bookings and what it costs, in the order the plan file lists them. */

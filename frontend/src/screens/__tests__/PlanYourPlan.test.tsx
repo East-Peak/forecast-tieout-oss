@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { cleanup } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { checkBindings, unboundDigits } from "../../binding/__tests__/harness";
 import { YOUR_PLAN, withYourPlan, withYourPlanRow } from "../../editor/yourPlan";
 import type { ComparisonRow } from "../../editor/protocol";
@@ -13,6 +13,12 @@ import * as files from "./files";
 import { build } from "./planExpectations";
 import { mountScreen } from "./screenChecks";
 import type { Case } from "./screenChecks";
+
+// recharts draws nothing without a measured box (jsdom has none): its container is given a size, and the figures printed at the bars' ends then exist
+vi.mock("recharts", async (importOriginal) => {
+  const { withCapture } = await import("./rechartsCapture");
+  return withCapture(await importOriginal<typeof import("recharts")>(), []);
+});
 
 afterEach(cleanup);
 

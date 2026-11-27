@@ -1,10 +1,10 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Callout } from "../../components/ui";
-import { SectionHeader } from "../../components/workbook";
+import { Disclosure, SectionHeader } from "../../components/workbook";
+import { useYourPlan } from "../../editor/YourPlanContext";
 import { YOUR_PLAN } from "../../editor/yourPlan";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
-import { STACK } from "../../components/workbook/stack";
-import { ActionsCard } from "./ActionsCard";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
@@ -24,6 +24,7 @@ import { WindowTable } from "./WindowTable";
  */
 export default function PlanScreen() {
   const { files, scenario, company } = useBindingContext();
+  const desktop = useYourPlan()?.desktop === true;
   const plan = files.report.plan;
   const full = plan !== undefined && !("unavailable" in plan) ? plan : null;
   const note = files.comparison.rows.find((r) => r.scenario === scenario)?.note != null;
@@ -47,6 +48,7 @@ export default function PlanScreen() {
         <>
           <Tornado sheet={worksheet} />
           <Bridge sheet={worksheet} />
+          <CompareTable />
           <QuarterTable />
           <Chain sheet={worksheet} />
         </>
@@ -59,7 +61,8 @@ export default function PlanScreen() {
       ) : null}
 
       {full ? (
-        <>
+        <Disclosure title="The plan's ledger" hint="Both windows with their ranges, the gap to target, and what each item contributes and costs" initiallyOpen={desktop}>
+         <div className="flex flex-col gap-6">
           <WindowTable />
           <Card>
             <SectionHeader title="The gap to target, both windows" subtitle="Gap is target less expected: positive is a shortfall, negative is ahead." />
@@ -95,11 +98,10 @@ export default function PlanScreen() {
             </Table>
           </Card>
           <ItemsCard plan={full} note={note} />
-        </>
+         </div>
+        </Disclosure>
       ) : null}
 
-      <ActionsCard />
-      <CompareTable />
     </div>
   );
 }

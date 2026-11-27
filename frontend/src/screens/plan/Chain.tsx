@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Bound } from "../../binding/Bound";
 import { Badge, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { STACK } from "../../components/workbook/stack";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import type { TieoutReport } from "../../generated/report";
 import { CHAIN, WS, WS_ROWS } from "./worksheetBindings";
 
@@ -48,7 +48,7 @@ export function Chain({ sheet }: { sheet: Sheet }) {
                     <TableCell className={STACK.title}>Bookings</TableCell>
                     <TableCell className={STACK.cell} data-label="Required"><Bound binding={CHAIN.bookingsTarget} row={path} /></TableCell>
                     <TableCell className={STACK.cell} data-label="Expected"><Bound binding={CHAIN.bookingsExpected} row={path} /></TableCell>
-                    <TableCell className={`${STACK.cell} text-xs sm:text-left`} data-label="What it says">
+                    <TableCell className={`${STACK.cell} col-span-2 text-xs sm:col-span-1 sm:text-left`} data-label="What it says">
                       Gap to target <Bound binding={CHAIN.bookingsGap} row={path} />
                     </TableCell>
                   </TableRow>
@@ -56,13 +56,13 @@ export function Chain({ sheet }: { sheet: Sheet }) {
                     <TableCell className={STACK.title}>Created pipeline</TableCell>
                     <TableCell className={STACK.cell} data-label="Required"><Bound binding={CHAIN.pipelineRequired} row={path} /></TableCell>
                     <TableCell className={STACK.cell} data-label="Expected"><Bound binding={CHAIN.pipelineExpected} row={path} /></TableCell>
-                    <TableCell className={`${STACK.cell} text-xs sm:text-left`} data-label="What it says"><Bound binding={CHAIN.pipelineHeadline} row={path} /></TableCell>
+                    <TableCell className={`${STACK.cell} col-span-2 text-xs sm:col-span-1 sm:text-left`} data-label="What it says"><Bound binding={CHAIN.pipelineHeadline} row={path} /></TableCell>
                   </TableRow>
                   <TableRow className={STACK.row} data-testid="chain-row" data-measure="per-ramped-ae-month">
                     <TableCell className={STACK.title}>Created pipeline per ramped AE-month</TableCell>
                     <TableCell className={STACK.cell} data-label="Required"><Bound binding={CHAIN.perRequired} row={path} /></TableCell>
                     <TableCell className={STACK.cell} data-label="Expected"><Bound binding={CHAIN.perExpected} row={path} /></TableCell>
-                    <TableCell className={`${STACK.cell} text-xs sm:text-left`} data-label="What it says">
+                    <TableCell className={`${STACK.cell} col-span-2 text-xs sm:col-span-1 sm:text-left`} data-label="What it says">
                       {q.per_ramped_ae_month.decides.value ? "Decides the timing check." : "Shown as a diagnostic: it does not decide the timing check for this company."}
                     </TableCell>
                   </TableRow>

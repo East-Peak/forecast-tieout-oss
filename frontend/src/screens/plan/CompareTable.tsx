@@ -1,7 +1,7 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
-import { STACK } from "../../components/workbook/stack";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import { B, ROWS } from "./bindings";
 
 /** Every scenario of the company side by side, as the core's generator wrote them in comparison.json. */

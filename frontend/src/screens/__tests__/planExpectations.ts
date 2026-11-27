@@ -90,10 +90,6 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   when(actions !== null, B.actionsDefinition.id, () => actions!.definition);
   when(actions !== null, B.actionsMeaning.id, () => actions!.meaning);
   when(actions !== null, B.actionsShape.id, () => actions!.program_shape);
-  const best = rows.map((x, i) => [x, i] as const).filter(([x]) => x.rank === 1);
-  many(B.bestAction.id, best.map(([x]) => x.action), best.map(([, i]) => `/actions/comparison/${i}`));
-  many(B.bestPerDollar.id, best.map(([x]) => fmt.multiple(x.gain_per_dollar!)), best.map(([, i]) => `/actions/comparison/${i}`));
-  many(B.aAction.id, rows.map((x) => x.action), aRows);
   many(B.aStatus.id, rows.map((x) => x.status), aRows);
   many(B.aRank.id, rows.map((x) => (x.rank === null ? "not ranked" : fmt.quantity(x.rank))), aRows);
   const why = (x: Actions["comparison"][number], fallback = "unavailable") => (x.not_ranked_because === null ? fallback : `unavailable: ${x.not_ranked_because}`);

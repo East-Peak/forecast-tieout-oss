@@ -195,7 +195,7 @@ async function captureAll(baseUrl) {
       await page.locator("#company-selector").waitFor({ state: "visible" });
       // charts draw after the report loads: wait until every chart container holds its drawn geometry
       await page.waitForFunction(() =>
-        [...document.querySelectorAll("[data-chart], [data-testid='bar-cell']")].every((c) => c.querySelector("svg path, svg rect")),
+        [...document.querySelectorAll("[data-chart], [data-testid='track']")].every((c) => c.querySelector("svg path, svg rect")),
       );
 
       const docsPath = path.join(docsScreenshotDir, capture.file);

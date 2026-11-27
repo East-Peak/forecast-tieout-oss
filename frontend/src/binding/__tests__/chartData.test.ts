@@ -162,6 +162,13 @@ describe("rows plotted by position, spans and gaps (the worksheet's charts)", ()
     expect(plotExtent(rows, ["move"], { zero: false, padding: 0.1 })).toEqual([28, 52]);
   });
 
+  it("a bar stands on zero: [0, value] above it and [value, 0] below it, and a gap stays a gap", () => {
+    const bar: SeriesSpec = { key: "bar", label: "Bar", kind: "bar", path: "/rows/{period}/low/change", periods: at, nullable: true };
+    const { rows } = buildChart(sheet, [bar]);
+    expect(rows.map((r) => r.bar)).toEqual([[-5.5, 0], null, [0, 7.25]]);
+    expect(plotExtent(rows, ["bar"], { zero: true, padding: 0 })).toEqual([-5.5, 7.25]);
+  });
+
   it("a reference point is one decimal read from the file", () => {
     expect(plotPoint(sheet, "/target/value")).toBe(60);
     expect(() => plotPoint(sheet, "/target/nope")).toThrow(/unbound path/);

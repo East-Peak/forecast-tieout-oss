@@ -30,7 +30,8 @@ const sheetOf = (r: TieoutReport) => {
 /** What each small chart must have been given for a window, from typed accessors (not from the screen's declared paths). */
 function expectedCharts(r: TieoutReport, window: Window): Array<{ name: string; data: unknown; keys: string[] }> {
   const ws = sheetOf(r);
-  const num = (s: string | null) => (s === null ? null : Number(s));
+  // a bar stands on zero with its left end first
+  const num = (s: string | null) => (s === null ? null : Number(s) < 0 ? [Number(s), 0] : [0, Number(s)]);
   // the rows stand in the report's rank for the window: 1 first, none last
   const ranked = <T extends { rank: Record<string, number | null> }>(rows: T[]) =>
     rows.map((row, i) => [row, i] as const).sort(([a, i], [b, j]) => (a.rank[window] ?? Infinity) - (b.rank[window] ?? Infinity) || i - j);

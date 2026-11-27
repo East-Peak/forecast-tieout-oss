@@ -7,7 +7,7 @@ import { resolvePointer } from "./pointer";
  * parsed from the file's decimal strings once (decimalToNumber); a null stays null, so a gap is
  * drawn as a gap. A range is the pair [low, high] the file holds, never low plus a width.
  */
-type SeriesKind = "decimal" | "range" | "span";
+type SeriesKind = "decimal" | "range" | "span" | "bar";
 
 type PeriodsFrom =
   | { keysAt: string } // the keys of an object
@@ -64,7 +64,11 @@ export function buildChart(doc: unknown, specs: SeriesSpec[]): { periods: string
       }
       const raw = resolvePointer(doc, pointFor(spec, period), { nullBelowNull: spec.nullable === true });
       if (raw === null) row[spec.key] = null;
-      else if (spec.kind === "span") {
+      else if (spec.kind === "bar") {
+        // a bar that stands on zero: [0, value] above it and [value, 0] below it, so that every bar has its left end first
+        const value = typeof raw === "number" ? raw : decimalToNumber(raw as string);
+        row[spec.key] = value < 0 ? [value, 0] : [0, value];
+      } else if (spec.kind === "span") {
         const start = resolvePointer(doc, spec.from!.replace(/\{period\}/g, period), { nullBelowNull: spec.nullable === true });
         const end = typeof raw === "number" ? raw : decimalToNumber(raw as string);
         row[spec.key] = start === null ? end : [decimalToNumber(start as string), end];

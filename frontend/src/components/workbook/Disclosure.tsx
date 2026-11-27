@@ -4,12 +4,14 @@ import type { ReactNode } from "react";
 interface Props {
   title: string;
   hint?: string;
+  /** open when first shown (the reader can still close it) */
+  initiallyOpen?: boolean;
   children: ReactNode;
 }
 
 /** A section the reader opens: a button that shows or hides its content. */
-export function Disclosure({ title, hint, children }: Props) {
-  const [open, setOpen] = useState(false);
+export function Disclosure({ title, hint, initiallyOpen = false, children }: Props) {
+  const [open, setOpen] = useState(initiallyOpen);
   const panel = useId();
   return (
     <div className="rounded-ft border border-slate-200 bg-white shadow-ft">

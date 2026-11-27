@@ -103,7 +103,7 @@ test.describe("the Plan worksheet in a real browser @smoke", () => {
     const issues = collectBrowserIssues(page);
     await open(page, "plan", "sapling-industries", "demo-plan");
     const bars = () =>
-      page.locator("[data-testid='bar-cell']").evaluateAll((cells) =>
+      page.locator("[data-testid='track'], [data-testid='bar-cell']").evaluateAll((cells) =>
         cells.map((cell) => {
           const box = cell.getBoundingClientRect();
           const paths = Array.from(cell.querySelectorAll(".recharts-bar-rectangle path")).filter((p) => (p.getAttribute("d") ?? "").length > 5);
@@ -111,7 +111,7 @@ test.describe("the Plan worksheet in a real browser @smoke", () => {
         }),
       );
     const first = await bars();
-    expect(first.length, "a bar cell per driver and per supported action, and per bridge step").toBeGreaterThanOrEqual(10);
+    expect(first.length, "a track per driver and per supported action, and a bar per bridge step").toBeGreaterThanOrEqual(10);
     for (const cell of first) expect(cell.width > 100 && cell.height > 20 && cell.drawn > 0, JSON.stringify(cell)).toBe(true);
     // the first row of the driver table is in the report's rank for the window; the other window may reorder
     const report = await reportOf(page, "sapling-industries", "demo-plan");
@@ -248,7 +248,7 @@ test.describe("at desktop widths the wide tables are tables, not stacked rows @s
   // The wide tables once stayed stacked at every width (their classes were never generated) and
   // every other check passed: nothing said a header row had to be there. Rows named here are the
   // ones that live in a wide table.
-  const WIDE_ROWS = { plan: "driver-row", forecast: "quarter-row", pipeline: "requirement-row", trust: "backtest-row" } as const;
+  const WIDE_ROWS = { plan: "worksheet-quarter-row", forecast: "quarter-row", pipeline: "requirement-row", trust: "backtest-row" } as const;
   for (const width of [1280, 1440]) {
     test.describe(`${width} wide`, () => {
       test.use({ viewport: { width, height: 900 } });

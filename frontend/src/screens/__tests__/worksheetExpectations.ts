@@ -127,7 +127,8 @@ export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKe
   many(DRIVER.overshoot.id, overshot.map(([d]) => fmt.usdShort(d.needed_alone!.overshoot!)), overshot.map(([, i]) => rows[i]));
   const precise = withWords.filter(([d]) => d.needed_alone!.precision_note !== null);
   many(DRIVER.precision.id, precise.map(([d]) => d.needed_alone!.precision_note!), precise.map(([, i]) => rows[i]));
-  many(DRIVER.history.id, ws.drivers.map((d) => d.needed_alone?.history_label ?? "not compared with history"), rows);
+  const history = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone?.history_label != null);
+  many(DRIVER.history.id, history.map(([d]) => d.needed_alone!.history_label!), history.map(([, i]) => rows[i]));
 
   // the opened row
   many(DRIVER.appliesTo.id, ws.drivers.map((d) => d.applies_to), rows);
@@ -161,6 +162,7 @@ export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKe
   many(ACTION.name.id, actions.map((a) => a.action.value), aRows);
   many(ACTION.gain[window].id, actions.map((a) => (a.bookings_gained.value === null ? a.status.value : fmt.usdShort(a.bookings_gained.value[window]))), aRows);
   many(ACTION.closes.id, actions.map((a) => a.closes_alone_label), aRows);
+  many(ACTION.outcome.id, actions.map((a) => a.closes_alone_outcome.value), aRows);
 }
 
 /** The bridge, drawn only where a plan is in force: its steps in the report's own order, each with its amount and its change. */

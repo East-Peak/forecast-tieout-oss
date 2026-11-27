@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { BindingProvider, Bound, bind } from "../binding/Bound";
 import { ReportOutlet } from "../shell/ReportOutlet";
@@ -26,7 +25,11 @@ const DESCRIPTION = bind({
 const selectClass =
   "min-w-0 flex-1 rounded-ft border border-slate-200 bg-white px-3 py-1.5 text-sm text-text-primary shadow-ft outline-none focus:border-ft-accent focus:ring-2 focus:ring-ft-accentSoft";
 
-const FIRST_EVIDENCE = SCREENS.find((s) => s.group === "evidence");
+/** A tab: the same height wherever it stands, with the accent underline on the screen in view. */
+const tabClass = ({ isActive }: { isActive: boolean }) =>
+  `flex h-10 items-center whitespace-nowrap border-b-2 px-3 text-sm transition-colors sm:px-4 ${
+    isActive ? "border-ft-accent text-ft-accent" : "border-transparent text-text-secondary hover:text-text-primary"
+  }`;
 
 export default function Layout() {
   const location = useLocation();
@@ -109,26 +112,22 @@ export default function Layout() {
           Your plan, computed in your browser; ranges unvalidated.
         </div>
       ) : null}
-      <nav className="flex flex-wrap items-center gap-0 border-b border-border px-1 sm:gap-1 sm:px-6" aria-label="Screens">
-        {SCREENS.map((screen) => (
-          <Fragment key={screen.path}>
-            {screen === FIRST_EVIDENCE ? (
-              <span data-nav-label className="ml-2 whitespace-nowrap border-l border-border py-2 pl-3 pr-1 text-[11px] font-semibold uppercase text-slate-500 sm:ml-3">
-                Evidence
-              </span>
-            ) : null}
-            <NavLink
-              to={withCurrentSearch(screen.path)}
-              className={({ isActive }) =>
-                `whitespace-nowrap border-b-2 px-2 py-2 text-sm transition-colors sm:px-4 ${
-                  isActive ? "border-ft-accent text-ft-accent" : "border-transparent text-text-secondary hover:text-text-primary"
-                }`
-              }
-            >
+      <nav className="flex flex-wrap items-end gap-x-4 gap-y-3 border-b border-border px-3 pb-0 pt-3 sm:px-6" aria-label="Screens">
+        {SCREENS.filter((screen) => screen.group === undefined).map((screen) => (
+          <NavLink key={screen.path} to={withCurrentSearch(screen.path)} className={tabClass}>
+            {screen.label}
+          </NavLink>
+        ))}
+        <div role="group" aria-label="Evidence" className="relative flex h-10 items-stretch rounded-t-ft border border-b-0 border-slate-300 px-1">
+          <span data-nav-label className="absolute -top-2.5 left-3 bg-surface px-1.5 text-[11px] font-semibold uppercase leading-none text-slate-500">
+            Evidence
+          </span>
+          {SCREENS.filter((screen) => screen.group === "evidence").map((screen) => (
+            <NavLink key={screen.path} to={withCurrentSearch(screen.path)} className={tabClass}>
               {screen.label}
             </NavLink>
-          </Fragment>
-        ))}
+          ))}
+        </div>
       </nav>
     </div>
   );

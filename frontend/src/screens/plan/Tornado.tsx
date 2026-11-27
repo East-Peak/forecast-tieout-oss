@@ -2,14 +2,16 @@ import { useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Bound, useBindingContext } from "../../binding/Bound";
 import { plotExtent } from "../../binding/chartData";
+import type { PlotRow } from "../../binding/chartData";
 import { usePlot } from "../../binding/ChartKit";
-import { Badge, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Text } from "../../components/ui";
-import { SectionHeader } from "../../components/workbook";
+import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
+import { Disclosure, SectionHeader } from "../../components/workbook";
+import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import { useYourPlan } from "../../editor/YourPlanContext";
 import { YOUR_PLAN } from "../../editor/yourPlan";
-import { STACK, STACK_XL } from "../../components/workbook/stack";
 import type { TieoutReport } from "../../generated/report";
-import { AxisHeader, BarCell } from "./BarCell";
+import { B, ROWS } from "./bindings";
+import { Track } from "./Track";
 import { ACTION, DRIVER, OBSERVATION, WINDOWS, WS, WS_ROWS, actionSeries, driverSeries } from "./worksheetBindings";
 import type { Window } from "./worksheetBindings";
 
@@ -17,6 +19,8 @@ type Sheet = Exclude<TieoutReport["worksheet"], { unavailable: string }>;
 type Driver = Sheet["drivers"][number];
 
 /** The two windows the report carries, in words: the first is this fiscal year, the second the next twelve months. */
+const WINDOW_WORDS: Record<Window, string> = { "rest of fiscal year": "This fiscal year", "next twelve months": "Next twelve months" };
+
 /** The rows' order for a window: the report's own rank (1 is the largest change), rows with none last, ties in the report's order. Nothing is parsed or subtracted. */
 function byRank(ranks: ReadonlyArray<number | null>): number[] {
   return ranks
@@ -31,14 +35,17 @@ function byRank(ranks: ReadonlyArray<number | null>): number[] {
     });
 }
 
-const WINDOW_WORDS: Record<Window, string> = { "rest of fiscal year": "This fiscal year", "next twelve months": "Next twelve months" };
+const caption = "text-[11px] font-semibold uppercase text-slate-500";
+/** The row's two halves: the track and its name on the left, the quiet figures on the right, side by side from the extra-large breakpoint. */
+const rowGrid = "xl:grid xl:grid-cols-[58%_1fr] xl:items-center xl:gap-6";
 
 /**
- * "What moves the outcome": the change in expected bookings against the plan in force when one driver or one action
- * is changed alone. Two groups, each with its own heading and never ranked together: the operating assumptions (two
- * bars each, at the company's own historical low and high settings) and the actions (one bar each). A switch chooses
- * which of the report's two windows is drawn; it selects, it does not calculate. Every bar is drawn from the report's
- * figure; the table beside each bar carries the figure, the setting, what is needed alone and where history stands.
+ * "What moves the outcome": the change in expected bookings against the plan in force when one driver or one action is
+ * changed alone. The bars are the chart: one track per driver, widest change first by the report's own rank for the
+ * window, low-setting bar and high-setting bar on a zero line shared by every row, with the dollar change printed at the
+ * end of each bar. Beside each track, quietly, what the driver is now, what it would need to be alone, and where that
+ * stands against history. The actions are a second group on a scale of their own, and say so. A switch chooses which of
+ * the report's two windows is drawn; it selects, it does not calculate.
  */
 export function Tornado({ sheet }: { sheet: Sheet }) {
   const [window, setWindow] = useState<Window>(WINDOWS[0]);
@@ -48,8 +55,11 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
   const actions = usePlot(useMemo(() => [actionSpecs.gain], [actionSpecs]));
   const driverOrder = byRank(sheet.drivers.map((d) => d.rank[window]));
   const actionOrder = byRank(sheet.actions.rows.map((a) => a.rank[window]));
-  // one scale for both groups and every bar, so that a bar's length means the same dollars wherever it is drawn
-  const domain = useMemo(() => plotExtent([...drivers.rows, ...actions.rows], ["low", "high", "gain"], { zero: true, padding: 0.04 }), [drivers.rows, actions.rows]);
+  // room beyond the longest bar for the figure printed at its end
+  const domain = useMemo(() => plotExtent(drivers.rows, ["low", "high"], { zero: true, padding: 0.3 }), [drivers.rows]);
+  const actionDomain = useMemo(() => plotExtent(actions.rows, ["gain"], { zero: true, padding: 0.3 }), [actions.rows]);
+  const { files } = useBindingContext();
+  const comparison = files.report.actions;
 
   return (
     <Card className="p-4 sm:p-5" data-testid="tornado" data-window={window}>
@@ -72,70 +82,85 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
           ))}
         </div>
       </div>
-      <Text className="mt-1 text-xs text-slate-600">
-        <Bound binding={WS.definition} /> Measured around <Bound binding={WS.measuredAround} />.
-      </Text>
-      <p className="mt-3 text-xs text-slate-500">
-        The bars show the change in bookings against the plan in force, on one scale for both groups: green is more booked, red is less. A single unit of an action is small
-        beside a driver's whole historical swing, so its bar is short; its figure is beside it. Each driver has two bars, the upper at its historical low setting and the lower at its historical high setting.
+      <p className="text-xs text-slate-600" data-testid="tornado-line">
+        <Bound binding={WS.definition} />
       </p>
 
-      <Group title="Operating assumptions" subtitle="Each driver is changed alone, for deals created after the as-of date.">
-        <Table className={STACK_XL.table} data-testid="driver-table">
-          <TableHead className={STACK_XL.head}>
-            <TableRow>
-              <TableHeaderCell>Driver</TableHeaderCell>
-              <TableHeaderCell className="p-0"><AxisHeader domain={domain} /></TableHeaderCell>
-              <TableHeaderCell>Current</TableHeaderCell>
-              <TableHeaderCell>Historical low to high</TableHeaderCell>
-              <TableHeaderCell>Needed alone</TableHeaderCell>
-              <TableHeaderCell>Inside history</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody className={STACK_XL.body}>
-            {driverOrder.map((i) => (
-              <DriverRow key={sheet.drivers[i].driver} driver={sheet.drivers[i]} row={drivers.rows[i]} index={i} window={window} domain={domain} />
-            ))}
-          </TableBody>
-        </Table>
-      </Group>
+      <section className="mt-5" aria-label="Operating assumptions">
+        <h3 className="font-display text-sm font-semibold text-ft-brand">Operating assumptions</h3>
+        <p className="text-xs text-slate-500">Widest change first. Each driver has two bars: its historical low setting and its historical high setting.</p>
+        <div className={`mt-2 hidden border-b border-slate-200 pb-1 ${rowGrid}`} aria-hidden="true">
+          <span className={`${caption} xl:block`}>Change in bookings</span>
+          <span className="hidden grid-cols-[1fr_1fr_1fr] gap-3 xl:grid">
+            <span className={caption}>Current</span>
+            <span className={caption}>Needed alone</span>
+            <span className={caption}>Against history</span>
+          </span>
+        </div>
+        <div className="divide-y divide-slate-100 xl:[&>*:first-child]:mt-0" data-testid="driver-list">
+          {driverOrder.map((i) => (
+            <DriverRow key={sheet.drivers[i].driver} driver={sheet.drivers[i]} row={drivers.rows[i]} index={i} window={window} domain={domain} />
+          ))}
+        </div>
+      </section>
 
-      <Group title="Actions" subtitle="One unit each, on the roster as signed: one AE hired next month, or one million dollars of program pipeline added next month.">
-        <Table className={STACK_XL.table} data-testid="action-table">
-          <TableHead className={STACK_XL.head}>
-            <TableRow>
-              <TableHeaderCell>Action</TableHeaderCell>
-              <TableHeaderCell className="p-0"><AxisHeader domain={domain} /></TableHeaderCell>
-              <TableHeaderCell>Change in bookings</TableHeaderCell>
-              <TableHeaderCell>Closes the gap alone</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody className={STACK_XL.body}>
-            {actionOrder.map((i) => (
-              <ActionRow key={sheet.actions.rows[i].kind} row={actions.rows[i]} index={i} window={window} domain={domain} kind={sheet.actions.rows[i].kind} supported={sheet.actions.rows[i].bookings_gained.value !== null} />
-            ))}
-          </TableBody>
-        </Table>
-      </Group>
-      <div className="mt-6 rounded-ft border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700" data-testid="worksheet-guardrails">
-        <p><Bound binding={WS.historyNote} /></p>
-        <p className="mt-1"><Bound binding={WS.sensitivityNote} /></p>
-        <p className="mt-1"><Bound binding={WS.expectationNote} /></p>
+      <section className="mt-6" aria-label="Actions">
+        <h3 className="font-display text-sm font-semibold text-ft-brand">Actions</h3>
+        <p className="text-xs text-slate-500">One unit each, on the roster as signed: one AE hired next month, or one million dollars of program pipeline added next month.</p>
+        <p className="mt-1 text-xs font-medium text-slate-700" data-testid="actions-scale-note">Not on the same scale as the drivers above.</p>
+        {"unavailable" in comparison ? (
+          <Callout color="amber" title="The two actions cannot be compared">
+            <Bound binding={B.actionsUnavailable} />
+          </Callout>
+        ) : null}
+        <div className="mt-2 divide-y divide-slate-100" data-testid="action-list">
+          {actionOrder.map((i) => (
+            <ActionRow key={sheet.actions.rows[i].kind} action={sheet.actions.rows[i]} row={actions.rows[i]} index={i} window={window} domain={actionDomain} />
+          ))}
+        </div>
+      </section>
+
+      <div className="mt-6">
+        <Disclosure title="How to read this">
+          <div className="flex flex-col gap-2 text-xs text-slate-700" data-testid="worksheet-guardrails">
+            <p>
+              Measured around <Bound binding={WS.measuredAround} />. Green is more booked and red is less. The drivers share one scale, with room at each end for the
+              figure printed there; the actions have a scale of their own, because one unit of an action is small beside a driver&apos;s whole historical swing.
+            </p>
+            <p><Bound binding={WS.historyNote} /></p>
+            <p><Bound binding={WS.sensitivityNote} /></p>
+            <p><Bound binding={WS.expectationNote} /></p>
+            {"unavailable" in comparison ? null : <ActionSentences />}
+          </div>
+        </Disclosure>
       </div>
     </Card>
   );
 }
 
-/** Where the editor can be opened (a wide screen), a click on a row or its bar opens it; a button inside the row keeps its own click. */
+/** The sentences the report gives for the two unit actions, and the gap each would have to close. */
+function ActionSentences() {
+  return (
+    <>
+      <p><Bound binding={B.actionsDefinition} /></p>
+      <p><Bound binding={B.actionsShape} /></p>
+      <p><Bound binding={B.actionsMeaning} /></p>
+      <p>
+        The gap to close: <Bound binding={B.closeGap} />. Basis: <Bound binding={B.closeBasis} />.
+      </p>
+    </>
+  );
+}
+
+/** Where the editor can be opened (a wide screen), a click on a row opens it; a button inside the row keeps its own click. */
 function useOpenEditor() {
   const { company, choose } = useBindingContext();
   const yourPlan = useYourPlan();
   const wide = yourPlan?.desktop === true;
   return {
     wide,
-    rowProps: wide
-      ? { onClick: () => choose?.(company, YOUR_PLAN), className: "cursor-pointer hover:bg-slate-50", title: "Open the editor" }
-      : { className: "" },
+    onClick: wide ? () => choose?.(company, YOUR_PLAN) : undefined,
+    clickable: wide ? "cursor-pointer hover:bg-slate-50" : "",
     addToPlan: (kind: "hire" | "program") => {
       yourPlan?.store.append(company, kind);
       choose?.(company, YOUR_PLAN);
@@ -143,117 +168,119 @@ function useOpenEditor() {
   };
 }
 
-function Group({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+function Toggle({ open, onToggle, controls, children }: { open: boolean; onToggle: () => void; controls: string; children: ReactNode }) {
   return (
-    <section className="mt-6" aria-label={title}>
-      <h3 className="font-display text-sm font-semibold text-ft-brand">{title}</h3>
-      <p className="mb-2 text-xs text-slate-500">{subtitle}</p>
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-controls={controls}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      className="text-xs font-medium text-ft-brand underline"
+    >
       {children}
-    </section>
+    </button>
   );
 }
 
-function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row: Parameters<typeof BarCell>[0]["row"]; index: number; window: Window; domain: [number, number] }) {
+function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row: PlotRow; index: number; window: Window; domain: [number, number] }) {
   const [open, setOpen] = useState(false);
+  const editor = useOpenEditor();
   const path = `${WS_ROWS.drivers}/${index}`;
   const { display } = driver;
-  const editor = useOpenEditor();
   const needed = driver.needed_alone;
   const solves = needed !== null && needed.outcome === "solves";
+  const settingMark = (word: string, setting: ReactNode) => (
+    <span className="block text-[10px] font-normal text-slate-500">
+      {word}, at {setting}
+    </span>
+  );
+  const marks = driver.historical === null ? {} : {
+    low: (
+      <>
+        <Bound binding={DRIVER.lowChange[window]} row={path} className="text-xs font-semibold text-slate-900" />
+        {settingMark("low", <Bound binding={DRIVER.lowSetting[display]} row={path} />)}
+      </>
+    ),
+    high: (
+      <>
+        <Bound binding={DRIVER.highChange[window]} row={path} className="text-xs font-semibold text-slate-900" />
+        {settingMark("high", <Bound binding={DRIVER.highSetting[display]} row={path} />)}
+      </>
+    ),
+  };
   return (
-    <>
-      <TableRow className={`${STACK_XL.row} ${editor.rowProps.className}`} onClick={editor.rowProps.onClick} data-testid="driver-row" data-driver={driver.driver}>
-        <TableCell className={STACK_XL.title}>
-          <div className="font-medium"><Bound binding={DRIVER.label} row={path} /></div>
-          <div className="text-xs font-normal text-slate-500"><Bound binding={DRIVER.unitLabel} row={path} /></div>
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls={`driver-detail-${driver.driver}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen((v) => !v);
-            }}
-            className="mt-1 text-xs font-medium text-ft-brand underline"
-          >
-            {open ? "Hide the quarters" : "Show the quarters"}
-          </button>
-        </TableCell>
-        <TableCell className="block px-0 py-1 xl:relative xl:table-cell xl:w-[26%] xl:min-w-[220px] xl:p-0">
-          {driver.historical === null ? (
-            <p className="text-xs text-slate-600 xl:px-3 xl:py-3" data-testid="history-unavailable">
-              <Bound binding={DRIVER.unavailable} row={path} />
-            </p>
-          ) : (
-            <BarCell row={row} keys={["low", "high"]} domain={domain} label={`${driver.label}: change in bookings at its historical low and high settings`} />
-          )}
-        </TableCell>
-        <TableCell className={STACK_XL.cell} data-label="Current">
-          <span>
-            <Bound binding={DRIVER.current[display]} row={path} />
-          </span>
-        </TableCell>
-        <TableCell className={STACK_XL.cell} data-label="Historical low to high">
-          {driver.historical === null ? (
-            <span className="text-xs text-slate-600">no historical setting</span>
-          ) : (
-            <span className="flex flex-col gap-1 xl:text-left">
-              <span className="text-xs">
-                <span className="text-slate-500">Low </span>
-                <Bound binding={DRIVER.lowSetting[display]} row={path} /> <span className="text-slate-500">moves bookings by</span>{" "}
-                <Bound binding={DRIVER.lowChange[window]} row={path} className="font-medium" />
-              </span>
-              <span className="text-xs">
-                <span className="text-slate-500">High </span>
-                <Bound binding={DRIVER.highSetting[display]} row={path} /> <span className="text-slate-500">moves bookings by</span>{" "}
-                <Bound binding={DRIVER.highChange[window]} row={path} className="font-medium" />
-              </span>
+    <div className="py-3">
+      <div className={`${rowGrid} ${editor.clickable} rounded-ft`} onClick={editor.onClick} data-testid="driver-row" data-driver={driver.driver}>
+        <div className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-3">
+          <div className="xl:w-36 xl:shrink-0">
+            <div className="text-sm font-medium text-slate-900"><Bound binding={DRIVER.label} row={path} /></div>
+            <div className="text-xs text-slate-500"><Bound binding={DRIVER.unitLabel} row={path} /></div>
+          </div>
+          <div className="h-28 min-w-0 flex-1 xl:h-24">
+            {driver.historical === null ? (
+              <p className="text-xs text-slate-600" data-testid="history-unavailable">
+                <Bound binding={DRIVER.unavailable} row={path} />
+              </p>
+            ) : (
+              <Track row={row} keys={["low", "high"]} domain={domain} label={`${driver.label}: change in bookings at its historical low and high settings`} marks={marks} />
+            )}
+          </div>
+        </div>
+        <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-slate-600 xl:mt-0 xl:grid-cols-[1fr_1fr_1fr] xl:gap-x-3" data-testid="driver-quiet">
+          <div>
+            <span className={`${caption} xl:hidden`}>Current </span>
+            <span className="text-slate-700">
+              <Bound binding={DRIVER.current[display]} row={path} />
             </span>
-          )}
-        </TableCell>
-        <TableCell className={STACK_XL.cell} data-label="Needed alone">
-          <span className="text-xs xl:text-sm">
-            {needed === null ? <Bound binding={DRIVER.neededNone} row={path} /> : solves ? <Bound binding={DRIVER.neededValue[display]} row={path} /> : <Bound binding={DRIVER.neededLabel} row={path} />}
-          </span>
-        </TableCell>
-        <TableCell className={STACK_XL.cell} data-label="Inside history">
-          <span className="text-xs">
-            <Bound binding={DRIVER.history} row={path} />
-          </span>
-        </TableCell>
-      </TableRow>
+          </div>
+          <div>
+            <span className={`${caption} xl:hidden`}>Needed alone </span>
+            <span className="text-slate-700">
+              {needed === null ? <Bound binding={DRIVER.neededNone} row={path} /> : solves ? <Bound binding={DRIVER.neededValue[display]} row={path} /> : <Bound binding={DRIVER.neededLabel} row={path} />}
+            </span>
+          </div>
+          <div className="col-span-2 flex flex-wrap items-center gap-2 xl:col-span-1">
+            {needed !== null && needed.inside_observed_range !== null ? (
+              <Badge color={needed.inside_observed_range ? "emerald" : "amber"} size="xs">
+                {needed.inside_observed_range ? "Inside history" : "Beyond history"}
+              </Badge>
+            ) : null}
+            <Toggle open={open} onToggle={() => setOpen((v) => !v)} controls={`driver-detail-${driver.driver}`}>
+              {open ? "Hide the quarters" : "Show the quarters"}
+            </Toggle>
+          </div>
+        </div>
+      </div>
       {open ? (
-        <TableRow className={`${STACK_XL.row} bg-slate-50`} data-testid="driver-detail">
-          <TableCell colSpan={6} className="block px-3 py-3 xl:table-cell">
-            <div id={`driver-detail-${driver.driver}`} className="flex flex-col gap-3 text-xs text-slate-700">
-              <p>
-                This is an assumption to discuss: it cannot be added to the plan as an item yet. <Bound binding={DRIVER.appliesTo} row={path} />
-              </p>
-              {solves ? <p><Bound binding={DRIVER.neededLabel} row={path} /></p> : null}
-              {needed === null || needed.reason_label === null ? null : <p><Bound binding={DRIVER.neededReason} row={path} /></p>}
-              {needed !== null && needed.overshoot !== null ? (
-                <p>Overshoot at that setting: <Bound binding={DRIVER.overshoot} row={path} /></p>
-              ) : null}
-              {needed === null || needed.precision_note === null ? null : <p><Bound binding={DRIVER.precision} row={path} /></p>}
-              {driver.historical === null ? null : (
-                <p>
-                  Observed range <Bound binding={DRIVER.minimum[display]} row={path} /> to <Bound binding={DRIVER.maximum[display]} row={path} />. <Bound binding={DRIVER.rule} row={path} />
-                </p>
-              )}
-              <p>
-                <Bound binding={DRIVER.gate} row={path} /> <Bound binding={DRIVER.eligible} row={path} /> of <Bound binding={DRIVER.required} row={path} /> required quarters count.
-              </p>
-              <Observations driver={driver} path={path} />
-              {driver.limitation === null ? null : (
-                <p className="font-medium text-slate-800">
-                  <Bound binding={DRIVER.limitation} row={path} />
-                </p>
-              )}
-            </div>
-          </TableCell>
-        </TableRow>
+        <div id={`driver-detail-${driver.driver}`} className="mt-2 flex flex-col gap-3 rounded-ft bg-slate-50 px-3 py-3 text-xs text-slate-700" data-testid="driver-detail">
+          <p>
+            This is an assumption to discuss: it cannot be added to the plan as an item yet. <Bound binding={DRIVER.appliesTo} row={path} />
+          </p>
+          {needed === null || needed.history_label === null ? null : <p><Bound binding={DRIVER.history} row={path} /></p>}
+          {solves ? <p><Bound binding={DRIVER.neededLabel} row={path} /></p> : null}
+          {needed === null || needed.reason_label === null ? null : <p><Bound binding={DRIVER.neededReason} row={path} /></p>}
+          {needed !== null && needed.overshoot !== null ? <p>Overshoot at that setting: <Bound binding={DRIVER.overshoot} row={path} /></p> : null}
+          {needed === null || needed.precision_note === null ? null : <p><Bound binding={DRIVER.precision} row={path} /></p>}
+          {driver.historical === null ? null : (
+            <p>
+              Observed range <Bound binding={DRIVER.minimum[display]} row={path} /> to <Bound binding={DRIVER.maximum[display]} row={path} />. <Bound binding={DRIVER.rule} row={path} />
+            </p>
+          )}
+          <p>
+            <Bound binding={DRIVER.gate} row={path} /> <Bound binding={DRIVER.eligible} row={path} /> of <Bound binding={DRIVER.required} row={path} /> required quarters count.
+          </p>
+          <Observations driver={driver} path={path} />
+          {driver.limitation === null ? null : (
+            <p className="font-medium text-slate-800">
+              <Bound binding={DRIVER.limitation} row={path} />
+            </p>
+          )}
+        </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -291,41 +318,121 @@ function Observations({ driver, path }: { driver: Driver; path: string }) {
   );
 }
 
-function ActionRow({ row, index, window, domain, kind, supported }: { row: Parameters<typeof BarCell>[0]["row"]; index: number; window: Window; domain: [number, number]; kind: string; supported: boolean }) {
-  const path = `${WS_ROWS.actions}/${index}`;
+type ActionRowData = Sheet["actions"]["rows"][number];
+
+function ActionRow({ action, row, index, window, domain }: { action: ActionRowData; row: PlotRow; index: number; window: Window; domain: [number, number] }) {
+  const [open, setOpen] = useState(false);
   const editor = useOpenEditor();
+  const { files } = useBindingContext();
+  const path = `${WS_ROWS.actions}/${index}`;
+  const supported = action.bookings_gained.value !== null;
+  const comparison = files.report.actions;
   return (
-    <TableRow className={`${STACK_XL.row} ${editor.rowProps.className}`} onClick={editor.rowProps.onClick} data-testid="worksheet-action-row" data-kind={kind}>
-      <TableCell className={STACK_XL.title}>
-        <Bound binding={ACTION.name} row={path} />
-      </TableCell>
-      <TableCell className="block px-0 py-1 xl:relative xl:table-cell xl:w-[26%] xl:min-w-[220px] xl:p-0">
-        {supported ? (
-          <BarCell row={row} keys={["gain"]} domain={domain} label="Change in bookings from one unit of this action" />
-        ) : (
-          <p className="text-xs text-slate-600 xl:px-3 xl:py-3">
-            <Bound binding={ACTION.gain[window]} row={path} />
-          </p>
-        )}
-      </TableCell>
-      <TableCell className={STACK_XL.cell} data-label="Change in bookings">
-        {supported ? <Bound binding={ACTION.gain[window]} row={path} /> : <span aria-hidden="true">&mdash;</span>}
-      </TableCell>
-      <TableCell className={STACK_XL.cell} data-label="Closes the gap alone">
-        <span className="text-xs"><Bound binding={ACTION.closes} row={path} /></span>
-        {editor.wide ? (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              editor.addToPlan(kind === "hire" ? "hire" : "program");
-            }}
-            className="mt-2 block rounded-ft border border-ft-accent bg-white px-3 py-1 text-xs font-semibold text-ft-accent hover:bg-ft-accentSoft"
-          >
-            Add to plan
-          </button>
-        ) : null}
-      </TableCell>
-    </TableRow>
+    <div className="py-3">
+      <div className={`${rowGrid} ${editor.clickable} rounded-ft`} onClick={editor.onClick} data-testid="worksheet-action-row" data-kind={action.kind}>
+        <div className="flex flex-col gap-1 xl:flex-row xl:items-center xl:gap-3">
+          <div className="text-sm font-medium text-slate-900 xl:w-36 xl:shrink-0">
+            <Bound binding={ACTION.name} row={path} />
+          </div>
+          <div className="h-14 min-w-0 flex-1">
+            {supported ? (
+              <Track
+                row={row}
+                keys={["gain"]}
+                domain={domain}
+                label="Change in bookings from one unit of this action"
+                marks={{ gain: <Bound binding={ACTION.gain[window]} row={path} className="text-xs font-semibold text-slate-900" /> }}
+              />
+            ) : (
+              <p className="text-xs text-slate-600">
+                <Bound binding={ACTION.gain[window]} row={path} />
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="mt-1 flex flex-wrap items-center gap-2 xl:mt-0" data-testid="action-quiet">
+          <Badge color={action.closes_alone_outcome.value === "feasible" ? "emerald" : "amber"} size="xs">
+            <Bound binding={ACTION.outcome} row={path} />
+          </Badge>
+          {editor.wide ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                editor.addToPlan(action.kind === "hire" ? "hire" : "program");
+              }}
+              className="rounded-ft border border-ft-accent bg-white px-3 py-1 text-xs font-semibold text-ft-accent hover:bg-ft-accentSoft"
+            >
+              Add to plan
+            </button>
+          ) : null}
+          <Toggle open={open} onToggle={() => setOpen((v) => !v)} controls={`action-detail-${action.kind}`}>
+            {open ? "Hide the details" : "Show the details"}
+          </Toggle>
+        </div>
+      </div>
+      {open ? (
+        <div id={`action-detail-${action.kind}`} className="mt-2 flex flex-col gap-2 rounded-ft bg-slate-50 px-3 py-3 text-xs text-slate-700" data-testid="action-detail">
+          <p><Bound binding={ACTION.closes} row={path} /></p>
+          {"unavailable" in comparison ? null : <ActionFigures kind={action.kind} index={index} />}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** What the old comparison and closes-alone tables said about this action: rank, gains, cost, gain per dollar, when it pays, and what closing the gap alone would take. */
+function ActionFigures({ kind, index }: { kind: "hire" | "program"; index: number }) {
+  const { files } = useBindingContext();
+  const actions = files.report.actions;
+  if ("unavailable" in actions) return null;
+  const row = `${ROWS.actions}/${index}`;
+  const close = actions.close_the_fiscal_year_gap;
+  const hires = close.hires;
+  return (
+    <>
+      <ul className="space-y-1" data-testid="action-figures">
+        <li>Status: <Bound binding={B.aStatus} row={row} /></li>
+        <li>Rank per dollar: <Bound binding={B.aRank} row={row} /></li>
+        <li>Gain, rest of year: <Bound binding={B.aRest} row={row} /></li>
+        <li>Gain, next twelve months: <Bound binding={B.aNext} row={row} /></li>
+        <li>Cash cost, next twelve months: <Bound binding={B.aCost} row={row} /></li>
+        <li>Gain per dollar: <Bound binding={B.aPerDollar} row={row} /></li>
+        <li>Starts paying: <Bound binding={B.aStarts} row={row} /></li>
+      </ul>
+      {kind === "hire" ? (
+        <section data-testid="close-hires">
+          <p className="font-semibold text-ft-brand">To close the gap alone with hires: <Bound binding={B.hiresOutcome} /></p>
+          {"bound" in hires ? (
+            <ul className="mt-1 space-y-1">
+              <li>Hires needed: <Bound binding={B.hiresCount} /></li>
+              <li>The most the company has started in a quarter: <Bound binding={B.hiresBound} /> (<Bound binding={B.hiresBoundBasis} />)</li>
+              <li>Cash cost, next twelve months: <Bound binding={B.hiresCost} /></li>
+            </ul>
+          ) : (
+            <p className="mt-1"><Bound binding={B.hiresNote} /></p>
+          )}
+        </section>
+      ) : (
+        <section data-testid="close-program">
+          <p className="font-semibold text-ft-brand">To close the gap alone with program pipeline: <Bound binding={B.programOutcome} /></p>
+          <ul className="mt-1 space-y-1">
+            <li>Pipeline needed: <Bound binding={B.programDollars} /></li>
+            <li>
+              {close.program.needed_but_over_the_cap !== null ? (
+                <>
+                  Over the cap: closing it would take <Bound binding={B.programOver} />, against a cap of <Bound binding={B.programCap} />
+                </>
+              ) : (
+                <>
+                  Within the cap of <Bound binding={B.programCap} />
+                </>
+              )}
+            </li>
+            <li>Cash cost, next twelve months: <Bound binding={B.programCost} /></li>
+          </ul>
+        </section>
+      )}
+    </>
   );
 }

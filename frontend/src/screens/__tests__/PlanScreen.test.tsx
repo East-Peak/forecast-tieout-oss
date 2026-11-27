@@ -1,8 +1,8 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import App from "../../App";
-import { unboundDigits } from "../../binding/__tests__/harness";
+import { openAll, unboundDigits } from "../../binding/__tests__/harness";
 import type { TieoutReport } from "../../generated/report";
 import type { Loaders } from "../../session/ReportSession";
 import { B, LISTED_BINDINGS, W } from "../plan/bindings";
@@ -12,6 +12,12 @@ import * as files from "./files";
 import * as fmt from "./independent";
 import { build } from "./planExpectations";
 import { caseOf, mountScreen, runScreenChecks } from "./screenChecks";
+
+// recharts draws nothing without a measured box (jsdom has none): its container is given a size, and the figures printed at the bars' ends then exist
+vi.mock("recharts", async (importOriginal) => {
+  const { withCapture } = await import("./rechartsCapture");
+  return withCapture(await importOriginal<typeof import("recharts")>(), []);
+});
 
 const fromDisk: Loaders = {
   index: () => Promise.resolve(files.index()),
@@ -209,12 +215,12 @@ runScreenChecks({
         for (const row of hires) expect(row.textContent).toContain("unsupported by this history");
         expect(container.querySelector("[data-binding='close.hires.outcome']")!.textContent).toBe("unsupported by this history");
         expect(container.querySelector("[data-binding='close.program.outcome']")!.textContent).toBe("unreachable");
-        const unsupported = Array.from(container.querySelectorAll("[data-testid='action-row']")).find((row) => /Hire/.test(row.textContent ?? ""))!;
+        const unsupported = container.querySelector("[data-testid='worksheet-action-row'][data-kind='hire']")!;
         expect(unsupported.textContent).toContain("unsupported by this history");
         expect(unsupported.textContent).not.toMatch(/\$0(?![\d.,KM])/);
-        // not a ranked action: no rank, no per-dollar figure
-        expect(unsupported.querySelector("[data-binding='action.rank']")!.textContent).toBe("not ranked");
-        expect(container.querySelector("[data-testid='better-per-dollar']")!.textContent).toContain("Add $");
+        // not a ranked action: no rank, no per-dollar figure, said in the opened details
+        const details = container.querySelector("[data-testid='action-detail']")!.parentElement!;
+        expect(Array.from(container.querySelectorAll("[data-testid='action-detail']")).some((d) => d.querySelector("[data-binding='action.rank']")?.textContent === "not ranked"), details.textContent ?? "").toBe(true);
       });
 
       it("a plan with items the history cannot value says that the totals are for the valued ones; a fully valued plan does not", () => {
@@ -242,7 +248,7 @@ runScreenChecks({
         report.actions = { unavailable: "no close-timing evidence" };
         const container = mountScreen(PlanScreen, { ...c, report }, c.company, c.scenario);
         expect(container.querySelector("[data-binding='actions.unavailable']")!.textContent).toBe("no close-timing evidence");
-        expect(container.querySelector("[data-testid='action-row']")).toBeNull();
+        expect(container.querySelector("[data-testid='action-figures']")).toBeNull();
       });
     });
 
@@ -255,6 +261,11 @@ runScreenChecks({
         );
         await waitFor(() => expect(screen.getByTestId("no-plan")).toBeInTheDocument());
         const press = (id: string) => fireEvent.click(document.querySelector(`[data-scenario-id='${id}']`)!);
+        // the ledger is closed on a phone-sized window (and so here): open it to count the items
+        const opened = () => {
+          openAll(document.body);
+          return document.querySelectorAll("[data-testid='plan-item-row']");
+        };
         const gap = () => document.querySelector("[data-binding='worksheet.summary.remaining-gap']")?.textContent;
 
         press("demo-plan");
@@ -262,12 +273,12 @@ runScreenChecks({
         const demo = files.report("sapling-industries", "demo-plan");
         expect(gap()).toBe(fmt.usdShort(fullPlan(demo).gap.fiscal_year.gap_with_plan));
         expect(document.querySelector("[data-scenario-id='demo-plan']")!.getAttribute("aria-pressed")).toBe("true");
-        expect(document.querySelectorAll("[data-testid='plan-item-row']").length).toBe(fullPlan(demo).items.length);
+        expect(opened().length).toBe(fullPlan(demo).items.length);
         expect((document.getElementById("scenario-selector") as HTMLSelectElement).value).toBe("demo-plan");
 
         press("hires-only");
         await waitFor(() => expect(document.querySelector("[data-scenario-id='hires-only']")!.getAttribute("aria-pressed")).toBe("true"));
-        await waitFor(() => expect(document.querySelectorAll("[data-testid='plan-item-row']").length).toBe(fullPlan(files.report("sapling-industries", "hires-only")).items.length));
+        await waitFor(() => expect(opened().length).toBe(fullPlan(files.report("sapling-industries", "hires-only")).items.length));
         expect(gap()).toBe(fmt.usdShort(fullPlan(files.report("sapling-industries", "hires-only")).gap.fiscal_year.gap_with_plan));
         expect(gap()).not.toBe(fmt.usdShort(fullPlan(demo).gap.fiscal_year.gap_with_plan));
         expect(unboundDigits(document.body)).toEqual([]);
