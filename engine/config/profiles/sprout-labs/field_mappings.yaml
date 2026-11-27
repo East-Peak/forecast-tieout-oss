@@ -1,6 +1,5 @@
 # Sprout Labs field mappings.
-# Same stage vocabulary as Acme demo (Discovery / Qualification / etc.) —
-# matches what most CRMs export by default. Forkers replicate this for
+# Stage names as most CRMs export them by default (Discovery / Qualification / etc.). Forkers replicate this for
 # their own profile by changing the keys to their CRM's stage names.
 
 opportunity:

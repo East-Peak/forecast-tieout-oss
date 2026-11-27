@@ -2,7 +2,7 @@ org_name: "Mighty Oak Holdings"
 org_id: "mighty-oak-holdings"
 timezone: "US/Eastern"
 
-# Feb-start fiscal year (Feb 1 - Jan 31). Aligned with Acme for demo parity.
+# Feb-start fiscal year (Feb 1 - Jan 31). Same calendar as the other demo companies.
 # FY26: Feb 2026 - Jan 2027. Q1=Feb/Mar/Apr, Q2=May/Jun/Jul, Q3=Aug/Sep/Oct, Q4=Nov/Dec/Jan.
 fiscal_year_start_month: 2
 

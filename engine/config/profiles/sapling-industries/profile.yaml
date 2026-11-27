@@ -2,8 +2,8 @@ org_name: "Sapling Industries"
 org_id: "sapling-industries"
 timezone: "US/Eastern"
 
-# Feb-start fiscal year (Feb 1 - Jan 31). Same calendar as Acme but
-# Sapling exercises the engine at 10x the scale.
+# Feb-start fiscal year (Feb 1 - Jan 31). Same calendar as the other
+# demo companies.
 fiscal_year_start_month: 2
 
 revenue_metric: "bookings"
