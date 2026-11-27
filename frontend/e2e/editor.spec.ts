@@ -144,17 +144,17 @@ test.describe("the plan editor, one shared page @smoke", () => {
       // the foot-of-screen links point at the editor without starting it; the Plan screen has the button and the notice instead
       if (screen !== "Plan") await expect(page.getByTestId("build-your-own").getByRole("link", { name: "Build your own plan" })).toBeVisible();
     }
-    await expect(page.getByTestId("no-plan").getByRole("button", { name: "build your own plan" })).toBeVisible();
+    await expect(page.getByTestId("no-plan").getByRole("button", { name: "Build a plan" })).toBeVisible();
     for (const scenario of ["demo-plan", "hires-only", "as-signed"]) {
       await page.locator(`[data-scenario-id='${scenario}']`).click();
       await expect(page.locator(`[data-scenario-id='${scenario}']`)).toHaveAttribute("aria-pressed", "true");
     }
     expect(editorRequests(requests)).toEqual([]);
-    await expect(page.getByRole("button", { name: "Build your own plan", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Edit plan", exact: true })).toBeVisible();
   });
 
   test("opening Your plan starts the core, shows the demo plan's figures as a report identical to the committed one, and marks the page @smoke", async () => {
-    await page.getByRole("button", { name: "Build your own plan", exact: true }).click();
+    await page.getByRole("button", { name: "Edit plan", exact: true }).click();
     await expect(page.getByTestId("plan-form")).toBeVisible({ timeout: 90_000 });
     await expect(page.getByTestId("plan-form").getByRole("heading", { name: "Your plan" })).toBeFocused();
     expect(await lastReport(page)).toBe(asYourPlan("sapling-industries"));
@@ -191,8 +191,8 @@ test.describe("the plan editor, one shared page @smoke", () => {
     await apply(page);
     expect(await lastReport(page)).toBe(fixture("report.json"));
     const native = JSON.parse(fixture("report.json")) as { plan: { gap: { fiscal_year: { gap_with_plan: string } } } };
-    await expect(page.locator("[data-binding='plan.gap']")).toHaveText(usdShort(native.plan.gap.fiscal_year.gap_with_plan));
-    await expect(page.locator("[data-binding='plan.gap']")).toHaveAttribute("data-scenario", "your-plan");
+    await expect(page.locator("[data-binding='worksheet.summary.remaining-gap']")).toHaveText(usdShort(native.plan.gap.fiscal_year.gap_with_plan));
+    await expect(page.locator("[data-binding='worksheet.summary.remaining-gap']")).toHaveAttribute("data-scenario", "your-plan");
     await expect(page.getByTestId("compare-row")).toHaveCount(5);
   });
 
@@ -218,11 +218,11 @@ test.describe("the plan editor, one shared page @smoke", () => {
   });
 
   test("the core's own words appear beside the field it refuses, and the last good figures stay @smoke", async () => {
-    const shown = await page.locator("[data-binding='plan.gap']").innerText();
+    const shown = await page.locator("[data-binding='worksheet.summary.remaining-gap']").innerText();
     await page.getByTestId("hire-row").first().getByLabel("How many").fill("0");
     await page.getByRole("button", { name: "Apply" }).click();
     await expect(page.getByTestId("hire-row").first().getByRole("alert")).toContainText("count must be a whole number of at least 1");
-    expect(await page.locator("[data-binding='plan.gap']").innerText()).toBe(shown);
+    expect(await page.locator("[data-binding='worksheet.summary.remaining-gap']").innerText()).toBe(shown);
     await page.getByTestId("hire-row").first().getByLabel("How many").fill("1");
   });
 
@@ -258,7 +258,7 @@ test.describe("the plan editor, one shared page @smoke", () => {
     await page.locator("[data-scenario-id='demo-plan']").click();
     await expect(page.getByTestId("plan-form")).toHaveCount(0);
     await expect(page.getByTestId("your-plan-mark")).toHaveCount(0);
-    await page.locator("[data-scenario-id='your-plan']").click();
+    await page.getByRole("button", { name: "Edit plan", exact: true }).click();
     await expect(page.getByTestId("plan-form")).toBeVisible();
     expect((await reports(page)).length, "no new computation to show what was applied").toBe(before);
     expect(await lastReport(page)).toBe(fixture("report.json"));
@@ -283,7 +283,7 @@ test.describe("a blocked download and a phone @smoke", () => {
     const context = await browser.newContext({ baseURL: info.project.use.baseURL, viewport: { width: 1440, height: 900 } });
     const { page } = await newPage(context, "&editorTimeout=short");
     await page.route("**/pyodide.asm.wasm", (route) => route.abort());
-    await page.getByRole("button", { name: "Build your own plan", exact: true }).click();
+    await page.getByRole("button", { name: "Edit plan", exact: true }).click();
     const status = page.getByTestId("session-status");
     await expect(status).toContainText("no answer within the time allowed", { timeout: 20_000 });
     await expect(status).toContainText("Choose another company or scenario");
@@ -304,8 +304,9 @@ test.describe("a blocked download and a phone @smoke", () => {
       userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
     });
     const { page, requests } = await newPage(context);
-    await expect(page.getByRole("button", { name: "Build your own plan", exact: true })).toHaveCount(0);
-    await expect(page.getByTestId("scenario-picker")).toContainText("Editing your own plan needs a larger screen.");
+    await expect(page.getByRole("button", { name: "Edit plan", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Add to plan" })).toHaveCount(0);
+    await expect(page.getByTestId("worksheet-summary")).toContainText("Editing your own plan needs a larger screen.");
     await expect(page.locator("#scenario-selector option")).toHaveText(["As signed", "Demo plan", "Hires only", "Program only"]);
     for (const screen of ["forecast", "capacity", "pipeline", "plan", "trust"]) {
       await page.goto(`/${screen}?company=sapling-industries&scenario=your-plan`, { waitUntil: "networkidle" });

@@ -109,7 +109,7 @@ export default function Layout() {
           Your plan, computed in your browser; ranges unvalidated.
         </div>
       ) : null}
-      <nav className="flex items-center gap-0 overflow-x-auto border-b border-border px-1 sm:gap-1 sm:px-6" aria-label="Screens">
+      <nav className="flex flex-wrap items-center gap-0 border-b border-border px-1 sm:gap-1 sm:px-6" aria-label="Screens">
         {SCREENS.map((screen) => (
           <Fragment key={screen.path}>
             {screen === FIRST_EVIDENCE ? (

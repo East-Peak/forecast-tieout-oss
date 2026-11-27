@@ -98,6 +98,44 @@ test.describe("Capacity, Pipeline, Plan and Trust, every company @smoke", () => 
   }
 });
 
+test.describe("the Plan worksheet in a real browser @smoke", () => {
+  test("every row's bars are drawn on one scale, the window switch redraws them from the report, and a quarter's disclosure opens @smoke", async ({ page }) => {
+    const issues = collectBrowserIssues(page);
+    await open(page, "plan", "sapling-industries", "demo-plan");
+    const bars = () =>
+      page.locator("[data-testid='bar-cell']").evaluateAll((cells) =>
+        cells.map((cell) => {
+          const box = cell.getBoundingClientRect();
+          const paths = Array.from(cell.querySelectorAll(".recharts-bar-rectangle path")).filter((p) => (p.getAttribute("d") ?? "").length > 5);
+          return { height: box.height, width: box.width, drawn: paths.length };
+        }),
+      );
+    const first = await bars();
+    expect(first.length, "a bar cell per driver and per supported action, and per bridge step").toBeGreaterThanOrEqual(10);
+    for (const cell of first) expect(cell.width > 100 && cell.height > 20 && cell.drawn > 0, JSON.stringify(cell)).toBe(true);
+    // the first row of the driver table is in the report's rank for the window; the other window may reorder
+    const report = await reportOf(page, "sapling-industries", "demo-plan");
+    const drivers = (report.worksheet as { drivers: Array<{ driver: string; rank: Record<string, number> }> }).drivers;
+    const ranked = (w: string) => [...drivers].sort((a, b) => a.rank[w] - b.rank[w]).map((d) => d.driver);
+    const order = () => page.locator("[data-testid='driver-row']").evaluateAll((rows) => rows.map((r) => r.getAttribute("data-driver")));
+    expect(await order()).toEqual(ranked("rest of fiscal year"));
+    await page.locator("[data-window-choice='next twelve months']").click();
+    expect(await order()).toEqual(ranked("next twelve months"));
+    await expect(page.locator("[data-testid='tornado']")).toHaveAttribute("data-window", "next twelve months");
+    for (const cell of await bars()) expect(cell.drawn, "bars are drawn in the other window too").toBeGreaterThan(0);
+    await page.locator("[data-testid='driver-row'] button[aria-expanded]").first().click();
+    await expect(page.getByTestId("driver-detail")).toContainText("assumption to discuss");
+    await expect(page.getByTestId("observation-row").first()).toBeVisible();
+    // the summary row and the top of the tornado are in view without scrolling at 1440 by 900
+    await page.evaluate(() => window.scrollTo(0, 0));
+    for (const locator of [page.getByTestId("worksheet-figures"), page.getByRole("heading", { name: "What moves the outcome" })]) {
+      const box = (await locator.boundingBox())!;
+      expect(box.y + box.height, "inside the first screen").toBeLessThanOrEqual(900);
+    }
+    expect(issues).toEqual([]);
+  });
+});
+
 test.describe("hovering the charts reads the report @smoke", () => {
   test("Capacity: each hover shows the report's heads, ramped equivalents and target for that month @smoke", async ({ page }) => {
     for (const company of COMPANIES) {
@@ -146,14 +184,14 @@ test.describe("Plan: switching scenario @smoke", () => {
   test("picking a scenario on the page reloads the report, moves the URL and the whole screen @smoke", async ({ page }) => {
     const issues = collectBrowserIssues(page);
     await open(page, "plan", "sapling-industries", "as-signed");
-    await expect(page.getByTestId("no-plan")).toContainText("There is no plan in this scenario");
+    await expect(page.getByTestId("no-plan")).toContainText("No plan is in force");
     for (const scenario of ["demo-plan", "hires-only", "program-only"] as const) {
       await page.locator(`[data-scenario-id='${scenario}']`).click();
       await expect(page).toHaveURL(new RegExp(`scenario=${scenario}`));
       await expect(page.locator(`[data-scenario-id='${scenario}']`)).toHaveAttribute("aria-pressed", "true");
       const report = await reportOf(page, "sapling-industries", scenario);
-      await expect(page.locator("[data-binding='plan.gap']")).toHaveText(usdShort(report.plan!.gap!.fiscal_year!.gap_with_plan));
-      await expect(page.locator("[data-binding='plan.gap']")).toHaveAttribute("data-scenario", scenario);
+      await expect(page.locator("[data-binding='worksheet.summary.remaining-gap']")).toHaveText(usdShort(report.plan!.gap!.fiscal_year!.gap_with_plan));
+      await expect(page.locator("[data-binding='worksheet.summary.remaining-gap']")).toHaveAttribute("data-scenario", scenario);
       await expect(page.getByTestId("plan-item-row")).toHaveCount(report.plan!.items!.length);
     }
     await page.locator("[data-scenario-id='as-signed']").click();
@@ -210,7 +248,7 @@ test.describe("at desktop widths the wide tables are tables, not stacked rows @s
   // The wide tables once stayed stacked at every width (their classes were never generated) and
   // every other check passed: nothing said a header row had to be there. Rows named here are the
   // ones that live in a wide table.
-  const WIDE_ROWS = { forecast: "quarter-row", pipeline: "requirement-row", trust: "backtest-row" } as const;
+  const WIDE_ROWS = { plan: "driver-row", forecast: "quarter-row", pipeline: "requirement-row", trust: "backtest-row" } as const;
   for (const width of [1280, 1440]) {
     test.describe(`${width} wide`, () => {
       test.use({ viewport: { width, height: 900 } });
