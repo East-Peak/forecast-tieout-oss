@@ -1,10 +1,11 @@
 import { lazy, Suspense } from "react";
-import type { ComponentType, LazyExoticComponent } from "react";
+import type { ComponentType, LazyExoticComponent, ReactNode } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import { fileLoaders } from "./data/reportFiles";
 import { ReportSessionProvider } from "./session/ReportSession";
 import type { Loaders } from "./session/ReportSession";
+import { legacyRedirect } from "./shell/legacyRoutes";
 import { SCREENS } from "./shell/screens";
 
 /** The five screens, each loaded when first opened. */
@@ -30,28 +31,40 @@ function ToForecast() {
   return <Navigate to={{ pathname: "/forecast", search }} replace />;
 }
 
+/**
+ * An address from the old app is sent to the screen that replaced it, with its company carried over.
+ * It happens before the session mounts, so the session's first read of the URL is the new one.
+ */
+function OldAddresses({ children }: { children: ReactNode }) {
+  const { pathname, search } = useLocation();
+  const destination = legacyRedirect(pathname, search);
+  return destination ? <Navigate to={destination} replace /> : <>{children}</>;
+}
+
 export default function App({ loaders = fileLoaders }: { loaders?: Loaders }) {
   return (
-    <ReportSessionProvider loaders={loaders}>
-      <Routes>
-        <Route element={<Layout />}>
-          {SCREENS.map((screen) => {
-            const Screen = SCREEN_COMPONENTS[screen.path];
-            return (
-              <Route
-                key={screen.path}
-                path={screen.path}
-                element={
-                  <Suspense fallback={<RouteLoading />}>
-                    <Screen />
-                  </Suspense>
-                }
-              />
-            );
-          })}
-          <Route path="*" element={<ToForecast />} />
-        </Route>
-      </Routes>
-    </ReportSessionProvider>
+    <OldAddresses>
+      <ReportSessionProvider loaders={loaders}>
+        <Routes>
+          <Route element={<Layout />}>
+            {SCREENS.map((screen) => {
+              const Screen = SCREEN_COMPONENTS[screen.path];
+              return (
+                <Route
+                  key={screen.path}
+                  path={screen.path}
+                  element={
+                    <Suspense fallback={<RouteLoading />}>
+                      <Screen />
+                    </Suspense>
+                  }
+                />
+              );
+            })}
+            <Route path="*" element={<ToForecast />} />
+          </Route>
+        </Routes>
+      </ReportSessionProvider>
+    </OldAddresses>
   );
 }

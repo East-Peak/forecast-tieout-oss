@@ -74,9 +74,27 @@ describe("the shell", () => {
     }
   });
 
-  it("an old address leads to Forecast, keeping the company", async () => {
-    open("/bookings?company=sprout-labs&scenario=as-signed");
+  it("an unknown address leads to Forecast, keeping the company", async () => {
+    open("/nothing-here?company=sprout-labs&scenario=as-signed");
     await waitFor(() => expect(document.querySelector("[data-chart='monthly']")).not.toBeNull());
+    expect(document.querySelector("main h2")?.textContent).toBe("Forecast");
+  });
+
+  it.each([
+    ["/bookings", "Forecast"],
+    ["/scenario", "Plan"],
+    ["/targets", "Plan"],
+    ["/inventory", "Pipeline"],
+    ["/funnel", "Pipeline"],
+    ["/audit", "Trust"],
+    ["/methodology", "Trust"],
+    ["/export", "Trust"],
+    ["/capacity", "Capacity"],
+  ])("the old %s opens %s with the old ?profile= read as the company", async (route, heading) => {
+    open(`${route}?profile=sprout-labs`);
+    await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe(heading));
+    await waitFor(() => expect(document.querySelector("main [data-binding]")?.getAttribute("data-company")).toBe("sprout-labs"));
+    expect((document.getElementById("company-selector") as HTMLSelectElement).value).toBe("sprout-labs");
   });
 
   it("shows a loading state first, and an error that names the problem when a report fails", async () => {

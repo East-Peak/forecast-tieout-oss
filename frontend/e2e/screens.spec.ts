@@ -195,3 +195,31 @@ test.describe("at phone width, with device emulation @smoke", () => {
     }
   }
 });
+
+test.describe("the old app's addresses @smoke", () => {
+  const MOVED = [
+    ["/bookings", "/forecast"],
+    ["/scenario", "/plan"],
+    ["/targets", "/plan"],
+    ["/inventory", "/pipeline"],
+    ["/funnel", "/pipeline"],
+    ["/audit", "/trust"],
+    ["/methodology", "/trust"],
+    ["/export", "/trust"],
+    ["/capacity", "/capacity"],
+  ] as const;
+
+  for (const [from, to] of MOVED) {
+    test(`${from} lands on ${to} with the company kept`, async ({ page }) => {
+      const issues = collectBrowserIssues(page);
+      await page.goto(`${from}?profile=sprout-labs`, { waitUntil: "networkidle" });
+      await expect(page.locator("main h2").first()).toBeVisible();
+      const url = new URL(page.url());
+      expect(url.pathname).toBe(to);
+      expect(url.searchParams.get("company")).toBe("sprout-labs");
+      expect(url.searchParams.has("profile")).toBe(false);
+      await expect(page.locator("#company-selector")).toHaveValue("sprout-labs");
+      expect(issues).toEqual([]);
+    });
+  }
+});
