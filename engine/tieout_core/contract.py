@@ -24,7 +24,7 @@ from .adoption import ADOPTED, NOT_SHOWN, UNAVAILABLE
 from .lever import COVERED, FEASIBLE, UNREACHABLE
 from .plan import NEXT_12, REST_OF_FY
 
-SCHEMA_VERSION = "1.1.0"
+SCHEMA_VERSION = "1.2.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -267,6 +267,7 @@ def _rates() -> dict:
         obj(
             {
                 "name": TEXT,
+                "unit": enum("share", "dollars", "number"),
                 "value": DECIMAL,
                 "definition": TEXT,
                 "numerator": TEXT,
@@ -672,6 +673,7 @@ def _required_pipeline() -> dict:
             "bookings_with_own_pipeline": MONEY,
             "bookings_under_completed_schedule": MONEY_OR_NULL,
             "surplus_over_target": MONEY_OR_NULL,
+            "surplus_statement": maybe(TEXT),
             "created_between": pair(DATE),
             "expected_created_pipeline": MONEY,
             "earlier_assigned_in_span": MONEY,

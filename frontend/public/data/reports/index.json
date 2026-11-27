@@ -13,28 +13,32 @@
           "id": "as-signed",
           "label": "As signed",
           "plan_file": null,
-          "report": "sprout-labs/as-signed.json"
+          "report": "sprout-labs/as-signed.json",
+          "report_markdown": "sprout-labs/as-signed.md"
         },
         {
           "description": "The company's demo plan: further hires and programme pipeline together.",
           "id": "demo-plan",
           "label": "Demo plan",
           "plan_file": "engine/config/profiles/sprout-labs/plan.yaml",
-          "report": "sprout-labs/demo-plan.json"
+          "report": "sprout-labs/demo-plan.json",
+          "report_markdown": "sprout-labs/demo-plan.md"
         },
         {
           "description": "Only the demo plan's further hires.",
           "id": "hires-only",
           "label": "Hires only",
           "plan_file": "engine/config/profiles/sprout-labs/plan-hires-only.yaml",
-          "report": "sprout-labs/hires-only.json"
+          "report": "sprout-labs/hires-only.json",
+          "report_markdown": "sprout-labs/hires-only.md"
         },
         {
           "description": "Only the demo plan's programme pipeline.",
           "id": "programme-only",
           "label": "Programme only",
           "plan_file": "engine/config/profiles/sprout-labs/plan-programme-only.yaml",
-          "report": "sprout-labs/programme-only.json"
+          "report": "sprout-labs/programme-only.json",
+          "report_markdown": "sprout-labs/programme-only.md"
         }
       ]
     },
@@ -51,28 +55,32 @@
           "id": "as-signed",
           "label": "As signed",
           "plan_file": null,
-          "report": "sapling-industries/as-signed.json"
+          "report": "sapling-industries/as-signed.json",
+          "report_markdown": "sapling-industries/as-signed.md"
         },
         {
           "description": "The company's demo plan: further hires and programme pipeline together.",
           "id": "demo-plan",
           "label": "Demo plan",
           "plan_file": "engine/config/profiles/sapling-industries/plan.yaml",
-          "report": "sapling-industries/demo-plan.json"
+          "report": "sapling-industries/demo-plan.json",
+          "report_markdown": "sapling-industries/demo-plan.md"
         },
         {
           "description": "Only the demo plan's further hires.",
           "id": "hires-only",
           "label": "Hires only",
           "plan_file": "engine/config/profiles/sapling-industries/plan-hires-only.yaml",
-          "report": "sapling-industries/hires-only.json"
+          "report": "sapling-industries/hires-only.json",
+          "report_markdown": "sapling-industries/hires-only.md"
         },
         {
           "description": "Only the demo plan's programme pipeline.",
           "id": "programme-only",
           "label": "Programme only",
           "plan_file": "engine/config/profiles/sapling-industries/plan-programme-only.yaml",
-          "report": "sapling-industries/programme-only.json"
+          "report": "sapling-industries/programme-only.json",
+          "report_markdown": "sapling-industries/programme-only.md"
         }
       ]
     },
@@ -89,32 +97,36 @@
           "id": "as-signed",
           "label": "As signed",
           "plan_file": null,
-          "report": "mighty-oak-holdings/as-signed.json"
+          "report": "mighty-oak-holdings/as-signed.json",
+          "report_markdown": "mighty-oak-holdings/as-signed.md"
         },
         {
           "description": "The company's demo plan: further hires and programme pipeline together.",
           "id": "demo-plan",
           "label": "Demo plan",
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan.yaml",
-          "report": "mighty-oak-holdings/demo-plan.json"
+          "report": "mighty-oak-holdings/demo-plan.json",
+          "report_markdown": "mighty-oak-holdings/demo-plan.md"
         },
         {
           "description": "Only the demo plan's further hires.",
           "id": "hires-only",
           "label": "Hires only",
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-hires-only.yaml",
-          "report": "mighty-oak-holdings/hires-only.json"
+          "report": "mighty-oak-holdings/hires-only.json",
+          "report_markdown": "mighty-oak-holdings/hires-only.md"
         },
         {
           "description": "Only the demo plan's programme pipeline.",
           "id": "programme-only",
           "label": "Programme only",
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-programme-only.yaml",
-          "report": "mighty-oak-holdings/programme-only.json"
+          "report": "mighty-oak-holdings/programme-only.json",
+          "report_markdown": "mighty-oak-holdings/programme-only.md"
         }
       ]
     }
   ],
   "default_company": "sapling-industries",
-  "schema_version": "1.1.0"
+  "schema_version": "1.2.0"
 }

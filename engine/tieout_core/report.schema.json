@@ -59,7 +59,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-1.1.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-1.2.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -2938,12 +2938,20 @@
           "source": {
             "$ref": "#/$defs/Text"
           },
+          "unit": {
+            "enum": [
+              "share",
+              "dollars",
+              "number"
+            ]
+          },
           "value": {
             "$ref": "#/$defs/Decimal"
           }
         },
         "required": [
           "name",
+          "unit",
           "value",
           "definition",
           "numerator",
@@ -3542,6 +3550,16 @@
                       }
                     ]
                   },
+                  "surplus_statement": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Text"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "target": {
                     "$ref": "#/$defs/Decimal"
                   },
@@ -3671,6 +3689,7 @@
                   "bookings_with_own_pipeline",
                   "bookings_under_completed_schedule",
                   "surplus_over_target",
+                  "surplus_statement",
                   "created_between",
                   "expected_created_pipeline",
                   "earlier_assigned_in_span",
@@ -4339,7 +4358,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "1.1.0"
+      "const": "1.2.0"
     },
     "verdicts": {
       "additionalProperties": false,

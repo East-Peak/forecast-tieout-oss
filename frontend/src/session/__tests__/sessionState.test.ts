@@ -3,7 +3,7 @@ import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
 import { initialState, reduce, resolveSelection, type SessionState } from "../sessionState";
 
-const scenario = (id: string) => ({ id, label: id, description: "", plan_file: null, report: `x/${id}.json` });
+const scenario = (id: string) => ({ id, label: id, description: "", plan_file: null, report: `x/${id}.json`, report_markdown: `x/${id}.md` });
 const company = (id: string) => ({
   id,
   name: id,

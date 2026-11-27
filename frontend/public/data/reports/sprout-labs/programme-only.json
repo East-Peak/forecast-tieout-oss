@@ -1520,6 +1520,7 @@
       ],
       "sample_size": 246,
       "source": "fitted",
+      "unit": "share",
       "value": "0.178862"
     },
     {
@@ -1535,6 +1536,7 @@
       ],
       "sample_size": 135,
       "source": "fitted",
+      "unit": "share",
       "value": "0.325926"
     },
     {
@@ -1550,6 +1552,7 @@
       ],
       "sample_size": 81,
       "source": "fitted",
+      "unit": "share",
       "value": "0.444444"
     },
     {
@@ -1565,6 +1568,7 @@
       ],
       "sample_size": 54,
       "source": "fitted",
+      "unit": "share",
       "value": "0.703704"
     },
     {
@@ -1580,6 +1584,7 @@
       ],
       "sample_size": 33,
       "source": "fitted",
+      "unit": "share",
       "value": "0.878788"
     },
     {
@@ -1592,6 +1597,7 @@
       "range95": null,
       "sample_size": 246,
       "source": "fitted",
+      "unit": "share",
       "value": "0.178862"
     },
     {
@@ -1604,6 +1610,7 @@
       "range95": null,
       "sample_size": 3,
       "source": "fitted",
+      "unit": "share",
       "value": "0.155532"
     },
     {
@@ -1616,6 +1623,7 @@
       "range95": null,
       "sample_size": 5,
       "source": "fitted",
+      "unit": "share",
       "value": "0.143089"
     },
     {
@@ -1628,6 +1636,7 @@
       "range95": null,
       "sample_size": 133,
       "source": "fitted",
+      "unit": "share",
       "value": "0.323650"
     },
     {
@@ -1640,6 +1649,7 @@
       "range95": null,
       "sample_size": 4,
       "source": "fitted",
+      "unit": "share",
       "value": "0.271605"
     },
     {
@@ -1652,6 +1662,7 @@
       "range95": null,
       "sample_size": 17,
       "source": "fitted",
+      "unit": "share",
       "value": "0.284284"
     },
     {
@@ -1664,6 +1675,7 @@
       "range95": null,
       "sample_size": 73,
       "source": "fitted",
+      "unit": "share",
       "value": "0.450418"
     },
     {
@@ -1676,6 +1688,7 @@
       "range95": null,
       "sample_size": 3,
       "source": "fitted",
+      "unit": "share",
       "value": "0.473430"
     },
     {
@@ -1688,6 +1701,7 @@
       "range95": null,
       "sample_size": 27,
       "source": "fitted",
+      "unit": "share",
       "value": "0.444444"
     },
     {
@@ -1700,6 +1714,7 @@
       "range95": null,
       "sample_size": 30,
       "source": "fitted",
+      "unit": "share",
       "value": "0.681481"
     },
     {
@@ -1712,6 +1727,7 @@
       "range95": null,
       "sample_size": 1,
       "source": "fitted",
+      "unit": "share",
       "value": "0.717813"
     },
     {
@@ -1724,6 +1740,7 @@
       "range95": null,
       "sample_size": 29,
       "source": "fitted",
+      "unit": "share",
       "value": "0.695389"
     },
     {
@@ -1736,6 +1753,7 @@
       "range95": null,
       "sample_size": 11,
       "source": "fitted",
+      "unit": "share",
       "value": "0.921799"
     },
     {
@@ -1748,6 +1766,7 @@
       "range95": null,
       "sample_size": 2,
       "source": "fitted",
+      "unit": "share",
       "value": "0.889807"
     },
     {
@@ -1760,6 +1779,7 @@
       "range95": null,
       "sample_size": 20,
       "source": "fitted",
+      "unit": "share",
       "value": "0.839394"
     },
     {
@@ -1775,6 +1795,7 @@
       ],
       "sample_size": 281,
       "source": "fitted",
+      "unit": "share",
       "value": "0.156584"
     },
     {
@@ -1787,6 +1808,7 @@
       "range95": null,
       "sample_size": 44,
       "source": "fitted",
+      "unit": "dollars",
       "value": "69645.613636"
     },
     {
@@ -1799,6 +1821,7 @@
       "range95": null,
       "sample_size": 281,
       "source": "fitted",
+      "unit": "dollars",
       "value": "75198.291815"
     },
     {
@@ -1811,6 +1834,7 @@
       "range95": null,
       "sample_size": 443,
       "source": "fitted",
+      "unit": "number",
       "value": "1.213699"
     },
     {
@@ -1823,6 +1847,7 @@
       "range95": null,
       "sample_size": 63,
       "source": "fitted",
+      "unit": "dollars",
       "value": "15947.676712"
     },
     {
@@ -1835,6 +1860,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "share",
       "value": "0.080000"
     },
     {
@@ -1847,6 +1873,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "share",
       "value": "0.180000"
     },
     {
@@ -1859,6 +1886,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "share",
       "value": "0.350000"
     },
     {
@@ -1871,6 +1899,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "share",
       "value": "0.550000"
     },
     {
@@ -1883,6 +1912,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "share",
       "value": "0.800000"
     },
     {
@@ -1895,6 +1925,7 @@
       "range95": null,
       "sample_size": 443,
       "source": "fitted",
+      "unit": "dollars",
       "value": "102034.805479"
     },
     {
@@ -1907,6 +1938,7 @@
       "range95": null,
       "sample_size": 63,
       "source": "fitted",
+      "unit": "number",
       "value": "113"
     },
     {
@@ -1919,6 +1951,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "365"
     },
     {
@@ -1931,6 +1964,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "20"
     },
     {
@@ -1943,6 +1977,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "20"
     },
     {
@@ -1955,6 +1990,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "365"
     },
     {
@@ -1967,6 +2003,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "24"
     },
     {
@@ -1979,6 +2016,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "3"
     },
     {
@@ -1991,6 +2029,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "2000"
     },
     {
@@ -2003,6 +2042,7 @@
       "range95": null,
       "sample_size": 3,
       "source": "entered",
+      "unit": "share",
       "value": "0.166700"
     },
     {
@@ -2015,6 +2055,7 @@
       "range95": null,
       "sample_size": 3,
       "source": "entered",
+      "unit": "share",
       "value": "0.500000"
     },
     {
@@ -2027,6 +2068,7 @@
       "range95": null,
       "sample_size": 3,
       "source": "entered",
+      "unit": "share",
       "value": "0.833300"
     },
     {
@@ -2039,6 +2081,7 @@
       "range95": null,
       "sample_size": 2,
       "source": "entered",
+      "unit": "share",
       "value": "0.020000"
     },
     {
@@ -2051,6 +2094,7 @@
       "range95": null,
       "sample_size": 443,
       "source": "fitted",
+      "unit": "number",
       "value": "8.183581"
     },
     {
@@ -2063,6 +2107,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "dollars",
       "value": "12000"
     },
     {
@@ -2075,6 +2120,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "number",
       "value": "0.080000"
     },
     {
@@ -2087,6 +2133,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "entered",
+      "unit": "number",
       "value": "3"
     },
     {
@@ -2099,6 +2146,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "share",
       "value": "0.200000"
     },
     {
@@ -2111,6 +2159,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "share",
       "value": "0.100000"
     },
     {
@@ -2123,6 +2172,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "6"
     },
     {
@@ -2135,6 +2185,7 @@
       "range95": null,
       "sample_size": 0,
       "source": "default",
+      "unit": "number",
       "value": "30.437500"
     }
   ],
@@ -2301,6 +2352,7 @@
         "required_extra_pipeline": null,
         "status": "in progress",
         "surplus_over_target": "-1116243.83",
+        "surplus_statement": "still short of target by $1,116,244 even once every quarter's schedule is created",
         "target": "2100000",
         "too_late": {
           "applies": true,
@@ -2360,6 +2412,7 @@
         "required_extra_pipeline": "24763697.22",
         "status": "not started",
         "surplus_over_target": "0.00",
+        "surplus_statement": "exactly on target once every quarter's schedule is created",
         "target": "2600000",
         "too_late": {
           "applies": true,
@@ -2712,7 +2765,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "reason": "the model's mean absolute error is lower than both baselines at 1 and 3 months",

@@ -153,6 +153,21 @@ def required_pipeline(
     return out, checks, results
 
 
+def surplus_statement(surplus: Decimal | None) -> str | None:
+    """A quarter's surplus over target in words: a negative one is a shortfall that
+    remains, never a negative requirement."""
+    if surplus is None:
+        return None
+    surplus = surplus.quantize(CENT)  # as the report's own figure is rounded
+    tail = "once every quarter's schedule is created"
+    shown = f"${abs(surplus):,.0f}"
+    if surplus > 0:
+        return f"ahead of target by {shown} {tail}"
+    if surplus < 0:
+        return f"still short of target by {shown} even {tail}"
+    return f"exactly on target {tail}"
+
+
 def _row(
     r: QuarterResult, in_fy: bool, history: History, per_rep_applies: bool
 ) -> dict:
@@ -208,6 +223,7 @@ def _row(
         if r.full_bookings is None
         else money(r.full_bookings),
         "surplus_over_target": None if r.surplus is None else money(r.surplus),
+        "surplus_statement": surplus_statement(r.surplus),
         "created_between": [r.piece[0].isoformat(), r.piece[1].isoformat()],
         "expected_created_pipeline": money(r.expected_created),
         "earlier_assigned_in_span": money(r.earlier_assigned),

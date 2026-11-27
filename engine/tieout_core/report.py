@@ -1005,9 +1005,64 @@ def _month_end(label: str) -> date:
     return nxt - timedelta(days=1)
 
 
+# What a rate's value is, so a screen can say it right: a share (shown as a percent), dollars,
+# or a plain number (its definition says what it counts). Keyed by the name before any ":".
+RATE_UNITS = {
+    **dict.fromkeys(
+        (
+            "win_within_horizon",
+            "new_pipeline_win_rate",
+            "stage_probability",
+            "ramp_weight",
+            "attrition_per_ae_month",
+            "capacity_min_staffing_variation",
+            "capacity_min_improvement",
+        ),
+        "share",
+    ),
+    **dict.fromkeys(
+        (
+            "mean_won_arr",
+            "mean_created_arr",
+            "trailing_bookings_per_day",
+            "created_arr_per_day",
+            "loaded_cost_per_ae_month",
+        ),
+        "dollars",
+    ),
+    **dict.fromkeys(
+        (
+            "created_deals_per_day",
+            "created_deals_per_ramped_ae_month",
+            "median_won_cycle_days",
+            "horizon_days",
+            "smoothing_pseudo_observations",
+            "min_timing_samples",
+            "trailing_days",
+            "recency_months",
+            "lever_cap_multiple",
+            "simulation_draws",
+            "programme_cost_per_dollar_of_pipeline",
+            "programme_ramp_months",
+            "capacity_min_folds",
+            "days_per_ae_month",
+        ),
+        "number",
+    ),
+}
+
+
+def rate_unit(name: str) -> str:
+    key = name.split(":")[0]
+    if key not in RATE_UNITS:
+        raise KeyError(f"no unit declared for rate '{name}'")
+    return RATE_UNITS[key]
+
+
 def _rate(r: Rate) -> dict:
     return {
         "name": r.name,
+        "unit": rate_unit(r.name),
         "value": _rate_value(r.value),
         "definition": r.definition,
         "numerator": r.numerator,

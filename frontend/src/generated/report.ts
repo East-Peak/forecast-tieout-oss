@@ -675,6 +675,7 @@ export type TieoutReport = {
     range95: [number, number] | null;
     sample_size: number;
     source: Text;
+    unit: "share" | "dollars" | "number";
     value: Decimal;
   }[];
   reconciliation: {
@@ -807,6 +808,7 @@ export type TieoutReport = {
           required_extra_pipeline: Money | null;
           status: "closed" | "in progress" | "not started";
           surplus_over_target: Money | null;
+          surplus_statement: Text | null;
           target: Decimal;
           too_late: {
             applies: boolean;
@@ -949,7 +951,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "1.1.0";
+  schema_version: "1.2.0";
   verdicts: {
     forecast_better_than_baselines: {
       reason: Text;

@@ -112,16 +112,21 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
     assert sorted(built) == [
         "index.json",
         f"{COMPANY}/as-signed.json",
+        f"{COMPANY}/as-signed.md",
         f"{COMPANY}/comparison.json",
         f"{COMPANY}/demo-plan.json",
+        f"{COMPANY}/demo-plan.md",
         f"{COMPANY}/hires-only.json",
+        f"{COMPANY}/hires-only.md",
         f"{COMPANY}/programme-only.json",
+        f"{COMPANY}/programme-only.md",
     ]
 
 
 def test_every_file_is_canonical_json(built):
     for name, text in built.items():
-        assert text == gen.canonical(json.loads(text)), name
+        if name.endswith(".json"):
+            assert text == gen.canonical(json.loads(text)), name
 
 
 def test_each_report_validates_is_correct_and_carries_its_scenarios_plan(built):
@@ -240,3 +245,11 @@ def test_verify_does_not_rewrite_the_directory(tmp_path, built):
     gen.differences(out, built)
     assert before == {p: p.read_bytes() for p in out.rglob("*.json")}
     shutil.rmtree(out)
+
+
+def test_a_changed_byte_in_a_report_md_is_a_difference(tmp_path, built):
+    out = tmp_path / "reports"
+    gen.write(out, built)
+    md = out / COMPANY / "as-signed.md"
+    md.write_text(md.read_text() + "x")
+    assert gen.differences(out, built) == [f"{COMPANY}/as-signed.md: differs"]

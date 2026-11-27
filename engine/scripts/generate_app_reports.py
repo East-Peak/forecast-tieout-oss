@@ -38,6 +38,7 @@ from jsonschema import Draft202012Validator
 
 from engine.tieout_core import contract
 from engine.tieout_core.comparison import BASELINE, comparison_rows
+from engine.tieout_core.markdown import render as render_markdown
 from engine.tieout_core.plan import NEXT_12, REST_OF_FY
 from engine.tieout_core.report import build_report
 
@@ -210,6 +211,7 @@ INDEX_SCHEMA = {
                                 "description": {"type": "string"},
                                 "plan_file": {"type": ["string", "null"]},
                                 "report": {"type": "string"},
+                                "report_markdown": {"type": "string"},
                             },
                             "required": [
                                 "id",
@@ -217,6 +219,7 @@ INDEX_SCHEMA = {
                                 "description",
                                 "plan_file",
                                 "report",
+                                "report_markdown",
                             ],
                             "additionalProperties": False,
                         },
@@ -273,6 +276,7 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
                     profile, data, AS_OF, draws=draws, seed=seed, plan_path=plan
                 )
                 files[f"{company}/{sc.id}.json"] = canonical(reports[sc.id])
+                files[f"{company}/{sc.id}.md"] = render_markdown(reports[sc.id])
             require_correct({f"{company}/{k}.json": v for k, v in reports.items()})
             files[f"{company}/comparison.json"] = canonical(
                 {
@@ -301,6 +305,7 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
                             if sc.plan is None
                             else (profile / sc.plan).as_posix(),
                             "report": f"{company}/{sc.id}.json",
+                            "report_markdown": f"{company}/{sc.id}.md",
                         }
                         for sc in SCENARIOS
                     ],
@@ -329,6 +334,8 @@ def _validate_files(files: dict[str, str]) -> None:
     index_validator = Draft202012Validator(INDEX_SCHEMA)
     comparison_validator = Draft202012Validator(COMPARISON_SCHEMA)
     for name, text in files.items():
+        if name.endswith(".md"):
+            continue  # the report's readable form: rendered from the report the schema just checked
         doc = json.loads(text)
         if name == "index.json":
             problems = _problems(index_validator, doc)
@@ -451,7 +458,8 @@ def main(argv=None) -> int:
             write(Path(tmp), files)
             regenerated = {
                 p.relative_to(tmp).as_posix(): p.read_text()
-                for p in Path(tmp).rglob("*.json")
+                for p in Path(tmp).rglob("*")
+                if p.is_file()
             }
             problems += [
                 f"{REPORTS}/{p}" for p in differences(REPO / REPORTS, regenerated)

@@ -6,7 +6,7 @@ import type { TieoutReport } from "../../generated/report";
 import { ReportSessionProvider, useSession, type Loaders } from "../ReportSession";
 import { STORAGE_KEY } from "../storage";
 
-const scenario = (id: string) => ({ id, label: `scenario ${id}`, description: "", plan_file: null, report: `${id}.json` });
+const scenario = (id: string) => ({ id, label: `scenario ${id}`, description: "", plan_file: null, report: `${id}.json`, report_markdown: `${id}.md` });
 const company = (id: string) => ({
   id,
   name: `Company ${id}`,

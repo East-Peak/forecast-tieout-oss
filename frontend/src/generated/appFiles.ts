@@ -20,6 +20,7 @@ export interface ReportIndex {
       label: string;
       plan_file: string | null;
       report: string;
+      report_markdown: string;
     }[];
   }[];
   default_company: string;
