@@ -163,7 +163,7 @@ COMPARISON_ROW = {
         "bookings_change",
         "fiscal_year_gap_change",
         "cash_cost_in_twelve_months",
-    ],  # fmt: skip
+    ],
     "additionalProperties": False,
 }
 COMPARISON_SCHEMA = {
@@ -231,7 +231,7 @@ INDEX_SCHEMA = {
                     "fiscal_year",
                     "comparison",
                     "scenarios",
-                ],  # fmt: skip
+                ],
                 "additionalProperties": False,
             },
         },
