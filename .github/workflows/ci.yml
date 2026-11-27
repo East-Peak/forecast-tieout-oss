@@ -51,12 +51,16 @@ jobs:
       - name: Data-v2 determinism check
         run: python -m engine.scripts.generate_data_v2 --verify
 
-      - name: Tieout core report for the demo companies
+      - name: Tieout core report for the demo companies, without and with the plan
         run: |
           for c in sprout-labs sapling-industries mighty-oak-holdings; do
             python -m engine.tieout_core report \
               --profile engine/config/profiles/$c --data engine/data-v2/$c \
               --as-of 2026-08-31 --out /tmp/tieout-report/$c
+            python -m engine.tieout_core report \
+              --profile engine/config/profiles/$c --data engine/data-v2/$c \
+              --as-of 2026-08-31 --plan engine/config/profiles/$c/plan.yaml \
+              --out /tmp/tieout-report-plan/$c
           done
 
       - name: Scenario golden vectors are current

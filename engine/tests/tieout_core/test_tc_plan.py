@@ -1,14 +1,27 @@
 """Goal 2B: plan.yaml (the only source of further hires and of programme
 pipeline) and the arithmetic of a programme's ramp."""
 
+import tempfile
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 import yaml
 
+from engine.tests.tieout_core.builders import write_profile
+from engine.tests.tieout_core.test_tc_backtest import AS_OF as HISTORY_AS_OF
+from engine.tests.tieout_core.test_tc_backtest import regular_history
+from engine.tieout_core.actions import Ground, Scenario, plan_section
+from engine.tieout_core.adoption import UNAVAILABLE, Adoption
+from engine.tieout_core.capacity_config import RosterLoad
+from engine.tieout_core.capacity_report import Capacity
 from engine.tieout_core.fiscal import month_windows
+from engine.tieout_core.fit import fit
+from engine.tieout_core.history import as_known_at
+from engine.tieout_core.load import load_profile
 from engine.tieout_core.plan import (
+    Plan,
     PlanProgramme,
     load_plan,
     next_month_start,
@@ -150,3 +163,57 @@ def test_a_programmes_cost_is_its_own_or_pipeline_times_the_rate_or_not_entered(
     ) == Decimal(70)
     assert programme_cost(programme(1000), Decimal("0.05")) == Decimal(50)
     assert programme_cost(programme(1000), None) is None
+
+
+# ---------------------------------------------------------------- ordered contributions
+
+
+def test_ordered_plan_contributions_by_hand():
+    # A world where every created deal books exactly 45 days later at its full size
+    # (win rate 1), so a programme's dollars book on the day they are created plus 45.
+    # Fiscal year ends 2027-01-31; the as-of is 2026-06-30.
+    #   A: $360,000 over July, August, September (ramp 1: equal thirds). Everything
+    #      is created by 09-30 and booked by 11-14, inside the year: it adds $360,000
+    #      to the rest of the year and to the twelve months.
+    #   B: $240,000 over December and January: $120,000 each. December's books from
+    #      01-15 to 02-14 and counts for the year only up to 01-31, i.e. the deals
+    #      created 12-01..12-17 = 17 of 31 days: 120,000 x 17/31 = 65,806.45 (to the
+    #      cent). January's books after 02-15: nothing in the year. In twelve months B
+    #      adds all $240,000.
+    with tempfile.TemporaryDirectory() as tmp:
+        profile = load_profile(write_profile(Path(tmp)))
+        data = regular_history()
+        model = fit(as_known_at(data, HISTORY_AS_OF), HISTORY_AS_OF, profile)
+    plan = Plan(
+        (),
+        (
+            PlanProgramme("A", Decimal(360_000), date(2026, 7, 1), 1, 3, None),
+            PlanProgramme("B", Decimal(240_000), date(2026, 12, 1), 1, 2, None),
+        ),
+    )
+    cap = Capacity(
+        None,
+        RosterLoad((), (), {}, 0, "none"),
+        Adoption(UNAVAILABLE, "none"),
+        None,
+        None,
+        365,
+        None,
+    )
+    labels = [w.label for w in WINDOWS]
+    rest = [w.label for w in WINDOWS if w.end <= FY_END]
+    g = Ground(cap, model, data, AS_OF, WINDOWS, rest, labels, rest, Decimal(0), Decimal(10**9), date(2026, 2, 1),
+               FY_END, None, Decimal(0), Decimal(10**9), 365)  # fmt: skip
+    section, checks = plan_section(g, Scenario(g), plan, Path("plan.yaml"))
+    a, b = section["items"]
+    # (every month is shown to the cent, so a total can be a few cents from the exact figure)
+    near = Decimal("0.06")
+    assert abs(Decimal(a["contribution"]["rest of fiscal year"]) - 360_000) <= near
+    assert abs(Decimal(a["contribution"]["next twelve months"]) - 360_000) <= near
+    assert (
+        abs(Decimal(b["contribution"]["rest of fiscal year"]) - Decimal("65806.45"))
+        <= near
+    )
+    assert abs(Decimal(b["contribution"]["next twelve months"]) - 240_000) <= near
+    assert abs(Decimal(section["difference"]["next twelve months"]) - 600_000) <= near
+    assert all(c.passed for c in checks)

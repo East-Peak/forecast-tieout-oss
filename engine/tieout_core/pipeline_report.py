@@ -118,11 +118,18 @@ def _row(r: QuarterResult, in_fy: bool) -> dict:
     def per(x):
         return None if x is None or not months else money(x / months)
 
-    headline = {
-        COVERED: "already covered",
-        FEASIBLE: f"required: ${r.required:,.2f}",
-        UNREACHABLE: "unreachable within the cap",
-    }[r.outcome]
+    if r.outcome == UNREACHABLE:
+        headline = (
+            "unreachable: pipeline created in time cannot book inside the quarter"
+            if r.required is None
+            else f"unreachable within the cap (it would take ${r.required:,.2f})"
+        )
+    else:
+        headline = (
+            "already covered"
+            if r.outcome == COVERED
+            else f"required: ${r.required:,.2f}"
+        )
     return {
         "quarter": r.quarter,
         "in_fiscal_year": in_fy,
