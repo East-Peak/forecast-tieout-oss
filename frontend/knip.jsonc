@@ -4,6 +4,8 @@
   "include": ["files", "dependencies", "exports", "types"],
   // Run by engine/scripts/generate_app_reports.py, not imported.
   "entry": ["scripts/generate-types.mjs"],
+  // pyodide is read by path (its files are copied into the site by scripts/editor-assets), not imported.
+  "ignoreDependencies": ["pyodide"],
   // Only exported JSON/API contract shapes carry @contract. Untagged dead exports still fail.
   "tags": ["-contract"],
   // Generated from the report schemas: every type the schema defines is exported, used or not.

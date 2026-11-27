@@ -1,6 +1,15 @@
 /// <reference types="vitest" />
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+
+/** The folder `npm run editor:assets` wrote under public/editor/ (named by a hash of its contents), or "none". */
+function editorAssetsDir(): string {
+  const manifest = resolve(dirname(fileURLToPath(import.meta.url)), "public", "editor", "manifest.json");
+  return existsSync(manifest) ? (JSON.parse(readFileSync(manifest, "utf8")) as { dir: string }).dir : "none";
+}
 
 function getPackageName(id: string): string | null {
   const marker = "node_modules/";
@@ -63,6 +72,7 @@ function manualChunks(id: string): string | undefined {
 
 export default defineConfig({
   plugins: [react()],
+  define: { __EDITOR_DIR__: JSON.stringify(editorAssetsDir()) },
   server: {
     port: 3000,
   },

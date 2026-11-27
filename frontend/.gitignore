@@ -1,1 +1,4 @@
 .vercel
+
+# The plan editor's assets: written by `npm run editor:assets`, never committed.
+/public/editor/

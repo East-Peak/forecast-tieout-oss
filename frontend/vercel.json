@@ -1,5 +1,11 @@
 {
   "rewrites": [
-    { "source": "/((?!assets/|data/|docs/|favicon).*)", "destination": "/index.html" }
+    { "source": "/((?!assets/|data/|docs/|editor/|favicon).*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/editor/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
   ]
 }
