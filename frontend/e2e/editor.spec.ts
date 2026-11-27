@@ -169,6 +169,9 @@ test.describe("the plan editor, one shared page @smoke", () => {
         const seen = (await reports(page)).length;
         await page.locator("#company-selector").selectOption(company);
         await expect(page.locator("#scenario-selector")).toHaveValue("your-plan");
+        // The old company's form is still on screen when the selector changes, so "the form is visible" proves nothing yet:
+        // wait for the screen itself to be the new company's, which it is only once its report has been computed and shown.
+        await expect(page.locator("main [data-binding]").first()).toHaveAttribute("data-company", company, { timeout: 90_000 });
         await expect(page.getByTestId("plan-form")).toBeVisible({ timeout: 90_000 });
         if (!visited.has(company)) {
           expect((await reports(page)).length, "a company's first load computes its demo plan, once").toBe(seen + 1);
