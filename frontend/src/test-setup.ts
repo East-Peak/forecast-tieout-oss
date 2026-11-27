@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { configure } from "@testing-library/react";
 
 // waitFor and findBy* give up after one second by default. The first test to open a screen also
