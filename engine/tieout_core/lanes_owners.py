@@ -16,6 +16,7 @@ from collections import defaultdict
 from datetime import timedelta
 from decimal import Decimal
 
+from . import driver_actions
 from . import lanes_flows as flows
 from . import lanes_rules as rules
 from .capacity import project
@@ -127,17 +128,31 @@ def _spread(total: Decimal, weights: dict, seg: str, unit: str) -> dict:
     return dict(zip(keys, flows.apportion(total, w, unit)))
 
 
-def remainder(state, cal, series_, priced: dict, tied: dict, made: dict, effect=None):
+def remainder(
+    state,
+    cal,
+    series_,
+    priced: dict,
+    tied: dict,
+    made: dict,
+    effect=None,
+    baseline=None,
+):
     """The segments' expected wins and creation (``tied``, ``made``) shared over owners: by
     leaf, so every quarter and every carried-in or created-in-period split adds back. Modeled
     wins are weighed at the price the segment's own modeled wins were given (``priced``, already
     normalized to the pooled total), so an owner's modeled bookings are consistent with it. With
-    win-rate actions (``effect``) each owner's extra wins come from the deals the owner is expected
-    to create on each day at that day's change, so an owner whose deals were created before the
-    action starts is credited none of it."""
+    actions (``effect``) each owner's extra wins and bookings come from the deals the owner is
+    expected to create on each day, at that day's changes in win rate, size and creation, so an
+    owner whose deals were created before an action starts is credited none of it; the owner's
+    other wins book at the segment's price, month by month, without the actions (``baseline``:
+    the owners' new wins priced so). Apportionment
+    over the segment's own figures then only settles rounding."""
     g = state.ground
     raw = flows.existing_flows(g.model, g.pop.deals, g.as_of, cal, lane=owner_of)
     wins, created = flows.new_flows(g.model, series_, g.as_of, cal)
+    lift = getattr(effect, "lift", None)
+    changed: dict = {}
     if effect is not None:
         days = (cal.year.end - g.as_of).days
         grown = {
@@ -146,25 +161,51 @@ def remainder(state, cal, series_, priced: dict, tied: dict, made: dict, effect=
         }
         if any(grown[lane] != per_day for lane, per_day in series_.items()):
             _, created = flows.new_flows(g.model, grown, g.as_of, cal)
-        # each owner's own deals, on each day, at that day's change in rate, and the deals its
-        # people's productivity adds, won at the rate left
-        moved = {
-            lane: [
-                n * d + (m - n) * (getattr(effect, "baseline", ZERO) + d)
-                for n, m, d in zip(per_day, grown[lane], effect.changes[lane[0]][:days])
-            ]
-            for lane, per_day in series_.items()
-        }
-        extra, _ = flows.new_flows(g.model, moved, g.as_of, cal, rate=ONE)
-        wins = {
-            k: wins.get(k, flows.ZERO_FLOW) + extra.get(k, flows.ZERO_FLOW)
-            for k in {*wins, *extra}
-        }
-    for (lane, q, origin), f in wins.items():
-        whole = priced.get((lane[0], q, origin), flows.ZERO_FLOW)
-        price = whole.bookings / whole.wins if whole.wins else ZERO
-        at = Flow(f.wins, f.wins * price, f.days)
-        raw[(lane, q, origin)] = raw.get((lane, q, origin), flows.ZERO_FLOW) + at
+        if lift is not None:  # each owner's own deals under the segment's changes
+            changed = driver_actions.lane_flows(
+                g,
+                lift,
+                cal,
+                {
+                    lane: (
+                        lane[0],
+                        per_day[:days],
+                        [ZERO] * days if lane[1] == PROGRAMS else per_day[:days],
+                    )
+                    for lane, per_day in series_.items()
+                },
+            )
+        else:  # an effect that is only a change in win rate by day
+            moved = {
+                lane: [
+                    n * d + (m - n) * (getattr(effect, "baseline", ZERO) + d)
+                    for n, m, d in zip(
+                        per_day, grown[lane], effect.changes[lane[0]][:days]
+                    )
+                ]
+                for lane, per_day in series_.items()
+            }
+            changed, _ = flows.new_flows(g.model, moved, g.as_of, cal, rate=ONE)
+    own_wins = {
+        k: wins.get(k, flows.ZERO_FLOW) + changed.get(k, flows.ZERO_FLOW)
+        for k in {*wins, *changed}
+    }
+    for key, f in own_wins.items():
+        lane, q, origin = key
+        if (
+            baseline is not None
+        ):  # priced on the atoms the segment is, so no owner is blended
+            at = Flow(
+                f.wins,
+                baseline.get(key, flows.ZERO_FLOW).bookings
+                + changed.get(key, flows.ZERO_FLOW).bookings,
+                f.days,
+            )
+        else:
+            whole = priced.get((lane[0], q, origin), flows.ZERO_FLOW)
+            price = whole.bookings / whole.wins if whole.wins else ZERO
+            at = Flow(f.wins, f.wins * price, f.days)
+        raw[key] = raw.get(key, flows.ZERO_FLOW) + at
     leaves: dict = defaultdict(dict)
     for (lane, q, origin), f in raw.items():
         leaves[(lane[0], q, origin)][lane] = f

@@ -157,3 +157,57 @@ def test_an_actions_wins_follow_the_deals_it_changes_not_the_owners_baseline_win
     )  # and they add to the segment exactly
     plain, _ = owners.remainder(state, CAL, lanes, priced, tied, {})
     assert {lane[1]: f.wins for (lane, _, _), f in plain.items()} == {"may": D(3), "july": D(3)}  # fmt: skip
+
+
+def test_an_owner_whose_deals_were_all_created_before_a_size_action_starts_gets_none_of_it():
+    """Two owners in one segment each create a deal a day, one only before July 1 and one only
+    from then on; every win is worth 1,000, and the segment's wins are won at twice that from
+    July 1 on (+100% size by creation date). The first owner's wins book 1,000 each, the second's
+    2,000: the segment's average is no price for either."""
+    from engine.tieout_core import driver_actions as da
+    from engine.tieout_core.fiscal import add_months, month_windows
+    from engine.tieout_core.forecast import Lift
+
+    m = model()
+    days = (CAL.year.end - AS_OF).days
+    start = (date(2026, 7, 1) - AS_OF).days
+    early = [D(1) if t < start else D(0) for t in range(1, days + 1)]
+    late = [D(1) if t >= start else D(0) for t in range(1, days + 1)]
+    whole = [a + b for a, b in zip(early, late)]
+    zero = [D(0)] * days
+    windows = month_windows(AS_OF, add_months(AS_OF, 12))
+    ground = SimpleNamespace(
+        model=m, pop=SimpleNamespace(deals=()), as_of=AS_OF, windows=windows
+    )
+    state = SimpleNamespace(ground=ground)
+    size = [D(0) if t < start else D(1) for t in range(1, days + 1)]
+    lift = Lift(
+        m.new_pipeline.win_rate, {"a": whole}, {"a": zero}, {"a": zero}, {},
+        [0] * days, [0] * days, {"a": size},
+    )  # fmt: skip
+    effect = SimpleNamespace(changes={"a": zero}, creation={}, baseline=D(0), lift=lift)
+    lanes = {("a", "early"): early, ("a", "late"): late}
+    seg_new, _ = flows.new_flows(m, {"a": whole}, AS_OF, CAL)
+    base = {k: flows.Flow(f.wins, f.wins * 1000, f.days) for k, f in seg_new.items()}
+    changed = da.lane_flows(ground, lift, CAL, {"a": ("a", whole, whole)})
+    priced = {k: base[k] + changed.get(k, flows.ZERO_FLOW) for k in base}
+    tied = {k: flows.Flow(f.wins, f.bookings.quantize(CENT), f.days) for k, f in priced.items()}  # fmt: skip
+    owner_new, _ = flows.new_flows(m, lanes, AS_OF, CAL)
+    owner_base = da.priced_new_wins(
+        ground,
+        {"a": whole},
+        {"a": Sizes(D(1000), "", D(10), "")},
+        CAL,
+        owner_new,
+        {lane: ("a", per_day) for lane, per_day in lanes.items()},
+    )
+    got, _ = owners.remainder(state, CAL, lanes, priced, tied, {}, effect, owner_base)
+    seen = 0
+    for (lane, q, origin), f in got.items():
+        if not f.wins:
+            continue
+        seen += 1
+        per = f.bookings / f.wins
+        want = 1000 if lane[1] == "early" else 2000
+        assert abs(per - want) < D("0.5"), (lane, q, origin, per)
+    assert seen

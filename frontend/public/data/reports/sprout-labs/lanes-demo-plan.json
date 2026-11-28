@@ -332,7 +332,7 @@
               "actual": "131448.55",
               "compared": "forecast",
               "denominator": "33.9150",
-              "forecast": "115344.13",
+              "forecast": "115344.12",
               "goal": "108117.93",
               "goal_inside_range80": null,
               "marks": {
@@ -348,7 +348,7 @@
                 },
                 "forecast": {
                   "denominator": "33.9150",
-                  "numerator": "3911896.31"
+                  "numerator": "3911895.84"
                 },
                 "goal": {
                   "denominator": "40.9605",
@@ -364,7 +364,7 @@
               "actual": "2628971.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3911896.31",
+              "forecast": "3911895.84",
               "goal": "4428564.34",
               "goal_inside_range80": null,
               "marks": null,
@@ -379,7 +379,7 @@
                 },
                 "forecast": {
                   "carried_in": "955060.85",
-                  "created_in_period": "2956835.46"
+                  "created_in_period": "2956834.99"
                 }
               },
               "status": "behind"
@@ -544,7 +544,7 @@
               "actual": "68535.42",
               "compared": "forecast",
               "denominator": "37.6326",
-              "forecast": "59636.86",
+              "forecast": "59636.88",
               "goal": "51112.59",
               "goal_inside_range80": null,
               "marks": {
@@ -560,7 +560,7 @@
                 },
                 "forecast": {
                   "denominator": "37.6326",
-                  "numerator": "2244290.22"
+                  "numerator": "2244290.69"
                 },
                 "goal": {
                   "denominator": "69.8739",
@@ -576,7 +576,7 @@
               "actual": "1302173.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2244290.22",
+              "forecast": "2244290.69",
               "goal": "3571435.66",
               "goal_inside_range80": null,
               "marks": null,
@@ -591,7 +591,7 @@
                 },
                 "forecast": {
                   "carried_in": "735752.05",
-                  "created_in_period": "1508538.17"
+                  "created_in_period": "1508538.64"
                 }
               },
               "status": "behind"
@@ -2858,7 +2858,7 @@
               "actual": null,
               "compared": "forecast",
               "denominator": "10.5597",
-              "forecast": "93949.10",
+              "forecast": "93949.06",
               "goal": "108117.62",
               "goal_inside_range80": null,
               "marks": {
@@ -2874,7 +2874,7 @@
                 },
                 "forecast": {
                   "denominator": "10.5597",
-                  "numerator": "992074.36"
+                  "numerator": "992073.89"
                 },
                 "goal": {
                   "denominator": "13.3122",
@@ -2890,7 +2890,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "992074.36",
+              "forecast": "992073.89",
               "goal": "1439283.41",
               "goal_inside_range80": null,
               "marks": null,
@@ -2904,8 +2904,8 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "858352.82",
-                  "created_in_period": "133721.54"
+                  "carried_in": "858352.41",
+                  "created_in_period": "133721.48"
                 }
               },
               "status": "behind"
@@ -3070,7 +3070,7 @@
               "actual": null,
               "compared": "forecast",
               "denominator": "12.4432",
-              "forecast": "50034.50",
+              "forecast": "50034.54",
               "goal": "51112.62",
               "goal_inside_range80": null,
               "marks": {
@@ -3086,7 +3086,7 @@
                 },
                 "forecast": {
                   "denominator": "12.4432",
-                  "numerator": "622589.31"
+                  "numerator": "622589.78"
                 },
                 "goal": {
                   "denominator": "22.7090",
@@ -3102,7 +3102,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "622589.31",
+              "forecast": "622589.78",
               "goal": "1160716.59",
               "goal_inside_range80": null,
               "marks": null,
@@ -3116,8 +3116,8 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "565445.29",
-                  "created_in_period": "57144.02"
+                  "carried_in": "565445.70",
+                  "created_in_period": "57144.08"
                 }
               },
               "status": "behind"

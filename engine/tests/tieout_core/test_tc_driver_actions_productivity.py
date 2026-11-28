@@ -177,30 +177,68 @@ def mixed_frame():
         origin,
         D(1000),
         D(2),
-        da.price_index(g, organic, SIZES, origin),
     )
 
 
-def test_the_organic_deals_are_priced_so_that_a_company_change_books_what_the_pooled_rate_does():
-    """Over all the wins the segments' prices add back to the pooled one; over the organic wins
-    alone they do not unless the mix is the same. Organic creation is changed at its own index, so
-    taking all of it away (company-wide, a zero target) takes the pooled bookings of 2 deals a
-    day at 0.2 and 1,000 each, and leaves the programs' exactly."""
+def cell_of(e, f, day):
+    """The (window, quarter) cell the wins of ``day`` land in, ten days on."""
+    return e.lift.landing[day + 9], f.origin[day - 1]
+
+
+def test_a_zero_target_in_a_segment_leaves_exactly_its_program_wins_at_their_frozen_price():
+    """One price per win in a segment, whoever created it: with a mix of organic and program
+    deals that differs between segments, taking a segment's organic creation away leaves what it
+    books from the programs' deals and never a residual below zero."""
     f = mixed_frame()
-    assert f.price["a"] != f.organic_price["a"]  # the mixes differ
+    e = da.effect(f, BASELINE, AS_OF, (prod(segment="a", target="0"),))
+    land, origin = cell_of(e, f, 11)
+    idx = f.price["a"][(land, origin)]
+    extra = e.lift.extra("a", land)[10]
+    assert (
+        extra == -D("1.5") * D("0.2") * idx
+    )  # the organic deals' wins, at the one price
+    still = D("0.2") * D("0.2") * idx  # the programs' 0.2 deals a day, won at 0.2
+    assert abs(D("1.7") * D("0.2") * idx + extra - still) < D("1e-20") and still > 0
+    assert not any(e.lift.extra("b", land))  # nothing moves in the other segment
+
+
+def test_a_segment_never_books_below_zero_whatever_the_three_drivers_do_to_it():
+    f = mixed_frame()
+    for u in ("0", "0.5", "3"):
+        for z in ("0", "1000", "9000"):
+            for p in ("0", "0.2", "0.9"):
+                acts = (
+                    prod(segment="a", target=u),
+                    size(segment="a", target=z),
+                    win_rate_action(segment="a", target=p),
+                )
+                e = da.effect(f, BASELINE, AS_OF, acts)
+                land, origin = cell_of(e, f, 11)
+                base = D("1.7") * BASELINE * f.price["a"][(land, origin)]
+                assert base + e.lift.extra("a", land)[10] >= 0, (u, z, p)
+
+
+def test_a_larger_size_after_a_zero_creation_never_lowers_what_the_company_books():
+    f = mixed_frame()
+    zero = da.effect(f, BASELINE, AS_OF, (prod(segment="a", target="0"),))
+    both = da.effect(
+        f,
+        BASELINE,
+        AS_OF,
+        (prod(segment="a", target="0"), size(segment="a", target="2000")),
+    )
+    land, _ = cell_of(zero, f, 11)
+    assert sum(both.lift.extra(s, land)[10] for s in "ab") >= sum(
+        zero.lift.extra(s, land)[10] for s in "ab"
+    )
+
+
+def test_a_company_zero_target_removes_the_organic_wins_at_the_prices_the_plan_gives_them():
+    f = mixed_frame()
     e = da.effect(f, BASELINE, AS_OF, (prod(segment=None, target="0"),))
-    assert abs(at(e, 11) + D("0.4")) < D("1e-20")
-    # the programs' own deals, priced in the plan: 1.0 a day at the pooled 0.2 and 1,000
-    assert not da.effect(f, BASELINE, AS_OF, ()).lift
-
-
-def test_a_company_change_is_the_pooled_change_whatever_the_mix_and_a_segments_is_its_own():
-    f = mixed_frame()
-    company = da.effect(f, BASELINE, AS_OF, (prod(segment=None, target="3"),))
-    assert abs(at(company, 11) - D("0.5") * D(2) * D("0.2")) < D("1e-20")
-    only_b = da.effect(f, BASELINE, AS_OF, (prod(segment="b", target="3"),))
-    cell = (
-        only_b.lift.landing[20],
-        f.origin[10],
-    )  # where the wins of day 11 land, ten days on
-    assert at(only_b, 11) == D("0.5") * D("0.5") * D("0.2") * f.organic_price["b"][cell]
+    land, origin = cell_of(e, f, 11)
+    want = -sum(
+        o * BASELINE * f.price[s][(land, origin)]
+        for s, o in (("a", D("1.5")), ("b", D("0.5")))
+    )
+    assert abs(at(e, 11) - want) < D("1e-20")

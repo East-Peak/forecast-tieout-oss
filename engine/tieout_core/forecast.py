@@ -97,14 +97,6 @@ class Lift:
     origin: Sequence[int]
     size: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
     creation: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
-    organic_price: Mapping[str, Mapping[tuple[int, int], Decimal]] = field(
-        default_factory=dict
-    )
-
-    def organic_prices(self, segment: str) -> Mapping[tuple[int, int], Decimal]:
-        """A segment's price index over its organic wins alone (the one over all its wins where
-        none is given)."""
-        return self.organic_price.get(segment) or self.price.get(segment, {})
 
     def __bool__(self) -> bool:
         return any(
@@ -129,49 +121,59 @@ class Lift:
 
     def extra(self, segment: str, landing: int) -> list[Decimal]:
         """The extra bookings, in units of the pooled mean won size, expected from the deals
-        ``segment`` creates on each day, for wins landing in window ``landing``. The deals it
-        already was to create are won at the rate and size the day's changes leave in place of the
-        pooled ones, at the segment's price index over all the wins; the organic deals its change
-        adds (or takes away) are won at the changed rate and size outright, at its price index
-        over the organic wins alone, so that a change in every segment's organic creation books
-        what changing the pooled rate would. A win-rate change alone is the deals times the
-        change times the price."""
+        ``segment`` creates on each day, for wins landing in window ``landing``. Every win in a
+        segment has one price, its frozen index, whoever created it: the deals it was to create,
+        and the organic deals its change adds or takes away, are won at the rate and size the day's
+        changes leave. A win-rate change alone is the deals times the change times the price. A
+        segment never books below zero: it can lose at most the organic wins it had."""
+        return self.extra_of(
+            segment, landing, self.counts(segment), self.organic[segment]
+        )
+
+    def extra_of(
+        self,
+        segment: str,
+        landing: int,
+        count: Sequence[Decimal],
+        organic: Sequence[Decimal],
+    ) -> list[Decimal]:
+        """``extra`` for any of the segment's lanes (an owner, say): the deals ``count`` it creates
+        on each day, of which ``organic`` are its people's, under the segment's changes."""
         change = self.changes[segment]
         size = self.size.get(segment) or ()
         grown = self.creation.get(segment) or ()
         out = [Decimal(0)] * len(self.origin)
         if not (any(change) or any(size) or any(grown)):
             return out
-        count, price = self.counts(segment), self.price.get(segment, {})
-        organic, organic_price = self.organic[segment], self.organic_prices(segment)
+        price = self.price.get(segment, {})
         for t, c in enumerate(change):
             z = size[t] if size else 0
             u = grown[t] if grown else 0
-            if c or z or u:
-                cell = (landing, self.origin[t])
+            if (c or z or u) and t < len(count):
                 moved = c * (1 + z) + self.baseline * z if z else c
-                value = count[t] * moved * price.get(cell, Decimal(1))
+                value = count[t] * moved
                 if u:
-                    value += (
-                        organic[t]
-                        * u
-                        * (self.baseline + c)
-                        * (1 + z)
-                        * organic_price.get(cell, Decimal(1))
-                    )
-                out[t] = value
+                    value += organic[t] * u * (self.baseline + c) * (1 + z)
+                out[t] = value * price.get((landing, self.origin[t]), Decimal(1))
         return out
 
     def extra_wins(self, segment: str) -> list[Decimal]:
         """The extra wins expected from the deals ``segment`` creates on each day: its deals
         times the change in the rate, and the organic deals its change adds times the rate."""
+        return self.extra_wins_of(segment, self.counts(segment), self.organic[segment])
+
+    def extra_wins_of(
+        self, segment: str, count: Sequence[Decimal], organic: Sequence[Decimal]
+    ) -> list[Decimal]:
+        """``extra_wins`` for any of the segment's lanes, as ``extra_of``."""
+        change = self.changes[segment]
         grown = self.creation.get(segment)
-        out = [n * c for n, c in zip(self.counts(segment), self.changes[segment])]
+        out = [n * c for n, c in zip(count, change)]
         if grown and any(grown):
-            organic, base = self.organic[segment], self.baseline
+            base = self.baseline
             out = [
                 w + o * u * (base + c) if u else w
-                for w, o, u, c in zip(out, organic, grown, self.changes[segment])
+                for w, o, u, c in zip(out, organic, grown, change)
             ]
         return out
 
@@ -588,19 +590,16 @@ def _price_grid(index, landing_of: np.ndarray, origin_of: np.ndarray) -> np.ndar
 def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -> None:
     """Book the wins of new pipeline when a ``lift`` changes some segments' drivers. ``deals`` is
     each path's expected creation by day, made of ``organic`` (random departures drawn) and
-    ``extra`` (programs'); every segment takes its expected share of it. A segment's deals are won
+    ``extra`` (programs'); every segment takes its expected share of it. A segment whose organic
+    creation changes takes the same share of the organic part, more or less of it (fewer deals are
+    the organic ones kept, each with the probability the change leaves: a thinned Poisson is a
+    Poisson at the lower rate), and its share of the programs' as it was. A segment's deals are won
     at the pooled rate plus its own change on the day they are created, and a win's size is scaled
-    by its segment's price index (the window it lands in, the quarter it was created in) and by the
-    change in size its segment's actions make on the day its deal was created. How many are won and
-    what each books are drawn apart, so the draws are centered on the forward function's
-    expectation: the segments' prices add back to the pooled price over each quarter's wins.
-
-    A segment whose organic creation changes is drawn in parts, as the forward function adds it up:
-    the organic deals it was to create and the programs', at the segment's price index; and the
-    organic deals the change adds, at its price index over its organic wins alone. Where the
-    change is to create fewer, each organic win is taken away with the chance of the change, and
-    what it books is then the difference between the two prices, so that the expected booking is
-    the forward function's. Whether any is created or taken away is not drawn."""
+    by its segment's one price index (the window it lands in, the quarter it was created in) and by
+    the change in size its segment's actions make on the day its deal was created. How many are won
+    and what each books are drawn apart, so the draws are centered on the forward function's
+    expectation: the segments' prices add back to the pooled price over each quarter's wins. Every
+    win books a positive amount, so no path books below zero."""
     names = list(lift.changes)
     count = np.array([[float(x) for x in lift.counts(s)[:span]] for s in names])
     change = np.array([[float(x) for x in lift.changes[s][:span]] for s in names])
@@ -629,12 +628,15 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -
         weights = np.asarray([float(w) for w in new.won_arr_weights])
         weights = weights / weights.sum()
     base = float(new.win_rate)
-
-    def draw(rate, prices, i, taken=None, own=None) -> None:
-        """Win each deal of ``rate`` (expected wins by path and day) and book it; with ``taken``
-        (the chance by day that an organic win is taken away) a win taken away books its price
-        less ``own``'s."""
-        wins = rng.poisson(np.broadcast_to(rate, deals.shape))
+    for i, name in enumerate(names):
+        grid = _price_grid(lift.price.get(name, {}), landing_of, origin_of)
+        if grown[i].any():
+            mine_i = (
+                organic * (organic_share[i] * (1 + grown[i])) + extra * program_share[i]
+            )
+        else:
+            mine_i = deals * share[i]
+        wins = rng.poisson(mine_i * (base + change[i]))
         row_of, day_of = np.nonzero(wins)
         repeats = wins[row_of, day_of].astype(np.intp)
         rows = np.repeat(row_of, repeats)
@@ -643,23 +645,11 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -
         sizes = pool[rng.choice(len(pool), size=len(rows), p=weights)]
         landing = created + days
         land = landing_of[np.minimum(landing, len(landing_of)) - 1]
-        price = prices[land, origin_of[created - 1]]
-        if taken is not None:
-            gone = rng.random(len(rows)) < taken[created - 1]
-            price = np.where(gone, price - own[land, origin_of[created - 1]], price)
-        book(rows, landing, sizes * price * bigger[i][created - 1])
-
-    for i, name in enumerate(names):
-        grid = _price_grid(lift.price.get(name, {}), landing_of, origin_of)
-        if not grown[i].any():
-            draw(deals * (share[i] * (base + change[i])), grid, i)
-            continue
-        own = _price_grid(lift.organic_prices(name), landing_of, origin_of)
-        won = base + change[i]
-        organic_i = organic * organic_share[i]
-        draw(organic_i * won, grid, i, taken=np.maximum(-grown[i], 0), own=own)
-        draw(extra * program_share[i] * won, grid, i)
-        draw(organic_i * np.maximum(grown[i], 0) * won, own, i)
+        book(
+            rows,
+            landing,
+            sizes * grid[land, origin_of[created - 1]] * bigger[i][created - 1],
+        )
 
 
 def _spread(values: np.ndarray) -> Spread:

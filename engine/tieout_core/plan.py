@@ -52,9 +52,10 @@ class ActionRefused(ValueError):
     """An action the loader refuses. The message is for a person (no item numbers, no field names, a
     segment by its display label); ``code`` says which rule refused it, for a program."""
 
-    def __init__(self, message: str, code: str) -> None:
+    def __init__(self, message: str, code: str, index: int | None = None) -> None:
         super().__init__(message)
         self.code = code
+        self.index = index  # which action, counting from one, where the core found it only when valuing
 
 
 def month_words(d: date) -> str:

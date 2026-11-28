@@ -303,3 +303,65 @@ def test_the_editors_own_entry_writes_what_a_native_run_writes_for_a_plan_with_e
         assert got["owners"][segment] == json.loads(
             (out / f"owners-{segment}.json").read_text()
         )
+
+
+# ----------------------------------------------------------------------- a target no simulation could carry
+
+
+def test_a_creation_target_above_ten_times_the_pooled_rate_is_refused_beside_its_item_before_any_simulation(
+    opened, monkeypatch
+):
+    from engine.tieout_core import forecast
+
+    def never(*a, **k):
+        raise AssertionError("the simulation must not start for a refused plan")
+
+    monkeypatch.setattr(forecast, "simulate", never)
+    creation = dict(DRIVERS[2], target="1000000000")
+    with gen.in_repo():
+        applied = apply_plan(
+            opened, plan_with(action(id="ok", slice="mid_market"), creation)
+        )
+    assert applied.report_text is None and applied.problems == []
+    (error,) = applied.errors
+    assert (error["section"], error["position"], error["code"]) == (
+        "actions",
+        1,
+        "target",
+    )
+    assert "more than ten times the pooled creation rate" in error["message"]
+    assert "deals per ramped AE-month" in error["message"]
+    assert "actions[" not in error["message"] and "productivity" not in error["message"]
+
+
+def test_ten_times_the_pooled_rate_itself_is_allowed(opened):
+    base = opened.signed["worksheet"]["drivers"]
+    rate = next(d for d in base if d["driver"] == "productivity")["current"]["value"]
+    with gen.in_repo():
+        ok = apply_plan(
+            opened, plan_with(dict(DRIVERS[2], target=str(float(rate) * 9.99)))
+        )
+    assert ok.errors == [] and ok.report_text is not None
+
+
+def test_a_size_target_no_decimal_could_carry_is_refused_beside_its_item_not_crashed(
+    opened,
+):
+    size = dict(DRIVERS[1], target="1e300")
+    with gen.in_repo():
+        applied = apply_plan(
+            opened, plan_with(action(id="ok", slice="mid_market"), size)
+        )
+    assert applied.report_text is None
+    (error,) = applied.errors
+    assert (error["section"], error["position"], error["code"]) == (
+        "actions",
+        1,
+        "target",
+    )
+    assert "more than a thousand times the pooled size" in error["message"]
+    with gen.in_repo():
+        big = apply_plan(opened, plan_with(dict(DRIVERS[1], target="4000000")))
+    assert (
+        big.errors == [] and big.report_text is not None
+    )  # ten times the mean is allowed

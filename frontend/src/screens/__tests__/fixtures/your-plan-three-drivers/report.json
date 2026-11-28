@@ -827,7 +827,7 @@
         "name": "Enterprise win-rate push",
         "ramp_months": 2,
         "removal_value": {
-          "next twelve months": "5769509.59",
+          "next twelve months": "5769509.56",
           "rest of fiscal year": "262556.70"
         },
         "slice": {
@@ -854,8 +854,8 @@
         "name": "Company deal size",
         "ramp_months": 1,
         "removal_value": {
-          "next twelve months": "4663130.73",
-          "rest of fiscal year": "287443.99"
+          "next twelve months": "4663378.75",
+          "rest of fiscal year": "287452.53"
         },
         "slice": {
           "key": null,
@@ -881,8 +881,8 @@
         "name": "Mid Market creation",
         "ramp_months": 2,
         "removal_value": {
-          "next twelve months": "2511757.30",
-          "rest of fiscal year": "34874.86"
+          "next twelve months": "2514843.88",
+          "rest of fiscal year": "34981.21"
         },
         "slice": {
           "key": "mid_market",
@@ -894,8 +894,8 @@
       }
     ],
     "joint_gain": {
-      "next twelve months": "12284262.88",
-      "rest of fiscal year": "563322.23"
+      "next twelve months": "12287349.46",
+      "rest of fiscal year": "563428.58"
     },
     "line": "An action changes one driver of the pipeline created from its start month on: the win rate, the size of a win, or how many deals people create. Deals already open keep their odds and their size. A segment's target is an entered change on the pooled baseline, not a value measured for the segment.",
     "range_note": "The plan's ranges are simulated with the actions in force, so they carry the model's uncertainty under the actions and exclude uncertainty about whether an action is achieved.",
@@ -913,8 +913,8 @@
         "rest of fiscal year": "0.20"
       },
       "values": {
-        "next twelve months": "-660134.74",
-        "rest of fiscal year": "-21553.32"
+        "next twelve months": "-660382.73",
+        "rest of fiscal year": "-21561.86"
       }
     },
     "removal_label": "Bookings lost if removed",
@@ -922,10 +922,10 @@
     "rounding_note": "Each forecast is the sum of its months, each to the cent. A figure that is a difference of forecasts can differ from another route to the same figure by up to a cent a month; the reconciliation line is held to that.",
     "with_actions": {
       "bookings": {
-        "next twelve months": "91661073.13",
-        "rest of fiscal year": "29113955.20"
+        "next twelve months": "91664159.71",
+        "rest of fiscal year": "29114061.55"
       },
-      "expected_fiscal_year": "58813715.20",
+      "expected_fiscal_year": "58813821.55",
       "quarters": [
         {
           "expected": "8616665.00",
@@ -946,8 +946,8 @@
           "status": "in progress"
         },
         {
-          "expected": "18621420.72",
-          "forecast": "18621420.72",
+          "expected": "18621527.07",
+          "forecast": "18621527.07",
           "quarter": "Q4FY26",
           "status": "not started"
         }
@@ -1590,28 +1590,28 @@
     "baseline_definition": "the roster as signed and nothing planned",
     "cash_cost_in_twelve_months": "1027150.64",
     "contributions_total": {
-      "next twelve months": "14988066.32",
-      "rest of fiscal year": "723990.91"
+      "next twelve months": "14991152.90",
+      "rest of fiscal year": "724097.26"
     },
     "cost_note": "hires at loaded cost per AE-month over expected months employed; programs at their cost, paid in step with the pipeline they create (or on the plan's own payment schedule), counting only what falls inside the twelve months; a driver action has no cost entered and none is counted",
     "difference": {
-      "next twelve months": "14988066.32",
-      "rest of fiscal year": "723990.91"
+      "next twelve months": "14991152.90",
+      "rest of fiscal year": "724097.26"
     },
-    "expected_fiscal_year": "58813715.20",
+    "expected_fiscal_year": "58813821.55",
     "file": "your-plan",
     "gap": {
       "fiscal_year": {
         "actual_to_date": "29699760",
         "baseline_gap": "1910275.71",
-        "gap_with_plan": "1186284.80",
+        "gap_with_plan": "1186178.45",
         "target": "60000000"
       },
       "next_twelve_months": {
         "actual_to_date": "7528814",
         "baseline_gap": "1081221.71",
-        "forecast_with_plan": "29113955.20",
-        "gap_with_plan": "357230.80",
+        "forecast_with_plan": "29114061.55",
+        "gap_with_plan": "357124.45",
         "note": "against the quarters with a target that end in the window; later months are bookings alone",
         "target": "37000000"
       }
@@ -1658,8 +1658,8 @@
         "cash_cost_in_twelve_months": null,
         "cash_cost_total": null,
         "contribution": {
-          "next twelve months": "12284262.88",
-          "rest of fiscal year": "563322.23"
+          "next twelve months": "12287349.46",
+          "rest of fiscal year": "563428.58"
         },
         "detail": "Enterprise win-rate push (Enterprise, from 2026-10); Company deal size (Company, from 2026-10); Mid Market creation (Mid Market, from 2026-11)",
         "kind": "actions",
@@ -1671,35 +1671,35 @@
     "ranges": {
       "bookings_in_window": {
         "next twelve months": {
-          "median": "90860265.88",
+          "median": "91179680.87",
           "range80": [
-            "75636204.59",
-            "108940686.54"
+            "75810417.14",
+            "108587241.71"
           ],
           "range95": [
-            "68191841.57",
-            "119182923.76"
+            "68371750.45",
+            "117315782.26"
           ]
         },
         "rest of fiscal year": {
-          "median": "28344466.47",
+          "median": "28337002.50",
           "range80": [
-            "22341595.34",
-            "36523244.00"
+            "22298161.39",
+            "36508206.93"
           ],
           "range95": [
-            "19703631.95",
-            "41910545.37"
+            "19787624.95",
+            "41615447.27"
           ]
         }
       },
       "by_window": {
         "2026-09": {
-          "mean": "5579910.19",
+          "mean": "5580276.57",
           "median": "5544060.50",
           "range80": [
             "3388877.30",
-            "7853479.30"
+            "7853650.10"
           ],
           "range95": [
             "2461071.55",
@@ -1707,167 +1707,167 @@
           ]
         },
         "2026-10": {
-          "mean": "4983139.67",
-          "median": "4776979.66",
+          "mean": "4974096.44",
+          "median": "4753959.55",
           "range80": [
-            "2615643.48",
-            "7671773.80"
+            "2584751.34",
+            "7627926.94"
           ],
           "range95": [
-            "1667104.22",
-            "9845517.91"
+            "1645726.65",
+            "9922788.86"
           ]
         },
         "2026-11": {
-          "mean": "5644129.10",
-          "median": "5263000.52",
+          "mean": "5645126.10",
+          "median": "5211702.11",
           "range80": [
-            "2751639.40",
-            "9122579.50"
+            "2828979.19",
+            "9167258.49"
           ],
           "range95": [
-            "1831550.82",
-            "11834429.36"
+            "1934510.89",
+            "11648983.64"
           ]
         },
         "2026-12": {
-          "mean": "5870553.87",
-          "median": "5202318.53",
+          "mean": "5879587.64",
+          "median": "5239757.85",
           "range80": [
-            "2633083.82",
-            "10079526.07"
+            "2617846.60",
+            "10110949.20"
           ],
           "range95": [
-            "1704433.52",
-            "13776624.22"
+            "1705841.30",
+            "13676789.51"
           ]
         },
         "2027-01": {
-          "mean": "6878716.89",
-          "median": "6206756.05",
+          "mean": "6885119.39",
+          "median": "6210609.51",
           "range80": [
-            "3067337.64",
-            "11488251.21"
+            "3069709.07",
+            "11645626.95"
           ],
           "range95": [
-            "1972900.67",
-            "15486497.69"
+            "2055439.53",
+            "15449985.17"
           ]
         },
         "2027-02": {
-          "mean": "7225404.05",
-          "median": "6462344.18",
+          "mean": "7260434.51",
+          "median": "6518858.19",
           "range80": [
-            "3002417.05",
-            "12760203.27"
+            "3021548.23",
+            "12671568.62"
           ],
           "range95": [
-            "1950221.19",
-            "16187555.72"
+            "1853869.66",
+            "16535602.02"
           ]
         },
         "2027-03": {
-          "mean": "8037742.10",
-          "median": "7299473.60",
+          "mean": "7938969.23",
+          "median": "7277875.69",
           "range80": [
-            "3400461.15",
-            "13727263.03"
+            "3285152.90",
+            "13515702.90"
           ],
           "range95": [
-            "2046685.12",
-            "17693250.98"
+            "2042842.18",
+            "17480296.24"
           ]
         },
         "2027-04": {
-          "mean": "8694237.07",
-          "median": "7898355.12",
+          "mean": "8648607.43",
+          "median": "7920623.12",
           "range80": [
-            "3795298.03",
-            "14678882.59"
+            "3789887.14",
+            "14459121.51"
           ],
           "range95": [
-            "2545272.99",
-            "19023165.47"
+            "2512106.16",
+            "18649375.76"
           ]
         },
         "2027-05": {
-          "mean": "9198814.26",
-          "median": "8471374.43",
+          "mean": "9297568.17",
+          "median": "8614118.60",
           "range80": [
-            "3959796.20",
-            "15455334.19"
+            "4009732.85",
+            "15481516.96"
           ],
           "range95": [
-            "2401647.64",
-            "19575811.96"
+            "2541864.50",
+            "20316725.78"
           ]
         },
         "2027-06": {
-          "mean": "9311423.89",
-          "median": "8624823.90",
+          "mean": "9392173.76",
+          "median": "8769390.73",
           "range80": [
-            "4092307.00",
-            "15452757.20"
+            "4123916.57",
+            "15803471.64"
           ],
           "range95": [
-            "2614462.19",
-            "19976624.94"
+            "2492636.74",
+            "19977854.45"
           ]
         },
         "2027-07": {
-          "mean": "9996780.75",
-          "median": "9241224.96",
+          "mean": "9983267.94",
+          "median": "9249076.80",
           "range80": [
-            "4701400.29",
-            "16405616.29"
+            "4584667.26",
+            "16443516.18"
           ],
           "range95": [
-            "3142812.70",
-            "20896082.77"
+            "3012584.54",
+            "20892512.68"
           ]
         },
         "2027-08": {
-          "mean": "10184212.39",
-          "median": "9471294.10",
+          "mean": "10211285.62",
+          "median": "9498104.25",
           "range80": [
-            "4640382.41",
-            "16906119.29"
+            "4543320.19",
+            "16838830.47"
           ],
           "range95": [
-            "3033053.10",
-            "21005004.84"
+            "2960327.44",
+            "21487915.68"
           ]
         }
       },
       "draws": 2000,
       "fiscal_year_expected_range80": [
-        "52041355.34",
-        "66223004.00"
+        "51997921.39",
+        "66207966.93"
       ],
       "fiscal_year_expected_range95": [
-        "49403391.95",
-        "71610305.37"
+        "49487384.95",
+        "71315207.27"
       ],
       "status": "unvalidated: these ranges include the plan and the capacity term; they have not been back-tested",
       "what_is_drawn": "deal outcomes, future departures, with the planned hires and program pipeline in the scenario, and the driver actions' changes"
     },
     "with_plan": {
-      "next twelve months": "91661073.13",
-      "rest of fiscal year": "29113955.20"
+      "next twelve months": "91664159.71",
+      "rest of fiscal year": "29114061.55"
     },
     "with_plan_by_window": {
       "2026-09": "5609666.34",
       "2026-10": "4882868.14",
-      "2026-11": "5651922.05",
-      "2026-12": "5946392.85",
-      "2027-01": "7023105.82",
-      "2027-02": "7095738.13",
-      "2027-03": "8145231.54",
-      "2027-04": "8721163.48",
-      "2027-05": "9290679.55",
-      "2027-06": "9109998.19",
-      "2027-07": "9981140.18",
-      "2027-08": "10203166.86"
+      "2026-11": "5651922.06",
+      "2026-12": "5946401.00",
+      "2027-01": "7023204.01",
+      "2027-02": "7096039.40",
+      "2027-03": "8145861.76",
+      "2027-04": "8721819.37",
+      "2027-05": "9291233.79",
+      "2027-06": "9110401.17",
+      "2027-07": "9981424.79",
+      "2027-08": "10203317.88"
     },
     "with_plan_quarters": [
       {
@@ -1900,8 +1900,8 @@
         "actual": "7528814",
         "expected": "18021348.48",
         "expected_range80": [
-          "15232572.20",
-          "21048457.92"
+          "15220597.83",
+          "21065755.26"
         ],
         "forecast": "10492534.48",
         "gap": "-1021348.48",
@@ -1911,13 +1911,13 @@
       },
       {
         "actual": "0",
-        "expected": "18621420.72",
+        "expected": "18621527.07",
         "expected_range80": [
-          "12239115.91",
-          "25784692.52"
+          "12193275.48",
+          "25731677.55"
         ],
-        "forecast": "18621420.72",
-        "gap": "1378579.28",
+        "forecast": "18621527.07",
+        "gap": "1378472.93",
         "quarter": "Q4FY26",
         "status": "not started",
         "target": "20000000"
@@ -4160,12 +4160,12 @@
           "passed": true
         },
         {
-          "detail": "rest of fiscal year: 723990.91 = 29113955.20 - 28389964.29; next twelve months: 14988066.32 = 91661073.13 - 76673006.81",
+          "detail": "rest of fiscal year: 724097.26 = 29114061.55 - 28389964.29; next twelve months: 14991152.90 = 91664159.71 - 76673006.81",
           "name": "plan contributions sum to the difference",
           "passed": true
         },
         {
-          "detail": "simulated mean 91,605,064.22 vs expected 91,661,073.12 (2000 draws)",
+          "detail": "simulated mean 91,696,512.80 vs expected 91,664,159.70 (2000 draws)",
           "name": "plan simulation centered on its expectation",
           "passed": true
         },
@@ -4180,47 +4180,47 @@
           "passed": true
         },
         {
-          "detail": "58089724.29 plus the contributions is 58813715.20; the working plan is 58813715.20",
+          "detail": "58089724.29 plus the contributions is 58813821.55; the working plan is 58813821.55",
           "name": "worksheet bridge steps sum to the working plan",
           "passed": true
         },
         {
-          "detail": "target 60000000 less 58813715.20 is 1186284.80",
+          "detail": "target 60000000 less 58813821.55 is 1186178.45",
           "name": "worksheet working plan and remaining gap close on the target",
           "passed": true
         },
         {
-          "detail": "the probe's baseline 58813715.20 against the report's 58813715.20",
+          "detail": "the probe's baseline 58813821.55 against the report's 58813821.55",
           "name": "worksheet baseline is the report's own expected fiscal year",
           "passed": true
         },
         {
-          "detail": "solves: 60000000.01 against 60000000.00",
+          "detail": "solves: 60000000.17 against 60000000.00",
           "name": "worksheet won_arr needed alone agrees with the target",
           "passed": true
         },
         {
-          "detail": "solves: 60000217.16 against 60000000.00",
+          "detail": "solves: 60000338.17 against 60000000.00",
           "name": "worksheet productivity needed alone agrees with the target",
           "passed": true
         },
         {
-          "detail": "solves: 60001249.51 against 60000000.00",
+          "detail": "solves: 60001384.69 against 60000000.00",
           "name": "worksheet cycle_days needed alone agrees with the target",
           "passed": true
         },
         {
-          "detail": "{'rest of fiscal year': '563322.23', 'next twelve months': '12284262.88'} by the probe against {'rest of fiscal year': '563322.23', 'next twelve months': '12284262.88'} in the plan",
+          "detail": "{'rest of fiscal year': '563428.58', 'next twelve months': '12287349.46'} by the probe against {'rest of fiscal year': '563428.58', 'next twelve months': '12287349.46'} in the plan",
           "name": "driver actions' joint gain is the plan's actions step",
           "passed": true
         },
         {
-          "detail": "58813715.20 against 58813715.20",
+          "detail": "58813821.55 against 58813821.55",
           "name": "driver actions' with-figures are the plan's expected fiscal year",
           "passed": true
         },
         {
-          "detail": "rest of fiscal year: reconciliation -21553.32, rounding allows 0.20; next twelve months: reconciliation -660134.74, rounding allows 0.48",
+          "detail": "rest of fiscal year: reconciliation -21561.86, rounding allows 0.20; next twelve months: reconciliation -660382.73, rounding allows 0.48",
           "name": "driver actions on different drivers interact: the reconciliation is the joint gain less the removal values",
           "passed": true
         }
@@ -4317,8 +4317,8 @@
         {
           "kind": "actions",
           "label": "Driver actions, together",
-          "next twelve months": "12284262.88",
-          "rest of fiscal year": "563322.23",
+          "next twelve months": "12287349.46",
+          "rest of fiscal year": "563428.58",
           "valued": true
         }
       ],
@@ -4366,13 +4366,13 @@
           "valued": true
         },
         {
-          "change": "563322.23",
+          "change": "563428.58",
           "from": "58250392.97",
           "kind": "actions",
           "label": "Driver actions, together",
           "note": null,
           "source": "/plan/items/3/contribution/rest of fiscal year",
-          "to": "58813715.20",
+          "to": "58813821.55",
           "valued": true
         },
         {
@@ -4382,7 +4382,7 @@
           "label": "Working plan",
           "note": null,
           "source": "/plan/expected_fiscal_year",
-          "to": "58813715.20",
+          "to": "58813821.55",
           "valued": true
         },
         {
@@ -4392,7 +4392,7 @@
           "label": "Remaining gap to target",
           "note": null,
           "source": "/plan/gap/fiscal_year/gap_with_plan",
-          "to": "1186284.80",
+          "to": "1186178.45",
           "valued": true
         }
       ],
@@ -4576,32 +4576,32 @@
     },
     "checks": [
       {
-        "detail": "58089724.29 plus the contributions is 58813715.20; the working plan is 58813715.20",
+        "detail": "58089724.29 plus the contributions is 58813821.55; the working plan is 58813821.55",
         "name": "worksheet bridge steps sum to the working plan",
         "passed": true
       },
       {
-        "detail": "target 60000000 less 58813715.20 is 1186284.80",
+        "detail": "target 60000000 less 58813821.55 is 1186178.45",
         "name": "worksheet working plan and remaining gap close on the target",
         "passed": true
       },
       {
-        "detail": "the probe's baseline 58813715.20 against the report's 58813715.20",
+        "detail": "the probe's baseline 58813821.55 against the report's 58813821.55",
         "name": "worksheet baseline is the report's own expected fiscal year",
         "passed": true
       },
       {
-        "detail": "solves: 60000000.01 against 60000000.00",
+        "detail": "solves: 60000000.17 against 60000000.00",
         "name": "worksheet won_arr needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "solves: 60000217.16 against 60000000.00",
+        "detail": "solves: 60000338.17 against 60000000.00",
         "name": "worksheet productivity needed alone agrees with the target",
         "passed": true
       },
       {
-        "detail": "solves: 60001249.51 against 60000000.00",
+        "detail": "solves: 60001384.69 against 60000000.00",
         "name": "worksheet cycle_days needed alone agrees with the target",
         "passed": true
       }
@@ -4750,15 +4750,15 @@
         "historical": {
           "high": {
             "change": {
-              "next twelve months": "756762.13",
-              "rest of fiscal year": "104334.42"
+              "next twelve months": "756800.12",
+              "rest of fiscal year": "104335.73"
             },
             "setting": "0.2220"
           },
           "low": {
             "change": {
-              "next twelve months": "-12303218.47",
-              "rest of fiscal year": "-1696238.55"
+              "next twelve months": "-12303835.93",
+              "rest of fiscal year": "-1696259.83"
             },
             "setting": "0.1754"
           },
@@ -4920,15 +4920,15 @@
         "historical": {
           "high": {
             "change": {
-              "next twelve months": "31125090.49",
-              "rest of fiscal year": "4044647.29"
+              "next twelve months": "31126518.59",
+              "rest of fiscal year": "4044696.48"
             },
             "setting": "605308.57"
           },
           "low": {
             "change": {
-              "next twelve months": "-8203962.76",
-              "rest of fiscal year": "-1066089.61"
+              "next twelve months": "-8204339.18",
+              "rest of fiscal year": "-1066102.59"
             },
             "setting": "363367.25"
           },
@@ -4940,12 +4940,12 @@
         "label": "Won ARR per new win",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. The plan's size actions change the size this sets by the same relative amount, so a setting here is the pooled mean the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60000000.01",
+          "achieved_fiscal_year_bookings": "60000000.17",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
           "inside_observed_range": true,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": "0.01",
+          "overshoot": "0.17",
           "precision_note": null,
           "reaches_target": true,
           "reason": null,
@@ -4953,7 +4953,7 @@
           "scale": null,
           "stepped": false,
           "target": "60000000.00",
-          "value": "469994.23"
+          "value": "469988.52"
         },
         "places": 2,
         "rank": {
@@ -5105,15 +5105,15 @@
         "historical": {
           "high": {
             "change": {
-              "next twelve months": "10882716.33",
-              "rest of fiscal year": "1413877.37"
+              "next twelve months": "10883223.37",
+              "rest of fiscal year": "1413894.83"
             },
             "setting": "2.4056"
           },
           "low": {
             "change": {
-              "next twelve months": "-1025474.93",
-              "rest of fiscal year": "-133229.21"
+              "next twelve months": "-1025522.68",
+              "rest of fiscal year": "-133230.86"
             },
             "setting": "2.0342"
           },
@@ -5125,12 +5125,12 @@
         "label": "Creation productivity",
         "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter. The plan's creation actions change the rate this sets by the same relative amount, so a setting here is the pooled rate the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60000217.16",
+          "achieved_fiscal_year_bookings": "60000338.17",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
           "inside_observed_range": true,
           "outcome": "solves",
           "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": "217.16",
+          "overshoot": "338.17",
           "precision_note": null,
           "reaches_target": true,
           "reason": null,
@@ -5290,15 +5290,15 @@
         "historical": {
           "high": {
             "change": {
-              "next twelve months": "-5596998.38",
-              "rest of fiscal year": "-1847832.10"
+              "next twelve months": "-5597127.51",
+              "rest of fiscal year": "-1847872.63"
             },
             "setting": "149.85"
           },
           "low": {
             "change": {
-              "next twelve months": "1828228.97",
-              "rest of fiscal year": "654383.29"
+              "next twelve months": "1828275.77",
+              "rest of fiscal year": "654398.20"
             },
             "setting": "126.55"
           },
@@ -5310,12 +5310,12 @@
         "label": "Cycle length of new pipeline",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. A quarter's cycle is the plain mean days of its wins, while the fit in use weights each day, so the two are close in kind but not the same measure.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60001249.51",
+          "achieved_fiscal_year_bookings": "60001384.69",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
           "inside_observed_range": true,
           "outcome": "solves",
           "outcome_label": "Solves mathematically, stepped: win times are whole days, so there is no exact root. This is the largest setting that reaches the target, and it overshoots by the amount shown.",
-          "overshoot": "1249.51",
+          "overshoot": "1384.69",
           "precision_note": null,
           "reaches_target": true,
           "reason": null,
@@ -5355,15 +5355,15 @@
       "no_plan_note": null,
       "remaining_gap": {
         "source": "/plan/gap/fiscal_year/gap_with_plan",
-        "value": "1186284.80"
+        "value": "1186178.45"
       },
       "twelve_month_gain": {
         "source": "/plan/difference/next twelve months",
-        "value": "14988066.32"
+        "value": "14991152.90"
       },
       "working_plan": {
         "source": "/plan/expected_fiscal_year",
-        "value": "58813715.20"
+        "value": "58813821.55"
       }
     },
     "windows": [

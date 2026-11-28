@@ -307,6 +307,7 @@ def finish(
                     driver_actions,
                 )  # it reads the plan basis, which reads this module
 
+                driver_actions.refuse_unbounded(ground, plan)
                 effect = driver_actions.effect_for(state, plan, hires, inflows)
             plan_section, c = actions.plan_section(
                 ground, state.scenario, plan, Path(str(plan_file)),

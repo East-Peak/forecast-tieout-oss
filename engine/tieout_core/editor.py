@@ -23,7 +23,7 @@ from .comparison import BASELINE, comparison_rows
 from .editor_lanes import Edited, FrozenBasis, frozen_basis, lanes_for
 from .fiscal import add_months
 from .lanes import unavailable_document
-from .plan import Plan, parse_plan, segment_words
+from .plan import ActionRefused, Plan, parse_plan, segment_words
 from .report import Prepared, finish, prepare
 
 AS_OF = date(2026, 8, 31)
@@ -99,6 +99,15 @@ def apply_plan(opened: Opened, doc) -> Applied:
         return Applied(None, [], [_error(str(exc), getattr(exc, "code", None))], None)
     try:
         report = finish(state, plan, YOUR_PLAN, opened.company, YOUR_PLAN)
+    except (
+        ActionRefused
+    ) as exc:  # a target the core could not carry, found when valuing
+        return Applied(
+            None,
+            [],
+            [_error(f"your plan: actions[{exc.index}]: {exc}", exc.code)],
+            None,
+        )
     except (
         driver_actions.Unavailable
     ) as exc:  # actions cannot be valued for this company

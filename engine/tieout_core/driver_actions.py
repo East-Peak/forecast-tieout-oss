@@ -40,7 +40,7 @@ from .fiscal import add_months
 from .forecast import Inflow, Lift
 from .lanes_basis import Basis, Sizes
 from .lanes_flows import Calendar
-from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction, month_words
+from .plan import NEXT_12, REST_OF_FY, ActionRefused, Plan, PlanAction, month_words
 from .records import Check
 from .roster import Member
 from .worksheet_drivers import Probe
@@ -86,8 +86,6 @@ class Frame:
     size: Decimal | None = None  # the pooled mean won ARR a size target is read against
     # the pooled creation rate a productivity target is read against
     productivity: Decimal | None = None
-    # each segment's price index over its organic wins alone (see ``Lift.extra``)
-    organic_price: Mapping[str, Mapping[tuple[int, int], Decimal]] | None = None
 
 
 @dataclass(frozen=True)
@@ -255,7 +253,6 @@ def build_frame(
     series = flows.segment_series(organic, extra, shares)
     landing, origin = day_cells(g, cal.year.start, days)
     price = price_index(g, series, sizes, origin)
-    organic_price = price_index(g, organic, sizes, origin)
     return Frame(
         tuple(segments),
         organic,
@@ -266,7 +263,6 @@ def build_frame(
         origin,
         g.model.new_pipeline.mean_won_arr,
         wd.current_value(g, PRODUCTIVITY),
-        organic_price,
     )
 
 
@@ -339,7 +335,6 @@ def effect(
         frame.origin,
         sizes,
         creation,
-        frame.organic_price or {},
     )
     return Effect(
         frame, baseline, as_of, tuple(actions), changes, sizes, creation, lift
@@ -349,14 +344,70 @@ def effect(
 # ---------------------------------------------------------------- what the lanes read
 
 
-def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flows.Flow]:
-    """What the actions add in the fiscal year, by (segment, quarter it lands in, quarter its deal
-    was created in): extra wins and win days (the lanes' own arithmetic) and the bookings,
-    booked month by month as the forward function books them (``Lift.extra``), so the lanes add to
-    its figures."""
+def priced_new_wins(
+    g: Ground,
+    series: Mapping[str, Sequence[Decimal]],
+    sizes: Mapping[str, Sizes],
+    cal: Calendar,
+    wins: Mapping[flows.Leaf, flows.Flow],
+    lanes: Mapping[object, tuple[str, Sequence[Decimal]]] | None = None,
+) -> dict[flows.Leaf, flows.Flow]:
+    """The wins the plan expects from pipeline not yet created (``wins``, by lane, quarter
+    landed in and quarter created in), priced as the pooled bookings are shared out among the
+    segments in each month a win lands in, by the quarter its deal was created in: the same
+    atoms the actions are priced on (``price_index``), added up to quarters. A win's price is
+    then one price, whether the plan's baseline or an action changes it. ``series`` are the
+    segments' deals created on each day, which fix the prices; ``lanes`` are what is priced
+    (each as ``(segment, deals it creates on each day)``), the segments themselves by default,
+    so an owner's wins are priced at the segment's price in each month they land."""
+    days = len(next(iter(series.values()), ()))
+    _, origin = day_cells(g, cal.year.start, days)
+    index = price_index(g, series, sizes, origin)
+    lanes = (
+        {s: (s, per_day) for s, per_day in series.items()} if lanes is None else lanes
+    )
+    new = g.model.new_pipeline
+    timing = new.timing
+    per_win = new.mean_won_arr / Decimal(timing.total)
+    booked: dict[flows.Leaf, Decimal] = defaultdict(Decimal)
+    for i, w in enumerate(g.windows):
+        q = next((k for k, qw in enumerate(cal.quarters) if qw.contains(w.end)), None)
+        if q is None:
+            continue
+        a, b = (
+            w.start.toordinal() - g.as_of.toordinal(),
+            w.end.toordinal() - g.as_of.toordinal(),
+        )
+        for key, (s, per_day) in lanes.items():
+            for t, count in enumerate(per_day[:days], 1):
+                hit = timing.count_through(b - t) - timing.count_through(a - t)
+                if count and hit:
+                    when = cal.bucket(g.as_of + timedelta(days=t))
+                    if when > len(cal.quarters):
+                        continue
+                    cell = index[s].get((i, origin[t - 1]), ONE)
+                    booked[(key, q, when)] += count * new.win_rate * hit * cell
+    return {
+        k: flows.Flow(wins[k].wins, booked[k] * per_win, wins[k].days) for k in wins
+    }
+
+
+def lane_flows(
+    g: Ground,
+    lift: Lift,
+    cal: Calendar,
+    lanes: Mapping[object, tuple[str, Sequence[Decimal], Sequence[Decimal]]],
+) -> dict[flows.Leaf, flows.Flow]:
+    """What the actions add in the fiscal year to each lane, by (lane, quarter it lands in, quarter
+    its deal was created in): extra wins and win days (the lanes' own arithmetic) and the bookings,
+    booked month by month as the forward function books them (``Lift.extra_of``). A lane is
+    ``(segment, deals it creates on each day, the deals among them that are its people's)``: a segment, or an
+    owner of one, whose own creation dates decide what each action does to it."""
     days = (cal.year.end - g.as_of).days
-    lift = eff.lift
-    series = {s: lift.extra_wins(s)[:days] for s in eff.frame.segments}
+    series = {
+        k: lift.extra_wins_of(s, deals[:days], organic[:days])
+        for k, (s, deals, organic) in lanes.items()
+    }
     wins, _ = flows.new_flows(g.model, series, g.as_of, cal, rate=ONE)
     timing = g.model.new_pipeline.timing
     per_win = g.model.new_pipeline.mean_won_arr / Decimal(timing.total)
@@ -369,12 +420,13 @@ def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flow
             w.start.toordinal() - g.as_of.toordinal(),
             w.end.toordinal() - g.as_of.toordinal(),
         )
-        for s in eff.frame.segments:
-            for t, value in enumerate(lift.extra(s, i)[:days], 1):
+        for k, (s, deals, organic) in lanes.items():
+            values = lift.extra_of(s, i, deals[:days], organic[:days])
+            for t, value in enumerate(values[:days], 1):
                 hit = timing.count_through(b - t) - timing.count_through(a - t)
                 if value and hit:
                     origin = cal.bucket(g.as_of + timedelta(days=t))
-                    booked[(s, q, origin)] += value * hit
+                    booked[(k, q, origin)] += value * hit
     return {
         k: flows.Flow(
             wins.get(k, flows.ZERO_FLOW).wins,
@@ -383,6 +435,22 @@ def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flow
         )
         for k in {*wins, *booked}
     }
+
+
+def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flows.Flow]:
+    """What the actions add in the fiscal year to each segment: ``lane_flows`` over the segments'
+    own creation, so the lanes add to the forward function's figures."""
+    days = (cal.year.end - g.as_of).days
+    lift = eff.lift
+    return lane_flows(
+        g,
+        lift,
+        cal,
+        {
+            s: (s, list(lift.counts(s)[:days]), list(lift.organic[s][:days]))
+            for s in eff.frame.segments
+        },
+    )
 
 
 def period_rate(eff: Effect, segments: Sequence[str], window, as_of: date) -> Decimal:
@@ -418,6 +486,38 @@ def basis_of(state) -> Basis:
             f"Driver actions cannot be valued for this company: its plan basis is unavailable ({found})."
         )
     return found
+
+
+# The most an action may ask for, in multiples of the pooled value: a creation rate any higher draws a
+# win for each of billions of deals in every path; a size any higher overflows the exact decimals.
+MAX_MULTIPLE = {PRODUCTIVITY: 10, WON_ARR: 1000}
+MULTIPLE_WORDS = {10: "ten", 1000: "a thousand"}
+
+
+def refuse_unbounded(g: Ground, plan: Plan) -> None:
+    """Refuse a target the core could not carry, in a person's words, before any simulation."""
+    for i, a in enumerate(plan.actions, 1):
+        limit = MAX_MULTIPLE.get(a.driver)
+        base = wd.current_value(g, a.driver) if limit else None
+        if base and a.target > limit * base:
+            words = MULTIPLE_WORDS[limit]
+            if a.driver == PRODUCTIVITY:
+                unit = (
+                    "deals per ramped AE-month"
+                    if g.cap.adopted
+                    else "organic deals per day"
+                )
+                what = f"{a.target.normalize():f} {unit}"
+                pooled = f"creation rate of {number(base, PRECISION[PRODUCTIVITY])}"
+            else:
+                what = f"${a.target.normalize():,f} per won deal"
+                pooled = f"size of {money(base)}"
+            raise ActionRefused(
+                f"{a.name!r} asks for {what}, more than {words} times the pooled {pooled}; "
+                f"an action may ask for at most {words} times it.",
+                "target",
+                i,
+            )
 
 
 def effect_for(

@@ -1,12 +1,12 @@
 {
   "bookings_change": {
-    "next twelve months": "14988066.32",
-    "rest of fiscal year": "723990.91"
+    "next twelve months": "14991152.90",
+    "rest of fiscal year": "724097.26"
   },
   "cash_cost_in_twelve_months": "1027150.64",
-  "expected_fiscal_year": "58813715.20",
-  "fiscal_year_gap": "1186284.80",
-  "fiscal_year_gap_change": "-723990.91",
+  "expected_fiscal_year": "58813821.55",
+  "fiscal_year_gap": "1186178.45",
+  "fiscal_year_gap_change": "-724097.26",
   "label": "Your plan",
   "note": null,
   "scenario": "your-plan"

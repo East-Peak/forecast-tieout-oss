@@ -111,7 +111,7 @@ def _remainder(
         raise ValueError(f"expected wins belong to no lane: {sorted(stray)}")
     new_wins, new_created = flows.new_flows(model, series, g.as_of, cal)
     no_action_created = new_created  # what each segment's created ARR is priced from
-    priced = flows.price(new_wins, sizes, model.new_pipeline.mean_won_arr)
+    priced = driver_actions.priced_new_wins(g, series, sizes, cal, new_wins)
     lift = None
     if effect is not None:
         lift = effect.lift
@@ -362,8 +362,17 @@ def lanes_document(
     wins_f, created_f = _merge(wins_a, wins_r), _merge(created_a, created_r)
     # the owners: the segments' expected wins and creation shared out
     lane_series = owners.series(state, basis, cal, hires, inflows, segments)
+    owner_new, _ = flows.new_flows(g.model, lane_series, g.as_of, cal)
+    owner_base = driver_actions.priced_new_wins(
+        g,
+        whole,
+        sizes,
+        cal,
+        owner_new,
+        {lane: (lane[0], per_day) for lane, per_day in lane_series.items()},
+    )  # each owner's new wins at the segment's price in each month they land
     wins_ro, created_ro = owners.remainder(
-        state, cal, lane_series, priced, wins_r, created_r, effect
+        state, cal, lane_series, priced, wins_r, created_r, effect, owner_base
     )
     owner_a = facts(state, cal, owner_of)
     owner_f = (

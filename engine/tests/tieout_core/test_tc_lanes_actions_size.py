@@ -140,3 +140,35 @@ def test_the_caveat_names_what_the_plan_acts_on(world):
     assert lanes.ACTIONS_CAVEAT in win_only["caveats"]
     assert lanes.ACTIONS_CAVEAT not in sized["caveats"]
     assert lanes.ACTIONS_CAVEAT_ANY in sized["caveats"]
+
+
+def test_a_zero_size_from_the_first_day_leaves_no_new_booking_in_any_lane_and_none_below_zero(
+    world,
+):
+    """Baseline lane bookings and an action's change are priced on the same atoms (each month a
+    win lands in, by the quarter its deal was created in), so taking all the size away leaves each
+    lane exactly no new booking: nothing negative where segments' mixes change
+    month by month within a quarter."""
+    from engine.tieout_core import actions, lanes_basis
+    from engine.tieout_core import lanes_flows as flows
+    from engine.tieout_core.plan import parse_plan
+
+    state, basis = world
+    seg = ["enterprise", "mid_market", "commercial"]
+    h, i = actions.plan_inputs(
+        state.ground, parse_plan({"hires": HIRES, "programs": PROGRAMS}, state.as_of, state.cap.members, "p")
+    )  # fmt: skip
+    plan = parse_plan(
+        {"actions": [size(target="0")], "hires": HIRES, "programs": PROGRAMS},
+        state.as_of, state.cap.members, "p",
+    )  # fmt: skip
+    cal = flows.Calendar(state.profile.fiscal_year)
+    sizes = lanes_basis.sizes_now(state.ground, state.params.trailing_days, seg)
+    scen = actions.Scenario(state.ground)
+    effect = da.effect_for(state, plan, h, i)
+    priced = lanes._remainder(state, basis, cal, h, i, seg, sizes, scen, effect)[4]
+    for (
+        key,
+        flow,
+    ) in priced.items():  # the new pipeline's wins, priced, with the action's change
+        assert abs(flow.bookings) < D("1e-9"), (key, flow.bookings)

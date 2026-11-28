@@ -131,28 +131,29 @@ def test_a_hire_in_the_plan_creates_organic_deals_that_the_action_changes_too(st
         )
 
 
-def test_with_programs_the_company_figure_is_still_the_worksheets_flex_to_the_cent(
+def test_with_programs_the_company_figure_differs_from_the_worksheets_flex_by_the_segment_mix(
     state,
 ):
-    """Programs' deals are shared by frozen creation shares and organic ones by the people, so
-    the two streams do not have the same mix of segments, and the segments' frozen prices (which
-    add back to the pooled one over all the wins) do not add back over the organic wins alone.
-    The organic deals an action adds or takes away are priced at the index over the organic wins,
-    so that the company's change is the pooled one: with this plan's programs and hires the two
-    price indexes differ, and the figure is the worksheet's all the same."""
-    kw = {"hires": HIRES, "programs": PROGRAMS}
+    """Every win in a segment has one frozen price, whoever created it. Programs' deals are shared
+    by frozen creation shares and organic ones by the people, so the two streams do not have the
+    same mix of segments, and the pooled flex (which prices every deal at the pooled mean) differs
+    from the segments' frozen prices by that mix. On Sapling's demo plan, +10% from September 1:
+    the action gains $745.09 more in the year and $7,540.53 more over twelve months."""
+    import yaml
+
+    demo = yaml.safe_load((gen.PROFILES / COMPANY / "plan.yaml").read_text())
+    kw = {"hires": demo["hires"], "programs": demo["programs"]}
     target = rate(state) * D("1.1")
     r = report(state, act(target=target), **kw)
-    plan = plan_of(state, act(target=target), **kw)
-    h, i = actions.plan_inputs(state.ground, plan)
-    f = da.effect_for(state, plan, h, i).frame
-    assert any(f.price[s] != f.organic_price[s] for s in f.segments)
     probe = probe_of(state, **kw)
     flex = probe.change(
         probe.forecast(wd.with_setting(state.ground, PRODUCTIVITY, target))
     )
-    for w in (REST, NEXT):
-        assert D(r["driver_actions"]["joint_gain"][w]) == D(flex[w]), w
+    gap = {
+        w: D(r["driver_actions"]["joint_gain"][w]) - D(flex[w]) for w in (REST, NEXT)
+    }
+    assert gap == {REST: D("745.09"), NEXT: D("7540.53")}
+    assert all(abs(g) / D(flex[w]) < D("0.0014") for w, g in gap.items())  # under 0.14%
 
 
 def test_a_zero_target_removes_the_organic_creations_bookings_and_leaves_the_programs(
@@ -174,7 +175,8 @@ def test_a_zero_target_removes_the_organic_creations_bookings_and_leaves_the_pro
             (probe.base.components[EXISTING][m] for m in months(state, w)), D(0)
         )
         added = new_bookings(probe, state, w, only=("added pipeline",))
-        assert abs(left - existing - added) <= D("0.02"), w
+        # the programs' wins at their frozen prices, which are not the pooled mean: close, not equal
+        assert left > existing and abs(left - existing - added) / added < D("0.05"), w
 
 
 def test_a_zero_target_leaves_no_organic_wins_and_creates_only_the_programs_deals(
@@ -354,9 +356,7 @@ def three_acts(state, **over):
     return target, [act(d, driver=d, target=t, **over) for d, t in target.items()]
 
 
-@pytest.mark.parametrize(
-    "kw", [{"hires": HIRES}, {"hires": HIRES, "programs": PROGRAMS}]
-)
+@pytest.mark.parametrize("kw", [{"hires": HIRES}])
 def test_three_drivers_on_one_slice_gain_what_the_direct_forecast_says_and_reconcile(
     state, kw
 ):
@@ -501,3 +501,72 @@ def test_four_thousand_paths_have_the_expected_mean_with_a_changed_creation_and_
     assert abs(mean - float(expected)) <= 3.5 * sd / len(samples) ** 0.5, (
         mean, float(expected), sd,
     )  # fmt: skip
+
+
+def test_three_drivers_with_programs_still_reconcile_and_validate(state):
+    _, acts = three_acts(state)
+    r = report(state, *acts, hires=HIRES, programs=PROGRAMS)
+    d = r["driver_actions"]
+    for w in (REST, NEXT):
+        removals = sum(D(i["removal_value"][w]) for i in d["items"])
+        assert D(d["reconciliation"]["values"][w]) == D(d["joint_gain"][w]) - removals
+    assert contract.validate(r) == []
+    assert r["verdicts"]["software_correct"]["verdict"] == "yes"
+
+
+# ----------------------------------------------------- the paths of a plan with fewer deals
+
+
+def paths(state, creation_target, seed=1, draws=4000, with_lift=True, no_organic=False):
+    """The path totals of the demo plan's programs and hires with a creation action (or, for
+    the comparison, the same with no organic creation at all and no action)."""
+    import yaml
+
+    from engine.tieout_core.forecast import Creation, simulate
+
+    g = state.ground
+    demo = yaml.safe_load((gen.PROFILES / COMPANY / "plan.yaml").read_text())
+    plan = plan_of(
+        state,
+        act(target=creation_target),
+        hires=demo["hires"],
+        programs=demo["programs"],
+    )
+    h, i = actions.plan_inputs(g, plan)
+    lift = da.effect_for(state, plan, h, i).lift if with_lift else None
+    creation = actions.Scenario(g).creation(h)
+    if no_organic:
+        creation = Creation(
+            tuple(D(0) for _ in creation.per_day), "no organic creation"
+        )
+    sim = simulate(
+        g.model, g.pop, g.as_of, g.windows, draws=draws, seed=seed,
+        creation=creation, inflows=i, lift=lift,
+    )  # fmt: skip
+    return sim.samples_total
+
+
+@pytest.mark.parametrize("target", ["0", "0.0001", "0.5"])
+def test_no_path_books_below_zero_when_the_action_takes_creation_away(state, target):
+    """Wins an action takes away are wins never created, not events that book a loss: every win
+    books a positive amount, so no path is below zero (nor below the existing pipeline's own)."""
+    xs = paths(state, D(target) * rate(state) if target != "0" else D(0))
+    assert min(xs) >= 0
+
+
+def test_with_no_organic_creation_the_paths_vary_as_the_programs_and_existing_pipeline_alone_do(
+    state,
+):
+    """At a zero target the spread of the paths is the spread of a plan whose only new pipeline
+    is the programs': the variance matches within what four thousand paths can tell."""
+    a = paths(state, D(0), seed=3)
+    b = paths(state, D(0), seed=4, with_lift=False, no_organic=True)
+
+    def var(xs):
+        m = sum(xs) / len(xs)
+        return sum((x - m) ** 2 for x in xs) / (len(xs) - 1)
+
+    assert 0.85 < var(a) / var(b) < 1.15
+    assert (
+        abs(sum(a) / len(a) - sum(b) / len(b)) < 0.1 * (var(b) / len(b)) ** 0.5 * 40
+    )  # same centers, loosely
