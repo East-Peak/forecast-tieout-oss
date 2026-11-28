@@ -14,6 +14,7 @@ export interface ReportIndex {
     fiscal_year: string;
     id: string;
     lanes_basis?: string | null;
+    lanes_records?: string | null;
     name: string;
     scenarios: {
       description: string;

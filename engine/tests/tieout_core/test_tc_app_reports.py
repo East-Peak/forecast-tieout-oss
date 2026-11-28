@@ -12,7 +12,7 @@ import pytest
 import yaml
 
 from engine.scripts import generate_app_reports as gen
-from engine.tieout_core import contract, lanes_contract
+from engine.tieout_core import contract, lanes_contract, lanes_records
 
 REST, TWELVE = "rest of fiscal year", "next twelve months"
 COMPANY = "sprout-labs"
@@ -123,6 +123,7 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
         f"{COMPANY}/lanes-demo-plan.json",
         f"{COMPANY}/lanes-hires-only.json",
         f"{COMPANY}/lanes-program-only.json",
+        f"{COMPANY}/lanes-records.json",
         f"{COMPANY}/program-only.json",
         f"{COMPANY}/program-only.md",
     ]
@@ -130,7 +131,11 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
 
 def test_every_file_is_canonical_json(built):
     for name, text in built.items():
-        if name.endswith(".json"):
+        if name.endswith(
+            "/lanes-records.json"
+        ):  # ids and records are written a line each
+            assert text == lanes_records.text(json.loads(text)), name
+        elif name.endswith(".json"):
             assert text == gen.canonical(json.loads(text)), name
 
 
@@ -185,6 +190,7 @@ def test_the_index_describes_the_company_and_lists_its_scenarios(built):
     assert company["scenarios"][0]["report"] == f"{COMPANY}/as-signed.json"
     assert company["scenarios"][0]["lanes"] == f"{COMPANY}/lanes-as-signed.json"
     assert company["lanes_basis"] == f"{COMPANY}/lanes-basis.json"
+    assert company["lanes_records"] == f"{COMPANY}/lanes-records.json"
     assert company["comparison"] == f"{COMPANY}/comparison.json"
 
 
@@ -287,3 +293,13 @@ def test_a_changed_byte_in_a_report_md_is_a_difference(tmp_path, built):
     md = out / COMPANY / "as-signed.md"
     md.write_text(md.read_text() + "x")
     assert gen.differences(out, built) == [f"{COMPANY}/as-signed.md: differs"]
+
+
+def test_a_records_shard_that_disagrees_with_the_lanes_stops_the_generator(built):
+    files = dict(built)
+    shard = json.loads(files[f"{COMPANY}/lanes-records.json"])
+    row = next(r for r in shard["rows"] if r["periods"]["FY26"]["created"])
+    row["periods"]["FY26"]["created"].pop()
+    files[f"{COMPANY}/lanes-records.json"] = lanes_records.text(shard)
+    with pytest.raises(ValueError, match="lanes-records"):
+        gen._validate_files(files)

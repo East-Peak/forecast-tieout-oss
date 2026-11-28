@@ -1,0 +1,254 @@
+{
+  "$defs": {
+    "Date": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "type": "string"
+    },
+    "Decimal": {
+      "pattern": "^-?\\d+(\\.\\d+)?$",
+      "type": "string"
+    },
+    "Money": {
+      "pattern": "^-?\\d+\\.\\d{2}$",
+      "type": "string"
+    },
+    "Text": {
+      "type": "string"
+    }
+  },
+  "$id": "https://forecast-tieout.example/schema/lanes-records-1.0.0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "lanes-records.json written by the core's generator: the deals behind the grid's cells.",
+  "properties": {
+    "as_of": {
+      "$ref": "#/$defs/Date"
+    },
+    "caveat": {
+      "$ref": "#/$defs/Text"
+    },
+    "company": {
+      "$ref": "#/$defs/Text"
+    },
+    "fiscal_year": {
+      "$ref": "#/$defs/Text"
+    },
+    "horizon_days": {
+      "type": "integer"
+    },
+    "periods": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "end": {
+            "$ref": "#/$defs/Date"
+          },
+          "key": {
+            "$ref": "#/$defs/Text"
+          },
+          "start": {
+            "$ref": "#/$defs/Date"
+          }
+        },
+        "required": [
+          "key",
+          "start",
+          "end"
+        ],
+        "type": "object"
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "type": "array"
+    },
+    "records": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "arr": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Money"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "arr_first": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Money"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "close": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created": {
+            "$ref": "#/$defs/Date"
+          },
+          "id": {
+            "$ref": "#/$defs/Text"
+          },
+          "name": {
+            "$ref": "#/$defs/Text"
+          },
+          "owner": {
+            "$ref": "#/$defs/Text"
+          },
+          "owner_name": {
+            "$ref": "#/$defs/Text"
+          },
+          "segment": {
+            "$ref": "#/$defs/Text"
+          },
+          "stage": {
+            "$ref": "#/$defs/Text"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "won",
+              "lost"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "segment",
+          "owner",
+          "owner_name",
+          "created",
+          "close",
+          "stage",
+          "status",
+          "arr_first",
+          "arr"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "rows": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "items": {
+              "$ref": "#/$defs/Text"
+            },
+            "maxItems": 4,
+            "minItems": 1,
+            "type": "array"
+          },
+          "periods": {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "cohort": {
+                  "items": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "type": "array"
+                },
+                "cohort_won": {
+                  "items": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "type": "array"
+                },
+                "created": {
+                  "items": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "type": "array"
+                },
+                "open": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "won_carried_in": {
+                  "items": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "type": "array"
+                },
+                "won_created_in_period": {
+                  "items": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "open",
+                "created",
+                "won_carried_in",
+                "won_created_in_period",
+                "cohort",
+                "cohort_won"
+              ],
+              "type": "object"
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "path",
+          "periods"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "sets": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/Text"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "company",
+    "as_of",
+    "fiscal_year",
+    "horizon_days",
+    "periods",
+    "sets",
+    "caveat",
+    "records",
+    "rows"
+  ],
+  "title": "TieoutLanesRecords",
+  "type": "object"
+}

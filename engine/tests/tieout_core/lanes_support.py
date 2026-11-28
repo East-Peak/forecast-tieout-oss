@@ -7,7 +7,15 @@ import shutil
 import pytest
 
 from engine.scripts import generate_app_reports as gen
-from engine.tieout_core import actions, lanes, lanes_basis, lanes_contract
+from engine.tieout_core import (
+    actions,
+    lanes,
+    lanes_basis,
+    lanes_contract,
+    lanes_records,
+    lanes_records_contract,
+    lanes_replay,
+)
 from engine.tieout_core.plan import load_plan
 from engine.tieout_core.report import finish, prepare
 
@@ -65,4 +73,7 @@ def mutated(company, tmp_path, scenario="as-signed", deals=None, team=None):
     basis_doc = lanes_basis.document(basis, company)
     problems = lanes_contract.validate_basis(basis_doc)
     problems += lanes_contract.validate(doc, basis_doc, report)
+    shard = lanes_records.document(state, company)
+    problems += lanes_records_contract.validate(shard, doc)
+    problems += lanes_replay.records(state, shard)
     return doc, basis_doc, problems

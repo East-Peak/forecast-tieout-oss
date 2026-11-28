@@ -10,6 +10,7 @@ the test suite.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from datetime import date, timedelta
 from decimal import Decimal
 
@@ -75,4 +76,68 @@ def replay(state: Prepared, doc: dict, hires, inflows) -> list[str]:
             found.append(
                 f"{p['key']}: win_rate actual is {got}, the deals give {rate:.4f}"
             )
+    return found
+
+
+def records(state: Prepared, shard: dict) -> list[str]:
+    """Every disagreement between the records shard and the raw deals: each set of each row and
+    period rebuilt from the deals' own dates and the periods the shard names (not from the
+    function that wrote it), and each record against its deal."""
+    deals, as_of = state.pop.deals, state.as_of
+    horizon = timedelta(days=state.params.horizon_days)
+    expected: dict[tuple, set] = defaultdict(set)
+    named: set[str] = set()
+    for p in shard["periods"]:
+        first, last = date.fromisoformat(p["start"]), date.fromisoformat(p["end"])
+        end = min(last, as_of)
+        for d in deals:
+            seg, who = d.segment or "unassigned", d.owner_id or "unassigned"
+            where = (("total",), ("segment", seg), ("segment", seg, "owner", who))
+            sets = []
+            if d.created < first and (not d.is_closed or d.close >= first):
+                sets.append("open")
+            if first <= d.created <= end:
+                sets.append("created")
+            if d.is_won and first <= d.close <= end:
+                sets.append("won_carried_in" if d.created < first else "won_created_in_period")  # fmt: skip
+            if end - 2 * horizon < d.created <= end - horizon:
+                sets.append("cohort")
+                if d.is_won and d.close - d.created <= horizon:
+                    sets.append("cohort_won")
+            for name in sets:
+                if name == "open" and first - timedelta(days=1) > as_of:
+                    continue  # a period not begun has no opening stock to list
+                named.add(d.id)
+                for path in where:
+                    expected[(path, p["key"], name)].add(d.id)
+    found: list[str] = []
+    given = {
+        (tuple(r["path"]), key, name): ids
+        for r in shard["rows"]
+        for key, sets in r["periods"].items()
+        for name, ids in sets.items()
+    }
+    for key in sorted(set(given) | set(expected), key=str):
+        path, period, name = key
+        mine = given.get(key)
+        if mine is None and name == "open":
+            mine = None if key not in expected else mine
+        want = expected.get(key, set())
+        got = set(mine or ())
+        if got != want or len(mine or ()) != len(got):
+            found.append(
+                f"{period} {list(path)} {name}: the shard lists {len(got)}, the deals give {len(want)}"
+            )
+    by_id = {d.id: d for d in deals}
+    if set(shard["records"]) != named:
+        found.append("the shard holds records for deals no cell names, or lacks some")
+    for i, r in shard["records"].items():
+        d = by_id.get(i)
+        if d is None or (r["segment"], r["owner"], r["created"], r["close"]) != (
+            d.segment or "unassigned",
+            d.owner_id or "unassigned",
+            str(d.created),
+            None if d.close is None else str(d.close),
+        ):
+            found.append(f"record {i} is not its deal")
     return found

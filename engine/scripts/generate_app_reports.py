@@ -41,6 +41,8 @@ from engine.tieout_core import (
     lanes,
     lanes_basis,
     lanes_contract,
+    lanes_records,
+    lanes_records_contract,
     lanes_replay,
 )
 from engine.tieout_core.company_line import company_line
@@ -56,6 +58,7 @@ GENERATED = Path("frontend/src/generated")
 LANES_SCHEMAS = {
     Path("engine/tieout_core/lanes.schema.json"): lanes_contract.schema,
     Path("engine/tieout_core/lanes-basis.schema.json"): lanes_contract.basis_schema,
+    Path("engine/tieout_core/lanes-records.schema.json"): lanes_records_contract.schema,
 }
 COMPANIES = ("sprout-labs", "sapling-industries", "mighty-oak-holdings")
 DEFAULT_COMPANY = "sapling-industries"
@@ -207,6 +210,7 @@ INDEX_SCHEMA = {
                     "comparison": {"type": "string"},
                     # not required: the editor's "your plan" entry has no lanes yet
                     "lanes_basis": {"type": ["string", "null"]},
+                    "lanes_records": {"type": ["string", "null"]},
                     "scenarios": {
                         "type": "array",
                         "items": {
@@ -310,6 +314,9 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
                     "lanes_basis": f"{company}/lanes-basis.json"
                     if f"{company}/lanes-basis.json" in files
                     else None,
+                    "lanes_records": f"{company}/lanes-records.json"
+                    if f"{company}/lanes-records.json" in files
+                    else None,
                     "scenarios": [
                         {
                             "id": sc.id,
@@ -366,6 +373,10 @@ def lanes_files(company: str, state, reports: dict, plans: dict) -> dict[str, st
                 state, basis, reports[sc.id], hires, inflows, company, sc.id, digest
             )
         )
+    # last, so a scenario's own file is the first one a rule can stop the run on
+    files[f"{company}/lanes-records.json"] = lanes_records.text(
+        lanes_records.document(state, company)
+    )
     return files
 
 
@@ -381,6 +392,14 @@ def _lanes_problems(name: str, doc, files: dict[str, str]) -> list[str]:
     folder, _, leaf = name.rpartition("/")
     if leaf == "lanes-basis.json":
         return lanes_contract.validate_basis(doc)
+    if leaf == "lanes-records.json":
+        return [
+            f"{sc.id}: {p}"
+            for sc in SCENARIOS
+            for p in lanes_records_contract.validate(
+                doc, json.loads(files[f"{folder}/lanes-{sc.id}.json"])
+            )
+        ]
     basis = files.get(f"{folder}/lanes-basis.json")
     report = json.loads(files[f"{folder}/{leaf.removeprefix('lanes-')}"])
     return lanes_contract.validate(doc, None if basis is None else json.loads(basis), report)  # fmt: skip
@@ -461,6 +480,12 @@ def replay_problems(companies=COMPANIES) -> list[str]:
                     f"{company}/{sc.id}: lanes: {p}"
                     for p in lanes_replay.replay(state, doc, hires, inflows)
                 ]
+            shard = json.loads(
+                (REPO / REPORTS / company / "lanes-records.json").read_text()
+            )
+            found += [
+                f"{company}: records: {p}" for p in lanes_replay.records(state, shard)
+            ]
     return found
 
 

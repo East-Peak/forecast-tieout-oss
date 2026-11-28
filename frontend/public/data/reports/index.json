@@ -7,6 +7,7 @@
       "fiscal_year": "FY26",
       "id": "sprout-labs",
       "lanes_basis": "sprout-labs/lanes-basis.json",
+      "lanes_records": "sprout-labs/lanes-records.json",
       "name": "Sprout Labs",
       "scenarios": [
         {
@@ -54,6 +55,7 @@
       "fiscal_year": "FY26",
       "id": "sapling-industries",
       "lanes_basis": "sapling-industries/lanes-basis.json",
+      "lanes_records": "sapling-industries/lanes-records.json",
       "name": "Sapling Industries",
       "scenarios": [
         {
@@ -101,6 +103,7 @@
       "fiscal_year": "FY26",
       "id": "mighty-oak-holdings",
       "lanes_basis": "mighty-oak-holdings/lanes-basis.json",
+      "lanes_records": "mighty-oak-holdings/lanes-records.json",
       "name": "Mighty Oak Holdings",
       "scenarios": [
         {
