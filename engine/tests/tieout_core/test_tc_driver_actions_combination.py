@@ -222,3 +222,78 @@ def test_the_sentence_reads_by_size_not_by_sign():
     assert da.reconciliation_sentence(-joint, D(-130), ten) == da.REINFORCE
     assert da.reconciliation_sentence(-joint, D(-70), ten) == da.OVERLAP
     assert "gain" not in da.REINFORCE and "loses" not in da.OVERLAP
+
+
+# ----------------------------------------------------- the draws are centered, with three drivers at once
+
+
+@pytest.fixture(scope="module")
+def flat():
+    with gen.in_repo():
+        yield prepare(
+            gen.PROFILES / "mighty-oak-holdings",
+            gen.DATA / "mighty-oak-holdings",
+            gen.AS_OF,
+            400,
+            0,
+        )
+
+
+def mean_against_expectation(st, changes, slices, hires=(), seed=1, draws=4000):
+    """The mean of ``draws`` paths less the forward function's expectation, in standard errors."""
+    from engine.tieout_core import driver_actions
+    from engine.tieout_core.forecast import model_forecast, simulate
+
+    g = st.ground
+    acts = [
+        {
+            "id": f"{d}-{s}", "name": d, "driver": d, "slice": s, "start": "2026-09",
+            "ramp_months": 1, "target": str(base_of(st, d) * (1 + D(c))),
+        }
+        for (d, c), s in zip(changes, slices)
+    ]  # fmt: skip
+    plan = parse_plan(
+        {"actions": acts, "hires": list(hires)}, st.as_of, st.cap.members, "p"
+    )
+    h, i = actions.plan_inputs(g, plan)
+    lift = driver_actions.effect_for(st, plan, h, i).lift
+    creation = actions.Scenario(g).creation(h)
+    expected = model_forecast(
+        g.model, g.pop, g.as_of, g.windows, creation=creation, inflows=i, lift=lift
+    ).total()
+    sim = simulate(
+        g.model, g.pop, g.as_of, g.windows, draws=draws, seed=seed,
+        creation=creation, inflows=i, lift=lift,
+    )  # fmt: skip
+    xs = sim.samples_total
+    mean = sum(xs) / len(xs)
+    sd = (sum((x - mean) ** 2 for x in xs) / (len(xs) - 1)) ** 0.5
+    return (mean - float(expected)) / (sd / len(xs) ** 0.5)
+
+
+CHANGES = [
+    [("win_rate", "0.3"), ("won_arr", "0.4"), ("productivity", "0.5")],
+    [("win_rate", "-0.3"), ("won_arr", "-0.4"), ("productivity", "-0.5")],
+    [("win_rate", "0.5"), ("won_arr", "-0.5"), ("productivity", "-1")],
+    [("win_rate", "-0.5"), ("won_arr", "5"), ("productivity", "5")],
+]
+
+
+@pytest.mark.parametrize("changes", CHANGES)
+@pytest.mark.parametrize(
+    "slices", [("company",) * 3, ("enterprise", "company", "mid_market")]
+)
+def test_three_drivers_at_once_have_the_expected_mean_where_the_capacity_term_is_adopted(
+    state, changes, slices
+):
+    assert abs(mean_against_expectation(state, changes, slices, hires=HIRES)) <= 3.5
+
+
+@pytest.mark.parametrize("changes", CHANGES)
+def test_two_drivers_at_once_have_the_expected_mean_where_creation_is_a_flat_rate(
+    flat, changes
+):
+    assert not flat.ground.cap.adopted
+    segments = sorted({m.segment for m in flat.cap.members})
+    pick = [changes[1], changes[2]]
+    assert abs(mean_against_expectation(flat, pick, ("company", segments[0]))) <= 3.5
