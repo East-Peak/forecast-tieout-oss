@@ -530,13 +530,25 @@ NO_INTERACTION = (
     "interact in this model."
 )
 REINFORCE = (
-    "What removing each one loses adds up to more than the actions gain together: each is worth "
-    "more with the others in place, so they reinforce each other."
+    "What removing each one changes adds up to more than the actions change together: each does "
+    "more with the others in place (more deals, won more often, at a larger size, multiply), so "
+    "they reinforce each other."
 )
 OVERLAP = (
-    "The actions together gain more than what removing each one loses adds up to: the others "
-    "cover part of what each does, so they overlap."
+    "The actions together change bookings by more than what removing each one changes adds up "
+    "to: the others cover part of what each does, so they overlap."
 )
+
+
+def reconciliation_sentence(joint: Decimal, summed: Decimal, allowed: Decimal) -> str:
+    """What the line between the joint gain and the sum of the removal values says. Within the
+    rounding allowance the actions do not interact. Beyond it, by the size of the effects: if the
+    removal values add up to more than the actions do together, each does more with the others in
+    place; if to less, the others cover part of what each does. (The comparison is of sizes, so
+    that it reads the same for actions that take bookings away.)"""
+    if abs(joint - summed) <= allowed:
+        return NO_INTERACTION
+    return REINFORCE if abs(summed) > abs(joint) else OVERLAP
 
 
 def _windows(f, probe: Probe) -> dict[str, Decimal]:
@@ -704,10 +716,7 @@ def section(
     gap = {w: joint[w] - summed[w] for w in WINDOWS}
     tolerance = {w: CENT * _months(g)[w] * (1 + len(eff.actions)) for w in WINDOWS}
     sentences = {
-        w: NO_INTERACTION
-        if abs(gap[w]) <= tolerance[w]
-        else (REINFORCE if gap[w] < 0 else OVERLAP)
-        for w in WINDOWS
+        w: reconciliation_sentence(joint[w], summed[w], tolerance[w]) for w in WINDOWS
     }
     out = {
         "definition": definition_for(eff.actions),

@@ -201,11 +201,7 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
         )
         rule(
             rec["sentences"][w]
-            == (
-                da.NO_INTERACTION
-                if abs(want) <= allowed
-                else (da.REINFORCE if want < 0 else da.OVERLAP)
-            ),
+            == da.reconciliation_sentence(joint[w], summed[w], allowed),
             f"driver_actions: the reconciliation sentence in {w} does not say what its figure does",
         )
         rule(
