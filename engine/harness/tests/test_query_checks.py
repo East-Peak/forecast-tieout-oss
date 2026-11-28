@@ -129,7 +129,13 @@ def test_the_check_has_teeth(original, cat, tmp_path):
 
 # ---- slices sum to parents -----------------------------------------------------------------------------------
 
-LEVELS = {"source": ["source", "source.group"], "month": ["month", "quarter"]}
+LEVELS = {
+    "source": ["source", "source.group"],
+    "month": ["month", "fiscal_quarter", "fiscal_year", "calendar_quarter"],
+}
+
+
+TIME = LEVELS["month"]
 
 
 def axes_of(metric) -> list[str]:

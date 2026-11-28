@@ -15,7 +15,7 @@ from datetime import date, datetime, timedelta
 from itertools import product
 
 from .catalog.columns import VIEWS
-from .catalog.compile import Axis, Plan, parse_axis, time_member
+from .catalog.compile import Axis, Plan, parse_axis
 from .catalog.expr import compile_expr
 from .catalog.model import Catalog, Measure, Metric
 from .contract.keys import RECONSTRUCTED
@@ -50,9 +50,14 @@ class Contract:
     eligible: int | None
     excluded: dict
     counts: dict  # diagnostics: rows landed in an unmapped member, rows that fell back to current
-    bound: str  # exact | lower_bound
+    bound: (
+        str | None
+    )  # exact | lower_bound, for additive sums and counts only; None for everything else
+    completeness: str  # complete | incomplete: whether every row of unknown membership or value was resolved
+    incomplete: dict  # counts of rows of unknown membership or value
     lineage: Lineage | None
     flags: tuple = ()
+    provenance: str | None = None
 
 
 @dataclass(frozen=True)
@@ -77,17 +82,32 @@ class SourceRow:
 
 @dataclass(frozen=True)
 class Fact:
+    """One input of an estimator, with the evidence's own uncertainty about it."""
+
     total: int | float | None
     n: int
+    completeness: str = "complete"
+    bound: str | None = "exact"
+    excluded: dict = field(default_factory=dict)
+    counts: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
 class Estimate:
+    """An estimator's answer. It must say how complete it is and where it came from."""
+
     value: float | None
     numerator: float | None = None
     denominator: float | None = None
     derivation: str = "pooled"
     reason: str | None = None
+    eligible: int | None = None
+    completeness: str = field(kw_only=True)
+    provenance: str = field(kw_only=True)
+
+    def __post_init__(self):
+        if self.completeness not in ("complete", "incomplete"):
+            raise ValueError("completeness is 'complete' or 'incomplete'")
 
 
 @dataclass(frozen=True)
@@ -103,6 +123,8 @@ class ProviderRequest:
     kind: str
     plan_version: str | None
     run_id: str | None
+    metric_version: str | None = None
+    mapping_versions: dict = field(default_factory=dict)
 
 
 PROVIDERS: dict[str, Callable[[ProviderRequest], list[Cell]]] = {}
@@ -146,7 +168,9 @@ class _Part:
     eligible: int = 0
     excluded: dict = field(default_factory=dict)
     counts: dict = field(default_factory=dict)
-    bound: str = "exact"
+    bound: str | None = "exact"
+    complete: dict = field(default_factory=dict)  # rows of unknown membership or value
+    provenance: str | None = None
     availability: str = "measured"
     reason: str | None = None
     derivation: str = "measured"
@@ -163,6 +187,7 @@ class _Ctx:
     versions: dict
     window: tuple[date, date] | None
     flags: tuple = ()
+    deps: dict = field(default_factory=dict)  # pinned metric dependencies (rollup `of`)
 
 
 @dataclass(frozen=True)
@@ -292,10 +317,13 @@ def _predicates(plan: Plan, spec: _Spec) -> _Sql:
     converted, series = "FALSE", spec.column
     if c := spec.conversion:
         link = c["link"]
-        target = plan.column((link, c["target"]["time"]))[0]
         linked = plan.catalog.entities[
             plan.catalog.entities[spec.entity].relationships[link].to
         ]
+        exists = f"{plan.column((link, VIEWS[linked.view].key))[0]} IS NOT NULL"  # the link resolves to a row
+        event = plan.main(
+            c["event"]
+        )  # when the lead converted, not when the opportunity was created
         tcond = "TRUE"
         if c["target"].get("where"):
             tcond = compile_expr(
@@ -304,9 +332,9 @@ def _predicates(plan: Plan, spec: _Spec) -> _Sql:
                 lambda n: plan.column((link, n))[0],
                 plan.params,
             )
-        series = f"date_diff('day', {spec.time}, {target})"
+        series = f"date_diff('day', {spec.time}, {event})"
         window = plan.params.add(c["window_days"])
-        converted = f"({eligible} AND {target} IS NOT NULL AND {target} <= $t AND {series} BETWEEN 0 AND {window} AND {tcond})"
+        converted = f"({eligible} AND {exists} AND {event} IS NOT NULL AND {event} <= $t AND {series} BETWEEN 0 AND {window} AND {tcond})"
     return _Sql(base, mature, eligible, converted, ex, series)
 
 
@@ -390,8 +418,12 @@ def _rows(ctx: _Ctx, spec: _Spec, which: str, key: tuple) -> list[SourceRow]:
         for c, m in zip(plan.group_cols(), key, strict=True)
     )
     value = spec.column if spec.agg == "sum" or spec.quantile is not None else "1"
-    if spec.conversion:
-        value = "1" if which != "converted" else p.series
+    if spec.conversion:  # a rate row contributes 1; only the lag metric carries days
+        value = (
+            p.series
+            if which == "converted" and spec.conversion["output"] == "lag"
+            else "1"
+        )
     ident = VIEWS[ctx.catalog.entities[spec.entity].view].key
     sql = f"{plan.with_sql()} SELECT {ident}, source_record_ids, {value} FROM f WHERE {plan.where()} AND {cond}{match} ORDER BY 1"
     return [SourceRow(r[0], r[2], tuple(r[1])) for r in _execute(ctx, plan, sql)]
@@ -400,8 +432,18 @@ def _rows(ctx: _Ctx, spec: _Spec, which: str, key: tuple) -> list[SourceRow]:
 # ---- metric kinds ----------------------------------------------------------------------------------------
 
 
-def _bound(*rows: _Row) -> str:
-    return "lower_bound" if any(r.unknown or r.null for r in rows) else "exact"
+def _incomplete(*rows: _Row) -> dict:
+    """Rows of unknown membership (a predicate that is NULL) or unknown value, the largest across inputs."""
+    out: dict = {}
+    for r in rows:
+        for name, n in (("unknown_membership", r.unknown), ("unknown_value", r.null)):
+            if n:
+                out[name] = max(out.get(name, 0), n)
+    return out
+
+
+def _bound(incomplete: dict) -> str:
+    return "lower_bound" if incomplete else "exact"
 
 
 def _counts(row: _Row) -> dict:
@@ -416,15 +458,16 @@ def _counts(row: _Row) -> dict:
 
 
 def _part(
-    num, den, row: _Row, bound: str, reason_empty="no_denominator", minimum=None
+    num, den, row: _Row, inc: dict, reason_empty="no_denominator", minimum=None
 ) -> _Part:
-    part = _Part(None, num, den, row.n, row.excluded, _counts(row), bound)
+    """A ratio-like part: never a mathematical bound, only complete or incomplete."""
+    part = _Part(None, num, den, row.n, row.excluded, _counts(row), None, inc)
     if den and num is not None:
         part.value = num / den
     if not den:
-        part.availability, part.reason = (
-            "insufficient",
-            "immature_cohort" if row.excluded.get("immature") else reason_empty,
+        part.availability = "insufficient"
+        part.reason = (
+            "immature_cohort" if row.excluded.get("immature") else reason_empty
         )
     elif minimum and den < minimum:
         part.value, part.availability, part.reason = (
@@ -438,7 +481,16 @@ def _part(
 def _eval_sum(ctx, metric):
     spec = _specs(metric, ctx.catalog)["value"]
     return {
-        k: _Part(r.total or 0, None, None, r.n, r.excluded, _counts(r), _bound(r))
+        k: _Part(
+            r.total or 0,
+            None,
+            None,
+            r.n,
+            r.excluded,
+            _counts(r),
+            _bound(_incomplete(r)),
+            _incomplete(r),
+        )
         for k, r in _run(ctx, spec).items()
     }
 
@@ -453,29 +505,28 @@ def _eval_ratio(ctx, metric):
             n.total or 0,
             d.total or 0,
             d,
-            _bound(n, d),
+            _incomplete(n, d),
             minimum=metric.spec.get("min_denominator"),
         )
     return out
 
 
 def _eval_quantile(ctx, metric):
-    rows = _run(ctx, _specs(metric, ctx.catalog)["value"])
     out = {}
-    for key, r in rows.items():
-        out[key] = _part(None, r.n, r, _bound(r), "no_rows")
+    for key, r in _run(ctx, _specs(metric, ctx.catalog)["value"]).items():
+        out[key] = _part(None, r.n, r, _incomplete(r), "no_rows")
         out[key].value = r.quant if r.n else None
     return out
 
 
 def _eval_conversion(ctx, metric):
-    rows, out = _run(ctx, _specs(metric, ctx.catalog)["value"]), {}
-    for key, r in rows.items():
+    out = {}
+    for key, r in _run(ctx, _specs(metric, ctx.catalog)["value"]).items():
         if metric.spec["output"] == "lag":
-            out[key] = _part(None, r.converted, r, _bound(r), "no_conversions")
+            out[key] = _part(None, r.converted, r, _incomplete(r), "no_conversions")
             out[key].value = r.quant if r.converted else None
         else:
-            out[key] = _part(r.converted, r.n, r, _bound(r), "no_mature_anchors")
+            out[key] = _part(r.converted, r.n, r, _incomplete(r), "no_mature_anchors")
     return out
 
 
@@ -490,52 +541,58 @@ def _eval_estimator(ctx, metric):
             *[_members(ctx, a, {k[i] for k in keys}) for i, a in enumerate(ctx.groups)]
         )
     )
-    inputs = {
-        k: {
-            role: Fact(rows[k].total or 0, rows[k].n) if k in rows else Fact(0, 0)
-            for role, rows in ran.items()
-        }
-        for k in keys
-    }
+
+    def fact(row: _Row | None) -> Fact:
+        if row is None:
+            return Fact(0, 0)
+        inc = _incomplete(row)
+        return Fact(
+            row.total or 0,
+            row.n,
+            "incomplete" if inc else "complete",
+            _bound(inc),
+            row.excluded,
+            _counts(row),
+        )
+
+    inputs = {k: {role: fact(rows.get(k)) for role, rows in ran.items()} for k in keys}
     out = {}
     for key, est in fn(inputs, dict(metric.spec.get("params", {}))).items():
+        facts = inputs[key]
+        inc: dict = {}
+        for role, row in ((r, ran[r].get(key)) for r in ran):
+            for name, n in _incomplete(row).items() if row else ():
+                inc[f"{role}.{name}"] = n
         part = _Part(
             est.value,
             est.numerator,
             est.denominator,
-            sum(f.n for f in inputs[key].values()),
+            0,
             derivation=est.derivation,
+            provenance=est.provenance,
         )
+        part.eligible = (
+            est.eligible
+            if est.eligible is not None
+            else max((f.n for f in facts.values()), default=0)
+        )
+        part.excluded = {
+            f"{role}.{k}": n for role, f in facts.items() for k, n in f.excluded.items()
+        }
+        part.bound, part.complete = (
+            None,
+            inc if est.completeness == "incomplete" or inc else {},
+        )
+        if est.completeness == "incomplete" and not inc:
+            part.complete = {"estimator_declared": 1}
         if est.value is None:
             part.availability, part.reason = "insufficient", est.reason or "no_estimate"
         out[key] = part
     return out
 
 
-def _periods(window: tuple[date, date], grain: str) -> list[str]:
-    out, day = [], window[0]
-    while day <= window[1]:
-        label = time_member(day, grain)
-        if label not in out:
-            out.append(label)
-        day += timedelta(days=1)
-    return out
-
-
-def _period_end(label: str, grain: str) -> date:
-    if grain == "year":
-        return date(int(label), 12, 31)
-    if grain == "quarter":
-        year, quarter = label.split("-Q")
-        return date(
-            int(year), int(quarter) * 3, monthrange(int(year), int(quarter) * 3)[1]
-        )
-    year, month = map(int, label.split("-"))
-    return date(year, month, monthrange(year, month)[1])
-
-
 def _rollup_axis(ctx, metric) -> Axis:
-    inner = ctx.catalog.metric(metric.spec["of"], metric.spec.get("of_version"))
+    inner = _inner(ctx, metric)
     for dim in ctx.catalog.dimensions.values():
         if (
             dim.kind == "time"
@@ -548,47 +605,65 @@ def _rollup_axis(ctx, metric) -> Axis:
     )
 
 
-def _closed_window(ctx, axis: Axis) -> tuple[date, date] | None:
-    """The span of whole periods closed by T and K: a period closes when K reaches its last day."""
+def _inner(ctx, metric) -> Metric:
+    return ctx.catalog.metric(
+        metric.spec["of"], ctx.deps.get("of") or metric.spec.get("of_version")
+    )
+
+
+def _rollup_periods(ctx, axis: Axis):
+    """Eligible periods: whole, inside the window, and closed by T and K. Everything else is counted, not divided."""
+    cal, grain = ctx.catalog.calendar, axis.dim.grain
     limit = min(ctx.window[1], ctx.asof.k.date())
-    ends = [
-        _period_end(p, axis.dim.grain) for p in _periods(ctx.window, axis.dim.grain)
-    ]
-    closed = [e for e in ends if e <= limit]
-    return (ctx.window[0], closed[-1]) if closed else None
+    eligible, excluded = [], {}
+    for label in cal.periods(ctx.window, grain):
+        start, end = cal.bounds(label, grain)
+        if end > limit:
+            excluded["open_period"] = excluded.get("open_period", 0) + 1
+        elif start < ctx.window[0] or end > ctx.window[1]:
+            excluded["partial_period"] = excluded.get("partial_period", 0) + 1
+        else:
+            eligible.append(label)
+    span = (
+        (cal.bounds(eligible[0], grain)[0], cal.bounds(eligible[-1], grain)[1])
+        if eligible
+        else None
+    )
+    return eligible, excluded, span
 
 
 def _eval_rollup(ctx, metric):
     axis = _rollup_axis(ctx, metric)
-    inner = ctx.catalog.metric(metric.spec["of"], metric.spec.get("of_version"))
-    span = _closed_window(ctx, axis)
-    periods = _periods(ctx.window, axis.dim.grain)
-    closed = [] if span is None else _periods(span, axis.dim.grain)
-    if span is None:
-        return {}
-    inner_ctx = _Ctx(
-        ctx.store,
-        ctx.catalog,
-        ctx.asof,
-        [*ctx.groups, axis],
-        ctx.filters,
-        ctx.versions,
-        span,
-    )
-    parts = _EVAL[inner.kind](inner_ctx, inner)
-    by_key: dict[tuple, dict[str, float | None]] = {}
-    for key, part in parts.items():
-        by_key.setdefault(key[:-1], {})[key[-1]] = part.value
-    out = {}
-    for key, per in by_key.items():
-        series = [per.get(p, 0 if inner.kind == "sum" else None) for p in closed]
-        series = [v for v in series if v is not None]
-        part = _Part(
-            excluded={"open_period": len(periods) - len(closed)}
-            if len(periods) > len(closed)
-            else {},
-            eligible=len(series),
+    inner = _inner(ctx, metric)
+    eligible, excluded, span = _rollup_periods(ctx, axis)
+    parts: dict = {}
+    if span is not None:
+        inner_ctx = _Ctx(
+            ctx.store,
+            ctx.catalog,
+            ctx.asof,
+            [*ctx.groups, axis],
+            ctx.filters,
+            ctx.versions,
+            span,
         )
+        parts = _EVAL[inner.kind](inner_ctx, inner)
+    per: dict[tuple, dict] = {}
+    for key, part in parts.items():
+        per.setdefault(key[:-1], {})[key[-1]] = part
+    members = [_members(ctx, a, {k[i] for k in per}) for i, a in enumerate(ctx.groups)]
+    out = {}
+    for key in product(
+        *members
+    ):  # every member, every eligible period: a member with no bookings is 0, not NULL
+        cells = per.get(key, {})
+        series = [
+            cells[p].value if p in cells else (0 if inner.kind == "sum" else None)
+            for p in eligible
+        ]
+        series = [v for v in series if v is not None]
+        part = _Part(excluded=dict(excluded), eligible=len(series), bound=None)
+        part.complete = {k: n for c in cells.values() for k, n in c.complete.items()}
         if series:
             stat = metric.spec["stat"]
             part.value = {
@@ -601,11 +676,6 @@ def _eval_rollup(ctx, metric):
                 part.num, part.den = sum(series), len(series)
         else:
             part.availability, part.reason = "insufficient", "no_closed_period"
-        part.bound = (
-            "lower_bound"
-            if any(p.bound == "lower_bound" for k, p in parts.items() if k[:-1] == key)
-            else "exact"
-        )
         out[key] = part
     return out
 
@@ -643,26 +713,27 @@ def _window(window, t: date):
 def _members(ctx: _Ctx, axis: Axis, observed: set[str]) -> list[str]:
     dim = axis.dim
     if dim.kind == "time":
-        return sorted(
-            {*(_periods(ctx.window, dim.grain) if ctx.window else []), *observed}
+        periods = (
+            ctx.catalog.calendar.periods(ctx.window, dim.grain) if ctx.window else []
         )
+        return sorted({*periods, *observed})
     declared = list(dict.fromkeys(m[axis.level] for m in dim.members.values()))
     return [*declared, *sorted(observed - set(declared))]
 
 
-def _not_applicable(metric: Metric, axes: list[Axis], key: tuple) -> bool:
+def _inapplicable(metric: Metric, axis: Axis, members: set[str]) -> bool:
+    """True when every leaf member under `members` is one the metric declares not applicable."""
     for rule in metric.applicability:
-        for axis, member in zip(axes, key, strict=True):
-            if axis.dim.name != rule["dimension"]:
-                continue
-            leaves = {k for k, v in axis.dim.members.items() if v[axis.level] == member}
-            hit = {
-                k
-                for k, v in axis.dim.members.items()
-                if set(v.values()) & set(rule["members"])
-            }
-            if leaves and leaves <= hit:
-                return True
+        if axis.dim.name != rule["dimension"]:
+            continue
+        leaves = {k for k, v in axis.dim.members.items() if v[axis.level] in members}
+        hit = {
+            k
+            for k, v in axis.dim.members.items()
+            if set(v.values()) & set(rule["members"])
+        }
+        if leaves and leaves <= hit:
+            return True
     return False
 
 
@@ -679,7 +750,18 @@ def _maturity(metric: Metric, t: date) -> dict | None:
     return {"days": days, "mature_through": end}
 
 
-def _handle(ctx: _Ctx, metric: Metric, key: tuple) -> dict:
+def _dependencies(ctx: _Ctx, metric: Metric) -> dict:
+    """What a metric was built from, pinned by name and version."""
+    s = metric.spec
+    if metric.kind == "rollup":
+        inner = _inner(ctx, metric)
+        return {"of": [inner.id, inner.version]}
+    if metric.kind == "estimator":
+        return dict(s["inputs"])
+    return {r: s[r] for r in ("measure", "numerator", "denominator") if r in s}
+
+
+def _handle(ctx: _Ctx, metric: Metric, key: tuple, versions: dict) -> dict:
     return {
         "metric": metric.id,
         "metric_version": metric.version,
@@ -688,37 +770,45 @@ def _handle(ctx: _Ctx, metric: Metric, key: tuple) -> dict:
         "window": None if ctx.window is None else [d.isoformat() for d in ctx.window],
         "t": ctx.asof.t.isoformat(),
         "k": ctx.asof.k.isoformat(),
-        "mapping_versions": dict(ctx.versions),
+        "mapping_versions": dict(versions),
+        "dependencies": _dependencies(ctx, metric),
+        "catalog_hash": ctx.catalog.content_hash,
         "key": list(key),
     }
 
 
 def _contract(
-    ctx: _Ctx, metric: Metric, key: tuple, part: _Part | None, versions: dict
+    ctx: _Ctx, metric: Metric, key: tuple, part: _Part | None, versions: dict, extra=()
 ) -> Contract:
     part = part or _Part()
+    counts = part.counts
     flags = [
         *ctx.flags,
-        *(
-            f
-            for f, n in (
-                ("unmapped_values", part.counts.get("unmapped")),
-                (
-                    "attribute_fallback_current",
-                    part.counts.get("attribute_fallback_current"),
-                ),
-            )
-            if n
-        ),
+        *(n for n, c in (("unmapped_values", counts.get("unmapped")), ("attribute_fallback_current", counts.get("attribute_fallback_current"))) if c),
         *part.flags,
-    ]
+        *extra,
+    ]  # fmt: skip
     if part.bound == "lower_bound":
         flags.append("lower_bound")
+    if part.complete:
+        flags.append("incomplete")
     return Contract(
         metric.id, metric.version, metric.aggregation, versions, ctx.window, ctx.asof.t, ctx.asof.k, ctx.asof.mode,
-        _maturity(metric, ctx.asof.t), part.eligible, part.excluded, part.counts, part.bound,
-        Lineage("measured", _handle(ctx, metric, key)), tuple(dict.fromkeys(flags)),
+        _maturity(metric, ctx.asof.t), part.eligible, part.excluded, counts, part.bound,
+        "incomplete" if part.complete else "complete", part.complete,
+        Lineage("measured", _handle(ctx, metric, key, versions)), tuple(dict.fromkeys(flags)), part.provenance,
     )  # fmt: skip
+
+
+def _resolved_versions(ctx: _Ctx, metric: Metric) -> dict:
+    entity = ctx.catalog.metric_entities(metric)[0]
+    axes = [*ctx.groups, *(a for a, _ in ctx.filters)]
+    return {
+        a.dim.name: ctx.versions.get(a.dim.name)
+        or ctx.catalog.mapping_version(a.dim.name, entity, None)[0]
+        for a in axes
+        if a.dim.kind != "time" and ctx.catalog.mapping(a.dim.name, entity)
+    }
 
 
 def _cells(
@@ -729,26 +819,31 @@ def _cells(
     axes_members = [
         _members(ctx, a, o) for a, o in zip(ctx.groups, observed, strict=True)
     ]
-    versions = {
-        a.dim.name: ctx.versions.get(a.dim.name)
-        or ctx.catalog.mapping_version(
-            a.dim.name, ctx.catalog.metric_entities(metric)[0], None
-        )[0]
-        for a in [*ctx.groups, *(a for a, _ in ctx.filters)]
-        if a.dim.kind != "time"
-    }
+    versions = _resolved_versions(ctx, metric)
+    filtered_out = any(_inapplicable(metric, a, set(m)) for a, m in ctx.filters)
     out = []
     for key in product(*axes_members):
         part = (parts or {}).get(key)
-        if _not_applicable(metric, ctx.groups, key):
-            cell = (None, None, None, "not_applicable", "measured", None, "measured")
-            part = part or _Part()
-            if (
-                part.eligible
-            ):  # rows that landed where the metric has no meaning: never hidden
-                part.flags = (*part.flags, "inapplicable_member_has_rows")
-        elif reason is not None:
+        na = filtered_out or any(
+            _inapplicable(metric, a, {m}) for a, m in zip(ctx.groups, key, strict=True)
+        )
+        if reason is not None and not na:
             cell = (None, None, None, "applicable", "unavailable", reason, "measured")
+        elif na:
+            # rows that land where the metric has no meaning are never dropped: they appear, flagged, so slices still sum
+            rows = (
+                part is not None and part.eligible and part.availability == "measured"
+            )
+            cell = (
+                part.value if rows else None,
+                part.num if rows else None,
+                part.den if rows else None,
+                "not_applicable",
+                "measured",
+                None,
+                "measured",
+            )
+            part = part if rows else _Part()
         elif part is None:
             part = _empty(metric)
             cell = (
@@ -770,6 +865,7 @@ def _cells(
                 part.reason,
                 part.derivation,
             )
+        extra = ("reconciliation",) if na and part.eligible else ()
         out.append(
             Cell(
                 key,
@@ -778,7 +874,7 @@ def _cells(
                 cell[4],
                 cell[5],
                 cell[6],
-                _contract(ctx, metric, key, part, versions),
+                _contract(ctx, metric, key, part, versions, extra),
             )
         )
     return out
@@ -786,7 +882,7 @@ def _cells(
 
 def _empty(metric: Metric) -> _Part:
     if metric.kind == "sum":
-        return _Part(0)
+        return _Part(0, bound="exact")
     reason = {"conversion": "no_mature_anchors", "ratio": "no_denominator"}.get(
         metric.kind, "no_rows"
     )
@@ -794,28 +890,39 @@ def _empty(metric: Metric) -> _Part:
         metric.kind == "conversion" and metric.spec["output"] == "rate"
     )
     return _Part(
-        num=0 if counted else None, den=0, availability="insufficient", reason=reason
+        num=0 if counted else None,
+        den=0,
+        bound=None,
+        availability="insufficient",
+        reason=reason,
     )
 
 
 def _provide(
-    catalog, metric, groups, filters, window, asof, kind, plan_version, run_id
+    catalog,
+    metric,
+    metric_version,
+    groups,
+    filters,
+    window,
+    asof,
+    kind,
+    plan_version,
+    run_id,
+    versions,
 ):
+    """Providers get the requested horizon untouched, and the versions that resolved."""
     ctx = _Ctx(None, catalog, asof, groups, filters, {}, window)
     keys = list(product(*[_members(ctx, a, set()) for a in groups]))
+    resolved = {
+        a.dim.name: versions.get(a.dim.name) or catalog.mapping_version(a.dim.name, catalog.metric_entities(metric)[0], None)[0]
+        for a, _ in [(g, 0) for g in groups] + list(filters)
+        if a.dim.kind != "time" and catalog.mapping(a.dim.name, catalog.metric_entities(metric)[0])
+    }  # fmt: skip
     request = ProviderRequest(
-        catalog,
-        metric,
-        tuple(a.name for a in groups),
-        keys,
-        {a.name: m for a, m in filters},
-        window,
-        asof.t,
-        asof.k,
-        kind,
-        plan_version,
-        run_id,
-    )
+        catalog, metric, tuple(a.name for a in groups), keys, {a.name: m for a, m in filters}, window,
+        asof.t, asof.k, kind, plan_version, run_id, metric.version, resolved,
+    )  # fmt: skip
     if kind in PROVIDERS:
         return PROVIDERS[kind](request)
     status = (
@@ -824,7 +931,8 @@ def _provide(
         else ("unavailable", "no_provider")
     )
     return [
-        Cell(key, None, None, None, "applicable", *status, "measured", _contract(ctx, metric, key, None, {})) for key in keys
+        Cell(key, None, None, None, "applicable", *status, "measured", _contract(ctx, metric, key, _Part(bound=None), resolved))
+        for key in keys
     ]  # fmt: skip
 
 
@@ -846,8 +954,9 @@ def query(
 ) -> list[Cell]:
     """Answer one metric as of business date `as_of` and knowledge instant K (`known_at`, or a named `mode`).
 
-    `window` is inclusive and clipped to `as_of`. Returns one cell per member of the cross product of
-    `group_by` ("segment", "source.group", "month"); `filters` maps a dimension (or level) to members.
+    `window` is inclusive; for actuals it is clipped to `as_of`, and no event after `as_of` is ever counted.
+    Returns one cell per member of the cross product of `group_by` ("segment", "source.group",
+    "month", "fiscal_quarter"); `filters` maps a dimension (or level) to members.
     """
     m = catalog.metric(metric, metric_version)
     if as_of is None:
@@ -871,6 +980,22 @@ def query(
                     f"{name!r} has no member(s) {sorted(set(wanted) - known)}; members are {sorted(known)}"
                 )
         cuts.append((axis, wanted))
+    if (
+        kind != "actual"
+    ):  # a plan, forecast or requirement keeps the horizon it was asked for
+        return _provide(
+            catalog,
+            m,
+            metric_version,
+            groups,
+            cuts,
+            window,
+            asof,
+            kind,
+            plan_version,
+            run_id,
+            dict(mapping_versions or {}),
+        )
     effective, flags = _window(window, as_of)
     if m.basis == "snapshot":
         effective, flags = None, ()
@@ -878,10 +1003,6 @@ def query(
         any(a.dim.kind == "time" for a in groups) or m.kind == "rollup"
     ):
         raise ValueError("a window is required for a time dimension or a rollup")
-    if kind != "actual":
-        return _provide(
-            catalog, m, groups, cuts, effective, asof, kind, plan_version, run_id
-        )
     ctx = _Ctx(
         store,
         catalog,
@@ -929,6 +1050,32 @@ def _side(catalog: Catalog, metric: Metric, side: str):
     return specs[side], "eligible"
 
 
+def _check_pins(catalog: Catalog, h: dict) -> None:
+    """A cell replays what it used. If the catalog changed, every pinned version must still be there."""
+    if h.get("catalog_hash") == catalog.content_hash:
+        return
+    missing = []
+    if h["metric_version"] not in catalog.metric_versions(h["metric"]):
+        missing.append(f"metric {h['metric']} version {h['metric_version']}")
+    for dim, version in h["mapping_versions"].items():
+        if not any(
+            v == version
+            for (d, _), mp in catalog.mappings.items()
+            if d == dim
+            for v in mp.versions
+        ):
+            missing.append(f"mapping {dim} version {version}")
+    for role, dep in h["dependencies"].items():
+        if role == "of" and dep[1] not in catalog.metric_versions(dep[0]):
+            missing.append(f"metric {dep[0]} version {dep[1]}")
+        elif role != "of" and dep not in catalog.measures:
+            missing.append(f"measure {dep}")
+    if missing:
+        raise ValueError(
+            f"the catalog content changed and {', '.join(missing)} is no longer present"
+        )
+
+
 def records(
     store, catalog: Catalog, cell: Cell | Lineage, side: str | None = None
 ) -> list[SourceRow]:
@@ -937,6 +1084,7 @@ def records(
     if lineage is None or lineage.kind != "measured":
         raise ValueError("only measured cells resolve to source rows")
     h = lineage.handle
+    _check_pins(catalog, h)
     metric = catalog.metric(h["metric"], h["metric_version"])
     asof = AsOf(store, date.fromisoformat(h["t"]), datetime.fromisoformat(h["k"]))
     window = (
@@ -946,12 +1094,18 @@ def records(
     )
     groups = [parse_axis(catalog, g) for g in h["group_by"]]
     cuts = [(parse_axis(catalog, n), tuple(m)) for n, m in h["filters"].items()]
-    ctx = _Ctx(store, catalog, asof, groups, cuts, h["mapping_versions"], window)
+    deps = {"of": h["dependencies"]["of"][1]} if "of" in h["dependencies"] else {}
+    ctx = _Ctx(
+        store, catalog, asof, groups, cuts, h["mapping_versions"], window, deps=deps
+    )
     key = tuple(h["key"])
     if metric.kind == "rollup":
-        axis = _rollup_axis(ctx, metric)
-        span = _closed_window(ctx, axis)
-        inner = catalog.metric(metric.spec["of"], metric.spec.get("of_version"))
+        _, _, span = _rollup_periods(ctx, _rollup_axis(ctx, metric))
+        if (
+            span is None
+        ):  # no closed period: an empty population, never unrestricted history
+            return []
+        inner = _inner(ctx, metric)
         ctx = _Ctx(store, catalog, asof, groups, cuts, h["mapping_versions"], span)
         metric = inner
     spec, which = _side(

@@ -191,7 +191,17 @@ def test_a_registered_estimator_pools_across_cells(estate, cat, request):
     def pooled(inputs, params):
         won = sum(f["successes"].total for f in inputs.values())
         trials = sum(f["trials"].total for f in inputs.values())
-        return {k: Estimate(won / trials, won, trials, "pooled") for k in inputs}
+        return {
+            k: Estimate(
+                won / trials,
+                won,
+                trials,
+                "pooled",
+                completeness="complete",
+                provenance="pooled across keys",
+            )
+            for k in inputs
+        }
 
     (unregistered,) = query(estate, cat, "pooled_win_rate", [], None, W, T)
     assert (unregistered.availability, unregistered.availability_reason) == (

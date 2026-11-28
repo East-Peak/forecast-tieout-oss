@@ -127,7 +127,7 @@ mappings:
             - {step: converted_lead_campaign, when: "lead_campaign_type is not null", member: Marketing}
             - {step: lead_source, when: "lead_source in ('outbound', 'self-sourced', 'self sourced')", member: Sales}
             - {step: lead_source, when: "lead_source in ('partner', 'partner referral')", member: Partner}
-            - {step: lead_source, when: "lead_source in ('trade show', 'event', 'webinar', 'web', 'organic', 'inbound', 'content', 'paid search', 'paid social', 'display', 'abm')", member: Marketing}
+            - {step: lead_source, when: "lead_source in ('trade show', 'event', 'webinar', 'web', 'web inbound', 'organic', 'inbound', 'content', 'paid search', 'paid social', 'display', 'abm')", member: Marketing}
     - entity: lead
       inputs: {campaign_type: first_touch.campaign.type, lead_source: lead_source}
       normalize: true
@@ -139,7 +139,7 @@ mappings:
             - {when: "campaign_type is not null", member: Marketing}
             - {when: "lead_source in ('outbound')", member: Sales}
             - {when: "lead_source in ('partner', 'partner referral')", member: Partner}
-            - {when: "lead_source in ('trade show', 'event', 'webinar', 'web', 'organic', 'inbound', 'content', 'paid search', 'paid social', 'display', 'abm')", member: Marketing}
+            - {when: "lead_source in ('trade show', 'event', 'webinar', 'web', 'web inbound', 'organic', 'inbound', 'content', 'paid search', 'paid social', 'display', 'abm')", member: Marketing}
     - entity: demand_episode
       inputs: {campaign_type: lead.first_touch.campaign.type, lead_source: lead.lead_source}
       normalize: true

@@ -4,6 +4,8 @@
 catalog: generated_company
 version: "1"
 
+calendar: {fiscal_year_start_month: 2, fiscal_year_naming: start_year}   # FY25 = 2025-02-01 to 2026-01-31
+
 entities:
   opportunity:
     view: opportunity
@@ -81,7 +83,9 @@ dimensions:
     members: [Unknown]
     unmapped: Unknown
   month: {kind: time, grain: month, label: Month}
-  quarter: {kind: time, grain: quarter, label: Quarter}
+  fiscal_quarter: {kind: time, grain: fiscal_quarter, label: Fiscal quarter}
+  fiscal_year: {kind: time, grain: fiscal_year, label: Fiscal year}
+  calendar_quarter: {kind: time, grain: calendar_quarter, label: Calendar quarter}
 
 attribution_policy:
   dimension: source
@@ -93,9 +97,14 @@ measures:
   bookings_cents: {entity: opportunity, agg: sum, column: amount_cents, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
   won_deals: {entity: opportunity, agg: count, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
   opportunities_created: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business'"}
-  cohort_won: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business' and stage = 'Closed Won'"}
-  cohort_decided: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business' and stage in ('Closed Won', 'Closed Lost')"}
+  cohort_won: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business' and stage = 'Closed Won' and closed_by_t = true"}
+  cohort_decided: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business' and stage in ('Closed Won', 'Closed Lost') and closed_by_t = true"}
   cycle_days: {entity: opportunity, agg: count, column: cycle_days, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  lost_deals: {entity: opportunity, agg: count, time: close_date, where: "type = 'New Business' and stage = 'Closed Lost'"}
+  leads_created: {entity: lead, agg: count, time: created_date}
+  episodes_admitted_by_outcome: {entity: demand_episode, agg: count, time: outcome_date, where: "outcome = 'admitted'"}
+  episodes_rejected_by_outcome: {entity: demand_episode, agg: count, time: outcome_date, where: "outcome = 'rejected'"}
+  episodes_expired_by_outcome: {entity: demand_episode, agg: count, time: outcome_date, where: "outcome = 'expired'"}
   open_deals: {entity: opportunity, agg: count, where: "type = 'New Business' and is_open = true"}
   open_amount_cents: {entity: opportunity, agg: sum, column: amount_at_t_cents, where: "type = 'New Business' and is_open = true"}
   mql_leads: {entity: lead, agg: count, time: mql_date, where: "mql_date is not null"}
@@ -114,7 +123,7 @@ metrics:
     kind: sum
     measure: bookings_cents
     aggregation: additive
-    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Revenue Operations
     definition: New-business amount of opportunities closed won, by effective close date, restated by what was known at K.
@@ -128,7 +137,7 @@ metrics:
     kind: sum
     measure: won_deals
     aggregation: additive
-    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Revenue Operations
     definition: Count of new-business opportunities closed won, by effective close date.
@@ -141,7 +150,7 @@ metrics:
     kind: sum
     measure: opportunities_created
     aggregation: additive
-    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Sales Operations
     definition: Count of new-business opportunities by creation date, deleted ones included (they existed).
@@ -154,7 +163,7 @@ metrics:
     kind: sum
     measure: mql_leads
     aggregation: additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     applicability:
       - {dimension: source, members: [BDR Outbound, AE Self-Sourced, Partner], reason: These sources have no marketing qualification}
     favorable: up
@@ -169,7 +178,7 @@ metrics:
     kind: sum
     measure: episodes_offered
     aggregation: additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Sales Operations
     definition: Count of demand episodes by offered date; a lead offered twice is two episodes.
@@ -182,7 +191,7 @@ metrics:
     kind: sum
     measure: episodes_admitted
     aggregation: additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Sales Operations
     definition: Demand episodes accepted by sales, by offered date, outcome as of T.
@@ -195,7 +204,7 @@ metrics:
     kind: sum
     measure: episodes_rejected
     aggregation: additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: down
     owner: Sales Operations
     definition: Demand episodes turned down by sales, by offered date, outcome as of T.
@@ -208,7 +217,7 @@ metrics:
     kind: sum
     measure: episodes_expired
     aggregation: additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: down
     owner: Sales Operations
     definition: Demand episodes that aged out of the queue, by offered date, outcome as of T.
@@ -224,7 +233,7 @@ metrics:
     aggregation: non_additive
     maturity_days: 90
     min_denominator: 1
-    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Sales Operations
     definition: Won over decided, for opportunities created in the period; a cohort is mature 90 days after its period ends.
@@ -240,7 +249,7 @@ metrics:
     aggregation: non_additive
     exclusions:
       - {reason: large_deal, when: "amount_cents > 20000000"}
-    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: up
     owner: Revenue Operations
     definition: Arithmetic mean of won amounts; deals above $200,000 are set aside, counted and listed, never dropped silently.
@@ -254,7 +263,7 @@ metrics:
     measure: cycle_days
     q: 0.5
     aggregation: non_additive
-    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
     favorable: down
     owner: Sales Operations
     definition: Median days from creation to the effective close date of deals closed won in the period.
@@ -267,12 +276,12 @@ metrics:
     kind: conversion
     anchor: {entity: lead, time: mql_date, where: "mql_date is not null"}
     link: converted_opportunity
-    target: {time: created_date}
+    event: converted_date   # when the lead converted, not when the opportunity was created
     window_days: 90
     maturity_days: 90
     output: rate
     aggregation: non_additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     applicability:
       - {dimension: source, members: [BDR Outbound, AE Self-Sourced, Partner], reason: These sources have no marketing qualification}
     favorable: up
@@ -287,13 +296,13 @@ metrics:
     kind: conversion
     anchor: {entity: lead, time: mql_date, where: "mql_date is not null"}
     link: converted_opportunity
-    target: {time: created_date}
+    event: converted_date   # when the lead converted, not when the opportunity was created
     window_days: 90
     maturity_days: 90
     output: lag
     q: 0.5
     aggregation: non_additive
-    dimensions: [segment, source, month, quarter]
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
     applicability:
       - {dimension: source, members: [BDR Outbound, AE Self-Sourced, Partner], reason: These sources have no marketing qualification}
     favorable: down
@@ -314,6 +323,86 @@ metrics:
     favorable: up
     owner: Revenue Operations
     definition: Mean of the per-month bookings over the closed months of the window.
+  - id: lost_deals
+    version: "1"
+    label: Lost deals
+    unit: count
+    population: New-business opportunities closed lost
+    basis: period
+    kind: sum
+    measure: lost_deals
+    aggregation: additive
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, fiscal_quarter, fiscal_year, calendar_quarter]
+    favorable: down
+    owner: Sales Operations
+    definition: Count of new-business opportunities closed lost, by effective close date.
+  - id: leads_created
+    version: "1"
+    label: Leads created
+    unit: count
+    population: Leads
+    basis: period
+    kind: sum
+    measure: leads_created
+    aggregation: additive
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
+    favorable: up
+    owner: Marketing
+    definition: Count of leads by creation date.
+  - id: demand_admitted_by_outcome
+    version: "1"
+    label: Demand episodes admitted (by outcome month)
+    unit: count
+    population: Demand episodes admitted to sales
+    basis: period
+    kind: sum
+    measure: episodes_admitted_by_outcome
+    aggregation: additive
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
+    favorable: up
+    owner: Sales Operations
+    definition: Demand episodes admitted, counted in the month the outcome happened.
+  - id: demand_rejected_by_outcome
+    version: "1"
+    label: Demand episodes rejected (by outcome month)
+    unit: count
+    population: Demand episodes turned down by sales
+    basis: period
+    kind: sum
+    measure: episodes_rejected_by_outcome
+    aggregation: additive
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
+    favorable: down
+    owner: Sales Operations
+    definition: Demand episodes rejected, counted in the month the outcome happened.
+  - id: demand_expired_by_outcome
+    version: "1"
+    label: Demand episodes expired (by outcome month)
+    unit: count
+    population: Demand episodes that aged out of the queue
+    basis: period
+    kind: sum
+    measure: episodes_expired_by_outcome
+    aggregation: additive
+    dimensions: [segment, source, month, fiscal_quarter, fiscal_year, calendar_quarter]
+    favorable: down
+    owner: Sales Operations
+    definition: Demand episodes expired, counted in the month the outcome happened.
+  - id: bookings_quarterly_average
+    version: "1"
+    label: Average fiscal-quarter bookings
+    unit: cents
+    population: Closed fiscal quarters of the window
+    basis: period
+    kind: rollup
+    of: bookings
+    period: fiscal_quarter
+    stat: mean
+    aggregation: non_additive
+    dimensions: [segment, region, source]
+    favorable: up
+    owner: Revenue Operations
+    definition: Mean of the per-fiscal-quarter bookings over the closed quarters of the window.
   - id: open_pipeline_deals
     version: "1"
     label: Open pipeline (deals)
@@ -341,7 +430,7 @@ metrics:
     owner: Sales Operations
     definition: Amount of new-business opportunities commercially open at T, amount as of T.
 
-plan_grain: [segment, source.group, quarter]
+plan_grain: [segment, source.group, fiscal_quarter]
 model_grain: [segment, source]
 roles:
   win_probability: {owner: Sales Operations, funnel_link: opportunity to won, type: outcome}
@@ -519,7 +608,10 @@ verified_queries:
     fixture: estate_a
 
 # ==================================================================================================
-# GUESSES ABOUT THE GENERATED COMPANY. The generator did not exist when this was written. Everything
+# RAW VALUES OF THE GENERATED COMPANY. First guessed, then corrected against the generator's extracts (seed 1):
+# campaign types are Paid Search, Paid Social, Trade Show, Webinar, Web Inbound and ABM Campaign; lead sources add
+# Web, Outbound, Partner and Self-Sourced; countries come as names, codes and variants (USA, U.S., UK, GB, Holland).
+# Everything
 # below that names a raw value (tier labels, campaign types, lead sources, role names, country
 # spellings) is a guess from the contract's field shapes. Correct it HERE and nowhere else.
 # ==================================================================================================
@@ -554,8 +646,8 @@ mappings:
         - version: v1
           adopted_on: 2025-01-01
           rules:
-            - {when: "code in ('US', 'CA', 'MX') or country in ('united states', 'united states of america', 'usa', 'us', 'u.s.', 'canada', 'mexico')", member: North America}
-            - {when: "code in ('GB', 'UK', 'DE', 'FR', 'NL', 'ES', 'IT', 'IE', 'SE', 'CH') or country in ('germany', 'united kingdom', 'uk', 'great britain', 'france', 'netherlands', 'spain', 'italy', 'ireland', 'sweden', 'switzerland')", member: EMEA}
+            - {when: "code in ('US', 'CA', 'MX') or country in ('united states', 'united states of america', 'usa', 'us', 'u.s.', 'canada', 'ca', 'mexico')", member: North America}
+            - {when: "code in ('GB', 'UK', 'DE', 'FR', 'NL', 'ES', 'IT', 'IE', 'SE', 'CH') or country in ('germany', 'de', 'united kingdom', 'uk', 'gb', 'great britain', 'france', 'fr', 'netherlands', 'holland', 'nl', 'spain', 'italy', 'ireland', 'sweden', 'switzerland')", member: EMEA}
   source:
     - entity: opportunity
       inputs:
@@ -572,20 +664,20 @@ mappings:
             - {step: sourcing_person_role, when: "sourcing_role in ('ae', 'account executive')", member: AE Self-Sourced}
             - {step: opportunity_campaign, when: "campaign_type in ('paid search', 'paid social', 'display')", member: Paid}
             - {step: opportunity_campaign, when: "campaign_type in ('trade show', 'event', 'webinar')", member: Events}
-            - {step: opportunity_campaign, when: "campaign_type in ('web', 'content', 'email', 'organic')", member: Inbound}
-            - {step: opportunity_campaign, when: "campaign_type = 'abm'", member: ABM}
+            - {step: opportunity_campaign, when: "campaign_type in ('web inbound', 'web', 'content', 'email', 'organic')", member: Inbound}
+            - {step: opportunity_campaign, when: "campaign_type in ('abm', 'abm campaign')", member: ABM}
             - {step: opportunity_campaign, when: "campaign_type in ('partner', 'partner referral')", member: Partner}
             - {step: converted_lead_campaign, when: "lead_campaign_type in ('paid search', 'paid social', 'display')", member: Paid}
             - {step: converted_lead_campaign, when: "lead_campaign_type in ('trade show', 'event', 'webinar')", member: Events}
-            - {step: converted_lead_campaign, when: "lead_campaign_type in ('web', 'content', 'email', 'organic')", member: Inbound}
-            - {step: converted_lead_campaign, when: "lead_campaign_type = 'abm'", member: ABM}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('web inbound', 'web', 'content', 'email', 'organic')", member: Inbound}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('abm', 'abm campaign')", member: ABM}
             - {step: converted_lead_campaign, when: "lead_campaign_type in ('partner', 'partner referral')", member: Partner}
             - {step: lead_source, when: "lead_source in ('outbound')", member: BDR Outbound}
             - {step: lead_source, when: "lead_source in ('self-sourced', 'self sourced')", member: AE Self-Sourced}
             - {step: lead_source, when: "lead_source in ('trade show', 'event', 'webinar')", member: Events}
-            - {step: lead_source, when: "lead_source in ('web', 'organic', 'inbound', 'content')", member: Inbound}
+            - {step: lead_source, when: "lead_source in ('web', 'web inbound', 'organic', 'inbound', 'content')", member: Inbound}
             - {step: lead_source, when: "lead_source in ('paid search', 'paid social', 'display')", member: Paid}
-            - {step: lead_source, when: "lead_source = 'abm'", member: ABM}
+            - {step: lead_source, when: "lead_source in ('abm', 'abm campaign')", member: ABM}
             - {step: lead_source, when: "lead_source in ('partner', 'partner referral')", member: Partner}
     - entity: lead
       inputs: {campaign_type: first_touch.campaign.type, lead_source: lead_source}
@@ -596,14 +688,14 @@ mappings:
           rules: &lead_source_rules
             - {when: "campaign_type in ('paid search', 'paid social', 'display')", member: Paid}
             - {when: "campaign_type in ('trade show', 'event', 'webinar')", member: Events}
-            - {when: "campaign_type in ('web', 'content', 'email', 'organic')", member: Inbound}
-            - {when: "campaign_type = 'abm'", member: ABM}
+            - {when: "campaign_type in ('web inbound', 'web', 'content', 'email', 'organic')", member: Inbound}
+            - {when: "campaign_type in ('abm', 'abm campaign')", member: ABM}
             - {when: "campaign_type in ('partner', 'partner referral')", member: Partner}
             - {when: "lead_source in ('outbound')", member: BDR Outbound}
             - {when: "lead_source in ('trade show', 'event', 'webinar')", member: Events}
-            - {when: "lead_source in ('web', 'organic', 'inbound', 'content')", member: Inbound}
+            - {when: "lead_source in ('web', 'web inbound', 'organic', 'inbound', 'content')", member: Inbound}
             - {when: "lead_source in ('paid search', 'paid social', 'display')", member: Paid}
-            - {when: "lead_source = 'abm'", member: ABM}
+            - {when: "lead_source in ('abm', 'abm campaign')", member: ABM}
             - {when: "lead_source in ('partner', 'partner referral')", member: Partner}
     - entity: demand_episode
       inputs: {campaign_type: lead.first_touch.campaign.type, lead_source: lead.lead_source}

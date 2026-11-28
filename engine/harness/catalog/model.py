@@ -1,12 +1,14 @@
 """The validated catalog, as plain immutable data."""
 
-from dataclasses import dataclass, field
+import hashlib
+from dataclasses import asdict, dataclass, field
 from datetime import date
+
+from .calendar import Calendar
 
 AGGREGATION = ("additive", "snapshot", "non_additive")
 KINDS = ("sum", "ratio", "quantile", "rollup", "conversion", "estimator")
 ATTRIBUTE_TIMES = ("at_creation", "at_close", "current")
-GRAINS = ("month", "quarter", "year")
 
 
 @dataclass(frozen=True)
@@ -129,6 +131,12 @@ class Catalog:
     model_grain: tuple[str, ...]
     roles: dict
     verified_queries: tuple[VerifiedQuery, ...]
+    calendar: Calendar = field(default_factory=Calendar)
+
+    @property
+    def content_hash(self) -> str:
+        """A hash of what the catalog says (not of its comments or layout), pinned by every cell's lineage."""
+        return hashlib.sha256(repr(asdict(self)).encode()).hexdigest()[:16]
 
     def metric(self, metric_id: str, version: str | None = None) -> Metric:
         found = [

@@ -20,13 +20,12 @@ JOINED = {  # derived columns that need a join on the main entity: name to (join
     ),
     "amount_at_t_cents": (
         (
-            "LEFT JOIN (SELECT opportunity_id, arg_max(amount_cents, valid_from) AS amount"
+            "LEFT JOIN (SELECT opportunity_id, arg_max_null(amount_cents, valid_from) AS amount"
             " FROM asof_opportunity_state($t, $k) GROUP BY 1) _st ON _st.opportunity_id = m.opportunity_id"
         ),
         "_st.amount",
     ),
 }
-TIME_FORMAT = {"month": "%Y-%m", "year": "%Y"}
 
 
 @dataclass(frozen=True)
@@ -56,12 +55,6 @@ def parse_axis(catalog: Catalog, text: str) -> Axis:
             f"dimension {name!r} has levels {list(dim.levels)}, not {level!r}"
         )
     return Axis(dim, level)
-
-
-def time_member(day: date, grain: str) -> str:
-    if grain == "quarter":
-        return f"{day.year}-Q{(day.month - 1) // 3 + 1}"
-    return day.strftime(TIME_FORMAT[grain])
 
 
 class Plan:
@@ -170,8 +163,14 @@ class Plan:
         cur = self._project(self.hop(path[:-1], "current"), col)
         if at == "current" or not versioned:
             return cur, "FALSE"
-        at_col = self._project(self.hop(path[:-1], at), col)
-        return f"COALESCE({at_col}, {cur})", f"({at_col} IS NULL AND {cur} IS NOT NULL)"
+        at_alias = self.hop(path[:-1], at)
+        at_col = self._project(at_alias, col)
+        # fall back to today's value only when no row existed at that time; a known NULL stays NULL (Unknown)
+        absent = f"{self._project(at_alias, VIEWS[self.catalog.entities[here].view].key)} IS NULL"
+        return (
+            f"CASE WHEN {absent} THEN {cur} ELSE {at_col} END",
+            f"({absent} AND {cur} IS NOT NULL)",
+        )
 
     def _project(self, alias: str, col: str) -> str:
         name = f"{alias}__{col}"
@@ -186,13 +185,7 @@ class Plan:
                 raise ValueError(
                     f"dimension {dim.name!r} needs a measure with a time column"
                 )
-            expr = (
-                f"strftime(date_trunc('{dim.grain}', CAST({self.time} AS DATE)), '{TIME_FORMAT[dim.grain]}')"
-                if dim.grain != "quarter"
-                else (
-                    f"strftime(CAST({self.time} AS DATE), '%Y') || '-Q' || CAST(quarter(CAST({self.time} AS DATE)) AS VARCHAR)"
-                )
-            )
+            expr = self.catalog.calendar.label_sql(self.time, dim.grain)
             self.axis_sql.append(f"{expr} AS {name}")
             return
         ver, mv = self.catalog.mapping_version(
@@ -246,6 +239,8 @@ class Plan:
 
     def where(self) -> str:
         parts = []
+        if self.time:  # no event after T is ever an actual, with or without a window
+            parts.append(f"{self.time} <= $t")
         if self.window is not None and self.time:
             parts.append(
                 f"{self.time} BETWEEN {self.params.add(self.window[0])} AND {self.params.add(self.window[1])}"

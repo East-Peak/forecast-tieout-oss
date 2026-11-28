@@ -37,6 +37,7 @@ def test_dependencies_stay_within_the_allowed_set():
     allowed = {"duckdb", "yaml", "numpy"}
     stdlib = {
         "re",
+        "hashlib",
         "ast",
         "statistics",
         "calendar",

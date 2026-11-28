@@ -4,12 +4,12 @@ import re
 from datetime import date
 from pathlib import Path
 
+from .calendar import GRAINS, Calendar
 from .columns import VIEWS
 from .expr import ExprError, Params, compile_expr
 from .model import (
     AGGREGATION,
     ATTRIBUTE_TIMES,
-    GRAINS,
     KINDS,
     Catalog,
     Dimension,
@@ -26,7 +26,7 @@ from .yamlio import ConfigError, LDict, LList, load_yaml
 
 NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 CARDINALITY = ("many_to_one", "one_to_one", "one_to_many", "many_to_many")
-TOP = ("catalog", "version", "entities", "dimensions", "mappings", "attribution_policy", "measures", "metrics",
+TOP = ("calendar", "catalog", "version", "entities", "dimensions", "mappings", "attribution_policy", "measures", "metrics",
        "plan_grain", "model_grain", "roles", "verified_queries")  # fmt: skip
 COMMON = ("id", "version", "label", "unit", "population", "basis", "kind", "aggregation", "dimensions", "applicability",
           "favorable", "owner", "definition", "ai_context", "exclusions", "maturity_days", "min_denominator")  # fmt: skip
@@ -35,7 +35,7 @@ KIND_KEYS = {
     "ratio": ("numerator", "denominator"),
     "quantile": ("measure", "q"),
     "rollup": ("of", "of_version", "period", "stat"),
-    "conversion": ("anchor", "link", "target", "window_days", "output", "q"),
+    "conversion": ("anchor", "link", "event", "target", "window_days", "output", "q"),
     "estimator": ("estimator", "inputs", "params"),
 }
 ROLE_KEYS = ("owner", "funnel_link", "type")
@@ -140,8 +140,14 @@ def load_catalog(source: str | Path, file: str | None = None) -> Catalog:
         grains[key] = _grain(v, root, key, dimensions)
     roles = _roles(v, root)
     queries = _verified(v, root, metrics)
+    cal = v.node(root, "calendar", LDict, False, LDict())
+    v.only(cal, ("fiscal_year_start_month", "fiscal_year_naming"), "calendar")
+    start = cal.get("fiscal_year_start_month", 1)
+    if not isinstance(start, int) or not 1 <= start <= 12:
+        v.fail(cal, "fiscal_year_start_month", "a month number from 1 to 12")
+    v.one_of(cal, "fiscal_year_naming", ("start_year",), False, "start_year")
     return Catalog(name, version, entities, dimensions, mappings, attribution, measures, tuple(metrics),
-                   grains["plan_grain"], grains["model_grain"], roles, tuple(queries))  # fmt: skip
+                   grains["plan_grain"], grains["model_grain"], roles, tuple(queries), Calendar(start))  # fmt: skip
 
 
 # ---- entities ---------------------------------------------------------------------------
@@ -514,10 +520,13 @@ def _metrics(v, node, measures, dimensions, mappings, entities):
         favorable = v.one_of(body, "favorable", ("up", "down", "none"))
         spec = {k: body[k] for k in KIND_KEYS[kind] if k in body}
         for key in KIND_KEYS[kind]:
-            if (
-                key not in body
-                and key not in ("of_version", "q", "params", "output", "window_days")
-                and not (kind == "conversion" and key == "target")
+            if key not in body and key not in (
+                "of_version",
+                "q",
+                "params",
+                "output",
+                "window_days",
+                "target",
             ):
                 v._missing(body, key)
         for ref in ("measure", "numerator", "denominator"):
@@ -600,11 +609,15 @@ def _conversion(v, body, spec, entities):
     rel = entities[entity].relationships.get(spec["link"])
     if rel is None or rel.cardinality not in ("many_to_one", "one_to_one"):
         v.fail(body, "link", f"a many_to_one or one_to_one relationship of '{entity}'")
-    target = v.node(spec, "target", LDict)
-    v.only(target, ("time", "where"), "conversion target")
+    if types.get(spec["event"]) != "date":
+        v.fail(
+            body,
+            "event",
+            f"the conversion event date is a date column of '{entity}' (when the lead converted)",
+        )
+    target = v.node(spec, "target", LDict, False, LDict())
+    v.only(target, ("where",), "conversion target")
     ttypes = _entity_columns(entities, rel.to, False)
-    if ttypes.get(target.get("time")) != "date":
-        v.fail(target, "time", f"a date column of '{rel.to}'")
     if "where" in target:
         v.predicate(target, "where", ttypes)
     out = v.one_of(spec, "output", ("rate", "lag"), False, "rate")

@@ -45,6 +45,7 @@ VIEWS = {
                   " owner_id:text sourcing_user_id:text stage:text amount_cents:int close_date:date created_at:ts deleted_at:ts"),
             simple={
                 "created_date": ("date", "CAST(created_at AS DATE)"),
+                "closed_by_t": ("bool", "COALESCE(close_date <= $t, FALSE)"),
                 "cycle_days": ("int", "date_diff('day', CAST(created_at AS DATE), close_date)"),
             },
             joined={"is_open": "bool", "amount_at_t_cents": "int"},
@@ -61,7 +62,10 @@ VIEWS = {
         View(
             "demand_episode", "episode_id",
             _cols("lead_id:text offer_seq:int offered_on:date mql_linked:bool outcome:text outcome_at:ts reason:text reason_class:text"),
-            simple={"episode_id": ("text", "lead_id || '#' || CAST(offer_seq AS VARCHAR)")},
+            simple={
+                "episode_id": ("text", "lead_id || '#' || CAST(offer_seq AS VARCHAR)"),
+                "outcome_date": ("date", "CAST(outcome_at AS DATE)"),
+            },
             created="offered_on",
         ),
         View("account", "account_id", _cols("account_id:text name:text tier:text billing_country:text billing_country_code:text created_at:ts deleted_at:ts")),

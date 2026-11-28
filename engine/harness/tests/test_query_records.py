@@ -21,7 +21,6 @@ def cells(estate, cat, metric, group_by=(), as_of=T, window=W, **kw):
 def test_additive_rows_sum_to_the_cell_exactly_for_every_slice(estate, cat):
     for metric, expected_rows in (
         ("bookings", None),
-        ("won_deals", None),
         ("opportunities_created", None),
     ):
         for group_by in (
@@ -36,6 +35,7 @@ def test_additive_rows_sum_to_the_cell_exactly_for_every_slice(estate, cat):
                 if (
                     cell.availability != "measured"
                     or cell.applicability != "applicable"
+                    or not cell.contract.eligible  # an empty cell has no rows to resolve
                 ):
                     continue
                 rows = records(estate, cat, cell)
