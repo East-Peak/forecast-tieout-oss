@@ -293,7 +293,7 @@ def test_where_segments_cannot_differ_in_price_the_company_action_is_the_workshe
     wins in time is what the worksheet does to the pooled timing."""
     from engine.tieout_core import lanes_basis
 
-    alike = lambda g, trailing, segments: {  # noqa: E731
+    alike = lambda g, trailing, segments: {
         s: lanes_basis.Sizes(D(1000), "", D(500), "") for s in segments
     }
     monkeypatch.setattr(lanes_basis, "sizes_now", alike)
