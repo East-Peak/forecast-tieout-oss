@@ -95,6 +95,34 @@ def test_types_are_generated_from_the_schema_in_memory_not_the_committed_copy(
     assert seen[0] == ['{"title": "FromMemory"}\n']
 
 
+def test_the_lanes_schemas_get_their_own_type_files_from_the_schemas_in_memory(
+    monkeypatch,
+):
+    """The four lanes schemas each define their own decimal types, so each compiles to its own
+    file; `--verify` compares them like the report types."""
+    seen = {}
+
+    def fake_run(args, cwd, check):
+        seen[Path(args[2]).name] = [Path(a).read_text() for a in args[3:]]
+        Path(args[2]).write_text("// types\n")
+
+    monkeypatch.setattr(gen.subprocess, "run", fake_run)
+    out = gen.types_files()
+    assert {p.name for p in out} >= {
+        "lanes.ts",
+        "lanesBasis.ts",
+        "lanesOwners.ts",
+        "lanesRecords.ts",
+    }
+    for target, make in (
+        ("lanes.ts", gen.lanes_contract.schema),
+        ("lanesBasis.ts", gen.lanes_contract.basis_schema),
+        ("lanesOwners.ts", gen.lanes_contract.owners_schema),
+        ("lanesRecords.ts", gen.lanes_records_contract.schema),
+    ):
+        assert seen[target] == [gen.lanes_contract.schema_text(make())]
+
+
 def test_the_generator_does_no_arithmetic_on_figures():
     source = Path(gen.__file__).read_text()
     assert "Decimal" not in source and "comparison_rows(" in source
