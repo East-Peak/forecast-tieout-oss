@@ -72,7 +72,7 @@ function otherWindowIds(): string[] {
 export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKey, acted: ReadonlySet<string> = new Set()): void {
   // with the plan's actions on the win rate the core solves for no setting: the driver says so in its limitation sentence, not in a figure
   const stacked = sheet.bridge.steps.some((s) => s.kind === "actions");
-  const isStacked = (d: Sheet["drivers"][number]) => stacked && d.driver === "win_rate" && d.needed_alone === null && d.cannot_scale_because === null;
+  const isStacked = (d: Sheet["drivers"][number]) => stacked && (d.driver === "win_rate" || d.driver === "cycle_days") && d.needed_alone === null && d.cannot_scale_because === null;
   // the rows stand in the report's own rank for the window (1 first, none last, ties in the report's order)
   const order = (ranks: Array<number | null>) =>
     ranks.map((_, i) => i).sort((a, b) => (ranks[a] ?? Infinity) - (ranks[b] ?? Infinity) || a - b);
@@ -123,7 +123,7 @@ export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKe
   const sentence = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => isStacked(d));
   many(DRIVER.neededStacked.id, sentence.map(([d]) => d.limitation!), sentence.map(([, i]) => rows[i]));
   // a size or creation row the plan has an action on says how the action stacks with its flex, in the core's sentence
-  const scaled = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.driver !== "win_rate" && acted.has(d.driver) && d.limitation !== null);
+  const scaled = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => (d.driver === "won_arr" || d.driver === "productivity") && acted.has(d.driver) && d.limitation !== null);
   many(DRIVER.scaled.id, scaled.map(([d]) => d.limitation!), scaled.map(([, i]) => rows[i]));
   // the label is in the cell where it does not solve, and in the opened row where it does
   const withWords = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone !== null);

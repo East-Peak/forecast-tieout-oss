@@ -21,7 +21,7 @@ export function ActionsBlock() {
     <Card data-testid="driver-actions">
       <SectionHeader
         title="Actions"
-        subtitle="Changes to the win rate, the size of a win, or the creation of new pipeline, valued on top of the plan's hires and programs. Each value is what removing that action loses, not a share of the joint gain."
+        subtitle="Changes to the win rate, the size of a win, the creation of new pipeline or how long wins take, valued on top of the plan's hires and programs. Each value is what removing that action loses, not a share of the joint gain."
       />
       <Table className={STACK.table} data-testid="driver-actions-table">
         <TableHead className={STACK.head}>

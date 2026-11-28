@@ -200,12 +200,12 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
   // where the plan's own actions on this driver sit against the worksheet: the core's evidence, which does not depend on a solve
   const placed = acted.filter((a) => a.evidence.position !== "none");
   const outsideByAction = placed.some((a) => a.evidence.position !== "inside");
-  const scaled = acted.length > 0 && driver.driver !== "win_rate" && driver.limitation !== null;
-  // the plan's actions sit on the win rate: the core solves for no setting, and says so in the driver's limitation
-  const unsolved = stacked && driver.driver === "win_rate" && driver.needed_alone === null && driver.cannot_scale_because === null;
-  // the three drivers an action can change have a favorable end, the high; the cycle (a longer one is worse) has none yet
-  const actionDriver = driver.driver === "cycle_days" ? null : driver.driver;
-  const favorable = actionDriver !== null && driver.historical !== null ? driver.historical.high.setting : null;
+  const scaled = acted.length > 0 && (driver.driver === "won_arr" || driver.driver === "productivity") && driver.limitation !== null;
+  // the plan's actions sit on the win rate, or move the cycle: the core solves for no setting, and says so in the driver's limitation
+  const unsolved = stacked && (driver.driver === "win_rate" || driver.driver === "cycle_days") && driver.needed_alone === null && driver.cannot_scale_because === null;
+  // each driver an action can change has a favorable end: the high setting, or for the cycle (a shorter one is better) the low
+  const actionDriver = driver.driver;
+  const favorable = driver.historical === null ? null : driver.driver === "cycle_days" ? driver.historical.low.setting : driver.historical.high.setting;
   const path = `${WS_ROWS.drivers}/${index}`;
   const { display } = driver;
   const needed = driver.needed_alone;
@@ -304,9 +304,9 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
         <div id={`driver-detail-${driver.driver}`} className="mt-2 flex flex-col gap-3 rounded-ft bg-slate-50 px-3 py-3 text-xs text-slate-700" data-testid="driver-detail">
           <p>
             This is an assumption to discuss
-            {driver.driver !== "cycle_days" && editor.wide
+            {editor.wide
               ? ": add it to the plan as an action to give it a start month, a ramp and a target of your own."
-              : ": it cannot be added to the plan as an item yet."}{" "}
+              : ": the plan editor needs a wider screen to add it to the plan as an action."}{" "}
             <Bound binding={DRIVER.appliesTo} row={path} />
           </p>
           {needed === null || needed.history_label === null ? null : <p><Bound binding={DRIVER.history} row={path} /></p>}

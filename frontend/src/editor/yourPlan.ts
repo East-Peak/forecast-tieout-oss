@@ -53,10 +53,10 @@ export interface ActionSeed {
 }
 
 /** What an action is called, by its driver: "Enterprise win-rate action". */
-const KIND: Record<ActionDriver, string> = { win_rate: "win-rate", won_arr: "deal-size", productivity: "creation" };
+const KIND: Record<ActionDriver, string> = { win_rate: "win-rate", won_arr: "deal-size", productivity: "creation", cycle_days: "cycle" };
 
 /** The drivers there are to act on. */
-export const ACTION_DRIVERS: readonly ActionDriver[] = ["win_rate", "won_arr", "productivity"];
+export const ACTION_DRIVERS: readonly ActionDriver[] = ["win_rate", "won_arr", "productivity", "cycle_days"];
 
 /**
  * The plan with a draft action added: the first month a plan may start in, no ramp. A slice that already has an action on the
@@ -91,7 +91,7 @@ export function sliceLabel(facts: Facts, slice: string): string {
 }
 
 /**
- * What "Add an action" adds: on the first driver (the win rate, the size, creation) that still has room, the company if it has
+ * What "Add an action" adds: on the first driver (the win rate, the size, creation, the cycle) that still has room, the company if it has
  * no action there yet, else the first segment without one. Null where every driver has an action on every segment.
  */
 export function nextAction(plan: PlanDoc, facts: Facts): { driver: ActionDriver; slice: string } | null {

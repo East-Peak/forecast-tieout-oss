@@ -156,7 +156,7 @@ describe("Plan an action here", () => {
 
   it("is not offered on another column, or on an owner row", async () => {
     await ready();
-    for (const column of ["bookings", "cycle", "created_arr", "won", "open"]) {
+    for (const column of ["bookings", "created_arr", "won", "open"]) {
       const panel = await open("segment/enterprise", column);
       expect(within(panel).queryByTestId("plan-action"), column).toBeNull();
       fireEvent.click(within(panel).getByRole("button", { name: "Close panel" }));
@@ -178,12 +178,13 @@ describe("Plan an action here", () => {
 });
 
 
-describe("Plan an action here, on the cells of the size of a win and of created deals", () => {
+describe("Plan an action here, on the cells of the size of a win, of created deals and of the cycle", () => {
   const sheet = REPORT.worksheet as { drivers: Array<{ driver: string; current: { value: string } }> };
   const baseline = (driver: string) => sheet.drivers.find((d) => d.driver === driver)!.current.value;
   const CASES = [
     ["avg_won_arr", "won_arr", /average won ARR of the lane's wins/],
     ["created", "productivity", /deals created in the period/],
+    ["cycle", "cycle_days", /mean days from creation to close of the wins that land in the period/],
   ] as const;
 
   it.each(CASES)("is offered on the %s cell of the company and of a segment, with the slice as context and a line on what the cell's number is", async (column, _driver, says) => {

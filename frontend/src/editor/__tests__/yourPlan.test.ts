@@ -60,6 +60,8 @@ describe("a draft action on another driver", () => {
     ]);
     const creation = withAction(EMPTY, FACTS, { slice: "company", driver: "productivity", target: "2.0662", origin: "tornado" });
     expect(creation.plan.actions?.[0]).toMatchObject({ name: "Company creation action", driver: "productivity", target: "2.0662" });
+    const cycle = withAction(EMPTY, FACTS, { slice: "enterprise", driver: "cycle_days", target: "132.74", origin: "grid" });
+    expect(cycle.plan.actions?.[0]).toMatchObject({ name: "Enterprise cycle action", driver: "cycle_days", target: "132.74" });
   });
 
   it("is a second action where the slice has one on another driver, and the same one where it is the same driver", () => {
@@ -71,10 +73,11 @@ describe("a draft action on another driver", () => {
     expect(again.id).toBe("action-1");
   });
 
-  it("holds as many as three drivers on every segment, and no driver more than once on a slice", () => {
+  it("holds as many as four drivers on every segment, and no driver more than once on a slice", () => {
     let plan = EMPTY;
-    for (const driver of ["win_rate", "won_arr", "productivity"] as const) for (const s of ["commercial", "enterprise", "mid_market"]) plan = withAction(plan, FACTS, { slice: s, driver, target: "1", origin: "grid" }).plan;
-    expect(plan.actions).toHaveLength(9);
+    for (const driver of ["win_rate", "won_arr", "productivity", "cycle_days"] as const) for (const s of ["commercial", "enterprise", "mid_market"]) plan = withAction(plan, FACTS, { slice: s, driver, target: "1", origin: "grid" }).plan;
+    expect(plan.actions).toHaveLength(12);
+    expect(new Set(plan.actions?.map((a) => a.id)).size).toBe(12);
     expect(withAction(plan, FACTS, { slice: "company", driver: "won_arr", target: "1", origin: "tornado" })).toMatchObject({ plan, id: null });
   });
 });

@@ -289,13 +289,13 @@ describe("actions: the list and the form, beside hires and programs", () => {
 
   it("removes an action, and stops offering another once every segment has one on each driver", async () => {
     const { store } = await mounted(ACTIONS_PLAN, SEGMENTS);
-    for (let n = 2; n <= 9; n++) {
+    for (let n = 2; n <= 12; n++) {
       fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
       expect(store.snapshot.drafts.acme.actions).toHaveLength(n);
     }
     expect(screen.getByRole("button", { name: "Add an action" })).toBeDisabled();
     fireEvent.click(screen.getAllByRole("button", { name: "Remove action" })[0]);
-    expect(store.snapshot.drafts.acme.actions).toHaveLength(8);
+    expect(store.snapshot.drafts.acme.actions).toHaveLength(11);
     expect(screen.getByRole("button", { name: "Add an action" })).toBeEnabled();
   });
 
@@ -481,11 +481,11 @@ describe("actions on the other drivers: the driver, the target in its terms, and
   const elements = (id: string) => Array.from(document.querySelectorAll<HTMLElement>(`[data-binding='${id}']`));
   const mount3 = () => mounted(DRIVERS_PLAN, SEGMENTS, DRIVERS_REPORT);
 
-  it("offers the three drivers in each row, and shows the target in the driver's own terms", async () => {
+  it("offers the four drivers in each row, and shows the target in the driver's own terms", async () => {
     await mount3();
     const rows = actionRows().map((r) => within(r));
     expect(rows).toHaveLength(3);
-    for (const r of rows) expect(Array.from((r.getByLabelText("Changes") as HTMLSelectElement).options).map((o) => o.text)).toEqual(["Win rate", "Won ARR per win", "Creation productivity"]);
+    for (const r of rows) expect(Array.from((r.getByLabelText("Changes") as HTMLSelectElement).options).map((o) => o.text)).toEqual(["Win rate", "Won ARR per win", "Creation productivity", "Cycle length"]);
     expect(rows.map((r) => (r.getByLabelText("Changes") as HTMLSelectElement).value)).toEqual(["win_rate", "won_arr", "productivity"]);
     expect(rows[0].getByLabelText("Target win rate (percent)")).toHaveValue("26");
     expect(rows[1].getByLabelText("Target won ARR per win (dollars)")).toHaveValue("450000");
@@ -549,7 +549,7 @@ describe("actions on the other drivers: the driver, the target in its terms, and
     await mount3();
     const line = screen.getByTestId("actions-line");
     expect(line).toHaveTextContent(CORE.line);
-    expect(line).toHaveTextContent(/the size of a win, or how many deals people create/);
+    expect(CORE.line).not.toBe((files.report("sapling-industries", "as-signed").driver_actions as { line: string }).line); // not the win rate's own line
   });
 
   it("moves a row to another driver with the target at that driver's baseline, and renames it only if it still had its own default name", async () => {
@@ -601,5 +601,86 @@ describe("actions on the other drivers: the driver, the target in its terms, and
     expect(document.querySelectorAll("[data-binding='driver-actions.item.change-percent']")).toHaveLength(0);
     expect(document.querySelectorAll("[data-binding='driver-actions.item.change-points']")).toHaveLength(0);
     expect(screen.getByTestId("action-pending")).toBeInTheDocument();
+  });
+});
+
+
+describe("an action on the cycle: days as typed, its baseline and settings from the cycle row, the core's evidence and a plain word that it is an assumption", () => {
+  const FOUR_FIXTURE = resolve(__dirname, "../../__tests__/fixtures/your-plan-four-drivers");
+  const FOUR_REPORT = JSON.parse(readFileSync(resolve(FOUR_FIXTURE, "report.json"), "utf8")) as TieoutReport;
+  const FOUR_PLAN = JSON.parse(readFileSync(resolve(FOUR_FIXTURE, "plan.json"), "utf8")) as PlanDoc;
+  const CORE = FOUR_REPORT.driver_actions as Extract<TieoutReport["driver_actions"], { joint_gain: unknown }>;
+  const cycle = (FOUR_REPORT.worksheet as { drivers: Array<{ driver: string; unit_label: string; current: { value: string }; historical: { low: { setting: string }; high: { setting: string } } }> }).drivers.find((d) => d.driver === "cycle_days")!;
+
+  it("shows the target in days, as typed, with the unit the worksheet gives, and sends it as typed", async () => {
+    const { store } = await mounted(FOUR_PLAN, SEGMENTS, FOUR_REPORT);
+    const rows = actionRows();
+    expect(rows).toHaveLength(4);
+    const mine = within(rows[3]);
+    expect(mine.getByLabelText("Changes")).toHaveValue("cycle_days");
+    expect(mine.getByLabelText("Target cycle length (days)")).toHaveValue("110");
+    fireEvent.change(mine.getByLabelText("Target cycle length (days)"), { target: { value: "118." } });
+    expect(store.snapshot.drafts.acme.actions?.[3].target).toBe("118.");
+    expect(cycle.unit_label).toBe("days from creation to win");
+  });
+
+  it("reads the baseline, low and high from the cycle row and the core's change in percent and resulting days for the action as applied", async () => {
+    const { context } = await mounted(FOUR_PLAN, SEGMENTS, FOUR_REPORT);
+    const e = CORE.items[3].evidence as { change_percent: string; resulting: string; label: string; position: string };
+    const failures = checkBindings(
+      document.body,
+      [
+        { id: "driver-actions.form.cycle_days.baseline", texts: [fmt.decimal2(cycle.current.value)] },
+        { id: "driver-actions.form.cycle_days.low", texts: [fmt.decimal2(cycle.historical.low.setting)] },
+        { id: "driver-actions.form.cycle_days.high", texts: [fmt.decimal2(cycle.historical.high.setting)] },
+        { id: "driver-actions.form.cycle_days.unit", texts: [cycle.unit_label] },
+        { id: "driver-actions.item.resulting.cycle_days", texts: [fmt.decimal2(e.resulting)], rows: ["/driver_actions/items/3"] },
+      ],
+      [],
+      DRIVER_ACTION_BINDINGS,
+      context,
+      ["driver-actions.form.baseline", "driver-actions.form.low", "driver-actions.form.high", "driver-actions.form.won_arr", "driver-actions.form.productivity", "driver-actions.form.line", "driver-actions.item.change", "driver-actions.item.label", "driver-actions.item.resulting.won_arr", "driver-actions.item.resulting.productivity", "driver-actions.item.low", "driver-actions.item.high"],
+    );
+    expect(failures).toEqual([]);
+    expect(unboundDigits(document.body)).toEqual([]);
+  });
+
+  it("says it is an entered timing assumption, in words with no figure, beside every cycle action", async () => {
+    await mounted(FOUR_PLAN, SEGMENTS, FOUR_REPORT);
+    const notes = screen.getAllByTestId("action-timing-note");
+    expect(notes).toHaveLength(1);
+    expect(notes[0]).toHaveTextContent(/entered timing assumption on the pooled history/);
+  });
+
+  it("moves a row to the cycle with the target at the pooled cycle", async () => {
+    const { store } = await mounted(DEMO, SEGMENTS, FOUR_REPORT);
+    fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+    fireEvent.change(screen.getByLabelText("Changes"), { target: { value: "cycle_days" } });
+    expect(store.snapshot.drafts.acme.actions).toEqual([{ id: "action-0", name: "Company cycle action", driver: "cycle_days", slice: "company", start: "2026-09", ramp_months: 0, target: cycle.current.value }]);
+  });
+
+  it("adds the cycle after the win rate, size and creation have an action on every slice", async () => {
+    const { store } = await mounted(DEMO, SEGMENTS, FOUR_REPORT);
+    for (let n = 0; n < 12; n++) fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+    const held = store.snapshot.drafts.acme.actions!;
+    expect(held).toHaveLength(12);
+    expect(held.slice(9).map((a) => [a.driver, a.slice])).toEqual([["cycle_days", "company"], ["cycle_days", "commercial"], ["cycle_days", "enterprise"]]);
+  });
+
+  it("shows the core's refusal of a cycle target beside its item, in its words", async () => {
+    const { editor } = await mounted(FOUR_PLAN, SEGMENTS, FOUR_REPORT);
+    const message = "'Enterprise cycle' asks for 50 days, less than half the pooled cycle of 132.74 days. That is a guardrail on what an entered timing can be, not a finding about what is achievable.";
+    editor.next = { kind: "invalid", errors: [{ section: "actions", index: 4, position: 3, message, code: "target" }] };
+    fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+    expect(await within(actionRows()[3]).findByRole("alert")).toHaveTextContent(message);
+  });
+
+  it("names the cycle bar and the cell in the note on a draft", async () => {
+    const { store } = await mounted(DEMO, SEGMENTS, FOUR_REPORT);
+    act(() => store.draftAction("acme", { slice: "company", driver: "cycle_days", target: cycle.historical.low.setting, origin: "tornado" }));
+    expect(await screen.findByTestId("action-origin")).toHaveTextContent(/Started from the cycle bar\. Its value will differ from the bar's figure/);
+    act(() => store.draftAction("acme", { slice: "enterprise", driver: "cycle_days", target: cycle.current.value, origin: "grid" }));
+    await waitFor(() => expect(screen.getAllByTestId("action-origin")).toHaveLength(2));
+    expect(screen.getAllByTestId("action-origin")[1]).toHaveTextContent(/wins that land in the period/);
   });
 });

@@ -18,10 +18,11 @@ const DRIVER_NAMES: Record<ActionDriver, { choice: string; target: string }> = {
   win_rate: { choice: DRIVER_CHOICE.win_rate, target: "Target win rate (percent)" },
   won_arr: { choice: DRIVER_CHOICE.won_arr, target: "Target won ARR per win (dollars)" },
   productivity: { choice: DRIVER_CHOICE.productivity, target: "Target creation productivity (deals)" },
+  cycle_days: { choice: DRIVER_CHOICE.cycle_days, target: "Target cycle length (days)" },
 };
 
 /** The bar a draft was started from, in the visitor's words for it. */
-const BAR: Record<ActionDriver, string> = { win_rate: "win-rate", won_arr: "deal-size", productivity: "creation" };
+const BAR: Record<ActionDriver, string> = { win_rate: "win-rate", won_arr: "deal-size", productivity: "creation", cycle_days: "cycle" };
 
 const GRID_NOTES: Record<ActionDriver, string> = {
   win_rate: "Started from a grid cell. The target begins at the pooled baseline: the cell's own number is a dated cohort rate, not the win rate the model changes.",
@@ -29,7 +30,12 @@ const GRID_NOTES: Record<ActionDriver, string> = {
     "Started from a grid cell. The target begins at the pooled baseline: the cell's own number is the average won ARR of the lane's wins, a blend of sizes that a forecast prices by sharing the pooled bookings out, not the size the model changes.",
   productivity:
     "Started from a grid cell. The target begins at the pooled baseline: the cell's own number is the deals created in the period, while the action changes how many deals the slice's people create per ramped AE-month (or per day where that term is not in use).",
+  cycle_days:
+    "Started from a grid cell. The target begins at the pooled baseline: the cell's own number is the mean days from creation to close of the wins that land in the period (recorded, still expected and new blended), not the cycle the model changes.",
 };
+
+/** The binding of an applied amount-driver action's resulting value, by driver. */
+const RESULTING = { won_arr: EVIDENCE_AMOUNT.resultingSize, productivity: EVIDENCE_AMOUNT.resultingCreation, cycle_days: EVIDENCE_AMOUNT.resultingCycle } as const;
 
 const originNote = (origin: ActionOrigin, driver: ActionDriver): string =>
   origin === "grid"
@@ -127,7 +133,7 @@ export function ActionsFieldset({ company, store, facts, draft, applied, origins
         const mine = errors.filter((e) => e.section === "actions" && e.position === i);
         return (
           <div key={action.id} data-testid="action-row" data-action-id={action.id} className="rounded-ft border border-slate-100 p-3">
-            <div className="grid grid-cols-2 items-end gap-3 xl:grid-cols-[1.8fr_1.5fr_1.2fr_1.5fr_1.2fr]">
+            <div className="grid grid-cols-2 items-end gap-3 lg:grid-cols-4 xl:grid-cols-[1.8fr_1.5fr_1.2fr_1.5fr_1.2fr]">
               <Field label="Action name">
                 <input className={fieldClass} type="text" value={action.name ?? ""} onChange={(e) => replace(i, (a) => ({ ...a, name: e.target.value }))} />
               </Field>
@@ -205,7 +211,7 @@ export function ActionsFieldset({ company, store, facts, draft, applied, origins
                   ) : (
                     <>
                       As applied: <Bound binding={EVIDENCE_AMOUNT.changePercent} row={evidence.row} className="font-semibold text-slate-900" /> percent on the baseline, resulting{" "}
-                      <Bound binding={action.driver === "won_arr" ? EVIDENCE_AMOUNT.resultingSize : EVIDENCE_AMOUNT.resultingCreation} row={evidence.row} className="font-semibold text-slate-900" />.{" "}
+                      <Bound binding={RESULTING[action.driver]} row={evidence.row} className="font-semibold text-slate-900" />.{" "}
                       {evidence.outside ? <Bound binding={EVIDENCE.label} row={evidence.row} className="font-medium text-amber-800" /> : null}
                     </>
                   )
@@ -214,10 +220,16 @@ export function ActionsFieldset({ company, store, facts, draft, applied, origins
                     {action.driver === "win_rate" ? "The core reports the change in points and the resulting rate when you apply." : "The core reports the change in percent and the resulting value when you apply."}
                   </span>
                 )}
+
               </p>
             ) : (
               <p className="mt-2 text-xs text-slate-600">The worksheet cannot be built for this plan, so there is no baseline to show beside the target.</p>
             )}
+            {action.driver === "cycle_days" ? (
+              <p className="mt-1 text-xs text-slate-600" data-testid="action-timing-note">
+                A cycle target is an entered timing assumption on the pooled history, not a finding about what a team can do.
+              </p>
+            ) : null}
             {origin ? (
               <p className="mt-1 text-xs text-slate-600" data-testid="action-origin">
                 {originNote(origin, action.driver)}

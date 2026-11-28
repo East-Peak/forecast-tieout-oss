@@ -27,7 +27,7 @@ export interface ProgramDoc {
   cost?: number;
 }
 /** The drivers an action can change: the win rate, the size of a win, and how many deals people create. */
-export type ActionDriver = "win_rate" | "won_arr" | "productivity";
+export type ActionDriver = "win_rate" | "won_arr" | "productivity" | "cycle_days";
 
 /** A change to one driver in one slice: "slice" is "company" or a segment, "target" in the driver's own terms (a probability, dollars per won deal, deals per ramped AE-month or per day; a decimal string, as the core reads it). */
 export interface ActionDoc {

@@ -119,6 +119,10 @@ const PLANNED: Partial<Record<ColumnKey, { driver: ActionDriver; says: string }>
     driver: "won_arr",
     says: "The target starts at the pooled baseline, to change: this cell's number is the average won ARR of the lane's wins, a blend of sizes (a forecast cell is priced by sharing the pooled bookings out), not the size the model changes.",
   },
+  cycle: {
+    driver: "cycle_days",
+    says: "The target starts at the pooled baseline, to change: this cell's number is the mean days from creation to close of the wins that land in the period (recorded, still expected and new blended), not the target and not the pooled cycle the model changes.",
+  },
   created: {
     driver: "productivity",
     says: "The target starts at the pooled baseline, to change: this cell's number is the deals created in the period, while an action changes how many deals the slice's people create per ramped AE-month (or per day where that term is not in use).",

@@ -12,6 +12,7 @@ const SECTION = "/driver_actions";
 const WIN_RATE = "/worksheet/drivers/{driver=win_rate}";
 const SIZE = "/worksheet/drivers/{driver=won_arr}";
 const CREATION = "/worksheet/drivers/{driver=productivity}";
+const CYCLE = "/worksheet/drivers/{driver=cycle_days}";
 const REST = "rest of fiscal year";
 const TWELVE = "next twelve months";
 
@@ -46,8 +47,16 @@ const FORM_CREATION = {
   unit: text("driver-actions.form.productivity.unit", `${CREATION}/unit_label`),
 } as const;
 
+/** And beside an action on the cycle: the pooled mean days from creation to win and the worksheet's low and high, in days. */
+const FORM_CYCLE = {
+  baseline: deals("driver-actions.form.cycle_days.baseline", `${CYCLE}/current/value`, { unavailable: words("no baseline") }),
+  low: deals("driver-actions.form.cycle_days.low", `${CYCLE}/historical/low/setting`, { unavailable: words("not offered") }),
+  high: deals("driver-actions.form.cycle_days.high", `${CYCLE}/historical/high/setting`, { unavailable: words("not offered") }),
+  unit: text("driver-actions.form.cycle_days.unit", `${CYCLE}/unit_label`),
+} as const;
+
 /** What the form reads for each driver's action. */
-export const FORM_BY_DRIVER = { win_rate: FORM, won_arr: FORM_SIZE, productivity: FORM_CREATION } as const;
+export const FORM_BY_DRIVER = { win_rate: FORM, won_arr: FORM_SIZE, productivity: FORM_CREATION, cycle_days: FORM_CYCLE } as const;
 
 /** One action's own evidence, read from `/driver_actions/items/{i}`: the core's change in points, the resulting rate, and where the target sits against the worksheet. */
 export const EVIDENCE = {
@@ -63,6 +72,7 @@ export const EVIDENCE_AMOUNT = {
   changePercent: deals("driver-actions.item.change-percent", "/evidence/change_percent"),
   resultingSize: dollars("driver-actions.item.resulting.won_arr", "/evidence/resulting"),
   resultingCreation: deals("driver-actions.item.resulting.productivity", "/evidence/resulting"),
+  resultingCycle: deals("driver-actions.item.resulting.cycle_days", "/evidence/resulting"),
 } as const;
 
 /** The Actions block, after Apply. */
@@ -95,10 +105,11 @@ export const DRIVER_ACTION_BINDINGS: readonly Binding[] = [
   ...Object.values(FORM),
   ...Object.values(FORM_SIZE),
   ...Object.values(FORM_CREATION),
+  ...Object.values(FORM_CYCLE),
   ...Object.values(EVIDENCE),
   ...Object.values(EVIDENCE_AMOUNT),
   ...Object.values(BLOCK),
 ];
 
 /** What each driver is called beside an action (a name, not a figure). */
-export const DRIVER_CHOICE = { win_rate: "Win rate", won_arr: "Won ARR per win", productivity: "Creation productivity" } as const;
+export const DRIVER_CHOICE = { win_rate: "Win rate", won_arr: "Won ARR per win", productivity: "Creation productivity", cycle_days: "Cycle length" } as const;

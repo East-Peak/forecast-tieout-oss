@@ -34,6 +34,13 @@ describe("the same reading for the other drivers an action can change", () => {
     expect(driverReading(r, "productivity")).toMatchObject({ present: true, baseline: "2.0662", favorable: "2.4056" });
   });
 
+  it("reads the cycle's favorable end as the low setting: a shorter cycle is the better one", () => {
+    const four = files.fixture("../fixtures/your-plan-four-drivers/report.json");
+    const row = (four.worksheet as { drivers: Array<{ driver: string; current: { value: string }; historical: { low: { setting: string }; high: { setting: string } } }> }).drivers.find((d) => d.driver === "cycle_days")!;
+    expect(driverReading(four, "cycle_days")).toEqual({ present: true, baseline: row.current.value, favorable: row.historical.low.setting });
+    expect(row.historical.low.setting).not.toBe(row.historical.high.setting);
+  });
+
   it("is nothing where the worksheet cannot be built", () => {
     const none = structuredClone(r);
     (none as { worksheet: unknown }).worksheet = { unavailable: "no worksheet" };

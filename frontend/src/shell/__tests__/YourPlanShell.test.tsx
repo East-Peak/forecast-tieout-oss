@@ -274,6 +274,7 @@ describe("the tornado opens the editor in place", () => {
   it.each([
     ["won_arr", "Target won ARR per win (dollars)", "deal-size", (high: string) => high],
     ["productivity", "Target creation productivity (deals)", "creation", (high: string) => high],
+    ["cycle_days", "Target cycle length (days)", "cycle", (_high: string, low: string) => low],
   ] as const)("Add to plan on the %s bar opens a draft company action on that driver at the worksheet's favorable end, and applies nothing", async (driver, label, bar, shown) => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
@@ -282,20 +283,20 @@ describe("the tornado opens the editor in place", () => {
       if (!el) throw new Error("not yet");
       return el as HTMLElement;
     });
-    const sheet = files.report("sprout-labs", "as-signed").worksheet as { drivers: Array<{ driver: string; historical: { high: { setting: string } } }> };
-    const high = sheet.drivers.find((d) => d.driver === driver)!.historical.high.setting;
+    const sheet = files.report("sprout-labs", "as-signed").worksheet as { drivers: Array<{ driver: string; historical: { high: { setting: string }; low: { setting: string } } }> };
+    const { high, low } = { high: sheet.drivers.find((d) => d.driver === driver)!.historical.high.setting, low: sheet.drivers.find((d) => d.driver === driver)!.historical.low.setting };
     fireEvent.click(within(row).getByRole("button", { name: "Add to plan" }));
     await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
     const action = await screen.findByTestId("action-row");
     expect(within(action).getByLabelText("Changes")).toHaveValue(driver);
     expect(within(action).getByLabelText("Slice")).toHaveValue("company");
-    expect(within(action).getByLabelText(label)).toHaveValue(shown(high));
+    expect(within(action).getByLabelText(label)).toHaveValue(shown(high, low));
     expect(screen.getByTestId("action-origin")).toHaveTextContent(`Started from the ${bar} bar. Its value will differ from the bar's figure`);
     expect(screen.getByTestId("plan-unapplied")).toBeInTheDocument();
     expect(editor.applied).toEqual([DEMO]);
   });
 
-  it("only the cycle bar has no button; the win-rate, size and creation bars each have one, and the worksheet's two unit actions keep theirs", async () => {
+  it("every driver's bar has the button, and the worksheet's two unit actions keep theirs", async () => {
     const editor = new FakeEditor();
     open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
     await waitFor(() => expect(document.querySelector("[data-testid='driver-row']")).not.toBeNull());
@@ -303,7 +304,7 @@ describe("the tornado opens the editor in place", () => {
     expect(drivers.length).toBeGreaterThan(1);
     for (const row of drivers) {
       const buttons = within(row).queryAllByRole("button", { name: "Add to plan" });
-      expect(buttons, row.getAttribute("data-driver") ?? "").toHaveLength(row.getAttribute("data-driver") === "cycle_days" ? 0 : 1);
+      expect(buttons, row.getAttribute("data-driver") ?? "").toHaveLength(1);
     }
     expect(document.querySelectorAll("[data-testid='worksheet-action-row'] button").length).toBeGreaterThan(0);
   });
