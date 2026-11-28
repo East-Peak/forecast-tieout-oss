@@ -49,7 +49,7 @@ def nothing_changes(state, **kw):
     h, i = actions.plan_inputs(g, plan)
     lift = da.effect_for(state, plan, h, i).lift
     assert lift
-    for segment, moves in lift.cycle.items():
+    for moves in lift.cycle.values():
         for c in set(moves):
             assert lift.transport.scaled(Fraction(1) + c)[0] == lift.transport.samples
     return lift, h, i
