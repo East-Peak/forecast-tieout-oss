@@ -66,11 +66,28 @@ const RECORD = `(() => {
       super(...args);
       this.addEventListener("message", (e) => { if (e.data && e.data.type === "applied" && e.data.report) window.__reports.push(e.data.report); });
     }
+    postMessage(m, ...rest) {
+      if (m && m.type === "apply") window.__requests.push(m.plan);
+      return super.postMessage(m, ...rest);
+    }
   };
 })();`;
 
 const reports = (page: Page) => page.evaluate(() => (window as unknown as { __reports: string[] }).__reports);
 const lastReport = async (page: Page) => (await reports(page)).slice(-1)[0];
+/** The plan of the last Apply the page sent to the worker, as the worker received it. */
+const lastRequestedPlan = async (page: Page) => JSON.parse(((await page.evaluate(() => (window as unknown as { __requests: string[] }).__requests)).slice(-1)[0]) ?? "null") as Plan | null;
+
+/** The items the form holds right now, read from its fields, in the form of `describe`. */
+const formItems = (page: Page) =>
+  page.evaluate(() => ({
+    hires: Array.from(document.querySelectorAll("[data-testid='hire-row']")).map((r) => Array.from(r.querySelectorAll("select, input")).map((e) => (e as HTMLInputElement).value).join("/")),
+    programs: Array.from(document.querySelectorAll("[data-testid='program-row']")).map((r) => Array.from(r.querySelectorAll("input")).map((e) => (e as HTMLInputElement).value).join("/")),
+  }));
+const describe_ = (plan: Plan) => ({
+  hires: plan.hires.map((h) => `${h.segment}/${h.count}/${h.start}`),
+  programs: plan.programs.map((p) => `${p.name}/${p.pipeline}/${p.cost ?? ""}/${p.ramp_months ?? ""}`),
+});
 
 async function newPage(context: BrowserContext, search = "") {
   await context.addInitScript(RECORD);
@@ -90,10 +107,34 @@ async function goTo(page: Page, screen: string) {
   await expect(heading(page)).toHaveText(screen);
 }
 
-async function enter(page: Page, plan: Plan) {
-  for (const kind of ["hire", "program"]) {
-    while ((await page.getByRole("button", { name: `Remove ${kind}` }).count()) > 0) await page.getByRole("button", { name: `Remove ${kind}` }).first().click();
+/**
+ * Show a company's form the way a visitor waits for it: the old company's form is still on screen when the selector
+ * changes (and is gone for a moment while the new one loads), so "a form is visible" proves nothing; the screen itself
+ * must be the new company's.
+ */
+async function switchCompany(page: Page, company: string) {
+  await page.locator("#company-selector").selectOption(company);
+  await expect(page.locator("#scenario-selector")).toHaveValue("your-plan");
+  await expect(page.locator("main [data-binding]").first()).toHaveAttribute("data-company", company, { timeout: 90_000 });
+  await expect(page.getByTestId("plan-form")).toBeVisible({ timeout: 90_000 });
+}
+
+/** Empty the form through its own buttons, one row at a time, waiting for each row to go before the next click. */
+async function clearForm(page: Page) {
+  for (const kind of ["hire", "program"] as const) {
+    const rows = page.getByTestId(`${kind}-row`);
+    for (let left = await rows.count(); left > 0; left--) {
+      await page.getByRole("button", { name: `Remove ${kind}`, exact: true }).first().click();
+      await expect(rows).toHaveCount(left - 1);
+    }
   }
+}
+
+/** Set the form to exactly `plan`, and say so: a form that holds anything else fails here, naming what it holds. */
+async function enter(page: Page, plan: Plan) {
+  await expect(page.getByTestId("plan-form")).toBeVisible();
+  await clearForm(page);
+  expect(await formItems(page), "the form is empty before the plan is entered").toEqual({ hires: [], programs: [] });
   for (const h of plan.hires) {
     await page.getByRole("button", { name: "Add a hire" }).click();
     const row = page.getByTestId("hire-row").last();
@@ -110,13 +151,16 @@ async function enter(page: Page, plan: Plan) {
     if (p.cost !== undefined) await row.getByLabel("Cost (optional)").fill(String(p.cost));
     if (p.ramp_months !== undefined) await row.getByLabel("Ramp in months (optional)").fill(String(p.ramp_months));
   }
+  expect(await formItems(page), "the form holds exactly the plan about to be applied").toEqual(describe_(plan));
 }
 
-async function apply(page: Page) {
+async function apply(page: Page, plan?: Plan) {
   const before = (await reports(page)).length;
   await page.getByRole("button", { name: "Apply" }).click();
   await expect.poll(async () => (await reports(page)).length, { timeout: 60_000 }).toBe(before + 1);
   await expect(page.getByRole("button", { name: "Apply" })).toBeEnabled();
+  // what the worker was asked to compute is the plan that was meant, so a wrong plan fails here in a line, not as a diff of two reports
+  if (plan) expect(await lastRequestedPlan(page), "the plan sent to the core is the plan entered").toEqual(plan);
 }
 
 const sideways = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -167,12 +211,7 @@ test.describe("the plan editor, one shared page @smoke", () => {
     test(`${company}: the demo plan's items entered through the form give the committed demo-plan report, but for its name @smoke`, async () => {
       if ((await page.locator("#company-selector").inputValue()) !== company) {
         const seen = (await reports(page)).length;
-        await page.locator("#company-selector").selectOption(company);
-        await expect(page.locator("#scenario-selector")).toHaveValue("your-plan");
-        // The old company's form is still on screen when the selector changes, so "the form is visible" proves nothing yet:
-        // wait for the screen itself to be the new company's, which it is only once its report has been computed and shown.
-        await expect(page.locator("main [data-binding]").first()).toHaveAttribute("data-company", company, { timeout: 90_000 });
-        await expect(page.getByTestId("plan-form")).toBeVisible({ timeout: 90_000 });
+        await switchCompany(page, company);
         if (!visited.has(company)) {
           expect((await reports(page)).length, "a company's first load computes its demo plan, once").toBe(seen + 1);
           expect(await lastReport(page), "the first load of a company is its demo plan").toBe(asYourPlan(company));
@@ -180,18 +219,17 @@ test.describe("the plan editor, one shared page @smoke", () => {
       }
       visited.add(company);
       await enter(page, DEMO[company]);
-      await apply(page);
+      await apply(page, DEMO[company]);
       expect(await lastReport(page)).toBe(asYourPlan(company));
       await expect(page.getByTestId("plan-item-row")).toHaveCount(DEMO[company].hires.length + DEMO[company].programs.length);
     });
   }
 
   test("an edited plan equals a native run of the same plan, on the screen as well as in the report @smoke", async () => {
-    await page.locator("#company-selector").selectOption("sapling-industries");
-    await expect(page.getByTestId("plan-form")).toBeVisible({ timeout: 90_000 });
+    await switchCompany(page, "sapling-industries");
     const plan = JSON.parse(fixture("plan.json")) as Plan;
     await enter(page, plan);
-    await apply(page);
+    await apply(page, plan);
     expect(await lastReport(page)).toBe(fixture("report.json"));
     const native = JSON.parse(fixture("report.json")) as { plan: { gap: { fiscal_year: { gap_with_plan: string } } } };
     await expect(page.locator("[data-binding='worksheet.summary.remaining-gap']")).toHaveText(usdShort(native.plan.gap.fiscal_year.gap_with_plan));
