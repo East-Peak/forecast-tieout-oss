@@ -55,7 +55,10 @@ OWNER_CAVEAT = (
     "employed in the year, from the roster as known at the plan date. Someone hired after that "
     "date has no original allocation. It is a planning allocation, never a measure of a person's "
     "performance, and what a person is shown to have produced is the record of their deals. "
-    "Ownership has no history in the files, so a deal's owner today stands in for its owner then."
+    "Ownership, quota and roster segment have no history in the files: a deal's owner, a "
+    "person's annual quota and the segment they sit in are today's values standing in for the plan "
+    "date. Only employment dates and deal data are cut at the plan date, so a later hire, "
+    "departure or deal cannot move a goal, but an edit to quota or roster segment would."
 )
 
 
@@ -477,6 +480,7 @@ def document(basis: Basis, company: str) -> dict:
                 "allocated": o.allocated,
                 "quota": None if o.quota is None else _text(o.quota, "0.01"),
                 "days": o.days,
+                "weight": _text(o.weight, "0.01"),
                 "share": _text(o.share, "0.000001"),
                 "opening": o.opening,
                 "creation_share": _text(o.creation_share, "0.000001"),

@@ -226,3 +226,16 @@ def test_lanes_that_drop_the_allocated_goal_wording_are_found(parts):
         doc["caveats"] = doc["caveats"][:-1]
 
     assert any("wording" in p for p in problems(parts, edit))
+
+
+def test_an_owner_weight_that_is_not_quota_times_days_or_a_share_that_is_not_its_weights_is_found(
+    built,
+):
+    company, _, basis, _ = built
+    doc = lanes_basis.document(basis, company)
+    owner = next(o for o in doc["owners"] if o["quota"] and o["days"])
+    owner["weight"] = "1.00"
+    assert any("weight" in p for p in lanes_contract.validate_basis(doc))
+    doc = lanes_basis.document(basis, company)
+    next(o for o in doc["owners"] if o["quota"] and o["days"])["share"] = "0.000001"
+    assert any("share" in p for p in lanes_contract.validate_basis(doc))

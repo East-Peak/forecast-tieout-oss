@@ -167,6 +167,7 @@ OWNER_BASIS = obj(
         "allocated": BOOL,
         "quota": maybe(MONEY),
         "days": INT,
+        "weight": MONEY,
         "share": DECIMAL,
         "opening": INT,
         "creation_share": DECIMAL,
@@ -343,6 +344,25 @@ def _owner_problems(doc: dict) -> list[str]:
         mine = [o for o in doc["owners"] if o["segment"] == key]
         if sum(o["opening"] for o in mine) != seg["opening"]:
             found.append(f"basis: {key}'s owners' opening does not add to its opening")
+        for o in mine:
+            owed = Decimal(o["quota"] or 0) * o["days"]
+            if (
+                o["id"] != "unassigned"
+                and o["allocated"]
+                and Decimal(o["weight"]) != owed
+            ):
+                found.append(f"basis: {key}/{o['id']}'s weight is not quota times days")
+        heavy = sum(Decimal(o["weight"]) for o in mine)
+        for o in mine:
+            want = (
+                Decimal(o["weight"]) / heavy
+                if heavy
+                else Decimal(int(o["id"] == "unassigned"))
+            )
+            if abs(Decimal(o["share"]) - want) > Decimal("0.0000005"):
+                found.append(
+                    f"basis: {key}/{o['id']}'s share is not its weight over the segment's"
+                )
         slack = Decimal("0.0000005") * len(mine)  # each share is written to six places
         if abs(sum(Decimal(o["share"]) for o in mine) - 1) > slack:
             found.append(f"basis: {key}'s owners' share does not add to one")

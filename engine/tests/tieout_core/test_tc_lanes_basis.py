@@ -216,12 +216,13 @@ def test_nobody_hired_after_the_plan_date_has_an_allocation(frozen):
     assert not any(o in later for _, _, o in b.owner_goals)
 
 
-def test_the_owner_goals_are_in_the_basis_file_and_move_with_nothing_after_the_plan_date(
+def test_a_hire_a_departure_or_a_deal_dated_after_the_plan_date_cannot_move_an_owner_goal(
     built,
 ):
-    """Hire someone after the plan date, move a departure to after it, give a rep a different quota
-    on a deal created after it: the basis file must not move by a byte. (Quota and ownership have
-    no history; today's stand in, and that is stated in the file.)"""
+    """Hire someone after the plan date, move a departure to after it, give deals created after it
+    to the new hire: the basis file must not move by a byte. This is all it proves: quota,
+    roster segment and a deal's owner have no history in the files, so they are today's values
+    (see the test below), and only employment dates and deal data are cut at the plan date."""
     company, state, b, _ = built
     doc = basis.document(b, company)
     assert doc["owners"] and doc["owner_goals"]
@@ -245,3 +246,30 @@ def test_the_owner_goals_are_in_the_basis_file_and_move_with_nothing_after_the_p
         ground=replace(state.ground, pop=pop),
     )
     assert canonical(basis_doc(changed, company)) == canonical(doc)
+
+
+def test_a_quota_edit_in_todays_roster_does_move_the_goal_and_the_file_says_so(built):
+    """The known limit, pinned: quota is today's value standing in for the plan date, so doubling
+    a rep's quota in the roster file changes their allocated goal."""
+    company, state, b, _ = built
+    doc = basis.document(b, company)
+    rep = next(o for o in b.owners if o.allocated and o.quota)
+    people = tuple(
+        replace(m, annual_quota=m.annual_quota * 2) if m.id == rep.id else m
+        for m in state.cap.members
+    )
+    edited = replace(state, cap=replace(state.cap, roster=replace(state.cap.roster, members=people)))  # fmt: skip
+    moved = basis_doc(edited, company)
+    assert canonical(moved) != canonical(doc)
+    assert "today's" in doc["owner_caveat"] and "quota" in doc["owner_caveat"]
+    assert "roster segment" in doc["owner_caveat"]
+
+
+def test_the_basis_records_each_owners_inputs_so_a_goal_can_be_traced(frozen):
+    _, _, b = frozen
+    for o in b.owners:
+        if o.allocated and o.id != "unassigned":
+            assert o.weight == (o.quota or D(0)) * o.days
+    doc = basis.document(b, "x")
+    row = next(o for o in doc["owners"] if o["quota"])
+    assert set(row) >= {"segment", "quota", "days", "weight", "share"}

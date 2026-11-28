@@ -85,6 +85,7 @@ class OwnerBasis:
     allocated: bool  # on the plan-start roster (or the unassigned bucket): has a goal, perhaps zero
     quota: Decimal | None
     days: int
+    weight: Decimal  # quota times days: what the share is in proportion to
     share: Decimal  # of the segment's goal
     opening: int  # deals open at the plan date
     creation_share: Decimal  # of the segment's deals created in the trailing year
@@ -131,6 +132,7 @@ def owner_basis(
                     w is not None or k == UNASSIGNED,
                     w.quota if w else None,
                     w.days if w else 0,
+                    w.weight if w else ZERO,
                     shared[k],
                     opening.get((seg, k), 0),
                     Decimal(made.get((seg, k), 0)) / created if created else ZERO,

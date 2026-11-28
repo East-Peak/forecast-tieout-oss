@@ -233,7 +233,8 @@ def allocation(lane, entry, name: str) -> str:
     return (
         f"Allocated goal: {entry.share:.1%} of the segment's, from {quota} and "
         f"{entry.days} days employed in the year on the plan-start roster. A planning "
-        "allocation, not a measure of performance."
+        "allocation, not a measure of performance. Quota and roster segment are today's values "
+        "standing in for the plan date; only employment dates and deals are cut at it."
     )
 
 

@@ -144,6 +144,9 @@ def test_guardrail_wording_says_allocated_production_is_not_measured_performance
         for r in p["rows"]:
             if len(r["path"]) == 4 and r["kind"] == "owner":
                 assert "allocat" in r["allocation"].lower()
+                assert (
+                    "today's" in r["allocation"] or "No allocation" in r["allocation"]
+                )
 
 
 def test_the_builders_checks_include_the_owner_ones_and_all_pass(built):

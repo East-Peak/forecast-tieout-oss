@@ -79,7 +79,7 @@ def flat_state(ends, shares=(("x", "0.6"), ("y", "0.4"))):
             as_of=AS_OF,
         )
     )
-    owned = tuple(OwnerBasis("a", i, i, True, D(1), 365, D(0), 0, D(s)) for i, s in shares)  # fmt: skip
+    owned = tuple(OwnerBasis("a", i, i, True, D(1), 365, D(365), D(0), 0, D(s)) for i, s in shares)  # fmt: skip
     basis = SimpleNamespace(segments=(SimpleNamespace(key="a", creation_share=D(1)),), owners=owned)  # fmt: skip
     return state, basis
 

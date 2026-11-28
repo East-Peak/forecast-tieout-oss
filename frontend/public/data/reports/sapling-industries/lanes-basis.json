@@ -132,7 +132,7 @@
   },
   "label": "Reconstructed FY plan basis, 2026-01-31",
   "opening": 128,
-  "owner_caveat": "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days employed in the year, from the roster as known at the plan date. Someone hired after that date has no original allocation. It is a planning allocation, never a measure of a person's performance, and what a person is shown to have produced is the record of their deals. Ownership has no history in the files, so a deal's owner today stands in for its owner then.",
+  "owner_caveat": "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days employed in the year, from the roster as known at the plan date. Someone hired after that date has no original allocation. It is a planning allocation, never a measure of a person's performance, and what a person is shown to have produced is the record of their deals. Ownership, quota and roster segment have no history in the files: a deal's owner, a person's annual quota and the segment they sit in are today's values standing in for the plan date. Only employment dates and deal data are cut at the plan date, so a later hire, departure or deal cannot move a goal, but an edit to quota or roster segment would.",
   "owner_goals": {
     "Q1FY26": {
       "commercial": {
@@ -1045,7 +1045,8 @@
       "opening": 7,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1056,7 +1057,8 @@
       "opening": 10,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1067,7 +1069,8 @@
       "opening": 4,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1078,7 +1081,8 @@
       "opening": 6,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1089,7 +1093,8 @@
       "opening": 1,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1100,7 +1105,8 @@
       "opening": 1,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1111,7 +1117,8 @@
       "opening": 2,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1122,7 +1129,8 @@
       "opening": 0,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.125000"
+      "share": "0.125000",
+      "weight": "1168000000.00"
     },
     {
       "allocated": true,
@@ -1133,7 +1141,8 @@
       "opening": 2,
       "quota": "3200000.00",
       "segment": "enterprise",
-      "share": "0.000000"
+      "share": "0.000000",
+      "weight": "0.00"
     },
     {
       "allocated": true,
@@ -1144,7 +1153,8 @@
       "opening": 0,
       "quota": null,
       "segment": "enterprise",
-      "share": "0.000000"
+      "share": "0.000000",
+      "weight": "0.00"
     },
     {
       "allocated": true,
@@ -1155,7 +1165,8 @@
       "opening": 5,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1166,7 +1177,8 @@
       "opening": 10,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1177,7 +1189,8 @@
       "opening": 2,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1188,7 +1201,8 @@
       "opening": 6,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1199,7 +1213,8 @@
       "opening": 5,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1210,7 +1225,8 @@
       "opening": 5,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1221,7 +1237,8 @@
       "opening": 5,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1232,7 +1249,8 @@
       "opening": 4,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1243,7 +1261,8 @@
       "opening": 2,
       "quota": "1800000.00",
       "segment": "mid_market",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "657000000.00"
     },
     {
       "allocated": true,
@@ -1254,7 +1273,8 @@
       "opening": 0,
       "quota": null,
       "segment": "mid_market",
-      "share": "0.000000"
+      "share": "0.000000",
+      "weight": "0.00"
     },
     {
       "allocated": true,
@@ -1265,7 +1285,8 @@
       "opening": 5,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1276,7 +1297,8 @@
       "opening": 5,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1287,7 +1309,8 @@
       "opening": 8,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1298,7 +1321,8 @@
       "opening": 4,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1309,7 +1333,8 @@
       "opening": 6,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1320,7 +1345,8 @@
       "opening": 8,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1331,7 +1357,8 @@
       "opening": 7,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1342,7 +1369,8 @@
       "opening": 6,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1353,7 +1381,8 @@
       "opening": 1,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.111111"
+      "share": "0.111111",
+      "weight": "328500000.00"
     },
     {
       "allocated": true,
@@ -1364,7 +1393,8 @@
       "opening": 1,
       "quota": "900000.00",
       "segment": "commercial",
-      "share": "0.000000"
+      "share": "0.000000",
+      "weight": "0.00"
     },
     {
       "allocated": true,
@@ -1375,7 +1405,8 @@
       "opening": 0,
       "quota": null,
       "segment": "commercial",
-      "share": "0.000000"
+      "share": "0.000000",
+      "weight": "0.00"
     }
   ],
   "schedule": [

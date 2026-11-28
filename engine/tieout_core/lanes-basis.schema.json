@@ -234,6 +234,9 @@
           },
           "share": {
             "$ref": "#/$defs/Decimal"
+          },
+          "weight": {
+            "$ref": "#/$defs/Money"
           }
         },
         "required": [
@@ -243,6 +246,7 @@
           "allocated",
           "quota",
           "days",
+          "weight",
           "share",
           "opening",
           "creation_share"

@@ -4,7 +4,7 @@
     "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start. The fit's estimator is chosen by the report's declared rule, scored on back-test folds cut at the plan date from what was known then; where too few folds exist at that date the rule keeps the incumbent (matured snapshots). A quarter whose entered target is zero has no target-equivalent wins, so the schedule's created deals for that quarter are shared by trailing-year bookings instead.",
     "The win-rate column is a dated benchmark, not a multiplier for the same period's created deals: it is the rate of the creation cohort old enough to have had its whole year, measured at the period's end (or the as-of date).",
     "Segment forecasts share one pooled model out; no model is fitted to a slice, so the company back-test's credibility does not transfer to a segment. A behind cell is a planning discrepancy, not proof of a cause.",
-    "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days employed in the year, from the roster as known at the plan date. Someone hired after that date has no original allocation. It is a planning allocation, never a measure of a person's performance, and what a person is shown to have produced is the record of their deals. Ownership has no history in the files, so a deal's owner today stands in for its owner then."
+    "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days employed in the year, from the roster as known at the plan date. Someone hired after that date has no original allocation. It is a planning allocation, never a measure of a person's performance, and what a person is shown to have produced is the record of their deals. Ownership, quota and roster segment have no history in the files: a deal's owner, a person's annual quota and the segment they sit in are today's values standing in for the plan date. Only employment dates and deal data are cut at the plan date, so a later hire, departure or deal cannot move a goal, but an edit to quota or roster segment would."
   ],
   "checks": [
     {
@@ -496,7 +496,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "154961.40",
@@ -650,7 +650,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "111877.89",
@@ -1458,7 +1458,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "99308.20",
@@ -1612,7 +1612,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "34147.00",
@@ -1766,7 +1766,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "29882.00",
@@ -1920,7 +1920,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -2914,7 +2914,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "150205.50",
@@ -3068,7 +3068,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "105452.00",
@@ -3876,7 +3876,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "67540.00",
@@ -4030,7 +4030,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "23932.50",
@@ -4184,7 +4184,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "29882.00",
@@ -4338,7 +4338,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -5332,7 +5332,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "165521.57",
@@ -5486,7 +5486,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "114764.00",
@@ -6294,7 +6294,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "150371.50",
@@ -6448,7 +6448,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "39254.25",
@@ -6602,7 +6602,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -6756,7 +6756,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -7753,7 +7753,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "90552.00",
@@ -7907,7 +7907,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "107413.00",
@@ -8715,7 +8715,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": "53896.00",
@@ -8869,7 +8869,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -9023,7 +9023,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -9177,7 +9177,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -10174,7 +10174,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -10328,7 +10328,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $2,000,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -11136,7 +11136,7 @@
           }
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -11290,7 +11290,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 50.0% of the segment's, from a $1,500,000 annual quota and 365 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -11444,7 +11444,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -11598,7 +11598,7 @@
           "sizes": null
         },
         {
-          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance.",
+          "allocation": "Allocated goal: 0.0% of the segment's, from a $1,500,000 annual quota and 0 days employed in the year on the plan-start roster. A planning allocation, not a measure of performance. Quota and roster segment are today's values standing in for the plan date; only employment dates and deals are cut at it.",
           "cells": {
             "avg_won_arr": {
               "actual": null,
@@ -12220,7 +12220,7 @@
   ],
   "plan_basis": {
     "cutoff": "2026-01-31",
-    "digest": "594a46829289c21305dda822c2d87b576132aec8e012dee146ab6e880455b07a",
+    "digest": "d846bc043c4d64359c22a22c53942c593199e142b466010df773a14ae631dbcf",
     "file": "lanes-basis.json",
     "label": "Reconstructed FY plan basis, 2026-01-31"
   },
