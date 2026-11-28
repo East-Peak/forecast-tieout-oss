@@ -78,7 +78,11 @@ class Transport:
     the first begins after day 0). Pieces are cached by (creation day, scale)."""
 
     def __init__(
-        self, timing: Timing, edges: Sequence[int], original: Timing | None = None
+        self,
+        timing: Timing,
+        edges: Sequence[int],
+        original: Timing | None = None,
+        shared: dict | None = None,
     ) -> None:
         self.timing = (
             timing  # the timing in force: the pooled one, or the worksheet's flex of it
@@ -87,6 +91,9 @@ class Transport:
             original or timing
         )  # the plan's own, which fixes each win's price
         self.edges = tuple(edges)
+        # where each creation day's cohort lands in the plan's own timing: it does not change with
+        # the worksheet's flex, so every flexed transport of this one keeps the same cuts
+        self._shared: dict = {} if shared is None else shared
         self.samples = timing.samples
         weights = timing.weights
         self.weights = (
@@ -115,7 +122,7 @@ class Transport:
     def with_timing(self, timing: Timing) -> Transport:
         """The same months over another timing (the worksheet's flex of the cycle): each sample
         keeps its place in the plan's own timing, which prices it, wherever the flex lands it."""
-        return Transport(timing, self.edges, self.original)
+        return Transport(timing, self.edges, self.original, self._shared)
 
     def scaled(self, f: Fraction) -> tuple[tuple[int, ...], list[Decimal]]:
         """The lags multiplied by ``f`` and rounded up, and the running sum of moved lag times weight."""
@@ -140,9 +147,16 @@ class Transport:
         if found is not None:
             return found
         lags, moment = self.scaled(f)
-        original = [bisect_right(self.original.samples, e - day) for e in self.edges]
+        original = self._shared.get(day)
+        if original is None:
+            original = [
+                bisect_right(self.original.samples, e - day) for e in self.edges
+            ]
+            self._shared[day] = original
         flexed = [bisect_right(self.samples, e - day) for e in self.edges]
-        moved = [bisect_right(lags, e - day) for e in self.edges]
+        moved = (
+            flexed if f == ONE else [bisect_right(lags, e - day) for e in self.edges]
+        )
         k = len(self.samples)
         cuts = sorted({0, k, *original, *flexed, *moved})
         out = []

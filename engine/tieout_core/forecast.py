@@ -109,6 +109,9 @@ class Lift:
         field(default_factory=dict, compare=False, repr=False)
     )
     _memo: dict = field(default_factory=dict, init=False, compare=False, repr=False)
+    # what does not depend on the timing in force (a day's deals as the changes leave them), kept
+    # across the lifts the worksheet's flex of the cycle makes from this one
+    _days: dict = field(default_factory=dict, init=False, compare=False, repr=False)
 
     def __bool__(self) -> bool:
         return any(
@@ -133,7 +136,28 @@ class Lift:
         flex of the cycle leaves, the prices staying as they were frozen."""
         if self.transport is None:
             return self
-        return replace(self, transport=self.transport.with_timing(timing))
+        flexed = replace(self, transport=self.transport.with_timing(timing))
+        object.__setattr__(flexed, "_days", self._days)
+        return flexed
+
+    def units_by_day(
+        self, segment: str
+    ) -> list[tuple[Decimal, Decimal, list[Decimal], list[Decimal]]]:
+        """For every day of the segment, worked out once: the wins' dollars as the changes leave
+        them and as they were, and each of those at the price of every month (and the tail) the wins
+        were to land in, by the quarter their deals were created in."""
+        found = self._days.get(segment)
+        if found is None:
+            count, organic = self.counts(segment), self.organic[segment]
+            price = self.price.get(segment, {})
+            months = len(self.transport.edges) + 1 if self.transport else 0
+            found = []
+            for t in range(len(count)):
+                made, was = self.day_units_of(segment, t, count[t], organic[t])
+                at = [price.get((j, self.origin[t]), Decimal(1)) for j in range(months)]
+                found.append((made, was, [made * p for p in at], [was * p for p in at]))
+            self._days[segment] = found
+        return found
 
     def day_units(self, segment: str, t: int) -> tuple[Decimal, Decimal]:
         """What a day's deals are worth won and not won, before they are priced or placed: the
@@ -175,28 +199,21 @@ class Lift:
             return found
         transport = self.transport
         out = [Decimal(0)] * ((len(transport.edges) + 1) if transport else 0)
-        price = self.price.get(segment, {})
+        units = self.units_by_day(segment)
+        cycle = self.cycle.get(segment)
+        flexed = transport.flexed if transport else False
         for t in self.moved_days(segment):
-            made, was = self.day_units(segment, t)
-            cycle = self.cycle.get(segment)
+            _, was, made_at, was_at = units[t]
             f = (Fraction(cycle[t]) if cycle else Fraction(0)) + 1
-            origin = self.origin[t]
             for piece in transport.pieces(t + 1, f):
-                out[piece.moved] += (
-                    made
-                    * piece.weight
-                    * price.get((piece.original, origin), Decimal(1))
-                )
+                out[piece.moved] += made_at[piece.original] * piece.weight
             for piece in transport.pieces(t + 1, Fraction(1)):
                 # what the pooled forecast already has there: the wins as they were, at the pooled
                 # price, where the timing in force lands them; with no flex that is the same dollars
                 # as these wins at their own prices (the prices add back to the pooled one)
-                at = (
-                    Decimal(1)
-                    if transport.flexed
-                    else price.get((piece.original, origin), Decimal(1))
-                )
-                out[piece.flexed] -= was * piece.weight * at
+                out[piece.flexed] -= (
+                    was if flexed else was_at[piece.original]
+                ) * piece.weight
         self._memo[("cycle", segment)] = out
         return out
 
@@ -250,6 +267,10 @@ class Lift:
             return out
         price = self.price.get(segment, {})
         placed = set(self.moved_days(segment))
+        if len(placed) >= len(
+            change
+        ):  # every day is placed sample by sample (a flexed timing)
+            return out
         for t, c in enumerate(change):
             z = size[t] if size else 0
             u = grown[t] if grown else 0

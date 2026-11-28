@@ -268,15 +268,12 @@ def segment_amounts(new, segments: Sequence[str]) -> dict:
     amounts over their (weighted) mean with their weights: a win in the segment draws its size from
     these and books it at the segment's price, so the spread between segments is not counted twice
     (the pooled amounts carry it already). A segment with fewer, or none, draws the pooled amounts."""
-    if not new.won_arr_segments or len(new.won_arr_segments) != len(
-        new.won_arr_samples
-    ):
+    found = getattr(new, "won_arr_segments", None)
+    if not found or len(found) != len(new.won_arr_samples):
         return {}
     out = {}
     for s in segments:
-        at = [
-            k for k, x in enumerate(new.won_arr_segments) if rules.segment_key(x) == s
-        ]
+        at = [k for k, x in enumerate(found) if rules.segment_key(x) == s]
         if len(at) < MIN_OWN_AMOUNTS:
             continue
         amounts = [new.won_arr_samples[k] for k in at]
