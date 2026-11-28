@@ -226,6 +226,126 @@ export type TieoutReport = {
     scoring: Text;
     verdict: BetterVerdict;
   };
+  driver_actions:
+    | {
+        /**
+         * @maxItems 0
+         */
+        items: [];
+      }
+    | {
+        unavailable: Text;
+      }
+    | {
+        definition: Text;
+        /**
+         * @minItems 1
+         */
+        items: [
+          {
+            affects: Text;
+            driver: "win_rate";
+            evidence: {
+              baseline_rate: Decimal;
+              change_points: Decimal;
+              historical_high: Decimal | null;
+              historical_low: Decimal | null;
+              label: Text;
+              position: "inside" | "below" | "above" | "none";
+              resulting_rate: Decimal;
+            };
+            id: Text;
+            name: Text;
+            ramp_months: number;
+            removal_value: {
+              "next twelve months": Money;
+              "rest of fiscal year": Money;
+            };
+            slice: {
+              key: Text | null;
+              kind: "company" | "segment";
+              label: Text;
+            };
+            start: Month;
+            target: Decimal;
+          },
+          ...{
+            affects: Text;
+            driver: "win_rate";
+            evidence: {
+              baseline_rate: Decimal;
+              change_points: Decimal;
+              historical_high: Decimal | null;
+              historical_low: Decimal | null;
+              label: Text;
+              position: "inside" | "below" | "above" | "none";
+              resulting_rate: Decimal;
+            };
+            id: Text;
+            name: Text;
+            ramp_months: number;
+            removal_value: {
+              "next twelve months": Money;
+              "rest of fiscal year": Money;
+            };
+            slice: {
+              key: Text | null;
+              kind: "company" | "segment";
+              label: Text;
+            };
+            start: Month;
+            target: Decimal;
+          }[]
+        ];
+        joint_gain: {
+          "next twelve months": Money;
+          "rest of fiscal year": Money;
+        };
+        range_note: Text;
+        reconciliation: {
+          sentences: {
+            "next twelve months": Text;
+            "rest of fiscal year": Text;
+          };
+          tolerance: {
+            "next twelve months": Money;
+            "rest of fiscal year": Money;
+          };
+          values: {
+            "next twelve months": Money;
+            "rest of fiscal year": Money;
+          };
+        };
+        removal_label: "Bookings lost if removed";
+        removal_note: Text;
+        rounding_note: Text;
+        with_actions: {
+          bookings: {
+            "next twelve months": Money;
+            "rest of fiscal year": Money;
+          };
+          expected_fiscal_year: Money;
+          quarters: {
+            expected: Money;
+            forecast: Money;
+            quarter: Quarter;
+            status: "closed" | "in progress" | "not started";
+          }[];
+        };
+        without_actions: {
+          bookings: {
+            "next twelve months": Money;
+            "rest of fiscal year": Money;
+          };
+          expected_fiscal_year: Money;
+          quarters: {
+            expected: Money;
+            forecast: Money;
+            quarter: Quarter;
+            status: "closed" | "in progress" | "not started";
+          }[];
+        };
+      };
   forecasts: {
     fitted_ranges:
       | {
@@ -678,6 +798,18 @@ export type TieoutReport = {
               payment_schedule: Text;
               valued: true;
             }
+          | {
+              cash_cost_in_twelve_months: null;
+              cash_cost_total: null;
+              contribution: {
+                "next twelve months": Money;
+                "rest of fiscal year": Money;
+              };
+              detail: Text;
+              kind: "actions";
+              label: Text;
+              valued: true;
+            }
         )[];
         order: Text;
         ranges: {
@@ -1075,7 +1207,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.6.0";
+  schema_version: "2.7.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];
@@ -1191,7 +1323,7 @@ export type TieoutReport = {
         };
         bridge: {
           contributions: {
-            kind: "hires" | "program";
+            kind: "hires" | "program" | "actions";
             label: Text;
             "next twelve months": Money | null;
             "rest of fiscal year": Money | null;
@@ -1206,7 +1338,7 @@ export type TieoutReport = {
             {
               change: Money | null;
               from: Money | null;
-              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              kind: "as_signed" | "hires" | "program" | "actions" | "working_plan" | "remaining_gap";
               label: Text;
               note: Text | null;
               source: Text;
@@ -1216,7 +1348,7 @@ export type TieoutReport = {
             {
               change: Money | null;
               from: Money | null;
-              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              kind: "as_signed" | "hires" | "program" | "actions" | "working_plan" | "remaining_gap";
               label: Text;
               note: Text | null;
               source: Text;
@@ -1226,7 +1358,7 @@ export type TieoutReport = {
             {
               change: Money | null;
               from: Money | null;
-              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              kind: "as_signed" | "hires" | "program" | "actions" | "working_plan" | "remaining_gap";
               label: Text;
               note: Text | null;
               source: Text;
@@ -1236,7 +1368,7 @@ export type TieoutReport = {
             ...{
               change: Money | null;
               from: Money | null;
-              kind: "as_signed" | "hires" | "program" | "working_plan" | "remaining_gap";
+              kind: "as_signed" | "hires" | "program" | "actions" | "working_plan" | "remaining_gap";
               label: Text;
               note: Text | null;
               source: Text;
@@ -1686,12 +1818,12 @@ export type Decimal = string & { readonly __decimal: true };
 export type Month = string;
 export type Date = string;
 export type BetterVerdict = "yes" | "no" | "not enough history to say";
+export type Quarter = string;
 /**
  * @minItems 2
  * @maxItems 2
  */
 export type MoneyRange = [Money, Money];
-export type Quarter = string;
 export type ComparisonOutcome = "model lower" | "baseline lower" | "tie";
 
 export interface RangeBasis {

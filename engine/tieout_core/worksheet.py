@@ -722,8 +722,9 @@ def company_quarters(g: Ground) -> tuple[Quarter, ...]:
     )
 
 
-def static_texts(plan_in_force: bool) -> dict:
-    """The section's fixed sentences and flags, which depend only on whether a plan is in force."""
+def static_texts(plan_in_force: bool, with_actions: bool = False) -> dict:
+    """The section's fixed sentences and flags, which depend only on whether a plan is in force
+    and whether it carries driver actions."""
     return {
         "definition": (
             "What moves the outcome: four operating drivers, each changed alone for deals "
@@ -731,7 +732,9 @@ def static_texts(plan_in_force: bool) -> dict:
         ),
         "plan_in_force": plan_in_force,
         "measured_around": (
-            "the plan in force: its hires and program pipeline, as applied"
+            "the plan in force: its hires, program pipeline and driver actions, as applied"
+            if with_actions
+            else "the plan in force: its hires and program pipeline, as applied"
             if plan_in_force
             else "the roster as signed and nothing planned"
         ),
@@ -752,8 +755,9 @@ def worksheet_section(
     actions_section: dict,
     gap: dict,
     required: dict,
+    lift: Sequence[Decimal] = (),
 ) -> tuple[dict, list[Check]]:
-    probe = wd.Probe(g, hires, inflows)
+    probe = wd.Probe(g, hires, inflows, lift)
     c = Context(g, probe, quarters, params, g.fy_target)
     drivers = [driver_row(c, d) for d in DRIVERS]
     for row, rank in zip(
@@ -799,7 +803,11 @@ def worksheet_section(
             )
         )
     section = {
-        **static_texts(plan_section is not None),
+        **static_texts(
+            plan_section is not None,
+            plan_section is not None
+            and any(i["kind"] == "actions" for i in plan_section["items"]),
+        ),
         "drivers": drivers,
         "actions": _action_rows(actions_section),
         "bridge": bridge,

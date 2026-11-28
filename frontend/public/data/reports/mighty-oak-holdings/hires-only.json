@@ -807,6 +807,9 @@
     "scoring": "per horizon, mean absolute dollar error over all folds; 'yes' only if the fitted model's error is lower than both baselines at 1 and 3 months; under 6 folds is 'not enough history to say'",
     "verdict": "no"
   },
+  "driver_actions": {
+    "items": []
+  },
   "forecasts": {
     "fitted_ranges": {
       "by_window": {
@@ -7325,7 +7328,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.6.0",
+  "schema_version": "2.7.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

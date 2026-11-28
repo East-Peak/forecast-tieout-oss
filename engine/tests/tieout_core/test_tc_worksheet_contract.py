@@ -169,7 +169,7 @@ def test_a_report_with_a_plan_has_the_gain_and_cost_and_one_without_has_none(
 
 
 def test_the_schema_is_versioned():
-    assert contract.SCHEMA_VERSION == "2.6.0"
+    assert contract.SCHEMA_VERSION == "2.7.0"
 
 
 # ---------------------------------------------------------------- the fix round

@@ -37,6 +37,7 @@ def render(r: dict) -> str:
         if "plan" in r:
             out += _plan(r["plan"])
         out += _actions(r["actions"])
+        out += _driver_actions(r["driver_actions"])
     return "\n".join(out).rstrip() + "\n"
 
 
@@ -780,7 +781,8 @@ def _plan(s: dict) -> list[str]:
         rows.append(
             [i["label"], i["detail"], i.get("note", "valued"),
              _usd(c[REST]) if c else "not valued", _usd(c[NEXT]) if c else "not valued",
-             _cost(i["cash_cost_in_twelve_months"])]
+             "no cost entered" if i["kind"] == "actions"
+             else _cost(i["cash_cost_in_twelve_months"])]
         )  # fmt: skip
     out += _table(
         [
@@ -929,4 +931,72 @@ def _actions(s: dict) -> list[str]:
             f"- **Program pipeline:** unreachable within the cap of {_usd(p['cap'])} ({p['cap_rule']}){over}."
         ]
     out += ["", f"_{_up(s['meaning'])}._", ""]
+    return out
+
+
+def _rate(x: str) -> str:
+    return f"{float(x):.2%}"
+
+
+def _driver_actions(s: dict) -> list[str]:
+    if "unavailable" in s:
+        return [
+            "## 13. Driver actions",
+            "",
+            f"Unavailable: the fitted forecast is unavailable ({s['unavailable']}).",
+            "",
+        ]
+    if not s["items"]:
+        return []
+    out = ["## 13. Driver actions", "", s["definition"], ""]
+    out += _table(
+        ["Action", "Slice", "Starts", "Ramp (months)", "Target", f"{s['removal_label']}, {REST}",
+         f"{s['removal_label']}, {NEXT}"],
+        [
+            (i["name"], i["slice"]["label"], i["start"], i["ramp_months"],
+             _rate(i["target"]), _usd(i["removal_value"][REST], True),
+             _usd(i["removal_value"][NEXT], True))
+            for i in s["items"]
+        ],
+    )  # fmt: skip
+    out += [s["removal_note"], ""]
+    for i in s["items"]:
+        e = i["evidence"]
+        out += [
+            (
+                f"- **{i['name']}:** {i['affects']} Pooled baseline {_rate(e['baseline_rate'])}, "
+                f"{e['change_points']} points, resulting {_rate(e['resulting_rate'])}: "
+                f"{e['label']}."
+            )
+        ]
+    out += [""]
+    j, rec = s["joint_gain"], s["reconciliation"]
+    out += _table(
+        ["Gain of all the actions together", REST, NEXT],
+        [
+            ("Joint gain", _usd(j[REST], True), _usd(j[NEXT], True)),
+            ("Joint gain less the sum of the removal values",
+             _usd(rec["values"][REST], True), _usd(rec["values"][NEXT], True)),
+        ],
+    )  # fmt: skip
+    out += [rec["sentences"][REST], "", s["rounding_note"], ""]
+    wo, wi = s["without_actions"], s["with_actions"]
+    out += [
+        "The same plan without its driver actions, against with them:",
+        "",
+    ]
+    out += _table(
+        ["", "Without", "With"],
+        [
+            ("Expected fiscal year", _usd(wo["expected_fiscal_year"], True),
+             _usd(wi["expected_fiscal_year"], True)),
+            (f"Bookings, {REST}", _usd(wo["bookings"][REST], True), _usd(wi["bookings"][REST], True)),
+            (f"Bookings, {NEXT}", _usd(wo["bookings"][NEXT], True), _usd(wi["bookings"][NEXT], True)),
+            *(
+                (f"{a['quarter']} expected", _usd(a["expected"], True), _usd(b["expected"], True))
+                for a, b in zip(wo["quarters"], wi["quarters"])
+            ),
+        ],
+    )  # fmt: skip
+    out += [s["range_note"], ""]
     return out

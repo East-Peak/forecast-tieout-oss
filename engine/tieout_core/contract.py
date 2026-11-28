@@ -33,7 +33,7 @@ from .rates import rate_unit
 from .stretch import horizon_for
 from .stretch_rules import HORIZONS
 
-SCHEMA_VERSION = "2.6.0"
+SCHEMA_VERSION = "2.7.0"
 SCHEMA_PATH = Path(__file__).with_name("report.schema.json")
 
 # ---------------------------------------------------------------- small builders
@@ -925,6 +925,11 @@ def _plan() -> dict:
         {"kind": const("program"), "label": TEXT, "detail": TEXT, "valued": const(True),
          "contribution": PER_WINDOW, **cost, "payment_schedule": TEXT}
     )  # fmt: skip
+    # 2.7.0: the driver actions together, one step on top of the hires and programs, with no cost
+    driver_actions = obj(
+        {"kind": const("actions"), "label": TEXT, "detail": TEXT, "valued": const(True),
+         "contribution": PER_WINDOW, "cash_cost_in_twelve_months": NULL, "cash_cost_total": NULL}
+    )  # fmt: skip
     twelve = obj(
         {
             "target": DECIMAL,
@@ -952,7 +957,9 @@ def _plan() -> dict:
             "file": TEXT,
             "order": TEXT,
             "baseline_definition": TEXT,
-            "items": arr(one_of(hires_valued, hires_not_valued, program)),
+            "items": arr(
+                one_of(hires_valued, hires_not_valued, program, driver_actions)
+            ),
             "baseline": PER_WINDOW,
             "with_plan": PER_WINDOW,
             "difference": PER_WINDOW,
@@ -1086,6 +1093,12 @@ def _worksheet() -> dict:
     return worksheet_contract.schema()
 
 
+def _driver_actions() -> dict:
+    from . import driver_actions_contract
+
+    return driver_actions_contract.schema()
+
+
 DEFS_MONTH_KEY = r"^\d{4}-(0[1-9]|1[0-2])$"
 
 DEFS["BetterVerdict"] = enum("yes", "no", "not enough history to say")
@@ -1183,6 +1196,7 @@ def schema() -> dict:
             # present only when a plan file was given
             "plan": _plan(),
             "actions": _actions(),
+            "driver_actions": _driver_actions(),
             "worksheet": _worksheet(),
             "schema_version": const(SCHEMA_VERSION),
         },
@@ -1199,6 +1213,7 @@ def schema() -> dict:
             "quota_productivity",
             "required_pipeline",
             "actions",
+            "driver_actions",
             "worksheet",
             "schema_version",
         ],
@@ -1916,7 +1931,8 @@ def _cross_rules(r: dict) -> list[str]:
                     (row["status"] == "valued") == adopted,
                     "the hire action is valued exactly when capacity is adopted",
                 )
-    from . import worksheet_contract
+    from . import driver_actions_contract, worksheet_contract
 
     worksheet_contract.rules_for(r, rule)
+    driver_actions_contract.rules_for(r, rule)
     return found

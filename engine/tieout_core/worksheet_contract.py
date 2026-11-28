@@ -51,7 +51,14 @@ SENTENCE_KEYS = frozenset(
     }
 )  # fmt: skip
 WINDOWS = (REST_OF_FY, NEXT_12)
-STEP_KINDS = ("as_signed", "hires", "program", "working_plan", "remaining_gap")
+STEP_KINDS = (
+    "as_signed",
+    "hires",
+    "program",
+    "actions",
+    "working_plan",
+    "remaining_gap",
+)
 
 
 def _ref_of(value: dict) -> dict:
@@ -160,7 +167,7 @@ def schema() -> dict:
     contribution = obj(
         {
             "label": TEXT,
-            "kind": enum("hires", "program"),
+            "kind": enum("hires", "program", "actions"),
             "valued": BOOL,
             REST_OF_FY: MONEY_OR_NULL,
             NEXT_12: MONEY_OR_NULL,
@@ -318,7 +325,8 @@ def _check(r: dict, w: dict, rule) -> None:
     plan = r.get("plan")
     in_force = plan is not None and "unavailable" not in plan
     plan_section = plan if in_force else None
-    for key, want in ws.static_texts(in_force).items():
+    with_actions = in_force and any(i["kind"] == "actions" for i in plan["items"])
+    for key, want in ws.static_texts(in_force, with_actions).items():
         rule(w[key] == want, f"worksheet.{key} is not what the report writes")
     _walk_sentences(w, "", rule)
     # restated and referenced figures: rebuilt from the report's own sections

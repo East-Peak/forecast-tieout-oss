@@ -296,28 +296,49 @@ def finish(
     fy = profile.fiscal_year
     plan_section = None
     plan_checks: list[Check] = []
+    effect = None
     if ground is not None:
+        hires, inflows = (
+            actions.plan_inputs(ground, plan) if plan is not None else ((), ())
+        )
         if plan is not None:
+            if plan.actions:
+                from . import (
+                    driver_actions,
+                )  # it reads the plan basis, which reads this module
+
+                effect = driver_actions.effect_for(state, plan, hires, inflows)
             plan_section, c = actions.plan_section(
-                ground, state.scenario, plan, Path(str(plan_file))
-            )
+                ground, state.scenario, plan, Path(str(plan_file)),
+                () if effect is None else effect.lift,
+            )  # fmt: skip
             plan_checks += c
     elif plan is not None:
         plan_section = actions_section
     plan_checks += actions_checks
     if ground is not None:
-        hires, inflows = (
-            actions.plan_inputs(ground, plan) if plan is not None else ((), ())
-        )
         worksheet_section, worksheet_checks = worksheet.worksheet_section(
             ground, state.quarters, params, plan_section if plan is not None else None,
             hires, inflows, actions_section, gap, required,
+            () if effect is None else effect.lift,
         )  # fmt: skip
     else:
         worksheet_section, worksheet_checks = (
             {"unavailable": fitted.unavailable_reason},
             [],
         )
+    driver_checks: list[Check] = []
+    if effect is not None:
+        win_rate = next(
+            d for d in worksheet_section["drivers"] if d["driver"] == "win_rate"
+        )
+        driver_section, driver_checks = driver_actions.section(
+            ground, effect, hires, inflows, win_rate, plan_section
+        )  # fmt: skip
+    elif plan is not None and plan.actions:
+        driver_section = {"unavailable": fitted.unavailable_reason}
+    else:
+        driver_section = {"items": []}
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows
@@ -338,6 +359,7 @@ def finish(
         *required_checks,
         *plan_checks,
         *worksheet_checks,
+        *driver_checks,
     ]
     failed = [c for c in checks if not c.passed]
 
@@ -428,6 +450,7 @@ def finish(
     if plan_section is not None:
         report["plan"] = plan_section
     report["actions"] = actions_section
+    report["driver_actions"] = driver_section
     report["worksheet"] = worksheet_section
     report["schema_version"] = SCHEMA_VERSION
     return report

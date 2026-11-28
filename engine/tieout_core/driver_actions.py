@@ -30,15 +30,19 @@ from . import lanes_flows as flows
 from . import lanes_rules as rules
 from .actions import Ground
 from .capacity import project
+from .figures import CENT, cents, money, number
 from .fiscal import add_months
 from .forecast import Inflow
 from .lanes_basis import Basis, Sizes
 from .lanes_flows import Calendar
-from .plan import Plan, PlanAction
+from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction
+from .records import Check
 from .roster import Member
-from .worksheet_rules import WIN_RATE
+from .worksheet_drivers import Probe
+from .worksheet_rules import PRECISION, WIN_RATE
 
 ZERO, ONE = Decimal(0), Decimal(1)
+WINDOWS = (REST_OF_FY, NEXT_12)
 
 
 class Unavailable(ValueError):
@@ -260,3 +264,217 @@ def effect_for(
         )
         state.memo["frames"][key] = frame
     return effect(frame, g.model.new_pipeline.win_rate, g.as_of, plan.actions)
+
+
+# ---------------------------------------------------------------- the report's section
+
+REMOVAL_LABEL = "Bookings lost if removed"
+DEFINITION = (
+    "A driver action is a named change to one driver in one slice, with a start month, a ramp and "
+    "a target. It changes the pipeline created from its start, ramping linearly by creation date "
+    "to the target and holding it after. Pipeline created before the start, and every deal "
+    "already open, keeps the rates it had. Where the capacity term is in use, hires and programs "
+    "stay as the plan has them; each action is valued against them."
+)
+REMOVAL_NOTE = (
+    "Each action's value is the forecast with all the actions less the forecast with every other "
+    "action but not this one, hires and programs held. It is what removing it loses, not a share "
+    "of the joint gain, so the values need not add up to it."
+)
+RANGE_NOTE = (
+    "The plan's ranges are simulated with the actions in force, so they carry the model's "
+    "uncertainty under the actions and exclude uncertainty about whether an action is achieved."
+)
+ROUNDING_NOTE = (
+    "Each forecast is the sum of its months, each to the cent. A figure that is a difference of "
+    "forecasts can differ from another route to the same figure by up to a cent a month; the "
+    "reconciliation line is held to that."
+)
+INSIDE = "within the worksheet's historical settings"
+OUTSIDE = "outside the worksheet's historical settings"
+NOT_OFFERED = "the worksheet offers no historical settings for the win rate"
+NO_INTERACTION = (
+    "The actions together gain what removing each one loses, to within rounding: they do not "
+    "interact in this model."
+)
+REINFORCE = (
+    "What removing each one loses adds up to more than the actions gain together: each is worth "
+    "more with the others in place, so they reinforce each other."
+)
+OVERLAP = (
+    "The actions together gain more than what removing each one loses adds up to: the others "
+    "cover part of what each does, so they overlap."
+)
+
+
+def empty_section() -> dict:
+    """The section when the plan has no driver actions."""
+    return {"items": []}
+
+
+def _windows(f, probe: Probe) -> dict[str, Decimal]:
+    shown = probe.shown(f)
+    return {w: shown[w] for w in WINDOWS}
+
+
+def _slice(a: PlanAction) -> dict:
+    return {
+        "kind": "company" if a.segment is None else "segment",
+        "key": a.segment,
+        "label": a.slice_label,
+    }
+
+
+def affects_text(slice_label: str, start: str, ramp_months: int) -> str:
+    ramp = (
+        "at once"
+        if ramp_months == 0
+        else f"ramping up over {ramp_months} {'month' if ramp_months == 1 else 'months'}"
+    )
+    return (
+        f"Pipeline created from {start} in {slice_label}, {ramp} to the target; pipeline "
+        "created earlier, and every deal already open, keeps its rate."
+    )
+
+
+def _evidence(g: Ground, a: PlanAction, row: dict) -> dict:
+    """The pooled baseline, the change, the result, and where the target sits against the
+    worksheet's low and high for this driver (its means of the lower and upper halves of the
+    quarters observed, not the extremes)."""
+    places = PRECISION[WIN_RATE]
+    base = g.model.new_pipeline.win_rate
+    h = row["historical"]
+    low = high = None
+    if h is None:
+        position, label = "none", NOT_OFFERED
+    else:
+        low, high = h["low"]["setting"], h["high"]["setting"]
+        if a.target < Decimal(low):
+            position, label = "below", OUTSIDE
+        elif a.target > Decimal(high):
+            position, label = "above", OUTSIDE
+        else:
+            position, label = "inside", INSIDE
+    return {
+        "baseline_rate": number(base, places),
+        "change_points": f"{(a.target - base) * 100:.2f}",
+        "resulting_rate": number(a.target, places),
+        "historical_low": low,
+        "historical_high": high,
+        "position": position,
+        "label": label,
+    }
+
+
+def _quarters(g: Ground, probe: Probe, f) -> list[dict]:
+    out = []
+    for q, status, _, booked, labels in g.quarters:
+        forecast = probe.scenario.shown(f, list(labels))
+        out.append(
+            {
+                "quarter": q,
+                "status": status,
+                "forecast": money(forecast),
+                "expected": money(booked + cents(forecast)),
+            }
+        )
+    return out
+
+
+def _figures(g: Ground, probe: Probe, f) -> dict:
+    shown = _windows(f, probe)
+    return {
+        "bookings": {w: money(v) for w, v in shown.items()},
+        "expected_fiscal_year": money(g.fytd + shown[REST_OF_FY]),
+        "quarters": _quarters(g, probe, f),
+    }
+
+
+def _months(g: Ground) -> dict[str, int]:
+    return {REST_OF_FY: len(g.rest_labels), NEXT_12: len(g.twelve_labels)}
+
+
+def section(
+    g: Ground,
+    eff: Effect,
+    hires: Sequence[Member],
+    inflows: Sequence[Inflow],
+    win_rate_row: dict,
+    plan_section: dict,
+) -> tuple[dict, list[Check]]:
+    """The driver actions' values and evidence, by the worksheet's probe (expectations only):
+    every counterfactual is the plan's own hires and programs with some of the actions."""
+    probe = Probe(g, hires, inflows)
+    without = probe.base
+    everything = probe.with_lift(eff.lift)
+    none_shown, all_shown = probe.shown(without), probe.shown(everything)
+    joint = {w: all_shown[w] - none_shown[w] for w in WINDOWS}
+    items, removals = [], []
+    for a in eff.actions:
+        left = probe.shown(probe.with_lift(eff.dropping(a).lift))
+        removal = {w: all_shown[w] - left[w] for w in WINDOWS}
+        removals.append(removal)
+        items.append(
+            {
+                "id": a.id,
+                "name": a.name,
+                "driver": a.driver,
+                "slice": _slice(a),
+                "start": f"{a.start:%Y-%m}",
+                "ramp_months": a.ramp_months,
+                "target": number(a.target, PRECISION[WIN_RATE]),
+                "affects": affects_text(
+                    a.slice_label, f"{a.start:%Y-%m}", a.ramp_months
+                ),
+                "removal_value": {w: money(v) for w, v in removal.items()},
+                "evidence": _evidence(g, a, win_rate_row),
+            }
+        )
+    summed = {w: sum((r[w] for r in removals), ZERO) for w in WINDOWS}
+    gap = {w: joint[w] - summed[w] for w in WINDOWS}
+    tolerance = {w: CENT * _months(g)[w] * (1 + len(eff.actions)) for w in WINDOWS}
+    sentences = {
+        w: NO_INTERACTION
+        if abs(gap[w]) <= tolerance[w]
+        else (REINFORCE if gap[w] < 0 else OVERLAP)
+        for w in WINDOWS
+    }
+    out = {
+        "definition": DEFINITION,
+        "removal_label": REMOVAL_LABEL,
+        "removal_note": REMOVAL_NOTE,
+        "items": items,
+        "joint_gain": {w: money(v) for w, v in joint.items()},
+        "reconciliation": {
+            "values": {w: money(v) for w, v in gap.items()},
+            "tolerance": {w: money(v) for w, v in tolerance.items()},
+            "sentences": sentences,
+        },
+        "without_actions": _figures(g, probe, without),
+        "with_actions": _figures(g, probe, everything),
+        "range_note": RANGE_NOTE,
+        "rounding_note": ROUNDING_NOTE,
+    }
+    step = next(i for i in plan_section["items"] if i["kind"] == "actions")
+    checks = [
+        Check(
+            "driver actions' joint gain is the plan's actions step",
+            out["joint_gain"] == step["contribution"],
+            f"{out['joint_gain']} by the probe against {step['contribution']} in the plan",
+        ),
+        Check(
+            "driver actions' with-figures are the plan's expected fiscal year",
+            out["with_actions"]["expected_fiscal_year"]
+            == plan_section["expected_fiscal_year"],
+            f"{out['with_actions']['expected_fiscal_year']} against {plan_section['expected_fiscal_year']}",
+        ),
+        Check(
+            "driver actions on a win rate do not interact: removal values add to the joint gain",
+            all(abs(gap[w]) <= tolerance[w] for w in WINDOWS),
+            "; ".join(
+                f"{w}: reconciliation {money(gap[w])}, rounding allows {money(tolerance[w])}"
+                for w in WINDOWS
+            ),
+        ),
+    ]
+    return out, checks

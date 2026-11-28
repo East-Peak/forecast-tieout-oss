@@ -192,7 +192,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.6.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.7.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -1271,6 +1271,555 @@
         "candidates"
       ],
       "type": "object"
+    },
+    "driver_actions": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "affects": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "driver": {
+                    "enum": [
+                      "win_rate"
+                    ]
+                  },
+                  "evidence": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "baseline_rate": {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      "change_points": {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      "historical_high": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "historical_low": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "position": {
+                        "enum": [
+                          "inside",
+                          "below",
+                          "above",
+                          "none"
+                        ]
+                      },
+                      "resulting_rate": {
+                        "$ref": "#/$defs/Decimal"
+                      }
+                    },
+                    "required": [
+                      "baseline_rate",
+                      "change_points",
+                      "resulting_rate",
+                      "historical_low",
+                      "historical_high",
+                      "position",
+                      "label"
+                    ],
+                    "type": "object"
+                  },
+                  "id": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "name": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "ramp_months": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "removal_value": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "next twelve months": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "rest of fiscal year": {
+                        "$ref": "#/$defs/Money"
+                      }
+                    },
+                    "required": [
+                      "rest of fiscal year",
+                      "next twelve months"
+                    ],
+                    "type": "object"
+                  },
+                  "slice": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "kind": {
+                        "enum": [
+                          "company",
+                          "segment"
+                        ]
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "key",
+                      "label"
+                    ],
+                    "type": "object"
+                  },
+                  "start": {
+                    "$ref": "#/$defs/Month"
+                  },
+                  "target": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "driver",
+                  "slice",
+                  "start",
+                  "ramp_months",
+                  "target",
+                  "affects",
+                  "removal_value",
+                  "evidence"
+                ],
+                "type": "object"
+              },
+              "maxItems": 0,
+              "type": "array"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "unavailable": {
+              "$ref": "#/$defs/Text"
+            }
+          },
+          "required": [
+            "unavailable"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "definition": {
+              "$ref": "#/$defs/Text"
+            },
+            "items": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "affects": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "driver": {
+                    "enum": [
+                      "win_rate"
+                    ]
+                  },
+                  "evidence": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "baseline_rate": {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      "change_points": {
+                        "$ref": "#/$defs/Decimal"
+                      },
+                      "historical_high": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "historical_low": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "position": {
+                        "enum": [
+                          "inside",
+                          "below",
+                          "above",
+                          "none"
+                        ]
+                      },
+                      "resulting_rate": {
+                        "$ref": "#/$defs/Decimal"
+                      }
+                    },
+                    "required": [
+                      "baseline_rate",
+                      "change_points",
+                      "resulting_rate",
+                      "historical_low",
+                      "historical_high",
+                      "position",
+                      "label"
+                    ],
+                    "type": "object"
+                  },
+                  "id": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "name": {
+                    "$ref": "#/$defs/Text"
+                  },
+                  "ramp_months": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "removal_value": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "next twelve months": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "rest of fiscal year": {
+                        "$ref": "#/$defs/Money"
+                      }
+                    },
+                    "required": [
+                      "rest of fiscal year",
+                      "next twelve months"
+                    ],
+                    "type": "object"
+                  },
+                  "slice": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "key": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/$defs/Text"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "kind": {
+                        "enum": [
+                          "company",
+                          "segment"
+                        ]
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "key",
+                      "label"
+                    ],
+                    "type": "object"
+                  },
+                  "start": {
+                    "$ref": "#/$defs/Month"
+                  },
+                  "target": {
+                    "$ref": "#/$defs/Decimal"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "driver",
+                  "slice",
+                  "start",
+                  "ramp_months",
+                  "target",
+                  "affects",
+                  "removal_value",
+                  "evidence"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "joint_gain": {
+              "additionalProperties": false,
+              "properties": {
+                "next twelve months": {
+                  "$ref": "#/$defs/Money"
+                },
+                "rest of fiscal year": {
+                  "$ref": "#/$defs/Money"
+                }
+              },
+              "required": [
+                "rest of fiscal year",
+                "next twelve months"
+              ],
+              "type": "object"
+            },
+            "range_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "reconciliation": {
+              "additionalProperties": false,
+              "properties": {
+                "sentences": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Text"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Text"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "tolerance": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "values": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "values",
+                "tolerance",
+                "sentences"
+              ],
+              "type": "object"
+            },
+            "removal_label": {
+              "const": "Bookings lost if removed"
+            },
+            "removal_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "rounding_note": {
+              "$ref": "#/$defs/Text"
+            },
+            "with_actions": {
+              "additionalProperties": false,
+              "properties": {
+                "bookings": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "expected_fiscal_year": {
+                  "$ref": "#/$defs/Money"
+                },
+                "quarters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "expected": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "forecast": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "quarter": {
+                        "$ref": "#/$defs/Quarter"
+                      },
+                      "status": {
+                        "enum": [
+                          "closed",
+                          "in progress",
+                          "not started"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "quarter",
+                      "status",
+                      "forecast",
+                      "expected"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "bookings",
+                "expected_fiscal_year",
+                "quarters"
+              ],
+              "type": "object"
+            },
+            "without_actions": {
+              "additionalProperties": false,
+              "properties": {
+                "bookings": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "$ref": "#/$defs/Money"
+                    },
+                    "rest of fiscal year": {
+                      "$ref": "#/$defs/Money"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
+                "expected_fiscal_year": {
+                  "$ref": "#/$defs/Money"
+                },
+                "quarters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "expected": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "forecast": {
+                        "$ref": "#/$defs/Money"
+                      },
+                      "quarter": {
+                        "$ref": "#/$defs/Quarter"
+                      },
+                      "status": {
+                        "enum": [
+                          "closed",
+                          "in progress",
+                          "not started"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "quarter",
+                      "status",
+                      "forecast",
+                      "expected"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "bookings",
+                "expected_fiscal_year",
+                "quarters"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "definition",
+            "removal_label",
+            "removal_note",
+            "items",
+            "joint_gain",
+            "reconciliation",
+            "without_actions",
+            "with_actions",
+            "range_note",
+            "rounding_note"
+          ],
+          "type": "object"
+        }
+      ]
     },
     "forecasts": {
       "additionalProperties": false,
@@ -3006,6 +3555,55 @@
                       "cash_cost_in_twelve_months",
                       "cash_cost_total",
                       "payment_schedule"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "cash_cost_in_twelve_months": {
+                        "type": "null"
+                      },
+                      "cash_cost_total": {
+                        "type": "null"
+                      },
+                      "contribution": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "next twelve months": {
+                            "$ref": "#/$defs/Money"
+                          },
+                          "rest of fiscal year": {
+                            "$ref": "#/$defs/Money"
+                          }
+                        },
+                        "required": [
+                          "rest of fiscal year",
+                          "next twelve months"
+                        ],
+                        "type": "object"
+                      },
+                      "detail": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "kind": {
+                        "const": "actions"
+                      },
+                      "label": {
+                        "$ref": "#/$defs/Text"
+                      },
+                      "valued": {
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "label",
+                      "detail",
+                      "valued",
+                      "contribution",
+                      "cash_cost_in_twelve_months",
+                      "cash_cost_total"
                     ],
                     "type": "object"
                   }
@@ -5013,7 +5611,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.6.0"
+      "const": "2.7.0"
     },
     "verdicts": {
       "additionalProperties": false,
@@ -5268,7 +5866,8 @@
                       "kind": {
                         "enum": [
                           "hires",
-                          "program"
+                          "program",
+                          "actions"
                         ]
                       },
                       "label": {
@@ -5344,6 +5943,7 @@
                           "as_signed",
                           "hires",
                           "program",
+                          "actions",
                           "working_plan",
                           "remaining_gap"
                         ]
@@ -6527,6 +7127,7 @@
     "quota_productivity",
     "required_pipeline",
     "actions",
+    "driver_actions",
     "worksheet",
     "schema_version"
   ],

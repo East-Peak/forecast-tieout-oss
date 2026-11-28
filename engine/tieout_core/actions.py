@@ -88,7 +88,10 @@ class Scenario:
         return project(g.cap.fit, [*g.cap.members, *hires], g.as_of, g.horizon_days)
 
     def forecast(
-        self, hires: Sequence[Member] = (), inflows: Sequence[Inflow] = ()
+        self,
+        hires: Sequence[Member] = (),
+        inflows: Sequence[Inflow] = (),
+        lift: Sequence[Decimal] = (),
     ) -> Forecast:
         g = self.g
         creation = self.creation(hires)
@@ -99,6 +102,7 @@ class Scenario:
             g.windows,
             creation=creation,
             inflows=tuple(inflows),
+            lift=tuple(lift),
         )
 
     def shown(self, f: Forecast, labels: list[str]) -> Decimal:
@@ -253,8 +257,11 @@ def plan_inputs(g: Ground, plan: Plan) -> tuple[tuple[Member, ...], tuple[Inflow
 # ---------------------------------------------------------------- section 11
 
 
+ACTIONS_STEP = "Driver actions, together"
+
+
 def plan_section(
-    g: Ground, scen: Scenario, plan: Plan, path: Path
+    g: Ground, scen: Scenario, plan: Plan, path: Path, lift: Sequence[Decimal] = ()
 ) -> tuple[dict, list[Check]]:
     cfg = g.cap.cfg
     adopted = g.cap.adopted
@@ -328,7 +335,23 @@ def plan_section(
         else:
             total_cost += cost
         items.append(row)
-    final = scen.forecast(tuple(hires), tuple(inflows))
+    final = scen.forecast(tuple(hires), tuple(inflows), tuple(lift))
+    if plan.actions:  # one step for all of them, on top of everything above it
+        now = scen.bookings(final)
+        items.append(
+            {
+                "kind": "actions",
+                "label": ACTIONS_STEP,
+                "detail": "; ".join(
+                    f"{a.name} ({a.slice_label}, from {a.start:%Y-%m})"
+                    for a in plan.actions
+                ),
+                "valued": True,
+                "contribution": {h: money(now[h] - prev[h]) for h in now},
+                "cash_cost_in_twelve_months": None,
+                "cash_cost_total": None,
+            }
+        )
     with_plan = scen.bookings(final)
     diff = {h: with_plan[h] - baseline[h] for h in baseline}
     summed = {
@@ -345,7 +368,7 @@ def plan_section(
     sim = simulate(
         g.model, g.pop, g.as_of, g.windows, draws=g.draws, seed=g.seed,
         groups={**quarter_labels, REST_OF_FY: g.rest_labels, NEXT_12: g.twelve_labels},
-        creation=scen.creation(tuple(hires)), inflows=tuple(inflows),
+        creation=scen.creation(tuple(hires)), inflows=tuple(inflows), lift=tuple(lift),
     )  # fmt: skip
     expected_total = float(final.total())
     sd_mean = (
@@ -355,8 +378,10 @@ def plan_section(
     centered = abs(sim.total.mean - expected_total) <= 4 * sd_mean + 0.01
     section = {
         "file": str(path),
-        "order": "hires first, then programs, each in the plan file's order; each contribution is "
-        "the extra bookings from adding that item to everything above it, so they sum to the difference",
+        "order": "hires first, then programs, each in the plan file's order"
+        + (", then the driver actions together" if plan.actions else "")
+        + "; each contribution is the extra bookings from adding that item to everything above "
+        "it, so they sum to the difference",
         "baseline_definition": "the roster as signed and nothing planned"
         + (
             ""
@@ -388,11 +413,18 @@ def plan_section(
             },
         },
         "cash_cost_in_twelve_months": None if cost_missing else money(total_cost),
-        "cost_note": "a missing cost is shown as 'cost not entered' and left out of the total"
-        if cost_missing
-        else "hires at loaded cost per AE-month over expected months employed; programs at their cost, "
-        "paid in step with the pipeline they create (or on the plan's own payment schedule), counting "
-        "only what falls inside the twelve months",
+        "cost_note": (
+            "a missing cost is shown as 'cost not entered' and left out of the total"
+            if cost_missing
+            else "hires at loaded cost per AE-month over expected months employed; programs at their cost, "
+            "paid in step with the pipeline they create (or on the plan's own payment schedule), counting "
+            "only what falls inside the twelve months"
+        )
+        + (
+            "; a driver action has no cost entered and none is counted"
+            if plan.actions
+            else ""
+        ),
         "ranges": {
             "status": "unvalidated: these ranges include the plan"
             + (" and the capacity term" if adopted else "")
@@ -413,7 +445,8 @@ def plan_section(
             "draws": g.draws,
             "what_is_drawn": "deal outcomes"
             + (", future departures" if adopted else "")
-            + ", with the planned hires and program pipeline in the scenario",
+            + ", with the planned hires and program pipeline in the scenario"
+            + (", and the driver actions' win rates" if plan.actions else ""),
         },
     }
     # Goal 3A: the with-plan figures a screen shows, by month, by quarter and for the year

@@ -132,21 +132,36 @@ class Probe:
     months each to the cent; the fiscal-year figure is exact, as the existing solves use it."""
 
     def __init__(
-        self, g: Ground, hires: Sequence[Member] = (), inflows: Sequence[Inflow] = ()
+        self,
+        g: Ground,
+        hires: Sequence[Member] = (),
+        inflows: Sequence[Inflow] = (),
+        lift: Sequence[Decimal] = (),
     ) -> None:
         self.g = g
         self.hires, self.inflows = tuple(hires), tuple(inflows)
+        self.lift = tuple(
+            lift
+        )  # the driver actions in force, as extra wins by day created
         self.scenario = Scenario(g)
         self._creation = self.scenario.creation(self.hires)
-        self.base = self._run(g.model, self._creation)
+        self.base = self._run(g.model, self._creation, None, self.lift)
         self._shown_base = self.shown(self.base)
 
-    def _run(self, model, creation, existing=None) -> Forecast:
+    def _run(self, model, creation, existing=None, lift=None) -> Forecast:
         g = self.g
         return model_forecast(
             model, g.pop, g.as_of, g.windows,
             creation=creation, inflows=self.inflows, existing=existing,
+            lift=self.lift if lift is None else lift,
         )  # fmt: skip
+
+    def with_lift(self, lift: Sequence[Decimal]) -> Forecast:
+        """This probe's scenario with ``lift`` in place of the one it was made with; open deals
+        are reused."""
+        return self._run(
+            self.g.model, self._creation, self.base.components[EXISTING], tuple(lift)
+        )
 
     def forecast(self, adjusted: Ground) -> Forecast:
         """The forecast for ``adjusted`` (a ground made by the overrides above) with this probe's

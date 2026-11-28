@@ -2,6 +2,9 @@
   "actions": {
     "unavailable": "no close-timing evidence for open deals in S5"
   },
+  "driver_actions": {
+    "items": []
+  },
   "backtest": {
     "candidates": {
       "recency": {
@@ -969,7 +972,7 @@
       "unavailable": "no capacity.yaml in the profile"
     }
   },
-  "schema_version": "2.6.0",
+  "schema_version": "2.7.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [],
