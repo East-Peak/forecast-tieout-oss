@@ -1,5 +1,5 @@
 import type { ReportIndex, ScenarioComparison } from "../generated/appFiles";
-import type { ActionDoc, ComparisonRow, Facts, PlanDoc } from "./protocol";
+import type { ActionDoc, ActionDriver, ComparisonRow, Facts, PlanDoc } from "./protocol";
 
 /** The scenario id of the visitor's own plan; the report's identity carries it. */
 export const YOUR_PLAN = "your-plan";
@@ -43,28 +43,66 @@ export function withUnit(plan: PlanDoc, facts: Facts, kind: UnitKind): PlanDoc {
 /** Where a draft action was asked for: it says so beside the draft, until the visitor applies it. */
 export type ActionOrigin = "tornado" | "grid";
 
-/** What a draft action starts from: the slice ("company" or a segment), a target the report gave (a probability, as text) and where it came from. */
+/** What a draft action starts from: the slice ("company" or a segment), the driver (the win rate unless said), a target the report gave (as text) and where it came from. */
 export interface ActionSeed {
   slice: string;
+  driver?: ActionDriver;
   target: string;
   /** null for an action the visitor adds by hand: it has no note beside it */
   origin: ActionOrigin | null;
 }
 
+/** What an action is called, by its driver: "Enterprise win-rate action". */
+const KIND: Record<ActionDriver, string> = { win_rate: "win-rate", won_arr: "deal-size", productivity: "creation" };
+
+/** The drivers there are to act on. */
+export const ACTION_DRIVERS: readonly ActionDriver[] = ["win_rate", "won_arr", "productivity"];
+
 /**
- * The plan with a draft action added: the first month a plan may start in, no ramp. A slice that already has an action is
- * not given a second (the core refuses two on one slice), and a plan whose segments all have one holds no more (the core
- * refuses the rest as overlaps). `id` is the action to show the visitor: the new one, the one the slice already has, or null.
+ * The plan with a draft action added: the first month a plan may start in, no ramp. A slice that already has an action on the
+ * driver is not given a second (the core refuses two on one driver and slice), and a driver every segment has an action on
+ * holds no more (the core refuses the rest as overlaps). `id` is the action to show the visitor: the new one, the one the
+ * slice already has, or null.
  */
 export function withAction(plan: PlanDoc, facts: Facts, seed: ActionSeed): { plan: PlanDoc; id: string | null } {
   const held = plan.actions ?? [];
-  const same = held.find((a) => a.slice === seed.slice);
+  const driver = seed.driver ?? "win_rate";
+  const mine = held.filter((a) => a.driver === driver);
+  const same = mine.find((a) => a.slice === seed.slice);
   if (same) return { plan, id: same.id };
-  if (held.length >= facts.segments.length) return { plan, id: null };
+  if (mine.length >= facts.segments.length) return { plan, id: null };
   const used = new Set(held.map((a) => a.id));
-  const id = Array.from({ length: facts.segments.length }, (_, i) => `action-${i}`).find((candidate) => !used.has(candidate));
+  const id = ACTION_DRIVERS.flatMap(() => facts.segments)
+    .map((_, i) => `action-${i}`)
+    .find((candidate) => !used.has(candidate));
   if (id === undefined) return { plan, id: null };
-  const slice = seed.slice === "company" ? "Company" : (facts.segments.find((s) => s.value === seed.slice)?.label ?? seed.slice);
-  const action: ActionDoc = { id, name: `${slice} win-rate action`, driver: "win_rate", slice: seed.slice, start: facts.months[0], ramp_months: 0, target: seed.target };
+  const action: ActionDoc = { id, name: defaultName(sliceLabel(facts, seed.slice), driver), driver, slice: seed.slice, start: facts.months[0], ramp_months: 0, target: seed.target };
   return { plan: { ...plan, actions: [...held, action] }, id };
+}
+
+/** The name an action has until the visitor gives it one: "Enterprise deal-size action". */
+export function defaultName(sliceLabel: string, driver: ActionDriver): string {
+  return `${sliceLabel} ${KIND[driver]} action`;
+}
+
+/** The slice's words: the company, or the segment's label. */
+export function sliceLabel(facts: Facts, slice: string): string {
+  return slice === "company" ? "Company" : (facts.segments.find((s) => s.value === slice)?.label ?? slice);
+}
+
+/**
+ * What "Add an action" adds: on the first driver (the win rate, the size, creation) that still has room, the company if it has
+ * no action there yet, else the first segment without one. Null where every driver has an action on every segment.
+ */
+export function nextAction(plan: PlanDoc, facts: Facts): { driver: ActionDriver; slice: string } | null {
+  const held = plan.actions ?? [];
+  for (const driver of ACTION_DRIVERS) {
+    const mine = held.filter((a) => a.driver === driver);
+    if (mine.length >= facts.segments.length) continue;
+    if (mine.length === 0) return { driver, slice: "company" };
+    const used = new Set(mine.map((a) => a.slice));
+    const free = facts.segments.find((s) => !used.has(s.value));
+    if (free) return { driver, slice: free.value };
+  }
+  return null;
 }

@@ -156,7 +156,7 @@ describe("Plan an action here", () => {
 
   it("is not offered on another column, or on an owner row", async () => {
     await ready();
-    for (const column of ["bookings", "created", "cycle", "avg_won_arr"]) {
+    for (const column of ["bookings", "cycle", "created_arr", "won", "open"]) {
       const panel = await open("segment/enterprise", column);
       expect(within(panel).queryByTestId("plan-action"), column).toBeNull();
       fireEvent.click(within(panel).getByRole("button", { name: "Close panel" }));
@@ -174,5 +174,58 @@ describe("Plan an action here", () => {
     cleanup();
     await ready({ editor: false });
     expect(within(await open("total", "win_rate")).queryByTestId("plan-action")).toBeNull();
+  });
+});
+
+
+describe("Plan an action here, on the cells of the size of a win and of created deals", () => {
+  const sheet = REPORT.worksheet as { drivers: Array<{ driver: string; current: { value: string } }> };
+  const baseline = (driver: string) => sheet.drivers.find((d) => d.driver === driver)!.current.value;
+  const CASES = [
+    ["avg_won_arr", "won_arr", /average won ARR of the lane's wins/],
+    ["created", "productivity", /deals created in the period/],
+  ] as const;
+
+  it.each(CASES)("is offered on the %s cell of the company and of a segment, with the slice as context and a line on what the cell's number is", async (column, _driver, says) => {
+    await ready();
+    for (const [row, slice] of [["total", "company"], ["segment/enterprise", "enterprise"]] as const) {
+      const panel = await open(row, column);
+      const entry = within(panel).getByTestId("plan-action");
+      expect(within(entry).getByRole("button", { name: "Plan an action here" })).toBeEnabled();
+      expect(entry).toHaveTextContent(says);
+      expect(entry).toHaveTextContent(/pooled baseline/);
+      expect(entry.getAttribute("data-slice")).toBe(slice);
+      fireEvent.click(within(panel).getByRole("button", { name: "Close panel" }));
+    }
+  });
+
+  it.each(CASES)("on the %s cell opens a draft on that driver with the slice prefilled and the target at the pooled baseline, and applies nothing", async (column, driver) => {
+    const { store, choose } = await ready();
+    const plan = JSON.stringify(store.snapshot.applied[COMPANY].plan);
+    const panel = await open("segment/mid_market", column);
+    fireEvent.click(within(panel).getByRole("button", { name: "Plan an action here" }));
+    expect(choose).toHaveBeenCalledWith(COMPANY, "your-plan");
+    const added = store.snapshot.drafts[COMPANY].actions!.find((a) => a.slice === "mid_market" && a.driver === driver)!;
+    expect(added).toMatchObject({ slice: "mid_market", start: "2026-09", ramp_months: 0, target: baseline(driver) });
+    expect(store.snapshot.origins[COMPANY][added.id]).toBe("grid");
+    expect(JSON.stringify(store.snapshot.applied[COMPANY].plan)).toBe(plan);
+    expect(screen.queryByTestId("cell-panel")).toBeNull();
+  });
+
+  it.each(CASES)("on the company's %s cell the slice is the company", async (column, driver) => {
+    const { store } = await ready();
+    const panel = await open("total", column);
+    fireEvent.click(within(panel).getByRole("button", { name: "Plan an action here" }));
+    expect(store.snapshot.drafts[COMPANY].actions!.some((a) => a.slice === "company" && a.driver === driver)).toBe(true);
+  });
+
+  it.each(CASES)("is not offered on an owner's %s cell, nor where the editor is not", async (column) => {
+    await ready();
+    fireEvent.click(screen.getByTestId("expand-segment/enterprise"));
+    fireEvent.click(await screen.findByTestId(`cell-segment/enterprise/owner/AE-010-${column}`));
+    expect(within(await screen.findByTestId("cell-panel")).queryByTestId("plan-action")).toBeNull();
+    cleanup();
+    await ready({ desktop: false });
+    expect(within(await open("total", column)).queryByTestId("plan-action")).toBeNull();
   });
 });

@@ -2,10 +2,10 @@ import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { STACK_GRID as STACK } from "../../components/workbook/stack";
-import { BLOCK, DA_ROWS } from "./driverActionBindings";
+import { BLOCK, DA_ROWS, DRIVER_CHOICE } from "./driverActionBindings";
 
 /**
- * "Actions", after Apply: each win-rate action with the bookings the plan loses if it is removed, in the year and over the
+ * "Actions", after Apply: each action with the bookings the plan loses if it is removed, in the year and over the
  * next twelve months, the joint gain beside them, the reconciliation line only where the core calls it material, and the same plan
  * without its actions. The removal values are not shares of the joint gain and are labeled as the core labels them.
  * The report's section is the whole content: nothing is added, split or compared here.
@@ -21,7 +21,7 @@ export function ActionsBlock() {
     <Card data-testid="driver-actions">
       <SectionHeader
         title="Actions"
-        subtitle="Changes to the win rate of new pipeline, valued on top of the plan's hires and programs. Each value is what removing that action loses, not a share of the joint gain."
+        subtitle="Changes to the win rate, the size of a win, or the creation of new pipeline, valued on top of the plan's hires and programs. Each value is what removing that action loses, not a share of the joint gain."
       />
       <Table className={STACK.table} data-testid="driver-actions-table">
         <TableHead className={STACK.head}>
@@ -43,7 +43,10 @@ export function ActionsBlock() {
             return (
               <TableRow key={item.id} className={STACK.row} data-testid="driver-action-row">
                 <TableCell className={STACK.title}>
-                  <div className="font-medium"><Bound binding={BLOCK.name} row={row} /></div>
+                  <div className="font-medium">
+                    <Bound binding={BLOCK.name} row={row} />{" "}
+                    <span className="text-[10px] font-semibold uppercase text-slate-500" data-testid="driver-action-driver">{DRIVER_CHOICE[item.driver]}</span>
+                  </div>
                   <div className="text-xs font-normal text-slate-500"><Bound binding={BLOCK.affects} row={row} /></div>
                 </TableCell>
                 <TableCell className={STACK.cell} data-label="Lost if removed, rest of the year"><Bound binding={BLOCK.removedRest} row={row} /></TableCell>

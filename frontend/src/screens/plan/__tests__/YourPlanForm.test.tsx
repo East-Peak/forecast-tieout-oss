@@ -52,6 +52,10 @@ class FakeEditor implements Editor {
 const FIXTURE = resolve(__dirname, "../../__tests__/fixtures/your-plan-actions");
 const ACTIONS_REPORT = JSON.parse(readFileSync(resolve(FIXTURE, "report.json"), "utf8")) as TieoutReport;
 const ACTIONS_PLAN = JSON.parse(readFileSync(resolve(FIXTURE, "plan.json"), "utf8")) as PlanDoc;
+// ... and for one with an action on each driver, the win rate and the size sharing Enterprise
+const DRIVERS_FIXTURE = resolve(__dirname, "../../__tests__/fixtures/your-plan-three-drivers");
+const DRIVERS_REPORT = JSON.parse(readFileSync(resolve(DRIVERS_FIXTURE, "report.json"), "utf8")) as TieoutReport;
+const DRIVERS_PLAN = JSON.parse(readFileSync(resolve(DRIVERS_FIXTURE, "plan.json"), "utf8")) as PlanDoc;
 const SEGMENTS = [
   { value: "commercial", label: "Commercial" },
   { value: "enterprise", label: "Enterprise" },
@@ -59,13 +63,13 @@ const SEGMENTS = [
 ];
 
 /** The form on a company whose demo plan is `demo` (applied first, so the report shown is the fixture's), in a page that reads the fixture's report. */
-async function mounted(demo: PlanDoc = DEMO, segments = FACTS.segments) {
+async function mounted(demo: PlanDoc = DEMO, segments = FACTS.segments, report: TieoutReport = ACTIONS_REPORT) {
   const editor = new FakeEditor();
   editor.open = () => Promise.resolve({ ...FACTS, segments, demo_plan: demo });
   const store = new YourPlanStore(editor);
   await store.load("acme");
   editor.sent.length = 0;
-  const context = { company: "acme", scenario: "your-plan", files: { report: ACTIONS_REPORT, index: withYourPlan(files.index()), comparison: files.comparison("sapling-industries") } };
+  const context = { company: "acme", scenario: "your-plan", files: { report, index: withYourPlan(files.index()), comparison: files.comparison("sapling-industries") } };
   const page = () => (
     <BindingProvider {...context}>
       <YourPlanProvider store={store} desktop>
@@ -283,15 +287,15 @@ describe("actions: the list and the form, beside hires and programs", () => {
     expect(store.snapshot.drafts.acme.actions?.[0].target).toBe("0.23");
   });
 
-  it("removes an action, and stops offering another once every segment has one", async () => {
+  it("removes an action, and stops offering another once every segment has one on each driver", async () => {
     const { store } = await mounted(ACTIONS_PLAN, SEGMENTS);
-    fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
-    expect(store.snapshot.drafts.acme.actions).toHaveLength(2);
-    fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
-    expect(store.snapshot.drafts.acme.actions).toHaveLength(3);
+    for (let n = 2; n <= 9; n++) {
+      fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+      expect(store.snapshot.drafts.acme.actions).toHaveLength(n);
+    }
     expect(screen.getByRole("button", { name: "Add an action" })).toBeDisabled();
     fireEvent.click(screen.getAllByRole("button", { name: "Remove action" })[0]);
-    expect(store.snapshot.drafts.acme.actions).toHaveLength(2);
+    expect(store.snapshot.drafts.acme.actions).toHaveLength(8);
     expect(screen.getByRole("button", { name: "Add an action" })).toBeEnabled();
   });
 
@@ -340,7 +344,7 @@ describe("actions: the evidence beside the target", () => {
 
   it("shows, for an action as applied, the core's change in points and resulting rate, and its label when the target is outside the settings", async () => {
     const { context } = await mounted(ACTIONS_PLAN, SEGMENTS);
-    const evidence = CORE.items[0].evidence;
+    const evidence = CORE.items[0].evidence as Extract<(typeof CORE.items)[0]["evidence"], { change_points: string }>;
     const row = "/driver_actions/items/0";
     expect(
       checkBindings(
@@ -466,5 +470,136 @@ describe("the form's intro and the line under its Actions heading", () => {
     await mounted();
     expect(screen.getByText(/Change the hires, programs and actions, then Apply\./)).toBeInTheDocument();
     expect(screen.getByTestId("actions-line")).not.toHaveTextContent(/share of deals created/);
+  });
+});
+
+
+describe("actions on the other drivers: the driver, the target in its terms, and the evidence", () => {
+  const CORE = DRIVERS_REPORT.driver_actions as Extract<TieoutReport["driver_actions"], { joint_gain: unknown }>;
+  const sheet = (DRIVERS_REPORT.worksheet as { drivers: Array<{ driver: string; unit_label: string; current: { value: string }; historical: { low: { setting: string }; high: { setting: string } } }> }).drivers;
+  const row = (driver: string) => sheet.find((d) => d.driver === driver)!;
+  const elements = (id: string) => Array.from(document.querySelectorAll<HTMLElement>(`[data-binding='${id}']`));
+  const mount3 = () => mounted(DRIVERS_PLAN, SEGMENTS, DRIVERS_REPORT);
+
+  it("offers the three drivers in each row, and shows the target in the driver's own terms", async () => {
+    await mount3();
+    const rows = actionRows().map((r) => within(r));
+    expect(rows).toHaveLength(3);
+    for (const r of rows) expect(Array.from((r.getByLabelText("Changes") as HTMLSelectElement).options).map((o) => o.text)).toEqual(["Win rate", "Won ARR per win", "Creation productivity"]);
+    expect(rows.map((r) => (r.getByLabelText("Changes") as HTMLSelectElement).value)).toEqual(["win_rate", "won_arr", "productivity"]);
+    expect(rows[0].getByLabelText("Target win rate (percent)")).toHaveValue("26");
+    expect(rows[1].getByLabelText("Target won ARR per win (dollars)")).toHaveValue("450000");
+    expect(rows[2].getByLabelText("Target creation productivity (deals)")).toHaveValue("2.6");
+  });
+
+  it("takes a dollar or a deal target as typed, and sends it as typed", async () => {
+    const { store, editor } = await mount3();
+    fireEvent.change(within(actionRows()[1]).getByLabelText("Target won ARR per win (dollars)"), { target: { value: "460000.5" } });
+    fireEvent.change(within(actionRows()[2]).getByLabelText("Target creation productivity (deals)"), { target: { value: "2." } });
+    expect(store.snapshot.drafts.acme.actions?.[1].target).toBe("460000.5");
+    expect(store.snapshot.drafts.acme.actions?.[2].target).toBe("2.");
+    expect(editor.sent).toEqual([]);
+  });
+
+  it("shows each driver's pooled baseline, low and high from its own worksheet row, and the unit the report gives", async () => {
+    const { context } = await mount3();
+    const expected = [
+      { id: "driver-actions.form.baseline", texts: [fmt.percent1(row("win_rate").current.value)] },
+      { id: "driver-actions.form.low", texts: [fmt.percent1(row("win_rate").historical.low.setting)] },
+      { id: "driver-actions.form.high", texts: [fmt.percent1(row("win_rate").historical.high.setting)] },
+      { id: "driver-actions.form.won_arr.baseline", texts: [fmt.usdShort(row("won_arr").current.value)] },
+      { id: "driver-actions.form.won_arr.low", texts: [fmt.usdShort(row("won_arr").historical.low.setting)] },
+      { id: "driver-actions.form.won_arr.high", texts: [fmt.usdShort(row("won_arr").historical.high.setting)] },
+      { id: "driver-actions.form.won_arr.unit", texts: [row("won_arr").unit_label] },
+      { id: "driver-actions.form.productivity.baseline", texts: [fmt.decimal2(row("productivity").current.value)] },
+      { id: "driver-actions.form.productivity.low", texts: [fmt.decimal2(row("productivity").historical.low.setting)] },
+      { id: "driver-actions.form.productivity.high", texts: [fmt.decimal2(row("productivity").historical.high.setting)] },
+      { id: "driver-actions.form.productivity.unit", texts: [row("productivity").unit_label] },
+    ];
+    expect(checkBindings(document.body, expected, [], DRIVER_ACTION_BINDINGS, context, ["driver-actions.item.", "driver-actions.form.line"])).toEqual([]);
+    expect(row("won_arr").unit_label).toBe("dollars of ARR per won deal");
+    expect(row("productivity").unit_label).toBe("created deals per ramped AE-month");
+  });
+
+  it("shows, for an action as applied, the core's percent on the baseline and the resulting value, and its label only outside the settings", async () => {
+    const { context } = await mount3();
+    const [size, creation] = [CORE.items[1], CORE.items[2]];
+    const e1 = size.evidence as { change_percent: string; resulting: string; label: string; position: string };
+    const e2 = creation.evidence as { change_percent: string; resulting: string; label: string; position: string };
+    expect(e1.position).toBe("inside");
+    expect(e2.position).toBe("above");
+    const failures = checkBindings(
+      document.body,
+      [
+        { id: "driver-actions.item.change-percent", texts: [fmt.decimal2(e1.change_percent), fmt.decimal2(e2.change_percent)], rows: ["/driver_actions/items/1", "/driver_actions/items/2"] },
+        { id: "driver-actions.item.resulting.won_arr", texts: [fmt.usdShort(e1.resulting)], rows: ["/driver_actions/items/1"] },
+        { id: "driver-actions.item.resulting.productivity", texts: [fmt.decimal2(e2.resulting)], rows: ["/driver_actions/items/2"] },
+        { id: "driver-actions.item.label", texts: [(CORE.items[0].evidence as { label: string }).label, e2.label], rows: ["/driver_actions/items/0", "/driver_actions/items/2"] },
+      ],
+      [],
+      DRIVER_ACTION_BINDINGS,
+      context,
+      ["driver-actions.form."],
+    );
+    expect(failures).toEqual([]);
+    expect(unboundDigits(document.body)).toEqual([]);
+  });
+
+  it("says the core's line for a plan that acts on more than the win rate", async () => {
+    await mount3();
+    const line = screen.getByTestId("actions-line");
+    expect(line).toHaveTextContent(CORE.line);
+    expect(line).toHaveTextContent(/the size of a win, or how many deals people create/);
+  });
+
+  it("moves a row to another driver with the target at that driver's baseline, and renames it only if it still had its own default name", async () => {
+    const { store } = await mounted(DEMO, SEGMENTS, DRIVERS_REPORT);
+    fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+    fireEvent.change(screen.getByLabelText("Changes"), { target: { value: "won_arr" } });
+    expect(store.snapshot.drafts.acme.actions).toEqual([{ id: "action-0", name: "Company deal-size action", driver: "won_arr", slice: "company", start: "2026-09", ramp_months: 0, target: "413835.73" }]);
+    fireEvent.change(screen.getByLabelText("Action name"), { target: { value: "Bigger deals" } });
+    fireEvent.change(screen.getByLabelText("Changes"), { target: { value: "productivity" } });
+    expect(store.snapshot.drafts.acme.actions?.[0]).toMatchObject({ name: "Bigger deals", driver: "productivity", target: "2.0662" });
+    expect(screen.getByLabelText("Target creation productivity (deals)")).toHaveValue("2.0662");
+  });
+
+  it("adds the next action on the driver with room: the win rate by slice, then the size, then creation", async () => {
+    const { store } = await mounted(DEMO, SEGMENTS, DRIVERS_REPORT);
+    for (let n = 0; n < 3; n++) fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+    expect(store.snapshot.drafts.acme.actions?.map((a) => [a.driver, a.slice])).toEqual([
+      ["win_rate", "company"],
+      ["win_rate", "commercial"],
+      ["win_rate", "enterprise"],
+    ]);
+    fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+    expect(store.snapshot.drafts.acme.actions?.[3]).toMatchObject({ driver: "won_arr", slice: "company" });
+  });
+
+  it("shows the core's words beside a size or creation action it refused", async () => {
+    const { editor } = await mount3();
+    const message = "The target won ARR per win must be zero or more dollars, not -$5.";
+    editor.next = { kind: "invalid", errors: [{ section: "actions", index: 2, position: 1, message }] };
+    fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+    expect(await within(actionRows()[1]).findByRole("alert")).toHaveTextContent(message);
+  });
+
+  it("names the driver in the note on a draft from a bar or a cell", async () => {
+    const { store } = await mounted(DEMO, SEGMENTS, DRIVERS_REPORT);
+    act(() => store.draftAction("acme", { slice: "company", driver: "won_arr", target: "605308.57", origin: "tornado" }));
+    expect(await screen.findByTestId("action-origin")).toHaveTextContent(/Started from the deal-size bar\. Its value will differ from the bar's figure/);
+    act(() => store.draftAction("acme", { slice: "enterprise", driver: "productivity", target: "2.0662", origin: "grid" }));
+    await waitFor(() => expect(screen.getAllByTestId("action-origin")).toHaveLength(2));
+    const notes = screen.getAllByTestId("action-origin").map((n) => n.textContent);
+    expect(notes[1]).toMatch(/deals created in the period/);
+    expect(notes[1]).toMatch(/pooled baseline/);
+    expect(elements("driver-actions.item.change-percent")).toHaveLength(0);
+  });
+
+  it("shows no figure of the core's for an action whose report entry is for another driver (the report is the last Apply's, the plan this one's): the pending line stands, and nothing is read from the wrong shape", async () => {
+    const changed: PlanDoc = { ...ACTIONS_PLAN, actions: [{ ...ACTIONS_PLAN.actions![0], driver: "won_arr", target: "450000" }] };
+    await mounted(changed, SEGMENTS);
+    expect(document.querySelectorAll("[data-binding='driver-actions.item.change-percent']")).toHaveLength(0);
+    expect(document.querySelectorAll("[data-binding='driver-actions.item.change-points']")).toHaveLength(0);
+    expect(screen.getByTestId("action-pending")).toBeInTheDocument();
   });
 });

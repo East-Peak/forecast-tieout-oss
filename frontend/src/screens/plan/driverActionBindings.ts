@@ -2,20 +2,24 @@ import { bind } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
 
 /**
- * The win-rate actions' committed binding list: what the plan editor shows beside an action (the pooled baseline and the
- * worksheet's low and high, the core's figures for an applied action) and what the Plan screen's Actions block shows after
- * Apply. Everything is read from the report's `driver_actions` section and the worksheet's win-rate driver, as the core wrote
+ * The driver actions' committed binding list: what the plan editor shows beside an action (the pooled baseline and the
+ * worksheet's low and high for the action's driver, the core's figures for an applied action) and what the Plan screen's Actions
+ * block shows after Apply. Everything is read from the report's `driver_actions` section and the worksheet's driver rows, as the core wrote
  * them: the browser adds, subtracts and compares nothing, so the change in points is the core's, not the form's.
  * A row binding is read from `/driver_actions/items/{i}`. The tests assert this list against independently written expectations.
  */
 const SECTION = "/driver_actions";
 const WIN_RATE = "/worksheet/drivers/{driver=win_rate}";
+const SIZE = "/worksheet/drivers/{driver=won_arr}";
+const CREATION = "/worksheet/drivers/{driver=productivity}";
 const REST = "rest of fiscal year";
 const TWELVE = "next twelve months";
 
 const text = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "text", format: "text", ...extra });
 const usd = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "usd", format: "usd-short", ...extra });
 const rate = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "fraction", format: "percent1", ...extra });
+const dollars = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "usd", format: "usd-short", ...extra });
+const deals = (id: string, path: string, extra: Partial<Binding> = {}) => bind({ id, path, unit: "quantity", format: "decimal2", ...extra });
 const points = (id: string, path: string) => bind({ id, path, unit: "quantity", format: "decimal2" });
 const words = (w: string) => ({ words: w }) as const;
 
@@ -28,6 +32,23 @@ export const FORM = {
   high: rate("driver-actions.form.high", `${WIN_RATE}/historical/high/setting`, { unavailable: words("not offered") }),
 } as const;
 
+/** The same beside an action on the size of a win (dollars per won deal) and on creation (deals per ramped AE-month, or per day), each with the unit the worksheet gives. */
+const FORM_SIZE = {
+  baseline: dollars("driver-actions.form.won_arr.baseline", `${SIZE}/current/value`, { unavailable: words("no baseline") }),
+  low: dollars("driver-actions.form.won_arr.low", `${SIZE}/historical/low/setting`, { unavailable: words("not offered") }),
+  high: dollars("driver-actions.form.won_arr.high", `${SIZE}/historical/high/setting`, { unavailable: words("not offered") }),
+  unit: text("driver-actions.form.won_arr.unit", `${SIZE}/unit_label`),
+} as const;
+const FORM_CREATION = {
+  baseline: deals("driver-actions.form.productivity.baseline", `${CREATION}/current/value`, { unavailable: words("no baseline") }),
+  low: deals("driver-actions.form.productivity.low", `${CREATION}/historical/low/setting`, { unavailable: words("not offered") }),
+  high: deals("driver-actions.form.productivity.high", `${CREATION}/historical/high/setting`, { unavailable: words("not offered") }),
+  unit: text("driver-actions.form.productivity.unit", `${CREATION}/unit_label`),
+} as const;
+
+/** What the form reads for each driver's action. */
+export const FORM_BY_DRIVER = { win_rate: FORM, won_arr: FORM_SIZE, productivity: FORM_CREATION } as const;
+
 /** One action's own evidence, read from `/driver_actions/items/{i}`: the core's change in points, the resulting rate, and where the target sits against the worksheet. */
 export const EVIDENCE = {
   change: points("driver-actions.item.change-points", "/evidence/change_points"),
@@ -35,6 +56,13 @@ export const EVIDENCE = {
   low: rate("driver-actions.item.low", "/evidence/historical_low", { unavailable: words("not offered") }),
   high: rate("driver-actions.item.high", "/evidence/historical_high", { unavailable: words("not offered") }),
   label: text("driver-actions.item.label", "/evidence/label"),
+} as const;
+
+/** The evidence of an action on the size of a win or on creation: the core's percent on the baseline, the resulting value, and where it sits against the worksheet (the label above is shared). */
+export const EVIDENCE_AMOUNT = {
+  changePercent: deals("driver-actions.item.change-percent", "/evidence/change_percent"),
+  resultingSize: dollars("driver-actions.item.resulting.won_arr", "/evidence/resulting"),
+  resultingCreation: deals("driver-actions.item.resulting.productivity", "/evidence/resulting"),
 } as const;
 
 /** The Actions block, after Apply. */
@@ -63,4 +91,14 @@ export const BLOCK = {
 /** Where the block's rows are read from. */
 export const DA_ROWS = { items: `${SECTION}/items` } as const;
 
-export const DRIVER_ACTION_BINDINGS: readonly Binding[] = [...Object.values(FORM), ...Object.values(EVIDENCE), ...Object.values(BLOCK)];
+export const DRIVER_ACTION_BINDINGS: readonly Binding[] = [
+  ...Object.values(FORM),
+  ...Object.values(FORM_SIZE),
+  ...Object.values(FORM_CREATION),
+  ...Object.values(EVIDENCE),
+  ...Object.values(EVIDENCE_AMOUNT),
+  ...Object.values(BLOCK),
+];
+
+/** What each driver is called beside an action (a name, not a figure). */
+export const DRIVER_CHOICE = { win_rate: "Win rate", won_arr: "Won ARR per win", productivity: "Creation productivity" } as const;

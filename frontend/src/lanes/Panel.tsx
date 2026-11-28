@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 import { Bound, useBindingContext } from "../binding/Bound";
 import { useYourPlan } from "../editor/YourPlanContext";
 import { YOUR_PLAN } from "../editor/yourPlan";
-import { winRateReading } from "../editor/winRate";
+import { driverReading } from "../editor/winRate";
+import type { ActionDriver } from "../editor/protocol";
 import { BASIS, FRAME, HEAD, LANE } from "./bindings";
 import type { CellSource } from "./bindings";
 import { PARTS } from "./definitions";
@@ -108,23 +109,40 @@ function GoalSource({ source, row, rowPointer, basis }: { source: CellSource; ro
   );
 }
 
+/** The driver an action planned from a cell changes, by the cell's column; and what the cell's number is against that driver. */
+const PLANNED: Partial<Record<ColumnKey, { driver: ActionDriver; says: string }>> = {
+  win_rate: {
+    driver: "win_rate",
+    says: "The target starts at the pooled baseline, to change: this cell's number is a dated cohort rate, not the win rate the model changes.",
+  },
+  avg_won_arr: {
+    driver: "won_arr",
+    says: "The target starts at the pooled baseline, to change: this cell's number is the average won ARR of the lane's wins, a blend of sizes (a forecast cell is priced by sharing the pooled bookings out), not the size the model changes.",
+  },
+  created: {
+    driver: "productivity",
+    says: "The target starts at the pooled baseline, to change: this cell's number is the deals created in the period, while an action changes how many deals the slice's people create per ramped AE-month (or per day where that term is not in use).",
+  },
+};
+
 /**
- * "Plan an action here", on a win-rate cell of the company or a segment where the plan editor is: it opens a draft action on that
- * slice, its target at the pooled baseline (the cell's own number is a dated cohort rate, not the driver the model changes), and
- * the panel steps aside for the form. Nothing is applied until the visitor applies it.
+ * "Plan an action here", on the win-rate, average won ARR and created-deals cells of the company or a segment where the plan
+ * editor is: it opens a draft action on that driver and slice, its target at the pooled baseline (the cell's own number is not
+ * the driver the model changes), and the panel steps aside for the form. Nothing is applied until the visitor applies it.
  */
 function PlanAnAction({ source, column, row, onClose }: { source: CellSource; column: ColumnKey; row: Row; onClose: () => void }) {
   const ctx = useBindingContext();
   const yourPlan = useYourPlan();
-  const baseline = winRateReading(ctx.files.report).baseline;
+  const planned = PLANNED[column];
+  const baseline = planned ? driverReading(ctx.files.report, planned.driver).baseline : null;
   const slice = row.kind === "company" ? "company" : row.kind === "segment" ? row.path[1] : undefined;
-  if (source !== "lanes" || column !== "win_rate" || !yourPlan?.desktop || baseline === null || slice === undefined) return null;
+  if (source !== "lanes" || !planned || !yourPlan?.desktop || baseline === null || slice === undefined) return null;
   return (
     <section className="mt-5" data-testid="plan-action" data-slice={slice}>
       <button
         type="button"
         onClick={() => {
-          yourPlan.store.draftAction(ctx.company, { slice, target: baseline, origin: "grid" });
+          yourPlan.store.draftAction(ctx.company, { slice, driver: planned.driver, target: baseline, origin: "grid" });
           ctx.choose?.(ctx.company, YOUR_PLAN);
           onClose();
         }}
@@ -132,9 +150,7 @@ function PlanAnAction({ source, column, row, onClose }: { source: CellSource; co
       >
         Plan an action here
       </button>
-      <p className="mt-1.5 text-[11px] leading-snug text-slate-500">
-        The target starts at the pooled baseline, to change: this cell&apos;s number is a dated cohort rate, not the win rate the model changes.
-      </p>
+      <p className="mt-1.5 text-[11px] leading-snug text-slate-500">{planned.says}</p>
     </section>
   );
 }

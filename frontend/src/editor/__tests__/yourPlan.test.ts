@@ -51,3 +51,30 @@ describe("a draft action", () => {
     expect(full.id).toBeNull();
   });
 });
+
+describe("a draft action on another driver", () => {
+  it("names its driver and is named for it in the core's words", () => {
+    const size = withAction(EMPTY, FACTS, { slice: "enterprise", driver: "won_arr", target: "413835.73", origin: "grid" });
+    expect(size.plan.actions).toEqual([
+      { id: "action-0", name: "Enterprise deal-size action", driver: "won_arr", slice: "enterprise", start: "2026-09", ramp_months: 0, target: "413835.73" },
+    ]);
+    const creation = withAction(EMPTY, FACTS, { slice: "company", driver: "productivity", target: "2.0662", origin: "tornado" });
+    expect(creation.plan.actions?.[0]).toMatchObject({ name: "Company creation action", driver: "productivity", target: "2.0662" });
+  });
+
+  it("is a second action where the slice has one on another driver, and the same one where it is the same driver", () => {
+    const rate = withAction(EMPTY, FACTS, { slice: "enterprise", target: "0.22", origin: "grid" });
+    const size = withAction(rate.plan, FACTS, { slice: "enterprise", driver: "won_arr", target: "400000", origin: "grid" });
+    expect(size.plan.actions?.map((a) => [a.id, a.driver])).toEqual([["action-0", "win_rate"], ["action-1", "won_arr"]]);
+    const again = withAction(size.plan, FACTS, { slice: "enterprise", driver: "won_arr", target: "500000", origin: "tornado" });
+    expect(again.plan).toBe(size.plan);
+    expect(again.id).toBe("action-1");
+  });
+
+  it("holds as many as three drivers on every segment, and no driver more than once on a slice", () => {
+    let plan = EMPTY;
+    for (const driver of ["win_rate", "won_arr", "productivity"] as const) for (const s of ["commercial", "enterprise", "mid_market"]) plan = withAction(plan, FACTS, { slice: s, driver, target: "1", origin: "grid" }).plan;
+    expect(plan.actions).toHaveLength(9);
+    expect(withAction(plan, FACTS, { slice: "company", driver: "won_arr", target: "1", origin: "tornado" })).toMatchObject({ plan, id: null });
+  });
+});

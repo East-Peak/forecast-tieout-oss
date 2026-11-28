@@ -61,6 +61,24 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     expect(Array.from(container.querySelectorAll("[data-testid='bridge-row']")).map((r) => r.getAttribute("data-kind"))).toContain("actions");
   });
 
+  it("a plan with an action on each driver is held to them too: the block names each driver, and the material reconciliation is the core's figure and sentence in both windows", () => {
+    const c = computed("your-plan-three-drivers");
+    const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+    const { expected, absent, periodLabels } = build(c);
+    expect([...checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], c), ...unboundDigits(container, periodLabels)]).toEqual([]);
+    const section = c.report.driver_actions;
+    if (!("joint_gain" in section)) throw new Error("no actions");
+    const rows = Array.from(container.querySelectorAll("[data-testid='driver-action-row']"));
+    expect(rows.map((r) => r.querySelector("[data-testid='driver-action-driver']")?.textContent)).toEqual(["Win rate", "Won ARR per win", "Creation productivity"]);
+    const line = container.querySelector("[data-testid='driver-actions-reconciliation']")!;
+    expect(section.reconciliation.material).toEqual({ "rest of fiscal year": true, "next twelve months": true });
+    expect(line).toHaveTextContent("-$22K");
+    expect(line).toHaveTextContent("-$660K");
+    for (const w of ["rest of fiscal year", "next twelve months"] as const) expect(line).toHaveTextContent(section.reconciliation.sentences[w]);
+    expect(container.querySelector("[data-testid='driver-actions']")).toHaveTextContent(/the size of a win, or the creation of new pipeline/);
+    expect(Array.from(container.querySelectorAll("[data-testid='bridge-row']")).map((r) => r.getAttribute("data-kind"))).toContain("actions");
+  });
+
   it("the reconciliation line is said only where the core calls it material, in the core's sentence for that window; a figure that rounds to zero is not said", () => {
     const c = computed("your-plan-actions");
     const none = mountScreen(PlanScreen, c, c.company, c.scenario);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import * as files from "../../screens/__tests__/files";
-import { winRateReading } from "../winRate";
+import { driverReading, winRateReading } from "../winRate";
 
 describe("what a draft action starts from, read from the worksheet", () => {
   it("is the pooled rate and the worksheet's high setting, as the report writes them", () => {
@@ -22,5 +22,21 @@ describe("what a draft action starts from, read from the worksheet", () => {
     expect(got.present).toBe(true);
     expect(got.baseline).not.toBeNull();
     expect(got.favorable).toBeNull();
+  });
+});
+
+describe("the same reading for the other drivers an action can change", () => {
+  const r = files.fixture("../fixtures/your-plan-three-drivers/report.json");
+
+  it("is each driver's pooled value and worksheet high, as the report writes them", () => {
+    expect(driverReading(r, "win_rate")).toEqual({ present: true, baseline: "0.2193", favorable: "0.2220" });
+    expect(driverReading(r, "won_arr")).toMatchObject({ present: true, baseline: "413835.73", favorable: "605308.57" });
+    expect(driverReading(r, "productivity")).toMatchObject({ present: true, baseline: "2.0662", favorable: "2.4056" });
+  });
+
+  it("is nothing where the worksheet cannot be built", () => {
+    const none = structuredClone(r);
+    (none as { worksheet: unknown }).worksheet = { unavailable: "no worksheet" };
+    expect(driverReading(none, "won_arr")).toEqual({ present: false, baseline: null, favorable: null });
   });
 });

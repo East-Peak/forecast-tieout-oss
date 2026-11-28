@@ -7,6 +7,7 @@ import { usePlot } from "../../binding/ChartKit";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { STACK_GRID as STACK } from "../../components/workbook/stack";
+import type { ActionDriver } from "../../editor/protocol";
 import { useYourPlan } from "../../editor/YourPlanContext";
 import { YOUR_PLAN } from "../../editor/yourPlan";
 import type { TieoutReport } from "../../generated/report";
@@ -166,9 +167,9 @@ function useOpenEditor() {
       yourPlan?.store.append(company, kind);
       choose?.(company, YOUR_PLAN);
     },
-    /** a draft win-rate action on the company, at the favorable end of the worksheet's settings; the form shows it, nothing is applied */
-    addAction: (target: string) => {
-      yourPlan?.store.draftAction(company, { slice: "company", target, origin: "tornado" });
+    /** a draft action on the company for that driver, at the favorable end of the worksheet's settings; the form shows it, nothing is applied */
+    addAction: (driver: ActionDriver, target: string) => {
+      yourPlan?.store.draftAction(company, { slice: "company", driver, target, origin: "tornado" });
       choose?.(company, YOUR_PLAN);
     },
   };
@@ -196,7 +197,9 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
   const editor = useOpenEditor();
   // the plan's actions sit on the win rate: the core solves for no setting, and says so in the driver's limitation
   const unsolved = stacked && driver.driver === "win_rate" && driver.needed_alone === null && driver.cannot_scale_because === null;
-  const favorable = driver.driver === "win_rate" && driver.historical !== null ? driver.historical.high.setting : null;
+  // the three drivers an action can change have a favorable end, the high; the cycle (a longer one is worse) has none yet
+  const actionDriver = driver.driver === "cycle_days" ? null : driver.driver;
+  const favorable = actionDriver !== null && driver.historical !== null ? driver.historical.high.setting : null;
   const path = `${WS_ROWS.drivers}/${index}`;
   const { display } = driver;
   const needed = driver.needed_alone;
@@ -257,12 +260,12 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
                 {needed.inside_observed_range ? "Within historical settings" : "Outside historical settings"}
               </Badge>
             ) : null}
-            {editor.wide && favorable !== null ? (
+            {editor.wide && actionDriver !== null && favorable !== null ? (
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  editor.addAction(favorable);
+                  editor.addAction(actionDriver, favorable);
                 }}
                 className="rounded-ft border border-ft-accent bg-white px-3 py-1 text-xs font-semibold text-ft-accent hover:bg-ft-accentSoft"
               >
@@ -284,8 +287,8 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
         <div id={`driver-detail-${driver.driver}`} className="mt-2 flex flex-col gap-3 rounded-ft bg-slate-50 px-3 py-3 text-xs text-slate-700" data-testid="driver-detail">
           <p>
             This is an assumption to discuss
-            {driver.driver === "win_rate" && editor.wide
-              ? ": add it to the plan as a win-rate action to give it a start month, a ramp and a target of your own."
+            {driver.driver !== "cycle_days" && editor.wide
+              ? ": add it to the plan as an action to give it a start month, a ramp and a target of your own."
               : ": it cannot be added to the plan as an item yet."}{" "}
             <Bound binding={DRIVER.appliesTo} row={path} />
           </p>
