@@ -23,7 +23,10 @@ A reopened deal re-enters the open stock (it starts a new selling spell, see
 DealObservations) and takes a slot. A deleted deal leaves the stock without
 being won or lost. The capacity inequality holds per team and month, on lane sums:
 
-    admissions + reopened <= carrying_capacity - open_start + wins + losses + deleted
+    admissions + reopened <= max(0, carrying_capacity - open_start + wins + losses + deleted)
+
+The check constrains admissions, not the stock: after a departure a team may sit above
+capacity (inherited deals) while it admits nothing.
 
 `flow_check` also checks continuity (next start equals this end) and returns
 how many cells it checked, which failed, and which could not be checked and why.
@@ -444,8 +447,8 @@ def flow_check(s: Snapshot) -> FlowReport:
                 [(n, x, at) for n, x in team.items()]
                 + [("carrying_capacity", s.carrying_capacity, at)],
                 lambda v: (
-                    f"admissions + reopened {v[1] + v[2]} exceed capacity room {v[6] - v[0] + v[3] + v[4] + v[5]} (carrying_capacity - open_start + wins + losses + deleted)"
-                    if v[1] + v[2] > v[6] - v[0] + v[3] + v[4] + v[5]
+                    f"admissions + reopened {v[1] + v[2]} exceed capacity room {max(0, v[6] - v[0] + v[3] + v[4] + v[5])} (carrying_capacity - open_start + wins + losses + deleted)"
+                    if v[1] + v[2] > max(0, v[6] - v[0] + v[3] + v[4] + v[5])
                     else None
                 ),
             )

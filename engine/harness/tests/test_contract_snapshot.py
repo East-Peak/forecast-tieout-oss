@@ -211,6 +211,22 @@ def test_capacity_inequality_counts_reopened_and_is_checked_per_team():
     )
 
 
+def test_a_team_above_capacity_after_a_departure_is_not_a_violation_unless_it_admits():
+    over = dict(
+        arrivals=lm([[3, 0], [2, 0]]),
+        admissions=lm([[2, 0], [2, 0]]),
+        opportunities_created=lm([[2, 0], [2, 0]]),
+        open_end=lm([[2, 1], [3, 2]]),
+        carrying_capacity=m(("team", "month"), [[10, 1]]),  # stock 5 > capacity 1
+    )
+    assert flow_check(make(**over)).violations == []
+    admits = dict(over, arrivals=lm([[3, 1], [2, 0]]), admissions=lm([[2, 1], [2, 0]]))
+    admits.update(queue_end=lm([[1, 1], [0, 0]]), open_end=lm([[2, 2], [3, 2]]))
+    admits.update(opportunities_created=lm([[2, 1], [2, 0]]))
+    (problem,) = flow_check(make(**admits)).violations
+    assert "capacity" in problem
+
+
 def test_missing_cells_are_unavailable_with_a_reason_not_failed():
     masked = Measure(
         ("lane", "month"),
@@ -263,7 +279,9 @@ def test_pending_requisitions_are_typed():
 def test_pending_requisitions_may_carry_a_non_ae_role_on_a_team_outside_the_snapshot():
     bdr = PendingRequisition("REQ-2", "BDR", "BDR", "2025-05-01")
     assert make(pending_requisitions=(bdr,)).pending_requisitions == (bdr,)
-    with pytest.raises(ValueError, match="team"):  # an AE requisition still needs an AE team
+    with pytest.raises(
+        ValueError, match="team"
+    ):  # an AE requisition still needs an AE team
         make(
             pending_requisitions=(PendingRequisition("R", "Nope", "AE", "2025-05-01"),)
         )
