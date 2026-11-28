@@ -250,6 +250,27 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
         _item(i, rows[i["driver"]], as_of, rule)
 
 
+def _half_unit(shown: str) -> Decimal:
+    """Half of the last place a figure was written to."""
+    return Decimal(1).scaleb(Decimal(shown).as_tuple().exponent) / 2
+
+
+def _percent_is_possible(baseline: str, resulting: str, percent: str) -> bool:
+    """Whether ``percent`` can be the change from the exact baseline to the exact target, given
+    only the two as written (each to its places) and the percent to two. The exact ones lie within
+    half a place of what is shown, so the ratio lies in an interval: with the baseline shown as
+    zero, anything at or above its lower end."""
+    b, t, got = Decimal(baseline), Decimal(resulting), Decimal(percent)
+    hb, ht = _half_unit(baseline), _half_unit(resulting)
+    low = (max(t - ht, Decimal(0)) / (b + hb) - 1) * 100
+    slack = CENT / 2  # the percent is itself written to two places
+    if got < low - slack:
+        return False
+    if b - hb <= 0:
+        return True
+    return got <= ((t + ht) / (b - hb) - 1) * 100 + slack
+
+
 class _Driver:
     """An action as the report names it: only its driver is read by the wording rules."""
 
@@ -300,12 +321,7 @@ def _item(i: dict, row: dict, as_of: date, rule) -> None:
             f"{where}: the baseline is not the worksheet's pooled value",
         )
         rule(
-            bool(Decimal(base))
-            and abs(
-                (Decimal(ev["resulting"]) / Decimal(base) - 1) * 100
-                - Decimal(ev["change_percent"])
-            )
-            <= CENT,
+            _percent_is_possible(ev["baseline"], ev["resulting"], ev["change_percent"]),
             f"{where}: the change in percent is not the resulting value over the baseline",
         )
     h = row["historical"]
