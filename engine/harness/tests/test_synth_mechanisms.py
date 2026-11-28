@@ -196,7 +196,9 @@ def test_every_owner_change_has_a_history_row_and_open_counts_match_the_simulati
 ):
     from engine.harness.tests.test_synth_extracts import read
 
-    company = inherited_run()
+    company = inherited_run(p_reopen=1.0)  # every loss is reopened where there is room
+    for o in company.sim.opps:  # replaying the history from the first owner gives the owner now, closed deals too
+        assert ([r[3] for r in o.owner_rows] or [o.owner0])[-1] == o.owner.uid, o.n
     generate(company.params, 2, tmp_path, [SMALL_END])
     opps = {r["Id"]: r for r in read(tmp_path, SMALL_END, "salesforce", "Opportunity")}
     rows = {}
