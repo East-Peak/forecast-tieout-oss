@@ -128,6 +128,10 @@ export default function Layout() {
             </NavLink>
           ))}
         </div>
+        <NavLink to={withCurrentSearch("/lanes")} className={tabClass}>
+          Lanes{" "}
+          <span className="ml-1.5 rounded-full border border-slate-300 px-1.5 text-[10px] font-medium uppercase leading-4 text-slate-500">prototype</span>
+        </NavLink>
       </nav>
     </div>
   );

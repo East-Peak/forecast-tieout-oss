@@ -21,6 +21,9 @@ const SCREEN_COMPONENTS: Record<string, LazyExoticComponent<ComponentType>> = {
   "/trust": lazy(() => import("./screens/trust/TrustScreen")),
 };
 
+/** The swimlane prototype: a scratch route, not one of the five screens, so it is not in `SCREENS`. */
+const Lanes = lazy(() => import("./lanes/LanesScreen"));
+
 function RouteLoading() {
   return (
     <div className="flex min-h-[40vh] items-center justify-center">
@@ -70,6 +73,14 @@ export default function App({ loaders = fileLoaders, editor = browserEditor, des
                   />
                 );
               })}
+              <Route
+                path="/lanes"
+                element={
+                  <Suspense fallback={<RouteLoading />}>
+                    <Lanes />
+                  </Suspense>
+                }
+              />
               <Route path="*" element={<ToLanding />} />
             </Route>
           </Routes>

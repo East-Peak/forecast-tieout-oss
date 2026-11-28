@@ -29,14 +29,14 @@ function open(url: string, loaders: Loaders = fromDisk) {
 }
 
 describe("the shell", () => {
-  it("opens on Plan for the index's default company: Plan first, then the four evidence screens under their label", async () => {
+  it("opens on Plan for the index's default company: Plan first, then the four evidence screens under their label, then the Lanes prototype", async () => {
     open("/");
     const nav = screen.getByRole("navigation", { name: "Screens" });
-    expect(within(nav).getAllByRole("link").map((a) => a.textContent)).toEqual(["Plan", "Forecast", "Capacity", "Pipeline", "Trust"]);
+    expect(within(nav).getAllByRole("link").map((a) => a.textContent)).toEqual(["Plan", "Forecast", "Capacity", "Pipeline", "Trust", "Lanes prototype"]);
     expect(within(nav).getByText("Evidence")).toBeInTheDocument();
     // the label sits between Plan and the four screens it names
     const order = Array.from(nav.querySelectorAll("a, [data-nav-label]")).map((el) => el.textContent);
-    expect(order).toEqual(["Plan", "Evidence", "Forecast", "Capacity", "Pipeline", "Trust"]);
+    expect(order).toEqual(["Plan", "Evidence", "Forecast", "Capacity", "Pipeline", "Trust", "Lanes prototype"]);
     await waitFor(() => expect(document.querySelector("main h2")?.textContent).toBe("Plan"));
     expect((document.getElementById("company-selector") as HTMLSelectElement).value).toBe(files.index().default_company);
     expect(screen.getByRole("link", { name: "Plan" }).getAttribute("aria-current")).toBe("page");
