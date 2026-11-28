@@ -1,17 +1,25 @@
-import { Fragment, useCallback, useEffect, useId, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { BindingProvider, Bound, useBindingContext } from "../binding/Bound";
+import type { EditedLanes } from "../editor/store";
+import { useYourPlan } from "../editor/YourPlanContext";
 import { YOUR_PLAN } from "../editor/yourPlan";
 import { BASIS, COLUMNS, FRAME, HEAD, LANE } from "./bindings";
 import type { CellSource } from "./bindings";
 import { GridCell } from "./Cell";
 import { useLanesLoaders } from "./LanesContext";
 import { CellPanel } from "./Panel";
-import type { BasisFile, ColumnKey, LanesFile, LanesLoaders, OwnersFile, RecordsFile, Row } from "./types";
+import type { BasisFile, ColumnKey, LanesAny, LanesFile, LanesLoaders, OwnersFile, RecordsFile, Row } from "./types";
 import { useFile } from "./useFile";
 import type { Loaded } from "./useFile";
 
-/** The scenario whose lanes are drawn: the visitor's own plan has none yet, so it shows the plan as signed. */
+/**
+ * The scenario whose files stand in for the visitor's own plan until its lanes are computed: actuals and goals do not depend on
+ * the plan, so they are drawn from it, and its forecasts are not drawn.
+ */
 const AS_SIGNED = "as-signed";
+/** An owners file of the visitor's plan is named in its own words, for the owners the worker has already sent. */
+const OWN_OWNERS = "your-plan:";
+const NO_SUBSCRIBE = () => () => {};
 
 /** One row of the grid as drawn: where it is read from and what names it. */
 interface Shown {
@@ -125,10 +133,12 @@ interface BodyProps {
   ownerPaths: Record<string, string | undefined>;
   recordsPath: string | null;
   company: string;
+  /** the forecasts of these lanes are being computed: they are withheld, and no cell opens */
+  pending?: boolean;
 }
 
 /** The grid, its toolbar and its panel, for one company's one scenario. */
-function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company }: BodyProps) {
+function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company, pending = false }: BodyProps) {
   const ctx = useBindingContext();
   const [period, setPeriod] = useState(0);
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
@@ -210,6 +220,7 @@ function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company }: BodyP
   }, [selected, target]);
 
   const open = (id: string, column: ColumnKey, button: HTMLElement) => {
+    if (pending) return;
     opener.current = button;
     setWantRecords(true);
     setSelected({ id, column });
@@ -268,7 +279,7 @@ function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company }: BodyP
                   const head: Shown = { source: "lanes", id: idOf(row.path), row, pointer: `/periods/${period}/rows/${index}` };
                   return (
                     <Fragment key={head.id}>
-                      <GridRow shown={head} role={row.kind === "company" ? "total" : "segment"} gridId={gridId} selected={selected} onOpen={open} toggle={slug === undefined ? undefined : { open: expanded.has(slug), busy: state?.status === "loading", flip: () => toggle(slug) }} />
+                      <GridRow shown={head} role={row.kind === "company" ? "total" : "segment"} gridId={gridId} selected={selected} onOpen={open} pending={pending} toggle={slug === undefined ? undefined : { open: expanded.has(slug), busy: state?.status === "loading", flip: () => toggle(slug) }} />
                       {state?.status === "loading" ? (
                         <tr>
           <th scope="row" className="sticky left-0 z-10 border-b border-r border-slate-200 bg-white" />
@@ -282,7 +293,7 @@ function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company }: BodyP
         </tr>
                       ) : null}
                       {state?.status === "ready" ? (
-                        <OwnerRows doc={state.doc} slug={slug!} periodKey={periodKey} gridId={gridId} selected={selected} onOpen={open} />
+                        <OwnerRows doc={state.doc} slug={slug!} periodKey={periodKey} gridId={gridId} selected={selected} onOpen={open} pending={pending} />
                       ) : null}
                     </Fragment>
                   );
@@ -311,13 +322,13 @@ function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company }: BodyP
   );
 }
 
-function OwnerRows({ doc, slug, periodKey, gridId, selected, onOpen }: { doc: OwnersFile; slug: string; periodKey: string; gridId: string; selected: Selected | null; onOpen: (id: string, column: ColumnKey, button: HTMLElement) => void }) {
+function OwnerRows({ doc, slug, periodKey, gridId, selected, onOpen, pending }: { doc: OwnersFile; slug: string; periodKey: string; gridId: string; selected: Selected | null; onOpen: (id: string, column: ColumnKey, button: HTMLElement) => void; pending: boolean }) {
   const ctx = useBindingContext();
   const p = doc.periods.findIndex((x) => x.key === periodKey);
   return (
     <BindingProvider company={ctx.company} scenario={ctx.scenario} files={{ ...ctx.files, owners: doc }} choose={ctx.choose}>
       {doc.periods[p].rows.map((o, i) => (
-        <GridRow key={idOf(o.path)} shown={{ source: "owners", id: idOf(o.path), row: o, pointer: `/periods/${p}/rows/${i}`, slug }} role="owner" gridId={gridId} selected={selected} onOpen={onOpen} />
+        <GridRow key={idOf(o.path)} shown={{ source: "owners", id: idOf(o.path), row: o, pointer: `/periods/${p}/rows/${i}`, slug }} role="owner" gridId={gridId} selected={selected} onOpen={onOpen} pending={pending} />
       ))}
     </BindingProvider>
   );
@@ -329,6 +340,7 @@ function GridRow({
   gridId,
   selected,
   onOpen,
+  pending,
   toggle,
 }: {
   shown: Shown;
@@ -336,6 +348,7 @@ function GridRow({
   gridId: string;
   selected: Selected | null;
   onOpen: (id: string, column: ColumnKey, button: HTMLElement) => void;
+  pending: boolean;
   toggle?: { open: boolean; busy: boolean; flip: () => void };
 }) {
   const own = LANE[shown.source];
@@ -376,6 +389,7 @@ function GridRow({
             cell={shown.row.cells[column]}
             selected={selected?.id === shown.id && selected.column === column}
             onOpen={(button) => onOpen(shown.id, column, button)}
+            pending={pending}
           />
         </td>
       ))}
@@ -390,6 +404,23 @@ export default function LanesSection() {
   return <Section loaders={loaders} />;
 }
 
+/**
+ * What the grid draws for the visitor's own plan. The lanes of an Apply belong to the report that Apply made, so lanes are
+ * taken only for the report on screen: any other state of the plan (a newer Apply not yet shown, a company never applied,
+ * lanes still being computed) is pending, and nothing of the as-signed forecast is drawn in its place.
+ */
+function useYourLanes(own: boolean, company: string, report: unknown): { lanes: EditedLanes; revision: number | null } {
+  const store = useYourPlan()?.store;
+  const snapshot = useSyncExternalStore(store?.subscribe ?? NO_SUBSCRIBE, () => store?.snapshot);
+  const applied = own ? snapshot?.applied[company] : undefined;
+  const current = applied !== undefined && applied.report === report ? applied : undefined;
+  const lanes: EditedLanes = current?.lanes ?? { status: "pending" };
+  useEffect(() => {
+    if (store && own && lanes.status === "stale") void store.recomputeLanes(company);
+  }, [store, own, company, lanes.status]);
+  return { lanes, revision: current?.revision ?? null };
+}
+
 function Section({ loaders }: { loaders: LanesLoaders }) {
   const ctx = useBindingContext();
   const entry = ctx.files.index.companies.find((c) => c.id === ctx.company);
@@ -397,8 +428,9 @@ function Section({ loaders }: { loaders: LanesLoaders }) {
   const scenario = entry?.scenarios.find((s) => s.id === (own ? AS_SIGNED : ctx.scenario));
   const lanesPath = scenario?.lanes ?? null;
   const key = `${ctx.company}/${scenario?.id ?? ""}`;
+  const yours = useYourLanes(own, ctx.company, ctx.files.report);
 
-  const lanes = useFile(
+  const file = useFile(
     lanesPath === null ? null : key,
     () => loaders.lanes(lanesPath!),
     (doc) => {
@@ -407,6 +439,19 @@ function Section({ loaders }: { loaders: LanesLoaders }) {
       return doc.scenario === scenario?.id ? null : `${lanesPath} is the lanes of ${doc.scenario}, not of ${scenario?.id}`;
     },
   );
+  // what is drawn: the scenario's own file, or for your plan the worker's lanes once they are in (and the as-signed file, forecasts withheld, until then)
+  const lanes: Loaded<LanesAny> = own && yours.lanes.status === "ready" ? { status: "ready", doc: yours.lanes.lanes } : file;
+  const pending = own && yours.lanes.status !== "ready" && yours.lanes.status !== "failed";
+  const failed = own && yours.lanes.status === "failed" ? yours.lanes.message : null;
+  const shownKey = own && yours.lanes.status === "ready" ? `${ctx.company}/${YOUR_PLAN}/${yours.revision}` : pending ? `${ctx.company}/${YOUR_PLAN}/pending` : key;
+  // the owners of your plan come from the worker's answer, by names of their own; every other file comes from the page's loaders
+  const sent = own && yours.lanes.status === "ready" ? yours.lanes.owners : null;
+  const bodyLoaders = useMemo<LanesLoaders>(
+    () => (sent ? { ...loaders, owners: (path) => (sent[path.slice(OWN_OWNERS.length)] ? Promise.resolve(sent[path.slice(OWN_OWNERS.length)]) : Promise.reject(new Error(`the worker sent no owners for ${path}`))) } : loaders),
+    [loaders, sent],
+  );
+  const ownerPaths = sent ? Object.fromEntries(Object.keys(sent).map((s) => [s, `${OWN_OWNERS}${s}`])) : (scenario?.lanes_owners ?? {});
+
   const basisPath = entry?.lanes_basis ?? null;
   const basis = useFile<BasisFile>(
     lanes.status === "ready" && basisPath !== null && !("unavailable" in lanes.doc) ? `${key}/basis` : null,
@@ -421,7 +466,7 @@ function Section({ loaders }: { loaders: LanesLoaders }) {
           Lanes
         </h2>
         <p className="mt-1 text-xs text-slate-500">Where the year is weaker than plan: which link, which segment, which owner.</p>
-        {lanes.status === "ready" && !("unavailable" in lanes.doc) ? (
+        {lanes.status === "ready" && !("unavailable" in lanes.doc) && failed === null ? (
           <p className="mt-1 text-xs text-slate-600" data-testid="plan-basis">
             <BindingProvider company={ctx.company} scenario={ctx.scenario} files={{ ...ctx.files, lanes: lanes.doc }} choose={ctx.choose}>
               <span className="font-semibold text-slate-800"><Bound binding={FRAME.basisLabel} /></span> <span className="text-slate-500">· data as of <Bound binding={FRAME.asOf} /></span>
@@ -429,12 +474,14 @@ function Section({ loaders }: { loaders: LanesLoaders }) {
           </p>
         ) : null}
       </div>
-      {own ? (
-        <p className="rounded-ft border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs text-amber-900" role="note" data-testid="your-plan-note">
-          The lanes do not yet reflect your edited plan: this grid is the plan as signed, so its forecasts are the as-signed forecasts. Actuals and goals do not depend on the plan.
+      {pending && lanes.status === "ready" ? (
+        <p className="text-xs text-slate-500" role="status" data-testid="lanes-pending">
+          Updating the forecasts for your plan. Actuals and goals do not depend on the plan, so they are shown.
         </p>
       ) : null}
-      {lanesPath === null ? (
+      {failed !== null ? (
+        <p className="text-sm text-red-700" role="alert">The lanes for your plan could not be computed: {failed}</p>
+      ) : lanesPath === null ? (
         <p className="text-sm text-slate-600" role="status">No lanes are published for this scenario.</p>
       ) : lanes.status === "error" ? (
         <p className="text-sm text-red-700" role="alert">The lanes could not be loaded: {lanes.error}</p>
@@ -446,13 +493,14 @@ function Section({ loaders }: { loaders: LanesLoaders }) {
         </BindingProvider>
       ) : (
         <Body
-          key={key}
-          loaders={loaders}
+          key={shownKey}
+          loaders={bodyLoaders}
           lanes={lanes.doc}
           basis={basis}
-          ownerPaths={scenario?.lanes_owners ?? {}}
+          ownerPaths={ownerPaths}
           recordsPath={entry?.lanes_records ?? null}
           company={ctx.company}
+          pending={pending}
         />
       )}
     </section>

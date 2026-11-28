@@ -51,34 +51,37 @@ interface Props {
   cell: CellData;
   selected: boolean;
   onOpen: (button: HTMLButtonElement) => void;
+  /** the forecast is being computed (for your plan): it, what is drawn from it and the panel are withheld; the actual and the goal stand */
+  pending?: boolean;
 }
 
 /** One cell of the grid: the actual large, the percent against the goal, a bar or a strip, and the forecast and the goal beneath. */
-export function GridCell({ source, rowPointer, rowId, headIds, column, cell, selected, onOpen }: Props) {
+export function GridCell({ source, rowPointer, rowId, headIds, column, cell, selected, onOpen, pending = false }: Props) {
   const own = LANE[source].cells[column];
   const at = `${rowPointer}/cells/${column}`;
-  const tone = toneOf(cell.status);
+  const tone = toneOf(pending ? "none" : cell.status);
   const actualOnly = cell.forecast === null && cell.goal === null;
   const noGoal = cell.none_because === "no_goal";
-  const rated = cell.ratio !== null && cell.goal !== null;
+  const rated = !pending && cell.ratio !== null && cell.goal !== null;
   const opening = column === "open";
   const tip = useId();
   const content = useId();
-  const reason = cell.status === "none" && cell.none_because !== null ? cell.none_because : null;
+  const reason = !pending && cell.status === "none" && cell.none_because !== null ? cell.none_because : null;
   // a stock that has not begun says so, quietly, where its figure would be; the others explain themselves on hover
   const notBegun = opening && cell.actual === null && reason !== null;
-  const inRange = cell.goal_inside_range80 === true && cell.range80 !== null;
+  const inRange = !pending && cell.goal_inside_range80 === true && cell.range80 !== null;
   return (
     <button
       type="button"
       data-testid={`cell-${rowId}-${column}`}
       data-color={tone}
-      data-status={cell.status}
+      data-status={pending ? "pending" : cell.status}
+      disabled={pending}
       aria-pressed={selected}
       aria-labelledby={`${headIds} ${content}`}
       aria-describedby={reason && !notBegun ? tip : undefined}
       onClick={(e) => onOpen(e.currentTarget)}
-      className={`group relative block h-full min-h-[88px] w-full scroll-mb-[56vh] scroll-ml-[120px] scroll-mt-[var(--ft-header-height,0px)] cursor-pointer sm:scroll-ml-[172px] lg:scroll-mb-0 lg:max-xl:scroll-mr-[440px] px-2.5 pb-2 pt-2.5 text-left outline-none transition-colors hover:bg-slate-100/80 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ft-accent ${selected ? "bg-slate-100" : ""}`}
+      className={`group relative block h-full min-h-[88px] w-full scroll-mb-[56vh] scroll-ml-[120px] scroll-mt-[var(--ft-header-height,0px)] ${pending ? "cursor-default" : "cursor-pointer"} sm:scroll-ml-[172px] lg:scroll-mb-0 lg:max-xl:scroll-mr-[440px] px-2.5 pb-2 pt-2.5 text-left outline-none transition-colors hover:bg-slate-100/80 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ft-accent ${selected ? "bg-slate-100" : ""}`}
     >
       <span id={content} className="block">
         {opening ? (
@@ -101,13 +104,20 @@ export function GridCell({ source, rowPointer, rowId, headIds, column, cell, sel
             {actualOnly ? null : (
               <>
                 {rated && cell.marks == null ? <Bar cell={cell} tone={tone} /> : null}
-                {cell.marks != null ? <Strip marks={cell.marks} tone={tone} /> : null}
-                {!rated && cell.marks == null ? <span className="mt-1.5 block h-2" aria-hidden="true" /> : null}
+                {!pending && cell.marks != null ? <Strip marks={cell.marks} tone={tone} /> : null}
+                {!rated && (pending || cell.marks == null) ? <span className="mt-1.5 block h-2" aria-hidden="true" /> : null}
                 <span className="mt-1 flex items-center justify-between gap-1 text-[11px] tabular-nums text-slate-600">
                   <span className="flex min-w-0 items-center gap-0.5">
                     <GaugeIcon />
                     <span className="sr-only">Forecast </span>
-                    <Maybe binding={own.forecast} row={at} />
+                    {pending ? (
+                      <span data-testid="forecast-pending" className="text-slate-400">
+                        <span aria-hidden="true">…</span>
+                        <span className="sr-only">being computed</span>
+                      </span>
+                    ) : (
+                      <Maybe binding={own.forecast} row={at} />
+                    )}
                   </span>
                   <span className="flex min-w-0 items-center gap-0.5">
                     <TargetIcon />

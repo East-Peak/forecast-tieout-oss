@@ -73,7 +73,7 @@ describe("the Plan screen's grid follows the company and scenario in the page", 
 });
 
 describe("your plan", () => {
-  it("shows the plan as signed with one line saying the lanes do not yet reflect the edited plan", async () => {
+  it("with no plan applied yet shows no as-signed forecast in its place, and no note that the lanes ignore the edits (the lanes of an Apply are in YourPlanLanes.test)", async () => {
     const c = caseOf("sapling-industries", "as-signed");
     render(
       <BindingProvider company="sapling-industries" scenario="your-plan" files={c}>
@@ -83,11 +83,13 @@ describe("your plan", () => {
       </BindingProvider>,
     );
     await screen.findByTestId("lanes-grid");
-    expect(screen.getByTestId("your-plan-note").textContent).toMatch(/do not yet reflect your edited plan/);
-    const figure = document.querySelector("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']")!;
-    expect(figure.getAttribute("data-scenario")).toBe("your-plan");
-    // the figures are the as-signed lanes'
-    expect(figure.textContent).toBe(usdShort(bookings("sapling-industries", "as-signed")!));
+    expect(screen.queryByTestId("your-plan-note")).toBeNull();
+    expect(screen.getByTestId("lanes-pending")).toBeTruthy();
+    expect(document.querySelector("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']")).toBeNull();
+    // the actual is the as-signed lanes': it does not depend on the plan
+    const actual = document.querySelector("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.actual']")!;
+    expect(actual.getAttribute("data-scenario")).toBe("your-plan");
+    expect(actual.textContent).toBe(usdShort(lanesOf("sapling-industries", "as-signed").periods[0].rows[0].cells.bookings.actual!));
   });
 
   it("says nothing of it for a named scenario", async () => {
