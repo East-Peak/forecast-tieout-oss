@@ -6,6 +6,7 @@ after K can reach a value. A cell says three separate things (applicability, ava
 derivation) and carries a Contract naming exactly what it measured.
 """
 
+import re
 import statistics
 from calendar import monthrange
 from collections.abc import Callable
@@ -309,6 +310,13 @@ def _predicates(plan: Plan, spec: _Spec) -> _Sql:
     return _Sql(base, mature, eligible, converted, ex, series)
 
 
+def _execute(ctx: _Ctx, plan: Plan, sql: str) -> list[tuple]:
+    used = set(re.findall(r"\$(\w+)", sql))
+    return ctx.store.con.execute(
+        sql, {k: v for k, v in plan.params.values.items() if k in used}
+    ).fetchall()
+
+
 def _run(ctx: _Ctx, spec: _Spec) -> dict[tuple, _Row]:
     plan = _plan(ctx, spec)
     p = _predicates(plan, spec)
@@ -343,7 +351,7 @@ def _run(ctx: _Ctx, spec: _Spec) -> dict[tuple, _Row]:
         f" GROUP BY {', '.join(keys)}" if keys else ""
     )
     out = {}
-    for row in ctx.store.con.execute(sql, plan.params.values).fetchall():
+    for row in _execute(ctx, plan, sql):
         v = dict(zip(aggs, row[len(keys) :], strict=True))
         excluded = {
             r: v[f"ex{i}"] for i, (r, _) in enumerate(p.exclusions) if v[f"ex{i}"]
@@ -386,10 +394,7 @@ def _rows(ctx: _Ctx, spec: _Spec, which: str, key: tuple) -> list[SourceRow]:
         value = "1" if which != "converted" else p.series
     ident = VIEWS[ctx.catalog.entities[spec.entity].view].key
     sql = f"{plan.with_sql()} SELECT {ident}, source_record_ids, {value} FROM f WHERE {plan.where()} AND {cond}{match} ORDER BY 1"
-    return [
-        SourceRow(r[0], r[2], tuple(r[1]))
-        for r in ctx.store.con.execute(sql, plan.params.values).fetchall()
-    ]
+    return [SourceRow(r[0], r[2], tuple(r[1])) for r in _execute(ctx, plan, sql)]
 
 
 # ---- metric kinds ----------------------------------------------------------------------------------------
@@ -737,7 +742,11 @@ def _cells(
         part = (parts or {}).get(key)
         if _not_applicable(metric, ctx.groups, key):
             cell = (None, None, None, "not_applicable", "measured", None, "measured")
-            part = _Part()
+            part = part or _Part()
+            if (
+                part.eligible
+            ):  # rows that landed where the metric has no meaning: never hidden
+                part.flags = (*part.flags, "inapplicable_member_has_rows")
         elif reason is not None:
             cell = (None, None, None, "applicable", "unavailable", reason, "measured")
         elif part is None:
