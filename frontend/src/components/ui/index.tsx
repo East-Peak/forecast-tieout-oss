@@ -90,7 +90,7 @@ export function Badge({
   return (
     <span
       className={cx(
-        "inline-flex items-center rounded-full border font-medium leading-none",
+        "inline-flex items-center whitespace-nowrap rounded-full border font-medium leading-none",
         size === "xs" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs",
         BADGE_STYLES[color],
         className,

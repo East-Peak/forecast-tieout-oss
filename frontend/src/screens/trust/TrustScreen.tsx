@@ -72,7 +72,7 @@ export default function TrustScreen() {
               return (
                 <TableRow key={i} className={STACK.row} data-testid="reconciliation-check">
                   <TableCell className={STACK.title}><Bound binding={B.recName} row={row} /></TableCell>
-                  <TableCell className={`${STACK.cell} sm:text-left`} data-label="What it compared"><Bound binding={B.recDetail} row={row} /></TableCell>
+                  <TableCell className={`${STACK.cell} max-sm:flex-col max-sm:items-start max-sm:gap-0.5 max-sm:text-left sm:text-left`} data-label="What it compared"><Bound binding={B.recDetail} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Result"><Passed binding={B.recPassed} row={row} /></TableCell>
                 </TableRow>
               );
@@ -254,7 +254,7 @@ export default function TrustScreen() {
                       </div>
                     ) : null}
                   </TableCell>
-                  <TableCell className={`${STACK.cell} font-medium`} data-label="Value"><Bound binding={value} row={row} /></TableCell>
+                  <TableCell className={`${STACK.cell} whitespace-nowrap font-medium`} data-label="Value"><Bound binding={value} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="95% range">
                     {rate.range95 !== null ? (
                       <>
@@ -289,7 +289,7 @@ export default function TrustScreen() {
               return (
                 <TableRow key={i} className={STACK.row} data-testid="software-check">
                   <TableCell className={STACK.title}><Bound binding={B.checkName} row={row} /></TableCell>
-                  <TableCell className={`${STACK.cell} sm:text-left`} data-label="What it compared"><Bound binding={B.checkDetail} row={row} /></TableCell>
+                  <TableCell className={`${STACK.cell} max-sm:flex-col max-sm:items-start max-sm:gap-0.5 max-sm:text-left sm:text-left`} data-label="What it compared"><Bound binding={B.checkDetail} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="Result"><Passed binding={B.checkPassed} row={row} /></TableCell>
                 </TableRow>
               );

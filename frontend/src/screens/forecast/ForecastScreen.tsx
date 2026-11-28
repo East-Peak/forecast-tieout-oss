@@ -80,13 +80,13 @@ export default function ForecastScreen() {
       ) : null}
 
       <div className="flex flex-col gap-3">
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-          <MetricCard label="Target" value={<Bound binding={B.yearTarget} />} note="The year's quarterly targets together" className="p-4" />
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-6 xl:grid-cols-5">
+          <MetricCard label="Target" value={<Bound binding={B.yearTarget} />} note="The year's quarterly targets together" className="p-4 lg:col-span-2 xl:col-span-1" />
           <MetricCard
             label={planned ? "Expected, with this scenario" : "Expected for the year"}
             value={<Bound binding={V.yearExpected} />}
             note={planned ? undefined : "Booked to date plus forecast"}
-            className="p-4"
+            className="p-4 lg:col-span-2 xl:col-span-1"
           >
             {planned ? (
               <p className="mt-1 text-[11px] leading-tight text-slate-500">
@@ -94,7 +94,7 @@ export default function ForecastScreen() {
               </p>
             ) : null}
           </MetricCard>
-          <MetricCard label="Gap to target" value={<Bound binding={V.yearGap} />} className="p-4">
+          <MetricCard label="Gap to target" value={<Bound binding={V.yearGap} />} className="p-4 lg:col-span-2 xl:col-span-1">
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <SignBadge binding={V.yearGap} />
               {planned ? (
@@ -107,24 +107,24 @@ export default function ForecastScreen() {
           <MetricCard
             label="80% range"
             value={
-              <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
+              <span className="text-xl lg:whitespace-nowrap" data-testid="range-figure">
                 <Bound binding={V.range80Low} /> to <Bound binding={V.range80High} />
               </span>
             }
             note="Of the expected year"
-            className="p-4"
+            className="p-4 lg:col-span-3 xl:col-span-1"
           >
             {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel80} /> : null}
           </MetricCard>
           <MetricCard
             label="95% range"
             value={
-              <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
+              <span className="text-xl lg:whitespace-nowrap" data-testid="range-figure">
                 <Bound binding={V.range95Low} /> to <Bound binding={V.range95High} />
               </span>
             }
             note="Of the expected year"
-            className="col-span-2 p-4 lg:col-span-1"
+            className="col-span-2 p-4 lg:col-span-3 xl:col-span-1"
           >
             {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel95} /> : null}
           </MetricCard>

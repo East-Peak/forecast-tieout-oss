@@ -232,7 +232,7 @@ test.describe("Forecast, every company and scenario @smoke", () => {
 });
 
 test.describe("the two range cards hold their figure on one line at desktop widths @smoke", () => {
-  for (const width of [1280, 1440]) {
+  for (const width of [1024, 1280, 1440]) {
     test.describe(`${width} wide`, () => {
       test.use({ viewport: { width, height: 900 } });
       for (const company of COMPANIES) {

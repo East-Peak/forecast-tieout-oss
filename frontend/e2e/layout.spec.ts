@@ -119,3 +119,35 @@ test.describe("nothing overflows at wide desktop widths either, in stretched tex
     });
   }
 });
+
+test.describe("no badge or pill breaks onto a second line, in stretched text @smoke", () => {
+  const SCREENS = ["forecast", "capacity", "pipeline", "plan", "trust"] as const;
+  for (const width of [390, 768, 1024, 1280]) {
+    test.describe(`${width} wide`, () => {
+      test.use({ viewport: { width, height: 900 } });
+      for (const screen of SCREENS) {
+        test(`${screen} @smoke`, async ({ page }) => {
+          await open(page, screen, "sapling-industries");
+          await page.addStyleTag({ content: STRETCH });
+          // open everything, as the other overflow checks do, so the badges inside disclosures are measured too
+          for (let pass = 0; pass < 5; pass++) {
+            const closed = await page.evaluate(() => {
+              const els = Array.from(document.querySelectorAll<HTMLElement>("[aria-expanded='false']"));
+              els.forEach((el) => el.click());
+              return els.length;
+            });
+            if (closed === 0) break;
+            await page.waitForTimeout(50);
+          }
+          const broken = await page.evaluate(() =>
+            Array.from(document.querySelectorAll<HTMLElement>("main span.rounded-full"))
+              .filter((el) => !el.closest("[data-testid='grid-scroll']"))
+              .filter((el) => el.getBoundingClientRect().height > parseFloat(getComputedStyle(el).fontSize) * 2.2)
+              .map((el) => (el.textContent ?? "").trim().slice(0, 30)),
+          );
+          expect(broken, "badges taller than one line").toEqual([]);
+        });
+      }
+    });
+  }
+});

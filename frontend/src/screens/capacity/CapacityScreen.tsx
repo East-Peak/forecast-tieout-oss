@@ -58,7 +58,7 @@ export default function CapacityScreen() {
           <Bound binding={B.rosterUnavailable} />
         </Callout>
       ) : null}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5" data-testid="capacity-headline">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 [&>:last-child:nth-child(odd)]:col-span-2 lg:[&>:last-child:nth-child(odd)]:col-span-1" data-testid="capacity-headline">
         {"unavailable" in roster ? null : (
           <>
             <MetricCard label="Heads today" value={<Bound binding={B.heads} />} note="Quota-carrying AEs employed on the as-of date" className="p-4" />

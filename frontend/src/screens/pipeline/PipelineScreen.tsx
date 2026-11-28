@@ -183,7 +183,7 @@ export default function PipelineScreen() {
                       <Bound binding={B.rNumerator} row={row} /> of <Bound binding={B.rDenominator} row={row} />
                     </div>
                   </TableCell>
-                  <TableCell className={`${STACK.cell} font-medium`} data-label="Value"><Bound binding={B.rValue} row={row} /></TableCell>
+                  <TableCell className={`${STACK.cell} whitespace-nowrap font-medium`} data-label="Value"><Bound binding={B.rValue} row={row} /></TableCell>
                   <TableCell className={STACK.cell} data-label="95% range">
                     <Bound binding={B.rLow} row={row} />
                     {rate.range95 !== null ? (
