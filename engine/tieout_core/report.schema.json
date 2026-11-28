@@ -192,7 +192,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.7.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.8.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -1277,6 +1277,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "definition": {
+              "$ref": "#/$defs/Text"
+            },
             "items": {
               "items": {
                 "additionalProperties": false,
@@ -1423,10 +1426,15 @@
               },
               "maxItems": 0,
               "type": "array"
+            },
+            "line": {
+              "$ref": "#/$defs/Text"
             }
           },
           "required": [
-            "items"
+            "items",
+            "definition",
+            "line"
           ],
           "type": "object"
         },
@@ -1611,12 +1619,31 @@
               ],
               "type": "object"
             },
+            "line": {
+              "$ref": "#/$defs/Text"
+            },
             "range_note": {
               "$ref": "#/$defs/Text"
             },
             "reconciliation": {
               "additionalProperties": false,
               "properties": {
+                "material": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "next twelve months": {
+                      "type": "boolean"
+                    },
+                    "rest of fiscal year": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "rest of fiscal year",
+                    "next twelve months"
+                  ],
+                  "type": "object"
+                },
                 "sentences": {
                   "additionalProperties": false,
                   "properties": {
@@ -1669,7 +1696,8 @@
               "required": [
                 "values",
                 "tolerance",
-                "sentences"
+                "sentences",
+                "material"
               ],
               "type": "object"
             },
@@ -1807,6 +1835,7 @@
           },
           "required": [
             "definition",
+            "line",
             "removal_label",
             "removal_note",
             "items",
@@ -5611,7 +5640,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.7.0"
+      "const": "2.8.0"
     },
     "verdicts": {
       "additionalProperties": false,

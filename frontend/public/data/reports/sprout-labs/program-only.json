@@ -809,7 +809,9 @@
     "verdict": "yes"
   },
   "driver_actions": {
-    "items": []
+    "definition": "A driver action is a named change to one driver in one slice, with a start month, a ramp and a target. It changes the pipeline created from its start, ramping linearly by creation date to the target and holding it after. Pipeline created before the start, and every deal already open, keeps the rates it had. Where the capacity term is in use, hires and programs stay as the plan has them; each action is valued against them. For a segment, the target is an entered change on the pooled baseline win rate, not a win rate that was measured for the segment.",
+    "items": [],
+    "line": "An action changes the win rate of pipeline created from its start month on. Deals already open keep their odds. A segment's target is an entered change on the pooled baseline, not a measured segment rate."
   },
   "forecasts": {
     "fitted_ranges": {
@@ -3097,7 +3099,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.7.0",
+  "schema_version": "2.8.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

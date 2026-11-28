@@ -96,7 +96,7 @@ def apply_plan(opened: Opened, doc) -> Applied:
     try:
         plan = parse_plan(_shaped(doc), state.as_of, state.cap.members, "your plan")
     except ValueError as exc:
-        return Applied(None, [], [_error(str(exc))], None)
+        return Applied(None, [], [_error(str(exc), getattr(exc, "code", None))], None)
     try:
         report = finish(state, plan, YOUR_PLAN, opened.company, YOUR_PLAN)
     except (
@@ -129,19 +129,25 @@ def _shaped(doc) -> dict:
     return doc
 
 
-def _error(message: str) -> dict:
+def _error(message: str, code: str | None = None) -> dict:
+    """An item the loader refused: where it is (section, and its place in the list as the core counts
+    from one and as the list holds it from zero) and what to say. An action's message is for a person
+    and carries no item number (the structured fields say which item); a hire's and a program's keep theirs."""
     found = _ITEM.match(message)
     if found is None:
         return {"section": None, "index": None, "position": None, "message": message}
-    return {
-        "section": found.group(1),
-        "index": int(
-            found.group(2)
-        ),  # as the core counts items in its messages, from one
-        "position": int(found.group(2))
-        - 1,  # the same item's place in the list, from zero
-        "message": message[len("your plan: ") :],
+    section = found.group(1)
+    out = {
+        "section": section,
+        "index": int(found.group(2)),
+        "position": int(found.group(2)) - 1,
+        "message": message[len(found.group(0)) :]
+        if section == "actions"
+        else message[len("your plan: ") :],
     }
+    if code is not None:
+        out["code"] = code
+    return out
 
 
 class EditorSession:

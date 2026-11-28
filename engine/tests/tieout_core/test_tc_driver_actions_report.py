@@ -80,7 +80,12 @@ def test_two_points_from_september_agree_with_the_outside_estimate_within_three_
 def test_no_actions_is_an_empty_section_and_the_plan_as_it_was(state):
     with gen.in_repo():
         plain = finish(state, plan_of(state), "plan.yaml", COMPANY, "x")
-    assert plain["driver_actions"] == {"items": []}
+    # no items, but what an action is: the form says it before the first Apply
+    assert plain["driver_actions"] == {
+        "items": [],
+        "definition": da.DEFINITION,
+        "line": da.LINE,
+    }
     assert all(i["kind"] != "actions" for i in plain["plan"]["items"])
 
 
@@ -371,7 +376,9 @@ EDITS = {
     "a repeated id": lambda r: r["driver_actions"]["items"][1].update({"id": "e"}),
     "the definition": lambda r: r["driver_actions"].update({"definition": "Whatever."}),
     "the range note": lambda r: r["driver_actions"].update({"range_note": ""}),
-    "an empty section beside a step": lambda r: r.update({"driver_actions": {"items": []}}),
+    "an empty section beside a step": lambda r: r.update({"driver_actions": {"items": [], "definition": da.DEFINITION, "line": da.LINE}}),
+    "the plain line": lambda r: r["driver_actions"].update({"line": "Whatever."}),
+    "a material flag that is not the figure's": lambda r: r["driver_actions"]["reconciliation"]["material"].update({REST: True}),
     "a step with no actions": lambda r: r["plan"]["items"].pop(),
     "the removal label": lambda r: r["driver_actions"].update({"removal_label": "Share of the gain"}),
 }  # fmt: skip
@@ -444,7 +451,7 @@ def test_a_plan_with_actions_is_refused_where_the_plan_basis_is_unavailable(
 
     monkeypatch.setattr(lanes_basis, "plan_basis", none)
     state.memo.clear()
-    with pytest.raises(da.Unavailable, match="plan basis, which is unavailable"):
+    with pytest.raises(da.Unavailable, match="plan basis is unavailable"):
         report(state, act(target=points(state, 2)))
     state.memo.clear()
 
@@ -762,3 +769,52 @@ def test_productivity_changes_the_organic_creation_an_action_acts_on_and_not_the
     assert abs((two - zero) - 2 * (one - zero)) < D(
         "1e-6"
     )  # and only the organic part scales
+
+
+# ------------------------------------------------ what a person reads: dates, the plain line, the reconciliation
+
+
+def test_the_empty_section_says_what_an_action_is_in_the_sentence_the_form_shows(state):
+    with gen.in_repo():
+        plain = finish(state, plan_of(state), "plan.yaml", COMPANY, "x")
+    line = plain["driver_actions"]["line"]
+    assert "pipeline created from its start month on" in line
+    assert "Deals already open keep their odds" in line
+    assert "entered change on the pooled baseline, not a measured segment rate" in line
+    assert contract.validate(plain) == []
+    wrong = copy.deepcopy(plain)
+    wrong["driver_actions"]["line"] = "An action does something."
+    assert contract.validate(wrong) != []
+
+
+def test_a_month_is_written_as_the_app_writes_it_in_the_sentence_on_what_an_action_affects(
+    state,
+):
+    r = report(
+        state, act("e", "enterprise", start="2026-10", ramp=2, target=points(state, 3))
+    )
+    text = r["driver_actions"]["items"][0]["affects"]
+    assert text.startswith(
+        "Pipeline created from October 2026 in Enterprise, ramping up over 2 months"
+    )
+    assert "2026-10" not in text
+
+
+def test_the_reconciliation_says_per_window_whether_it_is_material_and_the_rule_is_one(
+    state,
+):
+    """Material: it does not round to zero in whole dollars, the finest figure the screen writes."""
+    r = report(
+        state,
+        act("e", "enterprise", target=points(state, 3)),
+        act("m", "mid_market", ramp=2, target=points(state, 2)),
+    )
+    rec = r["driver_actions"]["reconciliation"]
+    for w in (REST, NEXT):
+        assert rec["material"][w] == (abs(D(rec["values"][w])) >= da.MATERIAL_FROM)
+    assert da.MATERIAL_FROM == D("0.5")
+    assert (
+        da.is_material(D("0.49")) is False
+        and da.is_material(D("-0.5")) is True
+        and da.is_material(D("0")) is False
+    )

@@ -338,7 +338,11 @@ def finish(
     elif plan is not None and plan.actions:
         driver_section = {"unavailable": fitted.unavailable_reason}
     else:
-        driver_section = {"items": []}
+        from . import (
+            driver_actions as no_actions,
+        )  # imported here for the reason it is above
+
+        driver_section = no_actions.empty_section()
     checks = list(rec.checks) + [
         existing_pipeline_conservation(model, pop, as_of, windows)
         if windows

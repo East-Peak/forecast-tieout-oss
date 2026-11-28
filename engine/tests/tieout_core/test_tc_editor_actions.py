@@ -52,10 +52,16 @@ def test_a_plan_with_an_action_entered_as_data_is_a_native_run_of_the_same_plan(
 
 def test_an_action_the_core_refuses_comes_back_beside_its_item(opened):
     cases = [
-        (action(slice="strategic"), "no segment of that name"),
-        (action(target="1.5"), "target is a probability"),
-        (action(start="2026-08"), "not after the as-of date"),
-        (action(driver="won_arr"), "driver must be one of win_rate"),
+        (action(slice="strategic"), "'strategic' is not the company or a segment"),
+        (
+            action(target="1.5"),
+            "The target win rate must be between 0% and 100%, not 150%",
+        ),
+        (
+            action(start="2026-08"),
+            "Starts in August 2026, which is not after the as-of date",
+        ),
+        (action(driver="won_arr"), "Only the win rate can be changed by an action"),
     ]
     for bad, why in cases:
         with gen.in_repo():
@@ -69,7 +75,12 @@ def test_an_action_the_core_refuses_comes_back_beside_its_item(opened):
             2,
             1,
         )
-        assert error["message"].startswith("actions[2]: ") and why in error["message"]
+        # in a person's words: where it is goes in the structured error, not in the text
+        assert why in error["message"] and "actions[" not in error["message"]
+        assert not any(
+            w in error["message"]
+            for w in ("win_rate", "slice", "driver", "ramp_months")
+        )
 
 
 def test_overlapping_actions_are_refused_with_the_item_that_repeats_the_slice(opened):
@@ -79,7 +90,9 @@ def test_overlapping_actions_are_refused_with_the_item_that_repeats_the_slice(op
         )
     (error,) = applied.errors
     assert error["section"] == "actions" and error["position"] == 1
-    assert "overlaps actions[1]" in error["message"]
+    assert error["message"].startswith("Overlaps 'Enterprise win-rate push'")
+    assert "actions[" not in error["message"] and "win_rate" not in error["message"]
+    assert error["code"] == "overlap"
 
 
 @pytest.mark.parametrize(

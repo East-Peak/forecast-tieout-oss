@@ -103,46 +103,71 @@ def test_a_target_outside_zero_and_one_or_no_number_is_refused(target):
 
 def test_a_segment_nobody_is_in_is_refused_and_the_message_names_it():
     text = refused(action(slice="strategic"))
-    assert "actions[1]" in text and "strategic" in text and "segment" in text
+    assert (
+        "actions[1]" in text and "'strategic' is not the company or a segment" in text
+    )
+    assert "(Enterprise, Mid Market)" in text and "slice" not in text
 
 
 def test_an_unknown_driver_is_refused_and_lists_what_is_supported():
     text = refused(action(driver="won_arr"))
-    assert "driver" in text and "win_rate" in text
-    assert "driver" in refused({k: v for k, v in action().items() if k != "driver"})
+    assert (
+        "Only the win rate can be changed by an action" in text
+        and "win_rate" not in text
+    )
+    assert "win rate" in refused({k: v for k, v in action().items() if k != "driver"})
 
 
 def test_a_start_not_after_the_as_of_date_is_refused_as_every_other_item_is():
     text = refused(action(start="2026-08"))
     assert "actions[1]" in text and "not after the as-of date" in text
-    assert "2026-09" not in text
+    assert "August 2026" in text and "August 31, 2026" in text and "2026-0" not in text
     assert parse(action(start="2026-09")).actions[0].start == date(2026, 9, 1)
     assert "start" in refused(action(start="soon"))
 
 
 @pytest.mark.parametrize("ramp", [-1, 1.5, "2", True])
 def test_a_ramp_is_a_whole_number_of_months_not_below_zero(ramp):
-    assert "ramp_months" in refused(action(ramp_months=ramp))
+    text = refused(action(ramp_months=ramp))
+    assert (
+        "The ramp must be a whole number of months" in text
+        and "ramp_months" not in text
+    )
 
 
 def test_an_action_needs_an_id_and_ids_are_unique():
     assert "id" in refused(action(id=""))
     assert "id" in refused({k: v for k, v in action().items() if k != "id"})
     text = refused(action(), action(slice="mid_market"))
-    assert "actions[2]" in text and "ent-win" in text and "actions[1]" in text
+    assert (
+        "actions[2]" in text
+        and "already has the id 'ent-win'" in text
+        and "actions[1]" not in text.split(": ", 2)[2]
+    )
 
 
 def test_two_actions_on_the_same_driver_and_slice_are_refused_whatever_their_dates():
     text = refused(action(), action(id="b", start="2027-01", target="0.3"))
-    assert "actions[2]" in text and "overlaps actions[1]" in text
-    assert "win_rate" in text and "enterprise" in text
+    assert text.endswith(
+        "Overlaps 'Enterprise win rate': both change the win rate for Enterprise, so the change would be counted twice."
+    )
+    assert (
+        "actions[1]" not in text.split(": ", 2)[2]
+        and "win_rate" not in text
+        and "enterprise" not in text.split(": ", 2)[2]
+    )
 
 
 @pytest.mark.parametrize("order", [(0, 1), (1, 0)])
 def test_the_company_overlaps_every_segment_whichever_is_listed_first(order):
     pair = [action(slice="company", id="all"), action(id="b", slice="mid_market")]
     text = refused(*(pair[i] for i in order))
-    assert "overlaps actions[1]" in text and "company" in text
+    body = text.split(": ", 2)[2]
+    assert (
+        body.startswith("Overlaps '")
+        and "the whole company" in text
+        and "actions[1]" not in body
+    )
 
 
 def test_different_segments_do_not_overlap():
@@ -201,10 +226,14 @@ def test_an_item_of_a_kind_nobody_handles_is_an_error_not_a_program():
 @pytest.mark.parametrize("ramp", [61, 100000, 10**9])
 def test_a_ramp_longer_than_five_years_is_refused_where_it_is_read(ramp):
     text = refused(action(ramp_months=ramp))
-    assert text.startswith("plan.yaml: actions[1]: ramp_months") and "0 to 60" in text
+    assert text.startswith("plan.yaml: actions[1]: The ramp") and "0 to 60" in text
 
 
 def test_a_ramp_of_sixty_months_is_the_longest_and_needs_a_real_end_date():
     assert parse(action(ramp_months=60)).actions[0].ramp_months == 60
     text = refused(action(start="9999-12", ramp_months=1))
-    assert "actions[1]" in text and "runs past the last date" in text
+    assert (
+        "actions[1]" in text
+        and "runs past the last date" in text
+        and "December 9999" in text
+    )

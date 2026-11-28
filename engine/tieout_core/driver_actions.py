@@ -39,7 +39,7 @@ from .fiscal import add_months
 from .forecast import Inflow, Lift
 from .lanes_basis import Basis, Sizes
 from .lanes_flows import Calendar
-from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction
+from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction, month_words
 from .records import Check
 from .roster import Member
 from .worksheet_drivers import Probe
@@ -355,7 +355,7 @@ def basis_of(state) -> Basis:
         state.memo["basis"] = found
     if isinstance(found, lanes_basis.BasisUnavailable):
         raise Unavailable(
-            f"win-rate actions need the plan basis, which is unavailable: {found}"
+            f"Win-rate actions cannot be valued for this company: its plan basis is unavailable ({found})."
         )
     return found
 
@@ -391,6 +391,25 @@ def effect_for(
 # ---------------------------------------------------------------- the report's section
 
 REMOVAL_LABEL = "Bookings lost if removed"
+LINE = (
+    "An action changes the win rate of pipeline created from its start month on. Deals already "
+    "open keep their odds. A segment's target is an entered change on the pooled baseline, "
+    "not a measured segment rate."
+)
+# The reconciliation is material when it does not round to zero in whole dollars, the finest figure
+# the screen writes; below that the line is not said. One rule, here, and the report states it per window.
+MATERIAL_FROM = Decimal("0.5")
+
+
+def is_material(value: Decimal) -> bool:
+    return abs(value) >= MATERIAL_FROM
+
+
+def empty_section() -> dict:
+    """A plan with no driver actions: no items, but what an action is, so a form can say it before the first."""
+    return {"items": [], "definition": DEFINITION, "line": LINE}
+
+
 DEFINITION = (
     "A driver action is a named change to one driver in one slice, with a start month, a ramp and "
     "a target. It changes the pipeline created from its start, ramping linearly by creation date "
@@ -431,11 +450,6 @@ OVERLAP = (
 )
 
 
-def empty_section() -> dict:
-    """The section when the plan has no driver actions."""
-    return {"items": []}
-
-
 def _windows(f, probe: Probe) -> dict[str, Decimal]:
     shown = probe.shown(f)
     return {w: shown[w] for w in WINDOWS}
@@ -456,7 +470,7 @@ def affects_text(slice_label: str, start: str, ramp_months: int) -> str:
         else f"ramping up over {ramp_months} {'month' if ramp_months == 1 else 'months'}"
     )
     return (
-        f"Pipeline created from {start} in {slice_label}, {ramp} to the target; pipeline "
+        f"Pipeline created from {month_words(date.fromisoformat(f'{start}-01'))} in {slice_label}, {ramp} to the target; pipeline "
         "created earlier, and every deal already open, keeps its rate."
     )
 
@@ -565,6 +579,7 @@ def section(
     }
     out = {
         "definition": DEFINITION,
+        "line": LINE,
         "removal_label": REMOVAL_LABEL,
         "removal_note": REMOVAL_NOTE,
         "items": items,
@@ -573,6 +588,7 @@ def section(
             "values": {w: money(v) for w, v in gap.items()},
             "tolerance": {w: money(v) for w, v in tolerance.items()},
             "sentences": sentences,
+            "material": {w: is_material(gap[w]) for w in WINDOWS},
         },
         "without_actions": _figures(g, probe, without),
         "with_actions": _figures(g, probe, everything),

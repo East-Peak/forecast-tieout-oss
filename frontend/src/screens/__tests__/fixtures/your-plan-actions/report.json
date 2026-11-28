@@ -812,7 +812,7 @@
     "definition": "A driver action is a named change to one driver in one slice, with a start month, a ramp and a target. It changes the pipeline created from its start, ramping linearly by creation date to the target and holding it after. Pipeline created before the start, and every deal already open, keeps the rates it had. Where the capacity term is in use, hires and programs stay as the plan has them; each action is valued against them. For a segment, the target is an entered change on the pooled baseline win rate, not a win rate that was measured for the segment.",
     "items": [
       {
-        "affects": "Pipeline created from 2026-10 in Enterprise, ramping up over 2 months to the target; pipeline created earlier, and every deal already open, keeps its rate.",
+        "affects": "Pipeline created from October 2026 in Enterprise, ramping up over 2 months to the target; pipeline created earlier, and every deal already open, keeps its rate.",
         "driver": "win_rate",
         "evidence": {
           "baseline_rate": "0.2193",
@@ -843,8 +843,13 @@
       "next twelve months": "5311232.38",
       "rest of fiscal year": "243806.11"
     },
+    "line": "An action changes the win rate of pipeline created from its start month on. Deals already open keep their odds. A segment's target is an entered change on the pooled baseline, not a measured segment rate.",
     "range_note": "The plan's ranges are simulated with the actions in force, so they carry the model's uncertainty under the actions and exclude uncertainty about whether an action is achieved.",
     "reconciliation": {
+      "material": {
+        "next twelve months": false,
+        "rest of fiscal year": false
+      },
       "sentences": {
         "next twelve months": "The actions together gain what removing each one loses, to within rounding: they do not interact in this model.",
         "rest of fiscal year": "The actions together gain what removing each one loses, to within rounding: they do not interact in this model."
@@ -3971,7 +3976,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.7.0",
+  "schema_version": "2.8.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

@@ -15,6 +15,7 @@ from decimal import Decimal
 
 from . import driver_actions as da
 from .contract import (
+    BOOL,
     DECIMAL,
     DECIMAL_OR_NULL,
     INT,
@@ -88,6 +89,7 @@ def schema() -> dict:
     full = obj(
         {
             "definition": TEXT,
+            "line": TEXT,
             "removal_label": const(da.REMOVAL_LABEL),
             "removal_note": TEXT,
             "items": arr(item, minItems=1),
@@ -97,6 +99,7 @@ def schema() -> dict:
                     "values": PER_WINDOW,
                     "tolerance": PER_WINDOW,
                     "sentences": obj({REST_OF_FY: TEXT, NEXT_12: TEXT}),
+                    "material": obj({REST_OF_FY: BOOL, NEXT_12: BOOL}),
                 }
             ),
             "without_actions": figures,
@@ -106,7 +109,9 @@ def schema() -> dict:
         }
     )
     return one_of(
-        obj({"items": arr(item, maxItems=0)}), obj({"unavailable": TEXT}), full
+        obj({"items": arr(item, maxItems=0), "definition": TEXT, "line": TEXT}),
+        obj({"unavailable": TEXT}),
+        full,
     )
 
 
@@ -129,6 +134,11 @@ def rules_for(r: dict, rule: Callable[[bool, str], None]) -> None:
         "the plan has an actions step exactly when the actions section lists actions",
     )
     if not section["items"]:
+        for text, want in (("definition", da.DEFINITION), ("line", da.LINE)):
+            rule(
+                section[text] == want,
+                f"driver_actions.{text} is not what the report writes",
+            )
         return
     try:
         _check(r, section, plan, in_plan[0], rule)
@@ -144,6 +154,7 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
     rule(len(set(ids)) == len(ids), "driver_actions: action ids are not unique")
     for text, want in (
         ("definition", da.DEFINITION),
+        ("line", da.LINE),
         ("removal_note", da.REMOVAL_NOTE),
         ("range_note", da.RANGE_NOTE),
         ("rounding_note", da.ROUNDING_NOTE),
@@ -182,6 +193,10 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
                 else (da.REINFORCE if want < 0 else da.OVERLAP)
             ),
             f"driver_actions: the reconciliation sentence in {w} does not say what its figure does",
+        )
+        rule(
+            rec["material"][w] == da.is_material(want),
+            f"driver_actions: the reconciliation in {w} is not marked material exactly where it rounds to a dollar or more",
         )
     rule(
         step["contribution"] == s["joint_gain"],

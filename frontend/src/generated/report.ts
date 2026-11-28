@@ -228,10 +228,12 @@ export type TieoutReport = {
   };
   driver_actions:
     | {
+        definition: Text;
         /**
          * @maxItems 0
          */
         items: [];
+        line: Text;
       }
     | {
         unavailable: Text;
@@ -301,8 +303,13 @@ export type TieoutReport = {
           "next twelve months": Money;
           "rest of fiscal year": Money;
         };
+        line: Text;
         range_note: Text;
         reconciliation: {
+          material: {
+            "next twelve months": boolean;
+            "rest of fiscal year": boolean;
+          };
           sentences: {
             "next twelve months": Text;
             "rest of fiscal year": Text;
@@ -1207,7 +1214,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.7.0";
+  schema_version: "2.8.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];
