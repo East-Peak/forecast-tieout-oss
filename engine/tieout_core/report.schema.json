@@ -6618,6 +6618,16 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
+                  "action_limitation": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/Text"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "applies_to": {
                     "$ref": "#/$defs/Text"
                   },
@@ -7075,7 +7085,8 @@
                   "historical",
                   "historical_unavailable_because",
                   "needed_alone",
-                  "limitation"
+                  "limitation",
+                  "action_limitation"
                 ],
                 "type": "object"
               },

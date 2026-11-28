@@ -112,12 +112,25 @@ describe("Plan: a report computed in the browser is held to the same checks as a
       const note = container.querySelector(`[data-testid='driver-scaled'][data-driver='${driver}']`);
       const row = c.report.worksheet && "drivers" in c.report.worksheet ? c.report.worksheet.drivers.find((d) => d.driver === driver) : undefined;
       expect(note, driver).not.toBeNull();
-      expect(note).toHaveTextContent(row!.limitation!);
+      expect(note).toHaveTextContent(row!.action_limitation!);
       expect(note!.querySelector("[data-binding='driver.scaled']")).not.toBeNull();
     }
     const plain = mountScreen(PlanScreen, computed("your-plan-actions"), COMPANY, YOUR_PLAN);
     expect(plain.querySelector("[data-testid='driver-scaled']")).toBeNull();
     expect(plain.querySelector("[data-testid='driver-row'][data-driver='won_arr'] [data-testid='driver-position-pill']")).toBeNull();
+  });
+
+  it("under each tornado row only the sentence specific to the plan's action stands; the shared caveat about the fit is not repeated under the rows", () => {
+    const c = computed("your-plan-four-drivers");
+    const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+    const tornado = container.querySelector("[data-testid='tornado']")!;
+    for (const driver of ["win_rate", "won_arr", "productivity", "cycle_days"]) {
+      const row = tornado.querySelector(`[data-testid='driver-row'][data-driver='${driver}']`)!;
+      const sheet = c.report.worksheet && "drivers" in c.report.worksheet ? c.report.worksheet.drivers.find((d) => d.driver === driver)! : undefined;
+      expect(sheet!.action_limitation, driver).not.toBeNull();
+      expect(row).toHaveTextContent(sheet!.action_limitation!);
+      expect(row.textContent!.includes("The fit in use learns from every deal"), driver).toBe(false);
+    }
   });
 
   it("the reconciliation line is said only where the core calls it material, in the core's sentence for that window; a figure that rounds to zero is not said", () => {

@@ -215,8 +215,8 @@ def test_a_target_equal_to_the_pooled_rate_changes_no_figure_anywhere(state):
         if (
             a["driver"] == "productivity"
         ):  # only what is said of it with an action on it
-            assert {**a, "limitation": None} == {**b, "limitation": None}
-            assert b["limitation"].endswith("at that setting.")
+            assert {**a, "action_limitation": None} == {**b, "action_limitation": None}
+            assert b["action_limitation"].endswith("at that setting.")
             continue
         assert a == b, a["driver"]
 

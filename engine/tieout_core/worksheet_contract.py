@@ -44,7 +44,8 @@ from .plan import NEXT_12, REST_OF_FY
 
 SENTENCE_KEYS = frozenset(
     {
-        "outcome_label", "reason_label", "history_label", "limitation", "applies_to", "gate",
+        "outcome_label", "reason_label", "history_label", "limitation", "action_limitation",
+        "applies_to", "gate",
         "rule", "definition", "expectation_note", "sensitivity_note", "history_note",
         "historical_unavailable_because", "not_eligible_because", "no_plan_note",
         "closes_alone_label", "measured_around", "order", "measure", "unit_label",
@@ -147,6 +148,7 @@ def _driver() -> dict:
             "historical_unavailable_because": maybe(TEXT),
             "needed_alone": maybe(needed),
             "limitation": maybe(TEXT),
+            "action_limitation": maybe(TEXT),
         }
     )
 
@@ -554,11 +556,13 @@ def _driver_rules(r: dict, d: dict, rule) -> None:
         f"{where}: the reason a range is missing is not what the gate and the driver say",
     )
     rule(
-        d["limitation"]
-        == ws.limitation_text(
-            name, gate, params.estimator, adopted, stacked, scaled, timed
-        ),
+        d["limitation"] == ws.limitation_text(name, gate, params.estimator, adopted),
         f"{where}.limitation is not what the report writes",
+    )
+    rule(
+        d["action_limitation"]
+        == ws.action_limitation_text(name, stacked, scaled, timed),
+        f"{where}.action_limitation is not what the report writes",
     )
     if h is not None and used and current is not None:
         _settings_rules(name, h, used, current, rule, where, stacked or timed)

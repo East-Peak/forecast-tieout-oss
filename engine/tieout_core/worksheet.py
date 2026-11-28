@@ -284,11 +284,9 @@ def limitation_text(
     gate_passed: bool,
     estimator: str,
     adopted: bool,
-    stacked: bool = False,
-    scaled: bool = False,
-    timed: bool = False,
 ) -> str | None:
-    """The limitation sentence, from the driver, the gate, the fit in use and the capacity term."""
+    """The limitation sentence, from the driver, the gate, the fit in use and the capacity term.
+    What the plan's own actions do to the row is its own sentence (``action_limitation_text``)."""
     parts = []
     if not gate_passed:
         parts.append(GATE_FAILED)
@@ -298,13 +296,21 @@ def limitation_text(
         parts.append(RAMP_LIMITATION if adopted else FLAT_LIMITATION)
     if driver == CYCLE_DAYS:
         parts.append(CYCLE_LIMITATION)
-    if driver == WIN_RATE and stacked:
-        parts.append(STACKED_LIMITATION)
-    if scaled and driver in SCALED_LIMITATION:
-        parts.append(SCALED_LIMITATION[driver])
-    if timed and driver == CYCLE_DAYS:
-        parts.append(CYCLE_TIMED_LIMITATION)
     return " ".join(parts) or None
+
+
+def action_limitation_text(
+    driver: str, stacked: bool = False, scaled: bool = False, timed: bool = False
+) -> str | None:
+    """What the plan's actions on this driver do to its row: the sentence that is specific to the
+    plan (it is none when no action of the plan is on the driver)."""
+    if driver == WIN_RATE and stacked:
+        return STACKED_LIMITATION
+    if scaled and driver in SCALED_LIMITATION:
+        return SCALED_LIMITATION[driver]
+    if timed and driver == CYCLE_DAYS:
+        return CYCLE_TIMED_LIMITATION
+    return None
 
 
 def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
@@ -313,9 +319,6 @@ def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
         gate_passed,
         c.params.estimator,
         c.g.cap.adopted,
-        c.stacked,
-        driver in c.scaled,
-        c.timed and driver == CYCLE_DAYS,
     )
 
 
@@ -472,6 +475,12 @@ def driver_row(c: Context, driver: str) -> dict:
         if (c.stacked and driver == WIN_RATE) or (c.timed and driver == CYCLE_DAYS)
         else _needed(c, driver, current, settings),
         "limitation": _limitation(c, driver, gate_passed),
+        "action_limitation": action_limitation_text(
+            driver,
+            c.stacked and driver == WIN_RATE,
+            driver in c.scaled,
+            c.timed and driver == CYCLE_DAYS,
+        ),
     }
 
 

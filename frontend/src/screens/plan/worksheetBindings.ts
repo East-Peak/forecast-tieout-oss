@@ -85,10 +85,10 @@ export const DRIVER = {
   neededValue: byDisplay("driver.needed.value", "/needed_alone/value"),
   /** a driver the history cannot scale has no "needed alone"; the report says why */
   neededNone: text("driver.needed.none", "/needed_alone/outcome_label", { unavailable: { reason: "/cannot_scale_because", sentence: true, words: "no figure" } }),
-  /** a win rate under the plan's actions is not solved for: the core's limitation sentence stands where its figure would */
-  neededStacked: text("driver.needed.stacked", "/limitation"),
+  /** a row the plan's actions leave unsolved (the win rate, the cycle): the core's sentence on what the actions do to it stands where its figure would */
+  neededStacked: text("driver.needed.stacked", "/action_limitation"),
   /** a size or creation row with an action of the plan on it: the core's sentence on how the action stacks with the flex */
-  scaled: text("driver.scaled", "/limitation"),
+  scaled: text("driver.scaled", "/action_limitation"),
   precision: text("driver.needed.precision", "/needed_alone/precision_note"),
   neededLabel: text("driver.needed.label", "/needed_alone/outcome_label"),
   neededReason: text("driver.needed.reason", "/needed_alone/reason_label"),

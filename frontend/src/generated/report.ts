@@ -1504,6 +1504,7 @@ export type TieoutReport = {
          */
         drivers: [
           {
+            action_limitation: Text | null;
             applies_to: Text;
             cannot_scale_because: Text | null;
             current: {
@@ -1579,6 +1580,7 @@ export type TieoutReport = {
             unit_label: Text;
           },
           {
+            action_limitation: Text | null;
             applies_to: Text;
             cannot_scale_because: Text | null;
             current: {
@@ -1654,6 +1656,7 @@ export type TieoutReport = {
             unit_label: Text;
           },
           {
+            action_limitation: Text | null;
             applies_to: Text;
             cannot_scale_because: Text | null;
             current: {
@@ -1729,6 +1732,7 @@ export type TieoutReport = {
             unit_label: Text;
           },
           {
+            action_limitation: Text | null;
             applies_to: Text;
             cannot_scale_because: Text | null;
             current: {

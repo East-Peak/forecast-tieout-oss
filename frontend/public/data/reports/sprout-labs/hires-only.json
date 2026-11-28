@@ -3655,6 +3655,7 @@
     "definition": "What moves the outcome: four operating drivers, each changed alone for deals created after the as-of date, measured around the plan in force.",
     "drivers": [
       {
+        "action_limitation": null,
         "applies_to": "The share of deals created after the as-of date that are won, for organic, hire-generated and program pipeline alike. Open deals and actuals are untouched.",
         "cannot_scale_because": null,
         "current": {
@@ -3840,6 +3841,7 @@
         "unit_label": "share of created deals won"
       },
       {
+        "action_limitation": null,
         "applies_to": "The mean ARR of each win among deals created after the as-of date. Creation counts and the program dollars-to-deals conversion are unchanged.",
         "cannot_scale_because": null,
         "current": {
@@ -4025,6 +4027,7 @@
         "unit_label": "dollars of ARR per won deal"
       },
       {
+        "action_limitation": null,
         "applies_to": "Deals created per ramped AE-month, for the signed roster and any planned hires, after the as-of date. Open deals and actuals are untouched.",
         "cannot_scale_because": null,
         "current": {
@@ -4210,6 +4213,7 @@
         "unit_label": "created deals per ramped AE-month"
       },
       {
+        "action_limitation": null,
         "applies_to": "Days from creation to win for deals created after the as-of date. Each win-time sample is scaled and rounded up to whole days; weights, probability and size are unchanged.",
         "cannot_scale_because": null,
         "current": {

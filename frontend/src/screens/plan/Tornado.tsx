@@ -200,7 +200,7 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
   // where the plan's own actions on this driver sit against the worksheet: the core's evidence, which does not depend on a solve
   const placed = acted.filter((a) => a.evidence.position !== "none");
   const outsideByAction = placed.some((a) => a.evidence.position !== "inside");
-  const scaled = acted.length > 0 && (driver.driver === "won_arr" || driver.driver === "productivity") && driver.limitation !== null;
+  const scaled = acted.length > 0 && (driver.driver === "won_arr" || driver.driver === "productivity") && driver.action_limitation !== null;
   // the plan's actions sit on the win rate, or move the cycle: the core solves for no setting, and says so in the driver's limitation
   const unsolved = stacked && (driver.driver === "win_rate" || driver.driver === "cycle_days") && driver.needed_alone === null && driver.cannot_scale_because === null;
   // each driver an action can change has a favorable end: the high setting, or for the cycle (a shorter one is better) the low

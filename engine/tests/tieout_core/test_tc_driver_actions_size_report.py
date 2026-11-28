@@ -158,9 +158,9 @@ def test_a_size_target_equal_to_the_pooled_mean_changes_no_figure_anywhere(state
             assert a == b, a["driver"]
             continue
         for key in a:
-            if key != "limitation":
+            if key != "action_limitation":
                 assert a[key] == b[key], key
-        assert b["limitation"].endswith("at that setting.")
+        assert b["action_limitation"].endswith("at that setting.")
 
 
 # ----------------------------------------------------- values reached two ways
@@ -341,7 +341,7 @@ def test_a_size_far_above_the_worksheets_high_is_outside_its_historical_settings
 def test_the_win_rates_needed_alone_still_solves_where_only_size_is_acted_on(state):
     r = report(state, act(target=bigger(state, 10)))
     rate = next(d for d in r["worksheet"]["drivers"] if d["driver"] == "win_rate")
-    assert rate["needed_alone"] is not None and "not on one line" not in (rate["limitation"] or "")  # fmt: skip
+    assert rate["needed_alone"] is not None and rate["action_limitation"] is None  # fmt: skip
 
 
 def test_the_size_row_still_solves_with_a_size_action_on_the_plan(state):
@@ -452,9 +452,10 @@ def test_the_worksheet_says_that_a_size_action_scales_the_setting_and_only_for_t
     acted = report(state, act(target=bigger(state, 10)))
     size = {d["driver"]: d for d in acted["worksheet"]["drivers"]}
     was = {d["driver"]: d for d in plain["worksheet"]["drivers"]}
-    assert "size actions change the size this sets by the same relative amount" in size["won_arr"]["limitation"]  # fmt: skip
-    assert (was["won_arr"]["limitation"] or "") not in (None,) and "size actions" not in (was["won_arr"]["limitation"] or "")  # fmt: skip
+    assert "size actions change the size this sets by the same relative amount" in size["won_arr"]["action_limitation"]  # fmt: skip
+    assert was["won_arr"]["action_limitation"] is None
     for other in ("win_rate", "productivity", "cycle_days"):
+        assert size[other]["action_limitation"] is None, other
         assert size[other]["limitation"] == was[other]["limitation"], other
 
 
@@ -462,12 +463,12 @@ def test_the_contract_refuses_a_worksheet_that_forgets_or_invents_that_sentence(
     acted = report(state, act(target=bigger(state, 10)))
     gone = copy.deepcopy(acted)
     row = next(d for d in gone["worksheet"]["drivers"] if d["driver"] == "won_arr")
-    row["limitation"] = None
+    row["action_limitation"] = None
     assert contract.validate(gone) != []
     plain = report(state)
     invented = copy.deepcopy(plain)
     row = next(d for d in invented["worksheet"]["drivers"] if d["driver"] == "won_arr")
-    row["limitation"] = (
+    row["action_limitation"] = (
         "The plan's size actions change the size this sets by the same relative amount."
     )
     assert contract.validate(invented) != []

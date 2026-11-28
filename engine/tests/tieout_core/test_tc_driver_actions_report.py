@@ -114,11 +114,12 @@ def test_a_target_equal_to_the_pooled_rate_changes_no_figure_anywhere(state):
         if a["driver"] != "win_rate":
             assert a == b
             continue
-        assert b["needed_alone"] is None and b["limitation"].endswith(
+        assert b["needed_alone"] is None and b["action_limitation"].endswith(
             "not on one line."
         )
+        assert a["action_limitation"] is None and b["limitation"] == a["limitation"]
         for key in a:
-            if key not in ("needed_alone", "limitation"):
+            if key not in ("needed_alone", "action_limitation"):
                 assert a[key] == b[key], key
 
 
@@ -729,14 +730,14 @@ def test_a_worksheet_over_an_action_solves_nothing_for_the_win_rate_and_says_why
     r = report(state, act(slice="enterprise", target=points(state, 3)))
     row = next(d for d in r["worksheet"]["drivers"] if d["driver"] == "win_rate")
     assert row["needed_alone"] is None
-    assert "no setting is solved for" in row["limitation"]
+    assert "no setting is solved for" in row["action_limitation"]
     assert row["historical"] is not None  # the changes at its settings are still shown
     others = [d for d in r["worksheet"]["drivers"] if d["driver"] != "win_rate"]
     assert all(d["needed_alone"] is not None for d in others)
     assert contract.validate(r) == []
 
 
-@pytest.mark.parametrize("mutate", ["needed_alone", "limitation"])
+@pytest.mark.parametrize("mutate", ["needed_alone", "action_limitation"])
 def test_the_contract_holds_a_win_rate_with_an_action_to_saying_so(state, mutate):
     r = report(state, act(target=points(state, 3)))
     row = next(d for d in r["worksheet"]["drivers"] if d["driver"] == "win_rate")

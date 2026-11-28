@@ -121,10 +121,10 @@ export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKe
   const none = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone === null && !isStacked(d));
   many(DRIVER.neededNone.id, none.map(([d]) => d.cannot_scale_because ?? "no figure"), none.map(([, i]) => rows[i]));
   const sentence = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => isStacked(d));
-  many(DRIVER.neededStacked.id, sentence.map(([d]) => d.limitation!), sentence.map(([, i]) => rows[i]));
+  many(DRIVER.neededStacked.id, sentence.map(([d]) => d.action_limitation!), sentence.map(([, i]) => rows[i]));
   // a size or creation row the plan has an action on says how the action stacks with its flex, in the core's sentence
-  const scaled = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => (d.driver === "won_arr" || d.driver === "productivity") && acted.has(d.driver) && d.limitation !== null);
-  many(DRIVER.scaled.id, scaled.map(([d]) => d.limitation!), scaled.map(([, i]) => rows[i]));
+  const scaled = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => (d.driver === "won_arr" || d.driver === "productivity") && acted.has(d.driver) && d.action_limitation !== null);
+  many(DRIVER.scaled.id, scaled.map(([d]) => d.action_limitation!), scaled.map(([, i]) => rows[i]));
   // the label is in the cell where it does not solve, and in the opened row where it does
   const withWords = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone !== null);
   many(DRIVER.neededLabel.id, withWords.map(([d]) => d.needed_alone!.outcome_label), withWords.map(([, i]) => rows[i]));

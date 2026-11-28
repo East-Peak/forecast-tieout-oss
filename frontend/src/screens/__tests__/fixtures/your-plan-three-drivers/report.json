@@ -4205,7 +4205,7 @@
           "passed": true
         },
         {
-          "detail": "solves: 60001384.69 against 60000000.00",
+          "detail": "solves: 60000599.89 against 60000000.00",
           "name": "worksheet cycle_days needed alone agrees with the target",
           "passed": true
         },
@@ -4601,7 +4601,7 @@
         "passed": true
       },
       {
-        "detail": "solves: 60001384.69 against 60000000.00",
+        "detail": "solves: 60000599.89 against 60000000.00",
         "name": "worksheet cycle_days needed alone agrees with the target",
         "passed": true
       }
@@ -4609,6 +4609,7 @@
     "definition": "What moves the outcome: four operating drivers, each changed alone for deals created after the as-of date, measured around the plan in force.",
     "drivers": [
       {
+        "action_limitation": "The plan's win-rate actions add their points to the pooled rate this changes, each day's rate held between zero and one, so bookings are not a straight line in it: no setting is solved for, and the changes at the low and high settings are not on one line.",
         "applies_to": "The share of deals created after the as-of date that are won, for organic, hire-generated and program pipeline alike. Open deals and actuals are untouched.",
         "cannot_scale_because": null,
         "current": {
@@ -4768,7 +4769,7 @@
         },
         "historical_unavailable_because": null,
         "label": "Win rate of new pipeline",
-        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. The plan's win-rate actions add their points to the pooled rate this changes, each day's rate held between zero and one, so bookings are not a straight line in it: no setting is solved for, and the changes at the low and high settings are not on one line.",
+        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
         "needed_alone": null,
         "places": 4,
         "rank": {
@@ -4779,6 +4780,7 @@
         "unit_label": "share of created deals won"
       },
       {
+        "action_limitation": "The plan's size actions change the size this sets by the same relative amount, so a setting here is the pooled mean the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
         "applies_to": "The mean ARR of each win among deals created after the as-of date. Creation counts and the program dollars-to-deals conversion are unchanged.",
         "cannot_scale_because": null,
         "current": {
@@ -4938,7 +4940,7 @@
         },
         "historical_unavailable_because": null,
         "label": "Won ARR per new win",
-        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. The plan's size actions change the size this sets by the same relative amount, so a setting here is the pooled mean the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
+        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
         "needed_alone": {
           "achieved_fiscal_year_bookings": "60000000.17",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
@@ -4964,6 +4966,7 @@
         "unit_label": "dollars of ARR per won deal"
       },
       {
+        "action_limitation": "The plan's creation actions change the rate this sets by the same relative amount, so a setting here is the pooled rate the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
         "applies_to": "Deals created per ramped AE-month, for the signed roster and any planned hires, after the as-of date. Open deals and actuals are untouched.",
         "cannot_scale_because": null,
         "current": {
@@ -5123,7 +5126,7 @@
         },
         "historical_unavailable_because": null,
         "label": "Creation productivity",
-        "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter. The plan's creation actions change the rate this sets by the same relative amount, so a setting here is the pooled rate the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
+        "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter.",
         "needed_alone": {
           "achieved_fiscal_year_bookings": "60000338.17",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
@@ -5149,6 +5152,7 @@
         "unit_label": "created deals per ramped AE-month"
       },
       {
+        "action_limitation": null,
         "applies_to": "Days from creation to win for deals created after the as-of date. Each win-time sample is scaled and rounded up to whole days; weights, probability and size are unchanged.",
         "cannot_scale_because": null,
         "current": {
@@ -5290,15 +5294,15 @@
         "historical": {
           "high": {
             "change": {
-              "next twelve months": "-5597127.51",
-              "rest of fiscal year": "-1847872.63"
+              "next twelve months": "-5596614.46",
+              "rest of fiscal year": "-1848216.69"
             },
             "setting": "149.85"
           },
           "low": {
             "change": {
-              "next twelve months": "1828275.77",
-              "rest of fiscal year": "654398.20"
+              "next twelve months": "1829268.25",
+              "rest of fiscal year": "653947.15"
             },
             "setting": "126.55"
           },
@@ -5310,12 +5314,12 @@
         "label": "Cycle length of new pipeline",
         "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. A quarter's cycle is the plain mean days of its wins, while the fit in use weights each day, so the two are close in kind but not the same measure.",
         "needed_alone": {
-          "achieved_fiscal_year_bookings": "60001384.69",
+          "achieved_fiscal_year_bookings": "60000599.89",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
           "inside_observed_range": true,
           "outcome": "solves",
           "outcome_label": "Solves mathematically, stepped: win times are whole days, so there is no exact root. This is the largest setting that reaches the target, and it overshoots by the amount shown.",
-          "overshoot": "1384.69",
+          "overshoot": "599.89",
           "precision_note": null,
           "reaches_target": true,
           "reason": null,
