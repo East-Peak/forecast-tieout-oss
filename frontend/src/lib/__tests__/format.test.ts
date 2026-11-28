@@ -67,6 +67,15 @@ describe("percent1: a fraction as a percent to one decimal", () => {
   });
 });
 
+describe("whole and decimal1: a decimal rounded half away from zero", () => {
+  it.each([["766.4543898509839959", "766"], ["1234.5", "1,235"], ["0.49", "0"], ["-0.4", "0"], ["-1234.5", "-1,235"]])("whole %s -> %s", (raw, shown) => {
+    expect(formatValue("whole", raw)).toBe(shown);
+  });
+  it.each([["151.7474061333", "151.7"], ["139.45", "139.5"], ["0.04", "0.0"], ["1234.96", "1,235.0"], ["-0.04", "0.0"], ["-2.25", "-2.3"]])("decimal1 %s -> %s", (raw, shown) => {
+    expect(formatValue("decimal1", raw)).toBe(shown);
+  });
+});
+
 describe("count, date, month and text", () => {
   it("groups counts", () => {
     expect(formatValue("count", 7)).toBe("7");
