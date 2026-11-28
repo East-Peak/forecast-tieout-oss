@@ -29,10 +29,11 @@ class FakeEditor implements Editor {
   gate: Promise<void> | null = null;
   subscribe = () => () => {};
   open = () => Promise.resolve(FACTS);
+  lanes = () => new Promise<never>(() => {}); // the lanes are not what this form is about: never answered
   async apply(_company: string, plan: PlanDoc): Promise<ApplyOutcome> {
     this.sent.push(plan);
     if (this.gate) await this.gate;
-    const next = this.next ?? { kind: "report" as const, report: { tag: "r" } as never, comparison: { scenario: "your-plan" } as never };
+    const next = this.next ?? { kind: "report" as const, report: { tag: "r" } as never, comparison: { scenario: "your-plan" } as never, revision: 1 };
     if (next instanceof Error) throw next;
     return next;
   }

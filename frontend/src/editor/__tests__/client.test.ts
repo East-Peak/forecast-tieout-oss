@@ -147,8 +147,8 @@ describe("applying", () => {
     const result = client.apply("acme", PLAN);
     expect(client.status).toEqual({ phase: "computing", company: "acme" });
     expect(JSON.parse(workers[0].last("apply").plan)).toEqual(PLAN);
-    workers[0].say({ type: "applied", id: workers[0].last("apply").id, report: JSON.stringify(REPORT), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW }) });
-    await expect(result).resolves.toEqual({ kind: "report", report: REPORT, comparison: ROW });
+    workers[0].say({ type: "applied", id: workers[0].last("apply").id, report: JSON.stringify(REPORT), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW, revision: 7 }) });
+    await expect(result).resolves.toEqual({ kind: "report", report: REPORT, comparison: ROW, revision: 7 });
     expect(client.status).toEqual({ phase: "ready", company: "acme" });
   });
 
@@ -177,6 +177,80 @@ describe("applying", () => {
     await vi.advanceTimersByTimeAsync(0);
     workers[0].say({ type: "applied", id: workers[0].last("apply").id, report: JSON.stringify({ ...REPORT, inputs: { identity: { company: "birch", scenario: "your-plan" } } }), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW }) });
     await expect(result).resolves.toMatchObject({ kind: "report" });
+  });
+});
+
+describe("the lanes of an Apply", () => {
+  const LANES = { company: "acme", scenario: "your-plan", periods: [] };
+  const OWNERS = { company: "acme", scenario: "your-plan", segment: "enterprise", periods: [] };
+  const answer = (over: object = {}) => JSON.stringify({ revision: 7, stale: false, problems: [], lanes: LANES, owners: { enterprise: OWNERS }, ...over });
+
+  async function applied() {
+    const s = setup();
+    const o = s.client.open("acme");
+    opened(s.workers[0], "acme");
+    await o;
+    const r = s.client.apply("acme", PLAN);
+    s.workers[0].say({ type: "applied", id: s.workers[0].last("apply").id, report: JSON.stringify(REPORT), meta: JSON.stringify({ problems: [], errors: [], comparison: ROW, revision: 7 }) });
+    await r;
+    return s;
+  }
+
+  it("asks the worker for the revision it was given, and returns the lanes and each segment's owners", async () => {
+    const { client, workers } = await applied();
+    const result = client.lanes("acme", 7);
+    expect(workers[0].last("lanes")).toMatchObject({ type: "lanes", revision: 7 });
+    workers[0].say({ type: "lanes", id: workers[0].last("lanes").id, lanes: answer() });
+    await expect(result).resolves.toEqual({ kind: "lanes", lanes: LANES, owners: { enterprise: OWNERS } });
+    expect(client.status.phase).toBe("ready");
+  });
+
+  it("says stale, without asking the worker, when it is not on that company", async () => {
+    const { client, workers } = await applied();
+    await expect(client.lanes("other", 7)).resolves.toEqual({ kind: "stale" });
+    expect(workers[0].sent.filter((m) => m.type === "lanes")).toHaveLength(0);
+  });
+
+  it("passes on the worker's own word that a revision is no longer the latest", async () => {
+    const { client, workers } = await applied();
+    const result = client.lanes("acme", 7);
+    workers[0].say({ type: "lanes", id: workers[0].last("lanes").id, lanes: JSON.stringify({ revision: 7, stale: true }) });
+    await expect(result).resolves.toEqual({ kind: "stale" });
+  });
+
+  it("returns the contract's findings as a refusal with no lanes", async () => {
+    const { client, workers } = await applied();
+    const result = client.lanes("acme", 7);
+    workers[0].say({ type: "lanes", id: workers[0].last("lanes").id, lanes: answer({ lanes: null, owners: {}, problems: ["goals would move"] }) });
+    await expect(result).resolves.toEqual({ kind: "refused", problems: ["goals would move"] });
+    expect(workers[0].terminated).toBe(false);
+  });
+
+  it("refuses lanes of another revision, company or scenario rather than passing them on", async () => {
+    for (const over of [{ revision: 6 }, { lanes: { ...LANES, company: "other" } }, { lanes: { ...LANES, scenario: "as-signed" } }]) {
+      const { client, workers } = await applied();
+      const result = client.lanes("acme", 7).catch((e: unknown) => e);
+      workers[0].say({ type: "lanes", id: workers[0].last("lanes").id, lanes: answer(over) });
+      expect(await result).toMatchObject({ kind: "error" });
+      expect(workers[0].terminated).toBe(true);
+    }
+  });
+
+  it("is replaced, as superseded, by the next request", async () => {
+    const { client, workers } = await applied();
+    const first = client.lanes("acme", 7).catch((e: unknown) => e);
+    void client.apply("acme", PLAN);
+    expect(await first).toMatchObject({ kind: "superseded" });
+    // and its late answer is ignored
+    workers[0].say({ type: "lanes", id: workers[0].sent.filter((m) => m.type === "lanes")[0].id, lanes: answer() });
+  });
+
+  it("times out on the Apply clock, ending the worker", async () => {
+    const { client, workers } = await applied();
+    const result = client.lanes("acme", 7).catch((e: unknown) => e);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(await result).toMatchObject({ kind: "timeout" });
+    expect(workers[0].terminated).toBe(true);
   });
 });
 

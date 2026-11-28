@@ -31,7 +31,7 @@ function computed(company: string): ApplyOutcome {
   report.inputs.identity.scenario = "your-plan";
   (report.plan as { file: string }).file = "your-plan";
   const row = { ...files.comparison(company).rows.find((r) => r.scenario === "demo-plan")!, scenario: "your-plan", label: "Your plan" };
-  return { kind: "report", report, comparison: row };
+  return { kind: "report", report, comparison: row, revision: 1 };
 }
 
 class FakeEditor implements Editor {
@@ -52,6 +52,7 @@ class FakeEditor implements Editor {
     this.opened.push(company);
     return Promise.resolve({ company, segments: [{ value: "mid_market", label: "Mid Market" }], months: ["2026-09", "2026-10"], max_dollars: "99999999", demo_plan: DEMO });
   }
+  lanes = () => new Promise<never>(() => {}); // the shell's tests are not about the grid: never answered
   apply(company: string, plan: PlanDoc): Promise<ApplyOutcome> {
     this.applied.push(plan);
     if (this.failNext) {

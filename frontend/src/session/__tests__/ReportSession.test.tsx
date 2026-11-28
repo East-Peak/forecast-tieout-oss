@@ -274,6 +274,7 @@ describe("Your plan in the session", () => {
     const editor: Editor = {
       status: { phase: "idle" },
       subscribe: () => () => {},
+      lanes: () => new Promise<never>(() => {}),
       open: (company) => {
         opened.push(company);
         return Promise.resolve({ company, segments: [], months: [], max_dollars: "1", demo_plan: DEMO } as Facts);
@@ -288,7 +289,7 @@ describe("Your plan in the session", () => {
     };
     return { store: new YourPlanStore(editor), answers, opened };
   }
-  const outcome = (tag: string, company = "a"): ApplyOutcome => ({ kind: "report", report: mine(tag, company), comparison: row(tag) as never });
+  const outcome = (tag: string, company = "a"): ApplyOutcome => ({ kind: "report", report: mine(tag, company), comparison: row(tag) as never, revision: 1 });
   const rowsOf = () => (screen.getByTestId("rows").textContent ?? "");
 
   function Rows() {
@@ -341,7 +342,7 @@ describe("Your plan in the session", () => {
     mountWith(baseline(loaders), "/plan?company=a&scenario=your-plan", { store, desktop: true });
     await waitFor(() => expect(answers).toHaveLength(1));
     const wrong = { ...mine("x"), inputs: { identity: { company: "a", scenario: "demo-plan" } } } as unknown as TieoutReport;
-    await act(async () => answers[0].resolve({ kind: "report", report: wrong, comparison: row("x") as never }));
+    await act(async () => answers[0].resolve({ kind: "report", report: wrong, comparison: row("x") as never, revision: 1 }));
     await waitFor(() => expect(text("status")).toBe("error"));
     expect(text("error")).toMatch(/a\/demo-plan.*not a\/your-plan/);
   });

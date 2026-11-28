@@ -94,6 +94,8 @@ export async function buildEditorAssets({
     const entries = [
       ...walk(join(repoRoot, "engine", "data-v2", id), repoRoot, () => true),
       ...walk(join(repoRoot, "engine", "config", "profiles", id), repoRoot, () => true),
+      // the committed plan basis (the goals): the worker proves the basis it computes is this file before it shows lanes
+      ...walk(join(frontendRoot, "public", "data", "reports", id), repoRoot, (n) => n === "lanes-basis.json"),
     ];
     files.push({ path: `data/company-${id}.zip`, data: zip(entries) });
   }

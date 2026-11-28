@@ -38,6 +38,8 @@ function world() {
   write(repo, "engine/data-v2/acme/deals.csv", "id\n1\n");
   write(repo, "engine/config/profiles/acme/plan.yaml", "hires: []\n");
   write(repo, "engine/config/profiles/other/plan.yaml", "hires: []\n");
+  write(repo, "frontend/public/data/reports/acme/lanes-basis.json", "{}");
+  write(repo, "frontend/public/data/reports/acme/as-signed.json", "{}");
   write(repo, "frontend/public/data/reports/index.json", JSON.stringify({ companies: [{ id: "acme" }] }));
   const fetched = [];
   const fetchBytes = async (url) => {
@@ -78,7 +80,7 @@ describe("the editor's assets", () => {
     expect(w.fetched.some((u) => u.includes("unused"))).toBe(false);
   });
 
-  it("takes the core's Python and schema and the named company's files, and nothing else", async () => {
+  it("takes the core's Python and schema, the named company's files and its committed plan basis, and nothing else", async () => {
     const built = await buildEditorAssets(w.options());
     const names = (zip) => {
       const buf = readFileSync(join(built.dir, "data", zip));
@@ -93,7 +95,8 @@ describe("the editor's assets", () => {
       return out;
     };
     expect(names("core.zip")).toEqual(["engine/tieout_core/__init__.py", "engine/tieout_core/report.py", "engine/tieout_core/report.schema.json"]);
-    expect(names("company-acme.zip")).toEqual(["engine/config/profiles/acme/plan.yaml", "engine/data-v2/acme/deals.csv"]);
+    // the committed plan basis rides with the company: the worker proves the goals it computes are that file's
+    expect(names("company-acme.zip")).toEqual(["engine/config/profiles/acme/plan.yaml", "engine/data-v2/acme/deals.csv", "frontend/public/data/reports/acme/lanes-basis.json"]);
   });
 
   it("names the folder by what is in it: the same inputs, the same folder; one changed line, another", async () => {

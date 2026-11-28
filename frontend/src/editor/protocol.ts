@@ -1,4 +1,6 @@
 import type { ScenarioComparison } from "../generated/appFiles";
+import type { TieoutLanes } from "../generated/lanes";
+import type { TieoutLanesOwners } from "../generated/lanesOwners";
 import type { TieoutReport } from "../generated/report";
 
 /** What the form needs from the core, written by the core when a company is prepared. */
@@ -43,17 +45,29 @@ export interface PlanError {
 }
 
 export type ApplyOutcome =
-  | { kind: "report"; report: TieoutReport; comparison: ComparisonRow }
+  /** `revision` names this Apply: the lanes of this report are asked for by it, and only the latest Apply has any */
+  | { kind: "report"; report: TieoutReport; comparison: ComparisonRow; revision: number }
   | { kind: "invalid"; errors: PlanError[] }
   /** the computed report failed the contract or its own checks: shown as a failure, never rendered */
   | { kind: "refused"; problems: string[] };
 
+/** What the swimlane grid needs for an Apply's report, written by the core after the report was returned. */
+export type LanesOutcome =
+  | { kind: "lanes"; lanes: TieoutLanes; owners: Record<string, TieoutLanesOwners> }
+  /** the worker has moved on (another Apply, another company): these lanes would belong to something no longer shown */
+  | { kind: "stale" }
+  /** the lanes failed the contract, or their goals were not the committed ones: shown as a failure, never rendered */
+  | { kind: "refused"; problems: string[] };
+
 export type ToWorker =
   | { type: "open"; id: string; company: string; assets: string }
-  | { type: "apply"; id: string; plan: string };
+  | { type: "apply"; id: string; plan: string }
+  | { type: "lanes"; id: string; revision: number };
 
 export type FromWorker =
   | { type: "progress"; id: string; text: string }
   | { type: "opened"; id: string; facts: string }
   | { type: "applied"; id: string; report: string; meta: string }
+  /** the lanes, owners and findings of one revision, as JSON text */
+  | { type: "lanes"; id: string; lanes: string }
   | { type: "failed"; id: string; error: string };

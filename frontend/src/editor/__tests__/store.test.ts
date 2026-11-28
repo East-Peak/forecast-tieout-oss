@@ -3,7 +3,7 @@ import type { ReportIndex, ScenarioComparison } from "../../generated/appFiles";
 import type { TieoutReport } from "../../generated/report";
 import { EditorFailure } from "../client";
 import type { EditorStatus } from "../client";
-import type { ApplyOutcome, ComparisonRow, Facts, PlanDoc } from "../protocol";
+import type { ApplyOutcome, ComparisonRow, Facts, LanesOutcome, PlanDoc } from "../protocol";
 import { YourPlanStore } from "../store";
 import { YOUR_PLAN, withYourPlan, withYourPlanRow } from "../yourPlan";
 
@@ -27,11 +27,19 @@ class FakeEditor {
     this.calls.push(`open ${company}`);
     return Promise.resolve(factsOf(company));
   }
+  /** the revision the next report is given: every Apply that makes a report is a new one */
+  revision = 0;
   apply(company: string, plan: PlanDoc) {
     this.calls.push(`apply ${company}`);
     this.applied.push(plan);
-    const next = this.outcomes.shift() ?? { kind: "report" as const, report: reportOf("demo"), comparison: rowOf("demo") };
-    return next instanceof Error ? Promise.reject(next) : Promise.resolve(next);
+    const next = this.outcomes.shift() ?? { kind: "report" as const, report: reportOf("demo"), comparison: rowOf("demo"), revision: 0 };
+    if (next instanceof Error) return Promise.reject(next);
+    return Promise.resolve(next.kind === "report" ? { ...next, revision: ++this.revision } : next);
+  }
+  /** the lanes asked for, each held until the test answers it */
+  lanesCalls: Array<{ company: string; revision: number; resolve: (o: LanesOutcome) => void; reject: (e: Error) => void }> = [];
+  lanes(company: string, revision: number) {
+    return new Promise<LanesOutcome>((resolve, reject) => this.lanesCalls.push({ company, revision, resolve, reject }));
   }
 }
 
@@ -78,7 +86,7 @@ describe("Apply", () => {
     const { editor, store } = make();
     await store.load("acme");
     store.setDraft("acme", { ...DEMO, hires: [] });
-    editor.outcomes.push({ kind: "report", report: reportOf("edited"), comparison: rowOf("edited") });
+    editor.outcomes.push({ kind: "report", report: reportOf("edited"), comparison: rowOf("edited"), revision: 0 });
     await store.apply("acme");
     expect(editor.applied.slice(-1)[0]).toEqual({ ...DEMO, hires: [] });
     expect(store.snapshot.applied.acme.report).toEqual(reportOf("edited"));
@@ -120,7 +128,7 @@ describe("Apply", () => {
     const { editor, store } = make();
     await store.load("acme");
     await store.load("birch");
-    editor.outcomes.push({ kind: "report", report: reportOf("acme-edited"), comparison: rowOf("a") });
+    editor.outcomes.push({ kind: "report", report: reportOf("acme-edited"), comparison: rowOf("a"), revision: 0 });
     const pending = store.apply("acme");
     expect(store.snapshot.feedback.busy).toBe(true);
     await pending;
@@ -135,6 +143,100 @@ describe("Apply", () => {
     });
     await store.load("acme");
     expect(heard).toBe(true);
+  });
+});
+
+const LANES = (tag: string): LanesOutcome => ({ kind: "lanes", lanes: { tag } as never, owners: { enterprise: { tag } as never } });
+const tick = () => new Promise((r) => setTimeout(r, 0));
+
+describe("the lanes of an Apply", () => {
+  it("are pending with the report, asked for by the Apply's revision, and ready when the worker answers", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "pending" });
+    expect(editor.lanesCalls.map((c) => [c.company, c.revision])).toEqual([["acme", store.snapshot.applied.acme.revision]]);
+    editor.lanesCalls[0].resolve(LANES("one"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "ready", lanes: { tag: "one" }, owners: { enterprise: { tag: "one" } } });
+  });
+
+  it("an answer for an earlier Apply of the company is dropped: the later Apply's lanes stay pending", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    store.setDraft("acme", { ...DEMO, hires: [] });
+    await store.apply("acme");
+    expect(editor.lanesCalls).toHaveLength(2);
+    editor.lanesCalls[0].resolve(LANES("old"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "pending" });
+    editor.lanesCalls[1].resolve(LANES("new"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toMatchObject({ status: "ready", lanes: { tag: "new" } });
+  });
+
+  it("belong to their company: one company's answer does not touch another's", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    await store.load("birch");
+    editor.lanesCalls.find((c) => c.company === "acme")!.resolve(LANES("acme's"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toMatchObject({ status: "ready", lanes: { tag: "acme's" } });
+    expect(store.snapshot.applied.birch.lanes).toEqual({ status: "pending" });
+  });
+
+  it("a refusal or a failure is the lanes' own state: the report stays", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    editor.lanesCalls[0].resolve({ kind: "refused", problems: ["goals would move"] });
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "failed", message: "goals would move" });
+    expect(store.snapshot.applied.acme.report).toEqual(reportOf("demo"));
+    store.setDraft("acme", { ...DEMO, hires: [] });
+    await store.apply("acme");
+    editor.lanesCalls[1].reject(new EditorFailure("timeout", "no answer within the time allowed"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "failed", message: "no answer within the time allowed" });
+  });
+
+  it("are marked stale when the worker moved on while this was still the company's latest Apply, and are computed again from the same plan", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    editor.lanesCalls[0].resolve({ kind: "stale" });
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "stale" });
+    const before = store.snapshot.applied.acme;
+    editor.calls.length = 0;
+    const again = store.recomputeLanes("acme");
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "pending" });
+    await again;
+    expect(editor.calls).toEqual(["apply acme"]);
+    expect(editor.applied.slice(-1)[0]).toEqual(before.plan);
+    expect(store.snapshot.applied.acme.revision).toBeGreaterThan(before.revision);
+    expect(editor.lanesCalls.slice(-1)[0].revision).toBe(store.snapshot.applied.acme.revision);
+  });
+
+  it("a request replaced by another company's open marks the lanes stale, and one replaced by the company's own newer Apply changes nothing", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    editor.lanesCalls[0].reject(new EditorFailure("superseded", "replaced"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "stale" });
+    store.setDraft("acme", { ...DEMO, hires: [] });
+    await store.recomputeLanes("acme");
+    const second = editor.lanesCalls.slice(-1)[0];
+    store.setDraft("acme", { ...DEMO, programs: [] });
+    await store.apply("acme");
+    second.reject(new EditorFailure("superseded", "replaced"));
+    await tick();
+    expect(store.snapshot.applied.acme.lanes).toEqual({ status: "pending" });
+  });
+
+  it("recomputing what is not stale does nothing", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    editor.calls.length = 0;
+    await store.recomputeLanes("acme");
+    expect(editor.calls).toEqual([]);
   });
 });
 

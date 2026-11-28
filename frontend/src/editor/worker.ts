@@ -4,7 +4,7 @@
 import type { PyodideInterface } from "pyodide";
 import type { FromWorker, ToWorker } from "./protocol";
 
-type PyProxyLike = { toJs(): unknown; destroy(): void; open(company: string): string; apply(plan: string): PyProxyLike };
+type PyProxyLike = { toJs(): unknown; destroy(): void; open(company: string): string; apply(plan: string): PyProxyLike; lanes(revision: number): string };
 
 let py: PyodideInterface | null = null;
 let session: PyProxyLike | null = null;
@@ -55,12 +55,18 @@ function apply(id: string, plan: string) {
   say({ type: "applied", id, report, meta });
 }
 
+/** The swimlane grid's files for an Apply the worker has already answered: computed here, after the report was sent, so they cost the Apply nothing. */
+function lanes(id: string, revision: number) {
+  if (!session) throw new Error("no company is open");
+  say({ type: "lanes", id, lanes: session.lanes(revision) });
+}
+
 // One request at a time, in the order sent: a slow download for one company must not finish after, and
 // replace, the company a later request opened.
 let queue: Promise<void> = Promise.resolve();
 
 onmessage = (event: MessageEvent<ToWorker>) => {
   const m = event.data;
-  const run = (queue = queue.then(() => (m.type === "open" ? open(m.id, m.company, m.assets) : apply(m.id, m.plan))));
+  const run = (queue = queue.then(() => (m.type === "open" ? open(m.id, m.company, m.assets) : m.type === "apply" ? apply(m.id, m.plan) : lanes(m.id, m.revision))));
   run.catch((e: unknown) => say({ type: "failed", id: m.id, error: e instanceof Error ? e.message : String(e) }));
 };

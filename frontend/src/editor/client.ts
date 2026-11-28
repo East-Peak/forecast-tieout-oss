@@ -1,4 +1,6 @@
-import type { ApplyOutcome, ComparisonRow, Facts, FromWorker, PlanDoc, PlanError, ToWorker } from "./protocol";
+import type { ApplyOutcome, ComparisonRow, Facts, FromWorker, LanesOutcome, PlanDoc, PlanError, ToWorker } from "./protocol";
+import type { TieoutLanes } from "../generated/lanes";
+import type { TieoutLanesOwners } from "../generated/lanesOwners";
 import type { TieoutReport } from "../generated/report";
 
 /** The part of a Worker the client uses; a fake stands in for it in tests. */
@@ -134,7 +136,7 @@ export class PlanEditorClient {
     return this.request<ApplyOutcome>(worker, this.timeouts.applyMs, (id) => ({ type: "apply", id, plan: JSON.stringify(plan) }), (m, done) => {
       if (m.type !== "applied") return;
       this.set({ phase: "ready", company });
-      const meta = JSON.parse(m.meta) as { problems: string[]; errors: PlanError[]; comparison: ComparisonRow | null };
+      const meta = JSON.parse(m.meta) as { problems: string[]; errors: PlanError[]; comparison: ComparisonRow | null; revision: number | null };
       if (meta.problems.length > 0) done({ kind: "refused", problems: meta.problems });
       else if (meta.errors.length > 0) done({ kind: "invalid", errors: meta.errors });
       else {
@@ -142,8 +144,30 @@ export class PlanEditorClient {
         const identity = report.inputs?.identity;
         if (identity?.company !== company || identity.scenario !== "your-plan") {
           this.end(worker, "error", `the worker answered for ${identity?.company ?? "no company"}, not ${company}`);
-        } else done({ kind: "report", report, comparison: meta.comparison as ComparisonRow });
+        } else done({ kind: "report", report, comparison: meta.comparison as ComparisonRow, revision: meta.revision as number });
       }
+    });
+  }
+
+  /**
+   * The swimlane grid's files for the Apply `revision` of `company`, which the worker computes after it has returned that
+   * Apply's report. Whatever is no longer the latest Apply of the company the worker holds is `stale`: nothing is
+   * asked, or what comes back is dropped, and the caller decides what to show instead. The answer is checked to be for
+   * this revision, this company and the visitor's plan before it is passed on.
+   */
+  lanes(company: string, revision: number): Promise<LanesOutcome> {
+    const worker = this.worker;
+    if (!worker || !this.isOpen(company)) return Promise.resolve({ kind: "stale" });
+    return this.request<LanesOutcome>(worker, this.timeouts.applyMs, (id) => ({ type: "lanes", id, revision }), (m, done) => {
+      if (m.type !== "lanes") return;
+      const got = JSON.parse(m.lanes) as { revision: number; stale: boolean; problems?: string[]; lanes?: TieoutLanes | null; owners?: Record<string, TieoutLanesOwners> };
+      if (got.revision !== revision) return this.end(worker, "error", `the worker answered for revision ${got.revision}, not ${revision}`);
+      if (got.stale) return done({ kind: "stale" });
+      if (!got.lanes) return done({ kind: "refused", problems: got.problems ?? [] });
+      if (got.lanes.company !== company || got.lanes.scenario !== "your-plan") {
+        return this.end(worker, "error", `the worker answered with the lanes of ${got.lanes.company} (${got.lanes.scenario}), not of ${company}'s plan`);
+      }
+      done({ kind: "lanes", lanes: got.lanes, owners: got.owners ?? {} });
     });
   }
 

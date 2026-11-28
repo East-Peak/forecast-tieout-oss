@@ -1,7 +1,9 @@
+import type { TieoutLanes } from "../generated/lanes";
+import type { TieoutLanesOwners } from "../generated/lanesOwners";
 import type { TieoutReport } from "../generated/report";
 import { EditorFailure } from "./client";
 import type { EditorStatus } from "./client";
-import type { ApplyOutcome, ComparisonRow, Facts, PlanDoc, PlanError } from "./protocol";
+import type { ApplyOutcome, ComparisonRow, Facts, LanesOutcome, PlanDoc, PlanError } from "./protocol";
 import { withUnit } from "./yourPlan";
 import type { UnitKind } from "./yourPlan";
 
@@ -11,13 +13,30 @@ export interface Editor {
   subscribe(listener: () => void): () => void;
   open(company: string): Promise<Facts>;
   apply(company: string, plan: PlanDoc): Promise<ApplyOutcome>;
+  lanes(company: string, revision: number): Promise<LanesOutcome>;
 }
+
+/**
+ * The swimlane grid's files for one Apply, which the worker computes after the report is returned. They are part of the
+ * Apply's entry, so lanes that belong to an earlier Apply can never sit beside a later report.
+ */
+export type EditedLanes =
+  | { status: "pending" }
+  /** the worker moved on before answering (another company was opened): computed again when the grid is shown */
+  | { status: "stale" }
+  | { status: "ready"; lanes: TieoutLanes; owners: Record<string, TieoutLanesOwners> }
+  | { status: "failed"; message: string };
+
+const PENDING: EditedLanes = { status: "pending" };
 
 export interface Applied {
   report: TieoutReport;
   comparison: ComparisonRow;
   /** the plan this report is for */
   plan: PlanDoc;
+  /** which Apply made it: the lanes are asked for by this */
+  revision: number;
+  lanes: EditedLanes;
 }
 
 interface Feedback {
@@ -77,7 +96,7 @@ export class YourPlanStore {
     if (outcome.kind !== "report") {
       throw new Error(outcome.kind === "invalid" ? outcome.errors.map((e) => e.message).join("; ") : outcome.problems.join("; "));
     }
-    const applied = { report: outcome.report, comparison: outcome.comparison, plan };
+    const applied: Applied = { report: outcome.report, comparison: outcome.comparison, plan, revision: outcome.revision, lanes: PENDING };
     const draft = (this.queued[company] ?? []).reduce((p, kind) => withUnit(p, facts, kind), copy(plan));
     delete this.queued[company];
     this.change({
@@ -86,6 +105,7 @@ export class YourPlanStore {
       applied: { ...this.snapshot.applied, [company]: applied },
       feedback: CLEAN,
     });
+    void this.computeLanes(company, applied);
     return applied;
   }
 
@@ -109,10 +129,9 @@ export class YourPlanStore {
     try {
       const outcome = await this.editor.apply(company, plan);
       if (outcome.kind === "report") {
-        this.change({
-          applied: { ...this.snapshot.applied, [company]: { report: outcome.report, comparison: outcome.comparison, plan } },
-          feedback: CLEAN,
-        });
+        const applied: Applied = { report: outcome.report, comparison: outcome.comparison, plan, revision: outcome.revision, lanes: PENDING };
+        this.change({ applied: { ...this.snapshot.applied, [company]: applied }, feedback: CLEAN });
+        void this.computeLanes(company, applied);
       } else if (outcome.kind === "invalid") {
         this.change({ feedback: { ...CLEAN, company, errors: outcome.errors } });
       } else {
@@ -125,6 +144,50 @@ export class YourPlanStore {
       }
       const failure = e instanceof EditorFailure && e.kind !== "superseded" ? { kind: e.kind, message: e.message } : { kind: "error" as const, message: e instanceof Error ? e.message : String(e) };
       this.change({ feedback: { ...CLEAN, company, failure } });
+    }
+  }
+
+  /**
+   * Ask the worker for the lanes of `applied`, whose report is already shown. The answer is kept only if `applied` is still
+   * the company's entry: an Apply made since owns the company, and what was asked for the earlier one is no longer wanted.
+   */
+  private async computeLanes(company: string, applied: Applied): Promise<void> {
+    const settle = (lanes: EditedLanes) => {
+      if (this.snapshot.applied[company] === applied) this.change({ applied: { ...this.snapshot.applied, [company]: { ...applied, lanes } } });
+    };
+    try {
+      const out = await this.editor.lanes(company, applied.revision);
+      if (out.kind === "lanes") settle({ status: "ready", lanes: out.lanes, owners: out.owners });
+      else if (out.kind === "stale") settle({ status: "stale" });
+      else settle({ status: "failed", message: out.problems.join("; ") });
+    } catch (e) {
+      if (e instanceof EditorFailure && e.kind === "superseded") settle({ status: "stale" });
+      else settle({ status: "failed", message: e instanceof Error ? e.message : String(e) });
+    }
+  }
+
+  /** Compute the lanes again for a plan whose lanes were left stale, by applying the same plan afresh (the worker holds only the latest Apply). */
+  async recomputeLanes(company: string): Promise<void> {
+    const kept = this.snapshot.applied[company];
+    if (kept?.lanes.status !== "stale") return;
+    const mine: Applied = { ...kept, lanes: PENDING };
+    this.change({ applied: { ...this.snapshot.applied, [company]: mine } });
+    const settle = (lanes: EditedLanes) => {
+      if (this.snapshot.applied[company] === mine) this.change({ applied: { ...this.snapshot.applied, [company]: { ...mine, lanes } } });
+    };
+    try {
+      const outcome = await this.editor.apply(company, copy(mine.plan));
+      if (this.snapshot.applied[company] !== mine) return;
+      if (outcome.kind !== "report") {
+        settle({ status: "failed", message: outcome.kind === "invalid" ? outcome.errors.map((e) => e.message).join("; ") : outcome.problems.join("; ") });
+        return;
+      }
+      const next: Applied = { report: outcome.report, comparison: outcome.comparison, plan: mine.plan, revision: outcome.revision, lanes: PENDING };
+      this.change({ applied: { ...this.snapshot.applied, [company]: next } });
+      void this.computeLanes(company, next);
+    } catch (e) {
+      if (e instanceof EditorFailure && e.kind === "superseded") settle({ status: "stale" });
+      else settle({ status: "failed", message: e instanceof Error ? e.message : String(e) });
     }
   }
 }
