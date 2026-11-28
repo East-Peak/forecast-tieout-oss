@@ -72,11 +72,11 @@ export function GridCell({ source, rowPointer, rowId, headIds, column, cell, sel
       aria-labelledby={`${headIds} ${content}`}
       aria-describedby={reason ? tip : undefined}
       onClick={(e) => onOpen(e.currentTarget)}
-      className={`group relative block h-full min-h-[88px] w-full cursor-pointer px-2.5 pb-2 pt-2.5 text-left outline-none transition-colors hover:bg-slate-100/80 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ft-accent ${selected ? "bg-slate-100" : ""}`}
+      className={`group relative block h-full min-h-[88px] w-full scroll-mb-[56vh] scroll-ml-[120px] scroll-mt-[var(--ft-header-height,0px)] cursor-pointer sm:scroll-ml-[172px] lg:scroll-mb-0 px-2.5 pb-2 pt-2.5 text-left outline-none transition-colors hover:bg-slate-100/80 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ft-accent ${selected ? "bg-slate-100" : ""}`}
     >
       <span id={content} className="block">
         <span className="flex items-baseline justify-between gap-1">
-          <Bound binding={own.actual} row={at} className="text-lg font-semibold leading-none tabular-nums text-slate-900 data-[unavailable=true]:text-sm data-[unavailable=true]:font-normal data-[unavailable=true]:text-slate-500" />
+          <Bound binding={own.actual} row={at} className={`tabular-nums data-[unavailable=true]:text-sm data-[unavailable=true]:font-normal data-[unavailable=true]:text-slate-500 ${actualOnly ? "text-base font-medium leading-none text-slate-600" : "text-lg font-semibold leading-none text-slate-900"}`} />
           {rated ? <Maybe binding={own.ratio} row={at} className={`text-xs font-semibold tabular-nums ${TEXT[tone]}`} /> : null}
         </span>
         {actualOnly ? null : (

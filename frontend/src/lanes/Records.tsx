@@ -39,7 +39,7 @@ export function RecordCount({ records, path, periodKey, column }: { records: Loa
   if (groups.length === 0) return <span className="block text-[11px] text-slate-500">No records are listed for this cell.</span>;
   return (
     <span className="block text-[11px] text-slate-600" data-testid="records-count">
-      Records:{" "}
+      Deals behind the actual:{" "}
       {groups.map((g, i) => (
         <span key={g.pointer}>
           {i > 0 ? " and " : ""}

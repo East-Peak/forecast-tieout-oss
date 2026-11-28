@@ -149,7 +149,7 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
       role="complementary"
       aria-label="Cell details"
       data-testid="cell-panel"
-      className="fixed inset-x-0 bottom-0 z-50 flex max-h-[62vh] flex-col rounded-t-xl border-t border-slate-200 bg-white shadow-[0_-4px_20px_rgba(15,23,42,0.12)] outline-none xl:sticky xl:inset-auto xl:top-[var(--ft-header-height,0px)] xl:z-10 xl:max-h-[calc(100vh-var(--ft-header-height,0px)-16px)] xl:w-[420px] xl:shrink-0 xl:rounded-ft xl:border xl:shadow-ft"
+      className="fixed inset-x-0 bottom-0 z-50 flex max-h-[55vh] flex-col rounded-t-xl border-t border-slate-200 bg-white shadow-[0_-4px_20px_rgba(15,23,42,0.12)] outline-none lg:sticky lg:inset-auto lg:top-[var(--ft-header-height,0px)] lg:z-10 lg:max-h-[calc(100vh-var(--ft-header-height,0px)-16px)] lg:w-[360px] lg:shrink-0 lg:rounded-ft lg:border lg:shadow-ft xl:w-[420px]"
     >
       <header className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-3">
         <div className="min-w-0">
@@ -172,7 +172,7 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
       </header>
       <div className="flex-1 overflow-y-auto px-5 pb-6 pt-4">
         <div className="flex gap-4">
-          <Figure label="Actual" note={<RecordCount records={records} path={row.path} periodKey={period.key} column={column} />}>
+          <Figure label="Actual">
             <Bound binding={own.actual} row={at} />
           </Figure>
           {actualOnly ? null : (
@@ -185,6 +185,9 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
               </Figure>
             </>
           )}
+        </div>
+        <div className="mt-2">
+          <RecordCount records={records} path={row.path} periodKey={period.key} column={column} />
         </div>
         {cell.ratio !== null && cell.goal !== null ? (
           <p className="mt-2 text-xs text-slate-600">

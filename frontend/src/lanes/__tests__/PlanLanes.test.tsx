@@ -87,7 +87,7 @@ describe("your plan", () => {
     const figure = document.querySelector("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']")!;
     expect(figure.getAttribute("data-scenario")).toBe("your-plan");
     // the figures are the as-signed lanes'
-    expect(figure.textContent).toBe(usdShort(bookings("sapling-industries", "as-signed")));
+    expect(figure.textContent).toBe(usdShort(bookings("sapling-industries", "as-signed")!));
   });
 
   it("says nothing of it for a named scenario", async () => {
