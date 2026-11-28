@@ -74,3 +74,29 @@ def test_the_editors_own_entry_writes_the_same_lanes_as_the_native_run():
     for segment in fixture.OWNER_SEGMENTS:
         want = json.loads((fixture.OUT / f"owners-{segment}.json").read_text())
         assert got["owners"][segment] == want
+
+
+def test_the_case_with_an_action_is_a_valid_report_with_the_actions_values_and_lanes():
+    from engine.tieout_core import lanes_contract
+
+    out = fixture.OUT_ACTIONS
+    report = json.loads((out / "report.json").read_text())
+    assert contract.validate(report) == []
+    (item,) = report["driver_actions"]["items"]
+    assert item["slice"]["key"] == "enterprise" and item["ramp_months"] == 2
+    assert item["evidence"]["label"] == "outside the worksheet's historical settings"
+    assert report["driver_actions"]["joint_gain"] == item["removal_value"]
+    assert json.loads((out / "plan.json").read_text())["actions"] == [
+        fixture.PLAN_WITH_ACTION["actions"][0]
+    ]
+    lanes = json.loads((out / "lanes.json").read_text())
+    basis = json.loads(
+        (
+            fixture.REPO
+            / "frontend/public/data/reports"
+            / fixture.COMPANY
+            / "lanes-basis.json"
+        ).read_text()
+    )
+    assert lanes_contract.validate(lanes, basis, report) == []
+    assert any(c["name"].startswith("lane action bookings") for c in lanes["checks"])

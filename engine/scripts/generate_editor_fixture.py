@@ -45,6 +45,7 @@ COMPANY = "sapling-industries"
 # the segments the plan adds hires to: their owners files are kept, with the planned-hires bucket
 OWNER_SEGMENTS = ("commercial", "enterprise")
 OUT = REPO / "frontend/src/screens/__tests__/fixtures/your-plan"
+OUT_ACTIONS = REPO / "frontend/src/screens/__tests__/fixtures/your-plan-actions"
 
 # An edit of Sapling's demo plan: one hire changed, one added in another segment, a program resized and
 # given a cost and a ramp.
@@ -65,10 +66,31 @@ PLAN = {
 }
 
 
-def build() -> dict[str, str]:
+# The same edit with a win-rate action in one segment on top of it: ramping up over two months to
+# a target above the worksheet's high, so the evidence reads "outside the worksheet's historical
+# settings". The form has no field for an action yet, so the browser tests do not enter this plan;
+# the editor's own entry is held to what a native run writes for it.
+PLAN_WITH_ACTION = {
+    **PLAN,
+    "actions": [
+        {
+            "id": "enterprise-win-rate",
+            "name": "Enterprise win-rate push",
+            "driver": "win_rate",
+            "slice": "enterprise",
+            "start": "2026-10",
+            "ramp_months": 2,
+            "target": "0.26",
+        }
+    ],
+}
+CASES = ((OUT, PLAN), (OUT_ACTIONS, PLAN_WITH_ACTION))
+
+
+def build(plan: dict = PLAN) -> dict[str, str]:
     with in_repo(), tempfile.TemporaryDirectory() as tmp:
         plan_file = Path(tmp) / f"{YOUR_PLAN}.yaml"
-        plan_file.write_text(yaml.safe_dump(PLAN, sort_keys=False))
+        plan_file.write_text(yaml.safe_dump(plan, sort_keys=False))
         kwargs = {"draws": DRAWS, "seed": SEED, "company": COMPANY}
         profile, data = PROFILES / COMPANY, DATA / COMPANY
         signed = build_report(
@@ -82,19 +104,19 @@ def build() -> dict[str, str]:
         {BASELINE: signed, YOUR_PLAN: yours}, {YOUR_PLAN: YOUR_PLAN_LABEL}
     )[1]
     return {
-        "plan.json": canonical(PLAN),
+        "plan.json": canonical(plan),
         "report.json": canonical(yours),
         "comparison-row.json": canonical(row),
-        **native_lanes(yours),
+        **native_lanes(yours, plan),
     }
 
 
-def native_lanes(report: dict) -> dict[str, str]:
+def native_lanes(report: dict, plan_doc: dict = PLAN) -> dict[str, str]:
     """The edited plan's lanes as the generator writes a scenario's: the basis built from the
     company's data (not read from the committed file), the plan loaded from a file."""
     with in_repo(), tempfile.TemporaryDirectory() as tmp:
         plan_file = Path(tmp) / f"{YOUR_PLAN}.yaml"
-        plan_file.write_text(yaml.safe_dump(PLAN, sort_keys=False))
+        plan_file.write_text(yaml.safe_dump(plan_doc, sort_keys=False))
         state = prepare(PROFILES / COMPANY, DATA / COMPANY, AS_OF, DRAWS, SEED)
         plan = load_plan(plan_file, AS_OF, state.cap.members)
         basis = lanes_basis.plan_basis(state)
@@ -127,22 +149,25 @@ def main(argv=None) -> int:
     )
     parser.add_argument("--verify", action="store_true")
     args = parser.parse_args(argv)
-    files = build()
+    built = {out: build(plan) for out, plan in CASES}
     if not args.verify:
-        OUT.mkdir(parents=True, exist_ok=True)
-        for name, text in files.items():
-            (OUT / name).write_text(text)
-        print(f"wrote {len(files)} files under {OUT.relative_to(REPO)}")
+        for out, files in built.items():
+            out.mkdir(parents=True, exist_ok=True)
+            for name, text in files.items():
+                (out / name).write_text(text)
+            print(f"wrote {len(files)} files under {out.relative_to(REPO)}")
         return 0
     stale = [
-        name
+        f"{out.name}/{name}"
+        for out, files in built.items()
         for name, text in files.items()
-        if not (OUT / name).exists() or (OUT / name).read_text() != text
+        if not (out / name).exists() or (out / name).read_text() != text
     ]
     if stale:
         print("editor fixture is stale:", *stale, sep="\n  ", file=sys.stderr)
         return 1
-    print(f"ok: {len(files)} editor fixture files are current")
+    total = sum(len(files) for files in built.values())
+    print(f"ok: {total} editor fixture files are current")
     return 0
 
 

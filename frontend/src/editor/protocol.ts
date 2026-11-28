@@ -26,17 +26,28 @@ export interface ProgramDoc {
   ramp_months?: number;
   cost?: number;
 }
+/** A change to one driver in one slice: "slice" is "company" or a segment, "target" a probability. */
+interface ActionDoc {
+  id: string;
+  name?: string;
+  driver: "win_rate";
+  slice: string;
+  start: string;
+  ramp_months?: number;
+  target: number | string;
+}
 /** A plan as the core's loader reads it (the same shape as plan.yaml, as data). */
 export interface PlanDoc {
   hires: HireDoc[];
   programs: ProgramDoc[];
+  actions?: ActionDoc[];
 }
 
 export type ComparisonRow = ScenarioComparison["rows"][number];
 
 /** Why the core refused an item, in its own words, and where. */
 export interface PlanError {
-  section: "hires" | "programs" | null;
+  section: "hires" | "programs" | "actions" | null;
   /** as the core counts items in its messages, from one */
   index: number | null;
   /** the same item's place in the list, from zero */

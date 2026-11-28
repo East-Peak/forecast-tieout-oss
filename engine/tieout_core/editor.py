@@ -18,7 +18,7 @@ from pathlib import Path
 
 import yaml
 
-from . import contract, lanes_basis
+from . import contract, driver_actions, lanes_basis
 from .comparison import BASELINE, comparison_rows
 from .editor_lanes import Edited, FrozenBasis, frozen_basis, lanes_for
 from .fiscal import add_months
@@ -34,7 +34,7 @@ DATA = Path("engine/data-v2")
 YOUR_PLAN = "your-plan"
 YOUR_PLAN_LABEL = "Your plan"
 MAX_DOLLARS_OF_YEAR_TARGET = 10
-_ITEM = re.compile(r"^your plan: (hires|programs)\[(\d+)\]: ")
+_ITEM = re.compile(r"^your plan: (hires|programs|actions)\[(\d+)\]: ")
 
 
 def canonical(doc) -> str:
@@ -97,7 +97,12 @@ def apply_plan(opened: Opened, doc) -> Applied:
         plan = parse_plan(_shaped(doc), state.as_of, state.cap.members, "your plan")
     except ValueError as exc:
         return Applied(None, [], [_error(str(exc))], None)
-    report = finish(state, plan, YOUR_PLAN, opened.company, YOUR_PLAN)
+    try:
+        report = finish(state, plan, YOUR_PLAN, opened.company, YOUR_PLAN)
+    except (
+        driver_actions.Unavailable
+    ) as exc:  # actions cannot be valued for this company
+        return Applied(None, [], [_error(f"your plan: {exc}")], None)
     problems = contract.validate(report)
     verdict = report["verdicts"]["software_correct"]
     if verdict["verdict"] != "yes":
@@ -115,10 +120,12 @@ def _shaped(doc) -> dict:
     ok = isinstance(doc, dict) and all(
         isinstance(doc.get(k) or [], list)
         and all(isinstance(i, dict) for i in doc.get(k) or [])
-        for k in ("hires", "programs")
+        for k in ("hires", "programs", "actions")
     )
     if not ok:
-        raise ValueError("your plan: hires and programs must each be a list of items")
+        raise ValueError(
+            "your plan: hires, programs and actions must each be a list of items"
+        )
     return doc
 
 

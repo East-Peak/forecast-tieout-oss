@@ -1,0 +1,34 @@
+{
+  "actions": [
+    {
+      "driver": "win_rate",
+      "id": "enterprise-win-rate",
+      "name": "Enterprise win-rate push",
+      "ramp_months": 2,
+      "slice": "enterprise",
+      "start": "2026-10",
+      "target": "0.26"
+    }
+  ],
+  "hires": [
+    {
+      "count": 3,
+      "segment": "enterprise",
+      "start": "2026-11"
+    },
+    {
+      "count": 1,
+      "segment": "commercial",
+      "start": "2026-12"
+    }
+  ],
+  "programs": [
+    {
+      "cost": 500000,
+      "name": "Field events",
+      "pipeline": 4000000,
+      "ramp_months": 2,
+      "start": "2026-10"
+    }
+  ]
+}
