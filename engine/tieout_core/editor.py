@@ -18,10 +18,12 @@ from pathlib import Path
 
 import yaml
 
-from . import contract
+from . import contract, lanes_basis
 from .comparison import BASELINE, comparison_rows
+from .editor_lanes import Edited, FrozenBasis, frozen_basis, lanes_for
 from .fiscal import add_months
-from .plan import parse_plan, segment_words
+from .lanes import unavailable_document
+from .plan import Plan, parse_plan, segment_words
 from .report import Prepared, finish, prepare
 
 AS_OF = date(2026, 8, 31)
@@ -56,6 +58,10 @@ class Applied:
     problems: list[str]  # the contract's findings and a failed software-correct verdict
     errors: list[dict]  # a plan the loader refused: {section, index, message}
     comparison: dict | None
+    report: dict | None = (
+        None  # the report as data, for what is built from it (the lanes)
+    )
+    plan: Plan | None = None  # the plan it was finished with
 
 
 def open_company(company: str) -> Opened:
@@ -101,7 +107,7 @@ def apply_plan(opened: Opened, doc) -> Applied:
     row = comparison_rows(
         {BASELINE: opened.signed, YOUR_PLAN: report}, {YOUR_PLAN: YOUR_PLAN_LABEL}
     )[1]
-    return Applied(canonical(report), [], [], row)
+    return Applied(canonical(report), [], [], row, report, plan)
 
 
 def _shaped(doc) -> dict:
@@ -133,14 +139,23 @@ def _error(message: str) -> dict:
 
 class EditorSession:
     """What the worker holds: the company opened last, and text in, text out (the worker passes
-    strings across the Python and JavaScript boundary and nothing else)."""
+    strings across the Python and JavaScript boundary and nothing else).
+
+    Each Apply that produced a report is a revision. The lanes of an edited plan are asked for
+    by revision, after the report has been returned, and only the latest Apply of the company
+    open now has any: a revision from an earlier Apply, or from another company, is stale and
+    answers with no lanes."""
 
     def __init__(self) -> None:
         self._opened: Opened | None = None
+        self._revision = 0  # only ever grows, across companies
+        self._edited: Edited | None = None
+        self._frozen: FrozenBasis | lanes_basis.BasisUnavailable | None = None
 
     def open(self, company: str) -> str:
         """Prepare ``company`` (the slow step); the form's facts as JSON text."""
         self._opened = open_company(company)
+        self._edited = self._frozen = None
         return json.dumps(self._opened.facts)
 
     def apply(self, plan_json: str) -> tuple[str, str]:
@@ -148,9 +163,45 @@ class EditorSession:
         if self._opened is None:
             raise RuntimeError("open a company first")
         applied = apply_plan(self._opened, json.loads(plan_json))
+        revision = None
+        if applied.report is not None:
+            self._revision += 1
+            revision = self._revision
+            self._edited = Edited(revision, applied.report, applied.plan)
         meta = {
             "problems": applied.problems,
             "errors": applied.errors,
             "comparison": applied.comparison,
+            "revision": revision,
         }
         return applied.report_text or "", json.dumps(meta)
+
+    def lanes(self, revision: int) -> str:
+        """The lanes of the Apply ``revision`` as JSON text: ``stale`` when it is not the latest
+        Apply of the company open; otherwise the lanes file, each segment's owners file and the
+        problems that stopped them (the plan basis is the committed one, or there are none)."""
+        opened, edited = self._opened, self._edited
+        if opened is None or edited is None or edited.revision != revision:
+            return json.dumps({"revision": revision, "stale": True})
+        out: dict = {"revision": revision, "stale": False, "owners": {}}
+        try:
+            frozen = self._frozen_basis(opened)
+        except lanes_basis.BasisUnavailable as why:
+            doc = unavailable_document(opened.company, YOUR_PLAN, str(why))
+            return json.dumps({**out, "lanes": doc, "problems": []})
+        except ValueError as problem:
+            return json.dumps({**out, "problems": [str(problem)]})
+        made = lanes_for(opened.state, frozen, edited, opened.company, YOUR_PLAN)
+        return json.dumps({**out, **made})
+
+    def _frozen_basis(self, opened: Opened) -> FrozenBasis:
+        """The company's basis, computed once for the company open."""
+        if isinstance(self._frozen, lanes_basis.BasisUnavailable):
+            raise self._frozen
+        if self._frozen is None:
+            try:
+                self._frozen = frozen_basis(opened.state, opened.company)
+            except lanes_basis.BasisUnavailable as why:
+                self._frozen = why
+                raise
+        return self._frozen

@@ -19,6 +19,14 @@ from pathlib import Path
 import yaml
 
 from engine.scripts.generate_app_reports import REPO, canonical, in_repo
+from engine.tieout_core import (
+    actions,
+    lanes,
+    lanes_basis,
+    lanes_contract,
+    lanes_files,
+    lanes_text,
+)
 from engine.tieout_core.comparison import BASELINE, comparison_rows
 from engine.tieout_core.editor import (
     AS_OF,
@@ -29,9 +37,12 @@ from engine.tieout_core.editor import (
     YOUR_PLAN,
     YOUR_PLAN_LABEL,
 )
-from engine.tieout_core.report import build_report
+from engine.tieout_core.plan import load_plan
+from engine.tieout_core.report import build_report, prepare
 
 COMPANY = "sapling-industries"
+# the segments the plan adds hires to: their owners files are kept, with the planned-hires bucket
+OWNER_SEGMENTS = ("commercial", "enterprise")
 OUT = REPO / "frontend/src/screens/__tests__/fixtures/your-plan"
 
 # An edit of Sapling's demo plan: one hire changed, one added in another segment, a program resized and
@@ -73,6 +84,31 @@ def build() -> dict[str, str]:
         "plan.json": canonical(PLAN),
         "report.json": canonical(yours),
         "comparison-row.json": canonical(row),
+        **native_lanes(yours),
+    }
+
+
+def native_lanes(report: dict) -> dict[str, str]:
+    """The edited plan's lanes as the generator writes a scenario's: the basis built from the
+    company's data (not read from the committed file), the plan loaded from a file."""
+    with in_repo(), tempfile.TemporaryDirectory() as tmp:
+        plan_file = Path(tmp) / f"{YOUR_PLAN}.yaml"
+        plan_file.write_text(yaml.safe_dump(PLAN, sort_keys=False))
+        state = prepare(PROFILES / COMPANY, DATA / COMPANY, AS_OF, DRAWS, SEED)
+        plan = load_plan(plan_file, AS_OF, state.cap.members)
+        basis = lanes_basis.plan_basis(state)
+        digest = lanes_contract.digest(lanes_basis.document(basis, COMPANY))
+        hires, inflows = actions.plan_inputs(state.ground, plan)
+        doc = lanes.lanes_document(
+            state, basis, report, hires, inflows, COMPANY, YOUR_PLAN, digest
+        )
+    mine, owners = lanes_files.split(doc)
+    return {
+        "lanes.json": canonical(mine),
+        **{
+            f"owners-{segment}.json": lanes_text.text(owners[segment])
+            for segment in OWNER_SEGMENTS
+        },
     }
 
 
