@@ -212,13 +212,13 @@ def test_capacity_inequality_counts_reopened_and_is_checked_per_team():
 
 
 def test_a_team_above_capacity_after_a_departure_is_not_a_violation_unless_it_admits():
-    over = dict(
-        arrivals=lm([[3, 0], [2, 0]]),
-        admissions=lm([[2, 0], [2, 0]]),
-        opportunities_created=lm([[2, 0], [2, 0]]),
-        open_end=lm([[2, 1], [3, 2]]),
-        carrying_capacity=m(("team", "month"), [[10, 1]]),  # stock 5 > capacity 1
-    )
+    over = {
+        "arrivals": lm([[3, 0], [2, 0]]),
+        "admissions": lm([[2, 0], [2, 0]]),
+        "opportunities_created": lm([[2, 0], [2, 0]]),
+        "open_end": lm([[2, 1], [3, 2]]),
+        "carrying_capacity": m(("team", "month"), [[10, 1]]),  # stock 5 > capacity 1
+    }
     assert flow_check(make(**over)).violations == []
     admits = dict(over, arrivals=lm([[3, 1], [2, 0]]), admissions=lm([[2, 1], [2, 0]]))
     admits.update(queue_end=lm([[1, 1], [0, 0]]), open_end=lm([[2, 2], [3, 2]]))
