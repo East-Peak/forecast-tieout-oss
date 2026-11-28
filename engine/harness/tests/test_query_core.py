@@ -212,3 +212,26 @@ def test_bad_requests_raise(estate, cat):
         run(estate, cat, "bookings", mode="contemporaneous", known_at=D("2025-06-30"))
     with pytest.raises(KeyError):
         run(estate, cat, "ghost")
+
+
+def test_metric_versions_coexist_and_are_selectable(estate, cat):
+    text = catalog_text().replace(
+        "plan_grain:",
+        """  - {id: bookings, version: "2", label: Bookings, unit: count, population: New-business deals closed won, basis: period, kind: sum, measure: won_deals, aggregation: additive, dimensions: [month], favorable: up, owner: Revenue Operations, definition: Version two counts deals.}
+plan_grain:""",
+        1,
+    )
+    versioned = load_catalog(text)
+    assert versioned.metric_versions("bookings") == ["1", "2"]
+    assert (
+        run(estate, versioned, "bookings")[0].value == 4
+    )  # the last declared version is the default
+    old = run(estate, versioned, "bookings", metric_version="1")[0]
+    assert old.value == 5_900_000 and old.contract.metric_version == "1"
+    with pytest.raises(ValueError):
+        run(estate, versioned, "bookings", ["segment"])  # version 2 supports only month
+
+
+def test_a_filter_naming_a_member_that_does_not_exist_raises(estate, cat):
+    with pytest.raises(ValueError):
+        run(estate, cat, "bookings", filters={"segment": ["Gigantic"]})

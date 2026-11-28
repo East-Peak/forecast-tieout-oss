@@ -119,17 +119,17 @@ class Plan:
         return compile_expr(text, self.view.typed(True), self.main, self.params)
 
     def hop(self, path: tuple[str, ...], at: str) -> str:
-        """The alias of the last relationship of `path`, joined as of T or at the row's own date."""
-        alias, here = "m", self.entity
+        """The alias of the last relationship of `path`. A versioned relationship is read at the row's own
+        date (`at`); every other is read as of T."""
+        alias, here, tag = "m", self.entity, ""
         for i, name in enumerate(path):
             rel = self.catalog.entities[here].relationships[name]
-            key = (at, path[: i + 1])
+            when = at if rel.versioned else "current"
+            tag += "" if when == "current" else "_at"
+            key = (alias, name, when)
             if key not in self.hops:
                 self.hops[key] = self._join(
-                    rel,
-                    alias,
-                    at,
-                    "h_" + "_".join(path[: i + 1]) + ("_at" if at != "current" else ""),
+                    rel, alias, when, "h_" + "_".join(path[: i + 1]) + tag
                 )
             alias, here = self.hops[key], rel.to
             self.used_entities.add(rel.to)
@@ -163,9 +163,12 @@ class Plan:
         """SQL for a path from the main entity, and a flag SQL for 'fell back to current' ('FALSE' if none)."""
         if len(path) == 1:
             return self.main(path[0]), "FALSE"
-        col = path[-1]
+        col, here, versioned = path[-1], self.entity, False
+        for name in path[:-1]:
+            rel = self.catalog.entities[here].relationships[name]
+            versioned, here = versioned or rel.versioned, rel.to
         cur = self._project(self.hop(path[:-1], "current"), col)
-        if at == "current":
+        if at == "current" or not versioned:
             return cur, "FALSE"
         at_col = self._project(self.hop(path[:-1], at), col)
         return f"COALESCE({at_col}, {cur})", f"({at_col} IS NULL AND {cur} IS NOT NULL)"

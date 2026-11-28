@@ -4,6 +4,8 @@ import pytest
 
 from engine.harness.catalog import load_catalog
 from engine.harness.query import (
+    ESTIMATORS,
+    PROVIDERS,
     Estimate,
     NonAdditiveError,
     query,
@@ -164,7 +166,7 @@ def test_non_additive_cells_refuse_to_be_summed_and_can_be_reaggregated(estate, 
     assert total(run(estate, cat, "bookings", ["segment"])) == 5_900_000
 
 
-def test_a_registered_estimator_pools_across_cells(estate, cat):
+def test_a_registered_estimator_pools_across_cells(estate, cat, request):
     text = catalog_text().replace(
         "  - id: win_rate\n",
         """  - id: pooled_win_rate
@@ -197,6 +199,7 @@ def test_a_registered_estimator_pools_across_cells(estate, cat):
         "estimator_not_registered",
     )
     register_estimator("pooled_rate", pooled)
+    request.addfinalizer(lambda: ESTIMATORS.pop("pooled_rate", None))
     cells = run(estate, cat, "pooled_win_rate", ["segment"])
     assert {c.derivation for c in cells} == {"pooled"}
     assert {round(c.value, 6) for c in cells} == {round(2 / 3, 6)}
@@ -214,12 +217,10 @@ def test_kinds_other_than_actual_without_a_provider_never_raise(estate, cat):
     assert len(forecast) == 6
 
 
-def test_a_registered_provider_answers_its_kind(estate, cat):
-    def provider(request):
+def test_a_registered_provider_answers_its_kind(estate, cat, request):
+    def provider(req):
         return [
-            run(estate, cat, "bookings", window=request.window, as_of=request.t)[
-                0
-            ].__class__(
+            run(estate, cat, "bookings", window=req.window, as_of=req.t)[0].__class__(
                 key,
                 1,
                 None,
@@ -230,9 +231,10 @@ def test_a_registered_provider_answers_its_kind(estate, cat):
                 "modeled",
                 run(estate, cat, "bookings")[0].contract,
             )
-            for key in request.keys
+            for key in req.keys
         ]
 
     register_provider("required", provider)
+    request.addfinalizer(lambda: PROVIDERS.pop("required", None))
     cells = run(estate, cat, "bookings", ["segment"], kind="required")
     assert {c.derivation for c in cells} == {"modeled"} and len(cells) == 4

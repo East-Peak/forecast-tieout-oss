@@ -9,8 +9,9 @@ entities:
     view: opportunity
     requires: [salesforce.Opportunity]
     relationships:
-      self: {to: opportunity, cardinality: one_to_one, join: [opportunity_id, opportunity_id]}
-      account: {to: account, cardinality: many_to_one, join: [account_id, account_id]}
+      # versioned: read at the row's own date (the dimension's attribute time), not as of T
+      self: {to: opportunity, cardinality: one_to_one, join: [opportunity_id, opportunity_id], versioned: true}
+      account: {to: account, cardinality: many_to_one, join: [account_id, account_id], versioned: true}
       sourcing_person: {to: person, cardinality: many_to_one, join: [sourcing_user_id, user_id]}
       campaign: {to: campaign, cardinality: many_to_one, join: [campaign_id, campaign_id]}
       # one converted lead per opportunity: the earliest conversion, then the lowest id
@@ -348,6 +349,174 @@ roles:
   mql_conversion: {owner: Marketing, funnel_link: MQL to opportunity, type: outcome}
   spend: {owner: Marketing, funnel_link: spend to MQL, type: control}
   heads: {owner: Sales Leadership, funnel_link: capacity to admissions, type: control}
+
+# Each question runs as a test (tests/test_query_verified.py) against the named fixture. Expected values
+# were derived by hand from the fixture's raw rows; where expected.yaml covers the same number it is cited.
+verified_queries:
+  - id: bookings_march_reconstructed
+    question: What were new-business bookings with a March 2025 close date, as we know them today?
+    call: {metric: bookings, group_by: [], window: [2025-03-01, 2025-03-31], as_of: 2025-03-31, mode: reconstructed}
+    expect: {cells: [{key: [], value: 2400000, bound: exact}]}
+    verified_by: hand derivation from the fixture; matches expected.yaml bookings_2025_03 (O1 amended 20000 to 24000 on 05-20)
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_march_contemporaneous
+    question: What did the business believe March 2025 bookings were on March 31?
+    call: {metric: bookings, group_by: [], window: [2025-03-01, 2025-03-31], as_of: 2025-03-31, mode: contemporaneous}
+    expect: {cells: [{key: [], value: 2000000}]}
+    verified_by: hand derivation; matches expected.yaml bookings_2025_03
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_april_reconstructed
+    question: What were April 2025 bookings as we know them today?
+    call: {metric: bookings, group_by: [], window: [2025-04-01, 2025-04-30], as_of: 2025-04-30, mode: reconstructed}
+    expect: {cells: [{key: [], value: 1500000}]}
+    verified_by: hand derivation; O2 closed won 05-06 with CloseDate 04-25; matches expected.yaml bookings_2025_04
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_april_contemporaneous
+    question: What did the business believe April 2025 bookings were on April 30?
+    call: {metric: bookings, group_by: [], window: [2025-04-01, 2025-04-30], as_of: 2025-04-30, mode: contemporaneous}
+    expect: {cells: [{key: [], value: 0}]}
+    verified_by: hand derivation; the closing of O2 was entered 05-06; matches expected.yaml bookings_2025_04
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_may_by_mode
+    question: What were May 2025 bookings as we know them today (O7), against the same month read on May 31 (O4)?
+    call: {metric: bookings, group_by: [month], window: [2025-05-01, 2025-05-31], as_of: 2025-05-31, mode: reconstructed}
+    expect: {cells: [{key: ["2025-05"], value: 1200000}]}
+    verified_by: hand derivation; matches expected.yaml bookings_2025_05 (reconstructed 1200000, contemporaneous 800000)
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_may_contemporaneous
+    question: What did the business believe May 2025 bookings were on May 31?
+    call: {metric: bookings, group_by: [month], window: [2025-05-01, 2025-05-31], as_of: 2025-05-31, mode: contemporaneous}
+    expect: {cells: [{key: ["2025-05"], value: 800000}]}
+    verified_by: hand derivation; O4 closed won 05-20 and its CloseDate moved to June only on 06-20
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_by_segment_first_half
+    question: How much did each segment book January to June 2025, with segment as of the deal's creation?
+    call: {metric: bookings, group_by: [segment], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect:
+      cells:
+        - {key: [Enterprise], value: 0}
+        - {key: [Mid-Market], value: 2700000}
+        - {key: [SMB], value: 3200000}
+        - {key: [Unknown], value: 0}
+    verified_by: hand derivation; account 001FX0000000001 was Tier 3 when O1 and O4 were created and became Tier 2 on 06-30
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_by_source_group
+    question: How much did Marketing, Sales and Partner source of first-half bookings?
+    call: {metric: bookings, group_by: ["source.group"], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect:
+      cells:
+        - {key: [Marketing], value: 3500000}
+        - {key: [Sales], value: 2400000}
+        - {key: [Partner], value: 0}
+        - {key: [Unknown], value: 0}
+    verified_by: hand derivation; O1 sourced by a BDR, O2, O4 and O7 carry a Paid Search campaign
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: mqls_april_reconstructed
+    question: How many MQLs had an April 2025 MQL date, as we know them today?
+    call: {metric: mqls, group_by: [], window: [2025-04-01, 2025-04-30], as_of: 2025-04-30, mode: reconstructed}
+    expect: {cells: [{key: [], value: 3}]}
+    verified_by: hand derivation; L8's MQL date was entered 05-12; matches expected.yaml mql_count_2025_04
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: mqls_april_contemporaneous
+    question: How many MQLs did the business count for April on April 30?
+    call: {metric: mqls, group_by: [], window: [2025-04-01, 2025-04-30], as_of: 2025-04-30, mode: contemporaneous}
+    expect: {cells: [{key: [], value: 2}]}
+    verified_by: hand derivation; matches expected.yaml mql_count_2025_04
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: mqls_have_no_meaning_for_outbound
+    question: Is an MQL count meaningful for BDR-sourced demand?
+    call: {metric: mqls, group_by: [source], window: [2025-01-01, 2025-01-31], as_of: 2025-01-31, mode: reconstructed}
+    expect:
+      cells:
+        - {key: [Paid], value: 1}
+        - {key: [Events], value: 0}
+        - {key: [Inbound], value: 0}
+        - {key: [ABM], value: 0}
+        - {key: [BDR Outbound], value: null, applicability: not_applicable}
+        - {key: [AE Self-Sourced], value: null, applicability: not_applicable}
+        - {key: [Partner], value: null, applicability: not_applicable}
+        - {key: [Unknown], value: 0}
+    verified_by: hand derivation; L1 (Paid Search, 01-25) is the only MQL in January; L2 is outbound demand with no MQL date
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: march_demand_outcomes
+    question: Of the demand episodes offered in March 2025, how many did sales reject, as of June 30?
+    call: {metric: demand_rejected, group_by: [], window: [2025-03-01, 2025-03-31], as_of: 2025-06-30}
+    expect: {cells: [{key: [], value: 1}]}
+    verified_by: hand derivation; L4's first episode was rejected 03-25; matches expected.yaml demand_outcomes_offered_2025_03_at_06_30
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: win_rate_mature_cohorts
+    question: What is the win rate of deals created January to June 2025, counting only cohorts old enough to have decided?
+    call: {metric: win_rate, group_by: [], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect: {cells: [{key: [], value: 0.6666666666666666, numerator: 2, denominator: 3}]}
+    verified_by: hand derivation; January to March cohorts are mature on 06-30 (month end plus 90 days); O1 and O2 won, O3 lost, O8 still open
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: average_deal_first_half
+    question: What was the average won deal, in cents, January to June 2025?
+    call: {metric: average_deal, group_by: [], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect: {cells: [{key: [], value: 1475000.0, numerator: 5900000, denominator: 4}]}
+    verified_by: hand derivation; 5900000 cents over four won deals, none above the large-deal threshold
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: sales_cycle_median
+    question: What was the median days from creation to close for deals won January to June 2025?
+    call: {metric: sales_cycle_median, group_by: [], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect: {cells: [{key: [], value: 53.0, denominator: 4}]}
+    verified_by: hand derivation; cycles 53 (O1), 81 (O2), 53 (O4) and 23 (O7) days
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: mql_conversion_and_lag
+    question: What share of mature MQLs became opportunities within 90 days?
+    call: {metric: mql_to_opportunity, group_by: [], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect: {cells: [{key: [], value: 0.5, numerator: 2, denominator: 4}]}
+    verified_by: hand derivation; L1 and L3 converted, L4 and L5 did not; April MQLs are immature on 06-30
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: mql_lag_median
+    question: How many days from MQL to opportunity, at the median, among converted MQLs?
+    call: {metric: mql_to_opportunity_lag, group_by: [], window: [2025-01-01, 2025-06-30], as_of: 2025-06-30}
+    expect: {cells: [{key: [], value: 6.5, denominator: 2}]}
+    verified_by: hand derivation; L1 took 9 days (01-25 to 02-03) and L3 took 4 days (03-08 to 03-12)
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: open_pipeline_may_reconstructed
+    question: How much open pipeline was there on May 31, as we know it today?
+    call: {metric: open_pipeline_cents, group_by: [], as_of: 2025-05-31, mode: reconstructed}
+    expect: {cells: [{key: [], value: 8300000}]}
+    verified_by: hand derivation; open were O4 (8000), O5 (5000), O6 (40000), O8 (30000); matches the open set of expected.yaml open_count_2025_05_31
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: open_pipeline_may_contemporaneous
+    question: How much open pipeline did the business see on May 31?
+    call: {metric: open_pipeline_cents, group_by: [], as_of: 2025-05-31, mode: contemporaneous}
+    expect: {cells: [{key: [], value: 8700000}]}
+    verified_by: hand derivation; open were O5 (5000), O6 (40000), O7 (12000), O8 (30000), per expected.yaml open_count_2025_05_31
+    verified_at: 2026-11-28
+    fixture: estate_a
+  - id: bookings_missing_instrumentation
+    question: What was March 2025 bookings by segment on March 31 (before any account snapshot existed)?
+    call: {metric: bookings, group_by: [segment], window: [2025-03-01, 2025-03-31], as_of: 2025-03-31, mode: contemporaneous}
+    expect:
+      cells:
+        - {key: [Enterprise], value: null, availability: unavailable, reason: no_extract_at_or_before_known_at}
+        - {key: [Mid-Market], value: null, availability: unavailable, reason: no_extract_at_or_before_known_at}
+        - {key: [SMB], value: null, availability: unavailable, reason: no_extract_at_or_before_known_at}
+        - {key: [Unknown], value: null, availability: unavailable, reason: no_extract_at_or_before_known_at}
+    verified_by: hand derivation; matches expected.yaml tier_a1_2025_03_31 (no extract at or before K)
+    verified_at: 2026-11-28
+    fixture: estate_a
 
 # ==================================================================================================
 # GUESSES ABOUT THE GENERATED COMPANY. The generator did not exist when this was written. Everything

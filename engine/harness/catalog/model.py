@@ -20,6 +20,7 @@ class Relationship:
     dedup: tuple[
         str, ...
     ] = ()  # order_by columns of `to`; the first row per remote key is kept
+    versioned: bool = False  # read at the row's own date (attribute time), not as of T
 
 
 @dataclass(frozen=True)

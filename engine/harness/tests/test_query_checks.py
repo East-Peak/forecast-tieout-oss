@@ -11,7 +11,7 @@ import pytest
 from engine.harness.evidence import load
 from engine.harness.query import NonAdditiveError, query, reaggregate, total
 from engine.harness.tests.test_evidence_leakage import PAIRS, mutate
-from engine.harness.tests.test_evidence_support import ROOT, estate_dirs
+from engine.harness.tests.test_evidence_support import ROOT
 from engine.harness.tests.test_query_support import D
 
 W = (D("2025-01-01"), D("2025-06-30"))
@@ -54,11 +54,7 @@ def test_counts_reconcile_to_the_raw_records(estate, cat):
         for r in rows(ex, "salesforce", "Opportunity")
     }
     created = by_month(
-        (
-            int(r["CreatedDate"][5:7])
-            for r in ever.values()
-            if r["Type"] == "New Business"
-        )
+        int(r["CreatedDate"][5:7]) for r in ever.values() if r["Type"] == "New Business"
     )
     assert {
         m: v for m, v in monthly(estate, cat, "opportunities_created").items() if v

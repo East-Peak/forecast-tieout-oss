@@ -168,7 +168,9 @@ def _entities(v: _Loader, node: LDict) -> dict[str, Entity]:
         rels = v.node(body, "relationships", LDict, False, LDict())
         for rname, rbody in rels.items():
             v.only(
-                rbody, ("to", "cardinality", "join", "dedup"), f"relationship '{rname}'"
+                rbody,
+                ("to", "cardinality", "join", "dedup", "versioned"),
+                f"relationship '{rname}'",
             )
             to = v.node(rbody, "to", str)
             if to not in out:
@@ -197,7 +199,14 @@ def _entities(v: _Loader, node: LDict) -> dict[str, Entity]:
                     f"a {card} join can multiply rows: declare dedup.order_by (the first row is kept)",
                 )
             out[name].relationships[rname] = Relationship(
-                rname, name, to, card, on[0], on[1], dedup
+                rname,
+                name,
+                to,
+                card,
+                on[0],
+                on[1],
+                dedup,
+                bool(rbody.get("versioned", False)),
             )
     return out
 

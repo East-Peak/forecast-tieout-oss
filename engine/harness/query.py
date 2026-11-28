@@ -734,7 +734,7 @@ def _cells(
         or ctx.catalog.mapping_version(
             a.dim.name, ctx.catalog.metric_entities(metric)[0], None
         )[0]
-        for a in ctx.groups
+        for a in [*ctx.groups, *(a for a, _ in ctx.filters)]
         if a.dim.kind != "time"
     }
     out = []
@@ -862,7 +862,15 @@ def query(
     cuts = []
     for name, members in (filters or {}).items():
         axis = parse_axis(catalog, name)
-        cuts.append((axis, (members,) if isinstance(members, str) else tuple(members)))
+        wanted = (members,) if isinstance(members, str) else tuple(members)
+        dim = axis.dim
+        if dim.kind == "categorical" and not dim.observed:
+            known = {v[axis.level] for v in dim.members.values()}
+            if set(wanted) - known:
+                raise ValueError(
+                    f"{name!r} has no member(s) {sorted(set(wanted) - known)}; members are {sorted(known)}"
+                )
+        cuts.append((axis, wanted))
     effective, flags = _window(window, as_of)
     if m.basis == "snapshot":
         effective, flags = None, ()
@@ -885,8 +893,6 @@ def query(
         flags,
     )
     if effective is not None and effective[0] > as_of:
-        return _cells(ctx, m, None, "window_after_as_of")
-    if window is not None and effective is not None and effective[0] > effective[1]:
         return _cells(ctx, m, None, "window_after_as_of")
     try:
         return _cells(ctx, m, _EVAL[m.kind](ctx, m), None)

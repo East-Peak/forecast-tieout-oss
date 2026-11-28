@@ -1,0 +1,146 @@
+# A coarse catalog over the same evidence as catalog.yaml: source is Marketing, Sales, Partner or Unknown.
+# Same entities, same attribution policy, fewer members; no region. Raw-value guesses are in "mappings:".
+catalog: generated_company_coarse
+version: "1"
+
+entities:
+  opportunity:
+    view: opportunity
+    requires: [salesforce.Opportunity]
+    relationships:
+      # versioned: read at the row's own date (the dimension's attribute time), not as of T
+      self: {to: opportunity, cardinality: one_to_one, join: [opportunity_id, opportunity_id], versioned: true}
+      account: {to: account, cardinality: many_to_one, join: [account_id, account_id], versioned: true}
+      sourcing_person: {to: person, cardinality: many_to_one, join: [sourcing_user_id, user_id]}
+      campaign: {to: campaign, cardinality: many_to_one, join: [campaign_id, campaign_id]}
+      converted_lead:
+        to: lead
+        cardinality: one_to_many
+        join: [opportunity_id, converted_opportunity_id]
+        dedup: {order_by: [converted_date, lead_id]}
+  lead:
+    view: lead
+    requires: [salesforce.Lead]
+    relationships:
+      first_touch:
+        to: touch
+        cardinality: one_to_many
+        join: [lead_id, lead_id]
+        dedup: {order_by: [first_responded_date, touch_id]}
+  demand_episode:
+    view: demand_episode
+    requires: [salesforce.Lead, salesforce.LeadHistory]
+    relationships:
+      lead: {to: lead, cardinality: many_to_one, join: [lead_id, lead_id]}
+  touch:
+    view: touch
+    requires: [salesforce.CampaignMember]
+    relationships:
+      campaign: {to: campaign, cardinality: many_to_one, join: [campaign_id, campaign_id]}
+  account: {view: account, requires: [salesforce.Account]}
+  campaign: {view: campaign, requires: [salesforce.Campaign]}
+  person: {view: person, requires: [people_system.people]}
+
+dimensions:
+  segment:
+    attribute_time: at_creation
+    members: [Enterprise, Mid-Market, SMB, Unknown]
+    unmapped: Unknown
+  source:
+    attribute_time: at_creation
+    members: [Marketing, Sales, Partner, Unknown]
+    unmapped: Unknown
+  month: {kind: time, grain: month}
+
+attribution_policy:
+  dimension: source
+  entity: opportunity
+  rule: One opportunity, one source; the first step that resolves wins.
+  precedence: [sourcing_person_role, opportunity_campaign, converted_lead_campaign, lead_source, unknown]
+
+measures:
+  bookings_cents: {entity: opportunity, agg: sum, column: amount_cents, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  won_deals: {entity: opportunity, agg: count, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  opportunities_created: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business'"}
+  open_deals: {entity: opportunity, agg: count, where: "type = 'New Business' and is_open = true"}
+  mql_leads: {entity: lead, agg: count, time: mql_date, where: "mql_date is not null"}
+  episodes_offered: {entity: demand_episode, agg: count, time: offered_on}
+
+metrics:
+  - {id: bookings, version: "1", label: Bookings, unit: cents, population: New-business deals closed won, basis: period, kind: sum, measure: bookings_cents, aggregation: additive, dimensions: [segment, source, month], favorable: up, owner: Revenue Operations, definition: New-business amount closed won by effective close date.}
+  - {id: won_deals, version: "1", label: Won deals, unit: count, population: New-business deals closed won, basis: period, kind: sum, measure: won_deals, aggregation: additive, dimensions: [segment, source, month], favorable: up, owner: Revenue Operations, definition: Count of new-business deals closed won.}
+  - {id: opportunities_created, version: "1", label: Opportunities created, unit: count, population: New-business opportunities, basis: period, kind: sum, measure: opportunities_created, aggregation: additive, dimensions: [segment, source, month], favorable: up, owner: Sales Operations, definition: Count of new-business opportunities by creation date.}
+  - {id: open_pipeline_deals, version: "1", label: Open pipeline (deals), unit: count, population: New-business deals open at T, basis: snapshot, kind: sum, measure: open_deals, aggregation: snapshot, dimensions: [segment, source], favorable: up, owner: Sales Operations, definition: Count of new-business deals open at T.}
+  - id: mqls
+    version: "1"
+    label: MQLs
+    unit: count
+    population: Leads with a marketing-qualified date
+    basis: period
+    kind: sum
+    measure: mql_leads
+    aggregation: additive
+    dimensions: [segment, source, month]
+    applicability:
+      - {dimension: source, members: [Sales, Partner], reason: These sources have no marketing qualification}
+    favorable: up
+    owner: Marketing
+    definition: Count of leads by the date they became marketing qualified.
+  - {id: demand_offered, version: "1", label: Demand episodes offered, unit: count, population: Demand offered to sales, basis: cohort, kind: sum, measure: episodes_offered, aggregation: additive, dimensions: [segment, source, month], favorable: up, owner: Sales Operations, definition: Count of demand episodes by offered date.}
+
+# ==================================================================================================
+# GUESSES ABOUT THE GENERATED COMPANY (same as catalog.yaml: correct the raw values here).
+# ==================================================================================================
+mappings:
+  segment:
+    - entity: opportunity
+      inputs: {tier: account.tier}
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: &tier_rules
+            - {when: "tier = 'Tier 1'", member: Enterprise}
+            - {when: "tier = 'Tier 2'", member: Mid-Market}
+            - {when: "tier = 'Tier 3'", member: SMB}
+    - entity: lead
+      inputs: {tier: tier}
+      versions: [{version: v1, adopted_on: 2025-01-01, rules: *tier_rules}]
+    - entity: demand_episode
+      inputs: {tier: lead.tier}
+      versions: [{version: v1, adopted_on: 2025-01-01, rules: *tier_rules}]
+  source:
+    - entity: opportunity
+      inputs:
+        sourcing_role: sourcing_person.role
+        campaign_type: campaign.type
+        lead_campaign_type: converted_lead.first_touch.campaign.type
+        lead_source: lead_source
+      normalize: true
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules:
+            - {step: sourcing_person_role, when: "sourcing_role in ('bdr', 'business development rep', 'ae', 'account executive')", member: Sales}
+            - {step: opportunity_campaign, when: "campaign_type in ('partner', 'partner referral')", member: Partner}
+            - {step: opportunity_campaign, when: "campaign_type is not null", member: Marketing}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('partner', 'partner referral')", member: Partner}
+            - {step: converted_lead_campaign, when: "lead_campaign_type is not null", member: Marketing}
+            - {step: lead_source, when: "lead_source in ('outbound', 'self-sourced', 'self sourced')", member: Sales}
+            - {step: lead_source, when: "lead_source in ('partner', 'partner referral')", member: Partner}
+            - {step: lead_source, when: "lead_source in ('trade show', 'event', 'webinar', 'web', 'organic', 'inbound', 'content', 'paid search', 'paid social', 'display', 'abm')", member: Marketing}
+    - entity: lead
+      inputs: {campaign_type: first_touch.campaign.type, lead_source: lead_source}
+      normalize: true
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: &lead_rules
+            - {when: "campaign_type in ('partner', 'partner referral')", member: Partner}
+            - {when: "campaign_type is not null", member: Marketing}
+            - {when: "lead_source in ('outbound')", member: Sales}
+            - {when: "lead_source in ('partner', 'partner referral')", member: Partner}
+            - {when: "lead_source in ('trade show', 'event', 'webinar', 'web', 'organic', 'inbound', 'content', 'paid search', 'paid social', 'display', 'abm')", member: Marketing}
+    - entity: demand_episode
+      inputs: {campaign_type: lead.first_touch.campaign.type, lead_source: lead.lead_source}
+      normalize: true
+      versions: [{version: v1, adopted_on: 2025-01-01, rules: *lead_rules}]
