@@ -385,8 +385,10 @@ class Simulation:
             n_clutter = poisson_quantile(
                 self.streams.rng("clut", ci, day).random(), lam * p.clutter_lead_share
             )
-            for k in range(n + n_clutter):
-                kind = "mql" if k < n else "clutter"
+            numbered = [("mql", k) for k in range(n)] + [
+                ("clutter", k) for k in range(n_clutter)
+            ]
+            for kind, k in numbered:
                 key = ("lead", ci, day, k, kind)
                 r = self.streams.rng(*key).random(12)
                 seg = pick(c.segment_mix, r[0])

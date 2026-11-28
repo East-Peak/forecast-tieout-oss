@@ -1,5 +1,6 @@
 """The simulated company and its ground truth (the stock-and-flow truth as a Snapshot)."""
 
+import sys
 from datetime import date
 from functools import cache
 
@@ -80,3 +81,49 @@ def test_truth_round_trips_through_its_file(tmp_path):
     assert loaded.outstanding_episodes == truth.outstanding_episodes
     assert loaded.roster == truth.roster
     assert flow_check(loaded).violations == []
+
+
+def test_synth_depends_only_on_the_standard_library_numpy_and_the_contract():
+    from engine.harness.tests.test_import_rules import imported_modules, touches
+
+    modules = imported_modules("synth")
+    assert touches(modules, "planning") == [] and touches(modules, "tieout_core") == []
+    absolute = {m.split(".")[0] for m in modules if not m.startswith(".")}
+    assert absolute <= set(sys.stdlib_module_names) | {"numpy"}, absolute
+    assert not any(m.startswith("engine") for m in modules)
+
+
+def capacity_expiry_share(variant: str, seed: int) -> float:
+    """Share of FY25 team-months in which some demand expired for lack of capacity."""
+    truth = run_company(CompanyParams.for_variant(variant), seed).truth
+    first, last = truth.months.index("2025-02"), truth.months.index("2026-01") + 1
+    expired = truth.exits.values[
+        :, first:last, truth.exit_reasons.index("expired_no_capacity")
+    ]
+    shares = [
+        float(
+            (
+                expired[[i for i, t in enumerate(truth.lane_team) if t == team]].sum(
+                    axis=0
+                )
+                > 0
+            ).mean()
+        )
+        for team in truth.teams
+    ]
+    return sum(shares) / len(shares)
+
+
+def test_capacity_binds_for_sustained_stretches_only_in_the_constrained_company():
+    # Stated before running: constrained, at least a third of FY25 team-months expire demand for
+    # capacity in every seed 1 to 5; demand-limited, at most a tenth on average and most seeds none.
+    constrained = [
+        capacity_expiry_share("capacity_constrained", s) for s in range(1, 6)
+    ]
+    limited = [capacity_expiry_share("demand_limited", s) for s in range(1, 6)]
+    print(
+        "capacity expiry share by seed",
+        {"constrained": constrained, "limited": limited},
+    )
+    assert min(constrained) >= 1 / 3
+    assert sum(limited) / 5 <= 0.10 and sum(share == 0 for share in limited) >= 3

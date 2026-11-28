@@ -6,6 +6,7 @@ instant (23:00 UTC on the date) appears. A record deleted before the extract is
 absent from it, with its history.
 """
 
+import calendar
 import json
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
@@ -31,16 +32,12 @@ def extract_folder(out: Path, when: date) -> Path:
 
 
 def default_extract_dates(params) -> list[date]:
-    """The plan date, then each month end from the month after it to the end of its fiscal year."""
-    dates, d = (
-        [params.plan_date],
-        date(params.plan_date.year, params.plan_date.month, 28) + timedelta(days=4),
-    )
-    while d <= date(params.plan_date.year + 1, 1, 31):
-        end = date(d.year, d.month, 1) + timedelta(days=32)
-        dates.append(date(end.year, end.month, 1) - timedelta(days=1))
-        d = dates[-1] + timedelta(days=1)
-        d = date(d.year, d.month, 28) + timedelta(days=4)
+    """The plan date, then each of the twelve month ends after its month."""
+    year, month = params.plan_date.year, params.plan_date.month
+    dates = [params.plan_date]
+    for i in range(1, 13):
+        y, m = divmod(year * 12 + month - 1 + i, 12)
+        dates.append(date(y, m + 1, calendar.monthrange(y, m + 1)[1]))
     return [x for x in dates if params.start <= x <= params.end]
 
 

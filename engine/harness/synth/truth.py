@@ -172,7 +172,9 @@ def build_truth(sim: Simulation) -> Snapshot:
     pending = tuple(
         PendingRequisition(x.req_id, x.team, x.role, iso(x.planned))
         for x in sim.people
-        if x.start > sim.d1 and x.req_id
+        if x.start > sim.d1
+        and x.req_id
+        and x.team in teams  # TODO: the contract only holds AE-team requisitions
     )
     last = n - 1
     episodes = []

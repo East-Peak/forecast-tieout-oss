@@ -141,3 +141,12 @@ def test_a_deletion_never_lands_between_an_off_cycle_extract_and_its_month_end()
     )  # the window is not empty without the rule
     off_cycle = (date(2024, 12, 18).toordinal(),)
     assert not any(window[0] <= d <= window[1] for d in deletions(off_cycle))
+
+
+def test_default_extract_dates_are_the_plan_date_and_every_month_end_of_the_year_after():
+    from engine.harness.synth.records import default_extract_dates
+
+    dates = default_extract_dates(CompanyParams.for_variant("demand_limited"))
+    assert len(dates) == 13 and dates[0] == date(2025, 1, 24)
+    assert dates[1] == date(2025, 2, 28) and dates[-1] == date(2026, 1, 31)
+    assert [d.month for d in dates[1:]] == [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]
