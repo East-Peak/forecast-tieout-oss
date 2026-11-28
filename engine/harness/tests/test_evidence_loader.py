@@ -12,7 +12,7 @@ from engine.harness.contract.manifest import (
     content_hash,
     write_manifest,
 )
-from engine.harness.evidence import Coverage, ExtractError, load
+from engine.harness.evidence import Coverage, ExtractError, Store, load
 
 from .test_evidence_support import (
     ESTATE_YAML,
@@ -259,3 +259,15 @@ def test_a_record_is_known_from_the_first_extract_that_shows_it_when_its_history
         "SELECT known_since FROM record WHERE entity = 'Lead' AND id = '00QFX0000000008'"
     ).fetchone()
     assert str(known) == "2025-04-30 23:00:00"  # its first history row is dated 05-12
+
+
+def test_a_store_on_disk_survives_reopening(tmp_path):
+    path = tmp_path / "evidence.duckdb"
+    first = load(estate_dirs(), Coverage.from_yaml(ESTATE_YAML), store=Store(path))
+    want = first.assertions()
+    first.con.close()
+    again = Store(path)
+    assert again.assertions() == want
+    assert again.coverage == Coverage.from_yaml(ESTATE_YAML)
+    load(estate_dirs(), store=again)
+    assert again.assertions() == want

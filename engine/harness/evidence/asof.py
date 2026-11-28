@@ -133,6 +133,8 @@ class AsOf:
         A field without history needs an extract at or before K (R5, R7); history and immutable fields
         carry their own knowledge time.
         """
+        if entity not in SCHEMAS:
+            raise ValueError(f"unknown object {entity!r}")
         coverage = self.store.coverage
         if field not in coverage.history_fields(
             entity

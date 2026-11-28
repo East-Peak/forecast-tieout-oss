@@ -356,3 +356,23 @@ def test_money_converts_to_cents_exactly(tmp_path):
     assert bookings_by_month(
         AsOf.reconstructed(store, date(2025, 3, 1)), "2025-02"
     ) == sum(amounts.values())
+
+
+def test_lead_events_cover_admission_and_conversion(store):
+    events = rows(
+        AsOf.reconstructed(store, NOW),
+        "lead_event",
+        "lead_id = '00QFX0000000001'",
+        "effective_at",
+    )
+    assert {
+        (e["event"], str(e["effective_at"])[:10])
+        for e in events
+        if e["event"] != "created"
+    } == {
+        ("mql", "2025-01-25"),
+        ("admitted", "2025-02-03"),
+        ("converted", "2025-02-03"),
+    }
+    assert [e["event"] for e in events].count("created") == 1
+    assert all(e["source_record_ids"] for e in events)

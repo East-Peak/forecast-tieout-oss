@@ -1,7 +1,11 @@
 """The store: a DuckDB database of registered extracts, raw rows, records and assertions."""
 
 import json
+import os
+import subprocess
+import sys
 from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 
@@ -117,6 +121,22 @@ class Store:
         return self.con.execute("SELECT max(extracted_at) FROM extract").fetchone()[0]
 
 
+def _loaded(store: Store, manifest: dict) -> bool:
+    """True when this very content is already registered (a repeat load validates nothing)."""
+    try:
+        digest = content_hash(manifest)
+        extract_id = manifest["extract_id"]
+    except (KeyError, TypeError, AttributeError):
+        return False
+    return (
+        store.con.execute(
+            "SELECT 1 FROM extract WHERE extract_id = ? AND content_hash = ?",
+            [extract_id, digest],
+        ).fetchone()
+        is not None
+    )
+
+
 def _register(store: Store, folder: Path, manifest: dict) -> bool:
     """Add one extract's raw rows. Returns False when the same content is already loaded."""
     digest = content_hash(manifest)
@@ -153,6 +173,44 @@ def _register(store: Store, folder: Path, manifest: dict) -> bool:
     return True
 
 
+PARALLEL_FROM = (
+    4  # folders; below this, starting interpreters costs more than validating
+)
+_VALIDATE = "import json,sys;from pathlib import Path;from engine.harness.contract.manifest import validate_extract;print(json.dumps(validate_extract(Path(sys.argv[1]))))"
+_ROOT = Path(__file__).resolve().parents[3]
+
+
+def _validate_all(folders: list[Path]) -> list[list[str]]:
+    """The contract's validate_extract for each folder, in worker interpreters when there are many.
+
+    Validation is pure Python, so threads would not help; fresh interpreters (not forked or spawned
+    workers) keep this safe to call from any script or notebook.
+    """
+    if len(folders) < PARALLEL_FROM:
+        return [validate_extract(f) for f in folders]
+    env = {
+        **os.environ,
+        "PYTHONPATH": os.pathsep.join([str(_ROOT), os.environ.get("PYTHONPATH", "")]),
+    }
+
+    def run(folder: Path) -> list[str]:
+        done = subprocess.run(
+            [sys.executable, "-c", _VALIDATE, str(folder)],
+            capture_output=True,
+            check=False,
+            env=env,
+            text=True,
+        )
+        if done.returncode:
+            raise ExtractError(
+                f"validation worker failed for {folder}: {done.stderr[-300:]}"
+            )
+        return json.loads(done.stdout)
+
+    with ThreadPoolExecutor(max_workers=min(os.cpu_count() or 1, 8)) as pool:
+        return list(pool.map(run, folders))
+
+
 def load(
     extract_dirs: Iterable[Path | str],
     coverage: Coverage | None = None,
@@ -165,12 +223,20 @@ def load(
     """
     store = store or Store()
     folders = [Path(d) for d in extract_dirs]
-    manifests = []
-    for folder in folders:
-        problems = validate_extract(folder)
+    manifests = [
+        json.loads((f / "manifest.json").read_text())
+        if (f / "manifest.json").exists()
+        else None
+        for f in folders
+    ]
+    fresh = [
+        f
+        for f, m in zip(folders, manifests, strict=True)
+        if m is None or not _loaded(store, m)
+    ]
+    for folder, problems in zip(fresh, _validate_all(fresh), strict=True):
         if problems:
             raise ExtractError(f"{folder}: " + "; ".join(problems[:5]))
-        manifests.append(json.loads((folder / "manifest.json").read_text()))
     con = store.con
     con.execute("BEGIN")
     try:

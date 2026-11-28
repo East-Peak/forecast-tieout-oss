@@ -113,3 +113,8 @@ def test_stage_at_and_open_at_are_never_mixed(store):
     asof = AsOf.reconstructed(store, date(2025, 5, 31))
     assert asof.stage_at("006FX0000000007") == "Negotiation"
     assert asof.open_at("006FX0000000007") is False
+
+
+def test_an_unknown_object_is_refused(store):
+    with pytest.raises(ValueError, match="unknown object"):
+        AsOf.reconstructed(store, date(2025, 5, 31)).field_at("Nope", "x", "y")
