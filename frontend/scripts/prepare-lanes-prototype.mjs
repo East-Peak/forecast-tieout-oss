@@ -61,8 +61,8 @@ function prepareCell(key, cell) {
     out.forecast_share = forecast === null ? null : css((forecast / goal) * 100);
   } else if (hasGoal) {
     // rates, days and averages: the goal is the tick at the middle of the track; each figure sits where it is
-    // relative to the goal, magnified so that 20% either side spans the track
-    const around = (v) => (v === null ? null : css(50 + (v / goal - 1) * 250));
+    // relative to the goal, magnified so that 25% either side spans the track (kept off the very ends so the mark is whole)
+    const around = (v) => (v === null ? null : `${Math.min(96, Math.max(4, Math.round((50 + (v / goal - 1) * 200) * 10) / 10))}%`);
     out.goal_pos = "50%";
     out.actual_pos = around(actual);
     out.forecast_pos = around(forecast);

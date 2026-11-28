@@ -29,9 +29,9 @@ function Bar({ column, cell, color }: { column: Column; cell: CellData; color: C
       ) : null}
       {column.kind === "processing" && cell.goal_pos ? (
         <>
-          <line x1={cell.goal_pos} x2={cell.goal_pos} y1="0" y2="100%" stroke="#94a3b8" strokeWidth="1.5" />
-          {cell.forecast_pos ? <circle cx={cell.forecast_pos} cy="50%" r="2.5" fill="#fff" stroke={stroke} strokeWidth="1.3" /> : null}
-          {cell.actual_pos ? <circle cx={cell.actual_pos} cy="50%" r="2.5" fill={stroke} /> : null}
+          <line x1={cell.goal_pos} x2={cell.goal_pos} y1="0" y2="100%" stroke="#475569" strokeWidth="1.5" />
+          {cell.forecast_pos ? <circle cx={cell.forecast_pos} cy="50%" r="3" fill="#fff" stroke={stroke} strokeWidth="1.3" /> : null}
+          {cell.actual_pos ? <circle cx={cell.actual_pos} cy="50%" r="3" fill={stroke} /> : null}
         </>
       ) : null}
     </svg>
