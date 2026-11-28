@@ -5,9 +5,13 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from .snapshot import Measure, Snapshot
+from .snapshot import Measure, RosterObservation, RosterObservations, Snapshot
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "workload_b"
+
+
+def admissions_of(expected: dict, lane: str) -> list[int]:
+    return expected["lane_tables"][lane]["admissions"]
 
 
 def snapshot_from_tables(inputs: dict, expected: dict) -> Snapshot:
@@ -42,6 +46,29 @@ def snapshot_from_tables(inputs: dict, expected: dict) -> Snapshot:
         dtype=np.int64,
     )
     team_table = expected["team_tables"][team]
+    n_lane, n_month = len(lanes), len(months)
+    roster = RosterObservations(
+        tuple(
+            RosterObservation(
+                person_id=r["name"],
+                role=r["role"],
+                team=r["team"],
+                segment=None,
+                start_date=r["start"],
+                end_date=None,
+                planned_start=r.get("planned_start"),
+                effective_at=f"{r['start']}T00:00:00Z",
+                recorded_at=f"{r['start']}T00:00:00Z",
+            )
+            for r in inputs["roster"]
+        )
+    )
+    bdrs = [r for r in inputs["roster"] if r.get("sources_lane")]
+    sourced = [admissions_of(expected, r["sources_lane"]) for r in bdrs]
+    exposure = np.zeros((n_lane, n_month))
+    for r in bdrs:  # a BDR counts 1.0 in every month here
+        exposure[lanes.index(r["sources_lane"])] += 1.0
+    zeros = np.zeros((n_lane, n_month), dtype=np.int64)
 
     def team_measure(field, dtype=np.int64):
         return Measure(("team", "month"), np.array([team_table[field]], dtype=dtype))
@@ -59,9 +86,17 @@ def snapshot_from_tables(inputs: dict, expected: dict) -> Snapshot:
         admissions=from_tables("admissions"),
         exits=Measure(("lane", "month", "reason"), exits),
         queue_end=from_tables("queue_end"),
-        opportunities_created=from_tables(
-            "admissions"
-        ),  # every admission creates one opportunity here
+        opportunities_created=from_tables("admissions"),  # each admission creates one
+        reopened=lane_measure(zeros),
+        deleted=lane_measure(zeros),
+        persons=tuple(r["name"] for r in bdrs),
+        sourced_by_person=Measure(
+            ("person", "month"),
+            np.array(sourced, dtype=np.int64).reshape(len(bdrs), n_month),
+        ),
+        bdr_exposure=Measure(("lane", "month"), exposure),
+        roster=roster,
+        outstanding_episodes=(),
         open_start=from_tables("open_start"),
         wins=from_tables("wins"),
         losses=from_tables("losses"),

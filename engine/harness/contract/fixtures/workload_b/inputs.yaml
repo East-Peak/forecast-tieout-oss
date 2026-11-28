@@ -1,14 +1,17 @@
-# Golden fixture B: the workload stock-and-flow contract, 6 months, one AE team.
+# Golden fixture B: the workload stock-and-flow contract, 8 months, one AE team.
+# Arrivals stop after July so that the last two months have slack: a model that always fills every slot fails there.
 # Inputs only. The expected table is expected.yaml; the arithmetic is ARITHMETIC.md.
-months: ["2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07"]
+months: ["2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09"]
 team: AE-SMB
 lanes: ["source=Paid", "source=Outbound"]   # declared order; ties in routing go to the earlier lane
 carrying_ceiling: 4        # open deals per ramped AE
 roster:                    # fabricated AEs; the third hire slips two months
-  - {name: AE-One,   start: "2024-06-01"}
-  - {name: AE-Two,   start: "2024-09-01"}
-  - {name: AE-Three, planned_start: "2025-04-01", start: "2025-06-01"}
-ramp: "An AE is on the roster from the start month, counts 0 in the start month and 1 from the next month (ramped). Ramp exposure equals ramped heads."
+  - {name: AE-One,   role: AE,  team: AE-SMB, start: "2024-06-01"}
+  - {name: AE-Two,   role: AE,  team: AE-SMB, start: "2024-09-01"}
+  - {name: AE-Three, role: AE,  team: AE-SMB, planned_start: "2025-04-01", start: "2025-06-01"}
+  - {name: BDR-One,  role: BDR, team: BDR,    start: "2024-03-01", sources_lane: "source=Outbound"}   # sources every Outbound opportunity
+reopened_and_deleted: "None in this fixture: the reopened and deleted flows are zero."
+ramp: "An AE is on the roster from the start month, counts 0 in the start month and 1 from the next month (ramped). Ramp exposure equals ramped heads. The BDR counts 1.0 from the first month; BDR exposure is by lane (Outbound 1.0, Paid 0.0)."
 deal_lifetime_months: 2    # a deal admitted in month m closes in month m+2
 queue_rule: "Demand not admitted in its arrival month waits one more month (retry); if still not admitted it expires at the end of that month with reason expired_no_capacity."
 reject_rule: "rejected_fit demand leaves from the new arrivals of its month before admission."
@@ -17,22 +20,22 @@ fraction_rule: "Largest remainder: each lane gets the floor of its exact share; 
 outcome_rule: "Closing deals split into wins and losses per lane by cumulative round-half-up: cumulative wins = floor(win_rate * cumulative closings + 1/2); the month's wins are the increase."
 lane_inputs:
   "source=Paid":
-    arrivals:     [4, 3, 4, 3, 3, 4]
-    rejected_fit: [0, 1, 0, 0, 0, 0]
+    arrivals:     [4, 3, 4, 3, 3, 4, 0, 0]
+    rejected_fit: [0, 1, 0, 0, 0, 0, 0, 0]
     initial_open: 4
-    initial_closings: [1, 2, 1, 0, 0, 0]   # the 4 deals already open close in these months
+    initial_closings: [1, 2, 1, 0, 0, 0, 0, 0]   # the 4 deals already open close in these months
     win_rate: "1/2"
     deal_size_cents: 1000000
-    leads: [12, 9, 12, 9, 9, 12]
-    mqls:  [4, 3, 4, 3, 3, 4]
-    spend_cents: [4000000, 4000000, 4000000, 4000000, 4000000, 4000000]
+    leads: [12, 9, 12, 9, 9, 12, 0, 0]
+    mqls:  [4, 3, 4, 3, 3, 4, 0, 0]
+    spend_cents: [4000000, 4000000, 4000000, 4000000, 4000000, 4000000, 0, 0]
   "source=Outbound":
-    arrivals:     [2, 3, 2, 2, 3, 2]
-    rejected_fit: [0, 0, 0, 1, 0, 0]
+    arrivals:     [2, 3, 2, 2, 3, 2, 0, 0]
+    rejected_fit: [0, 0, 0, 1, 0, 0, 0, 0]
     initial_open: 2
-    initial_closings: [1, 0, 1, 0, 0, 0]
+    initial_closings: [1, 0, 1, 0, 0, 0, 0, 0]
     win_rate: "1/3"
     deal_size_cents: 2000000
     leads: null                            # not measured for a BDR lane: masked in the Snapshot
     mqls: null
-    spend_cents: [0, 0, 0, 0, 0, 0]
+    spend_cents: [0, 0, 0, 0, 0, 0, 0, 0]

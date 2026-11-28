@@ -1,7 +1,7 @@
 # Golden fixture B: the arithmetic
 
-One AE team (`AE-SMB`), two source lanes (`Paid`, `Outbound`), six months
-(2025-02 to 2025-07, called m1 to m6). Inputs are in `inputs.yaml`, the answer
+One AE team (`AE-SMB`), two source lanes (`Paid`, `Outbound`), eight months
+(2025-02 to 2025-09, called m1 to m8). Inputs are in `inputs.yaml`, the answer
 in `expected.yaml`. `tests/test_workload_fixture.py` loads the answer into a
 `Snapshot`, checks the identities, and reruns these rules in a separate
 reference simulation.
@@ -11,10 +11,15 @@ reference simulation.
 - **Capacity.** Ceiling 4 open deals per ramped AE. An AE counts 0 in the start
   month and 1 from the next month. Two AEs are ramped throughout. The third was
   planned for April (ramped from May) and started in June (ramped from July):
-  ramped heads `2 2 2 2 2 3`, capacity `8 8 8 8 8 12`. Had the hire not slipped,
-  capacity would be `8 8 8 12 12 12`.
+  ramped heads `2 2 2 2 2 3 3 3`, capacity `8 8 8 8 8 12 12 12`. Had the hire not slipped,
+  capacity would be `8 8 8 12 12 12 12 12`. Capacity stays 12 in August and September.
 - **Room** in a month = capacity - open_start + wins + losses (slots released by
-  closings are usable in the same month). Admissions never exceed room.
+  closings are usable in the same month). Admissions never exceed room. No deal
+  is reopened or deleted in this fixture, so those flows are zero and the open
+  identity reduces to open_start + admissions - wins - losses = open_end.
+- **Arrivals stop after July** (zero arrivals and zero rejections in August and
+  September), so the last two months test that a model admits only what is
+  queued instead of filling every slot.
 - **Routing (design default).** Oldest demand first: retried demand
   (`queue_start`) before new demand. Within an age class, room splits across
   lanes in proportion to class size; for new demand the size is arrivals minus
@@ -75,9 +80,25 @@ Admissions Paid 3, Out 3. Wins: Paid cumulative 12, floor(6 + .5) = 6, no
 increase: 0 wins, 1 loss. Out cumulative 8, floor(8/3 + .5) = 3, minus 2 = 1 win,
 0 losses. Open end: Paid 5 + 3 - 1 = 7; Out 3 + 3 - 1 = 5 (12 = capacity).
 
+**m7 (August).** Capacity 12. Closings: Paid 4 (admitted m5), Out 2. Open at
+start 7 + 5 = 12. Room = 12 - 12 + 6 = 6. Retry: Paid 3, Out 1 (4 <= 6), all
+admitted: [3, 1]. No new demand. Queue end 0 and 0. Wins: Paid cumulative
+closings 16, floor(8 + .5) = 8, minus 6 = 2 wins, 2 losses. Out cumulative 10,
+floor(10/3 + .5) = 3, minus 3 = 0 wins, 2 losses. Open end: Paid 7 + 3 - 4 = 6;
+Out 5 + 1 - 2 = 4.
+
+**m8 (September).** Closings: Paid 3 (admitted m6), Out 3. Open at start
+6 + 4 = 10. Room = 12 - 10 + 6 = 8. No queue and no arrivals, so admissions
+[0, 0]. Wins: Paid cumulative 19, floor(9.5 + .5) = 10, minus 8 = 2 wins, 1 loss.
+Out cumulative 13, floor(13/3 + .5) = 4, minus 3 = 1 win, 2 losses. Open end:
+Paid 6 - 3 = 3; Out 4 - 3 = 1. The queue is empty, so there are no outstanding
+demand episodes.
+
 ## Checks
 
-Team room by month `4 2 6 2 6 6` equals team admissions (`3+1, 1+1, 3+3, 1+1,
-4+2, 3+3`): the team is full every month, so the capacity inequality holds with
-equality. The slipped hire withholds 4 slots in each of m4 and m5 (capacity 8
-instead of 12), which is why m4 admits 2 and expires 3 retried leads.
+Team room by month `4 2 6 2 6 6 6 8`. Team admissions are `4 2 6 2 6 6 4 0`
+(`3+1, 1+1, 3+3, 1+1, 4+2, 3+3, 3+1, 0+0`). Through July the team is full every
+month and the capacity inequality holds with equality. In August (4 < 6) and
+September (0 < 8) it is strict: capacity is available and unused because there
+is no demand, which a model that always fills every slot gets wrong. The
+slipped hire withholds 4 slots in each of m4 and m5 (capacity 8 instead of 12).

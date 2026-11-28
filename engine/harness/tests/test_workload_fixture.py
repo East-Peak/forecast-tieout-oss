@@ -6,7 +6,7 @@ from fractions import Fraction
 
 import numpy as np
 
-from engine.harness.contract.snapshot import flow_violations
+from engine.harness.contract.snapshot import flow_check
 from engine.harness.contract.workload import load_workload_b
 
 
@@ -53,7 +53,9 @@ def simulate(inputs):
     team_room, capacity = [], []
     for m in range(n):
         ramped = sum(
-            1 for r in inputs["roster"] if r["start"][:7] < inputs["months"][m]
+            1
+            for r in inputs["roster"]
+            if r["role"] == "AE" and r["start"][:7] < inputs["months"][m]
         )
         capacity.append(ramped * ceiling)
         closings, wins = {}, {}
@@ -90,14 +92,16 @@ def simulate(inputs):
 def test_fixture_loads_into_a_snapshot_and_identities_hold():
     snapshot, _, _ = load_workload_b()
     assert snapshot.lanes == ("source=Paid", "source=Outbound")
-    assert snapshot.months[0] == "2025-02" and len(snapshot.months) == 6
-    assert flow_violations(snapshot) == []
+    assert snapshot.months[0] == "2025-02" and len(snapshot.months) == 8
+    report = flow_check(snapshot)
+    assert report.violations == [] and report.unavailable == []
+    assert report.checked > 0
 
 
 def test_identities_hold_exactly_in_the_raw_table():
     _, _, expected = load_workload_b()
     for lane in expected["lane_tables"].values():
-        for m in range(6):
+        for m in range(len(lane["open_start"])):
             assert (
                 lane["open_start"][m]
                 + lane["admissions"][m]
@@ -113,12 +117,16 @@ def test_identities_hold_exactly_in_the_raw_table():
             assert lane["wins"][m] + lane["losses"][m] == lane["closings"][m]
 
 
-def test_capacity_inequality_holds_and_binds_each_month():
+def test_capacity_inequality_binds_through_july_then_goes_slack():
     snapshot, _, expected = load_workload_b()
     team = expected["team_tables"]["AE-SMB"]
     admissions = snapshot.by_team(snapshot.admissions).values[0]
-    assert admissions.tolist() == team["room"]  # equality: the team is full every month
+    assert admissions.tolist()[:6] == team["room"][:6]  # full every month through July
     assert np.all(admissions <= team["room"])
+    # August and September have no arrivals: a model that always fills every slot fails here
+    assert admissions.tolist()[6:] == [4, 0]
+    assert team["room"][6:] == [6, 8]
+    assert admissions[6] < team["room"][6] and admissions[7] < team["room"][7]
 
 
 def test_capacity_is_ramped_heads_times_the_ceiling():
@@ -140,7 +148,7 @@ def test_the_slipped_hire_costs_capacity_in_three_months():
             strict=True,
         )
     ]
-    assert lost == [0, 0, 0, 4, 4, 0]
+    assert lost == [0, 0, 0, 4, 4, 0, 0, 0]
 
 
 def test_bookings_are_wins_times_deal_size():
@@ -150,6 +158,21 @@ def test_bookings_are_wins_times_deal_size():
         assert snapshot.bookings_cents.values[i].tolist() == [
             w * size for w in snapshot.wins.values[i]
         ]
+
+
+def test_roster_and_sourcing_evidence_are_present():
+    snapshot, _, _ = load_workload_b()
+    assert snapshot.persons == ("BDR-One",)
+    assert (
+        snapshot.sourced_by_person.values[0].tolist()
+        == snapshot.admissions.values[1].tolist()
+    )
+    assert snapshot.bdr_exposure.values[1].tolist() == [1.0] * 8  # the BDR lane
+    assert snapshot.bdr_exposure.values[0].tolist() == [0.0] * 8  # the marketing lane
+    three = snapshot.roster.latest("AE-Three", known_at="2025-12-31T00:00:00Z")
+    assert (three.planned_start, three.start_date) == ("2025-04-01", "2025-06-01")
+    assert snapshot.reopened.values.sum() == 0 and snapshot.deleted.values.sum() == 0
+    assert snapshot.outstanding_episodes == ()  # the queue drains by September
 
 
 def test_masks_mark_unmeasured_inputs():
