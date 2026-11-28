@@ -56,12 +56,6 @@ export const WS = {
   bridgeOrder: text("worksheet.bridge.order", `${SHEET}/bridge/order`),
   bridgeTarget: usd("worksheet.bridge.target", `${SHEET}/bridge/target/value`),
 
-  // the as-signed chain
-  chainNote: text("worksheet.chain.note", `${SHEET}/chain/note`),
-  chainUnavailable: text("worksheet.chain.unavailable", `${SHEET}/chain/unavailable`),
-
-
-
 } as const satisfies Record<string, Binding>;
 
 /** A driver, read from `/worksheet/drivers/{i}`. */
@@ -135,27 +129,10 @@ export const QUARTER = {
   remainingGap: usd("quarter.remaining-gap", "/gap", { tint: "shortfall", unavailable: words("unavailable") }),
 } as const;
 
-/** One remaining quarter of the as-signed chain, read from `/worksheet/chain/quarters/{i}`. */
-export const CHAIN = {
-  quarter: text("chain.quarter", "/quarter"),
-  status: text("chain.status", "/status/value"),
-  bookingsTarget: usd("chain.bookings.target", "/bookings/target/value"),
-  bookingsExpected: usd("chain.bookings.expected", "/bookings/expected/value", { unavailable: words("unavailable") }),
-  bookingsGap: usd("chain.bookings.gap", "/bookings/gap/value", { tint: "shortfall", unavailable: words("unavailable") }),
-  pipelineRequired: usd("chain.pipeline.required", "/created_pipeline/required/value", { unavailable: { reason: "/created_pipeline/required_note/value", sentence: true, words: "no figure" } }),
-  pipelineExpected: usd("chain.pipeline.expected", "/created_pipeline/expected/value"),
-  pipelineHeadline: text("chain.pipeline.headline", "/created_pipeline/headline/value"),
-  perRequired: usd("chain.per-ae.required", "/per_ramped_ae_month/required/value", { unavailable: { reason: "/per_ramped_ae_month/note/value", sentence: true, words: "no figure" } }),
-  perExpected: usd("chain.per-ae.expected", "/per_ramped_ae_month/expected/value", { unavailable: { reason: "/per_ramped_ae_month/note/value", sentence: true, words: "no figure" } }),
-  timingLabel: text("chain.timing.label", "/timing/label/value"),
-  timingReason: text("chain.timing.reason", ""),
-} as const;
-
 export const WS_ROWS = {
   drivers: `${SHEET}/drivers`,
   actions: `${SHEET}/actions/rows`,
   steps: `${SHEET}/bridge/steps`,
-  chain: `${SHEET}/chain/quarters`,
   gapQuarters: "/gap/quarters",
   plannedQuarters: "/plan/with_plan_quarters",
 } as const;
@@ -203,7 +180,7 @@ export const BRIDGE_SERIES = {
 function everyBinding(): Binding[] {
   const flat = (o: Record<string, unknown>): Binding[] =>
     Object.values(o).flatMap((v) => (v && typeof v === "object" && "id" in v ? [v as Binding] : flat(v as Record<string, unknown>)));
-  return [...flat(WS), ...flat(DRIVER), ...flat(OBSERVATION), ...flat(ACTION), ...flat(STEP), ...flat(QUARTER), ...flat(CHAIN)];
+  return [...flat(WS), ...flat(DRIVER), ...flat(OBSERVATION), ...flat(ACTION), ...flat(STEP), ...flat(QUARTER)];
 }
 
 export const WORKSHEET_BINDINGS: readonly Binding[] = everyBinding();

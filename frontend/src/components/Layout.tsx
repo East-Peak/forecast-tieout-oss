@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { BindingProvider, Bound, bind } from "../binding/Bound";
 import { ReportOutlet } from "../shell/ReportOutlet";
@@ -39,8 +40,20 @@ export default function Layout() {
   const company = index?.companies.find((c) => c.id === selection?.company);
   const withCurrentSearch = (pathname: string) => ({ pathname, search: location.search });
 
+  // The header stays in view as the page scrolls; what sticks beneath it (the lanes' panel and column heads) is told how tall it is.
+  const headerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header || typeof ResizeObserver === "undefined") return undefined;
+    const publish = () => document.documentElement.style.setProperty("--ft-header-height", `${header.getBoundingClientRect().height}px`);
+    publish();
+    const watch = new ResizeObserver(publish);
+    watch.observe(header);
+    return () => watch.disconnect();
+  }, []);
+
   const header = (
-    <div className="sticky top-0 z-40 bg-surface shadow-sm">
+    <div ref={headerRef} className="sticky top-0 z-40 bg-surface shadow-sm">
       <div className={`h-1 ${accentOf(company?.id)}`} />
       <header className="border-b border-border px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

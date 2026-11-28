@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import App from "./App";
+import { fileLanesLoaders } from "./data/reportFiles";
 import faviconUrl from "./assets/favicon.svg";
 import "./index.css";
 
@@ -33,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         v7_relativeSplatPath: true,
       }}
     >
-      <App />
+      <App lanes={fileLanesLoaders} />
       {!isLocalHost && <Analytics />}
     </BrowserRouter>
   </React.StrictMode>

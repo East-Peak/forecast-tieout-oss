@@ -5,11 +5,11 @@ import { useYourPlan } from "../../editor/YourPlanContext";
 import { YOUR_PLAN } from "../../editor/yourPlan";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { STACK_GRID as STACK } from "../../components/workbook/stack";
+import LanesSection from "../../lanes/LanesSection";
 import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
 import { Bridge } from "./Bridge";
-import { Chain } from "./Chain";
 import { QuarterTable } from "./QuarterTable";
 import { Summary } from "./Summary";
 import { Tornado } from "./Tornado";
@@ -32,7 +32,8 @@ export default function PlanScreen() {
   const worksheet = "unavailable" in sheet ? null : sheet;
 
   return (
-    <div className="flex max-w-6xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
+     <div className="flex max-w-6xl flex-col gap-6">
       <SectionHeader title="Plan" subtitle="What moves the outcome, and which plan do we choose?" />
       <p className="-mt-3 text-xs text-slate-500">
         <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
@@ -52,10 +53,14 @@ export default function PlanScreen() {
             <CompareTable />
           </Disclosure>
           <QuarterTable />
-          <Chain sheet={worksheet} />
         </>
       ) : null}
+     </div>
 
+      {/* the lanes use the whole width the window gives; the rest of the screen keeps its measure */}
+      <LanesSection />
+
+     <div className="flex max-w-6xl flex-col gap-6">
       {plan !== undefined && full === null ? (
         <Callout color="amber" title="This plan cannot be valued" data-testid="plan-unavailable">
           <Bound binding={B.planUnavailable} />
@@ -103,7 +108,7 @@ export default function PlanScreen() {
          </div>
         </Disclosure>
       ) : null}
-
+     </div>
     </div>
   );
 }

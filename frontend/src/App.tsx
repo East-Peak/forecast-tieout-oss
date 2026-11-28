@@ -7,6 +7,8 @@ import { browserEditor } from "./editor/browserEditor";
 import { YourPlanStore } from "./editor/store";
 import type { Editor } from "./editor/store";
 import { YourPlanProvider, useDesktop } from "./editor/YourPlanContext";
+import { LanesProvider } from "./lanes/LanesContext";
+import type { LanesLoaders } from "./lanes/types";
 import { ReportSessionProvider } from "./session/ReportSession";
 import type { Loaders } from "./session/ReportSession";
 import { legacyRedirect } from "./shell/legacyRoutes";
@@ -45,13 +47,19 @@ function OldAddresses({ children }: { children: ReactNode }) {
   return destination ? <Navigate to={destination} replace /> : <>{children}</>;
 }
 
-/** `editor` and `desktop` are the page's own plan editor and whether the window is wide enough for it; tests pass others. */
-export default function App({ loaders = fileLoaders, editor = browserEditor, desktop }: { loaders?: Loaders; editor?: Editor; desktop?: boolean }) {
+/** The swimlane grid is drawn only where its files are given a source (the page gives the real ones; most tests give none). */
+function LanesProviderIfAny({ loaders, children }: { loaders?: LanesLoaders; children: ReactNode }) {
+  return loaders ? <LanesProvider loaders={loaders}>{children}</LanesProvider> : <>{children}</>;
+}
+
+/** `editor` and `desktop` are the page's own plan editor and whether the window is wide enough for it, `lanes` where the swimlane grid's files are read from; tests pass others. */
+export default function App({ loaders = fileLoaders, editor = browserEditor, desktop, lanes }: { loaders?: Loaders; editor?: Editor; desktop?: boolean; lanes?: LanesLoaders }) {
   const wide = useDesktop();
   const store = useMemo(() => new YourPlanStore(editor), [editor]);
   const canEdit = desktop ?? wide;
   return (
     <YourPlanProvider store={store} desktop={canEdit}>
+     <LanesProviderIfAny loaders={lanes}>
       <OldAddresses>
         <ReportSessionProvider loaders={loaders} yourPlan={store} desktop={canEdit}>
           <Routes>
@@ -75,6 +83,7 @@ export default function App({ loaders = fileLoaders, editor = browserEditor, des
           </Routes>
         </ReportSessionProvider>
       </OldAddresses>
+     </LanesProviderIfAny>
     </YourPlanProvider>
   );
 }
