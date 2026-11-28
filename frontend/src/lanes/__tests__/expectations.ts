@@ -73,6 +73,10 @@ class Collector {
 
 /** An actual-only cell: an owner's rate, cycle or average size, which has no forecast and no goal to compare. */
 const actualOnly = (cell: Cell) => cell.forecast === null && cell.goal === null;
+/** The opening stock is one figure, its caption the name of its goal: no forecast, goal, bar or percent. */
+const single = (cell: Cell, column: ColumnKey) => actualOnly(cell) || column === "open";
+/** A stock that has not begun shows its reason where the figure would be, and no figure. */
+const notBegun = (cell: Cell, column: ColumnKey) => column === "open" && cell.actual === null;
 
 const shownActual = (column: ColumnKey, cell: Cell) => (cell.actual === null ? "unavailable" : ACTUAL[column](cell.actual));
 const shownForecast = (column: ColumnKey, cell: Cell) => (cell.forecast === null ? "unavailable" : PLANNED[column](cell.forecast));
@@ -128,6 +132,8 @@ export function build(f: Files, state: State, options: { panelOnly?: boolean } =
         c.add("basis.schedule.bookings", fmt.usdShort(q.bookings), `/schedule/${i}`);
         c.add("basis.schedule.target", fmt.usdShort(q.target), `/schedule/${i}`);
       });
+      c.add("basis.schedule-total.bookings", fmt.usdShort(f.basis.schedule_total.bookings), "/schedule_total");
+      c.add("basis.schedule-total.target", fmt.usdShort(f.basis.schedule_total.target), "/schedule_total");
     }
 
     // the head: eight columns, in the file's order
@@ -144,8 +150,13 @@ export function build(f: Files, state: State, options: { panelOnly?: boolean } =
         const cell = r.row.cells[column];
         const at = `${base}/cells/${column}`;
         const p = (name: string) => `${r.source}.${column}.${name}`;
-        c.add(p("actual"), shownActual(column, cell), at);
-        if (!actualOnly(cell)) {
+        if (column === "open") {
+          if (!notBegun(cell, column)) {
+            c.add(p("actual"), shownActual(column, cell), at);
+            c.add("lanes.open.caption", lanes.columns.find((x) => x.key === "open")!.goal_label, "/columns/{key=open}");
+          }
+        } else c.add(p("actual"), shownActual(column, cell), at);
+        if (!single(cell, column)) {
           c.add(p("forecast"), shownForecast(column, cell), at);
           // a goal of zero is said "no goal" in words, not shown as a zero figure
           if (cell.none_because !== "no_goal") c.add(p("goal"), shownGoal(column, cell), at);
@@ -202,7 +213,8 @@ function panel(c: Collector, f: Files, state: State, rows: RowRef[]): void {
   c.add("lanes.panel.plan-basis.label", f.lanes.plan_basis.label);
 
   c.add(p("actual"), shownActual(column, cell), at);
-  if (!actualOnly(cell)) {
+  c.add("lanes.panel.column.definition", head.definition, `/columns/{key=${column}}`);
+  if (!single(cell, column)) {
     c.add(p("forecast"), shownForecast(column, cell), at);
     if (cell.none_because !== "no_goal") c.add(p("goal"), shownGoal(column, cell), at);
   }
@@ -230,8 +242,8 @@ function panel(c: Collector, f: Files, state: State, rows: RowRef[]): void {
     c.add(p("range.low"), fmt.usdShort(cell.range80[0]), at);
     c.add(p("range.high"), fmt.usdShort(cell.range80[1]), at);
   }
-  if (!actualOnly(cell)) c.add(`${r.source}.panel.row.allocation`, r.row.allocation, base);
-  if (r.row.kind === "owner" && !actualOnly(cell)) {
+  if (!single(cell, column)) c.add(`${r.source}.panel.row.allocation`, r.row.allocation, base);
+  if (r.row.kind === "owner" && !single(cell, column)) {
     const owner = f.basis.owners.find((o) => o.id === r.row.path[3]);
     if (owner) {
       const own = `/owners/{id=${owner.id}}`;

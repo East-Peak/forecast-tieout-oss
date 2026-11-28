@@ -40,20 +40,26 @@ export default function Layout() {
   const company = index?.companies.find((c) => c.id === selection?.company);
   const withCurrentSearch = (pathname: string) => ({ pathname, search: location.search });
 
-  // The header stays in view as the page scrolls; what sticks beneath it (the lanes' panel and column heads) is told how tall it is.
+  // What stays in view as the page scrolls is the whole header from md up, and below md only the screens' nav; what sticks beneath it
+  // (the lanes' panel, sheet and column heads) is told how tall that is. Below md the header box has no box of its own (display: contents).
   const headerRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const header = headerRef.current;
-    if (!header || typeof ResizeObserver === "undefined") return undefined;
-    const publish = () => document.documentElement.style.setProperty("--ft-header-height", `${header.getBoundingClientRect().height}px`);
+    const nav = navRef.current;
+    if (!header || !nav || typeof ResizeObserver === "undefined") return undefined;
+    const publish = () =>
+      document.documentElement.style.setProperty("--ft-header-height", `${header.getBoundingClientRect().height || nav.getBoundingClientRect().height}px`);
     publish();
     const watch = new ResizeObserver(publish);
     watch.observe(header);
+    watch.observe(nav);
     return () => watch.disconnect();
-  }, []);
+    // the page is rebuilt (its elements are new) when the report arrives, so what is observed is looked up again then
+  }, [state.status === "ready"]);
 
   const header = (
-    <div ref={headerRef} className="sticky top-0 z-40 bg-surface shadow-sm">
+    <div ref={headerRef} className="max-md:contents md:sticky md:top-0 md:z-40 md:bg-surface md:shadow-sm">
       <div className={`h-1 ${accentOf(company?.id)}`} />
       <header className="border-b border-border px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -125,7 +131,7 @@ export default function Layout() {
           Your plan, computed in your browser; ranges unvalidated.
         </div>
       ) : null}
-      <nav className="flex flex-wrap items-end gap-x-4 gap-y-3 border-b border-border px-3 pb-0 pt-3 sm:px-6" aria-label="Screens">
+      <nav ref={navRef} className="flex flex-wrap items-end gap-x-4 gap-y-3 border-b border-border bg-surface px-3 pb-0 pt-3 max-md:sticky max-md:top-0 max-md:z-40 max-md:shadow-sm sm:px-6" aria-label="Screens">
         {SCREENS.filter((screen) => screen.group === undefined).map((screen) => (
           <NavLink key={screen.path} to={withCurrentSearch(screen.path)} className={tabClass}>
             {screen.label}

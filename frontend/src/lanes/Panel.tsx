@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Bound } from "../binding/Bound";
 import { BASIS, FRAME, HEAD, LANE } from "./bindings";
 import type { CellSource } from "./bindings";
-import { DEFINITIONS, PARTS } from "./definitions";
+import { PARTS } from "./definitions";
 import { Maybe } from "./Maybe";
 import { RecordCount, Records } from "./Records";
 import { TEXT, toneOf } from "./tone";
@@ -125,7 +125,8 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
   const at = `${rowPointer}/cells/${column}`;
   const period = lanes.periods[periodIndex];
   const tone = toneOf(cell.status);
-  const actualOnly = cell.forecast === null && cell.goal === null;
+  // an owner's rate has only what was recorded; the opening stock is one figure, so its forecast and goal are not repeated
+  const actualOnly = (cell.forecast === null && cell.goal === null) || column === "open";
   const noGoal = cell.none_because === "no_goal";
   const reason = cell.status === "none" && cell.none_because !== null ? cell.none_because : null;
   const columnRow = `/columns/{key=${column}}`;
@@ -149,7 +150,7 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
       role="complementary"
       aria-label="Cell details"
       data-testid="cell-panel"
-      className="fixed inset-x-0 bottom-0 z-50 flex max-h-[55vh] flex-col rounded-t-xl border-t border-slate-200 bg-white shadow-[0_-4px_20px_rgba(15,23,42,0.12)] outline-none lg:sticky lg:inset-auto lg:top-[var(--ft-header-height,0px)] lg:z-10 lg:max-h-[calc(100vh-var(--ft-header-height,0px)-16px)] lg:w-[360px] lg:shrink-0 lg:rounded-ft lg:border lg:shadow-ft xl:w-[420px]"
+      className="fixed inset-x-0 bottom-0 z-50 flex max-h-[55vh] flex-col rounded-t-xl border-t border-slate-200 bg-white shadow-[0_-4px_20px_rgba(15,23,42,0.12)] outline-none lg:inset-x-auto lg:right-0 lg:top-[var(--ft-header-height,0px)] lg:max-h-none lg:w-[420px] lg:rounded-none lg:border-l lg:border-t-0 lg:shadow-[-4px_0_20px_rgba(15,23,42,0.12)] xl:sticky xl:inset-auto xl:top-[var(--ft-header-height,0px)] xl:z-10 xl:max-h-[calc(100vh-var(--ft-header-height,0px)-16px)] xl:shrink-0 xl:rounded-ft xl:border xl:shadow-ft"
     >
       <header className="flex items-start justify-between gap-3 border-b border-slate-100 px-5 py-3">
         <div className="min-w-0">
@@ -172,7 +173,7 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
       </header>
       <div className="flex-1 overflow-y-auto px-5 pb-6 pt-4">
         <div className="flex gap-4">
-          <Figure label="Actual">
+          <Figure label="Actual" note={column === "open" ? <Bound binding={HEAD.goalLabel} row={columnRow} /> : undefined}>
             <Bound binding={own.actual} row={at} />
           </Figure>
           {actualOnly ? null : (
@@ -210,7 +211,7 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
         {actualOnly ? null : <GoalSource source={source} row={row} rowPointer={rowPointer} basis={basis} />}
         <section className="mt-5">
           <h4 className="text-xs font-semibold uppercase text-slate-500">What it means</h4>
-          <p className="mt-1.5 text-xs leading-snug text-slate-700">{DEFINITIONS[column]}</p>
+          <p className="mt-1.5 text-xs leading-snug text-slate-700"><Bound binding={HEAD.definition} row={columnRow} /></p>
           <p className="mt-1.5 text-[11px] text-slate-500">
             Basis: <Bound binding={FRAME.panelBasisLabel} />
           </p>

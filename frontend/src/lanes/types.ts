@@ -16,6 +16,8 @@ export type ColumnKey = Column["key"];
 export type Cell = OwnersFile["periods"][number]["rows"][number]["cells"][ColumnKey] & {
   goal_inside_range80?: boolean | null;
   range80?: [string, string] | null;
+  /** where the strip's three points stand, 0 to 100, written by the core for a rate, a duration or a size of a lane */
+  marks?: { actual: string | null; forecast: string | null; goal: string } | null;
 };
 export type Status = Cell["status"];
 

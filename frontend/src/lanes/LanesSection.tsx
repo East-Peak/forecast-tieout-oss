@@ -101,6 +101,11 @@ function Honesty({ lanes, basis, owners }: { lanes: LanesFile; basis: Loaded<Bas
                       <td className="py-0.5 text-right"><Bound binding={BASIS.scheduleTarget} row={`/schedule/${i}`} /></td>
                     </tr>
                   ))}
+                  <tr className="border-t border-slate-200 font-medium">
+                    <th scope="row" className="py-0.5">Year</th>
+                    <td className="py-0.5 text-right"><Bound binding={BASIS.totalBookings} row="/schedule_total" /></td>
+                    <td className="py-0.5 text-right"><Bound binding={BASIS.totalTarget} row="/schedule_total" /></td>
+                  </tr>
                 </tbody>
               </table>
             ) : (
@@ -239,9 +244,9 @@ function Body({ loaders, lanes, basis, ownerPaths, recordsPath, company }: BodyP
       </div>
       <Honesty lanes={lanes} basis={basis} owners={ownersOpen} />
       <Legend />
-      <div data-testid="lanes-body" className={`lg:flex lg:items-start lg:gap-4 ${selected ? "pb-[55vh] lg:pb-0" : ""}`}>
+      <div data-testid="lanes-body" className={`xl:flex xl:items-start xl:gap-4 ${selected ? "pb-[55vh] lg:pb-0" : ""}`}>
         <div className="min-w-0 flex-1">
-          <div data-testid="grid-scroll" className="overflow-x-auto rounded-ft border border-slate-200 bg-white shadow-ft lg:max-h-[calc(100vh-var(--ft-header-height,0px)-24px)] lg:min-h-[300px] lg:overflow-auto">
+          <div data-testid="grid-scroll" className={`overflow-x-auto rounded-ft border border-slate-200 bg-white shadow-ft ${selected ? "lg:max-xl:pr-[440px]" : ""} lg:max-h-[calc(100vh-var(--ft-header-height,0px)-24px)] lg:min-h-[300px] lg:overflow-auto`}>
             <table className="w-full min-w-[1170px] border-separate border-spacing-0 text-left" data-testid="lanes-grid">
               <thead>
                 <tr>
@@ -410,7 +415,7 @@ function Section({ loaders }: { loaders: LanesLoaders }) {
   );
 
   return (
-    <section data-testid="lanes" aria-labelledby="lanes-title" className="flex w-full min-w-0 flex-col gap-3">
+    <section data-testid="lanes" aria-labelledby="lanes-title" className="flex w-full min-w-0 scroll-mt-[var(--ft-header-height,0px)] flex-col gap-3">
       <div>
         <h2 id="lanes-title" className="font-display text-base font-semibold text-ft-brand">
           Lanes

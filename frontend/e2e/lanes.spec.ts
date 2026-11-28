@@ -33,12 +33,12 @@ async function open(page: Page, company: string, scenario = "as-signed") {
 
 const cell = (page: Page, row: string, column: string) => page.getByTestId(`cell-${row}-${column}`);
 
-/** Scroll the page so a cell stands just below the sticky header (on a phone the header is half the screen: Playwright's own centering leaves the cell under it). */
+/** Scroll the page so a cell stands just below what stays at the top of the screen (the nav on a phone, the whole header from md up). */
 async function below(page: Page, locator: ReturnType<Page["getByTestId"]>) {
   await locator.evaluate((el) => {
     el.scrollIntoView({ block: "nearest", inline: "center" });
-    const header = document.querySelector<HTMLElement>(".sticky.top-0.z-40")!.getBoundingClientRect().height;
-    window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - header - 8);
+    const stuck = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ft-header-height"));
+    window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top - stuck - 8);
   });
 }
 
@@ -227,20 +227,28 @@ test.describe("layout at five widths, with the text spread @smoke", () => {
           await page.locator("[data-testid^='expand-segment/']").first().click();
           await expect(page.locator("[data-testid^='row-segment/'][data-role='owner']").first()).toBeVisible();
           await below(page, page.getByTestId("cell-total-bookings"));
-          // on a phone the sticky header leaves too little room for Playwright's own aim; the tap is sent to the cell
-          if (width < 1024) await page.getByTestId("cell-total-bookings").dispatchEvent("click");
-          else await page.getByTestId("cell-total-bookings").click();
+          await page.getByTestId("cell-total-bookings").click();
           const panel = page.getByTestId("cell-panel");
           await expect(panel).toBeVisible();
           await page.waitForTimeout(200);
           expect(await sideways(), "nor with the panel open").toBeLessThanOrEqual(0);
           const p = (await panel.boundingBox())!;
           if (width >= 1024) {
+            const nav = (await page.getByRole("navigation", { name: "Screens" }).boundingBox())!;
+            // fixed (1024 to 1279) or sticky (1280 up), the panel's own top offset is the header's bottom edge
+            const offset = await panel.evaluate((el) => Number.parseFloat(getComputedStyle(el).top));
+            expect(Math.abs(offset - (nav.y + nav.height)), "the panel's top is the header's bottom").toBeLessThan(2);
             const c = (await page.getByTestId("cell-total-bookings").boundingBox())!;
             const clear = c.x + c.width <= p.x + 1 || c.x >= p.x + p.width - 1;
             expect(clear, `the cell (${c.x}..${c.x + c.width}) is not under the panel (${p.x}..${p.x + p.width})`).toBe(true);
           } else {
             expect(p.width, "below lg the panel is a full-width sheet").toBeGreaterThanOrEqual(width - 1);
+            // the sheet leaves the tapped row in view: its label and its cell stand above the sheet
+            const c = (await page.getByTestId("cell-total-bookings").boundingBox())!;
+            const label = (await page.getByTestId("row-total").locator("th").first().boundingBox())!;
+            expect(c.y + c.height, "the tapped cell is above the sheet").toBeLessThanOrEqual(p.y + 1);
+            expect(label.y + label.height, "the row's label is above the sheet").toBeLessThanOrEqual(p.y + 1);
+            expect(label.y, "and below the nav").toBeGreaterThanOrEqual(0);
           }
           await page.keyboard.press("Escape");
           await expect(panel).toHaveCount(0);

@@ -249,18 +249,39 @@ describe("the grid's own behavior", () => {
     }
   });
 
+  it("an opening stock that has not begun says so in the file's words, and shows no figure and no zero", async () => {
+    const f = filesOf(company, "as-signed");
+    const q = f.lanes.periods.findIndex((p) => p.standing === "not started");
+    const container = await mount(company, "as-signed");
+    fireEvent.click(screen.getByTestId(`period-${f.lanes.periods[q].key}`));
+    const cell = container.querySelector("[data-testid='cell-total-open']")!;
+    expect(cell.textContent).toBe(f.lanes.reasons.not_modeled);
+    expect(cell.querySelector("[data-binding$='.actual']")).toBeNull();
+    expect(f.lanes.periods[q].rows[0].cells.open.none_because).toBe("not_modeled");
+  });
+
+  it("the opening stock is one figure with the name of its goal beneath, and no forecast, goal, bar or percent", async () => {
+    const container = await mount(company, "as-signed");
+    const f = filesOf(company, "as-signed");
+    const cell = container.querySelector("[data-testid='cell-total-open']")!;
+    expect(cell.querySelector("[data-binding='lanes.open.actual']")!.textContent).toBe(String(f.lanes.periods[0].rows[0].cells.open.actual));
+    expect(cell.querySelector("[data-binding='lanes.open.caption']")!.textContent).toBe("frozen opening basis");
+    for (const id of ["forecast", "goal", "ratio"]) expect(cell.querySelector(`[data-binding='lanes.open.${id}']`)).toBeNull();
+    expect(cell.querySelector("progress, [data-testid='strip']")).toBeNull();
+  });
+
   it("a gap in the file reads unavailable, never zero", async () => {
     // a quarter of some company in which a lane has no wins, so no cycle and no average size
     const found = files.COMPANIES.flatMap((c) => {
       const f = filesOf(c, "as-signed");
-      return f.lanes.periods.flatMap((p, period) => (p.rows.some((r) => COLUMN_KEYS.some((k) => r.cells[k].actual === null)) ? [{ c, period }] : []));
+      return f.lanes.periods.flatMap((p, period) => (p.rows.some((r) => COLUMN_KEYS.some((k) => k !== "open" && r.cells[k].actual === null)) ? [{ c, period }] : []));
     })[0];
     expect(found).toBeDefined();
     const container = await mount(found.c, "as-signed");
     const f = filesOf(found.c, "as-signed");
     fireEvent.click(screen.getByTestId(`period-${f.lanes.periods[found.period].key}`));
     const state = { ...base(found.c, "as-signed"), period: found.period };
-    const nulls = displayedRows(f, state).flatMap((r) => COLUMN_KEYS.filter((c) => r.row.cells[c].actual === null).map((c) => `cell-${idOf(r)}-${c}`));
+    const nulls = displayedRows(f, state).flatMap((r) => COLUMN_KEYS.filter((c) => c !== "open" && r.row.cells[c].actual === null).map((c) => `cell-${idOf(r)}-${c}`));
     expect(nulls.length).toBeGreaterThan(0);
     for (const id of nulls) expect(container.querySelector(`[data-testid='${id}'] [data-binding$='.actual']`)!.textContent).toBe("unavailable");
   });
@@ -280,17 +301,20 @@ describe("the grid's own behavior", () => {
     expect(bars.map((b) => b.getAttribute("max"))).toEqual([cell.goal, cell.goal]);
   });
 
-  it("rate, cycle and size compare three points on one strip, in the order of their values, goal marked", async () => {
+  it("rate, cycle and size compare three points on one strip, where the file's marks put them", async () => {
     const container = await mount(company, "as-signed");
     const f = filesOf(company, "as-signed");
     for (const column of ["win_rate", "cycle", "avg_won_arr"] as const) {
       const cell = f.lanes.periods[0].rows[0].cells[column];
       const strip = container.querySelector(`[data-testid='cell-total-${column}'] [data-testid='strip']`)!;
-      const x = (name: string) => Number(strip.querySelector(`[data-mark='${name}']`)!.getAttribute("data-at"));
-      const want = { actual: Number(cell.actual), forecast: Number(cell.forecast), goal: Number(cell.goal) };
-      const order = (o: Record<string, number>) => Object.keys(o).sort((a, b) => o[a] - o[b]).join(",");
-      expect(order({ actual: x("actual"), forecast: x("forecast"), goal: x("goal") }), column).toBe(order(want));
+      for (const name of ["actual", "forecast", "goal"] as const) {
+        const mark = strip.querySelector(`[data-mark='${name}']`)!;
+        expect(mark.getAttribute("data-at"), `${column} ${name}`).toBe(cell.marks![name]);
+        expect(Number.parseFloat((mark as HTMLElement).style.left)).toBe(Number(cell.marks![name]));
+      }
     }
+    // no strip where the file gives no marks, and none for a volume
+    expect(container.querySelector("[data-testid='cell-total-bookings'] [data-testid='strip']")).toBeNull();
   });
 
   it("opening a cell shows a panel beside the grid, not over it, and Escape closes it with the focus back on the cell", async () => {

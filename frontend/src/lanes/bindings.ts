@@ -74,7 +74,8 @@ function column(source: CellSource, col: ColumnKey) {
   const a = ACTUAL_FORMAT[col];
   const f = PLANNED_FORMAT[col];
   const lane = source === "lanes";
-  const planned = lane || !STRIP_COLUMNS.includes(col);
+  // the opening stock is one figure: its forecast and goal are the same number, so only the actual is drawn, and the goal's name as its caption
+  const planned = col !== "open" && (lane || !STRIP_COLUMNS.includes(col));
   const compared = lane ? col !== "open" : VOLUMES.includes(col);
   const strip = STRIP_COLUMNS.includes(col);
   const partsOf: Which[] = !strip ? [] : lane && col !== "win_rate" ? ["actual", "forecast", "goal"] : ["actual"];
@@ -148,6 +149,9 @@ export const HEAD = {
   panelTitle: text("lanes.panel.column.title", "lanes", "/title"),
   panelUnit: text("lanes.panel.column.unit", "lanes", "/unit"),
   goalLabel: text("lanes.panel.column.goal-label", "lanes", "/goal_label"),
+  definition: text("lanes.panel.column.definition", "lanes", "/definition"),
+  /** the opening stock's caption in a cell: the name of its goal, read from `/columns/{key=open}` */
+  openCaption: text("lanes.open.caption", "lanes", "/goal_label"),
 } as const;
 
 /** The goal basis (`lanes-basis.json`): the frozen schedule's bookings beside the targets, and each owner's allocation inputs. */
@@ -156,6 +160,9 @@ export const BASIS = {
   scheduleQuarter: text("basis.schedule.quarter", "basis", "/quarter"),
   scheduleBookings: figure("basis.schedule.bookings", "basis", "/bookings", "usd-short"),
   scheduleTarget: figure("basis.schedule.target", "basis", "/target", "usd-short"),
+  /** the year beside the quarters, read from `/schedule_total` */
+  totalBookings: figure("basis.schedule-total.bookings", "basis", "/bookings", "usd-short"),
+  totalTarget: figure("basis.schedule-total.target", "basis", "/target", "usd-short"),
   /** an owner, read from `/owners/{id=…}` */
   ownerQuota: figure("basis.owner.quota", "basis", "/quota", "usd-full", { unavailable: { words: "no quota" } }),
   ownerDays: figure("basis.owner.days", "basis", "/days", "whole"),

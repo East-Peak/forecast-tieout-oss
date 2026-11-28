@@ -247,6 +247,28 @@ test.describe("at phone width, with device emulation @smoke", () => {
   }
 });
 
+test.describe("the app header below md @smoke", () => {
+  // Below md the company and scenario selectors scroll away with the page and only the screens' nav stays; from md up the whole header stays.
+  for (const [width, headerStays] of [[390, false], [767, false], [768, true]] as const) {
+    test.describe(`${width} wide`, () => {
+      test.use({ viewport: { width, height: 844 } });
+      for (const screen of ALL_SCREENS) {
+        test(`${screen}: the header ${headerStays ? "stays" : "scrolls away and the nav stays"} @smoke`, async ({ page }) => {
+          await open(page, screen, "sapling-industries", "as-signed");
+          await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+          const scrolled = await page.evaluate(() => window.scrollY);
+          test.skip(scrolled < 300, "a page too short to scroll the header away");
+          const header = (await page.locator("header").first().boundingBox())!;
+          const nav = (await page.getByRole("navigation", { name: "Screens" }).boundingBox())!;
+          if (headerStays) expect(header.y + header.height, "the whole header stays in view").toBeGreaterThan(0);
+          else expect(header.y + header.height, "the header has scrolled out of view").toBeLessThanOrEqual(0);
+          expect(Math.abs(nav.y), "the nav is at the top of the screen").toBeLessThan(2 + (headerStays ? header.height + 10 : 0));
+        });
+      }
+    });
+  }
+});
+
 test.describe("at desktop widths the wide tables are tables, not stacked rows @smoke", () => {
   // The wide tables once stayed stacked at every width (their classes were never generated) and
   // every other check passed: nothing said a header row had to be there. Rows named here are the
