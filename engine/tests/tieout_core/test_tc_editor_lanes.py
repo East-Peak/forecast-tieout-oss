@@ -204,3 +204,21 @@ def test_the_editor_reads_the_basis_where_the_generator_writes_it():
     from engine.tieout_core import editor_lanes
 
     assert editor_lanes.REPORTS == gen.REPORTS
+
+
+def test_a_crlf_copy_of_the_committed_basis_is_refused_the_check_is_byte_for_byte(
+    tmp_path, monkeypatch
+):
+    from engine.tieout_core import editor_lanes
+
+    with gen.in_repo():
+        text = committed("sprout-labs", "lanes-basis.json")
+        folder = tmp_path / "reports" / "sprout-labs"
+        folder.mkdir(parents=True)
+        (folder / "lanes-basis.json").write_bytes(text.replace("\n", "\r\n").encode())
+        monkeypatch.setattr(editor_lanes, "REPORTS", tmp_path / "reports")
+        session = EditorSession()
+        _, meta = run(session, "sprout-labs", EDITED)
+        got = lanes_of(session, meta["revision"])
+    assert "lanes" not in got
+    assert any("committed" in p for p in got["problems"])

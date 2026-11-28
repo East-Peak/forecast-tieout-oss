@@ -52,7 +52,7 @@ def frozen_basis(state: Prepared, company: str) -> FrozenBasis:
     basis = lanes_basis.plan_basis(state)
     doc = lanes_basis.document(basis, company)
     path = REPORTS / company / "lanes-basis.json"
-    if not path.exists() or path.read_text() != canonical(doc):
+    if not path.exists() or path.read_bytes() != canonical(doc).encode("utf-8"):
         raise ValueError(
             "the plan basis computed here is not the committed one (lanes-basis.json); "
             "the goals would move, so no lanes are shown"

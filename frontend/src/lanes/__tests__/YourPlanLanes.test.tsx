@@ -65,17 +65,21 @@ async function mount(options: { store?: YourPlanStore; shown?: TieoutReport; com
   if (!options.store) await store.load(COMPANY);
   const company = options.company ?? COMPANY;
   const shown = options.shown ?? store.snapshot.applied[COMPANY]?.report ?? REPORT;
+  const view = render(tree(store, company, shown, options.loaders));
+  return { editor, store, view, again: (report: TieoutReport) => view.rerender(tree(store, company, report, options.loaders)) };
+}
+
+function tree(store: YourPlanStore, company: string, shown: TieoutReport, loaders: LanesLoaders = diskLoaders) {
   const c = { ...caseOf(company, "as-signed"), scenario: "your-plan", report: shown };
-  const view = render(
+  return (
     <YourPlanProvider store={store} desktop>
       <BindingProvider company={company} scenario="your-plan" files={c}>
-        <LanesProvider loaders={options.loaders ?? diskLoaders}>
+        <LanesProvider loaders={loaders}>
           <LanesSection />
         </LanesProvider>
       </BindingProvider>
-    </YourPlanProvider>,
+    </YourPlanProvider>
   );
-  return { editor, store, view };
 }
 
 const forecastOf = (id: string, rowId: string, col: string) => document.querySelector(`[data-testid='cell-${rowId}-${col}'] [data-binding='lanes.${id}.forecast']`);
@@ -181,20 +185,58 @@ describe("once the lanes of your plan arrive", () => {
   });
 });
 
-describe("a newer Apply", () => {
-  it("takes the forecasts back to pending at once, and a late answer for the earlier Apply is never shown", async () => {
-    const { editor, store } = await ready();
-    store.setDraft(COMPANY, { hires: [{ segment: "enterprise", start: "2026-10", count: 1 }], programs: [] });
-    await act(async () => store.apply(COMPANY));
-    await waitFor(() => expect(screen.getByTestId("lanes-pending")).toBeTruthy());
-    expect(forecastOf("bookings", "total", "bookings")).toBeNull();
-    expect(editor.asked).toHaveLength(2);
-    // the earlier request answering late changes nothing
-    await answer(editor, { kind: "lanes", lanes: SIGNED, owners: {} }, 0);
+/** Lanes of an earlier Apply, with a company forecast no other lanes show: it must never be on screen. */
+const A_LANESOF = (): LanesFile => {
+  const doc = structuredClone(EDITED);
+  doc.periods[0].rows[0].cells.bookings.forecast = "11111111.11" as never;
+  return doc;
+};
+
+describe("lanes in flight when something newer happens", () => {
+  it("Apply A, Apply B, then A's lanes arrive: B's forecasts stay pending until B's own lanes, and A's figure is never on screen", async () => {
+    const m = await mount();
+    await screen.findByTestId("lanes-grid");
+    const reportA = m.store.snapshot.applied[COMPANY].report;
+    expect(m.editor.asked).toHaveLength(1); // A's lanes: asked, not answered
+    const reportB = structuredClone(REPORT);
+    m.editor.reports.push(reportB);
+    m.store.setDraft(COMPANY, { hires: [{ segment: "enterprise", start: "2026-10", count: 1 }], programs: [] });
+    await act(async () => m.store.apply(COMPANY));
+    expect(m.store.snapshot.applied[COMPANY].report).toBe(reportB);
+    m.again(reportB);
+    expect(m.editor.asked).toHaveLength(2);
+    // A's answer arrives now, after B was applied and B is on screen
+    await answer(m.editor, { kind: "lanes", lanes: A_LANESOF(), owners: {} }, 0);
+    expect(m.store.snapshot.applied[COMPANY].lanes.status).toBe("pending");
     expect(screen.getByTestId("lanes-pending")).toBeTruthy();
     expect(forecastOf("bookings", "total", "bookings")).toBeNull();
-    await answer(editor, READY, 1);
+    expect(document.body.textContent).not.toContain(usdShort("11111111.11"));
+    expect(reportA).not.toBe(reportB);
+    await answer(m.editor, READY, 1);
     await waitFor(() => expect(forecastOf("bookings", "total", "bookings")?.textContent).toBe(usdShort(bookings(EDITED).forecast!)));
+  });
+
+  it("a company switch while lanes are in flight: the other company's lanes never show this one's, and its own arrive for it alone", async () => {
+    const m = await mount();
+    await screen.findByTestId("lanes-grid");
+    const sapling = m.store.snapshot.applied[COMPANY].report;
+    await m.store.load("sprout-labs");
+    expect(m.editor.asked.map((c) => c.company)).toEqual([COMPANY, "sprout-labs"]);
+    cleanup();
+    render(tree(m.store, "sprout-labs", m.store.snapshot.applied["sprout-labs"].report));
+    await screen.findByTestId("lanes-grid");
+    // sapling's lanes arrive while sprout-labs is shown: sprout-labs stays pending, with no sapling figure
+    await answer(m.editor, { kind: "lanes", lanes: A_LANESOF(), owners: {} }, 0);
+    expect(m.store.snapshot.applied["sprout-labs"].lanes.status).toBe("pending");
+    expect(screen.getByTestId("lanes-pending")).toBeTruthy();
+    expect(forecastOf("bookings", "total", "bookings")).toBeNull();
+    expect(m.store.snapshot.applied[COMPANY].lanes.status).toBe("ready");
+    // back to sapling: its own lanes, never pending
+    cleanup();
+    render(tree(m.store, COMPANY, sapling));
+    await screen.findByTestId("lanes-grid");
+    expect(forecastOf("bookings", "total", "bookings")?.textContent).toBe(usdShort("11111111.11"));
+    expect(screen.queryByTestId("lanes-pending")).toBeNull();
   });
 });
 
