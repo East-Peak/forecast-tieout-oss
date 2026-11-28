@@ -66,9 +66,10 @@ ACTIONS_CAVEAT = (
 ACTIONS_CAVEAT_ANY = (
     "Where the plan carries driver actions, the lanes they touch show the result: a win-rate "
     "action leaves the pooled rate plus the change it makes, weighted by the deals that lane is "
-    "expected to create in the period, and a size action changes what each win books, so the "
-    "lane's average won ARR. These are entered changes to pooled drivers, not values fitted to "
-    "the slice; goals and recorded actuals do not move."
+    "expected to create in the period, a size action changes what each win books, so the lane's "
+    "average won ARR, and a productivity action changes the deals its people create, so the lane's "
+    "created deals and created ARR. These are entered changes to pooled drivers, not values "
+    "fitted to the slice; goals and recorded actuals do not move."
 )
 CAVEATS = (CAVEAT, DATED_BENCHMARK, POOLED_MODEL)
 
@@ -109,10 +110,17 @@ def _remainder(
     if stray:  # a contribution with no lane would silently leave the company row short
         raise ValueError(f"expected wins belong to no lane: {sorted(stray)}")
     new_wins, new_created = flows.new_flows(model, series, g.as_of, cal)
+    no_action_created = new_created  # what each segment's created ARR is priced from
     priced = flows.price(new_wins, sizes, model.new_pipeline.mean_won_arr)
     lift = None
     if effect is not None:
         lift = effect.lift
+        if any(
+            any(c) for c in lift.creation.values()
+        ):  # the deals created, as the actions leave them
+            days = len(next(iter(series.values()), ()))
+            grown = {s: list(lift.created(s)[:days]) for s in series}
+            _, new_created = flows.new_flows(model, grown, g.as_of, cal)
         for k, f in driver_actions.action_flows(g, effect, cal).items():
             priced[k] = priced.get(k, flows.ZERO_FLOW) + f
     for k, f in priced.items():
@@ -141,11 +149,16 @@ def _remainder(
     made: dict[tuple[str, int], tuple[Decimal, Decimal]] = {}
     for j in range(1, 5):
         mine = [s for s in segments if (s, j) in new_created]
-        total = sum((new_created[(s, j)] for s in mine), ZERO)
-        pieces = flows.apportion(
-            (total * model.new_pipeline.mean_created_arr).quantize(CENT),
-            [new_created[(s, j)] * sizes[s].created for s in mine],
-        )
+        if new_created is no_action_created:
+            total = sum((new_created[(s, j)] for s in mine), ZERO)
+            pieces = flows.apportion(
+                (total * model.new_pipeline.mean_created_arr).quantize(CENT),
+                [new_created[(s, j)] * sizes[s].created for s in mine],
+            )
+        else:  # productivity actions: each deal is created at the price it had with none
+            pieces = created_arr(
+                new_created, no_action_created, sizes, mine, j, model.new_pipeline
+            )
         for s, arr in zip(mine, pieces):
             made[(s, j)] = (new_created[(s, j)].quantize(COUNT), arr)
     in_year = [
@@ -187,6 +200,27 @@ def _remainder(
             )
         )
     return tied, made, checks, series, priced
+
+
+def created_arr(created, no_action, sizes, mine, j: int, new) -> list[Decimal]:
+    """The ARR of the deals each of ``mine`` is expected to create in quarter ``j`` when the plan's
+    productivity actions change how many: what the pooled created size shared out gave it with no
+    action, plus each deal more or fewer at the price that sharing out puts on a deal (by the
+    segments' created sizes). No segment's price moves with another's creation, so a segment no
+    action touches keeps exactly what it had."""
+    base = [no_action.get((s, j), ZERO) for s in mine]
+    weights = [n * sizes[s].created for n, s in zip(base, mine)]
+    whole, weighed = sum(base, ZERO), sum(weights, ZERO)
+    shared = flows.apportion((whole * new.mean_created_arr).quantize(CENT), weights)
+    out = []
+    for s, was, now in zip(mine, shared, [created[(s, j)] for s in mine]):
+        price = (
+            new.mean_created_arr * sizes[s].created * whole / weighed
+            if weighed
+            else new.mean_created_arr
+        )
+        out.append(was + ((now - no_action.get((s, j), ZERO)) * price).quantize(CENT))
+    return out
 
 
 # ---------------------------------------------------------------- atoms and cells

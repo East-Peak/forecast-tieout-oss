@@ -84,6 +84,19 @@ def series(state, basis, cal, hires, inflows, segments) -> dict[tuple, list[Deci
     return out
 
 
+def _grown(effect, lane, per_day: list[Decimal], days: int) -> list[Decimal]:
+    """The deals ``lane`` creates on each day with the plan's productivity actions: a person's
+    or a planned hire's creation is organic and changes with its segment's; the programs' bucket
+    is not a person's, and creates what it did."""
+    seg, owner = lane
+    changes = getattr(effect, "creation", {}).get(
+        seg
+    )  # an effect with none has no creation
+    if owner == PROGRAMS or not changes:
+        return per_day
+    return [n * (1 + u) if u else n for n, u in zip(per_day, changes[:days])]
+
+
 def series_check(lanes: dict, whole: dict) -> Check:
     """The owners' creation on each day adds to its segment's."""
     days = len(next(iter(whole.values()), []))
@@ -125,12 +138,21 @@ def remainder(state, cal, series_, priced: dict, tied: dict, made: dict, effect=
     g = state.ground
     raw = flows.existing_flows(g.model, g.pop.deals, g.as_of, cal, lane=owner_of)
     wins, created = flows.new_flows(g.model, series_, g.as_of, cal)
-    if (
-        effect is not None
-    ):  # each owner's own deals, on each day, at that day's change in rate
+    if effect is not None:
         days = (cal.year.end - g.as_of).days
+        grown = {
+            lane: _grown(effect, lane, per_day, days)
+            for lane, per_day in series_.items()
+        }
+        if any(grown[lane] != per_day for lane, per_day in series_.items()):
+            _, created = flows.new_flows(g.model, grown, g.as_of, cal)
+        # each owner's own deals, on each day, at that day's change in rate, and the deals its
+        # people's productivity adds, won at the rate left
         moved = {
-            lane: [c * d for c, d in zip(per_day, effect.changes[lane[0]][:days])]
+            lane: [
+                n * d + (m - n) * (getattr(effect, "baseline", ZERO) + d)
+                for n, m, d in zip(per_day, grown[lane], effect.changes[lane[0]][:days])
+            ]
             for lane, per_day in series_.items()
         }
         extra, _ = flows.new_flows(g.model, moved, g.as_of, cal, rate=ONE)
