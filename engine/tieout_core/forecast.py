@@ -458,6 +458,7 @@ def simulate(
     parameter_uncertainty: bool = False,
     creation: Creation | None = None,
     inflows: Sequence[Inflow] = (),
+    lift: Sequence[Decimal] = (),
 ) -> Simulation:
     """Draw outcomes from the fitted model: each open deal wins or not and, if
     it wins, closes after a day count drawn from its timing; future wins arrive
@@ -470,7 +471,10 @@ def simulate(
     means, so the simulation stays centered on the expectation. Close timing is
     not drawn. With ``creation`` the creation rate is the given day-by-day one
     (departures drawn at random when it can) instead of the flat trailing rate,
-    and its own count-based uncertainty is not drawn."""
+    and its own count-based uncertainty is not drawn. A ``lift`` (the extra wins, by
+    day of creation, that a change to a win rate expects) is added to each day's
+    expected wins before they are drawn, so the draws are conditional on the change
+    having been made; whether it is made is not drawn."""
     rng = np.random.default_rng(seed)
     if not windows:
         empty = _spread(np.zeros(draws))
@@ -522,7 +526,8 @@ def simulate(
                         / Decimal(flow.end - flow.start)
                         / new.mean_created_arr
                     )
-        if creation is None and not extra.any():
+        lifted = np.array([float(x) for x in lift[:span]])
+        if creation is None and not extra.any() and not lifted.any():
             lam = float(new.created_per_day * new.win_rate) * span
             if parameter_uncertainty:
                 per_day = (
@@ -553,7 +558,10 @@ def simulate(
             win_rate = float(new.win_rate)
             if parameter_uncertainty:
                 win_rate = _beta(rng, win_rate, new.win_rate_n, draws)[:, None]
-            cell = rng.poisson(deals * win_rate)
+            expected = deals * win_rate
+            if lifted.any():
+                expected = np.maximum(expected + lifted, 0.0)
+            cell = rng.poisson(expected)
             row_of, day_of = np.nonzero(cell)
             repeats = cell[row_of, day_of]
             rows = np.repeat(row_of, repeats.astype(np.intp))

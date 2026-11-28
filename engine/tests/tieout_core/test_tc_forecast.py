@@ -298,3 +298,36 @@ def test_a_lift_adds_to_creation_whatever_its_source_and_changes_no_other_part()
     ):
         assert own.components[part] == plain.components[part]
     assert own.window_total("2026-03") - plain.window_total("2026-03") == Decimal(310)
+
+
+def _within_four_standard_errors(sim, expected):
+    sd = (
+        sum((x - sim.total.mean) ** 2 for x in sim.samples_total) / (sim.draws - 1)
+    ) ** 0.5 / sim.draws**0.5
+    return abs(sim.total.mean - expected) <= 4 * sd
+
+
+def test_a_simulation_under_a_lift_is_centered_on_the_forecast_under_it():
+    lift = (Decimal("0.2"),) * 75
+    expected = float(_lifted(lift).total())
+    plain = float(model_forecast(MODEL, DATA, CUT, WINDOWS).total())
+    sim = simulate(MODEL, DATA, CUT, WINDOWS, draws=6000, seed=3, lift=lift)
+    assert _within_four_standard_errors(sim, expected)
+    assert expected - plain > 1000  # and the lift is a real one
+
+
+def test_a_simulation_with_no_lift_or_a_lift_of_zeros_is_the_one_there_was():
+    plain = simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5)
+    assert simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5, lift=()) == plain
+    zeros = (Decimal(0),) * 75
+    assert simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5, lift=zeros) == plain
+
+
+def test_a_lift_that_never_wins_inside_the_windows_adds_nothing_to_them():
+    late = (Decimal(0),) * 60 + (
+        Decimal(5),
+    ) * 15  # created on days 61 to 75: wins on 91+
+    plain = model_forecast(MODEL, DATA, CUT, WINDOWS)
+    assert _lifted(late).window_total("2026-03") == plain.window_total("2026-03")
+    sim = simulate(MODEL, DATA, CUT, WINDOWS, draws=6000, seed=5, lift=late)
+    assert _within_four_standard_errors(sim, float(plain.total()))
