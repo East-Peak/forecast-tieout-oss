@@ -90,7 +90,7 @@ class PendingRequisition:
     req_id: str
     team: str
     role: str
-    planned_start: str  # YYYY-MM-DD
+    planned_start: str  # YYYY-MM-DD; an AE requisition names an AE team of the snapshot, others any team
 
 
 @dataclass(frozen=True)
@@ -269,7 +269,7 @@ class Snapshot:
         if np.any(self.ramped_heads.values > self.heads.values):
             raise ValueError("ramped_heads exceeds heads")
         for req in self.pending_requisitions:
-            if req.team not in self.teams:
+            if req.role == "AE" and req.team not in self.teams:
                 raise ValueError(
                     f"requisition {req.req_id}: team {req.team!r} is not a snapshot team"
                 )

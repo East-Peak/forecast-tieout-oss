@@ -260,6 +260,15 @@ def test_pending_requisitions_are_typed():
         )
 
 
+def test_pending_requisitions_may_carry_a_non_ae_role_on_a_team_outside_the_snapshot():
+    bdr = PendingRequisition("REQ-2", "BDR", "BDR", "2025-05-01")
+    assert make(pending_requisitions=(bdr,)).pending_requisitions == (bdr,)
+    with pytest.raises(ValueError, match="team"):  # an AE requisition still needs an AE team
+        make(
+            pending_requisitions=(PendingRequisition("R", "Nope", "AE", "2025-05-01"),)
+        )
+
+
 def test_outstanding_episodes_must_reproduce_the_queue_at_the_last_month():
     with pytest.raises(ValueError, match="outstanding"):
         make(outstanding_episodes=())  # queue_end Paid is 1
