@@ -6,7 +6,7 @@ from decimal import Decimal
 
 import pytest
 
-from engine.tieout_core import lanes, lanes_basis, lanes_rules
+from engine.tieout_core import lanes, lanes_basis, lanes_contract, lanes_rules
 
 D = Decimal
 ADDITIVE = ("created", "created_arr", "won", "bookings")
@@ -65,7 +65,7 @@ def test_a_parent_is_the_sum_of_its_children_and_the_year_the_sum_of_its_quarter
     _, _, _, docs = built
     for _, doc in docs.values():
         for period in doc["periods"]:
-            segments = [r for r in period["rows"] if r["path"][0] == "segment"]
+            segments = [r for r in period["rows"] if r["kind"] == "segment"]
             for col in ADDITIVE:
                 for mode in ("actual", "forecast", "goal"):
                     parent = cell(doc, period["key"], ["total"], col)[mode]
@@ -78,16 +78,17 @@ def test_a_parent_is_the_sum_of_its_children_and_the_year_the_sum_of_its_quarter
         for row in doc["periods"][0]["rows"]:
             for col in ADDITIVE:
                 for mode in ("actual", "forecast", "goal"):
-                    year = D(row["cells"][col][mode])
+                    year = row["cells"][col][mode]
                     quarters = [
-                        D(
-                            next(r for r in p["rows"] if r["path"] == row["path"])[
-                                "cells"
-                            ][col][mode]
-                        )
+                        next(r for r in p["rows"] if r["path"] == row["path"])["cells"][
+                            col
+                        ][mode]
                         for p in doc["periods"][1:]
                     ]
-                    assert year == sum(quarters), (row["path"], col, mode)
+                    if year is None:  # an owner with no allocation has no goal at all
+                        assert mode == "goal" and quarters == [None] * 4
+                        continue
+                    assert D(year) == sum(D(q) for q in quarters), (row["path"], col, mode)  # fmt: skip
 
 
 def test_the_parent_goal_for_a_rate_or_a_size_is_its_summed_numerator_over_its_denominator(
@@ -100,7 +101,7 @@ def test_the_parent_goal_for_a_rate_or_a_size_is_its_summed_numerator_over_its_d
             parts = [
                 r["cells"][column]["parts"]["goal"]
                 for r in period["rows"]
-                if r["path"][0] == "segment"
+                if r["kind"] == "segment"
             ]
             total = cell(doc, period["key"], ["total"], column)["parts"]["goal"]
             assert D(total["numerator"]) == sum(D(p["numerator"]) for p in parts)
@@ -132,6 +133,7 @@ def test_goals_are_the_same_in_every_scenario_so_a_plan_cannot_move_them(built):
             (p["key"], r["path"], col, c["goal"], c["parts"] and c["parts"]["goal"])
             for p in doc["periods"]
             for r in p["rows"]
+            if r["kind"] in ("company", "segment", "owner")
             for col, c in r["cells"].items()
         ]
 
@@ -157,6 +159,8 @@ def test_a_ratio_on_too_few_observations_has_no_status_and_exposes_its_denominat
     _, doc = docs["as-signed"]
     for period in doc["periods"]:
         for row in period["rows"]:
+            if len(row["path"]) == 4:
+                continue  # an owner's rates are never given a status at all
             for col in ("win_rate", "cycle", "avg_won_arr"):
                 c = row["cells"][col]
                 if (
@@ -179,7 +183,7 @@ def test_the_marker_is_on_total_bookings_only_and_only_for_a_period_with_a_range
     assert fy["goal_inside_range80"] == (lo <= D(fy["goal"]) <= hi)
     assert cell(doc, "Q1FY26", ["total"], "bookings")["range80"] is None
     assert all(
-        r["cells"]["bookings"]["range80"] is None
+        r["cells"]["bookings"].get("range80") is None
         for p in doc["periods"]
         for r in p["rows"]
         if r["path"] != ["total"]
@@ -208,18 +212,30 @@ def test_a_blank_segment_is_a_lane_of_its_own_and_the_company_row_still_adds_up(
     blank = replace(state, pop=pop, ground=replace(state.ground, pop=pop))
     changed = lanes_basis.plan_basis(blank)
     report, _ = docs["as-signed"]
+    basis_doc = lanes_basis.document(changed, company)
     doc = lanes.lanes_document(
-        blank, changed, report, (), (), company, "as-signed", "x"
+        blank,
+        changed,
+        report,
+        (),
+        (),
+        company,
+        "as-signed",
+        lanes_contract.digest(basis_doc),
     )
     paths = [r["path"] for r in doc["periods"][0]["rows"]]
     assert ["segment", "unassigned"] in paths
     assert paths[0] == ["total"]
     assert all(c["passed"] for c in doc["checks"]), doc["checks"]
+    assert lanes_contract.validate_basis(basis_doc) == []
+    assert lanes_contract.validate(doc, basis_doc, report) == []
     assert (
         cell(doc, "FY26", ["total"], "bookings")["forecast"]
         == (report["gap"]["fiscal_year"]["expected"])
     )
     total = D(cell(doc, "FY26", ["total"], "won")["actual"])
     assert total == sum(
-        D(cell(doc, "FY26", p, "won")["actual"]) for p in paths if p[0] == "segment"
+        D(cell(doc, "FY26", p, "won")["actual"])
+        for p in paths
+        if p[0] == "segment" and len(p) == 2
     )

@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from decimal import Decimal
 
+from . import lanes_rules as rules
 from .figures import CENT
 from .lanes_rules import COUNT
 
@@ -81,3 +82,47 @@ def quotient(part: dict | None, places: int) -> Decimal | None:
     return (Decimal(part["numerator"]) / Decimal(part["denominator"])).quantize(
         Decimal(1).scaleb(-places)
     )
+
+
+def owner_cell(col: rules.Column, atoms: dict) -> dict:
+    """One cell of an owner from the three modes' atoms (the goal's None where nothing was
+    allocated). Volumes carry a goal and a status where there is a goal; a rate, a cycle or an
+    average size carries what was recorded, with its numerator and denominator, and nothing to
+    compare it with."""
+    places = Decimal(1).scaleb(-col.places)
+    parts = split = None
+    compared = col.compared
+    if col.key in RATIOS:
+        num, den = RATIOS[col.key]
+        parts = {"actual": part(atoms["actual"], num, den), "forecast": None, "goal": None}  # fmt: skip
+        values = {"actual": quotient(parts["actual"], col.places), "forecast": None, "goal": None}  # fmt: skip
+        compared = "actual"
+    else:
+        values = {
+            m: (atoms[m] or {}).get(col.key) for m in ("actual", "forecast", "goal")
+        }
+        values = {m: None if v is None else v.quantize(places) for m, v in values.items()}  # fmt: skip
+        if col.key in SPLIT:
+            split = {
+                m: dict(
+                    zip(
+                        ("carried_in", "created_in_period"),
+                        (text(atoms[m][k], QUANTUM[k]) for k in SPLIT[col.key]),
+                    )
+                )
+                for m in ("actual", "forecast")
+            }
+    status, why, ratio = rules.owner_status(col, values[compared], values["goal"])
+    denominator = None
+    if col.minimum is not None and parts and parts["actual"]:
+        denominator = parts["actual"]["denominator"]
+    return {
+        **{m: text(v, places) for m, v in values.items()},
+        "parts": parts,
+        "split": split,
+        "compared": compared,
+        "ratio": None if ratio is None else str(ratio),
+        "status": status,
+        "none_because": why,
+        "denominator": denominator,
+    }

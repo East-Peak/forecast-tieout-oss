@@ -16,29 +16,30 @@ each cell's status; the screen does no arithmetic.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import timedelta
 from decimal import Decimal
 
 from . import lanes_flows as flows
+from . import lanes_owners as owners
 from . import lanes_rules as rules
 from .actions import Scenario
 from .capacity import project
 from .figures import CENT, cents
-from .fiscal import Window
 from .history import creation_amounts
-from .lanes_basis import CAVEAT, POOLED, Basis, Sizes, segment_sizes
-from .lanes_cells import (
-    FLOW_ATOMS,
-    QUANTUM,
-    RATIOS,
-    SPLIT,
-    add,
-    part,
-    quotient,
-    text,
-)
+from .lanes_basis import CAVEAT, OWNER_CAVEAT, POOLED, Basis, Sizes, segment_sizes
+from .lanes_cells import QUANTUM, RATIOS, SPLIT, add, part, quotient, text
 from .lanes_contract import SCHEMA_VERSION, reported
+from .lanes_facts import (
+    Period,
+    by_lane,
+    facts,
+    group,
+    modes,
+    owner_of,
+    periods,
+    segment_of,
+    standing,
+)
 from .lanes_flows import Calendar, Flow, Leaf
 from .lanes_rules import COUNT
 from .plan import segment_words
@@ -58,87 +59,6 @@ POOLED_MODEL = (
     "planning discrepancy, not proof of a cause."
 )
 CAVEATS = (CAVEAT, DATED_BENCHMARK, POOLED_MODEL)
-
-
-@dataclass(frozen=True)
-class Period:
-    key: str
-    kind: str  # year or quarter
-    window: Window
-    quarters: tuple[int, ...]  # the quarters whose wins and creation the period holds
-    carried_through: (
-        int  # a win whose deal was created in this origin or earlier is carried in
-    )
-
-    @property
-    def buckets(self) -> tuple[int, ...]:
-        return tuple(q + 1 for q in self.quarters)
-
-
-def periods(cal: Calendar) -> tuple[Period, ...]:
-    year = cal.year
-    whole = Period(
-        year.label, "year", Window(year.label, cal.start, year.end), (0, 1, 2, 3), 0
-    )
-    return (whole,) + tuple(
-        Period(key, "quarter", w, (q,), q)
-        for q, (key, w) in enumerate(zip(year.quarter_keys, cal.quarters))
-    )
-
-
-def _standing(window: Window, as_of: date) -> str:
-    if window.end <= as_of:
-        return "closed"
-    return "not started" if window.start >= as_of else "in progress"
-
-
-# ---------------------------------------------------------------- what has happened
-
-
-def facts(state: Prepared, cal: Calendar):
-    """Wins by (segment, quarter, origin) and created deals by (segment, quarter), as recorded
-    through the as-of date; the first recorded amount is a created deal's pipeline."""
-    amounts = creation_amounts(state.pop)
-    wins: dict[Leaf, Flow] = {}
-    created: dict[tuple[str, int], tuple[Decimal, Decimal]] = {}
-    for d in state.pop.deals:
-        seg = rules.segment_key(d.segment)
-        if cal.start < d.created <= state.as_of:
-            n, arr = created.get((seg, cal.bucket(d.created)), (ZERO, ZERO))
-            created[(seg, cal.bucket(d.created))] = (
-                n + 1,
-                arr + (amounts[d.id] or ZERO),
-            )
-        if d.is_won and cal.start < d.close <= state.as_of:
-            leaf = (seg, cal.bucket(d.close) - 1, cal.bucket(d.created))
-            days = Decimal((d.close - d.created).days)
-            wins[leaf] = wins.get(leaf, flows.ZERO_FLOW) + Flow(Decimal(1), d.arr, days)
-    return wins, created
-
-
-def _open_on(deals, seg: str, day: date) -> int:
-    return sum(
-        1
-        for d in deals
-        if rules.segment_key(d.segment) == seg
-        and d.created <= day
-        and (not d.is_closed or d.close > day)
-    )
-
-
-def _cohort(deals, seg: str, end: date, horizon: int) -> tuple[int, int]:
-    """(won within the horizon, created) among the deals created in the year ending
-    ``horizon`` days before ``end``."""
-    last = end - timedelta(days=horizon)
-    mine = [
-        d
-        for d in deals
-        if rules.segment_key(d.segment) == seg
-        and last - timedelta(days=horizon) < d.created <= last
-    ]
-    return sum(
-        1 for d in mine if d.is_won and (d.close - d.created).days <= horizon
-    ), len(mine)
 
 
 # ---------------------------------------------------------------- what is expected
@@ -263,26 +183,10 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
                 f"{days} days of creation by segment sum to the capacity term's",
             )
         )
-    return tied, made, checks
+    return tied, made, checks, series
 
 
 # ---------------------------------------------------------------- atoms and cells
-
-
-def _flow_atoms(period: Period, seg: str, wins, created) -> dict[str, Decimal]:
-    out = dict.fromkeys(FLOW_ATOMS, ZERO)
-    for (s, q, origin), f in wins.items():
-        if s == seg and q in period.quarters:
-            part = "carried" if origin <= period.carried_through else "new"
-            for name, value in (("won", f.wins), ("bookings", f.bookings)):
-                out[name] += value
-                out[f"{name}_{part}"] += value
-            out["days"] += f.days
-    for (s, j), (n, arr) in created.items():
-        if s == seg and j in period.buckets:
-            out["created"] += n
-            out["created_arr"] += arr
-    return out
 
 
 def _cell(col: rules.Column, atoms: dict, pooled_rate, goal_rate, range80):
@@ -387,10 +291,40 @@ def lanes_document(
     plan_sizes = {s.key: s.sizes for s in basis.segments}
     scenario_model = Scenario(g)
     wins_a, created_a = facts(state, cal)
-    wins_r, created_r, checks = _remainder(
+    wins_r, created_r, checks, whole = _remainder(
         state, basis, cal, hires, inflows, segments, sizes, scenario_model
     )
     wins_f, created_f = _merge(wins_a, wins_r), _merge(created_a, created_r)
+    # the owners: the segments' expected wins and creation shared out
+    lane_series = owners.series(state, basis, cal, hires, inflows, segments)
+    wins_ro, created_ro = owners.remainder(
+        state, cal, lane_series, sizes, wins_r, created_r
+    )
+    checks.append(owners.series_check(lane_series, whole))
+    owner_a = facts(state, cal, owner_of)
+    owner_f = (
+        _merge(owner_a[0], wins_ro),
+        _merge(owner_a[1], created_ro),
+    )
+    record, forecast_ = (
+        (by_lane(wins_a), by_lane(created_a)),
+        (by_lane(wins_f), by_lane(created_f)),
+    )
+    o_record, o_forecast = (
+        tuple(map(by_lane, owner_a)),
+        tuple(map(by_lane, owner_f)),
+    )
+    deals_by_segment = group(g.pop.deals, segment_of)
+    deals_by_owner = group(g.pop.deals, owner_of)
+    entries = {(o.segment, o.id): o for o in basis.owners}
+    names = {m.id: m.name for m in g.cap.members if m.name}
+    names.update({d.owner_id: d.owner_name for d in g.pop.deals if d.owner_name})
+    lane_keys = (
+        set(deals_by_owner)
+        | set(lane_series)
+        | set(entries)
+        | {(s, rules.UNASSIGNED) for s in segments}
+    )
     by_period = reported(report)
     opening = {s.key: s.opening for s in basis.segments}
 
@@ -409,40 +343,54 @@ def lanes_document(
             else None,
         }
 
-    out_periods = []
+    grid = {}
     for period in periods(cal):
-        begun = period.window.start <= g.as_of
-        end = min(period.window.end, g.as_of)
-        by_seg = {}
-        for seg in segments:
-            held = (
-                Decimal(_open_on(g.pop.deals, seg, period.window.start))
-                if begun
-                else None
+        by_seg = {
+            seg: modes(
+                state,
+                period,
+                deals_by_segment.get(seg, ()),
+                seg,
+                record,
+                forecast_,
+                goal_atoms(period, seg),
             )
-            won, n = _cohort(g.pop.deals, seg, end, state.params.horizon_days)
-            actual = {
-                **_flow_atoms(period, seg, wins_a, created_a),
-                "open": held,
-                "cohort_wins": Decimal(won),
-                "cohort_n": Decimal(n),
-            }
-            forecast = {**_flow_atoms(period, seg, wins_f, created_f), "open": held}
-            by_seg[seg] = {
-                "actual": actual,
-                "forecast": forecast,
-                "goal": goal_atoms(period, seg),
-            }
+            for seg in segments
+        }
         by_seg[""] = {
             m: add(by_seg[s][m] for s in segments)
             for m in ("actual", "forecast", "goal")
         }
+        by_owner = {
+            lane: modes(
+                state,
+                period,
+                deals_by_owner.get(lane, ()),
+                lane,
+                o_record,
+                o_forecast,
+                owners.goal_atoms(
+                    basis, entries, cal.start, period, fy.quarter_keys, *lane
+                ),
+            )
+            for lane in lane_keys
+        }
+        grid[period.key] = (by_seg, by_owner)
+    shown = owners.ordered(
+        owners.present({k: v[1] for k, v in grid.items()}),
+        grid[fy.label][1],
+        segments,
+        names,
+    )
+    out_periods = []
+    for period in periods(cal):
+        by_seg, by_owner = grid[period.key]
         expected, range80 = by_period[period.key if period.kind == "quarter" else ""]
-        standing = _standing(period.window, g.as_of)
+        stand = standing(period.window, g.as_of)
         rows = []
-        for seg in ("", *segments):
+        for rank, seg in enumerate(("", *segments)):
             total = seg == ""
-            marker = range80 if total and standing != "closed" else None
+            marker = range80 if total and stand != "closed" else None
             cells = {
                 c.key: _cell(
                     c,
@@ -458,6 +406,8 @@ def lanes_document(
                     "path": ["total"] if total else ["segment", seg],
                     "label": "Company total" if total else segment_words(seg),
                     "parent": None if total else ["total"],
+                    "kind": "company" if total else "segment",
+                    "rank": rank or 1,
                     "allocation": "the sum of its segments"
                     if total
                     else _allocation(seg, basis),
@@ -470,11 +420,22 @@ def lanes_document(
                     "cells": cells,
                 }
             )
+            for rank_, lane in enumerate((x for x in shown if x[0] == seg), 1):
+                name = names.get(lane[1], lane[1])
+                rows.append(
+                    owners.row(
+                        lane,
+                        rank_,
+                        by_owner[lane],
+                        name,
+                        owners.allocation(lane, entries.get(lane), name),
+                    )
+                )
         out_periods.append(
             {
                 "key": period.key,
                 "kind": period.kind,
-                "standing": standing,
+                "standing": stand,
                 "start": str(period.window.start + timedelta(days=1)),
                 "end": str(period.window.end),
                 "reported_bookings": expected,
@@ -508,7 +469,7 @@ def lanes_document(
             for c in rules.COLUMNS
         ],
         "reasons": rules.REASONS,
-        "caveats": list(CAVEATS),
+        "caveats": [*CAVEATS, OWNER_CAVEAT],
         "periods": out_periods,
         "checks": [
             {"name": c.name, "passed": c.passed, "detail": c.detail} for c in checks

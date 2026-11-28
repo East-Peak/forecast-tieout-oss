@@ -65,14 +65,45 @@ CELL = obj(
         "goal_inside_range80": maybe(BOOL),
     }
 )
-ROW = obj(
+OWNER_CELL = obj(
+    {
+        "actual": DECIMAL_OR_NULL,
+        "forecast": DECIMAL_OR_NULL,
+        "goal": DECIMAL_OR_NULL,
+        "parts": maybe(
+            obj({"actual": maybe(PART), "forecast": maybe(PART), "goal": maybe(PART)})
+        ),
+        "split": maybe(obj({"actual": SPLIT, "forecast": SPLIT})),
+        "compared": enum("actual", "forecast"),
+        "ratio": DECIMAL_OR_NULL,
+        "status": enum(rules.BEHIND, rules.ON_TRACK, rules.NONE),
+        "none_because": maybe(enum(*rules.REASONS)),
+        "denominator": DECIMAL_OR_NULL,
+    }
+)
+SEGMENT_ROW = obj(
     {
         "path": arr(TEXT, minItems=1, maxItems=2),
         "label": TEXT,
         "parent": maybe(arr(TEXT, minItems=1, maxItems=1)),
+        "kind": enum("company", "segment"),
+        "rank": INT,
         "allocation": TEXT,
         "sizes": maybe(obj({"plan_start": SIZES, "forecast": SIZES})),
         "cells": obj({c.key: CELL for c in rules.COLUMNS}),
+    }
+)
+OWNER_KINDS = ("owner", "unassigned", "programs", "planned_hires")
+OWNER_ROW = obj(
+    {
+        "path": arr(TEXT, minItems=4, maxItems=4),
+        "label": TEXT,
+        "parent": arr(TEXT, minItems=2, maxItems=2),
+        "kind": enum(*OWNER_KINDS),
+        "rank": INT,
+        "allocation": TEXT,
+        "sizes": {"type": "null"},
+        "cells": obj({c.key: OWNER_CELL for c in rules.COLUMNS}),
     }
 )
 PERIOD = obj(
@@ -83,7 +114,7 @@ PERIOD = obj(
         "start": DATE,
         "end": DATE,
         "reported_bookings": MONEY,
-        "rows": arr(ROW, minItems=1),
+        "rows": arr(one_of(SEGMENT_ROW, OWNER_ROW), minItems=1),
     }
 )
 COLUMN = obj(
@@ -346,6 +377,18 @@ def validate(doc: dict, basis: dict | None, report: dict) -> list[str]:
     return problems
 
 
+def _segments(p) -> list[dict]:
+    return [r for r in p["rows"] if r["kind"] == "segment"]
+
+
+def _owners(p, parent: list | None = None) -> list[dict]:
+    return [
+        r
+        for r in p["rows"]
+        if len(r["path"]) == 4 and (parent is None or r["parent"] == parent)
+    ]
+
+
 def _shape(doc, rule) -> None:
     first = [r["path"] for r in doc["periods"][0]["rows"]]
     rule(first[0] == ["total"], "the first row of every period is the company total")
@@ -356,17 +399,48 @@ def _shape(doc, rule) -> None:
             paths == first,
             f"{p['key']}: every period holds the same rows in the same order",
         )
-        for r in p["rows"][1:]:
+        ranks: dict[tuple, list[int]] = {}
+        for prev, r in zip(p["rows"], p["rows"][1:]):
+            parent = r["parent"]
             rule(
-                r["parent"] == ["total"],
-                f"{p['key']}: {r['path']} must sit under the total",
+                parent == (["total"] if r["kind"] == "segment" else r["path"][:2]),
+                f"{p['key']}: {r['path']} must sit under its parent",
             )
+            if r["kind"] != "segment":
+                rule(
+                    prev["path"] == parent or prev["parent"] == parent,
+                    f"{p['key']}: {r['path']} is not directly beneath its segment's rows",
+                )
+        for r in p["rows"]:
+            ranks.setdefault(tuple(r["parent"] or ()), []).append(r["rank"])
+        for parent, got in ranks.items():
+            rule(
+                got == list(range(1, len(got) + 1)),
+                f"{p['key']}: the rows under {list(parent)} are not ranked 1, 2, ... in order",
+            )
+    for seg in _segments(doc["periods"][0]):
+        goals = [
+            _d(r["cells"]["bookings"]["goal"])
+            for r in _owners(doc["periods"][0], seg["path"])
+            if r["kind"] == "owner"
+        ]
+        known = [g for g in goals if g is not None]
+        rule(
+            goals == known + [None] * (len(goals) - len(known))
+            and known == sorted(known, reverse=True),
+            f"{seg['path']}: owners are not ordered by bookings goal, largest first",
+        )
+    rule(
+        doc["periods"][0]["rows"][0]["kind"] == "company",
+        "the first row is the company",
+    )
 
 
 def _cells(doc, rule) -> None:
     """Each cell on its own: a split adds up, a ratio is its parts, a status is the figures'."""
     for p in doc["periods"]:
         for r in p["rows"]:
+            owner = len(r["path"]) == 4
             for col in rules.COLUMNS:
                 c, where = r["cells"][col.key], f"{p['key']} {r['path']} {col.key}"
                 if c["split"]:
@@ -377,16 +451,20 @@ def _cells(doc, rule) -> None:
                             == _d(c[m]),
                             f"{where}: the {m} split does not add to the figure",
                         )
-                if col.key in ("avg_won_arr", "cycle"):
-                    for m in MODES:
+                if col.key in rules.RATIO_COLUMNS:
+                    for m in ("actual",) if owner or col.key == "win_rate" else MODES:
                         rule(
                             _quotient(c["parts"][m], col.places) == _d(c[m]),
                             f"{where}: the {m} figure is not its numerator over its denominator",
                         )
-                if col.key == "win_rate":
+                if owner and col.key in rules.RATIO_COLUMNS:
                     rule(
-                        _quotient(c["parts"]["actual"], col.places) == _d(c["actual"]),
-                        f"{where}: the actual rate is not its numerator over its denominator",
+                        c["forecast"] is None
+                        and c["goal"] is None
+                        and c["parts"]["forecast"] is None
+                        and c["parts"]["goal"] is None
+                        and c["compared"] == "actual",
+                        f"{where}: an owner's rate carries what was recorded and nothing to compare",
                     )
                 held = c["parts"][c["compared"]] if c["parts"] else None
                 den = (
@@ -398,7 +476,12 @@ def _cells(doc, rule) -> None:
                     _d(c["denominator"]) == den,
                     f"{where}: the denominator is not the compared figure's",
                 )
-                want = rules.status(col, _d(c[c["compared"]]), _d(c["goal"]), den)
+                value, goal = _d(c[c["compared"]]), _d(c["goal"])
+                want = (
+                    rules.owner_status(col, value, goal)
+                    if owner
+                    else rules.status(col, value, goal, den)
+                )
                 got = (c["status"], c["none_because"], _d(c["ratio"]))
                 rule(
                     got == want,
@@ -409,29 +492,41 @@ def _cells(doc, rule) -> None:
 def _sums(doc, rule) -> None:
     year, quarters = doc["periods"][0], doc["periods"][1:]
     for p in doc["periods"]:
-        total, kids = p["rows"][0], p["rows"][1:]
+        total = p["rows"][0]
         for col in ("open", *ADDITIVE, *rules.RATIO_COLUMNS):
             for m in MODES:
                 _add_up(
                     rule,
                     f"{p['key']} {col} {m}: the company",
                     total["cells"][col],
-                    [k["cells"][col] for k in kids],
+                    [k["cells"][col] for k in _segments(p)],
                     m,
                     True,
                 )
+        for seg in _segments(p):
+            kids = [k["cells"] for k in _owners(p, seg["path"])]
+            for col in ("open", *ADDITIVE):
+                for m in MODES:
+                    _add_up(
+                        rule,
+                        f"{p['key']} {col} {m}: the segment {seg['path'][1]}",
+                        seg["cells"][col],
+                        [k[col] for k in kids],
+                        m,
+                        True,
+                    )
+            for (
+                col
+            ) in rules.RATIO_COLUMNS:  # only what was recorded is shared with owners
+                for key in ("numerator", "denominator"):
+                    rule(
+                        Decimal(seg["cells"][col]["parts"]["actual"][key])
+                        == sum(Decimal(k[col]["parts"]["actual"][key]) for k in kids),
+                        f"{p['key']} {col} actual {key}: the segment {seg['path'][1]} is not the sum of its owners",
+                    )
     for r in range(len(year["rows"])):
         mine = year["rows"][r]["cells"]
-        for col in ADDITIVE:
-            for m in MODES:
-                _add_up(
-                    rule,
-                    f"{year['key']} {col} {m} {year['rows'][r]['path']}: the year over its quarters",
-                    mine[col],
-                    [q["rows"][r]["cells"][col] for q in quarters],
-                    m,
-                )
-        for col in FLOWS:
+        for col in (*ADDITIVE, *FLOWS):
             for m in MODES:
                 _add_up(
                     rule,
@@ -486,10 +581,15 @@ def _against_basis(doc, basis, rule) -> None:
         and doc["plan_basis"]["cutoff"] == basis["cutoff"],
         "the lanes' plan basis is not the basis file's label and date",
     )
+    rule(
+        basis["owner_caveat"] in doc["caveats"],
+        "the lanes do not carry the basis's wording on allocated goals",
+    )
     goals = basis["goals"]
     segments = {s["key"]: s for s in basis["segments"]}
+    opening = {(o["segment"], o["id"]): o["opening"] for o in basis["owners"]}
     for p in doc["periods"][1:]:
-        for r in p["rows"][1:]:
+        for r in _segments(p):
             seg = r["path"][1]
             mine = goals[p["key"]].get(seg)
             want = (
@@ -512,11 +612,19 @@ def _against_basis(doc, basis, rule) -> None:
                 Decimal(days) == (Decimal(mine["days"]) if mine else 0),
                 f"{p['key']} {r['path']} cycle: the goal is not the basis's",
             )
+        for r in _owners(p):
+            _, seg, _, who = r["path"]
+            mine = basis["owner_goals"].get(p["key"], {}).get(seg, {}).get(who)
+            for col in ADDITIVE:
+                rule(
+                    _d(r["cells"][col]["goal"]) == (_d(mine[col]) if mine else None),
+                    f"{p['key']} {r['path']} {col}: the owner's goal is not the basis's",
+                )
     for p in doc["periods"]:
-        for r in p["rows"][1:]:
-            opening = segments.get(r["path"][1], {}).get("opening", 0)
+        for r in _segments(p):
+            held = segments.get(r["path"][1], {}).get("opening", 0)
             want = (
-                Decimal(opening)
+                Decimal(held)
                 if p["key"] in (doc["fiscal_year"], f"Q1{doc['fiscal_year']}")
                 else None
             )
@@ -524,11 +632,25 @@ def _against_basis(doc, basis, rule) -> None:
                 _d(r["cells"]["open"]["goal"]) == want,
                 f"{p['key']} {r['path']} open: the goal is not the basis's",
             )
-        for r in p["rows"]:
-            rule(
-                _d(r["cells"]["win_rate"]["goal"]) == Decimal(basis["fit"]["win_rate"]),
-                f"{p['key']} {r['path']} win_rate: the goal is not the basis's",
+        for r in _owners(p):
+            held = opening.get((r["path"][1], r["path"][3]))
+            want = (
+                Decimal(held)
+                if held is not None
+                and p["key"] in (doc["fiscal_year"], f"Q1{doc['fiscal_year']}")
+                else None
             )
+            rule(
+                _d(r["cells"]["open"]["goal"]) == want,
+                f"{p['key']} {r['path']} open: the owner's goal is not the basis's",
+            )
+        for r in p["rows"]:
+            if len(r["path"]) < 4:
+                rule(
+                    _d(r["cells"]["win_rate"]["goal"])
+                    == Decimal(basis["fit"]["win_rate"]),
+                    f"{p['key']} {r['path']} win_rate: the goal is not the basis's",
+                )
 
 
 def _against_report(doc, report, rule) -> None:
@@ -551,7 +673,7 @@ def _against_report(doc, report, rule) -> None:
         rule(total["range80"] == want, f"{p['key']}: the range is not the report's")
         for r in p["rows"][1:]:
             rule(
-                r["cells"]["bookings"]["range80"] is None,
+                r["cells"]["bookings"].get("range80") is None,
                 f"{p['key']} {r['path']}: only the company row carries the range",
             )
     rule(

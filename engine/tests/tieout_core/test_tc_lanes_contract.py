@@ -155,3 +155,74 @@ def test_owner_goals_that_do_not_add_to_the_segments_goal_or_an_opening_that_doe
     doc = lanes_basis.document(basis, company)
     next(o for o in doc["owners"] if o["segment"] == seg)["share"] = "0.999999"
     assert any("share" in p for p in lanes_contract.validate_basis(doc))
+
+
+def first_owner(doc, period=0, kind="owner"):
+    return next(
+        r
+        for r in doc["periods"][period]["rows"]
+        if len(r["path"]) == 4 and r["kind"] == kind and r["cells"]["bookings"]["goal"]
+    )
+
+
+def test_owners_that_do_not_add_to_their_segment_are_found_in_every_mode(parts):
+    for mode in ("actual", "forecast", "goal"):
+
+        def edit(doc, *_, mode=mode):
+            c = first_owner(doc)["cells"]["bookings"]
+            c[mode] = "1.00"
+
+        assert any("segment" in p for p in problems(parts, edit)), mode
+
+
+def test_an_owner_split_a_won_part_and_an_owner_rate_part_that_do_not_add_are_found(
+    parts,
+):
+    def split(doc, *_):
+        first_owner(doc)["cells"]["won"]["split"]["forecast"]["carried_in"] = "99.0000"
+
+    def rate(doc, *_):
+        first_owner(doc)["cells"]["win_rate"]["parts"]["actual"]["denominator"] = "9999"
+
+    assert any("split" in p or "segment" in p for p in problems(parts, split))
+    assert any("win_rate" in p for p in problems(parts, rate))
+
+
+def test_an_owner_rate_given_a_goal_or_a_status_is_found(parts):
+    def goal(doc, *_):
+        c = first_owner(doc)["cells"]["cycle"]
+        c["goal"], c["status"], c["none_because"] = "100.00", "behind", None
+
+    assert any("an owner's rate" in p or "status" in p for p in problems(parts, goal))
+
+
+def test_an_owner_goal_that_is_not_the_frozen_allocation_is_found(parts):
+    def edit(doc, *_):
+        for p in doc["periods"][1:]:
+            for r in p["rows"]:
+                if len(r["path"]) == 4 and r["cells"]["bookings"]["goal"]:
+                    r["cells"]["bookings"]["goal"] = "1.00"
+
+    assert any("owner's goal" in p for p in problems(parts, edit))
+
+
+def test_owners_out_of_order_or_ranked_wrongly_are_found(parts):
+    def swap(doc, *_):
+        for p in doc["periods"]:
+            rows = p["rows"]
+            i = next(i for i, r in enumerate(rows) if len(r["path"]) == 4)
+            rows[i], rows[i + 1] = rows[i + 1], rows[i]
+
+    def rank(doc, *_):
+        for p in doc["periods"]:
+            first_owner(doc, doc["periods"].index(p))["rank"] = 99
+
+    assert any("order" in p or "ranked" in p for p in problems(parts, swap))
+    assert any("ranked" in p for p in problems(parts, rank))
+
+
+def test_lanes_that_drop_the_allocated_goal_wording_are_found(parts):
+    def edit(doc, *_):
+        doc["caveats"] = doc["caveats"][:-1]
+
+    assert any("wording" in p for p in problems(parts, edit))
