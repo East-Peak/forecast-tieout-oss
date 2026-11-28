@@ -250,6 +250,13 @@ test.describe("the plan editor, one shared page @smoke", () => {
     expect(issues).toEqual([]);
   });
 
+  test("on Plan the lanes say they do not yet reflect the edited plan, and show the plan as signed @smoke", async () => {
+    await goTo(page, "Plan");
+    await expect(page.getByTestId("your-plan-note")).toContainText("do not yet reflect your edited plan");
+    const lanes = JSON.parse(readFileSync(resolve(ROOT, "public/data/reports/sapling-industries/lanes-as-signed.json"), "utf8")) as { periods: Array<{ rows: Array<{ cells: { bookings: { forecast: string } } }> }> };
+    await expect(page.locator("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']")).toHaveText(usdShort(lanes.periods[0].rows[0].cells.bookings.forecast));
+  });
+
   test("the form keeps what was entered while the visitor looks at other screens @smoke", async () => {
     await goTo(page, "Plan");
     const before = await page.getByTestId("program-row").first().getByLabel("Created pipeline").inputValue();
@@ -274,11 +281,11 @@ test.describe("the plan editor, one shared page @smoke", () => {
       await page.evaluate(() => document.fonts.ready);
       const style = await page.addStyleTag({ content: STRETCH });
       expect(await sideways(page), `${width}: the page does not scroll sideways`).toBeLessThanOrEqual(0);
-      const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => el.scrollWidth > el.clientWidth + 1).length);
+      const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => !el.matches("[data-testid='grid-scroll']") && el.scrollWidth > el.clientWidth + 1).length);
       expect(scrolling, `${width}: no table scrolls sideways inside its card`).toBe(0);
       const wide = await page.evaluate(() =>
         Array.from(document.querySelectorAll("main *"))
-          .filter((el) => el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
+          .filter((el) => !el.closest("[data-testid='grid-scroll']") && el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
           .map((el) => `${el.tagName}.${String(el.className).slice(0, 40)}`)
           .slice(0, 5),
       );

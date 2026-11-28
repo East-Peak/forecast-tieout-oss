@@ -6,6 +6,9 @@ import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } fro
  * Browser smoke for the screens beyond Forecast: Capacity, Pipeline, Plan and Trust for every company, as
  * signed and with the demo plan, with every expandable thing opened; chart geometry and real hovers; scenario
  * switching on Plan; and no sideways overflow on all five screens under phone device emulation.
+ * The lanes grid (data-testid grid-scroll) is the one table that scrolls sideways inside its own container below the
+ * desktop widths: that is its design, so the "no table scrolls inside its card" checks leave it out and the lanes spec
+ * holds it to its own rules (the page never overflows, the first column stays, the container is what scrolls).
  */
 const NEW_SCREENS = ["capacity", "pipeline", "plan", "trust"] as const;
 const ALL_SCREENS = ["forecast", ...NEW_SCREENS] as const;
@@ -227,11 +230,11 @@ test.describe("at phone width, with device emulation @smoke", () => {
             expect(await sideways(), "the page does not scroll sideways").toBeLessThanOrEqual(0);
             await openAll(page);
             expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
-            const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => el.scrollWidth > el.clientWidth + 1).length);
+            const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => !el.matches("[data-testid='grid-scroll']") && el.scrollWidth > el.clientWidth + 1).length);
             expect(scrolling, "no table scrolls sideways inside its card").toBe(0);
             const wide = await page.evaluate(() =>
               Array.from(document.querySelectorAll("main *"))
-                .filter((el) => el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
+                .filter((el) => !el.closest("[data-testid='grid-scroll']") && el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
                 .map((el) => `${el.tagName}.${String(el.className).slice(0, 40)}`)
                 .slice(0, 5),
             );
@@ -289,7 +292,7 @@ test.describe("at tablet widths, with stretched text @smoke", () => {
               expect(await sideways(), "nor with everything opened").toBeLessThanOrEqual(0);
               const scrolling = await page.evaluate(() =>
                 Array.from(document.querySelectorAll(".overflow-x-auto"))
-                  .filter((el) => el.scrollWidth > el.clientWidth + 1)
+                  .filter((el) => !el.matches("[data-testid='grid-scroll']") && el.scrollWidth > el.clientWidth + 1)
                   .map((el) => `${el.tagName}: ${(el.textContent ?? "").slice(0, 50)}`),
               );
               expect(scrolling, "no table scrolls sideways inside its card").toEqual([]);
