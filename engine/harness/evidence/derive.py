@@ -5,6 +5,10 @@ so loading is idempotent and independent of order: `rebuild` recomputes it all.
 """
 
 from ..contract.keys import DELETED_FIELD
+
+RESTORED_FIELD = (
+    "_restored"  # pseudo-field of the assertion that records a record coming back
+)
 from ..contract.schemas import SCHEMAS
 from .coverage import Coverage, is_field_style
 from .sql import created_field, ident, key_expr, lit, raw_table, text
@@ -37,18 +41,13 @@ def _source(obj: str, key_sql: str, suffix: str = "") -> str:
 def rebuild(con, coverage: Coverage) -> None:
     con.execute("DELETE FROM assertion")
     con.execute("DELETE FROM record")
+    for obj in entity_objects():
+        _check_immutables(con, obj, coverage)
     _build_records(con, coverage)
-    gap = con.execute(
-        "SELECT entity, id FROM record WHERE last_ord - first_ord + 1 <> n_shown LIMIT 1"
-    ).fetchone()
-    if gap:
-        raise ExtractError(
-            f"{gap[0]} {gap[1]} reappears after it was absent from an extract"
-        )
     for obj in entity_objects():
         _snapshot_assertions(con, obj, coverage)
         _immutable_assertions(con, obj, coverage)
-        _deletions(con, obj)
+        _existence(con, obj)
     for entity, via in sorted({(e, v) for e, _, v in coverage.history}):
         fields = [f for e, f, v in coverage.history if (e, v) == (entity, via)]
         if is_field_style(via):
@@ -58,34 +57,62 @@ def rebuild(con, coverage: Coverage) -> None:
 
 
 def _build_records(con, coverage: Coverage) -> None:
+    """One row per record: every record a snapshot shows, plus every history parent no snapshot shows."""
     firsts = [
         f"SELECT {lit(e)} AS entity, {ident(_parent_column(v, e))} AS id, min({ident('CreatedDate')}) AS ts FROM {raw_table(v)} GROUP BY 2"
         for e, v in sorted({(e, v) for e, _, v in coverage.history})
     ]
     history = (
         " UNION ALL ".join(firsts)
-        or "SELECT NULL::VARCHAR, NULL::VARCHAR, NULL::TIMESTAMP WHERE FALSE"
+        or "SELECT NULL::VARCHAR AS entity, NULL::VARCHAR AS id, NULL::TIMESTAMP AS ts WHERE FALSE"
     )
     parts = []
     for obj in entity_objects():
         created = created_field(obj)
         parts.append(
             f"""SELECT {lit(obj)} AS entity, {key_expr(obj, "r")} AS id, {lit(SCHEMAS[obj].system)} AS system,
-                   {f"min(r.{ident(created)})" if created else "NULL::TIMESTAMP"} AS created_at,
+                   {f"arg_min(r.{ident(created)}, l.extracted_at)" if created else "NULL::TIMESTAMP"} AS created_at,
                    arg_min(r.extract_id, l.extracted_at) AS first_extract_id,
                    min(l.extracted_at) AS first_extract_at,
                    min(l.ord) AS first_ord, max(l.ord) AS last_ord, count(*) AS n_shown
             FROM {raw_table(obj)} r JOIN listing l ON l.extract_id = r.extract_id AND l.object = {lit(obj)}
             GROUP BY 1, 2, 3"""
         )
+    systems = " ".join(
+        f"WHEN {lit(o)} THEN {lit(SCHEMAS[o].system)}" for o in entity_objects()
+    )
     con.execute(
         f"""INSERT INTO record
-        WITH h AS ({history}), base AS ({" UNION ALL ".join(parts)})
+        WITH h AS ({history}), base AS ({" UNION ALL ".join(parts)}),
+        hmin AS (SELECT entity, id, min(ts) AS ts FROM h GROUP BY 1, 2)
         SELECT b.entity, b.id, b.system, b.created_at, b.first_extract_id, b.first_extract_at,
-               least(COALESCE(h.ts, b.first_extract_at), b.first_extract_at) AS known_since,
-               b.first_ord, b.last_ord, b.n_shown
-        FROM base b LEFT JOIN (SELECT entity, id, min(ts) AS ts FROM h GROUP BY 1, 2) h USING (entity, id)"""
+               least(COALESCE(hmin.ts, b.first_extract_at), b.first_extract_at) AS known_since,
+               b.first_ord, b.last_ord, b.n_shown, FALSE
+        FROM base b LEFT JOIN hmin USING (entity, id)
+        UNION ALL
+        SELECT hmin.entity, hmin.id, CASE hmin.entity {systems} END, NULL, NULL, NULL, hmin.ts, NULL, NULL, 0, TRUE
+        FROM hmin WHERE NOT EXISTS (SELECT 1 FROM base b WHERE b.entity = hmin.entity AND b.id = hmin.id)"""
     )
+
+
+def _check_immutables(con, obj: str, coverage: Coverage) -> None:
+    """Declared-immutable fields and the creation time must agree across every extract."""
+    created = created_field(obj)
+    fields = [*coverage.immutable.get(obj, ())]
+    if created and created not in fields:
+        fields.append(created)
+    for field in fields:
+        row = con.execute(
+            f"""WITH s AS (
+                SELECT {key_expr(obj, "r")} AS id, {text(obj, field, "r")} AS v, r.extract_id AS x, l.extracted_at AS ex_at
+                FROM {raw_table(obj)} r JOIN listing l ON l.extract_id = r.extract_id AND l.object = {lit(obj)})
+            SELECT id, arg_min_null(v, (ex_at, x)), arg_min(x, (ex_at, x)), arg_max_null(v, (ex_at, x)), arg_max(x, (ex_at, x))
+            FROM s GROUP BY id HAVING count(DISTINCT COALESCE(v, '<null>')) > 1 ORDER BY id LIMIT 1"""
+        ).fetchone()
+        if row:
+            raise ExtractError(
+                f"{obj} {row[0]}: {field} is immutable but is {row[1]!r} in {row[2]} and {row[3]!r} in {row[4]}"
+            )
 
 
 def _snapshot_assertions(con, obj: str, coverage: Coverage) -> None:
@@ -143,14 +170,38 @@ def _immutable_assertions(con, obj: str, coverage: Coverage) -> None:
     )
 
 
-def _deletions(con, obj: str) -> None:
+def _existence(con, obj: str) -> None:
+    """`_deleted` at the first extract that lacks a record, `_restored` where it comes back.
+
+    Only extracts that list the object count. A record no snapshot shows (history only) is deleted
+    at the first extract of its system, listing the object, taken after it was known.
+    """
+    system = SCHEMAS[obj].system
+    src = _source(obj, "_id", "#snapshot")
     con.execute(
         f"""INSERT INTO assertion
-        SELECT {lit(obj)}, rec.id, {lit(DELETED_FIELD)}, 'true', nx.extracted_at, nx.extracted_at,
-               {_source(obj, "rec.id", "#snapshot")}, nx.extract_id, FALSE, TRUE
-        FROM record rec JOIN listing nx
-          ON nx.system = rec.system AND nx.object = {lit(obj)} AND nx.ord = rec.last_ord + 1
-        WHERE rec.entity = {lit(obj)}"""
+        WITH shown AS (
+            SELECT {key_expr(obj, "r")} AS _id, l.ord AS _ord
+            FROM {raw_table(obj)} r JOIN listing l ON l.extract_id = r.extract_id AND l.object = {lit(obj)}),
+        span AS (
+            SELECT rec.id AS _id, l.ord AS _ord, l.extracted_at AS _at, l.extract_id AS _x, (s._id IS NOT NULL) AS _present
+            FROM record rec
+            JOIN listing l ON l.system = rec.system AND l.object = {lit(obj)} AND l.ord BETWEEN rec.first_ord AND rec.last_ord + 1
+            LEFT JOIN shown s ON s._id = rec.id AND s._ord = l.ord
+            WHERE rec.entity = {lit(obj)} AND NOT rec.partial),
+        t AS (SELECT *, lag(_present) OVER (PARTITION BY _id ORDER BY _ord) AS _prev FROM span)
+        SELECT {lit(obj)}, _id, CASE WHEN _present THEN '{RESTORED_FIELD}' ELSE '{DELETED_FIELD}' END, 'true', _at, _at,
+               {src}, _x, FALSE, NOT _present
+        FROM t WHERE _prev IS NOT NULL AND _present <> _prev"""
+    )
+    con.execute(
+        f"""INSERT INTO assertion
+        SELECT {lit(obj)}, _id, {lit(DELETED_FIELD)}, 'true', _at, _at, {src}, _x, FALSE, TRUE
+        FROM (SELECT rec.id AS _id, nx.extracted_at AS _at, nx.extract_id AS _x
+              FROM record rec JOIN listing nx
+                ON nx.system = {lit(system)} AND nx.object = {lit(obj)} AND nx.extracted_at >= rec.known_since
+              WHERE rec.entity = {lit(obj)} AND rec.partial
+              QUALIFY row_number() OVER (PARTITION BY rec.id ORDER BY nx.ord) = 1)"""
     )
 
 

@@ -355,7 +355,7 @@ def test_money_converts_to_cents_exactly(tmp_path):
 
     assert bookings_by_month(
         AsOf.reconstructed(store, date(2025, 3, 1)), "2025-02"
-    ) == sum(amounts.values())
+    ).total_cents == sum(amounts.values())
 
 
 def test_lead_events_cover_admission_and_conversion(store):

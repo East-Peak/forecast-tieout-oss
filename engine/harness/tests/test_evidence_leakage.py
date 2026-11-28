@@ -117,7 +117,11 @@ def mutate(dest: Path, k: datetime, variant: str) -> list[Path]:
                     (variant == "scramble_snapshots" and after)
                     or (variant == "scramble_snapshots_before" and not after)
                 ) and name != "plan_lines":
-                    keep = set(schema.key) | set(COVERAGE.immutable.get(name, ()))
+                    keep = (
+                        set(schema.key)
+                        | set(COVERAGE.immutable.get(name, ()))
+                        | {"CreatedDate", "createdate"}
+                    )
                     rows = [
                         {f.name: (r[f.name] if f.name in keep else junk(f, r[f.name])) for f in schema.fields}
                         for r in rows
@@ -176,7 +180,9 @@ def fingerprint(store, t: date, k: datetime, ask: dict) -> dict:
     from engine.harness.evidence import bookings_by_month, mql_count
 
     months = [f"2025-{m:02d}" for m in range(1, 9)]
-    out["measures"] = [(bookings_by_month(asof, m), mql_count(asof, m)) for m in months]
+    out["measures"] = [
+        (bookings_by_month(asof, m).total_cents, mql_count(asof, m)) for m in months
+    ]
     out["availability"] = [
         asof.availability(s, o) for s, o in (("people_system", "requisitions"), ("hubspot", "contacts"), ("salesforce", "OpportunityFieldHistory"))
     ]  # fmt: skip

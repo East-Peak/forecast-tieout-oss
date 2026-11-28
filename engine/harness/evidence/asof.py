@@ -11,11 +11,14 @@ from datetime import date, datetime, timedelta
 
 from ..contract.keys import AS_OF_MODES, CONTEMPORANEOUS, DELETED_FIELD, RECONSTRUCTED
 from ..contract.schemas import SCHEMAS
+from .derive import RESTORED_FIELD
+from .sql import created_field
 from .store import Store
-from .views import VIEW_NAMES
+from .views import ASOF_KEY, VIEW_NAMES
 
 NO_EXTRACT = "no_extract_at_or_before_known_at"
 NOT_EXTRACTED = "object_not_extracted"
+NOT_IN_SNAPSHOT = "record_not_in_snapshot"  # history shows the record, no extract does
 
 
 @dataclass(frozen=True)
@@ -143,8 +146,7 @@ class AsOf:
             if not gate.available:
                 return FieldValue(None, (), gate.unavailable)
         rows = self._rows(
-            """SELECT arg_max_null(value, (effective_at, recorded_at, source)),
-                      arg_max_null(assumed_since_creation, (effective_at, recorded_at, source))
+            f"""SELECT arg_max_null(value, {ASOF_KEY}), arg_max_null(assumed_since_creation, {ASOF_KEY})
                FROM assertion WHERE entity = ? AND id = ? AND field = ? AND recorded_at <= ?
                  AND effective_at <= ? HAVING count(*) > 0""",
             entity,
@@ -154,7 +156,13 @@ class AsOf:
             self.day_end,
         )
         if not rows:
-            return FieldValue(None)
+            partial = self._rows(
+                "SELECT 1 FROM record WHERE entity = ? AND id = ? AND partial AND known_since <= ?",
+                entity,
+                record_id,
+                self.k,
+            )
+            return FieldValue(None, (), NOT_IN_SNAPSHOT if partial else None)
         value, assumed = rows[0]
         return FieldValue(value, ("assumed_since_creation",) if assumed else ())
 
@@ -167,25 +175,29 @@ class AsOf:
 
     def status_at(self, entity: str, record_id: str) -> Status:
         """Existence: deleted from the first extract that lacks the record (an upper bound, R4)."""
-        deleted = self._rows(
-            """SELECT 1 FROM assertion WHERE entity = ? AND id = ? AND field = ? AND recorded_at <= ?
-               AND effective_at <= ? LIMIT 1""",
+        last = self._rows(
+            """SELECT arg_max(field, (effective_at, field)) FROM assertion
+               WHERE entity = ? AND id = ? AND field IN (?, ?) AND recorded_at <= ? AND effective_at <= ?
+               HAVING count(*) > 0""",
             entity,
             record_id,
             DELETED_FIELD,
+            RESTORED_FIELD,
             self.k,
             self.day_end,
         )
-        if deleted:
+        if last and last[0][0] == DELETED_FIELD:
             return Status("deleted", ("deletion_time_upper_bound",))
         known = self._rows(
-            "SELECT 1 FROM record WHERE entity = ? AND id = ? AND known_since <= ? AND COALESCE(created_at, known_since) <= ?",
+            "SELECT 1 FROM records_known(?, ?, ?) WHERE id = ? AND (created_at IS NULL OR created_at <= ?)",
             entity,
-            record_id,
+            created_field(entity) or "",
             self.k,
+            record_id,
             self.day_end,
         )
-        return Status("present" if known else "unknown")
+        flags = ("restoration_time_upper_bound",) if last else ()
+        return Status("present" if known else "unknown", flags if known else ())
 
     # -- opportunities ----------------------------------------------------
     def open_at(self, opportunity_id: str) -> bool:
@@ -209,7 +221,7 @@ class AsOf:
     def closing(self, opportunity_id: str) -> Closing:
         """The commercial close date and the observed closing transition, kept apart."""
         close = self._rows(
-            """SELECT CAST(arg_max_null(value, (recorded_at, effective_at, source)) AS DATE) FROM assertion
+            """SELECT CAST(arg_max_null(value, (recorded_at, effective_at, prec(assumed_since_creation), source)) AS DATE) FROM assertion
                WHERE entity = 'Opportunity' AND id = ? AND field = 'CloseDate' AND recorded_at <= ?""",
             opportunity_id,
             self.k,
@@ -247,16 +259,37 @@ def _month_start(month: str) -> date:
     return date.fromisoformat(f"{month}-01")
 
 
-def bookings_by_month(asof: AsOf, month: str) -> int:
-    """New-business bookings in cents with an effective close date in `month` ("2025-03"), restated by K."""
-    rows = asof._rows(
-        """SELECT COALESCE(sum(amount_cents), 0) FROM asof_opportunity(?, ?)
-           WHERE type = 'New Business' AND stage = 'Closed Won' AND date_trunc('month', close_date) = ?""",
+@dataclass(frozen=True)
+class Bookings:
+    """New-business bookings of a month: known cents plus what could not be priced."""
+
+    total_cents: int  # sum of the known amounts
+    deals: int  # closed-won deals in the month, priced or not
+    unknown_amount: int  # of those, deals whose amount is not known
+    unknown_type: int  # closed-won deals whose Type is not known (no snapshot shows them): not in the total
+    bound: str  # "exact", or "lower_bound" when anything above is unknown
+
+
+def bookings_by_month(asof: AsOf, month: str) -> Bookings:
+    """New-business bookings with an effective close date in `month` ("2025-03"), restated by K."""
+    (total, deals, no_amount, no_type) = asof._rows(
+        """SELECT COALESCE(sum(amount_cents) FILTER (WHERE type = 'New Business'), 0),
+                  count(*) FILTER (WHERE type = 'New Business'),
+                  count(*) FILTER (WHERE type = 'New Business' AND amount_cents IS NULL),
+                  count(*) FILTER (WHERE type IS NULL)
+           FROM asof_opportunity(?, ?)
+           WHERE stage = 'Closed Won' AND date_trunc('month', close_date) = ?""",
         asof.t,
         asof.k,
         _month_start(month),
+    )[0]
+    return Bookings(
+        int(total),
+        deals,
+        no_amount,
+        no_type,
+        "exact" if no_amount + no_type == 0 else "lower_bound",
     )
-    return int(rows[0][0])
 
 
 def mql_count(asof: AsOf, month: str) -> int:

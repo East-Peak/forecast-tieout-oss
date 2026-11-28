@@ -65,8 +65,10 @@ def reconcile(store, dirs: list[Path]) -> None:
     asof = AsOf.reconstructed(store, FAR)
     bookings = raw_bookings_by_month(dirs)
     for month, cents in bookings.items():
-        assert bookings_by_month(asof, month) == cents, month
-    assert sum(bookings_by_month(asof, m) for m in bookings) == sum(bookings.values())
+        assert bookings_by_month(asof, month).total_cents == cents, month
+    assert sum(bookings_by_month(asof, m).total_cents for m in bookings) == sum(
+        bookings.values()
+    )
     mqls = raw_mqls_by_month(dirs)
     assert {m: mql_count(asof, m) for m in mqls} == mqls
     assert asof.relation("demand_episode").aggregate("count(*)").fetchall()[0][

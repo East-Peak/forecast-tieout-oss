@@ -224,7 +224,7 @@ def test_the_same_extract_id_with_different_content_is_rejected(tmp_path):
         load([target], store=store)
 
 
-def test_a_record_that_disappears_and_returns_is_refused(tmp_path):
+def test_a_record_that_disappears_and_returns_is_restored(tmp_path):
     dirs = copy_estate(tmp_path / "e")
     # extra extract of salesforce after the second that brings the deleted deal back
     second = next(
@@ -240,8 +240,16 @@ def test_a_record_that_disappears_and_returns_is_refused(tmp_path):
         third,
         build_manifest(third, "salesforce", datetime(2025, 8, 31, 23, tzinfo=UTC)),
     )
-    with pytest.raises(ExtractError, match="reappears"):
-        load([*dirs, third])
+    store = load([*dirs, third])
+    got = [
+        (a.field, a.effective_at, f)
+        for a, f in store.flagged_assertions()
+        if a.id == "006FX0000000005" and a.field in ("_deleted", "_restored")
+    ]
+    assert got == [
+        ("_deleted", "2025-06-30T23:00:00Z", ("deletion_time_upper_bound",)),
+        ("_restored", "2025-08-31T23:00:00Z", ("restoration_time_upper_bound",)),
+    ]
     assert second.exists()
 
 

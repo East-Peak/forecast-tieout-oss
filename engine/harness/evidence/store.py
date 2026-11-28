@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS extract_object (
 CREATE TABLE IF NOT EXISTS coverage (kind VARCHAR, entity VARCHAR, field VARCHAR, via VARCHAR);
 CREATE TABLE IF NOT EXISTS record (
     entity VARCHAR, id VARCHAR, system VARCHAR, created_at TIMESTAMP, first_extract_id VARCHAR,
-    first_extract_at TIMESTAMP, known_since TIMESTAMP, first_ord BIGINT, last_ord BIGINT, n_shown BIGINT);
+    first_extract_at TIMESTAMP, known_since TIMESTAMP, first_ord BIGINT, last_ord BIGINT, n_shown BIGINT,
+    partial BOOLEAN);
 CREATE TABLE IF NOT EXISTS assertion (
     entity VARCHAR, id VARCHAR, field VARCHAR, value VARCHAR, effective_at TIMESTAMP,
     recorded_at TIMESTAMP, source VARCHAR, extract_id VARCHAR,
@@ -68,7 +69,9 @@ class Store:
         rows = self.con.execute(
             "SELECT kind, entity, field, via FROM coverage ORDER BY 1, 2, 3"
         ).fetchall()
-        if not rows:
+        if (
+            not rows
+        ):  # nothing declared yet; an empty declaration is stored as a marker row
             return Coverage.standard()
         history = tuple((e, f, v) for k, e, f, v in rows if k == "history")
         immutable: dict[str, tuple[str, ...]] = {}
@@ -79,7 +82,8 @@ class Store:
 
     def _set_coverage(self, coverage: Coverage) -> None:
         self.con.execute("DELETE FROM coverage")
-        rows = [("history", e, f, v) for e, f, v in coverage.history]
+        rows = [("declared", "", "", None)]
+        rows += [("history", e, f, v) for e, f, v in coverage.history]
         rows += [
             ("immutable", e, f, None)
             for e, fs in coverage.immutable.items()
@@ -108,7 +112,8 @@ class Store:
                         strict=True,
                     )
                     if on
-                ),
+                )
+                + (("restoration_time_upper_bound",) if r[2] == "_restored" else ()),
             )
             for r in rows
         ]

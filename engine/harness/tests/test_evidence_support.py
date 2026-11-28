@@ -106,3 +106,67 @@ def scaled_estate(dest: Path, copies: int, extracts: int = 13) -> list[Path]:
             write_manifest(target, build_manifest(target, system, when))
             out.append(target)
     return sorted(out)
+
+
+# ---- small programmatic estates (independent counterexamples) -----------
+
+BASE_OPP = {
+    "AccountId": "001X1", "OwnerId": "005X1", "CreatedById": "005X1", "Sourcing_User__c": None,
+    "CampaignId": None, "LeadSource": None, "Type": "New Business", "StageName": "Discovery",
+    "Amount": 1000.0, "CloseDate": "2025-12-31", "IsClosed": False, "IsWon": False,
+    "CreatedDate": "2025-01-05T09:00:00Z", "SystemModstamp": "2025-01-05T09:00:00Z",
+}  # fmt: skip
+
+
+def opp(oid: str, **over) -> dict:
+    return {"Id": oid, **BASE_OPP, **over}
+
+
+def ohist(hid: str, oid: str, stage: str, amount, close: str, at: str) -> dict:
+    return {
+        "Id": hid,
+        "OpportunityId": oid,
+        "StageName": stage,
+        "Amount": amount,
+        "CloseDate": close,
+        "CreatedDate": at,
+    }
+
+
+def ofh(hid: str, oid: str, old, new, at: str, field: str = "OwnerId") -> dict:
+    return {"Id": hid, "OpportunityId": oid, "Field": field, "OldValue": old, "NewValue": new, "CreatedDate": at, "CreatedById": "005X1"}  # fmt: skip
+
+
+def lead(lid: str, **over) -> dict:
+    base = {
+        "Id": lid, "OwnerId": "005X1", "CreatedById": "005X1", "LeadSource": "Web", "Tier__c": None,
+        "Sales_Offered_Date__c": None, "MQL_Date__c": None, "Disposition__c": None, "Disposition_Reason__c": None,
+        "IsConverted": False, "ConvertedDate": None, "ConvertedOpportunityId": None, "ConvertedAccountId": None,
+        "CreatedDate": "2025-01-02T09:00:00Z", "SystemModstamp": "2025-01-02T09:00:00Z",
+    }  # fmt: skip
+    return {**base, **over}
+
+
+def lh(hid: str, lid: str, field: str, old, new, at: str) -> dict:
+    return {"Id": hid, "LeadId": lid, "Field": field, "OldValue": old, "NewValue": new, "CreatedDate": at, "CreatedById": "005X1"}  # fmt: skip
+
+
+def write_extract(
+    root: Path, when: str, system: str, objects: dict[str, list[dict]]
+) -> Path:
+    """One system folder of one extract; `when` like 2025-03-01T23:00:00Z."""
+    folder = root / f"extract_{when[:10]}" / system
+    folder.mkdir(parents=True, exist_ok=True)
+    for name, rows in objects.items():
+        write_rows(folder, name, rows)
+    stamp = datetime.fromisoformat(when)
+    write_manifest(folder, build_manifest(folder, system, stamp))
+    return folder
+
+
+def sf(root: Path, when: str, opps=(), ohists=(), ofhs=(), leads=(), lhists=()) -> Path:
+    return write_extract(
+        root, when, "salesforce",
+        {"Opportunity": list(opps), "OpportunityHistory": list(ohists), "OpportunityFieldHistory": list(ofhs),
+         "Lead": list(leads), "LeadHistory": list(lhists)},
+    )  # fmt: skip

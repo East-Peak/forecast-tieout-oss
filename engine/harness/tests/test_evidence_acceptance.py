@@ -30,7 +30,7 @@ def iso(moment):
 def answer(asof: AsOf, case: dict) -> dict:
     kind, args = case["kind"], case["args"]
     if kind == "bookings":
-        return {"value_cents": bookings_by_month(asof, args["month"])}
+        return {"value_cents": bookings_by_month(asof, args["month"]).total_cents}
     if kind == "stage_at":
         return {"value": asof.stage_at(args["opportunity"])}
     if kind == "status_at":

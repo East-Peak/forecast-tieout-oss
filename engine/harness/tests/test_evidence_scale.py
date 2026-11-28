@@ -70,7 +70,7 @@ def test_bookings_by_month_answers_in_under_a_second(scaled):
     asof = AsOf.reconstructed(store, date(2099, 1, 1))
     started = time.perf_counter()
     got = {
-        m: bookings_by_month(asof, m)
+        m: bookings_by_month(asof, m).total_cents
         for m in ("2025-03", "2025-04", "2025-05", "2025-06")
     }
     elapsed = time.perf_counter() - started

@@ -7,7 +7,7 @@ DECLARED = (
     set(SCHEMAS)
     | set(SYSTEMS)
     | {f.name for s in SCHEMAS.values() for f in s.fields}
-    | {DELETED_FIELD}
+    | {DELETED_FIELD, "_restored"}
 )
 
 ISO = "%Y-%m-%dT%H:%M:%SZ"

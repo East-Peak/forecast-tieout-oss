@@ -3,6 +3,7 @@
 from .asof import (
     AsOf,
     Availability,
+    Bookings,
     Closing,
     DemandOutcomes,
     Episode,
@@ -19,6 +20,7 @@ from .store import Store, load
 __all__ = [
     "AsOf",
     "Availability",
+    "Bookings",
     "Closing",
     "Coverage",
     "DemandOutcomes",
