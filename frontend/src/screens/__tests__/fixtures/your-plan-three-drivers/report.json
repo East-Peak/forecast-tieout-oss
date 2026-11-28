@@ -4938,7 +4938,7 @@
         },
         "historical_unavailable_because": null,
         "label": "Won ARR per new win",
-        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
+        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. The plan's size actions change the size this sets by the same relative amount, so a setting here is the pooled mean the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
         "needed_alone": {
           "achieved_fiscal_year_bookings": "60000000.01",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",
@@ -5123,7 +5123,7 @@
         },
         "historical_unavailable_because": null,
         "label": "Creation productivity",
-        "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter.",
+        "limitation": "Each quarter is read against the current fitted ramp curve and the roster that actually worked, not against a curve refitted for that quarter. The plan's creation actions change the rate this sets by the same relative amount, so a setting here is the pooled rate the actions are measured from, and the changes shown are the plan with its actions in force at that setting.",
         "needed_alone": {
           "achieved_fiscal_year_bookings": "60000217.16",
           "history_label": "Inside what the company has done: the value lies between the lowest and the highest quarter observed.",

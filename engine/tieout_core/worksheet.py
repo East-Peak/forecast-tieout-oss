@@ -15,7 +15,7 @@ carries no digit that a field does not carry.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
@@ -186,6 +186,18 @@ STACKED_LIMITATION = (
     "held between zero and one, so bookings are not a straight line in it: no setting is solved "
     "for, and the changes at the low and high settings are not on one line."
 )
+SCALED_LIMITATION = {
+    WON_ARR: (
+        "The plan's size actions change the size this sets by the same relative amount, so a "
+        "setting here is the pooled mean the actions are measured from, and the changes shown are "
+        "the plan with its actions in force at that setting."
+    ),
+    PRODUCTIVITY: (
+        "The plan's creation actions change the rate this sets by the same relative amount, so a "
+        "setting here is the pooled rate the actions are measured from, and the changes shown are "
+        "the plan with its actions in force at that setting."
+    ),
+}
 CYCLE_LIMITATION = (
     "A quarter's cycle is the plain mean days of its wins, while the fit in use weights each "
     "day, so the two are close in kind but not the same measure."
@@ -230,6 +242,9 @@ class Context:
     params: FitParams
     fy_target: Decimal
     stacked: bool = False  # the plan's driver actions sit on the pooled win rate
+    scaled: frozenset[str] = (
+        frozenset()
+    )  # the drivers the plan's actions scale (size, creation)
 
 
 def unit_for(adopted: bool, driver: str) -> tuple[str, str, str, str]:
@@ -264,6 +279,7 @@ def limitation_text(
     estimator: str,
     adopted: bool,
     stacked: bool = False,
+    scaled: bool = False,
 ) -> str | None:
     """The limitation sentence, from the driver, the gate, the fit in use and the capacity term."""
     parts = []
@@ -277,12 +293,19 @@ def limitation_text(
         parts.append(CYCLE_LIMITATION)
     if driver == WIN_RATE and stacked:
         parts.append(STACKED_LIMITATION)
+    if scaled and driver in SCALED_LIMITATION:
+        parts.append(SCALED_LIMITATION[driver])
     return " ".join(parts) or None
 
 
 def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
     return limitation_text(
-        driver, gate_passed, c.params.estimator, c.g.cap.adopted, c.stacked
+        driver,
+        gate_passed,
+        c.params.estimator,
+        c.g.cap.adopted,
+        c.stacked,
+        driver in c.scaled,
     )
 
 
@@ -779,15 +802,15 @@ def worksheet_section(
     gap: dict,
     required: dict,
     lift: Lift | None = None,
-    win_rate_acted_on: bool | None = None,
+    acted_on: Collection[str] | None = None,
 ) -> tuple[dict, list[Check]]:
-    """``win_rate_acted_on``: whether the plan's actions include one on the win rate (which
-    stacks with the worksheet's own flex of it); by default, whether it has any action."""
+    """``acted_on``: the drivers the plan's actions are on. The win rate stacks with the
+    worksheet's own flex of it, so it is not solved for; size and creation scale with it, so they
+    are solved for and say so. By default, any action is taken to be one on the win rate."""
     probe = wd.Probe(g, hires, inflows, lift)
-    stacked = (
-        has_actions(plan_section) if win_rate_acted_on is None else win_rate_acted_on
-    )
-    c = Context(g, probe, quarters, params, g.fy_target, stacked)
+    stacked = has_actions(plan_section) if acted_on is None else WIN_RATE in acted_on
+    scaled = frozenset(acted_on or ()) - {WIN_RATE}
+    c = Context(g, probe, quarters, params, g.fy_target, stacked, scaled)
     drivers = [driver_row(c, d) for d in DRIVERS]
     for row, rank in zip(
         drivers, rank_by_window([_driver_magnitudes(r) for r in drivers])

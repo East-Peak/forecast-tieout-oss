@@ -152,9 +152,15 @@ def test_a_size_target_equal_to_the_pooled_mean_changes_no_figure_anywhere(state
         doc["ranges"].pop("what_is_drawn")
     assert a == b  # the figures, the quarters, the gaps and the very same draws
     assert same["driver_actions"]["joint_gain"] == {REST: "0.00", NEXT: "0.00"}
-    # the worksheet is the same: a size action does not stack on any other driver's flex
+    # the worksheet is the same but for what is said of the size with an action on it
     for a, b in zip(base["worksheet"]["drivers"], same["worksheet"]["drivers"]):
-        assert a == b, a["driver"]
+        if a["driver"] != "won_arr":
+            assert a == b, a["driver"]
+            continue
+        for key in a:
+            if key != "limitation":
+                assert a[key] == b[key], key
+        assert b["limitation"].endswith("at that setting.")
 
 
 # ----------------------------------------------------- values reached two ways
@@ -434,3 +440,34 @@ def test_the_simulation_is_centered_for_a_size_action_where_creation_is_flat(
     assert (
         r["driver_actions"]["items"][0]["evidence"]["baseline"] == f"{pooled(flat):.2f}"
     )
+
+
+# ----------------------------------------------------- the worksheet says how an action on the driver stacks
+
+
+def test_the_worksheet_says_that_a_size_action_scales_the_setting_and_only_for_that_driver(
+    state,
+):
+    plain = report(state)
+    acted = report(state, act(target=bigger(state, 10)))
+    size = {d["driver"]: d for d in acted["worksheet"]["drivers"]}
+    was = {d["driver"]: d for d in plain["worksheet"]["drivers"]}
+    assert "size actions change the size this sets by the same relative amount" in size["won_arr"]["limitation"]  # fmt: skip
+    assert (was["won_arr"]["limitation"] or "") not in (None,) and "size actions" not in (was["won_arr"]["limitation"] or "")  # fmt: skip
+    for other in ("win_rate", "productivity", "cycle_days"):
+        assert size[other]["limitation"] == was[other]["limitation"], other
+
+
+def test_the_contract_refuses_a_worksheet_that_forgets_or_invents_that_sentence(state):
+    acted = report(state, act(target=bigger(state, 10)))
+    gone = copy.deepcopy(acted)
+    row = next(d for d in gone["worksheet"]["drivers"] if d["driver"] == "won_arr")
+    row["limitation"] = None
+    assert contract.validate(gone) != []
+    plain = report(state)
+    invented = copy.deepcopy(plain)
+    row = next(d for d in invented["worksheet"]["drivers"] if d["driver"] == "won_arr")
+    row["limitation"] = (
+        "The plan's size actions change the size this sets by the same relative amount."
+    )
+    assert contract.validate(invented) != []

@@ -321,7 +321,7 @@ def finish(
             ground, state.quarters, params, plan_section if plan is not None else None,
             hires, inflows, actions_section, gap, required,
             None if effect is None else effect.lift,
-            plan is not None and any(a.driver == "win_rate" for a in plan.actions),
+            frozenset(a.driver for a in plan.actions) if plan is not None else frozenset(),
         )  # fmt: skip
     else:
         worksheet_section, worksheet_checks = (

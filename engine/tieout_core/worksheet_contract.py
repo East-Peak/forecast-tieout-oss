@@ -480,12 +480,17 @@ def _driver_rules(r: dict, d: dict, rule) -> None:
     plan = r.get("plan")
     acted = r.get("driver_actions") or {}
     if "unavailable" in acted or "items" not in acted:
-        stacked = ws.has_actions(
-            plan if plan is not None and "unavailable" not in plan else None
+        drivers = (
+            {rules.WIN_RATE}
+            if ws.has_actions(
+                plan if plan is not None and "unavailable" not in plan else None
+            )
+            else set()
         )
     else:  # the win rate stacks only where an action is on it
-        stacked = any(i["driver"] == rules.WIN_RATE for i in acted["items"])
-    stacked = stacked and name == rules.WIN_RATE
+        drivers = {i["driver"] for i in acted["items"]}
+    stacked = rules.WIN_RATE in drivers and name == rules.WIN_RATE
+    scaled = name in drivers and name != rules.WIN_RATE
     where = f"worksheet.drivers[{name}]"
     inputs = r["inputs"]
     adopted = inputs["capacity"]["decision"] == "adopted"
@@ -549,7 +554,7 @@ def _driver_rules(r: dict, d: dict, rule) -> None:
     )
     rule(
         d["limitation"]
-        == ws.limitation_text(name, gate, params.estimator, adopted, stacked),
+        == ws.limitation_text(name, gate, params.estimator, adopted, stacked, scaled),
         f"{where}.limitation is not what the report writes",
     )
     if h is not None and used and current is not None:
