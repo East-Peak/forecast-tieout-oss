@@ -255,3 +255,41 @@ describe("quantities, units and flags", () => {
     expect(seen).toEqual(["x/hires-only"]);
   });
 });
+
+describe("Bound reads the lanes files too", () => {
+  const lanes = { cells: { won: { actual: "81.0000", cycle: "146.23" } }, ids: ["a", "b", "c"], when: [] };
+  const owners = { cells: { won: { actual: "5.0000" } } };
+  const withLanes = (node: React.ReactNode) =>
+    render(
+      <BindingProvider company="x" scenario="demo-plan" files={{ report, index, comparison, lanes, owners } as never}>
+        {node}
+      </BindingProvider>,
+    );
+
+  it("names the file it read: lanes and owners are different sources", () => {
+    withLanes(
+      <>
+        <Bound binding={bind({ id: "l", source: "lanes", path: "/cells/won/actual", unit: "quantity", format: "whole" })} />
+        <Bound binding={bind({ id: "o", source: "owners", path: "/cells/won/actual", unit: "quantity", format: "decimal1" })} />
+        <Bound binding={bind({ id: "d", source: "lanes", path: "/cells/won/cycle", unit: "days", format: "days" })} />
+      </>,
+    );
+    expect(screen.getByText("81")).toHaveAttribute("data-source", "lanes");
+    expect(screen.getByText("5.0")).toHaveAttribute("data-source", "owners");
+    expect(screen.getByText("146d")).toHaveAttribute("data-format", "days");
+  });
+
+  it("a count of the list at a path is the list's length, read and not added", () => {
+    withLanes(<Bound binding={bind({ id: "n", source: "lanes", path: "/ids", unit: "count", format: "count", of: "length" })} />);
+    expect(screen.getByText("3")).toHaveAttribute("data-path", "/ids");
+  });
+
+  it("a length of something that is not a list is refused", () => {
+    expect(() => withLanes(<Bound binding={bind({ id: "n", source: "lanes", path: "/cells", unit: "count", format: "count", of: "length" })} />)).toThrow(/not a list/);
+  });
+
+  it("a file the page was not given is an unbound path, never a quiet blank", () => {
+    expect(() => show(<Bound binding={bind({ id: "l", source: "lanes", path: "/cells", unit: "text", format: "text" })} />)).toThrow(UnboundPath);
+  });
+});
+

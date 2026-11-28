@@ -99,3 +99,17 @@ export function plotExtent(rows: readonly PlotRow[], keys: readonly string[], op
 export function plotPoint(doc: unknown, pointer: string): number {
   return decimalToNumber(resolvePointer(doc, pointer) as string);
 }
+
+/**
+ * Where a few values of one measure stand on a small strip, as percents of its length (for a mark on a line,
+ * drawn on paper: the strip runs from the least value to the greatest, `margin` percent in from each end, and
+ * equal values stand on one point). A gap stays a gap. This is plotting, the same job as a chart's axis; the
+ * figures themselves are shown by Bound from the file, never from these positions.
+ */
+export function pointScale(values: ReadonlyArray<string | null>, margin: number): Array<number | null> {
+  const numbers = values.map((v) => (v === null ? null : decimalToNumber(v)));
+  const present = numbers.filter((n): n is number => n !== null);
+  const least = Math.min(...present);
+  const span = Math.max(...present) - least;
+  return numbers.map((n) => (n === null ? null : span === 0 ? 50 : Math.round((margin + ((n - least) / span) * (100 - 2 * margin)) * 100) / 100));
+}

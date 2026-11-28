@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildChart, plotExtent, plotPoint } from "../chartData";
+import { buildChart, plotExtent, plotPoint, pointScale } from "../chartData";
 import type { SeriesSpec } from "../chartData";
 
 const doc = {
@@ -172,5 +172,25 @@ describe("rows plotted by position, spans and gaps (the worksheet's charts)", ()
   it("a reference point is one decimal read from the file", () => {
     expect(plotPoint(sheet, "/target/value")).toBe(60);
     expect(() => plotPoint(sheet, "/target/nope")).toThrow(/unbound path/);
+  });
+
+  describe("pointScale: where a few values stand on one small strip, as percents of its length", () => {
+    it("runs from the least value to the greatest, inset by the margin at each end, a gap staying a gap", () => {
+      expect(pointScale(["146.23", "151.30", null, "140.96"], 10)).toEqual([50.77, 90, null, 10]);
+    });
+    it("keeps the order of the values, and equal values stand on the same point", () => {
+      const [a, b, c] = pointScale(["0.2215", "0.2193", "0.2035"], 8) as number[];
+      expect(a).toBeGreaterThan(b);
+      expect(b).toBeGreaterThan(c);
+      expect(pointScale(["5.00", "5.00"], 10)).toEqual([50, 50]);
+      expect(pointScale([null], 10)).toEqual([null]);
+    });
+    it("holds at the rounding of two places on decimals close together", () => {
+      expect(pointScale(["0.1", "0.3"], 0)).toEqual([0, 100]);
+      expect(pointScale(["1000000.01", "1000000.03", "1000000.02"], 0)).toEqual([0, 100, 50]);
+    });
+    it("refuses a value that is not a decimal", () => {
+      expect(() => pointScale(["12 days"], 10)).toThrow(/not a decimal/);
+    });
   });
 });

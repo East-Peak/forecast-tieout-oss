@@ -11,14 +11,15 @@ import { resolvePointer } from "./pointer";
  * (the scenario's report, the index, or the comparison), a pointer into it, a unit and
  * one of the named formats. The browser formats; it calculates nothing.
  */
-export type SourceName = "report" | "index" | "comparison";
-type Unit = "usd" | "fraction" | "count" | "quantity" | "flag" | "date" | "month" | "text";
+export type SourceName = "report" | "index" | "comparison" | "lanes" | "owners" | "basis" | "records";
+type Unit = "usd" | "fraction" | "count" | "quantity" | "days" | "flag" | "date" | "month" | "text";
 
 const FORMATS: Record<Unit, FormatName[]> = {
   usd: ["usd-full", "usd-short"],
   fraction: ["percent1"],
-  count: ["count"],
-  quantity: ["quantity", "decimal2", "multiple", "cents"],
+  count: ["count", "whole"],
+  quantity: ["quantity", "whole", "decimal1", "decimal2", "multiple", "cents"],
+  days: ["days"],
   flag: ["passed", "yesno"],
   date: ["date"],
   month: ["month"],
@@ -38,6 +39,8 @@ export interface Binding {
    * gives the reason (relative to the row unless ``absolute``), or the words themselves.
    */
   unavailable?: { reason?: string; words?: string; absolute?: boolean; sentence?: boolean };
+  /** "length": the figure is how many entries the list at the path holds (the file's own list, counted by reading it, not added) */
+  of?: "length";
   /** "shortfall": a positive figure is a shortfall (red), a negative one is ahead (green) */
   tint?: "shortfall";
 }
@@ -53,6 +56,11 @@ interface Files {
   report: TieoutReport;
   index: ReportIndex;
   comparison: ScenarioComparison;
+  /** the swimlane grid's files, present where the grid is drawn: total and segments, one segment's owners, the goal basis, the deals */
+  lanes?: unknown;
+  owners?: unknown;
+  basis?: unknown;
+  records?: unknown;
 }
 interface BindingContextValue {
   company: string;
@@ -87,9 +95,13 @@ function expandPath(path: string, ctx: { company: string; scenario: string }): s
 
 /** The value a binding names, read from the file (the whole pointer: row prefix plus path). */
 export function readBinding(ctx: BindingContextValue, binding: Binding, row = ""): unknown {
-  return resolvePointer(ctx.files[binding.source], expandPath(row + binding.path, ctx), {
-    nullBelowNull: binding.unavailable !== undefined,
-  });
+  const pointer = expandPath(row + binding.path, ctx);
+  const value = resolvePointer(ctx.files[binding.source], pointer, { nullBelowNull: binding.unavailable !== undefined });
+  if (binding.of === "length") {
+    if (!Array.isArray(value)) throw new Error(`binding ${binding.id} (${pointer}) counts a list, and this is not a list`);
+    return value.length;
+  }
+  return value;
 }
 
 const TONES = {

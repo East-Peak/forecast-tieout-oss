@@ -11,6 +11,9 @@
  *              else whole dollars, rounded into the next unit when it rounds up:  $58.1M  $612K  $12
  *   percent1   a fraction as a percent to one decimal:  83.3%
  *   count      a whole number, grouped
+ *   whole      a decimal rounded to a whole number, grouped, half away from zero:  767
+ *   decimal1   a decimal to one place, half away from zero:  151.7
+ *   days       a decimal as whole days:  146d
  *   quantity   a count or a decimal at the report's own places, grouped:  93.60  1,234
  *   decimal2   a decimal to two places, half away from zero:  2.07  1,234.50
  *   multiple   a quantity and "x":  1.31x
@@ -21,7 +24,7 @@
  *   month      ISO month as  Sep 2026
  *   text       verbatim
  */
-export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "quantity" | "decimal2" | "multiple" | "cents" | "passed" | "yesno" | "date" | "month" | "text";
+export type FormatName = "usd-full" | "usd-short" | "percent1" | "count" | "whole" | "decimal1" | "days" | "quantity" | "decimal2" | "multiple" | "cents" | "passed" | "yesno" | "date" | "month" | "text";
 
 const DECIMAL = /^(-?)(\d+)(?:\.(\d+))?$/;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -112,6 +115,18 @@ function count(raw: unknown): string {
   return signed(raw < 0, magnitude, group(magnitude));
 }
 
+function whole(raw: unknown): string {
+  const d = parseDecimal(raw);
+  const n = roundedAbs(d, 0);
+  return signed(d.negative, n, group(n));
+}
+
+function decimal1(raw: unknown): string {
+  const d = parseDecimal(raw);
+  const tenths = roundedAbs(d, -1);
+  return signed(d.negative, tenths, `${group(tenths / 10n)}.${tenths % 10n}`);
+}
+
 /** A count, or a decimal string left at the places the report gives it (93.60 stays 93.60). */
 function quantity(raw: unknown): string {
   if (typeof raw === "number") return count(raw);
@@ -163,6 +178,12 @@ export function formatValue(format: FormatName, raw: unknown): string {
       return percent1(raw);
     case "count":
       return count(raw);
+    case "whole":
+      return whole(raw);
+    case "decimal1":
+      return decimal1(raw);
+    case "days":
+      return `${whole(raw)}d`;
     case "quantity":
       return quantity(raw);
     case "decimal2":

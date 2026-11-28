@@ -78,3 +78,20 @@ export function decimal2(raw: string): string {
   const shown = twoPlaces.format(Math.abs(Number(raw)));
   return Number(raw) < 0 && Number(shown.split(",").join("")) !== 0 ? `-${shown}` : shown;
 }
+
+const wholeHalfUp = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0, roundingMode: "halfExpand", useGrouping: true } as Intl.NumberFormatOptions);
+const oneHalfUp = new Intl.NumberFormat("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1, roundingMode: "halfExpand" } as Intl.NumberFormatOptions);
+
+/** A decimal string as a grouped whole number, half away from zero (a rounded zero has no sign). */
+export function whole(raw: string): string {
+  const shown = wholeHalfUp.format(Math.abs(Number(raw)));
+  return Number(raw) < 0 && shown !== "0" ? `-${shown}` : shown;
+}
+
+/** A decimal string to one place, half away from zero. */
+export function decimal1(raw: string): string {
+  const shown = oneHalfUp.format(Math.abs(Number(raw)));
+  return Number(raw) < 0 && Number(shown.split(",").join("")) !== 0 ? `-${shown}` : shown;
+}
+
+export const days = (raw: string): string => `${whole(raw)}d`;

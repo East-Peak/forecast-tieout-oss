@@ -176,3 +176,26 @@ describe("decimal2: a decimal to two places, half away from zero", () => {
     expect(formatValue("decimal2", raw)).toBe(shown);
   });
 });
+
+describe("whole, decimal1 and days: a lane's counts and durations, half away from zero", () => {
+  it.each([
+    ["whole", "766.4543", "766"],
+    ["whole", "1234.5", "1,235"],
+    ["whole", "128", "128"],
+    ["whole", "-0.4", "0"],
+    ["whole", "0.4999", "0"],
+    ["decimal1", "151.7474", "151.7"],
+    ["decimal1", "0.05", "0.1"],
+    ["decimal1", "1234.96", "1,235.0"],
+    ["decimal1", "-0.04", "0.0"],
+    ["days", "146.23", "146d"],
+    ["days", "150.5", "151d"],
+    ["days", "0.00", "0d"],
+  ] as const)("%s of %s reads %s", (format, raw, shown) => {
+    expect(formatValue(format, raw)).toBe(shown);
+  });
+  it("refuses a gap rather than showing a zero", () => {
+    expect(() => formatValue("whole", null)).toThrow();
+    expect(() => formatValue("days", null)).toThrow();
+  });
+});
