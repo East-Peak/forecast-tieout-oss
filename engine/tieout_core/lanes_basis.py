@@ -148,6 +148,22 @@ def segment_sizes(
     return out
 
 
+def sizes_now(g, trailing_days: int, segments: Sequence[str]) -> dict[str, Sizes]:
+    """Each of ``segments``' sizes as of the ground's as-of date; the pooled sizes for a segment
+    with no deals."""
+    new = g.model.new_pipeline
+    pooled = Sizes(new.mean_won_arr, POOLED, new.mean_created_arr, POOLED)
+    now = segment_sizes(
+        g.pop.deals,
+        creation_amounts(g.pop),
+        g.as_of,
+        new.mean_won_arr,
+        new.mean_created_arr,
+        trailing_days,
+    )
+    return {s: now.get(s, pooled) for s in segments}
+
+
 def split_goals(
     target: Decimal,
     trailing: Mapping[str, Decimal],

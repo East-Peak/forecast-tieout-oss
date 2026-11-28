@@ -19,14 +19,13 @@ from collections.abc import Mapping
 from datetime import timedelta
 from decimal import Decimal
 
+from . import driver_actions
 from . import lanes_flows as flows
 from . import lanes_owners as owners
 from . import lanes_rules as rules
 from .actions import Scenario
-from .capacity import project
 from .figures import CENT, cents
-from .history import creation_amounts
-from .lanes_basis import CAVEAT, OWNER_CAVEAT, POOLED, Basis, Sizes, segment_sizes
+from .lanes_basis import CAVEAT, OWNER_CAVEAT, POOLED, Basis, Sizes, sizes_now
 from .lanes_cells import QUANTUM, RATIOS, SPLIT, add, part, quotient, text
 from .lanes_contract import SCHEMA_VERSION, reported
 from .lanes_facts import (
@@ -67,49 +66,9 @@ CAVEATS = (CAVEAT, DATED_BENCHMARK, POOLED_MODEL)
 def _series(state: Prepared, basis: Basis, cal: Calendar, hires, inflows, segments):
     """Deals created on each day to the year's end, by segment: organic creation and programs."""
     g = state.ground
-    horizon = (cal.year.end - g.as_of).days
     share = {s.key: s.creation_share for s in basis.segments}
-    if g.cap.adopted:
-        people = [*g.cap.members, *hires]
-        organic = {
-            seg: list(
-                project(
-                    g.cap.fit,
-                    [m for m in people if rules.segment_key(m.segment) == seg],
-                    g.as_of,
-                    g.horizon_days,
-                ).per_day[:horizon]
-            )
-            for seg in segments
-        }
-    else:
-        rate = g.model.new_pipeline.created_per_day
-        organic = {seg: [rate * share.get(seg, ZERO)] * horizon for seg in segments}
-    extra = flows.inflow_series(inflows, g.model.new_pipeline.mean_created_arr, horizon)
-    return flows.segment_series(organic, extra, share)
-
-
-def _price(won: Mapping[Leaf, Flow], sizes, pooled_size: Decimal) -> dict[Leaf, Flow]:
-    """Modeled wins priced per segment: each (quarter, origin) cell's pooled bookings shared out
-    in proportion to wins times the segment's size, so the segments add to the pooled figure."""
-    out = dict(won)
-    cells: dict[tuple[int, int], list[Leaf]] = {}
-    for leaf in won:
-        cells.setdefault(leaf[1:], []).append(leaf)
-    for leaves in cells.values():
-        pooled = sum((won[k].wins for k in leaves), ZERO) * pooled_size
-        weights = [won[k].wins * sizes[k[0]].won for k in leaves]
-        for k, b in zip(leaves, _share(pooled, weights)):
-            out[k] = Flow(won[k].wins, b, won[k].days)
-    return out
-
-
-def _share(total: Decimal, weights) -> list[Decimal]:
-    """``total`` in proportion to ``weights`` exactly (no rounding), or evenly if none weigh."""
-    weight = sum(weights, ZERO)
-    if not weight:
-        return [total / len(weights)] * len(weights)
-    return [total * w / weight for w in weights]
+    horizon = (cal.year.end - g.as_of).days
+    return driver_actions.creation_series(g, share, hires, inflows, segments, horizon)
 
 
 def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
@@ -123,7 +82,7 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
     if stray:  # a contribution with no lane would silently leave the company row short
         raise ValueError(f"expected wins belong to no lane: {sorted(stray)}")
     new_wins, new_created = flows.new_flows(model, series, g.as_of, cal)
-    priced = _price(new_wins, sizes, model.new_pipeline.mean_won_arr)
+    priced = flows.price(new_wins, sizes, model.new_pipeline.mean_won_arr)
     for k, f in priced.items():
         leaves[k] = leaves.get(k, flows.ZERO_FLOW) + f
     forecast = scenario.forecast(tuple(hires), tuple(inflows))
@@ -292,15 +251,7 @@ def lanes_document(
     segments = known + [s for s in extra if s not in known]
     new = g.model.new_pipeline
     pooled = Sizes(new.mean_won_arr, POOLED, new.mean_created_arr, POOLED)
-    now = segment_sizes(
-        g.pop.deals,
-        creation_amounts(g.pop),
-        g.as_of,
-        new.mean_won_arr,
-        new.mean_created_arr,
-        state.params.trailing_days,
-    )
-    sizes = {s: now.get(s, pooled) for s in segments}
+    sizes = sizes_now(g, state.params.trailing_days, segments)
     plan_sizes = {s.key: s.sizes for s in basis.segments}
     scenario_model = Scenario(g)
     wins_a, created_a = facts(state, cal)

@@ -6,7 +6,6 @@ from decimal import Decimal
 from types import SimpleNamespace
 
 from engine.tests.tieout_core.test_tc_lanes_flows import AS_OF, CAL, model, open_deal
-from engine.tieout_core import lanes
 from engine.tieout_core import lanes_flows as flows
 from engine.tieout_core import lanes_owners as owners
 from engine.tieout_core.lanes_basis import Sizes
@@ -25,7 +24,7 @@ def setup(segment_size):
     )
     seg_new, _ = flows.new_flows(m, {"a": created}, AS_OF, CAL)
     sizes = {"a": Sizes(D(segment_size), "", D(10), "")}
-    priced = lanes._price(seg_new, sizes, D(1000))
+    priced = flows.price(seg_new, sizes, D(1000))
     existing = flows.existing_flows(m, (deal,), AS_OF, CAL)
     tied = {}
     for k in set(existing) | set(priced):

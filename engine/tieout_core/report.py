@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import Decimal
 from pathlib import Path
@@ -107,6 +107,9 @@ class Prepared:
     required: dict
     required_checks: list[Check]
     quarters: tuple = ()  # the worksheet's evidence: the company's past, by creation quarter
+    # What a plan with actions needs from the frozen plan basis, made on first use and kept
+    # with this state alone (a copy made with ``replace`` starts empty).
+    memo: dict = field(default_factory=dict, init=False, compare=False, repr=False)
 
 
 def prepare(

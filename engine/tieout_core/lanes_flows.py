@@ -110,6 +110,29 @@ def apportion(
     return [f * unit for f in floors]
 
 
+def price(won: Mapping[Leaf, Flow], sizes, pooled_size: Decimal) -> dict[Leaf, Flow]:
+    """Modeled wins priced per segment: each (quarter, origin) cell's pooled bookings shared out
+    in proportion to wins times the segment's size, so the segments add to the pooled figure."""
+    out = dict(won)
+    cells: dict[tuple[int, int], list[Leaf]] = {}
+    for leaf in won:
+        cells.setdefault(leaf[1:], []).append(leaf)
+    for leaves in cells.values():
+        pooled = sum((won[k].wins for k in leaves), ZERO) * pooled_size
+        weights = [won[k].wins * sizes[k[0]].won for k in leaves]
+        for k, b in zip(leaves, share(pooled, weights)):
+            out[k] = Flow(won[k].wins, b, won[k].days)
+    return out
+
+
+def share(total: Decimal, weights) -> list[Decimal]:
+    """``total`` in proportion to ``weights`` exactly (no rounding), or evenly if none weigh."""
+    weight = sum(weights, ZERO)
+    if not weight:
+        return [total / len(weights)] * len(weights)
+    return [total * w / weight for w in weights]
+
+
 def _offsets(w: Window, as_of: date) -> tuple[int, int]:
     """The days after ``as_of`` that a quarter covers, from its first to its last."""
     return max((w.start - as_of).days, 0), (w.end - as_of).days

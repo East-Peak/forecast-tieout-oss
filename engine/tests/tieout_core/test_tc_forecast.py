@@ -248,3 +248,53 @@ def test_the_simulation_runs_where_the_platform_integer_is_32_bits(
     monkeypatch.setattr(forecast_module, "np", _Wasm32Numpy())
     wasm = simulate(MODEL, ONLY_X, CUT, WINDOWS, draws=500, seed=7, inflows=inflows)
     assert wasm == native
+
+
+# ------------------------------------------------------------------ win-rate lift
+
+
+def _lifted(lift, **kw):
+    return model_forecast(MODEL, DATA, CUT, WINDOWS, lift=lift, **kw)
+
+
+def test_a_lift_is_wins_expected_on_each_days_creation_at_the_mean_won_size():
+    """Wins land 30 days after creation; the windows end on days 16, 44 and 75, so the deals
+    created on days 1 to 14 win in the second window and on days 15 to 45 in the third."""
+    f = _lifted((Decimal("0.01"),) * 75)
+    assert f.components[forecast_module.ACTIONS] == {
+        "2026-01": Decimal(0),
+        "2026-02": Decimal("0.01") * 14 * 1000,
+        "2026-03": Decimal("0.01") * 31 * 1000,
+    }
+    assert (
+        f.components[forecast_module.EXISTING]
+        == model_forecast(MODEL, DATA, CUT, WINDOWS).components[
+            forecast_module.EXISTING
+        ]
+    )
+
+
+def test_a_lift_on_later_days_only_moves_the_windows_those_days_win_in():
+    lift = (Decimal(0),) * 20 + (Decimal(2),) * 55  # days 21 to 75
+    got = _lifted(lift).components[forecast_module.ACTIONS]
+    assert got["2026-02"] == 0  # the deals created on days 1 to 14 are not lifted
+    assert got["2026-03"] == Decimal(2) * 25 * 1000  # days 21 to 45
+
+
+def test_no_lift_or_a_lift_of_zeros_is_the_forecast_as_it_was():
+    plain = model_forecast(MODEL, DATA, CUT, WINDOWS)
+    assert _lifted(()) == plain
+    assert _lifted((Decimal(0),) * 75) == plain
+
+
+def test_a_lift_adds_to_creation_whatever_its_source_and_changes_no_other_part():
+    flows = (Inflow(0, 30, Decimal(6000)),)
+    own = _lifted((Decimal("0.01"),) * 75, inflows=flows)
+    plain = model_forecast(MODEL, DATA, CUT, WINDOWS, inflows=flows)
+    for part in (
+        forecast_module.EXISTING,
+        forecast_module.FUTURE,
+        forecast_module.ADDED,
+    ):
+        assert own.components[part] == plain.components[part]
+    assert own.window_total("2026-03") - plain.window_total("2026-03") == Decimal(310)

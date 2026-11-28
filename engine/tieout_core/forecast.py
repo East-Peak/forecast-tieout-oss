@@ -25,6 +25,7 @@ from .records import Check, Dataset, Profile
 EXISTING = "existing pipeline"
 FUTURE = "future pipeline"
 ADDED = "added pipeline"
+ACTIONS = "driver actions"
 RUN_RATE = "run-rate"
 
 
@@ -222,8 +223,11 @@ def model_forecast(
     creation: Creation | None = None,
     inflows: Sequence[Inflow] = (),
     existing: dict[str, Decimal] | None = None,
+    lift: Sequence[Decimal] = (),
 ) -> Forecast:
-    """``added_pipeline`` is created in equal parts in each window that ends by
+    """``lift`` is the extra wins expected from the deals created on each day after the cutoff
+    (day 1 first), from a change to a win rate; each win is the mean won size, and it books
+    on the timing of any other new win. ``added_pipeline`` is created in equal parts in each window that ends by
     ``added_through`` (every window by default) and books in any window.
     ``inflows`` are further dollars created over given day ranges (programs,
     quarterly requirements). ``creation``, when given, replaces the flat
@@ -322,9 +326,26 @@ def model_forecast(
                     )
                     added[w.label] += deals_per_day * per_created_deal * hits
 
+    lifted = _zeros(windows)
+    if n and windows and any(lift):
+        per_win = new.mean_won_arr / Decimal(n)
+        for w, (a, b) in zip(windows, offsets):
+            lifted[w.label] = per_win * sum(
+                (
+                    lift[t - 1]
+                    * (
+                        new.timing.count_through(b - t)
+                        - new.timing.count_through(a - t)
+                    )
+                    for t in range(1, min(offsets[-1][1], len(lift)) + 1)
+                ),
+                Decimal(0),
+            )
     components = {EXISTING: existing, FUTURE: future}
     if added_pipeline or inflows:
         components[ADDED] = added
+    if any(lift):
+        components[ACTIONS] = lifted
     creation_text = (
         f"new pipeline is created at {new.created_per_day:.4f} deals per day"
         if creation is None
