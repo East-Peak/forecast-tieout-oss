@@ -31,6 +31,15 @@ not touch it.
 - Timestamps are UTC ISO 8601 with a trailing `Z`; dates are `YYYY-MM-DD`.
 - American English.
 
+## Golden fixtures (`contract/fixtures/`)
+
+- `estate_a/`: two extracts of a tiny estate (a late amount edit, a close date
+  entered in arrears, a deleted record, a field with no history), `estate.yaml`
+  (field coverage), and `expected.yaml` (the answers an evidence engine must
+  give in both as-of modes, with the semantic rules R1 to R9 that define them).
+- `workload_b/`: the hand-computed workload; `contract/workload.py` loads it
+  as a `Snapshot`. Arithmetic is in `ARITHMETIC.md`.
+
 ## Running
 
 ```

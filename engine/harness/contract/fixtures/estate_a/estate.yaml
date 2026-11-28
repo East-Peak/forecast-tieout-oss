@@ -1,0 +1,27 @@
+# Golden fixture A: a tiny estate extracted twice, with a late edit.
+# Declares the per-estate facts the evidence engine needs and cannot read off the records.
+estate: estate_a
+fiscal_year_start_month: 2
+extracts:
+  - {folder: extract_2025-04-30, extracted_at: "2025-04-30T23:00:00Z"}
+  - {folder: extract_2025-06-30, extracted_at: "2025-06-30T23:00:00Z"}
+# How each field's knowledge time is learned (design section 1, "Field coverage is declared per estate").
+# history:   a history object carries the field; recorded_at is the history row's CreatedDate.
+# immutable: never changes after creation; known as soon as the record is known.
+# Every other field is snapshot-only: recorded_at is the extracted_at of the first extract showing the value.
+field_coverage:
+  history:
+    Opportunity.StageName:  {via: OpportunityHistory, since: record creation}
+    Opportunity.Amount:     {via: OpportunityHistory, since: record creation}
+    Opportunity.CloseDate:  {via: OpportunityHistory, since: record creation}
+    Opportunity.OwnerId:    {via: OpportunityFieldHistory, since: record creation}
+    Lead.MQL_Date__c:             {via: LeadHistory, since: record creation}
+    Lead.Disposition__c:          {via: LeadHistory, since: record creation}
+    Lead.Disposition_Reason__c:   {via: LeadHistory, since: record creation}
+  immutable:
+    Opportunity: [AccountId, CreatedById, CampaignId, LeadSource, Type, CreatedDate]
+    Lead: [CreatedById, LeadSource, CreatedDate]
+  snapshot_only_examples:    # every other field; these are the ones the cases below touch
+    - Account.Tier__c          # changes between the extracts with no history: the one field with no history
+    - Opportunity.Sourcing_User__c
+    - Lead.Tier__c

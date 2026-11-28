@@ -1,0 +1,12 @@
+{
+  "manifest_version": 1,
+  "extract_id": "spend_sheet-20250630T230000Z",
+  "source_system": "spend_sheet",
+  "extracted_at": "2025-06-30T23:00:00Z",
+  "objects": {
+    "spend": {
+      "count": 3,
+      "sha256": "3575cea41b5a90429081791fc6ec9429249aa8fe748ed061423c4bd766ce8eb7"
+    }
+  }
+}

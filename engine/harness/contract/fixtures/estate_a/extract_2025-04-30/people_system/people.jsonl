@@ -1,0 +1,4 @@
+{"person_id": "P-001", "name": "Alex Fixture", "email": "alex.fixture@example.com", "role": "AE", "team": "AE-Enterprise", "segment": "Enterprise", "region": "NA", "start_date": "2024-01-10", "end_date": null}
+{"person_id": "P-002", "name": "Bea Fixture", "email": "bea.fixture@example.com", "role": "AE", "team": "AE-MidMarket", "segment": "Mid-Market", "region": "NA", "start_date": "2024-01-10", "end_date": null}
+{"person_id": "P-003", "name": "Cal Fixture", "email": "cal.fixture@example.com", "role": "BDR", "team": "BDR", "segment": null, "region": "NA", "start_date": "2024-03-01", "end_date": null}
+{"person_id": "P-004", "name": "Dee Fixture", "email": "dee.fixture@example.com", "role": "Marketing", "team": "Marketing", "segment": null, "region": "NA", "start_date": "2023-06-01", "end_date": null}

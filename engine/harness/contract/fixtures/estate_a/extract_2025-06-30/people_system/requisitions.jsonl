@@ -1,0 +1,2 @@
+{"req_id": "REQ-001", "team": "AE-MidMarket", "role": "AE", "planned_start": "2025-08-01", "status": "open", "person_id": null, "opened_date": "2025-05-15", "closed_date": null}
+{"req_id": "REQ-002", "team": "AE-Enterprise", "role": "AE", "planned_start": "2024-01-01", "status": "filled", "person_id": "P-001", "opened_date": "2023-11-01", "closed_date": "2024-01-10"}

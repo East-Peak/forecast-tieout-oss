@@ -1,0 +1,12 @@
+{
+  "manifest_version": 1,
+  "extract_id": "people_system-20250430T230000Z",
+  "source_system": "people_system",
+  "extracted_at": "2025-04-30T23:00:00Z",
+  "objects": {
+    "people": {
+      "count": 4,
+      "sha256": "ed218ebe0aa5a46d10b5c60f99855ad3b242702c33f7506a604618c9c867f408"
+    }
+  }
+}

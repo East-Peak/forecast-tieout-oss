@@ -1,0 +1,44 @@
+{
+  "manifest_version": 1,
+  "extract_id": "salesforce-20250430T230000Z",
+  "source_system": "salesforce",
+  "extracted_at": "2025-04-30T23:00:00Z",
+  "objects": {
+    "Opportunity": {
+      "count": 5,
+      "sha256": "2505424a8d40d6ae50ab1a326553bdaa1f19490ca36a845530badf1267b98ac3"
+    },
+    "OpportunityHistory": {
+      "count": 11,
+      "sha256": "3a92f5ad2a8e9d792d4d823b9e3c6d96ab15f8bdb3e30011790e6cb91c22a94a"
+    },
+    "OpportunityFieldHistory": {
+      "count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Lead": {
+      "count": 8,
+      "sha256": "3879c67c07198c1ae662fc2e87230e037e07fa9f3a2714906350d11525774ad0"
+    },
+    "LeadHistory": {
+      "count": 13,
+      "sha256": "ad2dcc0e0453dff7d54cfcb3f7861f793e3e5c985041324894c073231b4849f1"
+    },
+    "Account": {
+      "count": 3,
+      "sha256": "edfd603408ba445bedfaf417469983ca2a982bddde23ed6bbc519dc1cf0286cc"
+    },
+    "Campaign": {
+      "count": 2,
+      "sha256": "316b1b867da74b1c1a4762405962130f22c0548c4a5459f4aef30b29fba81933"
+    },
+    "CampaignMember": {
+      "count": 7,
+      "sha256": "f19716bf2e6c675b58a8a7c54493157759ff3b53e773fec9d0f65fa2c734cc06"
+    },
+    "User": {
+      "count": 4,
+      "sha256": "e125250ec4cd23e982118f51c1ccfc7a1c20cf41cbaebebca09b8257142bc2b9"
+    }
+  }
+}

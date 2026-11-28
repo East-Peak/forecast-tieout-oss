@@ -1,0 +1,16 @@
+{
+  "manifest_version": 1,
+  "extract_id": "hubspot-20250630T230000Z",
+  "source_system": "hubspot",
+  "extracted_at": "2025-06-30T23:00:00Z",
+  "objects": {
+    "contacts": {
+      "count": 2,
+      "sha256": "7367e0b838af04ee3a18c051153a6ac680992cc937a07f2b774ce0a6311695f0"
+    },
+    "deals": {
+      "count": 2,
+      "sha256": "23753b481d48b46aa3044175b7ead6da1e2e3403253daa797024ba8ece9b365e"
+    }
+  }
+}
