@@ -28,6 +28,7 @@ from .plan import (
     NEXT_12,
     REST_OF_FY,
     Plan,
+    PlanAction,
     PlanHire,
     PlanProgram,
     next_month_start,
@@ -238,10 +239,14 @@ def plan_inputs(g: Ground, plan: Plan) -> tuple[tuple[Member, ...], tuple[Inflow
         if isinstance(item, PlanHire):
             if g.cap.adopted:
                 hires.extend(plan.members_for(index))
-        else:
+        elif isinstance(item, PlanProgram):
             inflows.extend(
                 program_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
             )
+        elif isinstance(item, PlanAction):
+            continue  # a driver changes, not people or pipeline: valued as the actions
+        else:
+            raise TypeError(f"no rule for the plan item {item!r}")
     return tuple(hires), tuple(inflows)
 
 
@@ -265,6 +270,10 @@ def plan_section(
         cfg.program_ramp_months if cfg else None
     ) or DEFAULT_PROGRAM_RAMP_MONTHS
     for index, item in enumerate(plan.items()):
+        if isinstance(item, PlanAction):
+            continue  # valued together, after the items applied in turn
+        if not isinstance(item, (PlanHire, PlanProgram)):
+            raise TypeError(f"no rule for the plan item {item!r}")
         total = None
         if isinstance(item, PlanHire):
             people = plan.members_for(index)
@@ -285,7 +294,7 @@ def plan_section(
                 hires.extend(people)
             else:
                 row |= {"valued": False, "note": f"hiring is {UNSUPPORTED}: not valued"}
-        else:
+        elif isinstance(item, PlanProgram):
             flows = program_inflows(item, g.windows, g.as_of, g.fy_end, ramp_default)
             per_dollar = cfg.program_cost_per_dollar if cfg else None
             cost = program_cost_in_window(item, per_dollar, flows, g.windows[-1].end)

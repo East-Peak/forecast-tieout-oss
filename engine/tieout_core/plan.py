@@ -7,6 +7,14 @@ month, an optional ramp in months, an optional length in months and an
 optional cost. Items are applied in the order hires first, then programs,
 each in file order.
 
+An action is a named change to one driver in one slice (the company, or one
+segment): a stable id, a start month, a ramp in months (0 is immediate) and a
+target value. Only the win rate can be acted on so far, and its target is a
+probability. An action changes the pipeline created from its start, so it is
+not an item to apply in turn: the joint effect of all the actions is valued
+together, on top of the hires and programs. Two actions on one driver may not
+touch the same slice, and the company touches every segment.
+
 Program arithmetic: a program running N months (default: through the
 fiscal-year end) creates its dollars in the calendar months from its start
 month, month j at a weight of min(1, j / ramp); the dollars of the whole
@@ -28,10 +36,13 @@ import yaml
 from .fiscal import Window, add_months
 from .forecast import Inflow
 from .roster import Member
+from .worksheet_rules import WIN_RATE
 
 DEFAULT_PROGRAM_RAMP_MONTHS = 3
 REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
+COMPANY = "company"  # an action's slice when it is not one segment's
+ACTION_DRIVERS = (WIN_RATE,)
 
 
 def segment_words(segment: str) -> str:
@@ -71,12 +82,32 @@ class PlanProgram:
 
 
 @dataclass(frozen=True)
+class PlanAction:
+    id: str
+    name: str
+    driver: str
+    segment: str | None  # None: the company, every segment alike
+    start: date  # the first day of the start month
+    ramp_months: int  # 0: the whole change from the start
+    target: Decimal  # the driver's value once the ramp is done
+
+    @property
+    def label(self) -> str:
+        return self.name
+
+    @property
+    def slice_label(self) -> str:
+        return "Company" if self.segment is None else segment_words(self.segment)
+
+
+@dataclass(frozen=True)
 class Plan:
     hires: tuple[PlanHire, ...]
     programs: tuple[PlanProgram, ...]
+    actions: tuple[PlanAction, ...] = ()
 
-    def items(self) -> list[PlanHire | PlanProgram]:
-        return [*self.hires, *self.programs]
+    def items(self) -> list[PlanHire | PlanProgram | PlanAction]:
+        return [*self.hires, *self.programs, *self.actions]
 
     def members_for(self, index: int) -> tuple[Member, ...]:
         """The people hire ``index`` adds."""
@@ -140,7 +171,8 @@ def parse_plan(doc: dict, as_of: date, members, source: str) -> Plan:
                 payments,
             )
         )
-    return Plan(tuple(hires), tuple(programs))
+    actions = _actions(doc.get("actions") or (), as_of, members, source)
+    return Plan(tuple(hires), tuple(programs), actions)
 
 
 def program_cost(p: PlanProgram, per_dollar: Decimal | None) -> Decimal | None:
@@ -261,3 +293,73 @@ def _opt_int(value, name: str, where: str) -> int | None:
     if not isinstance(value, int) or isinstance(value, bool) or value < 1:
         raise ValueError(f"{where}: {name} must be a whole number of at least 1")
     return value
+
+
+def _actions(raw_items, as_of: date, members, source: str) -> tuple[PlanAction, ...]:
+    segments = {m.segment for m in members if m.segment}
+    out: list[PlanAction] = []
+    for i, raw in enumerate(raw_items, start=1):
+        where = f"{source}: actions[{i}]"
+        if not isinstance(raw, dict):
+            raise ValueError(  # noqa: TRY004 - the form reports a ValueError
+                f"{where}: an action is a mapping of its fields"
+            )
+        out.append(_action(raw, as_of, segments, where))
+        _refuse_overlap(out, where)
+    return tuple(out)
+
+
+def _action(raw: dict, as_of: date, segments: set[str], where: str) -> PlanAction:
+    ident = str(raw.get("id") or "").strip()
+    if not ident:
+        raise ValueError(
+            f"{where}: id is required, and must stay the same when the plan changes"
+        )
+    driver = raw.get("driver")
+    if driver not in ACTION_DRIVERS:
+        raise ValueError(
+            f"{where}: driver must be one of {', '.join(ACTION_DRIVERS)}, not {driver!r}"
+        )
+    where_slice = str(raw.get("slice") or "").strip()
+    if where_slice != COMPANY and where_slice not in segments:
+        raise ValueError(
+            f"{where}: slice must be {COMPANY!r} or a segment on the roster "
+            f"({', '.join(sorted(segments))}), not {where_slice!r}: no segment of that name"
+        )
+    ramp = raw.get("ramp_months", 0)
+    if not isinstance(ramp, int) or isinstance(ramp, bool) or ramp < 0:
+        raise ValueError(f"{where}: ramp_months must be a whole number of 0 or more")
+    target = _decimal(raw.get("target"), "target", where)
+    if not 0 <= target <= 1:
+        raise ValueError(f"{where}: target is a probability, from 0 to 1, not {target}")
+    return PlanAction(
+        ident,
+        str(raw.get("name") or ident),
+        driver,
+        None if where_slice == COMPANY else where_slice,
+        _month(raw.get("start"), as_of, where),
+        ramp,
+        target,
+    )
+
+
+def _refuse_overlap(actions: list[PlanAction], where: str) -> None:
+    """The last action added may not change a driver where an earlier one already does: the
+    same segment, or the company against any segment (it touches every one)."""
+    new = actions[-1]
+    for j, old in enumerate(actions[:-1], start=1):
+        if old.id == new.id:
+            raise ValueError(
+                f"{where}: id {new.id!r} is already used by actions[{j}]; ids are unique"
+            )
+        if old.driver == new.driver and (
+            old.segment is None or new.segment is None or old.segment == new.segment
+        ):
+            raise ValueError(
+                f"{where}: overlaps actions[{j}] ({old.name!r}): both change {new.driver} "
+                f"for {_touches(old)} and {_touches(new)}, and they would be counted twice"
+            )
+
+
+def _touches(a: PlanAction) -> str:
+    return "the company" if a.segment is None else f"segment {a.segment}"
