@@ -87,6 +87,8 @@ export const DRIVER = {
   neededNone: text("driver.needed.none", "/needed_alone/outcome_label", { unavailable: { reason: "/cannot_scale_because", sentence: true, words: "no figure" } }),
   /** a win rate under the plan's actions is not solved for: the core's limitation sentence stands where its figure would */
   neededStacked: text("driver.needed.stacked", "/limitation"),
+  /** a size or creation row with an action of the plan on it: the core's sentence on how the action stacks with the flex */
+  scaled: text("driver.scaled", "/limitation"),
   precision: text("driver.needed.precision", "/needed_alone/precision_note"),
   neededLabel: text("driver.needed.label", "/needed_alone/outcome_label"),
   neededReason: text("driver.needed.reason", "/needed_alone/reason_label"),

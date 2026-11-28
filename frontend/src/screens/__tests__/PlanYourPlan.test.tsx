@@ -79,6 +79,23 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     expect(Array.from(container.querySelectorAll("[data-testid='bridge-row']")).map((r) => r.getAttribute("data-kind"))).toContain("actions");
   });
 
+  it("the tornado says where the plan's win-rate action sits against the worksheet even though no setting is solved, and says how a size or creation action stacks with its flex", () => {
+    const c = computed("your-plan-three-drivers");
+    const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+    const rate = container.querySelector("[data-testid='driver-row'][data-driver='win_rate']")!;
+    expect(rate.querySelector("[data-testid='driver-position-pill']")).toHaveTextContent("Outside historical settings");
+    for (const driver of ["won_arr", "productivity"]) {
+      const note = container.querySelector(`[data-testid='driver-scaled'][data-driver='${driver}']`);
+      const row = c.report.worksheet && "drivers" in c.report.worksheet ? c.report.worksheet.drivers.find((d) => d.driver === driver) : undefined;
+      expect(note, driver).not.toBeNull();
+      expect(note).toHaveTextContent(row!.limitation!);
+      expect(note!.querySelector("[data-binding='driver.scaled']")).not.toBeNull();
+    }
+    const plain = mountScreen(PlanScreen, computed("your-plan-actions"), COMPANY, YOUR_PLAN);
+    expect(plain.querySelector("[data-testid='driver-scaled']")).toBeNull();
+    expect(plain.querySelector("[data-testid='driver-row'][data-driver='won_arr'] [data-testid='driver-position-pill']")).toBeNull();
+  });
+
   it("the reconciliation line is said only where the core calls it material, in the core's sentence for that window; a figure that rounds to zero is not said", () => {
     const c = computed("your-plan-actions");
     const none = mountScreen(PlanScreen, c, c.company, c.scenario);

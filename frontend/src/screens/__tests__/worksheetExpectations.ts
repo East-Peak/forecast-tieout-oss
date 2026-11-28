@@ -49,7 +49,7 @@ export function worksheetExpectations({ report: r, comparison, scenario }: Case,
   one(WS.sensitivityNote.id, ws.sensitivity_note);
   one(WS.expectationNote.id, ws.expectation_note);
 
-  tornado(ws, put, REST_WINDOW);
+  tornado(ws, put, REST_WINDOW, new Set("items" in r.driver_actions ? r.driver_actions.items.map((a) => a.driver) : []));
   bridge(ws, put);
   quarters(r, put);
   alsoNamed.push(...otherWindowIds());
@@ -69,7 +69,7 @@ function otherWindowIds(): string[] {
 }
 
 /** The driver table, its disclosures and the two actions, for the window the switch is on. */
-export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKey): void {
+export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKey, acted: ReadonlySet<string> = new Set()): void {
   // with the plan's actions on the win rate the core solves for no setting: the driver says so in its limitation sentence, not in a figure
   const stacked = sheet.bridge.steps.some((s) => s.kind === "actions");
   const isStacked = (d: Sheet["drivers"][number]) => stacked && d.driver === "win_rate" && d.needed_alone === null && d.cannot_scale_because === null;
@@ -122,6 +122,9 @@ export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKe
   many(DRIVER.neededNone.id, none.map(([d]) => d.cannot_scale_because ?? "no figure"), none.map(([, i]) => rows[i]));
   const sentence = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => isStacked(d));
   many(DRIVER.neededStacked.id, sentence.map(([d]) => d.limitation!), sentence.map(([, i]) => rows[i]));
+  // a size or creation row the plan has an action on says how the action stacks with its flex, in the core's sentence
+  const scaled = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.driver !== "win_rate" && acted.has(d.driver) && d.limitation !== null);
+  many(DRIVER.scaled.id, scaled.map(([d]) => d.limitation!), scaled.map(([, i]) => rows[i]));
   // the label is in the cell where it does not solve, and in the opened row where it does
   const withWords = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone !== null);
   many(DRIVER.neededLabel.id, withWords.map(([d]) => d.needed_alone!.outcome_label), withWords.map(([, i]) => rows[i]));

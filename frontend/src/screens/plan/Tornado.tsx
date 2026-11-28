@@ -195,6 +195,12 @@ function Toggle({ open, onToggle, controls, children }: { open: boolean; onToggl
 function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Driver; row: PlotRow; index: number; window: Window; domain: [number, number]; stacked: boolean }) {
   const [open, setOpen] = useState(false);
   const editor = useOpenEditor();
+  const { files } = useBindingContext();
+  const acted = "items" in files.report.driver_actions ? files.report.driver_actions.items.filter((a) => a.driver === driver.driver) : [];
+  // where the plan's own actions on this driver sit against the worksheet: the core's evidence, which does not depend on a solve
+  const placed = acted.filter((a) => a.evidence.position !== "none");
+  const outsideByAction = placed.some((a) => a.evidence.position !== "inside");
+  const scaled = acted.length > 0 && driver.driver !== "win_rate" && driver.limitation !== null;
   // the plan's actions sit on the win rate: the core solves for no setting, and says so in the driver's limitation
   const unsolved = stacked && driver.driver === "win_rate" && driver.needed_alone === null && driver.cannot_scale_because === null;
   // the three drivers an action can change have a favorable end, the high; the cycle (a longer one is worse) has none yet
@@ -259,6 +265,12 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
               <Badge color={needed.inside_observed_range ? "emerald" : "amber"} size="xs">
                 {needed.inside_observed_range ? "Within historical settings" : "Outside historical settings"}
               </Badge>
+            ) : needed === null && placed.length > 0 ? (
+              <span data-testid="driver-position-pill">
+                <Badge color={outsideByAction ? "amber" : "emerald"} size="xs">
+                  {outsideByAction ? "Outside historical settings" : "Within historical settings"}
+                </Badge>
+              </span>
             ) : null}
             {editor.wide && actionDriver !== null && favorable !== null ? (
               <button
@@ -277,6 +289,11 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
             </Toggle>
           </div>
         </div>
+        {scaled ? (
+          <p className="mt-1 text-xs text-slate-600 xl:col-span-2" data-testid="driver-scaled" data-driver={driver.driver}>
+            <Bound binding={DRIVER.scaled} row={path} />
+          </p>
+        ) : null}
         {unsolved ? (
           <p className="mt-1 text-xs text-slate-600 xl:col-span-2" data-testid="needed-stacked">
             <Bound binding={DRIVER.neededStacked} row={path} />
