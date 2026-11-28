@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
-import { usdShort } from "../src/screens/__tests__/independent";
+import { percentText } from "../src/editor/percent";
+import { decimal2, percent1, usdShort } from "../src/screens/__tests__/independent";
 import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } from "./support";
 
 /**
@@ -9,9 +10,11 @@ import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } fro
  * visitor's plan. Most cases share one page (so Pyodide starts once); the cases that need a page of their own
  * (a phone, a blocked download) take one.
  */
+type Action = { id: string; name: string; driver: "win_rate"; slice: string; start: string; ramp_months: number; target: string };
 type Plan = {
   hires: Array<{ segment: string; start: string; count: number }>;
   programs: Array<{ name: string; pipeline: number; start: string; cost?: number; ramp_months?: number }>;
+  actions?: Action[];
 };
 
 // The committed demo plans (engine/config/profiles/<company>/plan.yaml), typed in through the form below.
@@ -45,7 +48,16 @@ const committed = (company: string, scenario: string) => readFileSync(resolve(RO
 type LanesFile = { periods: Array<{ key: string; rows: Array<{ path: string[]; cells: Record<string, { forecast: string | null; goal: string | null; actual: string | null }> }> }> };
 type OwnersFile = LanesFile;
 const signedLanes = (company = "sapling-industries") => JSON.parse(readFileSync(resolve(ROOT, `public/data/reports/${company}/lanes-as-signed.json`), "utf8")) as LanesFile;
-const fixture = (name: string) => readFileSync(resolve(ROOT, `src/screens/__tests__/fixtures/your-plan/${name}`), "utf8");
+const fixture = (name: string, dir = "your-plan") => readFileSync(resolve(ROOT, `src/screens/__tests__/fixtures/${dir}/${name}`), "utf8");
+/** The core's own output for the same plan with a win-rate action on Enterprise: its report, its grid. */
+const withActions = (name: string) => fixture(name, "your-plan-actions");
+/** The form gives an action an id of its own ("action-0", "action-1", in the order they are added); the fixture's is named for what it is. */
+const FIXTURE_ACTION_ID = "enterprise-win-rate";
+const FORM_ACTION_ID = "action-0";
+const asFormIds = (text: string) => {
+  expect(text.split(`"${FIXTURE_ACTION_ID}"`).length - 1, "the fixture names its action once or more").toBeGreaterThan(0);
+  return text.split(`"${FIXTURE_ACTION_ID}"`).join(`"${FORM_ACTION_ID}"`);
+};
 
 /** The committed demo-plan report as the browser's core must write it: only the report's identity and the plan's name differ. */
 function asYourPlan(company: string): string {
@@ -93,11 +105,15 @@ const formItems = (page: Page) =>
   page.evaluate(() => ({
     hires: Array.from(document.querySelectorAll("[data-testid='hire-row']")).map((r) => Array.from(r.querySelectorAll("select, input")).map((e) => (e as HTMLInputElement).value).join("/")),
     programs: Array.from(document.querySelectorAll("[data-testid='program-row']")).map((r) => Array.from(r.querySelectorAll("input")).map((e) => (e as HTMLInputElement).value).join("/")),
+    actions: Array.from(document.querySelectorAll("[data-testid='action-row']")).map((r) => Array.from(r.querySelectorAll("select, input")).map((e) => (e as HTMLInputElement).value).join("/")),
   }));
 const describe_ = (plan: Plan) => ({
   hires: plan.hires.map((h) => `${h.segment}/${h.count}/${h.start}`),
   programs: plan.programs.map((p) => `${p.name}/${p.pipeline}/${p.cost ?? ""}/${p.ramp_months ?? ""}`),
+  actions: (plan.actions ?? []).map((a) => `${a.name}/${a.slice}/${a.start}/${a.ramp_months}/${percentText(a.target)}`),
 });
+/** The plan as the form will send it: each action under the id the form gives it. */
+const asSent = (plan: Plan): Plan => ({ ...plan, actions: (plan.actions ?? []).map((a, i) => ({ ...a, id: `action-${i}` })) });
 
 async function newPage(context: BrowserContext, search = "") {
   await context.addInitScript(RECORD);
@@ -131,7 +147,7 @@ async function switchCompany(page: Page, company: string) {
 
 /** Empty the form through its own buttons, one row at a time, waiting for each row to go before the next click. */
 async function clearForm(page: Page) {
-  for (const kind of ["hire", "program"] as const) {
+  for (const kind of ["hire", "program", "action"] as const) {
     const rows = page.getByTestId(`${kind}-row`);
     for (let left = await rows.count(); left > 0; left--) {
       await page.getByRole("button", { name: `Remove ${kind}`, exact: true }).first().click();
@@ -144,7 +160,7 @@ async function clearForm(page: Page) {
 async function enter(page: Page, plan: Plan) {
   await expect(page.getByTestId("plan-form")).toBeVisible();
   await clearForm(page);
-  expect(await formItems(page), "the form is empty before the plan is entered").toEqual({ hires: [], programs: [] });
+  expect(await formItems(page), "the form is empty before the plan is entered").toEqual({ hires: [], programs: [], actions: [] });
   for (const h of plan.hires) {
     await page.getByRole("button", { name: "Add a hire" }).click();
     const row = page.getByTestId("hire-row").last();
@@ -161,7 +177,22 @@ async function enter(page: Page, plan: Plan) {
     if (p.cost !== undefined) await row.getByLabel("Cost (optional)").fill(String(p.cost));
     if (p.ramp_months !== undefined) await row.getByLabel("Ramp in months (optional)").fill(String(p.ramp_months));
   }
+  for (const a of plan.actions ?? []) await addAction(page, a);
   expect(await formItems(page), "the form holds exactly the plan about to be applied").toEqual(describe_(plan));
+}
+
+/** Add an action through the form's own fields: the form picks the slice it starts on, and the visitor sets the rest. */
+async function addAction(page: Page, a: Omit<Action, "id">) {
+  const rows = page.getByTestId("action-row");
+  const before = await rows.count();
+  await page.getByRole("button", { name: "Add an action" }).click();
+  await expect(rows).toHaveCount(before + 1);
+  const row = rows.last();
+  await row.getByLabel("Action name").fill(a.name);
+  await row.getByLabel("Slice").selectOption(a.slice);
+  await row.getByLabel("Starts").selectOption(a.start);
+  await row.getByLabel("Ramp in months (zero is immediate)").fill(String(a.ramp_months));
+  await row.getByLabel("Target win rate (percent)").fill(percentText(a.target));
 }
 
 async function apply(page: Page, plan?: Plan) {
@@ -170,10 +201,37 @@ async function apply(page: Page, plan?: Plan) {
   await expect.poll(async () => (await reports(page)).length, { timeout: 60_000 }).toBe(before + 1);
   await expect(page.getByRole("button", { name: "Apply" })).toBeEnabled();
   // what the worker was asked to compute is the plan that was meant, so a wrong plan fails here in a line, not as a diff of two reports
-  if (plan) expect(await lastRequestedPlan(page), "the plan sent to the core is the plan entered").toEqual(plan);
+  if (plan) expect(await lastRequestedPlan(page), "the plan sent to the core is the plan entered").toEqual(plan.actions ? asSent(plan) : plan);
 }
 
 const sideways = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+
+/** The Plan screen at the desktop widths, with the text spread: nothing scrolls sideways or runs past the edge, and its tables stay tables. */
+async function fitsAtDesktopWidths(page: Page) {
+  for (const width of [1024, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.evaluate(() => document.fonts.ready);
+    const style = await page.addStyleTag({ content: STRETCH });
+    expect(await sideways(page), `${width}: the page does not scroll sideways`).toBeLessThanOrEqual(0);
+    const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => !el.matches("[data-testid='grid-scroll']") && el.scrollWidth > el.clientWidth + 1).length);
+    expect(scrolling, `${width}: no table scrolls sideways inside its card`).toBe(0);
+    const wide = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("main *"))
+        .filter((el) => !el.closest("[data-testid='grid-scroll']") && el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
+        .map((el) => `${el.tagName}.${String(el.className).slice(0, 40)}`)
+        .slice(0, 5),
+    );
+    expect(wide, `${width}: nothing runs past the right edge`).toEqual([]);
+    await style.evaluate((el) => el.remove());
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const stacked = await page.evaluate(() =>
+    Array.from(document.querySelectorAll("main table"))
+      .filter((t) => getComputedStyle(t).display !== "table" || getComputedStyle(t.querySelector("thead")!).display !== "table-header-group")
+      .map((t) => (t.textContent ?? "").slice(0, 40)),
+  );
+  expect(stacked, "no table on the page is laid out as stacked rows").toEqual([]);
+}
 
 test.describe("the plan editor, one shared page @smoke", () => {
   test.describe.configure({ mode: "serial", timeout: 120_000 });
@@ -321,29 +379,7 @@ test.describe("the plan editor, one shared page @smoke", () => {
 
   test("the Plan screen with the form open does not scroll sideways at desktop widths, even with the text spread; its tables stay tables @smoke", async () => {
     await goTo(page, "Plan");
-    for (const width of [1024, 1280, 1440]) {
-      await page.setViewportSize({ width, height: 900 });
-      await page.evaluate(() => document.fonts.ready);
-      const style = await page.addStyleTag({ content: STRETCH });
-      expect(await sideways(page), `${width}: the page does not scroll sideways`).toBeLessThanOrEqual(0);
-      const scrolling = await page.evaluate(() => Array.from(document.querySelectorAll(".overflow-x-auto")).filter((el) => !el.matches("[data-testid='grid-scroll']") && el.scrollWidth > el.clientWidth + 1).length);
-      expect(scrolling, `${width}: no table scrolls sideways inside its card`).toBe(0);
-      const wide = await page.evaluate(() =>
-        Array.from(document.querySelectorAll("main *"))
-          .filter((el) => !el.closest("[data-testid='grid-scroll']") && el.getBoundingClientRect().right > document.documentElement.clientWidth + 1)
-          .map((el) => `${el.tagName}.${String(el.className).slice(0, 40)}`)
-          .slice(0, 5),
-      );
-      expect(wide, `${width}: nothing runs past the right edge`).toEqual([]);
-      await style.evaluate((el) => el.remove());
-    }
-    await page.setViewportSize({ width: 1440, height: 900 });
-    const stacked = await page.evaluate(() =>
-      Array.from(document.querySelectorAll("main table"))
-        .filter((t) => getComputedStyle(t).display !== "table" || getComputedStyle(t.querySelector("thead")!).display !== "table-header-group")
-        .map((t) => (t.textContent ?? "").slice(0, 40)),
-    );
-    expect(stacked, "no table on the page is laid out as stacked rows").toEqual([]);
+    await fitsAtDesktopWidths(page);
   });
 
   test("choosing a named scenario leaves the worker warm and the plan is still there when the visitor comes back @smoke", async () => {
@@ -371,6 +407,202 @@ test.describe("the plan editor, one shared page @smoke", () => {
     await expect(forecast("sapling-industries")).toHaveText(editedBookings, { timeout: 60_000 });
     expect(editedBookings).not.toBe(usdShort(signedLanes().periods[0].rows[0].cells.bookings.forecast!));
     await expect(page.getByTestId("forecast-pending")).toHaveCount(0);
+  });
+
+  // ---- win-rate actions: the same page, the same worker, in this order (each test starts from what the one before left) ----
+
+  const ENTERPRISE_PUSH = JSON.parse(withActions("plan.json")) as Plan;
+  const driverActions = (report: string) => JSON.parse(report).driver_actions as {
+    items: Array<{ name: string; removal_value: Record<string, string>; evidence: { change_points: string; resulting_rate: string; label: string; position: string } }>;
+    joint_gain: Record<string, string>;
+    with_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
+    without_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
+    reconciliation: { values: Record<string, string> };
+  };
+  const REST = "rest of fiscal year";
+  const TWELVE = "next twelve months";
+  const actionRows = (p: Page) => p.getByTestId("action-row");
+  const bound = (p: Page, id: string) => p.locator(`[data-binding='${id}']`);
+
+  test("a segment action entered through the form gives the core's own report, the Actions block says its values, and the bridge has its joint step @smoke", async () => {
+    await switchCompany(page, "sapling-industries");
+    await enter(page, ENTERPRISE_PUSH);
+    await apply(page, ENTERPRISE_PUSH);
+    // the browser's core wrote the native run's report, but for the id the form gave the action
+    expect(await lastReport(page)).toBe(asFormIds(withActions("report.json")));
+    const native = driverActions(withActions("report.json"));
+    // wait on content only this Apply can show: the block, with the removal value of the action
+    await expect(bound(page, "driver-actions.item.removal.rest")).toHaveText(usdShort(native.items[0].removal_value[REST]), { timeout: 30_000 });
+    await expect(bound(page, "driver-actions.item.removal.next12")).toHaveText(usdShort(native.items[0].removal_value[TWELVE]));
+    await expect(bound(page, "driver-actions.joint.rest")).toHaveText(usdShort(native.joint_gain[REST]));
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(native.joint_gain[TWELVE]));
+    await expect(bound(page, "driver-actions.with.year")).toHaveText(usdShort(native.with_actions.expected_fiscal_year));
+    await expect(bound(page, "driver-actions.without.year")).toHaveText(usdShort(native.without_actions.expected_fiscal_year));
+    await expect(bound(page, "driver-actions.without.next12")).toHaveText(usdShort(native.without_actions.bookings[TWELVE]));
+    await expect(bound(page, "driver-actions.removal-label").first()).toHaveText("Bookings lost if removed");
+    // no interaction between actions here: the reconciliation line is not said
+    await expect(page.getByTestId("driver-actions-reconciliation")).toHaveCount(0);
+    // beside the target: the core's change in points and resulting rate for this action as applied, and its label, in its words
+    const row = actionRows(page).first();
+    await expect(row.locator("[data-binding='driver-actions.item.change-points']")).toHaveText(decimal2(native.items[0].evidence.change_points));
+    await expect(row.locator("[data-binding='driver-actions.item.resulting']")).toHaveText(percent1(native.items[0].evidence.resulting_rate));
+    await expect(row.locator("[data-binding='driver-actions.item.label']")).toHaveText("outside the worksheet's historical settings");
+    await expect(row.locator("[data-binding='driver-actions.form.baseline']")).toBeVisible();
+    // the bridge: its steps are the report's, the joint actions step among them
+    await expect(page.locator("[data-testid='bridge-row'][data-kind='actions']")).toHaveCount(1);
+    await expect(page.getByTestId("plan-item-row")).toHaveCount(4);
+    // win rate "needed alone" is not solved under actions: the core's sentence stands in its place
+    await expect(page.getByTestId("needed-stacked")).toContainText("no setting is solved for");
+    const digits = await unboundDigits(page, periodLabelsOf(await lastReport(page)));
+    expect(digits, "digits outside a bound element").toEqual([]);
+    await fitsAtDesktopWidths(page);
+    expect(issues).toEqual([]);
+  });
+
+  test("the grid under the action: the browser's core wrote the native run's lanes, the action's segment forecasts a different win rate and the others do not @smoke", async () => {
+    const native = JSON.parse(withActions("lanes.json")) as LanesFile;
+    const signed = signedLanes();
+    const rate = (lanes: LanesFile, lane: string) => lanes.periods[0].rows.find((r) => r.path.join("/") === (lane === "total" ? lane : `segment/${lane}`))!.cells.win_rate.forecast!;
+    const forecast = (segment: string) => page.locator(`[data-testid='cell-segment/${segment}-win_rate'] [data-binding='lanes.win_rate.forecast']`);
+    // wait on the edited plan's own figure for the action's segment: the as-signed rate is a different one
+    await expect(forecast("enterprise")).toHaveText(percent1(rate(native, "enterprise")), { timeout: 60_000 });
+    // the worker's answer for this Apply, read once the grid shows it (the answer comes after the report)
+    const answer = JSON.parse((await lanesAnswers(page)).slice(-1)[0]) as { stale: boolean; problems: string[]; lanes: unknown; owners: Record<string, unknown> };
+    expect(answer.stale).toBe(false);
+    expect(answer.problems).toEqual([]);
+    expect(answer.lanes).toEqual(JSON.parse(withActions("lanes.json")));
+    expect(answer.owners.enterprise).toEqual(JSON.parse(withActions("owners-enterprise.json")));
+    expect(percent1(rate(signed, "enterprise")), "the action moves the segment's forecast").not.toBe(percent1(rate(native, "enterprise")));
+    for (const other of ["mid_market", "commercial"]) {
+      await expect(forecast(other)).toHaveText(percent1(rate(signed, other)));
+      expect(rate(native, other), `${other} is not touched`).toBe(rate(signed, other));
+    }
+    await expect(page.locator("[data-testid='cell-total-win_rate'] [data-binding='lanes.win_rate.forecast']")).toHaveText(percent1(rate(native, "total")));
+    // its panel says what the core says about a win-rate action, and offers to plan another
+    await page.getByTestId("cell-segment/enterprise-win_rate").click();
+    await expect(page.getByTestId("panel-actions-caveat")).toContainText("entered change to a pooled rate");
+    await page.getByRole("button", { name: "Close panel" }).click();
+  });
+
+  test("Add to plan on the win-rate bar opens a draft company action at the worksheet's favorable end, and applies nothing @smoke", async () => {
+    const applied = (await reports(page)).length;
+    const high = (JSON.parse(withActions("report.json")) as { worksheet: { drivers: Array<{ driver: string; historical: { high: { setting: string } } }> } }).worksheet.drivers.find((d) => d.driver === "win_rate")!.historical.high.setting;
+    const drivers = page.locator("[data-testid='driver-row']");
+    for (const other of await drivers.evaluateAll((els) => els.map((e) => e.getAttribute("data-driver")).filter((d) => d !== "win_rate"))) {
+      await expect(page.locator(`[data-testid='driver-row'][data-driver='${other}'] button`, { hasText: "Add to plan" }), `${other} has no button`).toHaveCount(0);
+    }
+    await page.locator("[data-testid='driver-row'][data-driver='win_rate']").getByRole("button", { name: "Add to plan" }).click();
+    await expect(actionRows(page)).toHaveCount(2);
+    const draft = actionRows(page).last();
+    await expect(draft.getByLabel("Slice")).toHaveValue("company");
+    await expect(draft.getByLabel("Starts")).toHaveValue("2026-09");
+    await expect(draft.getByLabel("Ramp in months (zero is immediate)")).toHaveValue("0");
+    await expect(draft.getByLabel("Target win rate (percent)")).toHaveValue(percentText(high));
+    await expect(draft.getByTestId("action-origin")).toContainText("will differ from the bar's figure");
+    await expect(draft.getByTestId("action-origin")).toContainText("immediate company-wide change from the as-of date");
+    await expect(draft.getByLabel("Action name")).toBeFocused();
+    await expect(page.getByTestId("plan-unapplied")).toBeVisible();
+    expect((await reports(page)).length, "nothing was computed for the draft").toBe(applied);
+    await draft.getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(1);
+  });
+
+  test("Plan an action here, on a segment's win-rate cell, opens a draft with that slice and the pooled baseline as its target, and applies nothing @smoke", async () => {
+    const applied = (await reports(page)).length;
+    const baseline = (JSON.parse(withActions("report.json")) as { worksheet: { drivers: Array<{ driver: string; current: { value: string } }> } }).worksheet.drivers.find((d) => d.driver === "win_rate")!.current.value;
+    const cellNumber = (JSON.parse(withActions("lanes.json")) as LanesFile).periods[0].rows.find((r) => r.path.join("/") === "segment/mid_market")!.cells.win_rate.actual!;
+    await page.getByTestId("cell-segment/mid_market-win_rate").click();
+    const entry = page.getByTestId("plan-action");
+    await expect(entry).toContainText("dated cohort rate");
+    await entry.getByRole("button", { name: "Plan an action here" }).click();
+    await expect(actionRows(page)).toHaveCount(2);
+    const draft = actionRows(page).last();
+    await expect(draft.getByLabel("Slice")).toHaveValue("mid_market");
+    await expect(draft.getByLabel("Target win rate (percent)")).toHaveValue(percentText(baseline));
+    expect(percentText(baseline), "the cell's own number is not the target").not.toBe(percentText(cellNumber));
+    await expect(draft.getByTestId("action-origin")).toContainText("pooled baseline");
+    await expect(page.getByTestId("cell-panel"), "the panel steps aside").toHaveCount(0);
+    await expect(page.getByTestId("plan-unapplied")).toBeVisible();
+    expect((await reports(page)).length, "nothing was computed for the draft").toBe(applied);
+    // not offered on an owner's rate, nor on another column
+    await page.getByTestId("expand-segment/enterprise").click();
+    await page.getByTestId("cell-segment/enterprise/owner/AE-010-win_rate").click();
+    await expect(page.getByTestId("cell-panel")).toBeVisible();
+    await expect(page.getByTestId("plan-action")).toHaveCount(0);
+    await page.getByTestId("cell-segment/enterprise-bookings").click();
+    await expect(page.getByTestId("plan-action")).toHaveCount(0);
+    await page.getByRole("button", { name: "Close panel" }).click();
+    await page.getByTestId("expand-segment/enterprise").click();
+    await draft.getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(1);
+  });
+
+  test("a company action replaces the segment's, and the block says the worker's own values; an overlapping action is refused beside the item in the core's words @smoke", async () => {
+    await actionRows(page).first().getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(0);
+    await addAction(page, { name: "Company win-rate push", slice: "company", start: "2026-10", ramp_months: 0, target: "0.2300" });
+    await apply(page);
+    const report = await lastReport(page);
+    const mine = driverActions(report);
+    expect(mine.items).toHaveLength(1);
+    await expect(bound(page, "driver-actions.item.removal.rest")).toHaveText(usdShort(mine.items[0].removal_value[REST]), { timeout: 30_000 });
+    await expect(bound(page, "driver-actions.item.removal.next12")).toHaveText(usdShort(mine.items[0].removal_value[TWELVE]));
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
+    await expect(bound(page, "driver-actions.with.next12")).toHaveText(usdShort(mine.with_actions.bookings[TWELVE]));
+    await expect(bound(page, "driver-actions.without.year")).toHaveText(usdShort(mine.without_actions.expected_fiscal_year));
+    await expect(bound(page, "driver-actions.item.change-points")).toHaveText(decimal2(mine.items[0].evidence.change_points));
+    expect(mine.items[0].evidence.position, "23 percent is above the worksheet's high").toBe("above");
+    await expect(bound(page, "driver-actions.item.label")).toHaveText(mine.items[0].evidence.label);
+    // the gain is the company's: the three segments' win-rate forecasts all moved, none by the segment's alone
+    const shown = await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.rest']").innerText();
+    // a second action on a segment overlaps the company's: refused, with the last good figures left as they were
+    await page.getByRole("button", { name: "Add an action" }).click();
+    await expect(actionRows(page)).toHaveCount(2);
+    await page.getByRole("button", { name: "Apply" }).click();
+    await expect(actionRows(page).last().getByRole("alert")).toContainText("overlaps actions[1]", { timeout: 30_000 });
+    await expect(actionRows(page).last().getByRole("alert")).toContainText("they would be counted twice");
+    await expect(actionRows(page).first().getByRole("alert")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Apply" })).toBeEnabled();
+    expect(await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.rest']").innerText(), "the last good figures stay").toBe(shown);
+    await actionRows(page).last().getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(1);
+  });
+
+  test("two actions on two segments: the block lists both with their values, and the reconciliation line is the core's @smoke", async () => {
+    await actionRows(page).first().getByRole("button", { name: "Remove action" }).click();
+    await addAction(page, { name: "Enterprise push", slice: "enterprise", start: "2026-10", ramp_months: 2, target: "0.2600" });
+    await addAction(page, { name: "Commercial push", slice: "commercial", start: "2026-11", ramp_months: 3, target: "0.2400" });
+    await apply(page);
+    const mine = driverActions(await lastReport(page));
+    expect(mine.items).toHaveLength(2);
+    await expect(page.getByTestId("driver-action-row")).toHaveCount(2, { timeout: 30_000 });
+    await expect(bound(page, "driver-actions.item.removal.next12").nth(0)).toHaveText(usdShort(mine.items[0].removal_value[TWELVE]));
+    await expect(bound(page, "driver-actions.item.removal.next12").nth(1)).toHaveText(usdShort(mine.items[1].removal_value[TWELVE]));
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
+    // the reconciliation line is said for a window only where the core's figure is not zero
+    for (const [window, id] of [[REST, "rest"], [TWELVE, "next12"]] as const) {
+      const value = mine.reconciliation.values[window];
+      await expect(bound(page, `driver-actions.reconciliation.${id}`)).toHaveCount(Number(value) === 0 ? 0 : 1);
+    }
+    expect(await unboundDigits(page, periodLabelsOf(await lastReport(page)))).toEqual([]);
+  });
+
+  test("removing every action returns the no-action figures, and the Actions block goes @smoke", async () => {
+    const plain = JSON.parse(fixture("plan.json")) as Plan;
+    await enter(page, plain);
+    await apply(page, plain);
+    expect(await lastReport(page)).toBe(fixture("report.json"));
+    await expect(page.getByTestId("driver-actions")).toHaveCount(0, { timeout: 30_000 });
+    await expect(page.locator("[data-testid='bridge-row'][data-kind='actions']")).toHaveCount(0);
+    await expect(page.getByTestId("needed-stacked")).toHaveCount(0);
+    const native = JSON.parse(fixture("report.json")) as { plan: { gap: { fiscal_year: { gap_with_plan: string } } } };
+    await expect(page.locator("[data-binding='worksheet.summary.remaining-gap']")).toHaveText(usdShort(native.plan.gap.fiscal_year.gap_with_plan));
+    // and the grid is the no-action plan's again
+    await expect(page.locator("[data-testid='cell-segment/enterprise-win_rate'] [data-binding='lanes.win_rate.forecast']")).toHaveText(
+      percent1((JSON.parse(fixture("lanes.json")) as LanesFile).periods[0].rows.find((r) => r.path.join("/") === "segment/enterprise")!.cells.win_rate.forecast!),
+      { timeout: 60_000 },
+    );
+    expect(issues).toEqual([]);
   });
 });
 
@@ -415,6 +647,11 @@ test.describe("a blocked download and a phone @smoke", () => {
     const { page, requests } = await newPage(context);
     await expect(page.getByRole("button", { name: "Edit plan", exact: true })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Add to plan" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Add an action" })).toHaveCount(0);
+    await page.getByTestId("cell-total-win_rate").click();
+    await expect(page.getByTestId("cell-panel")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Plan an action here" }), "a phone's panel offers no editor").toHaveCount(0);
+    await page.getByRole("button", { name: "Close panel" }).click();
     await expect(page.getByTestId("worksheet-summary")).toContainText("Editing your own plan needs a larger screen.");
     await expect(page.locator("#scenario-selector option")).toHaveText(["As signed", "Demo plan", "Hires only", "Program only"]);
     for (const screen of ["forecast", "capacity", "pipeline", "plan", "trust"]) {
