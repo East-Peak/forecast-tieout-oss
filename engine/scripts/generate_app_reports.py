@@ -44,7 +44,9 @@ from engine.tieout_core import (
     lanes_records,
     lanes_records_contract,
     lanes_replay,
+    lanes_text,
 )
+from engine.tieout_core import lanes_files as lanes_split
 from engine.tieout_core.company_line import company_line
 from engine.tieout_core.comparison import BASELINE, comparison_rows
 from engine.tieout_core.editor import AS_OF, DATA, DRAWS, PROFILES, SEED, canonical
@@ -58,6 +60,7 @@ GENERATED = Path("frontend/src/generated")
 LANES_SCHEMAS = {
     Path("engine/tieout_core/lanes.schema.json"): lanes_contract.schema,
     Path("engine/tieout_core/lanes-basis.schema.json"): lanes_contract.basis_schema,
+    Path("engine/tieout_core/lanes-owners.schema.json"): lanes_contract.owners_schema,
     Path("engine/tieout_core/lanes-records.schema.json"): lanes_records_contract.schema,
 }
 COMPANIES = ("sprout-labs", "sapling-industries", "mighty-oak-holdings")
@@ -223,6 +226,10 @@ INDEX_SCHEMA = {
                                 "report": {"type": "string"},
                                 "report_markdown": {"type": "string"},
                                 "lanes": {"type": "string"},
+                                "lanes_owners": {
+                                    "type": "object",
+                                    "additionalProperties": {"type": "string"},
+                                },
                             },
                             "required": [
                                 "id",
@@ -328,6 +335,7 @@ def build(companies=COMPANIES, draws: int = DRAWS, seed: int = SEED) -> dict[str
                             "report": f"{company}/{sc.id}.json",
                             "report_markdown": f"{company}/{sc.id}.md",
                             "lanes": f"{company}/lanes-{sc.id}.json",
+                            **_owner_files(company, sc.id, files),
                         }
                         for sc in SCENARIOS
                     ],
@@ -368,16 +376,30 @@ def lanes_files(company: str, state, reports: dict, plans: dict) -> dict[str, st
             if plans[sc.id]
             else ((), ())
         )
-        files[f"{company}/lanes-{sc.id}.json"] = canonical(
-            lanes.lanes_document(
-                state, basis, reports[sc.id], hires, inflows, company, sc.id, digest
-            )
+        doc = lanes.lanes_document(
+            state, basis, reports[sc.id], hires, inflows, company, sc.id, digest
         )
+        mine, owners = lanes_split.split(doc)
+        files[f"{company}/lanes-{sc.id}.json"] = canonical(mine)
+        for seg, owned in owners.items():
+            files[f"{company}/{lanes_split.name(sc.id, seg)}"] = lanes_text.text(owned)
     # last, so a scenario's own file is the first one a rule can stop the run on
     files[f"{company}/lanes-records.json"] = lanes_records.text(
         lanes_records.document(state, company)
     )
     return files
+
+
+def _owner_files(company: str, scenario: str, files: dict) -> dict:
+    """The index key naming a scenario's owners files by segment (in the lanes' order), where
+    there are any."""
+    lanes_doc = json.loads(files[f"{company}/lanes-{scenario}.json"])
+    found = {}
+    for row in lanes_doc["periods"][0]["rows"][1:]:
+        name = f"{company}/{lanes_split.name(scenario, row['path'][1])}"
+        if name in files:
+            found[row["path"][1]] = name
+    return {"lanes_owners": found} if found else {}
 
 
 def lanes_schema_files() -> dict[Path, str]:
@@ -392,12 +414,33 @@ def _lanes_problems(name: str, doc, files: dict[str, str]) -> list[str]:
     folder, _, leaf = name.rpartition("/")
     if leaf == "lanes-basis.json":
         return lanes_contract.validate_basis(doc)
+    if leaf.startswith("lanes-owners-"):
+        scenario = doc["scenario"]
+        lanes_doc = json.loads(files[f"{folder}/lanes-{scenario}.json"])
+        mine = [
+            json.loads(t) for n, t in files.items()
+            if n.startswith(f"{folder}/lanes-owners-{scenario}-")
+        ]  # fmt: skip
+        return lanes_contract.validate_owners(
+            doc,
+            lanes_doc,
+            json.loads(files[f"{folder}/lanes-basis.json"]),
+            json.loads(files[f"{folder}/{scenario}.json"]),
+        ) + lanes_contract.validate_owner_set(mine, lanes_doc)
     if leaf == "lanes-records.json":
         return [
             f"{sc.id}: {p}"
             for sc in SCENARIOS
             for p in lanes_records_contract.validate(
-                doc, json.loads(files[f"{folder}/lanes-{sc.id}.json"])
+                doc,
+                lanes_split.merge(
+                    json.loads(files[f"{folder}/lanes-{sc.id}.json"]),
+                    [
+                        json.loads(t)
+                        for n, t in files.items()
+                        if n.startswith(f"{folder}/lanes-owners-{sc.id}-")
+                    ],
+                ),
             )
         ]
     basis = files.get(f"{folder}/lanes-basis.json")

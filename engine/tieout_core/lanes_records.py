@@ -13,11 +13,11 @@ it is the same in every scenario and there is one shard per company.
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
 from datetime import date, timedelta
 from decimal import Decimal
 
+from . import lanes_text
 from .figures import money
 from .history import creation_amounts
 from .lanes_contract import SCHEMA_VERSION
@@ -149,27 +149,6 @@ def document(state, company: str) -> dict:
     }
 
 
-def _flat(x) -> bool:
-    return not any(
-        isinstance(v, dict | list) for v in (x.values() if isinstance(x, dict) else x)
-    )
-
-
-def _dump(x, depth: int) -> str:
-    if not isinstance(x, dict | list) or _flat(x):
-        return json.dumps(x, sort_keys=True, ensure_ascii=False)
-    pad, end = "  " * (depth + 1), "  " * depth
-    if isinstance(x, list):
-        body = ",\n".join(pad + _dump(v, depth + 1) for v in x)
-        return f"[\n{body}\n{end}]"
-    body = ",\n".join(
-        f"{pad}{json.dumps(k, ensure_ascii=False)}: {_dump(v, depth + 1)}"
-        for k, v in sorted(x.items())
-    )
-    return f"{{\n{body}\n{end}}}"
-
-
 def text(doc: dict) -> str:
-    """The shard as written: sorted keys, two-space indent, and a list of ids or a record on one
-    line, so a file of thousands of ids stays small and a diff stays readable."""
-    return _dump(doc, 0) + "\n"
+    """The shard as written: see ``lanes_text``."""
+    return lanes_text.text(doc)

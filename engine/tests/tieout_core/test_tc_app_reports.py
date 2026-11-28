@@ -122,6 +122,14 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
         f"{COMPANY}/lanes-basis.json",
         f"{COMPANY}/lanes-demo-plan.json",
         f"{COMPANY}/lanes-hires-only.json",
+        f"{COMPANY}/lanes-owners-as-signed-commercial.json",
+        f"{COMPANY}/lanes-owners-as-signed-mid-market.json",
+        f"{COMPANY}/lanes-owners-demo-plan-commercial.json",
+        f"{COMPANY}/lanes-owners-demo-plan-mid-market.json",
+        f"{COMPANY}/lanes-owners-hires-only-commercial.json",
+        f"{COMPANY}/lanes-owners-hires-only-mid-market.json",
+        f"{COMPANY}/lanes-owners-program-only-commercial.json",
+        f"{COMPANY}/lanes-owners-program-only-mid-market.json",
         f"{COMPANY}/lanes-program-only.json",
         f"{COMPANY}/lanes-records.json",
         f"{COMPANY}/program-only.json",
@@ -131,10 +139,8 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
 
 def test_every_file_is_canonical_json(built):
     for name, text in built.items():
-        if name.endswith(
-            "/lanes-records.json"
-        ):  # ids and records are written a line each
-            assert text == lanes_records.text(json.loads(text)), name
+        if "/lanes-owners-" in name or name.endswith("/lanes-records.json"):
+            assert text == lanes_records.text(json.loads(text)), name  # a row a line
         elif name.endswith(".json"):
             assert text == gen.canonical(json.loads(text)), name
 
@@ -224,6 +230,14 @@ def test_the_lanes_files_satisfy_their_contract_and_name_the_basis_they_were_rea
         assert doc["scenario"] == sc.id and doc["company"] == COMPANY
         assert doc["plan_basis"]["digest"] == lanes_contract.digest(basis)
         assert lanes_contract.validate(doc, basis, report) == []
+        owners = [
+            json.loads(t)
+            for n, t in built.items()
+            if n.startswith(f"{COMPANY}/lanes-owners-{sc.id}-")
+        ]
+        for each in owners:
+            assert lanes_contract.validate_owners(each, doc, basis, report) == []
+        assert lanes_contract.validate_owner_set(owners, doc) == []
 
 
 def test_the_committed_lanes_schemas_are_the_contract_as_it_is_now():

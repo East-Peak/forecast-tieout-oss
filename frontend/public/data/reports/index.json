@@ -15,6 +15,10 @@
           "id": "as-signed",
           "label": "As signed",
           "lanes": "sprout-labs/lanes-as-signed.json",
+          "lanes_owners": {
+            "commercial": "sprout-labs/lanes-owners-as-signed-commercial.json",
+            "mid_market": "sprout-labs/lanes-owners-as-signed-mid-market.json"
+          },
           "plan_file": null,
           "report": "sprout-labs/as-signed.json",
           "report_markdown": "sprout-labs/as-signed.md"
@@ -24,6 +28,10 @@
           "id": "demo-plan",
           "label": "Demo plan",
           "lanes": "sprout-labs/lanes-demo-plan.json",
+          "lanes_owners": {
+            "commercial": "sprout-labs/lanes-owners-demo-plan-commercial.json",
+            "mid_market": "sprout-labs/lanes-owners-demo-plan-mid-market.json"
+          },
           "plan_file": "engine/config/profiles/sprout-labs/plan.yaml",
           "report": "sprout-labs/demo-plan.json",
           "report_markdown": "sprout-labs/demo-plan.md"
@@ -33,6 +41,10 @@
           "id": "hires-only",
           "label": "Hires only",
           "lanes": "sprout-labs/lanes-hires-only.json",
+          "lanes_owners": {
+            "commercial": "sprout-labs/lanes-owners-hires-only-commercial.json",
+            "mid_market": "sprout-labs/lanes-owners-hires-only-mid-market.json"
+          },
           "plan_file": "engine/config/profiles/sprout-labs/plan-hires-only.yaml",
           "report": "sprout-labs/hires-only.json",
           "report_markdown": "sprout-labs/hires-only.md"
@@ -42,6 +54,10 @@
           "id": "program-only",
           "label": "Program only",
           "lanes": "sprout-labs/lanes-program-only.json",
+          "lanes_owners": {
+            "commercial": "sprout-labs/lanes-owners-program-only-commercial.json",
+            "mid_market": "sprout-labs/lanes-owners-program-only-mid-market.json"
+          },
           "plan_file": "engine/config/profiles/sprout-labs/plan-program-only.yaml",
           "report": "sprout-labs/program-only.json",
           "report_markdown": "sprout-labs/program-only.md"
@@ -63,6 +79,11 @@
           "id": "as-signed",
           "label": "As signed",
           "lanes": "sapling-industries/lanes-as-signed.json",
+          "lanes_owners": {
+            "commercial": "sapling-industries/lanes-owners-as-signed-commercial.json",
+            "enterprise": "sapling-industries/lanes-owners-as-signed-enterprise.json",
+            "mid_market": "sapling-industries/lanes-owners-as-signed-mid-market.json"
+          },
           "plan_file": null,
           "report": "sapling-industries/as-signed.json",
           "report_markdown": "sapling-industries/as-signed.md"
@@ -72,6 +93,11 @@
           "id": "demo-plan",
           "label": "Demo plan",
           "lanes": "sapling-industries/lanes-demo-plan.json",
+          "lanes_owners": {
+            "commercial": "sapling-industries/lanes-owners-demo-plan-commercial.json",
+            "enterprise": "sapling-industries/lanes-owners-demo-plan-enterprise.json",
+            "mid_market": "sapling-industries/lanes-owners-demo-plan-mid-market.json"
+          },
           "plan_file": "engine/config/profiles/sapling-industries/plan.yaml",
           "report": "sapling-industries/demo-plan.json",
           "report_markdown": "sapling-industries/demo-plan.md"
@@ -81,6 +107,11 @@
           "id": "hires-only",
           "label": "Hires only",
           "lanes": "sapling-industries/lanes-hires-only.json",
+          "lanes_owners": {
+            "commercial": "sapling-industries/lanes-owners-hires-only-commercial.json",
+            "enterprise": "sapling-industries/lanes-owners-hires-only-enterprise.json",
+            "mid_market": "sapling-industries/lanes-owners-hires-only-mid-market.json"
+          },
           "plan_file": "engine/config/profiles/sapling-industries/plan-hires-only.yaml",
           "report": "sapling-industries/hires-only.json",
           "report_markdown": "sapling-industries/hires-only.md"
@@ -90,6 +121,11 @@
           "id": "program-only",
           "label": "Program only",
           "lanes": "sapling-industries/lanes-program-only.json",
+          "lanes_owners": {
+            "commercial": "sapling-industries/lanes-owners-program-only-commercial.json",
+            "enterprise": "sapling-industries/lanes-owners-program-only-enterprise.json",
+            "mid_market": "sapling-industries/lanes-owners-program-only-mid-market.json"
+          },
           "plan_file": "engine/config/profiles/sapling-industries/plan-program-only.yaml",
           "report": "sapling-industries/program-only.json",
           "report_markdown": "sapling-industries/program-only.md"
@@ -111,6 +147,11 @@
           "id": "as-signed",
           "label": "As signed",
           "lanes": "mighty-oak-holdings/lanes-as-signed.json",
+          "lanes_owners": {
+            "Enterprise": "mighty-oak-holdings/lanes-owners-as-signed-enterprise.json",
+            "Mid-Market": "mighty-oak-holdings/lanes-owners-as-signed-mid-market.json",
+            "Strategic Enterprise": "mighty-oak-holdings/lanes-owners-as-signed-strategic-enterprise.json"
+          },
           "plan_file": null,
           "report": "mighty-oak-holdings/as-signed.json",
           "report_markdown": "mighty-oak-holdings/as-signed.md"
@@ -120,6 +161,11 @@
           "id": "demo-plan",
           "label": "Demo plan",
           "lanes": "mighty-oak-holdings/lanes-demo-plan.json",
+          "lanes_owners": {
+            "Enterprise": "mighty-oak-holdings/lanes-owners-demo-plan-enterprise.json",
+            "Mid-Market": "mighty-oak-holdings/lanes-owners-demo-plan-mid-market.json",
+            "Strategic Enterprise": "mighty-oak-holdings/lanes-owners-demo-plan-strategic-enterprise.json"
+          },
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan.yaml",
           "report": "mighty-oak-holdings/demo-plan.json",
           "report_markdown": "mighty-oak-holdings/demo-plan.md"
@@ -129,6 +175,11 @@
           "id": "hires-only",
           "label": "Hires only",
           "lanes": "mighty-oak-holdings/lanes-hires-only.json",
+          "lanes_owners": {
+            "Enterprise": "mighty-oak-holdings/lanes-owners-hires-only-enterprise.json",
+            "Mid-Market": "mighty-oak-holdings/lanes-owners-hires-only-mid-market.json",
+            "Strategic Enterprise": "mighty-oak-holdings/lanes-owners-hires-only-strategic-enterprise.json"
+          },
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-hires-only.yaml",
           "report": "mighty-oak-holdings/hires-only.json",
           "report_markdown": "mighty-oak-holdings/hires-only.md"
@@ -138,6 +189,11 @@
           "id": "program-only",
           "label": "Program only",
           "lanes": "mighty-oak-holdings/lanes-program-only.json",
+          "lanes_owners": {
+            "Enterprise": "mighty-oak-holdings/lanes-owners-program-only-enterprise.json",
+            "Mid-Market": "mighty-oak-holdings/lanes-owners-program-only-mid-market.json",
+            "Strategic Enterprise": "mighty-oak-holdings/lanes-owners-program-only-strategic-enterprise.json"
+          },
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-program-only.yaml",
           "report": "mighty-oak-holdings/program-only.json",
           "report_markdown": "mighty-oak-holdings/program-only.md"

@@ -16,6 +16,7 @@ from decimal import Decimal
 
 from jsonschema import Draft202012Validator
 
+from . import lanes_files
 from . import lanes_rules as rules
 from .contract import (
     BOOL,
@@ -59,7 +60,7 @@ CELL = obj(
         "compared": enum("actual", "forecast"),
         "ratio": DECIMAL_OR_NULL,
         "status": enum(rules.BEHIND, rules.ON_TRACK, rules.NONE),
-        "none_because": maybe(enum(*rules.REASONS)),
+        "none_because": maybe(enum(*rules.SEGMENT_REASONS)),
         "denominator": DECIMAL_OR_NULL,
         "range80": maybe(MONEY_RANGE),
         "goal_inside_range80": maybe(BOOL),
@@ -114,7 +115,7 @@ PERIOD = obj(
         "start": DATE,
         "end": DATE,
         "reported_bookings": MONEY,
-        "rows": arr(one_of(SEGMENT_ROW, OWNER_ROW), minItems=1),
+        "rows": arr(SEGMENT_ROW, minItems=1),
     }
 )
 COLUMN = obj(
@@ -143,13 +144,29 @@ AVAILABLE = obj(
             {"label": TEXT, "cutoff": DATE, "digest": TEXT, "file": TEXT}
         ),
         "columns": arr(COLUMN, minItems=8, maxItems=8),
-        "reasons": obj({k: TEXT for k in rules.REASONS}),
+        "reasons": obj({k: TEXT for k in rules.SEGMENT_REASONS}),
         "caveats": arr(TEXT, minItems=1),
         "periods": arr(PERIOD, minItems=5, maxItems=5),
         "checks": arr(CHECK, minItems=1),
     }
 )
 UNAVAILABLE = obj({**HEADER, "unavailable": TEXT})
+OWNERS = obj(
+    {
+        **HEADER,
+        "as_of": DATE,
+        "fiscal_year": TEXT,
+        "plan_basis": AVAILABLE["properties"]["plan_basis"],
+        "segment": TEXT,
+        "lanes": TEXT,
+        "reasons": obj({k: TEXT for k in rules.REASONS}),
+        "caveats": arr(TEXT, minItems=1),
+        "periods": arr(
+            obj({"key": TEXT, "rows": arr(OWNER_ROW)}), minItems=5, maxItems=5
+        ),
+        "checks": arr(CHECK, minItems=1),
+    }
+)
 GOAL = obj(
     {
         "bookings": MONEY,
@@ -258,6 +275,10 @@ def _schema(title: str, name: str, body: dict) -> dict:
 
 def schema() -> dict:
     return _schema("TieoutLanes", "lanes", one_of(AVAILABLE, UNAVAILABLE))
+
+
+def owners_schema() -> dict:
+    return _schema("TieoutLanesOwners", "lanes-owners", OWNERS)
 
 
 def basis_schema() -> dict:
@@ -378,10 +399,55 @@ def _owner_problems(doc: dict) -> list[str]:
 
 def validate(doc: dict, basis: dict | None, report: dict) -> list[str]:
     """Every problem with a lanes file: the schema's, then the rules. ``basis`` is the company's
-    basis file as parsed and ``report`` the scenario's report."""
+    basis file as parsed and ``report`` the scenario's report. A full document (owner rows
+    included, as the builder makes it) is held to both files' contracts."""
+    if any(lanes_files.is_owner(r) for p in doc.get("periods", ()) for r in p["rows"]):
+        lanes, owners = lanes_files.split(doc)
+        found = validate(lanes, basis, report)
+        if found:  # the owners are held against a lanes file that is sound
+            return found
+        for each in owners.values():
+            found += validate_owners(each, lanes, basis, report)
+        return found + validate_owner_set(list(owners.values()), lanes)
     found = _errors(schema(), doc)
     if found or "unavailable" in doc:
         return found
+    return _rules(doc, basis, report)
+
+
+def validate_owner_set(owners: list[dict], lanes: dict) -> list[str]:
+    """The owners files of a scenario are one for each segment of its lanes file, and no more."""
+    want = [r["path"][1] for r in lanes["periods"][0]["rows"] if r["kind"] == "segment"]
+    got = [o["segment"] for o in owners]
+    return [f"an owners file is missing for {s}" for s in want if s not in got] + [
+        f"an owners file is for {s}, which the lanes do not have"
+        for s in got
+        if s not in want
+    ]
+
+
+def validate_owners(owners: dict, lanes: dict, basis: dict, report: dict) -> list[str]:
+    """Every problem with one segment's owners file, held against its scenario's lanes file: the
+    schema's, that it belongs to it, and every rule over the two together (the segment's owners
+    add to it)."""
+    found = _errors(owners_schema(), owners)
+    if found or "unavailable" in lanes:
+        return found
+    problems: list[str] = []
+    for key in lanes_files.HEADER:
+        if owners[key] != lanes[key]:
+            problems.append(f"the owners file's {key} is not its lanes file's")
+    if owners["lanes"] != f"lanes-{lanes['scenario']}.json":
+        problems.append("the owners file names another lanes file")
+    if [p["key"] for p in owners["periods"]] != [p["key"] for p in lanes["periods"]]:
+        return [*problems, "the owners file's periods are not the lanes file's"]
+    full = lanes_files.merge(lanes, [owners])
+    return problems + _rules(
+        full, basis, report, owners["caveats"], (owners["segment"],)
+    )
+
+
+def _rules(doc, basis, report, owner_wording=None, owned=()) -> list[str]:
     problems: list[str] = []
 
     def rule(ok: bool, message: str) -> None:
@@ -389,9 +455,16 @@ def validate(doc: dict, basis: dict | None, report: dict) -> list[str]:
             problems.append(message)
 
     _shape(doc, rule)
+    if problems:  # the rules below read rows by position, so they need the shape right
+        return problems
     _cells(doc, rule)
-    _sums(doc, rule)
+    _sums(doc, rule, owned)
     _against_basis(doc, basis, rule)
+    if owner_wording is not None:
+        rule(
+            basis["owner_caveat"] in owner_wording,
+            "the owners file does not carry the basis's wording on allocated goals",
+        )
     _against_report(doc, report, rule)
     problems += [f"check failed: {c['name']}" for c in doc["checks"] if not c["passed"]]
     return problems
@@ -509,7 +582,7 @@ def _cells(doc, rule) -> None:
                 )
 
 
-def _sums(doc, rule) -> None:
+def _sums(doc, rule, owned=()) -> None:
     year, quarters = doc["periods"][0], doc["periods"][1:]
     for p in doc["periods"]:
         total = p["rows"][0]
@@ -523,7 +596,7 @@ def _sums(doc, rule) -> None:
                     m,
                     True,
                 )
-        for seg in _segments(p):
+        for seg in (s for s in _segments(p) if s["path"][1] in owned):
             kids = [k["cells"] for k in _owners(p, seg["path"])]
             for col in ("open", *ADDITIVE):
                 for m in MODES:
@@ -600,10 +673,6 @@ def _against_basis(doc, basis, rule) -> None:
         doc["plan_basis"]["label"] == basis["label"]
         and doc["plan_basis"]["cutoff"] == basis["cutoff"],
         "the lanes' plan basis is not the basis file's label and date",
-    )
-    rule(
-        basis["owner_caveat"] in doc["caveats"],
-        "the lanes do not carry the basis's wording on allocated goals",
     )
     goals = basis["goals"]
     segments = {s["key"]: s for s in basis["segments"]}

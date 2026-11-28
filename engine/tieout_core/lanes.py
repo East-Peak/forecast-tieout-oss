@@ -300,7 +300,6 @@ def lanes_document(
     wins_ro, created_ro = owners.remainder(
         state, cal, lane_series, priced, wins_r, created_r
     )
-    checks.append(owners.series_check(lane_series, whole))
     owner_a = facts(state, cal, owner_of)
     owner_f = (
         _merge(owner_a[0], wins_ro),
@@ -443,6 +442,7 @@ def lanes_document(
             }
         )
     checks += _ties(state, out_periods)
+    checks.append(owners.series_check(lane_series, whole))
     return {
         "schema_version": SCHEMA_VERSION,
         "company": company,

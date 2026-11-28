@@ -31,7 +31,7 @@ from .history import as_known_at, creation_amounts, latest_known_date
 from .lanes_alloc import UNITS, OwnerBasis, owner_basis
 from .lanes_contract import SCHEMA_VERSION
 from .lanes_flows import Calendar
-from .lanes_rules import COUNT
+from .lanes_rules import COUNT, OWNER_CAVEAT
 from .records import Check, Deal
 from .report import LEVER_CAP_MULTIPLE, Prepared, _trailing_created_arr
 from .requirement import solve_quarters
@@ -48,17 +48,6 @@ CAVEAT = (
     + rules.ESTIMATOR_RULE
     + " "
     + rules.ZERO_TARGET_RULE
-)
-
-OWNER_CAVEAT = (
-    "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days "
-    "employed in the year, from the roster as known at the plan date. Someone hired after that "
-    "date has no original allocation. It is a planning allocation, never a measure of a person's "
-    "performance, and what a person is shown to have produced is the record of their deals. "
-    "Ownership, quota and roster segment have no history in the files: a deal's owner, a "
-    "person's annual quota and the segment they sit in are today's values standing in for the plan "
-    "date. Only employment dates and deal data are cut at the plan date, so a later hire, "
-    "departure or deal cannot move a goal, but an edit to quota or roster segment would."
 )
 
 

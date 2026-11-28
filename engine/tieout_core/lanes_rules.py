@@ -53,6 +53,19 @@ REASONS = {
 }
 
 
+OWNER_CAVEAT = (
+    "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days "
+    "employed in the year, from the roster as known at the plan date. Someone hired after that "
+    "date has no original allocation. It is a planning allocation, never a measure of a person's "
+    "performance, and what a person is shown to have produced is the record of their deals. "
+    "Ownership, quota and roster segment have no history in the files: a deal's owner, a "
+    "person's annual quota and the segment they sit in are today's values standing in for the plan "
+    "date. Only employment dates and deal data are cut at the plan date, so a later hire, "
+    "departure or deal cannot move a goal, but an edit to quota or roster segment would."
+)
+SEGMENT_REASONS = ("no_goal", "not_modeled", "too_few", "vacuous")  # the lanes file's
+
+
 @dataclass(frozen=True)
 class Column:
     key: str

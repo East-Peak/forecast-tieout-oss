@@ -21,6 +21,9 @@ export interface ReportIndex {
       id: string;
       label: string;
       lanes?: string;
+      lanes_owners?: {
+        [k: string]: string | undefined;
+      };
       plan_file: string | null;
       report: string;
       report_markdown: string;

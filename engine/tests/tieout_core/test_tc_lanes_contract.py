@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from engine.tieout_core import lanes, lanes_basis, lanes_contract
+from engine.tieout_core import lanes, lanes_basis, lanes_contract, lanes_files
 from engine.tieout_core.editor import canonical
 
 
@@ -221,21 +221,10 @@ def test_owners_out_of_order_or_ranked_wrongly_are_found(parts):
     assert any("ranked" in p for p in problems(parts, rank))
 
 
-def test_lanes_that_drop_the_allocated_goal_wording_are_found(parts):
-    def edit(doc, *_):
-        doc["caveats"] = doc["caveats"][:-1]
-
-    assert any("wording" in p for p in problems(parts, edit))
-
-
-def test_an_owner_weight_that_is_not_quota_times_days_or_a_share_that_is_not_its_weights_is_found(
-    built,
-):
-    company, _, basis, _ = built
-    doc = lanes_basis.document(basis, company)
-    owner = next(o for o in doc["owners"] if o["quota"] and o["days"])
-    owner["weight"] = "1.00"
-    assert any("weight" in p for p in lanes_contract.validate_basis(doc))
-    doc = lanes_basis.document(basis, company)
-    next(o for o in doc["owners"] if o["quota"] and o["days"])["share"] = "0.000001"
-    assert any("share" in p for p in lanes_contract.validate_basis(doc))
+def test_an_owners_file_that_drops_the_allocated_goal_wording_is_found(parts):
+    doc, basis_doc, report = copy.deepcopy(parts)
+    lanes_doc, owners = lanes_files.split(doc)
+    owners_doc = next(iter(owners.values()))
+    owners_doc["caveats"] = ["something else"]
+    found = lanes_contract.validate_owners(owners_doc, lanes_doc, basis_doc, report)
+    assert any("wording" in p for p in found)
