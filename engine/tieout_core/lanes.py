@@ -626,3 +626,13 @@ def _ties(state: Prepared, periods_out: list[dict]) -> list[Check]:
             else "differs: " + ", ".join(off),
         ),
     ]
+
+
+def unavailable_document(company: str, scenario: str, reason: str) -> dict:
+    """The lanes file when there is no plan basis to build them on: the reason, never a zero."""
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "company": company,
+        "scenario": scenario,
+        "unavailable": reason,
+    }

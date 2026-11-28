@@ -13,11 +13,13 @@ export interface ReportIndex {
     description: string;
     fiscal_year: string;
     id: string;
+    lanes_basis?: string | null;
     name: string;
     scenarios: {
       description: string;
       id: string;
       label: string;
+      lanes?: string;
       plan_file: string | null;
       report: string;
       report_markdown: string;

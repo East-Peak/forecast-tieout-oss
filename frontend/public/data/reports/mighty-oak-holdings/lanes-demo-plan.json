@@ -1,0 +1,3904 @@
+{
+  "as_of": "2026-08-31",
+  "caveats": [
+    "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start.",
+    "The win-rate column is a dated benchmark, not a multiplier for the same period's created deals: it is the rate of the creation cohort old enough to have had its whole year, measured at the period's end (or the as-of date).",
+    "Segment forecasts share one pooled model out; no model is fitted to a slice, so the company back-test's credibility does not transfer to a segment. A behind cell is a planning discrepancy, not proof of a cause."
+  ],
+  "checks": [
+    {
+      "detail": "existing and modeled wins at their size book 33275197.22 in the year's remaining months; the forward function gives 33275197.22",
+      "name": "lane contributions replay the forward function",
+      "passed": true
+    },
+    {
+      "detail": "the year's created, won, opening and bookings match the report's flow",
+      "name": "lane actuals tie to the reconciliation",
+      "passed": true
+    },
+    {
+      "detail": "the year and each quarter match to the cent",
+      "name": "company bookings equal the report's expected bookings",
+      "passed": true
+    }
+  ],
+  "columns": [
+    {
+      "compared": "forecast",
+      "goal_label": "frozen opening basis",
+      "key": "open",
+      "minimum": null,
+      "places": 0,
+      "reversed": false,
+      "title": "Open at start",
+      "unit": "deals"
+    },
+    {
+      "compared": "forecast",
+      "goal_label": "derived requirement",
+      "key": "created",
+      "minimum": null,
+      "places": 4,
+      "reversed": false,
+      "title": "Created deals",
+      "unit": "deals"
+    },
+    {
+      "compared": "forecast",
+      "goal_label": "derived requirement",
+      "key": "created_arr",
+      "minimum": null,
+      "places": 2,
+      "reversed": false,
+      "title": "Created pipeline",
+      "unit": "ARR"
+    },
+    {
+      "compared": "actual",
+      "goal_label": "plan-start assumption",
+      "key": "win_rate",
+      "minimum": 20,
+      "places": 4,
+      "reversed": false,
+      "title": "Win rate, 365 days",
+      "unit": "rate"
+    },
+    {
+      "compared": "forecast",
+      "goal_label": "model-implied benchmark",
+      "key": "cycle",
+      "minimum": 5,
+      "places": 2,
+      "reversed": true,
+      "title": "Cycle",
+      "unit": "days"
+    },
+    {
+      "compared": "forecast",
+      "goal_label": "target-equivalent wins",
+      "key": "won",
+      "minimum": null,
+      "places": 4,
+      "reversed": false,
+      "title": "Won deals",
+      "unit": "deals"
+    },
+    {
+      "compared": "forecast",
+      "goal_label": "model-implied benchmark",
+      "key": "avg_won_arr",
+      "minimum": 5,
+      "places": 2,
+      "reversed": false,
+      "title": "Average won ARR",
+      "unit": "ARR"
+    },
+    {
+      "compared": "forecast",
+      "goal_label": "entered target",
+      "key": "bookings",
+      "minimum": null,
+      "places": 2,
+      "reversed": false,
+      "title": "Bookings",
+      "unit": "ARR"
+    }
+  ],
+  "company": "mighty-oak-holdings",
+  "fiscal_year": "FY26",
+  "periods": [
+    {
+      "end": "2027-01-31",
+      "key": "FY26",
+      "kind": "year",
+      "reported_bookings": "60722956.21",
+      "rows": [
+        {
+          "allocation": "the sum of its segments",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "1524875.50",
+              "compared": "forecast",
+              "denominator": "41.0959",
+              "forecast": "1477591.59",
+              "goal": "1633449.94",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "18.0000",
+                  "numerator": "27447759.00"
+                },
+                "forecast": {
+                  "denominator": "41.0959",
+                  "numerator": "60722956.21"
+                },
+                "goal": {
+                  "denominator": "51.4249",
+                  "numerator": "84000000.00"
+                }
+              },
+              "range80": null,
+              "ratio": "0.9046",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "27447759.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "60722956.21",
+              "goal": "84000000.00",
+              "goal_inside_range80": false,
+              "none_because": null,
+              "parts": null,
+              "range80": [
+                "49369434.30",
+                "72864654.50"
+              ],
+              "ratio": "0.7229",
+              "split": {
+                "actual": {
+                  "carried_in": "26702190.00",
+                  "created_in_period": "745569.00"
+                },
+                "forecast": {
+                  "carried_in": "36205057.14",
+                  "created_in_period": "24517899.07"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "247.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "442.9302",
+              "goal": "445.0000",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9953",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "442765508.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "810588827.14",
+              "goal": "1052634743.98",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7701",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "216.94",
+              "compared": "forecast",
+              "denominator": "41.0959",
+              "forecast": "240.28",
+              "goal": "217.26",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "18.0000",
+                  "numerator": "3905.00"
+                },
+                "forecast": {
+                  "denominator": "41.0959",
+                  "numerator": "9874.40"
+                },
+                "goal": {
+                  "denominator": "51.4249",
+                  "numerator": "11172.51"
+                }
+              },
+              "range80": null,
+              "ratio": "1.1060",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": "127",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "127",
+              "goal": "127",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1084",
+              "compared": "actual",
+              "denominator": "415",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "415",
+                  "numerator": "45"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.8856",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "18.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "41.0959",
+              "goal": "51.4249",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7991",
+              "split": {
+                "actual": {
+                  "carried_in": "17.0000",
+                  "created_in_period": "1.0000"
+                },
+                "forecast": {
+                  "carried_in": "24.5362",
+                  "created_in_period": "16.5597"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Company total",
+          "parent": null,
+          "path": [
+            "total"
+          ],
+          "sizes": null
+        },
+        {
+          "allocation": "49.1% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "2298084.29",
+              "compared": "forecast",
+              "denominator": "17.6747",
+              "forecast": "2055646.69",
+              "goal": "2192999.42",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "7.0000",
+                  "numerator": "16086590.00"
+                },
+                "forecast": {
+                  "denominator": "17.6747",
+                  "numerator": "36332938.57"
+                },
+                "goal": {
+                  "denominator": "18.8199",
+                  "numerator": "41272029.79"
+                }
+              },
+              "range80": null,
+              "ratio": "0.9374",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "16086590.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "36332938.57",
+              "goal": "41272029.79",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8803",
+              "split": {
+                "actual": {
+                  "carried_in": "16086590.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "23259153.72",
+                  "created_in_period": "13073784.85"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "110.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "211.7076",
+              "goal": "162.8562",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.3000",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "222673139.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "436070986.67",
+              "goal": "319782778.25",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.3636",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": "188.71",
+              "compared": "forecast",
+              "denominator": "17.6747",
+              "forecast": "249.37",
+              "goal": "217.26",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "7.0000",
+                  "numerator": "1321.00"
+                },
+                "forecast": {
+                  "denominator": "17.6747",
+                  "numerator": "4407.49"
+                },
+                "goal": {
+                  "denominator": "18.8199",
+                  "numerator": "4088.79"
+                }
+              },
+              "range80": null,
+              "ratio": "1.1478",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": "60",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "60",
+              "goal": "60",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0933",
+              "compared": "actual",
+              "denominator": "225",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "225",
+                  "numerator": "21"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.7623",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "7.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "17.6747",
+              "goal": "18.8199",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9391",
+              "split": {
+                "actual": {
+                  "carried_in": "7.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "11.0450",
+                  "created_in_period": "6.6297"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "2062819.97",
+              "created_basis": "segment mean",
+              "won": "2088859.88",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "1963589.83",
+              "created_basis": "segment mean",
+              "won": "2192998.21",
+              "won_basis": "segment mean"
+            }
+          }
+        },
+        {
+          "allocation": "32.7% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "3473725.00",
+              "compared": "forecast",
+              "denominator": "3.7176",
+              "forecast": "3748980.51",
+              "goal": "1992371.03",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "2.0000",
+                  "numerator": "6947450.00"
+                },
+                "forecast": {
+                  "denominator": "3.7176",
+                  "numerator": "13937209.94"
+                },
+                "goal": {
+                  "denominator": "13.7851",
+                  "numerator": "27465033.86"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "6947450.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "13937209.94",
+              "goal": "27465033.86",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.5075",
+              "split": {
+                "actual": {
+                  "carried_in": "6947450.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "7742051.96",
+                  "created_in_period": "6195157.98"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "34.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "56.4549",
+              "goal": "119.2876",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4733",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "160886360.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "273927106.32",
+              "goal": "632516239.92",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4331",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "273.50",
+              "compared": "forecast",
+              "denominator": "3.7176",
+              "forecast": "245.22",
+              "goal": "217.26",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "2.0000",
+                  "numerator": "547.00"
+                },
+                "forecast": {
+                  "denominator": "3.7176",
+                  "numerator": "911.62"
+                },
+                "goal": {
+                  "denominator": "13.7851",
+                  "numerator": "2994.93"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "17",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "17",
+              "goal": "17",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0784",
+              "compared": "actual",
+              "denominator": "51",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "51",
+                  "numerator": "4"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.6405",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "2.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "3.7176",
+              "goal": "13.7851",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.2697",
+              "split": {
+                "actual": {
+                  "carried_in": "2.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "2.3192",
+                  "created_in_period": "1.3984"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Strategic Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Strategic Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "4949349.38",
+              "created_basis": "segment mean",
+              "won": "1986317.81",
+              "won_basis": "pooled, thin sample"
+            },
+            "plan_start": {
+              "created": "5302447.53",
+              "created_basis": "segment mean",
+              "won": "1992374.28",
+              "won_basis": "pooled, thin sample"
+            }
+          }
+        },
+        {
+          "allocation": "18.2% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "490413.22",
+              "compared": "forecast",
+              "denominator": "19.7036",
+              "forecast": "530502.43",
+              "goal": "810999.86",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "9.0000",
+                  "numerator": "4413719.00"
+                },
+                "forecast": {
+                  "denominator": "19.7036",
+                  "numerator": "10452807.70"
+                },
+                "goal": {
+                  "denominator": "18.8199",
+                  "numerator": "15262936.35"
+                }
+              },
+              "range80": null,
+              "ratio": "0.6541",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "4413719.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "10452807.70",
+              "goal": "15262936.35",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.6848",
+              "split": {
+                "actual": {
+                  "carried_in": "3668150.00",
+                  "created_in_period": "745569.00"
+                },
+                "forecast": {
+                  "carried_in": "5203851.46",
+                  "created_in_period": "5248956.24"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "103.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "174.7677",
+              "goal": "162.8562",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0731",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "59206009.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "100590734.15",
+              "goal": "100335725.81",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0025",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": "226.33",
+              "compared": "forecast",
+              "denominator": "19.7036",
+              "forecast": "231.19",
+              "goal": "217.26",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "9.0000",
+                  "numerator": "2037.00"
+                },
+                "forecast": {
+                  "denominator": "19.7036",
+                  "numerator": "4555.29"
+                },
+                "goal": {
+                  "denominator": "18.8199",
+                  "numerator": "4088.79"
+                }
+              },
+              "range80": null,
+              "ratio": "1.0641",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": "50",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "50",
+              "goal": "50",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1439",
+              "compared": "actual",
+              "denominator": "139",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "139",
+                  "numerator": "20"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "1.1757",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "9.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "19.7036",
+              "goal": "18.8199",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0470",
+              "split": {
+                "actual": {
+                  "carried_in": "8.0000",
+                  "created_in_period": "1.0000"
+                },
+                "forecast": {
+                  "carried_in": "11.1720",
+                  "created_in_period": "8.5316"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Mid-Market",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Mid-Market"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "566938.23",
+              "created_basis": "segment mean",
+              "won": "641063.00",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "616100.13",
+              "created_basis": "segment mean",
+              "won": "810999.42",
+              "won_basis": "segment mean"
+            }
+          }
+        }
+      ],
+      "standing": "in progress",
+      "start": "2026-02-01"
+    },
+    {
+      "end": "2026-04-30",
+      "key": "Q1FY26",
+      "kind": "quarter",
+      "reported_bookings": "12839981.00",
+      "rows": [
+        {
+          "allocation": "the sum of its segments",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "1604997.62",
+              "compared": "forecast",
+              "denominator": "8.0000",
+              "forecast": "1604997.62",
+              "goal": "1633453.12",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "8.0000",
+                  "numerator": "12839981.00"
+                },
+                "forecast": {
+                  "denominator": "8.0000",
+                  "numerator": "12839981.00"
+                },
+                "goal": {
+                  "denominator": "10.4074",
+                  "numerator": "17000000.00"
+                }
+              },
+              "range80": null,
+              "ratio": "0.9826",
+              "split": null,
+              "status": "on_track"
+            },
+            "bookings": {
+              "actual": "12839981.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "12839981.00",
+              "goal": "17000000.00",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7553",
+              "split": {
+                "actual": {
+                  "carried_in": "12839981.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "12839981.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "100.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "100.0000",
+              "goal": "108.5068",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9216",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "153252405.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "153252405.00",
+              "goal": "256669916.59",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.5971",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "214.12",
+              "compared": "forecast",
+              "denominator": "8.0000",
+              "forecast": "214.12",
+              "goal": "226.82",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "8.0000",
+                  "numerator": "1713.00"
+                },
+                "forecast": {
+                  "denominator": "8.0000",
+                  "numerator": "1713.00"
+                },
+                "goal": {
+                  "denominator": "10.4074",
+                  "numerator": "2360.63"
+                }
+              },
+              "range80": null,
+              "ratio": "0.9440",
+              "split": null,
+              "status": "on_track"
+            },
+            "open": {
+              "actual": "127",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "127",
+              "goal": "127",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1266",
+              "compared": "actual",
+              "denominator": "395",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "395",
+                  "numerator": "50"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "1.0343",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "8.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "8.0000",
+              "goal": "10.4074",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7687",
+              "split": {
+                "actual": {
+                  "carried_in": "8.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "8.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Company total",
+          "parent": null,
+          "path": [
+            "total"
+          ],
+          "sizes": null
+        },
+        {
+          "allocation": "49.1% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "2658992.25",
+              "compared": "forecast",
+              "denominator": "4.0000",
+              "forecast": "2658992.25",
+              "goal": "2192993.25",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "4.0000",
+                  "numerator": "10635969.00"
+                },
+                "forecast": {
+                  "denominator": "4.0000",
+                  "numerator": "10635969.00"
+                },
+                "goal": {
+                  "denominator": "3.8088",
+                  "numerator": "8352672.69"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "10635969.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "10635969.00",
+              "goal": "8352672.69",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.2734",
+              "split": {
+                "actual": {
+                  "carried_in": "10635969.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "10635969.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "on_track"
+            },
+            "created": {
+              "actual": "37.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "37.0000",
+              "goal": "39.7101",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9318",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "71744281.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "71744281.00",
+              "goal": "77974348.55",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9201",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "180.50",
+              "compared": "forecast",
+              "denominator": "4.0000",
+              "forecast": "180.50",
+              "goal": "226.82",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "4.0000",
+                  "numerator": "722.00"
+                },
+                "forecast": {
+                  "denominator": "4.0000",
+                  "numerator": "722.00"
+                },
+                "goal": {
+                  "denominator": "3.8088",
+                  "numerator": "863.92"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "60",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "60",
+              "goal": "60",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1208",
+              "compared": "actual",
+              "denominator": "207",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "207",
+                  "numerator": "25"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.9869",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "4.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "4.0000",
+              "goal": "3.8088",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0502",
+              "split": {
+                "actual": {
+                  "carried_in": "4.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "4.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "2062819.97",
+              "created_basis": "segment mean",
+              "won": "2088859.88",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "1963589.83",
+              "created_basis": "segment mean",
+              "won": "2192998.21",
+              "won_basis": "segment mean"
+            }
+          }
+        },
+        {
+          "allocation": "32.7% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "0.0000",
+              "forecast": null,
+              "goal": "1992400.79",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "goal": {
+                  "denominator": "2.7898",
+                  "numerator": "5558399.71"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "0.00",
+              "goal": "5558399.71",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.0000",
+              "split": {
+                "actual": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "12.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "12.0000",
+              "goal": "29.0866",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4126",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "52652761.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "52652761.00",
+              "goal": "154230170.31",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.3414",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "0.0000",
+              "forecast": null,
+              "goal": "226.82",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "goal": {
+                  "denominator": "2.7898",
+                  "numerator": "632.79"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "17",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "17",
+              "goal": "17",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0926",
+              "compared": "actual",
+              "denominator": "54",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "54",
+                  "numerator": "5"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.7565",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "0.0000",
+              "goal": "2.7898",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.0000",
+              "split": {
+                "actual": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Strategic Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Strategic Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "4949349.38",
+              "created_basis": "segment mean",
+              "won": "1986317.81",
+              "won_basis": "pooled, thin sample"
+            },
+            "plan_start": {
+              "created": "5302447.53",
+              "created_basis": "segment mean",
+              "won": "1992374.28",
+              "won_basis": "pooled, thin sample"
+            }
+          }
+        },
+        {
+          "allocation": "18.2% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "551003.00",
+              "compared": "forecast",
+              "denominator": "4.0000",
+              "forecast": "551003.00",
+              "goal": "810997.58",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "4.0000",
+                  "numerator": "2204012.00"
+                },
+                "forecast": {
+                  "denominator": "4.0000",
+                  "numerator": "2204012.00"
+                },
+                "goal": {
+                  "denominator": "3.8088",
+                  "numerator": "3088927.60"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "2204012.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "2204012.00",
+              "goal": "3088927.60",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7135",
+              "split": {
+                "actual": {
+                  "carried_in": "2204012.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "2204012.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "51.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "51.0000",
+              "goal": "39.7101",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.2843",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "28855363.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "28855363.00",
+              "goal": "24465397.73",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.1794",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": "247.75",
+              "compared": "forecast",
+              "denominator": "4.0000",
+              "forecast": "247.75",
+              "goal": "226.82",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "4.0000",
+                  "numerator": "991.00"
+                },
+                "forecast": {
+                  "denominator": "4.0000",
+                  "numerator": "991.00"
+                },
+                "goal": {
+                  "denominator": "3.8088",
+                  "numerator": "863.92"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "50",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "50",
+              "goal": "50",
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1493",
+              "compared": "actual",
+              "denominator": "134",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "134",
+                  "numerator": "20"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "1.2198",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "4.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "4.0000",
+              "goal": "3.8088",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0502",
+              "split": {
+                "actual": {
+                  "carried_in": "4.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "4.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Mid-Market",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Mid-Market"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "566938.23",
+              "created_basis": "segment mean",
+              "won": "641063.00",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "616100.13",
+              "created_basis": "segment mean",
+              "won": "810999.42",
+              "won_basis": "segment mean"
+            }
+          }
+        }
+      ],
+      "standing": "closed",
+      "start": "2026-02-01"
+    },
+    {
+      "end": "2026-07-31",
+      "key": "Q2FY26",
+      "kind": "quarter",
+      "reported_bookings": "12166999.00",
+      "rows": [
+        {
+          "allocation": "the sum of its segments",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "1738142.71",
+              "compared": "forecast",
+              "denominator": "7.0000",
+              "forecast": "1738142.71",
+              "goal": "1633439.08",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "7.0000",
+                  "numerator": "12166999.00"
+                },
+                "forecast": {
+                  "denominator": "7.0000",
+                  "numerator": "12166999.00"
+                },
+                "goal": {
+                  "denominator": "11.6319",
+                  "numerator": "19000000.00"
+                }
+              },
+              "range80": null,
+              "ratio": "1.0641",
+              "split": null,
+              "status": "on_track"
+            },
+            "bookings": {
+              "actual": "12166999.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "12166999.00",
+              "goal": "19000000.00",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.6404",
+              "split": {
+                "actual": {
+                  "carried_in": "12166999.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "12166999.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "107.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "107.0000",
+              "goal": "112.1644",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9540",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "219482111.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "219482111.00",
+              "goal": "265321609.13",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8272",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "196.43",
+              "compared": "forecast",
+              "denominator": "7.0000",
+              "forecast": "196.43",
+              "goal": "219.34",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "7.0000",
+                  "numerator": "1375.00"
+                },
+                "forecast": {
+                  "denominator": "7.0000",
+                  "numerator": "1375.00"
+                },
+                "goal": {
+                  "denominator": "11.6319",
+                  "numerator": "2551.37"
+                }
+              },
+              "range80": null,
+              "ratio": "0.8956",
+              "split": null,
+              "status": "on_track"
+            },
+            "open": {
+              "actual": "121",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "121",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1117",
+              "compared": "actual",
+              "denominator": "403",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "403",
+                  "numerator": "45"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.9126",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "7.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "7.0000",
+              "goal": "11.6319",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.6018",
+              "split": {
+                "actual": {
+                  "carried_in": "7.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "7.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Company total",
+          "parent": null,
+          "path": [
+            "total"
+          ],
+          "sizes": null
+        },
+        {
+          "allocation": "49.1% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "1816873.67",
+              "compared": "forecast",
+              "denominator": "3.0000",
+              "forecast": "1816873.67",
+              "goal": "2192990.22",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "3.0000",
+                  "numerator": "5450621.00"
+                },
+                "forecast": {
+                  "denominator": "3.0000",
+                  "numerator": "5450621.00"
+                },
+                "goal": {
+                  "denominator": "4.2569",
+                  "numerator": "9335340.07"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "5450621.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "5450621.00",
+              "goal": "9335340.07",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.5839",
+              "split": {
+                "actual": {
+                  "carried_in": "5450621.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "5450621.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "52.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "52.0000",
+              "goal": "41.0487",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.2668",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "112905746.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "112905746.00",
+              "goal": "80602809.90",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.4008",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": "199.67",
+              "compared": "forecast",
+              "denominator": "3.0000",
+              "forecast": "199.67",
+              "goal": "219.34",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "3.0000",
+                  "numerator": "599.00"
+                },
+                "forecast": {
+                  "denominator": "3.0000",
+                  "numerator": "599.00"
+                },
+                "goal": {
+                  "denominator": "4.2569",
+                  "numerator": "933.72"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "55",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "55",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0897",
+              "compared": "actual",
+              "denominator": "223",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "223",
+                  "numerator": "20"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.7328",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "3.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "3.0000",
+              "goal": "4.2569",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7047",
+              "split": {
+                "actual": {
+                  "carried_in": "3.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "3.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "2062819.97",
+              "created_basis": "segment mean",
+              "won": "2088859.88",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "1963589.83",
+              "created_basis": "segment mean",
+              "won": "2192998.21",
+              "won_basis": "segment mean"
+            }
+          }
+        },
+        {
+          "allocation": "32.7% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "5082120.00",
+              "compared": "forecast",
+              "denominator": "1.0000",
+              "forecast": "5082120.00",
+              "goal": "1992344.41",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "1.0000",
+                  "numerator": "5082120.00"
+                },
+                "forecast": {
+                  "denominator": "1.0000",
+                  "numerator": "5082120.00"
+                },
+                "goal": {
+                  "denominator": "3.1181",
+                  "numerator": "6212329.09"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "5082120.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "5082120.00",
+              "goal": "6212329.09",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8181",
+              "split": {
+                "actual": {
+                  "carried_in": "5082120.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "5082120.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "19.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "19.0000",
+              "goal": "30.0670",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.6319",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "84884595.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "84884595.00",
+              "goal": "159428689.87",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.5324",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "293.00",
+              "compared": "forecast",
+              "denominator": "1.0000",
+              "forecast": "293.00",
+              "goal": "219.34",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "1.0000",
+                  "numerator": "293.00"
+                },
+                "forecast": {
+                  "denominator": "1.0000",
+                  "numerator": "293.00"
+                },
+                "goal": {
+                  "denominator": "3.1181",
+                  "numerator": "683.93"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "12",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "12",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0833",
+              "compared": "actual",
+              "denominator": "48",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "48",
+                  "numerator": "4"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.6806",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "1.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "1.0000",
+              "goal": "3.1181",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.3207",
+              "split": {
+                "actual": {
+                  "carried_in": "1.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "1.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Strategic Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Strategic Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "4949349.38",
+              "created_basis": "segment mean",
+              "won": "1986317.81",
+              "won_basis": "pooled, thin sample"
+            },
+            "plan_start": {
+              "created": "5302447.53",
+              "created_basis": "segment mean",
+              "won": "1992374.28",
+              "won_basis": "pooled, thin sample"
+            }
+          }
+        },
+        {
+          "allocation": "18.2% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "544752.67",
+              "compared": "forecast",
+              "denominator": "3.0000",
+              "forecast": "544752.67",
+              "goal": "810996.46",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "3.0000",
+                  "numerator": "1634258.00"
+                },
+                "forecast": {
+                  "denominator": "3.0000",
+                  "numerator": "1634258.00"
+                },
+                "goal": {
+                  "denominator": "4.2569",
+                  "numerator": "3452330.84"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "1634258.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "1634258.00",
+              "goal": "3452330.84",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4734",
+              "split": {
+                "actual": {
+                  "carried_in": "1634258.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "1634258.00",
+                  "created_in_period": "0.00"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "36.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "36.0000",
+              "goal": "41.0487",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8770",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "21691770.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "21691770.00",
+              "goal": "25290109.36",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8577",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "161.00",
+              "compared": "forecast",
+              "denominator": "3.0000",
+              "forecast": "161.00",
+              "goal": "219.34",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "3.0000",
+                  "numerator": "483.00"
+                },
+                "forecast": {
+                  "denominator": "3.0000",
+                  "numerator": "483.00"
+                },
+                "goal": {
+                  "denominator": "4.2569",
+                  "numerator": "933.72"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "54",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "54",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1591",
+              "compared": "actual",
+              "denominator": "132",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "132",
+                  "numerator": "21"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "1.2998",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "3.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "3.0000",
+              "goal": "4.2569",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7047",
+              "split": {
+                "actual": {
+                  "carried_in": "3.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "3.0000",
+                  "created_in_period": "0.0000"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Mid-Market",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Mid-Market"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "566938.23",
+              "created_basis": "segment mean",
+              "won": "641063.00",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "616100.13",
+              "created_basis": "segment mean",
+              "won": "810999.42",
+              "won_basis": "segment mean"
+            }
+          }
+        }
+      ],
+      "standing": "closed",
+      "start": "2026-05-01"
+    },
+    {
+      "end": "2026-10-31",
+      "key": "Q3FY26",
+      "kind": "quarter",
+      "reported_bookings": "15239944.98",
+      "rows": [
+        {
+          "allocation": "the sum of its segments",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "813593.00",
+              "compared": "forecast",
+              "denominator": "12.9986",
+              "forecast": "1172429.72",
+              "goal": "1633453.12",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "3.0000",
+                  "numerator": "2440779.00"
+                },
+                "forecast": {
+                  "denominator": "12.9986",
+                  "numerator": "15239944.98"
+                },
+                "goal": {
+                  "denominator": "13.4684",
+                  "numerator": "22000000.00"
+                }
+              },
+              "range80": null,
+              "ratio": "0.7178",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "2440779.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "15239944.98",
+              "goal": "22000000.00",
+              "goal_inside_range80": true,
+              "none_because": null,
+              "parts": null,
+              "range80": [
+                "9536172.20",
+                "22446334.10"
+              ],
+              "ratio": "0.6927",
+              "split": {
+                "actual": {
+                  "carried_in": "2440779.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "14831704.89",
+                  "created_in_period": "408240.09"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "40.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "115.0522",
+              "goal": "112.1644",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0257",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "70030992.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "210927870.87",
+              "goal": "265321609.13",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.7950",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "272.33",
+              "compared": "forecast",
+              "denominator": "12.9986",
+              "forecast": "280.72",
+              "goal": "217.34",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "3.0000",
+                  "numerator": "817.00"
+                },
+                "forecast": {
+                  "denominator": "12.9986",
+                  "numerator": "3649.01"
+                },
+                "goal": {
+                  "denominator": "13.4684",
+                  "numerator": "2927.28"
+                }
+              },
+              "range80": null,
+              "ratio": "1.2916",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": "125",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "125",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1084",
+              "compared": "actual",
+              "denominator": "415",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "415",
+                  "numerator": "45"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.8856",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "3.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "12.9986",
+              "goal": "13.4684",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9651",
+              "split": {
+                "actual": {
+                  "carried_in": "3.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "12.7421",
+                  "created_in_period": "0.2565"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Company total",
+          "parent": null,
+          "path": [
+            "total"
+          ],
+          "sizes": null
+        },
+        {
+          "allocation": "49.1% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "4.6503",
+              "forecast": "1909872.34",
+              "goal": "2193008.96",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "4.6503",
+                  "numerator": "8881479.34"
+                },
+                "goal": {
+                  "denominator": "4.9290",
+                  "numerator": "10809341.14"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "8881479.34",
+              "goal": "10809341.14",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8216",
+              "split": {
+                "actual": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "8592011.09",
+                  "created_in_period": "289468.25"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "21.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "59.9597",
+              "goal": "41.0487",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.4607",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "38023112.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "119766408.66",
+              "goal": "80602809.90",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.4859",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "4.6503",
+              "forecast": "340.70",
+              "goal": "217.34",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "4.6503",
+                  "numerator": "1584.38"
+                },
+                "goal": {
+                  "denominator": "4.9290",
+                  "numerator": "1071.29"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "59",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "59",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0933",
+              "compared": "actual",
+              "denominator": "225",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "225",
+                  "numerator": "21"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.7623",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "4.6503",
+              "goal": "4.9290",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9435",
+              "split": {
+                "actual": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "4.4996",
+                  "created_in_period": "0.1507"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "2062819.97",
+              "created_basis": "segment mean",
+              "won": "2088859.88",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "1963589.83",
+              "created_basis": "segment mean",
+              "won": "2192998.21",
+              "won_basis": "segment mean"
+            }
+          }
+        },
+        {
+          "allocation": "32.7% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "1865330.00",
+              "compared": "forecast",
+              "denominator": "1.2915",
+              "forecast": "2319053.08",
+              "goal": "1992361.83",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "1.0000",
+                  "numerator": "1865330.00"
+                },
+                "forecast": {
+                  "denominator": "1.2915",
+                  "numerator": "2995057.05"
+                },
+                "goal": {
+                  "denominator": "3.6104",
+                  "numerator": "7193223.15"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "1865330.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "2995057.05",
+              "goal": "7193223.15",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4164",
+              "split": {
+                "actual": {
+                  "carried_in": "1865330.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "2928523.19",
+                  "created_in_period": "66533.86"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "3.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "11.6015",
+              "goal": "30.0670",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.3859",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "23349004.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "66649924.61",
+              "goal": "159428689.87",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4181",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": "254.00",
+              "compared": "forecast",
+              "denominator": "1.2915",
+              "forecast": "240.96",
+              "goal": "217.34",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "1.0000",
+                  "numerator": "254.00"
+                },
+                "forecast": {
+                  "denominator": "1.2915",
+                  "numerator": "311.20"
+                },
+                "goal": {
+                  "denominator": "3.6104",
+                  "numerator": "784.70"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": "19",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "19",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0784",
+              "compared": "actual",
+              "denominator": "51",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "51",
+                  "numerator": "4"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.6405",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "1.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "1.2915",
+              "goal": "3.6104",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.3577",
+              "split": {
+                "actual": {
+                  "carried_in": "1.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "1.2774",
+                  "created_in_period": "0.0141"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Strategic Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Strategic Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "4949349.38",
+              "created_basis": "segment mean",
+              "won": "1986317.81",
+              "won_basis": "pooled, thin sample"
+            },
+            "plan_start": {
+              "created": "5302447.53",
+              "created_basis": "segment mean",
+              "won": "1992374.28",
+              "won_basis": "pooled, thin sample"
+            }
+          }
+        },
+        {
+          "allocation": "18.2% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": "287724.50",
+              "compared": "forecast",
+              "denominator": "7.0568",
+              "forecast": "476619.51",
+              "goal": "811003.39",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "2.0000",
+                  "numerator": "575449.00"
+                },
+                "forecast": {
+                  "denominator": "7.0568",
+                  "numerator": "3363408.59"
+                },
+                "goal": {
+                  "denominator": "4.9290",
+                  "numerator": "3997435.71"
+                }
+              },
+              "range80": null,
+              "ratio": "0.5877",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "575449.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "3363408.59",
+              "goal": "3997435.71",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8414",
+              "split": {
+                "actual": {
+                  "carried_in": "575449.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "3311170.61",
+                  "created_in_period": "52237.98"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "16.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "43.4910",
+              "goal": "41.0487",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0595",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "8658876.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "24511537.60",
+              "goal": "25290109.36",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9692",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": "281.50",
+              "compared": "forecast",
+              "denominator": "7.0568",
+              "forecast": "248.47",
+              "goal": "217.34",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "2.0000",
+                  "numerator": "563.00"
+                },
+                "forecast": {
+                  "denominator": "7.0568",
+                  "numerator": "1753.43"
+                },
+                "goal": {
+                  "denominator": "4.9290",
+                  "numerator": "1071.29"
+                }
+              },
+              "range80": null,
+              "ratio": "1.1432",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": "47",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "47",
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1439",
+              "compared": "actual",
+              "denominator": "139",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "139",
+                  "numerator": "20"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "1.1757",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "2.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "7.0568",
+              "goal": "4.9290",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.4317",
+              "split": {
+                "actual": {
+                  "carried_in": "2.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "6.9651",
+                  "created_in_period": "0.0917"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Mid-Market",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Mid-Market"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "566938.23",
+              "created_basis": "segment mean",
+              "won": "641063.00",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "616100.13",
+              "created_basis": "segment mean",
+              "won": "810999.42",
+              "won_basis": "segment mean"
+            }
+          }
+        }
+      ],
+      "standing": "in progress",
+      "start": "2026-08-01"
+    },
+    {
+      "end": "2027-01-31",
+      "key": "Q4FY26",
+      "kind": "quarter",
+      "reported_bookings": "20476031.23",
+      "rows": [
+        {
+          "allocation": "the sum of its segments",
+          "cells": {
+            "avg_won_arr": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "13.0973",
+              "forecast": "1563378.04",
+              "goal": "1633453.12",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "13.0973",
+                  "numerator": "20476031.23"
+                },
+                "goal": {
+                  "denominator": "15.9172",
+                  "numerator": "26000000.00"
+                }
+              },
+              "range80": null,
+              "ratio": "0.9571",
+              "split": null,
+              "status": "on_track"
+            },
+            "bookings": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "20476031.23",
+              "goal": "26000000.00",
+              "goal_inside_range80": true,
+              "none_because": null,
+              "parts": null,
+              "range80": [
+                "10382890.80",
+                "32295453.20"
+              ],
+              "ratio": "0.7875",
+              "split": {
+                "actual": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "19858141.79",
+                  "created_in_period": "617889.44"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "120.8780",
+              "goal": "112.1644",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0777",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "226926440.27",
+              "goal": "265321609.13",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8553",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "13.0973",
+              "forecast": "239.54",
+              "goal": "209.41",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "13.0973",
+                  "numerator": "3137.39"
+                },
+                "goal": {
+                  "denominator": "15.9172",
+                  "numerator": "3333.23"
+                }
+              },
+              "range80": null,
+              "ratio": "1.1439",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": null,
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1084",
+              "compared": "actual",
+              "denominator": "415",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "415",
+                  "numerator": "45"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.8856",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "13.0973",
+              "goal": "15.9172",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8228",
+              "split": {
+                "actual": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "12.7862",
+                  "created_in_period": "0.3111"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Company total",
+          "parent": null,
+          "path": [
+            "total"
+          ],
+          "sizes": null
+        },
+        {
+          "allocation": "49.1% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "6.0244",
+              "forecast": "1886473.21",
+              "goal": "2193002.11",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "6.0244",
+                  "numerator": "11364869.23"
+                },
+                "goal": {
+                  "denominator": "5.8252",
+                  "numerator": "12774675.89"
+                }
+              },
+              "range80": null,
+              "ratio": "0.8602",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "11364869.23",
+              "goal": "12774675.89",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.8896",
+              "split": {
+                "actual": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "10931717.21",
+                  "created_in_period": "433152.02"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "62.7479",
+              "goal": "41.0487",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.5286",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "131654551.01",
+              "goal": "80602809.90",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.6334",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "6.0244",
+              "forecast": "249.34",
+              "goal": "209.41",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "6.0244",
+                  "numerator": "1502.11"
+                },
+                "goal": {
+                  "denominator": "5.8252",
+                  "numerator": "1219.86"
+                }
+              },
+              "range80": null,
+              "ratio": "1.1907",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": null,
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0933",
+              "compared": "actual",
+              "denominator": "225",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "225",
+                  "numerator": "21"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.7623",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "6.0244",
+              "goal": "5.8252",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0342",
+              "split": {
+                "actual": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "5.8629",
+                  "created_in_period": "0.1615"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "2062819.97",
+              "created_basis": "segment mean",
+              "won": "2088859.88",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "1963589.83",
+              "created_basis": "segment mean",
+              "won": "2192998.21",
+              "won_basis": "segment mean"
+            }
+          }
+        },
+        {
+          "allocation": "32.7% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "1.4261",
+              "forecast": "4109131.82",
+              "goal": "1992378.81",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "1.4261",
+                  "numerator": "5860032.89"
+                },
+                "goal": {
+                  "denominator": "4.2668",
+                  "numerator": "8501081.91"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "bookings": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "5860032.89",
+              "goal": "8501081.91",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.6893",
+              "split": {
+                "actual": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "5769096.45",
+                  "created_in_period": "90936.44"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "13.8534",
+              "goal": "30.0670",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4608",
+              "split": null,
+              "status": "behind"
+            },
+            "created_arr": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "69739825.71",
+              "goal": "159428689.87",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.4374",
+              "split": null,
+              "status": "behind"
+            },
+            "cycle": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "1.4261",
+              "forecast": "215.57",
+              "goal": "209.41",
+              "goal_inside_range80": null,
+              "none_because": "too_few",
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "1.4261",
+                  "numerator": "307.42"
+                },
+                "goal": {
+                  "denominator": "4.2668",
+                  "numerator": "893.51"
+                }
+              },
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "open": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": null,
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.0784",
+              "compared": "actual",
+              "denominator": "51",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "51",
+                  "numerator": "4"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "0.6405",
+              "split": null,
+              "status": "behind"
+            },
+            "won": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "1.4261",
+              "goal": "4.2668",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.3342",
+              "split": {
+                "actual": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "1.3904",
+                  "created_in_period": "0.0357"
+                }
+              },
+              "status": "behind"
+            }
+          },
+          "label": "Strategic Enterprise",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Strategic Enterprise"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "4949349.38",
+              "created_basis": "segment mean",
+              "won": "1986317.81",
+              "won_basis": "pooled, thin sample"
+            },
+            "plan_start": {
+              "created": "5302447.53",
+              "created_basis": "segment mean",
+              "won": "1992374.28",
+              "won_basis": "pooled, thin sample"
+            }
+          }
+        },
+        {
+          "allocation": "18.2% of the trailing year's bookings at the plan start",
+          "cells": {
+            "avg_won_arr": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "5.6468",
+              "forecast": "575747.17",
+              "goal": "811000.86",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "5.6468",
+                  "numerator": "3251129.11"
+                },
+                "goal": {
+                  "denominator": "5.8252",
+                  "numerator": "4724242.20"
+                }
+              },
+              "range80": null,
+              "ratio": "0.7099",
+              "split": null,
+              "status": "behind"
+            },
+            "bookings": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "3251129.11",
+              "goal": "4724242.20",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.6882",
+              "split": {
+                "actual": {
+                  "carried_in": "0.00",
+                  "created_in_period": "0.00"
+                },
+                "forecast": {
+                  "carried_in": "3157328.13",
+                  "created_in_period": "93800.98"
+                }
+              },
+              "status": "behind"
+            },
+            "created": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "44.2767",
+              "goal": "41.0487",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0786",
+              "split": null,
+              "status": "on_track"
+            },
+            "created_arr": {
+              "actual": "0.00",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "25532063.55",
+              "goal": "25290109.36",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "1.0096",
+              "split": null,
+              "status": "on_track"
+            },
+            "cycle": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": "5.6468",
+              "forecast": "235.15",
+              "goal": "209.41",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "0.0000",
+                  "numerator": "0.00"
+                },
+                "forecast": {
+                  "denominator": "5.6468",
+                  "numerator": "1327.86"
+                },
+                "goal": {
+                  "denominator": "5.8252",
+                  "numerator": "1219.86"
+                }
+              },
+              "range80": null,
+              "ratio": "1.1229",
+              "split": null,
+              "status": "behind"
+            },
+            "open": {
+              "actual": null,
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": null,
+              "goal": null,
+              "goal_inside_range80": null,
+              "none_because": "vacuous",
+              "parts": null,
+              "range80": null,
+              "ratio": null,
+              "split": null,
+              "status": "none"
+            },
+            "win_rate": {
+              "actual": "0.1439",
+              "compared": "actual",
+              "denominator": "139",
+              "forecast": "0.0910",
+              "goal": "0.1224",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": {
+                "actual": {
+                  "denominator": "139",
+                  "numerator": "20"
+                },
+                "forecast": null,
+                "goal": null
+              },
+              "range80": null,
+              "ratio": "1.1757",
+              "split": null,
+              "status": "on_track"
+            },
+            "won": {
+              "actual": "0.0000",
+              "compared": "forecast",
+              "denominator": null,
+              "forecast": "5.6468",
+              "goal": "5.8252",
+              "goal_inside_range80": null,
+              "none_because": null,
+              "parts": null,
+              "range80": null,
+              "ratio": "0.9694",
+              "split": {
+                "actual": {
+                  "carried_in": "0.0000",
+                  "created_in_period": "0.0000"
+                },
+                "forecast": {
+                  "carried_in": "5.5329",
+                  "created_in_period": "0.1139"
+                }
+              },
+              "status": "on_track"
+            }
+          },
+          "label": "Mid-Market",
+          "parent": [
+            "total"
+          ],
+          "path": [
+            "segment",
+            "Mid-Market"
+          ],
+          "sizes": {
+            "forecast": {
+              "created": "566938.23",
+              "created_basis": "segment mean",
+              "won": "641063.00",
+              "won_basis": "segment mean"
+            },
+            "plan_start": {
+              "created": "616100.13",
+              "created_basis": "segment mean",
+              "won": "810999.42",
+              "won_basis": "segment mean"
+            }
+          }
+        }
+      ],
+      "standing": "not started",
+      "start": "2026-11-01"
+    }
+  ],
+  "plan_basis": {
+    "cutoff": "2026-01-31",
+    "digest": "d9e576ebab915257eda16e9b395992c59ec9374d92107d33f8813f7b20480d02",
+    "file": "lanes-basis.json",
+    "label": "Reconstructed FY plan basis, 2026-01-31"
+  },
+  "reasons": {
+    "no_goal": "There is no goal here, or it is zero, so there is nothing to compare with.",
+    "not_modeled": "This figure is not modeled for this period.",
+    "too_few": "Too few observations stand behind this ratio for a stable comparison.",
+    "vacuous": "For a period that has begun the forecast is the recorded fact, which is also the basis the goal was frozen from, so the comparison carries no information."
+  },
+  "scenario": "demo-plan",
+  "schema_version": "1.0.0"
+}

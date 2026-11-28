@@ -12,7 +12,7 @@ import pytest
 import yaml
 
 from engine.scripts import generate_app_reports as gen
-from engine.tieout_core import contract
+from engine.tieout_core import contract, lanes_contract
 
 REST, TWELVE = "rest of fiscal year", "next twelve months"
 COMPANY = "sprout-labs"
@@ -118,6 +118,11 @@ def test_four_scenarios_per_company_plus_index_and_comparison(built):
         f"{COMPANY}/demo-plan.md",
         f"{COMPANY}/hires-only.json",
         f"{COMPANY}/hires-only.md",
+        f"{COMPANY}/lanes-as-signed.json",
+        f"{COMPANY}/lanes-basis.json",
+        f"{COMPANY}/lanes-demo-plan.json",
+        f"{COMPANY}/lanes-hires-only.json",
+        f"{COMPANY}/lanes-program-only.json",
         f"{COMPANY}/program-only.json",
         f"{COMPANY}/program-only.md",
     ]
@@ -178,6 +183,8 @@ def test_the_index_describes_the_company_and_lists_its_scenarios(built):
         "as-signed", "demo-plan", "hires-only", "program-only"
     ]  # fmt: skip
     assert company["scenarios"][0]["report"] == f"{COMPANY}/as-signed.json"
+    assert company["scenarios"][0]["lanes"] == f"{COMPANY}/lanes-as-signed.json"
+    assert company["lanes_basis"] == f"{COMPANY}/lanes-basis.json"
     assert company["comparison"] == f"{COMPANY}/comparison.json"
 
 
@@ -198,6 +205,33 @@ def test_the_comparison_file_ties_to_the_reports(built):
     assert Decimal(rows["demo-plan"]["fiscal_year_gap_change"]) == Decimal(
         plan["plan"]["gap"]["fiscal_year"]["gap_with_plan"]
     ) - Decimal(plan["plan"]["gap"]["fiscal_year"]["baseline_gap"])
+
+
+def test_the_lanes_files_satisfy_their_contract_and_name_the_basis_they_were_read_from(
+    built,
+):
+    basis = json.loads(built[f"{COMPANY}/lanes-basis.json"])
+    assert lanes_contract.validate_basis(basis) == []
+    for sc in gen.SCENARIOS:
+        doc = json.loads(built[f"{COMPANY}/lanes-{sc.id}.json"])
+        report = json.loads(built[f"{COMPANY}/{sc.id}.json"])
+        assert doc["scenario"] == sc.id and doc["company"] == COMPANY
+        assert doc["plan_basis"]["digest"] == lanes_contract.digest(basis)
+        assert lanes_contract.validate(doc, basis, report) == []
+
+
+def test_the_committed_lanes_schemas_are_the_contract_as_it_is_now():
+    for path, text in gen.lanes_schema_files().items():
+        assert (gen.REPO / path).read_text() == text, path
+
+
+def test_a_lanes_file_that_breaks_a_rule_stops_the_generator(built):
+    files = dict(built)
+    doc = json.loads(files[f"{COMPANY}/lanes-as-signed.json"])
+    doc["periods"][0]["rows"][0]["cells"]["won"]["actual"] = "1.0000"
+    files[f"{COMPANY}/lanes-as-signed.json"] = gen.canonical(doc)
+    with pytest.raises(ValueError, match="lanes-as-signed"):
+        gen._validate_files(files)
 
 
 def test_generation_is_deterministic():

@@ -1,0 +1,168 @@
+{
+  "capacity_at_plan_start": {
+    "decision": "not shown",
+    "reason": "4 folds at 6 months; at least 6 are needed"
+  },
+  "caveat": "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start.",
+  "checks": [
+    {
+      "detail": "the refit's latest fact is dated 2026-01-31; the cutoff is 2026-01-31",
+      "name": "plan basis saw nothing after its cutoff",
+      "passed": true
+    },
+    {
+      "detail": "the schedule's quarters book 12526405.62; the forward function gives 12526405.62",
+      "name": "frozen schedule replays the forward function",
+      "passed": true
+    },
+    {
+      "detail": "each quarter's segment bookings goals sum to its target to the cent",
+      "name": "segment goals add to the entered targets",
+      "passed": true
+    }
+  ],
+  "company": "sprout-labs",
+  "cutoff": "2026-01-31",
+  "fit": {
+    "cohort_size": 252,
+    "created_per_day": "0.9397",
+    "mean_created_arr": "75969.49",
+    "mean_won_arr": "62269.48",
+    "win_rate": "0.1825"
+  },
+  "goals": {
+    "Q1FY26": {
+      "commercial": {
+        "bookings": "714287.13",
+        "created": "366.3569",
+        "created_arr": "20751194.44",
+        "days": "1695.30",
+        "won": "13.9748"
+      },
+      "mid_market": {
+        "bookings": "885712.87",
+        "created": "214.7609",
+        "created_arr": "23040967.43",
+        "days": "993.79",
+        "won": "8.1921"
+      }
+    },
+    "Q2FY26": {
+      "commercial": {
+        "bookings": "758930.08",
+        "created": "136.9849",
+        "created_arr": "7759101.29",
+        "days": "1587.30",
+        "won": "14.8482"
+      },
+      "mid_market": {
+        "bookings": "941069.92",
+        "created": "80.3015",
+        "created_arr": "8615275.16",
+        "days": "930.49",
+        "won": "8.7041"
+      }
+    },
+    "Q3FY26": {
+      "commercial": {
+        "bookings": "937501.86",
+        "created": "136.9849",
+        "created_arr": "7759101.29",
+        "days": "2375.13",
+        "won": "18.3419"
+      },
+      "mid_market": {
+        "bookings": "1162498.14",
+        "created": "80.3015",
+        "created_arr": "8615275.16",
+        "days": "1392.31",
+        "won": "10.7521"
+      }
+    },
+    "Q4FY26": {
+      "commercial": {
+        "bookings": "1160716.59",
+        "created": "136.9849",
+        "created_arr": "7759101.29",
+        "days": "2851.37",
+        "won": "22.7090"
+      },
+      "mid_market": {
+        "bookings": "1439283.41",
+        "created": "80.3015",
+        "created_arr": "8615275.16",
+        "days": "1671.50",
+        "won": "13.3122"
+      }
+    }
+  },
+  "label": "Reconstructed FY plan basis, 2026-01-31",
+  "opening": 75,
+  "schedule": [
+    {
+      "bookings": "1720178.16",
+      "created": "581.1178",
+      "created_arr": "44147222.92",
+      "days": "3093.11",
+      "outcome": "feasible",
+      "quarter": "Q1FY26",
+      "target": "1600000.00",
+      "wins": "25.4974"
+    },
+    {
+      "bookings": "4642078.84",
+      "created": "217.2864",
+      "created_arr": "16507134.68",
+      "days": "7903.76",
+      "outcome": "already covered",
+      "quarter": "Q2FY26",
+      "target": "1700000.00",
+      "wins": "73.9346"
+    },
+    {
+      "bookings": "3564148.62",
+      "created": "217.2864",
+      "created_arr": "16507134.68",
+      "days": "7410.53",
+      "outcome": "already covered",
+      "quarter": "Q3FY26",
+      "target": "2100000.00",
+      "wins": "57.2277"
+    },
+    {
+      "bookings": "2600000.00",
+      "created": "217.2864",
+      "created_arr": "16507134.68",
+      "days": "5230.47",
+      "outcome": "feasible",
+      "quarter": "Q4FY26",
+      "target": "2600000.00",
+      "wins": "41.6566"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "segments": [
+    {
+      "created_size": "107286.60",
+      "created_size_basis": "segment mean",
+      "creation_share": "0.381924",
+      "key": "mid_market",
+      "opening": 30,
+      "share": "0.553571",
+      "trailing_bookings": "1838002.00",
+      "won_size": "108117.76",
+      "won_size_basis": "segment mean"
+    },
+    {
+      "created_size": "56642.02",
+      "created_size_basis": "segment mean",
+      "creation_share": "0.618076",
+      "key": "commercial",
+      "opening": 45,
+      "share": "0.446429",
+      "trailing_bookings": "1482265.00",
+      "won_size": "51112.59",
+      "won_size_basis": "segment mean"
+    }
+  ]
+}

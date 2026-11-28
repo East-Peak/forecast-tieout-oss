@@ -1,0 +1,207 @@
+{
+  "capacity_at_plan_start": {
+    "decision": "not shown",
+    "reason": "4 folds at 6 months; at least 6 are needed"
+  },
+  "caveat": "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start.",
+  "checks": [
+    {
+      "detail": "the refit's latest fact is dated 2026-01-31; the cutoff is 2026-01-31",
+      "name": "plan basis saw nothing after its cutoff",
+      "passed": true
+    },
+    {
+      "detail": "the schedule's quarters book 121017508.88; the forward function gives 121017508.88",
+      "name": "frozen schedule replays the forward function",
+      "passed": true
+    },
+    {
+      "detail": "each quarter's segment bookings goals sum to its target to the cent",
+      "name": "segment goals add to the entered targets",
+      "passed": true
+    }
+  ],
+  "company": "mighty-oak-holdings",
+  "cutoff": "2026-01-31",
+  "fit": {
+    "cohort_size": 828,
+    "created_per_day": "1.2192",
+    "mean_created_arr": "1932126.88",
+    "mean_won_arr": "1992374.28",
+    "win_rate": "0.1224"
+  },
+  "goals": {
+    "Q1FY26": {
+      "Enterprise": {
+        "bookings": "8352672.69",
+        "created": "39.7101",
+        "created_arr": "77974348.55",
+        "days": "863.92",
+        "won": "3.8088"
+      },
+      "Mid-Market": {
+        "bookings": "3088927.60",
+        "created": "39.7101",
+        "created_arr": "24465397.73",
+        "days": "863.92",
+        "won": "3.8088"
+      },
+      "Strategic Enterprise": {
+        "bookings": "5558399.71",
+        "created": "29.0866",
+        "created_arr": "154230170.31",
+        "days": "632.79",
+        "won": "2.7898"
+      }
+    },
+    "Q2FY26": {
+      "Enterprise": {
+        "bookings": "9335340.07",
+        "created": "41.0487",
+        "created_arr": "80602809.90",
+        "days": "933.72",
+        "won": "4.2569"
+      },
+      "Mid-Market": {
+        "bookings": "3452330.84",
+        "created": "41.0487",
+        "created_arr": "25290109.36",
+        "days": "933.72",
+        "won": "4.2569"
+      },
+      "Strategic Enterprise": {
+        "bookings": "6212329.09",
+        "created": "30.0670",
+        "created_arr": "159428689.87",
+        "days": "683.93",
+        "won": "3.1181"
+      }
+    },
+    "Q3FY26": {
+      "Enterprise": {
+        "bookings": "10809341.14",
+        "created": "41.0487",
+        "created_arr": "80602809.90",
+        "days": "1071.29",
+        "won": "4.9290"
+      },
+      "Mid-Market": {
+        "bookings": "3997435.71",
+        "created": "41.0487",
+        "created_arr": "25290109.36",
+        "days": "1071.29",
+        "won": "4.9290"
+      },
+      "Strategic Enterprise": {
+        "bookings": "7193223.15",
+        "created": "30.0670",
+        "created_arr": "159428689.87",
+        "days": "784.70",
+        "won": "3.6104"
+      }
+    },
+    "Q4FY26": {
+      "Enterprise": {
+        "bookings": "12774675.89",
+        "created": "41.0487",
+        "created_arr": "80602809.90",
+        "days": "1219.86",
+        "won": "5.8252"
+      },
+      "Mid-Market": {
+        "bookings": "4724242.20",
+        "created": "41.0487",
+        "created_arr": "25290109.36",
+        "days": "1219.86",
+        "won": "5.8252"
+      },
+      "Strategic Enterprise": {
+        "bookings": "8501081.91",
+        "created": "30.0670",
+        "created_arr": "159428689.87",
+        "days": "893.51",
+        "won": "4.2668"
+      }
+    }
+  },
+  "label": "Reconstructed FY plan basis, 2026-01-31",
+  "opening": 127,
+  "schedule": [
+    {
+      "bookings": "29882560.25",
+      "created": "108.5068",
+      "created_arr": "209649000.27",
+      "days": "3484.56",
+      "outcome": "already covered",
+      "quarter": "Q1FY26",
+      "target": "17000000.00",
+      "wins": "15.3625"
+    },
+    {
+      "bookings": "30650027.07",
+      "created": "112.1644",
+      "created_arr": "216715820.51",
+      "days": "3620.65",
+      "outcome": "already covered",
+      "quarter": "Q2FY26",
+      "target": "19000000.00",
+      "wins": "16.5068"
+    },
+    {
+      "bookings": "29847710.47",
+      "created": "112.1644",
+      "created_arr": "216715820.51",
+      "days": "3438.20",
+      "outcome": "already covered",
+      "quarter": "Q3FY26",
+      "target": "22000000.00",
+      "wins": "15.8191"
+    },
+    {
+      "bookings": "30637211.10",
+      "created": "112.1644",
+      "created_arr": "216715820.51",
+      "days": "3188.61",
+      "outcome": "already covered",
+      "quarter": "Q4FY26",
+      "target": "26000000.00",
+      "wins": "15.2266"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "segments": [
+    {
+      "created_size": "1963589.83",
+      "created_size_basis": "segment mean",
+      "creation_share": "0.519101",
+      "key": "Enterprise",
+      "opening": 60,
+      "share": "0.491334",
+      "trailing_bookings": "52631957.00",
+      "won_size": "2192998.21",
+      "won_size_basis": "segment mean"
+    },
+    {
+      "created_size": "5302447.53",
+      "created_size_basis": "segment mean",
+      "creation_share": "0.114607",
+      "key": "Strategic Enterprise",
+      "opening": 17,
+      "share": "0.326965",
+      "trailing_bookings": "35024652.00",
+      "won_size": "1992374.28",
+      "won_size_basis": "pooled, thin sample"
+    },
+    {
+      "created_size": "616100.13",
+      "created_size_basis": "segment mean",
+      "creation_share": "0.366292",
+      "key": "Mid-Market",
+      "opening": 50,
+      "share": "0.181702",
+      "trailing_bookings": "19463986.00",
+      "won_size": "810999.42",
+      "won_size_basis": "segment mean"
+    }
+  ]
+}

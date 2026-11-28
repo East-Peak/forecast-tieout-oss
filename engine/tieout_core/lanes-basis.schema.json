@@ -1,0 +1,269 @@
+{
+  "$defs": {
+    "Check": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "$ref": "#/$defs/Text"
+        },
+        "name": {
+          "$ref": "#/$defs/Text"
+        },
+        "passed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "passed",
+        "detail"
+      ],
+      "type": "object"
+    },
+    "Date": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "type": "string"
+    },
+    "Decimal": {
+      "pattern": "^-?\\d+(\\.\\d+)?$",
+      "type": "string"
+    },
+    "Money": {
+      "pattern": "^-?\\d+\\.\\d{2}$",
+      "type": "string"
+    },
+    "MoneyRange": {
+      "items": {
+        "$ref": "#/$defs/Money"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "Quarter": {
+      "pattern": "^Q[1-4]FY\\d{2}$",
+      "type": "string"
+    },
+    "Text": {
+      "type": "string"
+    }
+  },
+  "$id": "https://forecast-tieout.example/schema/lanes-basis-1.0.0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "lanes-basis.json written by the core's generator: the swimlane grid's figures.",
+  "properties": {
+    "capacity_at_plan_start": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "$ref": "#/$defs/Text"
+        },
+        "reason": {
+          "$ref": "#/$defs/Text"
+        }
+      },
+      "required": [
+        "decision",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "caveat": {
+      "$ref": "#/$defs/Text"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/Check"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "company": {
+      "$ref": "#/$defs/Text"
+    },
+    "cutoff": {
+      "$ref": "#/$defs/Date"
+    },
+    "fit": {
+      "additionalProperties": false,
+      "properties": {
+        "cohort_size": {
+          "type": "integer"
+        },
+        "created_per_day": {
+          "$ref": "#/$defs/Decimal"
+        },
+        "mean_created_arr": {
+          "$ref": "#/$defs/Money"
+        },
+        "mean_won_arr": {
+          "$ref": "#/$defs/Money"
+        },
+        "win_rate": {
+          "$ref": "#/$defs/Decimal"
+        }
+      },
+      "required": [
+        "win_rate",
+        "cohort_size",
+        "mean_won_arr",
+        "mean_created_arr",
+        "created_per_day"
+      ],
+      "type": "object"
+    },
+    "goals": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "additionalProperties": false,
+          "properties": {
+            "bookings": {
+              "$ref": "#/$defs/Money"
+            },
+            "created": {
+              "$ref": "#/$defs/Decimal"
+            },
+            "created_arr": {
+              "$ref": "#/$defs/Money"
+            },
+            "days": {
+              "$ref": "#/$defs/Decimal"
+            },
+            "won": {
+              "$ref": "#/$defs/Decimal"
+            }
+          },
+          "required": [
+            "bookings",
+            "won",
+            "created",
+            "created_arr",
+            "days"
+          ],
+          "type": "object"
+        },
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "label": {
+      "$ref": "#/$defs/Text"
+    },
+    "opening": {
+      "type": "integer"
+    },
+    "schedule": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "bookings": {
+            "$ref": "#/$defs/Money"
+          },
+          "created": {
+            "$ref": "#/$defs/Decimal"
+          },
+          "created_arr": {
+            "$ref": "#/$defs/Money"
+          },
+          "days": {
+            "$ref": "#/$defs/Decimal"
+          },
+          "outcome": {
+            "$ref": "#/$defs/Text"
+          },
+          "quarter": {
+            "$ref": "#/$defs/Quarter"
+          },
+          "target": {
+            "$ref": "#/$defs/Money"
+          },
+          "wins": {
+            "$ref": "#/$defs/Decimal"
+          }
+        },
+        "required": [
+          "quarter",
+          "target",
+          "outcome",
+          "created",
+          "created_arr",
+          "wins",
+          "bookings",
+          "days"
+        ],
+        "type": "object"
+      },
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "segments": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "created_size": {
+            "$ref": "#/$defs/Money"
+          },
+          "created_size_basis": {
+            "$ref": "#/$defs/Text"
+          },
+          "creation_share": {
+            "$ref": "#/$defs/Decimal"
+          },
+          "key": {
+            "$ref": "#/$defs/Text"
+          },
+          "opening": {
+            "type": "integer"
+          },
+          "share": {
+            "$ref": "#/$defs/Decimal"
+          },
+          "trailing_bookings": {
+            "$ref": "#/$defs/Money"
+          },
+          "won_size": {
+            "$ref": "#/$defs/Money"
+          },
+          "won_size_basis": {
+            "$ref": "#/$defs/Text"
+          }
+        },
+        "required": [
+          "key",
+          "trailing_bookings",
+          "share",
+          "creation_share",
+          "opening",
+          "won_size",
+          "won_size_basis",
+          "created_size",
+          "created_size_basis"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "company",
+    "label",
+    "cutoff",
+    "capacity_at_plan_start",
+    "fit",
+    "opening",
+    "segments",
+    "schedule",
+    "goals",
+    "caveat",
+    "checks"
+  ],
+  "title": "TieoutLanesBasis",
+  "type": "object"
+}

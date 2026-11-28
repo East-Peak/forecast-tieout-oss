@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from engine.tieout_core import lanes_basis, lanes_contract
+from engine.tieout_core import lanes, lanes_basis, lanes_contract
 from engine.tieout_core.editor import canonical
 
 
@@ -137,3 +137,5 @@ def test_the_unavailable_shape_is_a_shape_of_its_own():
     assert lanes_contract.validate(doc, None, {}) == []
     assert lanes_contract.validate({**doc, "unavailable": 3}, None, {})
     assert canonical(doc)
+    made = lanes.unavailable_document("x", "as-signed", doc["unavailable"])
+    assert made == doc and lanes_contract.validate(made, None, {}) == []

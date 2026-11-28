@@ -6,12 +6,14 @@
       "description": "Short of target this year. Headcount explains pipeline; the fitted forecast beats the simple yardsticks.",
       "fiscal_year": "FY26",
       "id": "sprout-labs",
+      "lanes_basis": "sprout-labs/lanes-basis.json",
       "name": "Sprout Labs",
       "scenarios": [
         {
           "description": "The roster as signed and nothing planned.",
           "id": "as-signed",
           "label": "As signed",
+          "lanes": "sprout-labs/lanes-as-signed.json",
           "plan_file": null,
           "report": "sprout-labs/as-signed.json",
           "report_markdown": "sprout-labs/as-signed.md"
@@ -20,6 +22,7 @@
           "description": "The company's demo plan: further hires and program pipeline together.",
           "id": "demo-plan",
           "label": "Demo plan",
+          "lanes": "sprout-labs/lanes-demo-plan.json",
           "plan_file": "engine/config/profiles/sprout-labs/plan.yaml",
           "report": "sprout-labs/demo-plan.json",
           "report_markdown": "sprout-labs/demo-plan.md"
@@ -28,6 +31,7 @@
           "description": "Only the demo plan's further hires.",
           "id": "hires-only",
           "label": "Hires only",
+          "lanes": "sprout-labs/lanes-hires-only.json",
           "plan_file": "engine/config/profiles/sprout-labs/plan-hires-only.yaml",
           "report": "sprout-labs/hires-only.json",
           "report_markdown": "sprout-labs/hires-only.md"
@@ -36,6 +40,7 @@
           "description": "Only the demo plan's program pipeline.",
           "id": "program-only",
           "label": "Program only",
+          "lanes": "sprout-labs/lanes-program-only.json",
           "plan_file": "engine/config/profiles/sprout-labs/plan-program-only.yaml",
           "report": "sprout-labs/program-only.json",
           "report_markdown": "sprout-labs/program-only.md"
@@ -48,12 +53,14 @@
       "description": "Short of target this year. Headcount explains pipeline; the fitted forecast does not yet beat the simple yardsticks.",
       "fiscal_year": "FY26",
       "id": "sapling-industries",
+      "lanes_basis": "sapling-industries/lanes-basis.json",
       "name": "Sapling Industries",
       "scenarios": [
         {
           "description": "The roster as signed and nothing planned.",
           "id": "as-signed",
           "label": "As signed",
+          "lanes": "sapling-industries/lanes-as-signed.json",
           "plan_file": null,
           "report": "sapling-industries/as-signed.json",
           "report_markdown": "sapling-industries/as-signed.md"
@@ -62,6 +69,7 @@
           "description": "The company's demo plan: further hires and program pipeline together.",
           "id": "demo-plan",
           "label": "Demo plan",
+          "lanes": "sapling-industries/lanes-demo-plan.json",
           "plan_file": "engine/config/profiles/sapling-industries/plan.yaml",
           "report": "sapling-industries/demo-plan.json",
           "report_markdown": "sapling-industries/demo-plan.md"
@@ -70,6 +78,7 @@
           "description": "Only the demo plan's further hires.",
           "id": "hires-only",
           "label": "Hires only",
+          "lanes": "sapling-industries/lanes-hires-only.json",
           "plan_file": "engine/config/profiles/sapling-industries/plan-hires-only.yaml",
           "report": "sapling-industries/hires-only.json",
           "report_markdown": "sapling-industries/hires-only.md"
@@ -78,6 +87,7 @@
           "description": "Only the demo plan's program pipeline.",
           "id": "program-only",
           "label": "Program only",
+          "lanes": "sapling-industries/lanes-program-only.json",
           "plan_file": "engine/config/profiles/sapling-industries/plan-program-only.yaml",
           "report": "sapling-industries/program-only.json",
           "report_markdown": "sapling-industries/program-only.md"
@@ -90,12 +100,14 @@
       "description": "Short of target this year. The history cannot say whether headcount explains pipeline; the fitted forecast does not yet beat the simple yardsticks.",
       "fiscal_year": "FY26",
       "id": "mighty-oak-holdings",
+      "lanes_basis": "mighty-oak-holdings/lanes-basis.json",
       "name": "Mighty Oak Holdings",
       "scenarios": [
         {
           "description": "The roster as signed and nothing planned.",
           "id": "as-signed",
           "label": "As signed",
+          "lanes": "mighty-oak-holdings/lanes-as-signed.json",
           "plan_file": null,
           "report": "mighty-oak-holdings/as-signed.json",
           "report_markdown": "mighty-oak-holdings/as-signed.md"
@@ -104,6 +116,7 @@
           "description": "The company's demo plan: further hires and program pipeline together.",
           "id": "demo-plan",
           "label": "Demo plan",
+          "lanes": "mighty-oak-holdings/lanes-demo-plan.json",
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan.yaml",
           "report": "mighty-oak-holdings/demo-plan.json",
           "report_markdown": "mighty-oak-holdings/demo-plan.md"
@@ -112,6 +125,7 @@
           "description": "Only the demo plan's further hires.",
           "id": "hires-only",
           "label": "Hires only",
+          "lanes": "mighty-oak-holdings/lanes-hires-only.json",
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-hires-only.yaml",
           "report": "mighty-oak-holdings/hires-only.json",
           "report_markdown": "mighty-oak-holdings/hires-only.md"
@@ -120,6 +134,7 @@
           "description": "Only the demo plan's program pipeline.",
           "id": "program-only",
           "label": "Program only",
+          "lanes": "mighty-oak-holdings/lanes-program-only.json",
           "plan_file": "engine/config/profiles/mighty-oak-holdings/plan-program-only.yaml",
           "report": "mighty-oak-holdings/program-only.json",
           "report_markdown": "mighty-oak-holdings/program-only.md"
