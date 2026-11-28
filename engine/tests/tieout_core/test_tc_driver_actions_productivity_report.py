@@ -210,6 +210,12 @@ def test_a_target_equal_to_the_pooled_rate_changes_no_figure_anywhere(state):
         doc["ranges"].pop("what_is_drawn")
     assert a == b
     for a, b in zip(base["worksheet"]["drivers"], same["worksheet"]["drivers"]):
+        if (
+            a["driver"] == "productivity"
+        ):  # only what is said of it with an action on it
+            assert {**a, "limitation": None} == {**b, "limitation": None}
+            assert b["limitation"].endswith("at that setting.")
+            continue
         assert a == b, a["driver"]
 
 
