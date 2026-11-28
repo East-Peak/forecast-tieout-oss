@@ -293,6 +293,19 @@ describe("actions: the list and the form, beside hires and programs", () => {
     expect(screen.getByRole("button", { name: "Add an action" })).toBeEnabled();
   });
 
+  it("a plan whose last action is removed is the plan it was before: no empty list, so nothing reads as changed", async () => {
+    const { store } = await mounted(ACTIONS_PLAN, SEGMENTS);
+    fireEvent.click(screen.getByRole("button", { name: "Remove action" }));
+    expect("actions" in store.snapshot.drafts.acme).toBe(false);
+    expect(store.snapshot.drafts.acme).toEqual({ hires: ACTIONS_PLAN.hires, programs: ACTIONS_PLAN.programs });
+    cleanup();
+    const plain = await mounted(DEMO, SEGMENTS);
+    fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
+    fireEvent.click(screen.getByRole("button", { name: "Remove action" }));
+    expect(screen.queryByTestId("plan-unapplied")).toBeNull();
+    expect(plain.store.snapshot.drafts.acme).toEqual(DEMO);
+  });
+
   it("is sent with Apply, in the plan's own shape", async () => {
     const { editor } = await mounted(ACTIONS_PLAN, SEGMENTS);
     fireEvent.click(screen.getByRole("button", { name: "Apply" }));

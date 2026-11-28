@@ -67,8 +67,12 @@ export function ActionsFieldset({ company, store, facts, draft, applied, origins
   const slices = [{ value: "company", label: "Company" }, ...facts.segments];
   const used = new Set(actions.map((a) => a.slice));
   const next = actions.length === 0 ? "company" : (facts.segments.find((s) => !used.has(s.value))?.value ?? "company");
-  const replace = (i: number, change: (a: NonNullable<PlanDoc["actions"]>[number]) => NonNullable<PlanDoc["actions"]>[number]) =>
-    store.setDraft(company, { ...draft, actions: actions.map((a, k) => (k === i ? change(a) : a)) });
+  /** the plan with these actions: none is no list at all, so a plan whose last action was removed is the plan it was before */
+  const setActions = (next: NonNullable<PlanDoc["actions"]>) => {
+    const { actions: _held, ...rest } = draft;
+    store.setDraft(company, next.length === 0 ? rest : { ...rest, actions: next });
+  };
+  const replace = (i: number, change: (a: NonNullable<PlanDoc["actions"]>[number]) => NonNullable<PlanDoc["actions"]>[number]) => setActions(actions.map((a, k) => (k === i ? change(a) : a)));
 
   useEffect(() => {
     if (!revealed) return;
@@ -126,7 +130,7 @@ export function ActionsFieldset({ company, store, facts, draft, applied, origins
                 />
               </Field>
               <PercentField label="Target win rate (percent)" probability={action.target} onChange={(target) => replace(i, (a) => ({ ...a, target }))} />
-              <button type="button" className={buttonClass} onClick={() => store.setDraft(company, { ...draft, actions: actions.filter((_, k) => k !== i) })}>
+              <button type="button" className={buttonClass} onClick={() => setActions(actions.filter((_, k) => k !== i))}>
                 Remove action
               </button>
             </div>

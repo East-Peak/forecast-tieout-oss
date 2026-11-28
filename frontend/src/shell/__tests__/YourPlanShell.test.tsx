@@ -267,6 +267,8 @@ describe("the tornado opens the editor in place", () => {
     expect(screen.getByTestId("action-origin")).toHaveTextContent("will differ from the bar's figure");
     expect(screen.getByTestId("plan-unapplied")).toBeInTheDocument();
     expect(editor.applied).toEqual([DEMO]);
+    // the editor opened for this draft: the draft is what the visitor lands on, not the form's heading
+    await waitFor(() => expect(within(action).getByLabelText("Action name")).toHaveFocus());
   });
 
   it("no other driver's bar has the button, and the worksheet's two unit actions keep theirs", async () => {

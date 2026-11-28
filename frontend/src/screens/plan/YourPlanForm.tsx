@@ -27,9 +27,11 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
   const applied = snap.applied[company];
   const top = useRef<HTMLDivElement>(null);
   const shown = Boolean(facts && draft);
+  // a draft asked for from the worksheet or the grid is what the visitor lands on (the actions' own effect brings it into view)
+  const toDraft = snap.revealed?.company === company;
   // Opening the editor, from this screen or another, lands on the form: in view, with its heading focused.
   useEffect(() => {
-    if (!shown) return;
+    if (!shown || toDraft) return;
     const heading = top.current?.querySelector("h2");
     heading?.setAttribute("tabindex", "-1");
     heading?.focus({ preventScroll: true });
