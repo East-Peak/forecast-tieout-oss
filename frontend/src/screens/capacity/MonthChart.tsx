@@ -25,7 +25,7 @@ export function MonthChart() {
   return (
     <Card className="p-4 sm:p-5" data-testid="chart-container" data-chart={CHART_ID}>
       <h3 className="mb-1 text-sm font-semibold text-ft-brand">Heads and ramped equivalents, by month</h3>
-      <p className="mb-4 text-xs text-slate-500">
+      <p className="mb-4 max-w-4xl text-xs text-slate-500">
         A year of history to the left of the as-of line, a year of forecast to the right. A head ramps over the months after the
         start; the headcount target is a comparison line and never creates a hire.
       </p>

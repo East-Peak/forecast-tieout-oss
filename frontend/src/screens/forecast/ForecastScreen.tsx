@@ -1,7 +1,8 @@
 import { Bound, readBinding, useBindingContext } from "../../binding/Bound";
+import { COLUMN } from "../../components/workbook/column";
 import type { Binding } from "../../binding/Bound";
 import { Badge, Callout } from "../../components/ui";
-import { SectionHeader } from "../../components/workbook";
+import { ScreenHeading } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
 import { signOf } from "../../lib/format";
 import { B, MONTHLY_METHODS, PLANNED, SIGNED } from "./bindings";
@@ -56,11 +57,16 @@ export default function ForecastScreen() {
   const V = planned ? PLANNED : SIGNED;
 
   return (
-    <div className="flex max-w-6xl flex-col gap-6">
-      <SectionHeader title="Forecast" subtitle="Where the year lands, and how sure we are." />
-      <p className="-mt-3 text-xs text-slate-500">
-        <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} /> · <Bound binding={B.measure} />
-      </p>
+    <div className={COLUMN}>
+      <ScreenHeading
+        title="Forecast"
+        subtitle="Where the year lands, and how sure we are."
+        caption={
+          <>
+            <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} /> · <Bound binding={B.measure} />
+          </>
+        }
+      />
 
       {!available.fitted ? (
         <Callout color="amber" title="The fitted forecast is unavailable">
@@ -73,69 +79,71 @@ export default function ForecastScreen() {
         </Callout>
       ) : null}
 
-      {/* from xl the two range cards take a third more room each, so "$50.0M to $68.0M" stays on one line */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5 xl:grid-cols-[repeat(3,minmax(0,1fr))_repeat(2,minmax(0,1.5fr))]">
-        <MetricCard label="Target" value={<Bound binding={B.yearTarget} />} note="The year's quarterly targets together" className="p-4" />
-        <MetricCard
-          label={planned ? "Expected, with this scenario" : "Expected for the year"}
-          value={<Bound binding={V.yearExpected} />}
-          note={planned ? undefined : "Booked to date plus forecast"}
-          className="p-4"
-        >
-          {planned ? (
-            <p className="mt-1 text-[11px] leading-tight text-slate-500">
-              As signed: <Bound binding={B.signedExpected} />
-            </p>
-          ) : null}
-        </MetricCard>
-        <MetricCard label="Gap to target" value={<Bound binding={V.yearGap} />} className="p-4">
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <SignBadge binding={V.yearGap} />
+      <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+          <MetricCard label="Target" value={<Bound binding={B.yearTarget} />} note="The year's quarterly targets together" className="p-4" />
+          <MetricCard
+            label={planned ? "Expected, with this scenario" : "Expected for the year"}
+            value={<Bound binding={V.yearExpected} />}
+            note={planned ? undefined : "Booked to date plus forecast"}
+            className="p-4"
+          >
             {planned ? (
-              <span className="text-[11px] text-slate-500">
-                As signed: <Bound binding={B.signedGap} />
-              </span>
+              <p className="mt-1 text-[11px] leading-tight text-slate-500">
+                As signed: <Bound binding={B.signedExpected} />
+              </p>
             ) : null}
-          </div>
-        </MetricCard>
-        <MetricCard
-          label="80% range"
-          value={
-            <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
-              <Bound binding={V.range80Low} /> to <Bound binding={V.range80High} />
-            </span>
-          }
-          note="Of the expected year"
-          className="p-4"
-        >
-          {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel80} /> : null}
-        </MetricCard>
-        <MetricCard
-          label="95% range"
-          value={
-            <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
-              <Bound binding={V.range95Low} /> to <Bound binding={V.range95High} />
-            </span>
-          }
-          note="Of the expected year"
-          className="col-span-2 p-4 lg:col-span-1"
-        >
-          {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel95} /> : null}
-        </MetricCard>
-      </div>
-
-      {available.fitted ? (
-        <div className="text-sm text-slate-700" data-testid="range-trust">
-          <span className="font-semibold text-ft-brand">How far to trust the ranges: </span>
-          <Bound binding={V.yearRangeStatus} />
+          </MetricCard>
+          <MetricCard label="Gap to target" value={<Bound binding={V.yearGap} />} className="p-4">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <SignBadge binding={V.yearGap} />
+              {planned ? (
+                <span className="text-[11px] text-slate-500">
+                  As signed: <Bound binding={B.signedGap} />
+                </span>
+              ) : null}
+            </div>
+          </MetricCard>
+          <MetricCard
+            label="80% range"
+            value={
+              <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
+                <Bound binding={V.range80Low} /> to <Bound binding={V.range80High} />
+              </span>
+            }
+            note="Of the expected year"
+            className="p-4"
+          >
+            {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel80} /> : null}
+          </MetricCard>
+          <MetricCard
+            label="95% range"
+            value={
+              <span className="text-xl xl:whitespace-nowrap" data-testid="range-figure">
+                <Bound binding={V.range95Low} /> to <Bound binding={V.range95High} />
+              </span>
+            }
+            note="Of the expected year"
+            className="col-span-2 p-4 lg:col-span-1"
+          >
+            {available.fitted && !planned ? <RangeLabel binding={B.rangeLabel95} /> : null}
+          </MetricCard>
         </div>
-      ) : null}
+
+        {available.fitted ? (
+          <div className="rounded-ft border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-sm text-slate-700" data-testid="range-trust">
+            <span className="font-semibold text-ft-brand">How far to trust the ranges: </span>
+            <Bound binding={V.yearRangeStatus} />
+          </div>
+        ) : null}
+      </div>
 
       <Verdicts />
 
-      <MonthlyChart available={available} planned={planned} />
-
-      <QuarterChart fittedAvailable={available.fitted} planned={planned} />
+      <div className="grid gap-6 2xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] 2xl:items-start">
+        <MonthlyChart available={available} planned={planned} />
+        <QuarterChart fittedAvailable={available.fitted} planned={planned} />
+      </div>
       <QuarterTable planned={planned} />
       <WindowTable planned={planned} fittedAvailable={available.fitted} />
       {available.fitted ? <RangeCheck /> : null}

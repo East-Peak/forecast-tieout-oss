@@ -1,4 +1,5 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
+import { COLUMN } from "../../components/workbook/column";
 import { Callout } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { useYourPlan } from "../../editor/YourPlanContext";
@@ -33,7 +34,7 @@ export default function PlanScreen() {
 
   return (
     <div className="flex flex-col gap-6">
-     <div className="flex max-w-6xl flex-col gap-6">
+     <div className={COLUMN}>
       <SectionHeader title="Plan" subtitle="What moves the outcome, and which plan do we choose?" />
       <p className="-mt-3 text-xs text-slate-500">
         <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
@@ -60,7 +61,7 @@ export default function PlanScreen() {
       {/* the lanes use the whole width the window gives; the rest of the screen keeps its measure */}
       <LanesSection />
 
-     <div className="flex max-w-6xl flex-col gap-6">
+     <div className={COLUMN}>
       {plan !== undefined && full === null ? (
         <Callout color="amber" title="This plan cannot be valued" data-testid="plan-unavailable">
           <Bound binding={B.planUnavailable} />

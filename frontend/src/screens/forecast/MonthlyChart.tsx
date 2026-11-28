@@ -75,7 +75,7 @@ export function MonthlyChart({ available, planned }: { available: Availability; 
   return (
     <Card className="p-4 sm:p-5" data-testid="chart-container" data-chart={MONTHLY_CHART_ID}>
       <h3 className="mb-1 text-sm font-semibold text-ft-brand">Bookings by month, and the forecast</h3>
-      <p className="mb-1 text-xs text-slate-500">
+      <p className="mb-1 max-w-4xl text-xs text-slate-500">
         The ranges are for each month&apos;s bookings taken alone, not for the twelve months together.
         {available.fitted ? (
           <>
@@ -84,7 +84,7 @@ export function MonthlyChart({ available, planned }: { available: Availability; 
           </>
         ) : null}
       </p>
-      <p className="mb-4 text-xs text-slate-500" data-testid="baseline-note">
+      <p className="mb-4 max-w-4xl text-xs text-slate-500" data-testid="baseline-note">
         Compare with the stage-weighted pipeline and the last twelve months&apos; pace in the verdict above and on Trust.
       </p>
       <ResponsiveContainer width="100%" height={320}>

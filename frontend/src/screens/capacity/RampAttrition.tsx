@@ -17,9 +17,10 @@ export function RampAttrition() {
         title="Ramp, attrition and the pipeline a rep creates"
         subtitle="Each rate says whether it was fitted from the history, entered by the company or left at a default, and what it rests on."
       />
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className={ramp ? "grid gap-6 lg:grid-cols-2 lg:grid-rows-[auto_1fr]" : "grid gap-6 lg:grid-cols-2"}>
         {ramp ? (
-          <section data-testid="ramp">
+          <section data-testid="ramp" className="lg:contents">
+            <div className="lg:col-start-1 lg:row-start-1">
             <h3 className="text-sm font-semibold text-ft-brand">
               Ramp: <Bound binding={B.rampSource} />
             </h3>
@@ -49,41 +50,44 @@ export function RampAttrition() {
                 <Bound binding={B.rampLimitation} />
               </p>
             ) : null}
-            <Table className={`${STACK.table} mt-3`}>
-              <TableHead className={STACK.head}>
-                <TableRow>
-                  <TableHeaderCell>Tenure month</TableHeaderCell>
-                  <TableHeaderCell className="text-right">Share of a tenured rep's pipeline</TableHeaderCell>
-                  <TableHeaderCell className="text-right">95% range</TableHeaderCell>
-                </TableRow>
-              </TableHead>
-              <TableBody className={STACK.body}>
-                {ramp.weights.map((w, i) => {
-                  const row = `${ROWS.weights}/${i}`;
-                  return (
-                    <TableRow key={i} className={STACK.row} data-testid="weight-row">
-                      <TableCell className={STACK.cell} data-label="Tenure month"><Bound binding={B.wMonth} row={row} /></TableCell>
-                      <TableCell className={STACK.cell} data-label="Share of a tenured rep's pipeline"><Bound binding={B.wWeight} row={row} /></TableCell>
-                      <TableCell className={STACK.cell} data-label="95% range">
-                        {Array.isArray(w.range95) ? (
-                          <>
-                            <Bound binding={B.wLow} row={row} /> to <Bound binding={B.wHigh} row={row} />
-                          </>
-                        ) : typeof w.range95 === "string" ? (
-                          <Bound binding={B.wCeiling} row={row} />
-                        ) : (
-                          <Bound binding={B.wNoRange} row={row} />
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+            </div>
+            <div className="min-w-0 lg:col-start-2 lg:[grid-row:1/span_2] lg:self-start">
+            <Table className={`${STACK.table} mt-3 lg:mt-0`}>
+                <TableHead className={STACK.head}>
+                  <TableRow>
+                    <TableHeaderCell>Tenure month</TableHeaderCell>
+                    <TableHeaderCell className="text-right">Share of a tenured rep's pipeline</TableHeaderCell>
+                    <TableHeaderCell className="text-right">95% range</TableHeaderCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody className={STACK.body}>
+                  {ramp.weights.map((w, i) => {
+                    const row = `${ROWS.weights}/${i}`;
+                    return (
+                      <TableRow key={i} className={STACK.row} data-testid="weight-row">
+                        <TableCell className={STACK.cell} data-label="Tenure month"><Bound binding={B.wMonth} row={row} /></TableCell>
+                        <TableCell className={STACK.cell} data-label="Share of a tenured rep's pipeline"><Bound binding={B.wWeight} row={row} /></TableCell>
+                        <TableCell className={STACK.cell} data-label="95% range">
+                          {Array.isArray(w.range95) ? (
+                            <>
+                              <Bound binding={B.wLow} row={row} /> to <Bound binding={B.wHigh} row={row} />
+                            </>
+                          ) : typeof w.range95 === "string" ? (
+                            <Bound binding={B.wCeiling} row={row} />
+                          ) : (
+                            <Bound binding={B.wNoRange} row={row} />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </section>
         ) : null}
 
-        <div className="flex flex-col gap-6">
+        <div className={ramp ? "flex flex-col gap-6 lg:col-start-1 lg:row-start-2" : "flex flex-col gap-6"}>
           {attrition ? (
             <section data-testid="attrition">
               <h3 className="text-sm font-semibold text-ft-brand">

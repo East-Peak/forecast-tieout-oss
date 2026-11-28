@@ -1,7 +1,8 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
+import { COLUMN } from "../../components/workbook/column";
 import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { Callout, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
-import { Disclosure, SectionHeader } from "../../components/workbook";
+import { Disclosure, ScreenHeading } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
 import { STACK } from "../../components/workbook/stack";
 
@@ -25,11 +26,16 @@ export default function CapacityScreen() {
   const months = rc.months ?? [];
 
   return (
-    <div className="flex max-w-6xl flex-col gap-6">
-      <SectionHeader title="Capacity" subtitle="Can this team carry the number?" />
-      <p className="-mt-3 text-xs text-slate-500">
-        <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
-      </p>
+    <div className={COLUMN}>
+      <ScreenHeading
+        title="Capacity"
+        subtitle="Can this team carry the number?"
+        caption={
+          <>
+            <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
+          </>
+        }
+      />
 
       {notUsed ? (
         <Callout color="amber" title="Capacity is not used for this forecast" data-testid="capacity-not-used">

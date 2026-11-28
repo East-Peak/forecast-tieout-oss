@@ -1,8 +1,9 @@
 import { Bound, useBindingContext } from "../../binding/Bound";
+import { COLUMN } from "../../components/workbook/column";
 import type { Binding } from "../../binding/Bound";
 import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
-import { Disclosure, SectionHeader } from "../../components/workbook";
+import { Disclosure, ScreenHeading, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
 import { STACK } from "../../components/workbook/stack";
 import { B, FLOW_KEYS, NEW_PIPELINE_WIN_RATE, ROWS, STAGE_WIN_RATE } from "./bindings";
@@ -28,11 +29,16 @@ export default function PipelineScreen() {
   const winRates = rates.map((rate, i) => [rate, i] as const).filter(([rate]) => STAGE_WIN_RATE.test(rate.name) || rate.name === NEW_PIPELINE_WIN_RATE);
 
   return (
-    <div className="flex max-w-6xl flex-col gap-6">
-      <SectionHeader title="Pipeline" subtitle="What must be created, by when, and is it too late?" />
-      <p className="-mt-3 text-xs text-slate-500">
-        <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
-      </p>
+    <div className={COLUMN}>
+      <ScreenHeading
+        title="Pipeline"
+        subtitle="What must be created, by when, and is it too late?"
+        caption={
+          <>
+            <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
+          </>
+        }
+      />
 
       {"unavailable" in required ? (
         <Callout color="amber" title="The requirement cannot be computed">
@@ -74,36 +80,32 @@ export default function PipelineScreen() {
         </>
       )}
 
-      <Card>
-        <SectionHeader title="The year's pipeline flow" subtitle="What was open at the start of the year, what came in, and where it went." />
-        <Table className={STACK.table}>
-          <TableHead className={STACK.head}>
-            <TableRow>
-              <TableHeaderCell>Stage of the flow</TableHeaderCell>
-              <TableHeaderCell className="text-right">Deals</TableHeaderCell>
-              <TableHeaderCell className="text-right">Dollars</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody className={STACK.body}>
-            {FLOW_KEYS.map((key) => {
-              const row = `${ROWS.flow}/${key}`;
-              return (
-                <TableRow key={key} className={STACK.row} data-testid="flow-row">
-                  <TableCell className={STACK.title}>{FLOW_LABELS[key]}</TableCell>
-                  <TableCell className={STACK.cell} data-label="Deals"><Bound binding={B.flowCount} row={row} /></TableCell>
-                  <TableCell className={STACK.cell} data-label="Dollars"><Bound binding={B.flowArr} row={row} /></TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Card>
-
-      {"unavailable" in required ? null : (
-        <>
-          <QuarterChart />
-          <QuarterTable />
-
+      <div className={"unavailable" in required ? "flex flex-col gap-6" : "grid gap-6 2xl:grid-cols-2 2xl:items-start"}>
+        <Card>
+          <SectionHeader title="The year's pipeline flow" subtitle="What was open at the start of the year, what came in, and where it went." />
+          <Table className={STACK.table}>
+            <TableHead className={STACK.head}>
+              <TableRow>
+                <TableHeaderCell>Stage of the flow</TableHeaderCell>
+                <TableHeaderCell className="text-right">Deals</TableHeaderCell>
+                <TableHeaderCell className="text-right">Dollars</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody className={STACK.body}>
+              {FLOW_KEYS.map((key) => {
+                const row = `${ROWS.flow}/${key}`;
+                return (
+                  <TableRow key={key} className={STACK.row} data-testid="flow-row">
+                    <TableCell className={STACK.title}>{FLOW_LABELS[key]}</TableCell>
+                    <TableCell className={STACK.cell} data-label="Deals"><Bound binding={B.flowCount} row={row} /></TableCell>
+                    <TableCell className={STACK.cell} data-label="Dollars"><Bound binding={B.flowArr} row={row} /></TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Card>
+        {"unavailable" in required ? null : (
           <Card>
             <SectionHeader title="How long a created dollar takes to book" subtitle="The lead-time table: why pipeline created now mostly books after the quarter it is created in." />
             <p className="text-sm leading-6 text-slate-700">
@@ -136,6 +138,12 @@ export default function PipelineScreen() {
             </p>
             <p className="mt-1 text-xs text-slate-500"><Bound binding={B.ltBasis} /></p>
           </Card>
+        )}
+      </div>
+      {"unavailable" in required ? null : (
+        <>
+          <QuarterChart />
+          <QuarterTable />
 
           <Card>
             <SectionHeader title="Against the team's own record" subtitle="A requirement is held against the most this team has ever created." />

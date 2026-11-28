@@ -1,9 +1,10 @@
 import { Bound, readBinding, useBindingContext } from "../../binding/Bound";
+import { COLUMN } from "../../components/workbook/column";
 import { YOUR_PLAN } from "../../editor/yourPlan";
 import type { Binding } from "../../binding/Bound";
 import { BuildYourOwnPlan } from "../../components/BuildYourOwnPlan";
 import { Badge, Callout, Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
-import { Disclosure, SectionHeader } from "../../components/workbook";
+import { Disclosure, ScreenHeading, SectionHeader } from "../../components/workbook";
 import { MetricCard } from "../../components/workbook/MetricCard";
 import { STACK, STACK_LG } from "../../components/workbook/stack";
 import { StretchEvidence } from "../forecast/StretchEvidence";
@@ -36,11 +37,16 @@ export default function TrustScreen() {
   const folds = Object.keys(r.history.facts.backtest_folds);
 
   return (
-    <div className="flex max-w-6xl flex-col gap-6">
-      <SectionHeader title="Trust" subtitle="Why should anyone believe any of this?" />
-      <p className="-mt-3 text-xs text-slate-500">
-        <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
-      </p>
+    <div className={COLUMN}>
+      <ScreenHeading
+        title="Trust"
+        subtitle="Why should anyone believe any of this?"
+        caption={
+          <>
+            <Bound binding={B.fiscalYear} /> · as of <Bound binding={B.asOf} />
+          </>
+        }
+      />
 
       <Verdicts />
 

@@ -22,7 +22,7 @@ export function QuarterChart() {
   return (
     <Card className="p-4 sm:p-5" data-testid="chart-container" data-chart={CHART_ID}>
       <h3 className="mb-1 text-sm font-semibold text-ft-brand">Pipeline to create, from the as-of date through each quarter's end</h3>
-      <p className="mb-4 text-xs text-slate-500">
+      <p className="mb-4 max-w-4xl text-xs text-slate-500">
         Each bar covers the time from the as-of date to the end of its quarter, so the spans overlap: a later quarter's bar includes the earlier
         quarters' time. A quarter where no amount of extra pipeline helps has no second bar: the table says why.
       </p>

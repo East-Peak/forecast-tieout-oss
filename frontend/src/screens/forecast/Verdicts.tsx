@@ -21,6 +21,11 @@ function outcomeTone(outcome: string): Tone {
   return "slate";
 }
 
+/**
+ * One verdict: the question, the report's word, and its reason. With nothing beneath it, a verdict is a compact strip (the
+ * question, the word and the reason on one line, wrapping on a phone); with evidence beneath it, the question, word and
+ * reason stand beside that evidence from lg up and above it below.
+ */
 function Verdict({
   question,
   verdict,
@@ -36,18 +41,32 @@ function Verdict({
 }) {
   const ctx = useBindingContext();
   const word = String(readBinding(ctx, verdict));
+  const badge = (
+    <Badge color={tone ?? toneOf(word)} className="text-sm">
+      <Bound binding={verdict} />
+    </Badge>
+  );
+  if (!children) {
+    return (
+      <Card className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3" data-testid="verdict-card">
+        <p className="text-xs font-medium text-slate-500">{question}</p>
+        {badge}
+        <p className="min-w-0 text-xs leading-5 text-slate-600">
+          <Bound binding={reason} />
+        </p>
+      </Card>
+    );
+  }
   return (
-    <Card className="p-4" data-testid="verdict-card">
-      <p className="text-xs font-medium text-slate-500">{question}</p>
-      <div className="mt-2 flex items-center gap-2">
-        <Badge color={tone ?? toneOf(word)} className="text-sm">
-          <Bound binding={verdict} />
-        </Badge>
+    <Card className="grid gap-x-8 gap-y-3 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]" data-testid="verdict-card">
+      <div>
+        <p className="text-xs font-medium text-slate-500">{question}</p>
+        <div className="mt-2 flex items-center gap-2">{badge}</div>
+        <p className="mt-2 text-xs leading-5 text-slate-600">
+          <Bound binding={reason} />
+        </p>
       </div>
-      <p className="mt-2 text-xs leading-5 text-slate-600">
-        <Bound binding={reason} />
-      </p>
-      {children}
+      <div className="min-w-0">{children}</div>
     </Card>
   );
 }
@@ -81,7 +100,7 @@ function Comparison() {
   if (rows.length === 0) return null;
   return (
     <>
-      <p className="mt-3 text-[11px] text-slate-500">Average miss in dollars on the past, lower is better.</p>
+      <p className="text-[11px] text-slate-500">Average miss in dollars on the past, lower is better.</p>
       <Table className={`${STACK.table} mt-1 text-xs`}>
         <TableHead className={STACK.head}>
           <TableRow>
@@ -116,8 +135,9 @@ function Comparison() {
 export function Verdicts() {
   const ctx = useBindingContext();
   const better = String(readBinding(ctx, B.betterVerdict));
+  const compared = ctx.files.report.verdicts.forecast_better_than_baselines.comparisons.length > 0;
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="flex flex-col gap-4">
       <Verdict question="Is the software correct?" verdict={B.softwareVerdict} reason={B.softwareSummary} />
       <Verdict
         question="Is the fitted forecast better than the baselines?"
@@ -125,7 +145,7 @@ export function Verdicts() {
         reason={B.betterReason}
         tone={better === "no" ? "amber" : undefined}
       >
-        <Comparison />
+        {compared ? <Comparison /> : null}
       </Verdict>
     </div>
   );
