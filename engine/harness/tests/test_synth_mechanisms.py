@@ -191,6 +191,26 @@ def test_self_sourcing_needs_room_and_its_rate_falls_to_zero_when_the_ae_is_full
     assert sim_module.T_ADMIT  # self-sourced deals are not queued demand
 
 
+def test_reopening_under_a_new_owner_writes_the_owner_change():
+    params = dataclasses.replace(
+        small_params("demand_limited"),
+        attrition_annual={"AE": 0.8, "BDR": 0.2},
+        p_reopen=1.0,
+        reopen_days=(30, 120),
+    )
+    sim = run_company(params, 2).sim
+    holder = sim.cs[0].uid
+    moved = [
+        o
+        for o in sim.opps
+        if o.reopened
+        and any(r[4] == r[3] and holder not in (r[2], r[3]) for r in o.owner_rows)
+    ]
+    assert moved, "a reopened deal should have changed hands at reopening"
+    for o in sim.opps:  # replaying history from the first owner gives the owner now
+        assert ([r[3] for r in o.owner_rows] or [o.owner0])[-1] == o.owner.uid, o.n
+
+
 def test_every_owner_change_has_a_history_row_and_open_counts_match_the_simulation(
     tmp_path,
 ):
