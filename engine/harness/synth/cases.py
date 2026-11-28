@@ -14,6 +14,27 @@ def _win_rate(opps) -> float | None:
     return round(sum(o.status == "won" for o in done) / len(done), 4) if done else None
 
 
+def _trailing_win_rate(opps, as_of: str, since: str) -> float | None:
+    """Win rate of deals whose closing was on the books in (since, as_of], from history cut at `as_of`."""
+    won = lost = 0
+    for o in opps:
+        shown = [i for i in o.images if i[1] <= as_of]
+        if len(shown) < 2 or not shown[-1][2].startswith("Closed"):
+            continue
+        closing = next(
+            (i for i in reversed(shown) if not i[2].startswith("Closed")), None
+        )
+        when = (
+            next(i[1] for i in shown[shown.index(closing) + 1 :])
+            if closing
+            else shown[0][1]
+        )
+        if when > since:
+            won += shown[-1][2] == CLOSED_WON
+            lost += shown[-1][2] == CLOSED_LOST
+    return round(won / (won + lost), 4) if won + lost else None
+
+
 def named_cases(company: Company) -> dict:
     sim, p = company.sim, company.params
     lane = lambda seg, src: sim.lane_keys[sim.lane_ix[(seg, src)]]
@@ -30,17 +51,10 @@ def named_cases(company: Company) -> dict:
     step_lane = sim.lane_ix[(ws.segment, ws.source)]
     step_day = day_of(ws.on)
     in_lane = [o for o in sim.opps if o.lane == step_lane]
-    closing_days = {
-        o.n: day_of(date.fromisoformat(o.images[-1][1][:10])) for o in in_lane
-    }
-    trailing = [
-        o
-        for o in in_lane
-        if plan - 365 <= closing_days[o.n] <= plan and o.status in ("won", "lost")
-    ]
+    plan_ts = ts(plan, 23 * 3600)
+    trailing = _trailing_win_rate(in_lane, plan_ts, ts(plan - 365, 23 * 3600))
 
     young = [o for o in sim.opps if plan - 60 < o.created_day <= plan]
-    plan_ts = ts(plan, 23 * 3600)
     closed = [
         o
         for o in young
@@ -68,11 +82,21 @@ def named_cases(company: Company) -> dict:
     ci = p.campaigns.index(plateau)
     pm = (plateau.plateau.year * 12 + plateau.plateau.month - 1) - sim.m0
     lo, hi = max(pm - 6, 0), min(pm + 6, sim.n_months)
-    pick = next(
-        (i, s)
-        for i, s in enumerate(p.hires, start=1)
-        if s.role == "AE" and not s.cancelled and s.planned_start >= FY25_START
-    )
+    benchmark = {}
+    for team in sim.teams:
+        i, spec = next(
+            (i, h)
+            for i, h in enumerate(p.hires, start=1)
+            if h.team == team
+            and h.role == "AE"
+            and not h.cancelled
+            and h.planned_start >= FY25_START
+        )
+        benchmark[team] = {
+            "req_id": f"REQ-{i:03d}",
+            "planned_start": spec.planned_start.isoformat(),
+            "default_slip_days": 120,
+        }
     return {
         "thin_slice": {
             "lane": lane("Enterprise", "Partner"),
@@ -91,7 +115,7 @@ def named_cases(company: Company) -> dict:
             "win_rate_after": _win_rate(
                 [o for o in in_lane if o.created_day >= step_day]
             ),
-            "trailing_12m_win_rate_at_plan_date": _win_rate(trailing),
+            "trailing_12m_win_rate_at_plan_date": trailing,
         },
         "immature_cohort": {
             "created_from": iso(plan - 59),
@@ -115,7 +139,7 @@ def named_cases(company: Company) -> dict:
             "lane": sim.lane_keys[whale.lane],
             "amount_cents": whale.cents,
             "created": iso(whale.created_day),
-            "close_date": iso(whale.close_day),
+            "close_date": iso(whale.close_day) if whale.close_day else None,
             "status": whale.status,
         },
         "slipping_hires": reqs,
@@ -126,11 +150,5 @@ def named_cases(company: Company) -> dict:
             "expected_mqls_before": round(sum(sim.lam[ci][lo:pm]) / max(pm - lo, 1), 2),
             "expected_mqls_after": round(sum(sim.lam[ci][pm:hi]) / max(hi - pm, 1), 2),
         },
-        "counterfactual_hire": {
-            "req_id": f"REQ-{pick[0]:03d}",
-            "team": pick[1].team,
-            "role": "AE",
-            "planned_start": pick[1].planned_start.isoformat(),
-            "default_slip_days": 120,
-        },
+        "benchmark_hires": benchmark,
     }

@@ -16,12 +16,19 @@ from datetime import date
 from pathlib import Path
 
 from .cases import named_cases
+from .observable import build_observable
 from .params import VARIANTS, CompanyParams, Intervention
 from .people import day_of
 from .records import default_extract_dates, write_extracts
 from .run import Company, run_company
 from .truth import save_truth
 
+MECHANISM_NOTES = [
+    "Partner referrals are leads offered to sales as demand episodes, queued with every other source (routing_priority).",
+    "AE self-sourcing is not queued demand: it happens only when the AE has room, after the day's queued demand is routed; its rate falls to zero as the AE fills.",
+    "A departing AE's open deals wait with a manager for handoff_days, some are lost to the gap, then pass to the teammate with the fewest deals even beyond their ceiling; the team admits nothing while over capacity.",
+    "carrying_capacity is the peak daily capacity in the month; carrying ramp is tenure-based and separate from the sourcing ramp.",
+]
 HELD_OUT_SEEDS = range(101, 121)  # reserved for later scoring: development uses 1 to 20
 
 
@@ -34,20 +41,33 @@ def generate(
 ) -> Company:
     out = Path(out)
     dates = default_extract_dates(params) if dates is None else dates
-    company = run_company(params, seed, intervention, tuple(day_of(d) for d in dates))
+    company = run_company(params, seed, intervention)
     write_extracts(company, out, dates)
-    (out / "truth").mkdir(parents=True, exist_ok=True)
-    save_truth(company.truth, out / "truth" / "snapshot.json")
+    truth = out / "truth"
+    truth.mkdir(parents=True, exist_ok=True)
+    save_truth(company.truth, truth / "omniscient_snapshot.json")
+    notes = {}
+    if dates:  # with no extract there is nothing for a reader to observe
+        observable, notes, program_spend = build_observable(
+            company.sim, [day_of(d) for d in dates]
+        )
+        save_truth(observable, truth / "observable_snapshot.json")
+        (truth / "observable_spend_by_program.json").write_text(
+            json.dumps(program_spend, indent=1) + "\n"
+        )
     manifest = {
         "seed": seed,
         "variant": params.variant,
         "extract_dates": [d.isoformat() for d in dates],
         "params": params.to_dict(),
         "named_cases": named_cases(company),
-        "direct_demand_turned_away": company.sim.turned_away,
-        "notes": "Truth for judging only. Lanes use the attribution the business recorded.",
+        "observable": notes,
+        "mechanism_notes": MECHANISM_NOTES,
+        "notes": "Truth for judging only. omniscient_snapshot.json is everything the simulation did; "
+        "observable_snapshot.json is what a perfect reader of the extracts knows at the final extract. "
+        "Lanes use the attribution the business recorded.",
     }
-    (out / "truth" / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    (truth / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return company
 
 

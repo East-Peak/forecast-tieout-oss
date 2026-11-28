@@ -34,8 +34,12 @@ def test_output_layout_keeps_truth_apart_from_the_extracts(output):
     out, manifest = output
     assert sorted(p.name for p in out.iterdir()) == ["extracts", "truth"]
     assert len(list((out / "extracts").iterdir())) == len(DATES)
-    assert (out / "truth" / "snapshot.json").exists()
-    assert flow_check(load_truth(out / "truth" / "snapshot.json")).violations == []
+    assert (out / "truth" / "omniscient_snapshot.json").exists()
+    assert (out / "truth" / "observable_snapshot.json").exists()
+    assert (
+        flow_check(load_truth(out / "truth" / "omniscient_snapshot.json")).violations
+        == []
+    )
     assert manifest["seed"] == 2 and manifest["variant"] == "capacity_constrained"
     assert manifest["extract_dates"] == [d.isoformat() for d in DATES]
     assert manifest["params"]["company_name"].endswith("(fictional)")
@@ -53,9 +57,9 @@ def test_every_named_case_is_in_the_manifest_and_matches_the_data(output):
         "very_large_deal",
         "slipping_hires",
         "plateaued_lane",
-        "counterfactual_hire",
+        "benchmark_hires",
     }
-    lanes = load_truth(out / "truth" / "snapshot.json").lanes
+    lanes = load_truth(out / "truth" / "omniscient_snapshot.json").lanes
     final = out / "extracts" / f"extract_{SMALL_END.isoformat()}"
     opps = {
         json.loads(x)["Id"]: json.loads(x)
@@ -83,7 +87,7 @@ def test_every_named_case_is_in_the_manifest_and_matches_the_data(output):
 
     whale = cases["very_large_deal"]
     assert opps[whale["opportunity_id"]]["Amount"] == whale["amount_cents"] / 100
-    assert whale["amount_cents"] >= 100_000_000
+    assert whale["amount_cents"] >= 250_000_000
 
     reqs = {
         json.loads(x)["req_id"]: json.loads(x)
@@ -105,12 +109,14 @@ def test_every_named_case_is_in_the_manifest_and_matches_the_data(output):
         and plateau["expected_mqls_after"] <= plateau["expected_mqls_before"] * 1.08
     )
 
-    pick = cases["counterfactual_hire"]
-    assert (
-        pick["req_id"] in reqs
-        and pick["role"] == "AE"
-        and pick["planned_start"] >= "2025-02-01"
-    )
+    picks = cases["benchmark_hires"]
+    assert set(picks) == {"AE-SMB", "AE-MidMarket", "AE-Enterprise"}
+    for team, pick in picks.items():
+        assert pick["req_id"] in reqs and reqs[pick["req_id"]]["team"] == team
+        assert (
+            pick["planned_start"] >= "2025-02-01"
+            and reqs[pick["req_id"]]["role"] == "AE"
+        )
 
 
 def test_the_step_change_in_win_rate_shows_in_outcomes_and_a_trailing_rate_understates_it():
@@ -127,26 +133,30 @@ def test_the_step_change_in_win_rate_shows_in_outcomes_and_a_trailing_rate_under
     assert mean(trailing) < mean(after) - 0.01
 
 
-def test_a_deletion_never_lands_between_an_off_cycle_extract_and_its_month_end():
-    def deletions(extract_days):
-        params = CompanyParams.for_variant(
-            "demand_limited", start=SMALL_START, end=SMALL_END, p_delete=0.5
-        )
-        sim = run_company(params, 1, extract_days=extract_days).sim
-        return [o.dead[:10] for o in sim.opps if o.dead]
+def test_extract_dates_are_causally_inert():
+    """The business does not know when it will be extracted: the event log is the same for any dates."""
+    import pathlib
+    import tempfile
 
-    window = ("2024-12-19", "2024-12-31")
-    assert any(
-        window[0] <= d <= window[1] for d in deletions(())
-    )  # the window is not empty without the rule
-    off_cycle = (date(2024, 12, 18).toordinal(),)
-    assert not any(window[0] <= d <= window[1] for d in deletions(off_cycle))
+    from engine.harness.synth.cli import generate
 
-
-def test_default_extract_dates_are_the_plan_date_and_every_month_end_of_the_year_after():
-    from engine.harness.synth.records import default_extract_dates
-
-    dates = default_extract_dates(CompanyParams.for_variant("demand_limited"))
-    assert len(dates) == 13 and dates[0] == date(2025, 1, 24)
-    assert dates[1] == date(2025, 2, 28) and dates[-1] == date(2026, 1, 31)
-    assert [d.month for d in dates[1:]] == [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]
+    params = CompanyParams.for_variant(
+        "demand_limited", start=SMALL_START, end=SMALL_END, p_delete=0.3
+    )
+    prints = []
+    for dates in (
+        [],
+        [date(2024, 12, 18)],
+        [date(2024, 12, 18), date(2025, 1, 31), SMALL_END],
+    ):
+        with tempfile.TemporaryDirectory() as scratch:
+            company = generate(params, 1, pathlib.Path(scratch), dates)
+            prints.append(
+                (
+                    company.sim.fingerprint(),
+                    (
+                        pathlib.Path(scratch) / "truth/omniscient_snapshot.json"
+                    ).read_text(),
+                )
+            )
+    assert prints[0] == prints[1] == prints[2]
