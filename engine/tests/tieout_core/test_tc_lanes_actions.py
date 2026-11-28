@@ -368,3 +368,22 @@ def test_every_check_a_grid_with_actions_carries_fails_the_contract_when_it_fail
             d["checks"][i]["passed"] = False
 
         assert any(name in p for p in found(world, good, fail)), name
+
+
+def test_a_zero_company_target_is_a_valid_grid_that_loses_exactly_the_new_pipelines_bookings(
+    world,
+):
+    """Nothing new is won: the year's forecast is the open deals' alone, and every check holds."""
+    report, doc, _ = build(world, act(target="0"), hires=HIRES, programs=PROGRAMS)
+    _, plain, _ = build(world, hires=HIRES, programs=PROGRAMS)
+    assert problems(world, report, doc) == []
+    assert all(c["passed"] for c in doc["checks"])
+    for seg in SEGMENTS:
+        mine = cells(doc, FY, "segment", seg)["won"]
+        assert D(mine["forecast"]) <= D(
+            cells(plain, FY, "segment", seg)["won"]["forecast"]
+        )
+        assert rate(doc, FY, "segment", seg) == D("0.0000")
+    assert D(cells(doc, FY, "total")["bookings"]["forecast"]) < D(
+        cells(plain, FY, "total")["bookings"]["forecast"]
+    )

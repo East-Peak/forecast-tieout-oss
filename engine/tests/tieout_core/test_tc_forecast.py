@@ -252,6 +252,27 @@ def test_the_simulation_runs_where_the_platform_integer_is_32_bits(
 
 # ------------------------------------------------------------------ win-rate lift
 
+DAYS = 75
+LANDING = tuple(0 if t <= 16 else 1 if t <= 44 else 2 for t in range(1, DAYS + 1))
+D = Decimal
+
+
+def lift_of(change=None, counts=None, price=None, **by_segment):
+    """A lift over the tiny model's 75 days: ``change`` points a day (a number or a day-by-day
+    tuple) on one segment "a" creating ``counts`` deals a day, priced at ``price``."""
+    change = (D(change),) * DAYS if not isinstance(change, tuple) else change
+    counts = (D(1) if counts is None else D(counts),) * DAYS
+    zeros = (D(0),) * DAYS
+    return forecast_module.Lift(
+        MODEL.new_pipeline.win_rate,
+        {"a": counts},
+        {"a": zeros},
+        {"a": change},
+        {"a": {(i, 0): D(price) for i in range(3)} if price else {}},
+        LANDING,
+        (0,) * DAYS,
+    )
+
 
 def _lifted(lift, **kw):
     return model_forecast(MODEL, DATA, CUT, WINDOWS, lift=lift, **kw)
@@ -260,7 +281,7 @@ def _lifted(lift, **kw):
 def test_a_lift_is_wins_expected_on_each_days_creation_at_the_mean_won_size():
     """Wins land 30 days after creation; the windows end on days 16, 44 and 75, so the deals
     created on days 1 to 14 win in the second window and on days 15 to 45 in the third."""
-    f = _lifted((Decimal("0.01"),) * 75)
+    f = _lifted(lift_of("0.01"))
     assert f.components[forecast_module.ACTIONS] == {
         "2026-01": Decimal(0),
         "2026-02": Decimal("0.01") * 14 * 1000,
@@ -274,8 +295,20 @@ def test_a_lift_is_wins_expected_on_each_days_creation_at_the_mean_won_size():
     )
 
 
+def test_a_lift_is_priced_by_the_window_its_wins_land_in():
+    f = _lifted(lift_of("0.01", price=2))
+    assert (
+        f.components[forecast_module.ACTIONS]["2026-02"] == Decimal("0.01") * 14 * 2000
+    )
+    priced = {(0, 0): D(5), (1, 0): D(3), (2, 0): D(0)}
+    lift = lift_of("0.01")
+    lift = forecast_module.replace(lift, price={"a": priced})
+    got = _lifted(lift).components[forecast_module.ACTIONS]
+    assert got["2026-02"] == D("0.01") * 14 * 3000 and got["2026-03"] == 0
+
+
 def test_a_lift_on_later_days_only_moves_the_windows_those_days_win_in():
-    lift = (Decimal(0),) * 20 + (Decimal(2),) * 55  # days 21 to 75
+    lift = lift_of((Decimal(0),) * 20 + (Decimal(2),) * 55)  # days 21 to 75
     got = _lifted(lift).components[forecast_module.ACTIONS]
     assert got["2026-02"] == 0  # the deals created on days 1 to 14 are not lifted
     assert got["2026-03"] == Decimal(2) * 25 * 1000  # days 21 to 45
@@ -283,13 +316,13 @@ def test_a_lift_on_later_days_only_moves_the_windows_those_days_win_in():
 
 def test_no_lift_or_a_lift_of_zeros_is_the_forecast_as_it_was():
     plain = model_forecast(MODEL, DATA, CUT, WINDOWS)
-    assert _lifted(()) == plain
-    assert _lifted((Decimal(0),) * 75) == plain
+    assert _lifted(None) == plain
+    assert _lifted(lift_of(0)) == plain
 
 
 def test_a_lift_adds_to_creation_whatever_its_source_and_changes_no_other_part():
     flows = (Inflow(0, 30, Decimal(6000)),)
-    own = _lifted((Decimal("0.01"),) * 75, inflows=flows)
+    own = _lifted(lift_of("0.01"), inflows=flows)
     plain = model_forecast(MODEL, DATA, CUT, WINDOWS, inflows=flows)
     for part in (
         forecast_module.EXISTING,
@@ -300,6 +333,105 @@ def test_a_lift_adds_to_creation_whatever_its_source_and_changes_no_other_part()
     assert own.window_total("2026-03") - plain.window_total("2026-03") == Decimal(310)
 
 
+def test_a_lift_rebased_on_another_rate_holds_each_days_probability_between_zero_and_one():
+    lift = lift_of("0.3")  # +30 points on a pooled rate of one half
+    assert lift.rebased(D("0.5")) is lift
+    high = lift.rebased(D("0.9"))  # 1.2 held to 1: ten points, not thirty
+    assert high.changes["a"][0] == D("0.1") and high.baseline == D("0.9")
+    low = lift_of("-0.3").rebased(D("0.1"))  # -0.2 held to 0: ten points down
+    assert low.changes["a"][0] == D("-0.1")
+    assert lift.rebased(D("0.2")).changes["a"][0] == D("0.3")
+
+
+def test_scaling_organic_creation_leaves_programs_alone():
+    lift = forecast_module.replace(
+        lift_of("0.1"), program={"a": (D(4),) * DAYS}, organic={"a": (D(6),) * DAYS}
+    )
+    half = lift.scaled(D("0.5"))
+    assert half.counts("a")[0] == D(3) + D(4)
+    assert lift.scaled(D(0)).counts("a")[0] == D(4)
+    assert lift.scaled(D(1)) is lift
+
+
+# ------------------------------------------------------------------ ranges under a lift
+
+BUSY = forecast_module.replace(
+    MODEL,
+    new_pipeline=forecast_module.replace(MODEL.new_pipeline, created_per_day=D(2)),
+)
+SHARES = {"a": D("0.6"), "b": D("0.4")}
+PRICE = {
+    "a": D("0.5"),
+    "b": D("1.75"),
+}  # 0.6 * 0.5 + 0.4 * 1.75 = 1: they add to the pooled price
+
+
+def busy_lift(**points):
+    """Segments a and b, creating 2 deals a day between them, at the points each is changed by."""
+    zeros = (D(0),) * DAYS
+    return forecast_module.Lift(
+        BUSY.new_pipeline.win_rate,
+        {s: (D(2) * SHARES[s],) * DAYS for s in SHARES},
+        {s: zeros for s in SHARES},
+        {s: (D(points.get(s, 0)),) * DAYS for s in SHARES},
+        {s: {(i, 0): PRICE[s] for i in range(3)} for s in SHARES},
+        LANDING,
+        (0,) * DAYS,
+    )
+
+
+def adopted_creation():
+    """Creation that follows headcount: two deals a day, doubled or halved at random in each
+    path, so that its mean is two."""
+    import numpy as np
+
+    per_day = tuple(D(2) for _ in range(DAYS))
+
+    def draws(rng, n):
+        return np.tile(np.full(DAYS, 2.0), (n, 1)) * rng.choice([0.5, 1.5], size=(n, 1))
+
+    return forecast_module.Creation(per_day, "headcount", draws=draws)
+
+
+CASES = {
+    "a positive action": {"a": "0.2"},
+    "a negative action": {"b": "-0.3"},
+    "a zero endpoint in one segment": {"a": "-0.5"},
+    "a zero endpoint in every segment": {"a": "-0.5", "b": "-0.5"},
+    "a positive action in every segment": {"a": "0.25", "b": "0.25"},
+}
+
+
+@pytest.mark.parametrize("company", ["flat creation", "adopted capacity"])
+@pytest.mark.parametrize("case", list(CASES))
+def test_a_simulation_under_actions_is_centered_on_the_forecast_under_them(
+    case, company
+):
+    creation = adopted_creation() if company == "adopted capacity" else None
+    lift = busy_lift(**CASES[case])
+    expected = float(
+        model_forecast(BUSY, DATA, CUT, WINDOWS, lift=lift, creation=creation).total()
+    )
+    sim = simulate(
+        BUSY, DATA, CUT, WINDOWS, draws=8000, seed=11, lift=lift, creation=creation
+    )
+    assert _within_four_standard_errors(sim, expected), (sim.total.mean, expected)
+
+
+def test_the_zero_endpoint_leaves_no_new_wins_in_any_path():
+    """With every segment at zero only the open deals can win: the simulated mean is theirs."""
+    lift = busy_lift(a="-0.5", b="-0.5")
+    expected = model_forecast(BUSY, DATA, CUT, WINDOWS, lift=lift)
+    assert sum(expected.components[forecast_module.FUTURE].values()) + sum(
+        expected.components[forecast_module.ACTIONS].values()
+    ) == pytest.approx(0, abs=1e-9)
+    open_only = float(sum(expected.components[forecast_module.EXISTING].values()))
+    sim = simulate(BUSY, DATA, CUT, WINDOWS, draws=8000, seed=2, lift=lift)
+    assert _within_four_standard_errors(sim, open_only)
+    # and the draws are the open deals' alone: no path books more than they hold (100 + 50 + 180)
+    assert max(sim.samples_total) <= 330
+
+
 def _within_four_standard_errors(sim, expected):
     sd = (
         sum((x - sim.total.mean) ** 2 for x in sim.samples_total) / (sim.draws - 1)
@@ -307,27 +439,17 @@ def _within_four_standard_errors(sim, expected):
     return abs(sim.total.mean - expected) <= 4 * sd
 
 
-def test_a_simulation_under_a_lift_is_centered_on_the_forecast_under_it():
-    lift = (Decimal("0.2"),) * 75
-    expected = float(_lifted(lift).total())
-    plain = float(model_forecast(MODEL, DATA, CUT, WINDOWS).total())
-    sim = simulate(MODEL, DATA, CUT, WINDOWS, draws=6000, seed=3, lift=lift)
-    assert _within_four_standard_errors(sim, expected)
-    assert expected - plain > 1000  # and the lift is a real one
-
-
 def test_a_simulation_with_no_lift_or_a_lift_of_zeros_is_the_one_there_was():
     plain = simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5)
-    assert simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5, lift=()) == plain
-    zeros = (Decimal(0),) * 75
-    assert simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5, lift=zeros) == plain
+    assert simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5, lift=None) == plain
+    assert (
+        simulate(MODEL, DATA, CUT, WINDOWS, draws=500, seed=5, lift=lift_of(0)) == plain
+    )
 
 
-def test_a_lift_that_never_wins_inside_the_windows_adds_nothing_to_them():
-    late = (Decimal(0),) * 60 + (
-        Decimal(5),
-    ) * 15  # created on days 61 to 75: wins on 91+
-    plain = model_forecast(MODEL, DATA, CUT, WINDOWS)
-    assert _lifted(late).window_total("2026-03") == plain.window_total("2026-03")
-    sim = simulate(MODEL, DATA, CUT, WINDOWS, draws=6000, seed=5, lift=late)
-    assert _within_four_standard_errors(sim, float(plain.total()))
+def test_a_lift_is_not_drawn_together_with_the_uncertainty_of_the_rates():
+    with pytest.raises(ValueError, match="fixed rates"):
+        simulate(
+            MODEL, DATA, CUT, WINDOWS, draws=10, seed=1, lift=lift_of("0.1"),
+            parameter_uncertainty=True,
+        )  # fmt: skip

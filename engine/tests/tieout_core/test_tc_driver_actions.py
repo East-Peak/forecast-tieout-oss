@@ -11,7 +11,7 @@ import pytest
 
 from engine.tieout_core import driver_actions as da
 from engine.tieout_core import lanes_flows as flows
-from engine.tieout_core.fiscal import FiscalYear
+from engine.tieout_core.fiscal import FiscalYear, add_months, month_windows
 from engine.tieout_core.fit import Timing
 from engine.tieout_core.forecast import Inflow
 from engine.tieout_core.lanes_basis import Sizes
@@ -42,6 +42,7 @@ def ground():
         model=SimpleNamespace(new_pipeline=new),
         as_of=AS_OF,
         horizon_days=365,
+        windows=month_windows(AS_OF, add_months(AS_OF, 12)),
     )
 
 
@@ -54,6 +55,13 @@ def act(id="x", segment="b", start="2026-05-01", ramp=0, target="0.3"):
     return PlanAction(id, id, "win_rate", segment, date(y, m, d), ramp, D(target))
 
 
+def at(e, day):
+    """The extra wins, priced, from the deals created on ``day`` (the first is the day after the
+    as-of date), as they land in the window ten days later: the timing's first win."""
+    land = min(day + 10, len(e.lift.landing))
+    return e.lift.priced(e.lift.landing[land - 1])[day - 1]
+
+
 def run(*actions, inflows=()):
     return da.effect(frame(inflows), BASELINE, AS_OF, actions)
 
@@ -63,11 +71,10 @@ def test_the_flat_creation_rate_is_shared_by_the_frozen_shares_and_a_segment_is_
     assert f.series["a"][0] == D("1.5") and f.series["b"][364] == D("0.5")
     assert len(f.series["a"]) == 365
     # in every cell a wins three times as much as b, so the pooled price is shared by 3:3000
-    assert f.price["a"] == D(2) / D(3) and f.price["b"] == D(2)
-    assert (
-        sum(f.series[s][0] * f.price[s] for s in SEGMENTS)
-        == D(2) * D("0.75") * D(2) / D(3) + D("0.5") * 2
-    )  # wins weighted by price, for one day
+    assert set(f.price["a"].values()) == {D(2) / D(3)}
+    assert set(f.price["b"].values()) == {D(2)}
+    # and they add back to the pooled price: three wins of a at 2/3 and one of b at 2 are four at 1
+    assert D(3) * D(2) / D(3) + D(1) * D(2) == D(4)
 
 
 def test_nothing_changes_before_the_start_and_all_of_it_after_with_no_ramp():
@@ -76,7 +83,7 @@ def test_nothing_changes_before_the_start_and_all_of_it_after_with_no_ramp():
     assert e.changes["b"][10] == D("0.1") == e.changes["b"][364]
     assert e.changes["a"] == (D(0),) * 365
     # 0.5 deals a day times 0.1 more wins each, at twice the pooled price
-    assert e.lift[9] == 0 and e.lift[10] == D("0.1") == e.lift[364]
+    assert at(e, 10) == 0 and at(e, 11) == D("0.1") == at(e, 365)
 
 
 def test_a_ramp_rises_by_creation_date_from_the_start_to_the_months_end_and_holds():
@@ -87,7 +94,7 @@ def test_a_ramp_rises_by_creation_date_from_the_start_to_the_months_end_and_hold
     assert e.changes["b"][11] == 2 * one_day
     assert e.changes["b"][70] == D("0.1")  # day 71 = July 1 - 1: the 61st day
     assert e.changes["b"][71] == D("0.1") == e.changes["b"][200]
-    assert e.lift[10] == D("0.1") / 61  # 0.5 * (0.1 / 61) * 2
+    assert at(e, 11) == D("0.1") / 61  # 0.5 * (0.1 / 61) * 2
 
 
 def test_the_start_day_of_a_ramp_is_the_first_day_of_its_first_month():
@@ -100,13 +107,13 @@ def test_the_start_day_of_a_ramp_is_the_first_day_of_its_first_month():
 
 def test_a_target_equal_to_the_baseline_or_no_actions_change_nothing():
     for none in (run(), run(act(target="0.2"))):
-        assert not any(none.lift)
+        assert not none.lift
         assert all(not any(v) for v in none.changes.values())
 
 
 def test_a_target_below_the_baseline_is_a_negative_change():
     e = run(act(target="0.15"))
-    assert e.lift[10] == D("-0.05")
+    assert at(e, 11) == D("-0.05")
 
 
 def test_the_company_is_the_same_action_in_every_segment_exactly():
@@ -115,7 +122,7 @@ def test_the_company_is_the_same_action_in_every_segment_exactly():
     assert company.changes == each.changes
     assert company.lift == each.lift
     # 1.5 * 0.1 * 2/3 + 0.5 * 0.1 * 2 on any day after the start
-    assert company.lift[10] == D("0.1") + D("0.1")
+    assert at(company, 11) == D("0.1") + D("0.1")
 
 
 def test_listing_actions_in_another_order_changes_nothing_to_the_last_digit():
@@ -151,8 +158,8 @@ def test_program_pipeline_is_created_in_segments_by_share_and_is_changed_once():
     assert f.series["b"][10] == D("0.5") + D("0.25") * D("0.2")
     # the extra lift is the program's deals times the change times each segment's price
     extra = D("0.2") * D("0.1") * (D("0.75") * D(2) / D(3) + D("0.25") * 2)
-    assert with_program.lift[10] - plain.lift[10] == extra
-    assert with_program.lift[20] == plain.lift[20]  # the program is over
+    assert at(with_program, 11) - at(plain, 11) == extra
+    assert at(with_program, 21) == at(plain, 21)  # the program is over
 
 
 def test_an_action_for_a_segment_with_no_lane_is_an_error():

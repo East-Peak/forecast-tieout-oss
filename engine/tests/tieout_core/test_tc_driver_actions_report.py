@@ -3,6 +3,7 @@ reached by more than one route, and what the contract refuses."""
 
 import copy
 import json
+from dataclasses import replace
 from decimal import Decimal
 
 import pytest
@@ -215,11 +216,12 @@ def test_a_late_start_is_worth_nothing_in_the_year_and_something_after_it(state)
 def test_an_action_for_a_segment_with_no_creation_adds_no_wins(state):
     plan = plan_of(state, act("e", "enterprise", target=points(state, 3)))
     e = da.effect_for(state, plan, (), ())
-    assert any(e.lift)
-    quiet = da.Frame(
-        e.frame.segments, {s: (D(0),) * 365 for s in e.frame.segments}, e.frame.price
-    )
-    assert not any(da.effect(quiet, e.baseline, e.as_of, e.actions).lift)
+    windows = range(len(state.ground.windows))
+    assert any(any(e.lift.priced(i)) for i in windows)
+    zeros = {s: (D(0),) * 365 for s in e.frame.segments}
+    quiet = replace(e.frame, organic=zeros, program=zeros, series=zeros)
+    none = da.effect(quiet, e.baseline, e.as_of, e.actions)
+    assert not any(any(none.lift.priced(i)) for i in windows)
 
 
 def test_the_rest_of_the_year_figure_and_the_twelve_month_one_come_from_the_same_series(
@@ -376,7 +378,7 @@ def test_a_check_that_fails_fails_the_software_correct_verdict(state, monkeypatc
 
     def off(self, lift):
         f = real(self, lift)
-        if any(lift):  # the probe, but for a thousand dollars the plan does not have
+        if lift:  # the probe, but for a thousand dollars the plan does not have
             comp = f.components[ACTIONS]
             comp["2026-10"] = comp["2026-10"] + D(1000)
         return f
@@ -441,62 +443,148 @@ def test_a_plan_with_actions_is_refused_where_the_plan_basis_is_unavailable(
 
 
 def test_organic_hire_and_program_creation_each_get_the_change_exactly_once(state):
-    """A mid-market action from the first day, at once: the lift on each day is the change times
-    the segment's price index times the deals its people, its hires and its share of the
-    programs are expected to create, recomputed here from the capacity projection and the
-    program's own dollars."""
+    """A mid-market action from the first day, at once: the deals its change acts on each day are
+    the segment's own people's, its hires' and its share of the programs', each recomputed here
+    from the capacity projection and the program's own dollars, and counted once."""
     from engine.tieout_core.capacity import project
     from engine.tieout_core.plan import program_inflows
 
     g = state.ground
     target = points(state, 4)
-    change = target - g.model.new_pipeline.win_rate
     hires = [{"segment": "mid_market", "start": "2026-10", "count": 2}]
     programs = [{"name": "P", "pipeline": 3_000_000, "start": "2026-10"}]
     mm = [m for m in g.cap.members if m.segment == "mid_market"]
     days = g.horizon_days
 
-    def lift(**plan):
+    def effect_of(**plan):
         p = plan_of(
             state, act("m", "mid_market", start="2026-09", target=target), **plan
         )
-        h = tuple(
-            m
-            for i, item in enumerate(p.items())
-            for m in (p.members_for(i) if i < len(p.hires) else ())
-        )
+        people = tuple(m for i in range(len(p.hires)) for m in p.members_for(i))
         flows = tuple(
             f
             for item in p.programs
             for f in program_inflows(item, g.windows, g.as_of, g.fy_end, 3)
         )
-        eff = da.effect_for(state, p, h, flows)
-        return eff.lift, eff.frame.price["mid_market"], h, flows
+        return da.effect_for(state, p, people, flows), people, flows
 
-    organic, price, _, _ = lift()
+    e, _, _ = effect_of()
     want = project(g.cap.fit, mm, g.as_of, days).per_day
+    assert list(e.lift.organic["mid_market"]) == list(want)  # the signed roster's, once
+    assert not any(e.lift.program["mid_market"])
     assert all(
-        abs(organic[t] - change * price * want[t]) < D("1e-15") for t in range(days)
+        c == target - g.model.new_pipeline.win_rate for c in e.changes["mid_market"]
     )
 
-    # each plan has its own price index
-    with_hires, price, people, _ = lift(hires=hires)
+    e, people, _ = effect_of(hires=hires)
     both = project(g.cap.fit, [*mm, *people], g.as_of, days).per_day
-    assert all(
-        abs(with_hires[t] - change * price * both[t]) < D("1e-15") for t in range(days)
-    )
-    assert with_hires[200] > organic[200]  # the hires are there, once
+    assert list(e.lift.organic["mid_market"]) == list(both)  # and the hires', once
+    assert e.lift.organic["mid_market"][200] > want[200]
 
-    with_program, price, _, flows = lift(programs=programs)
-    share = state.memo["frames"][((), tuple(flows))].series  # the frame the report used
+    e, _, flows = effect_of(programs=programs)
+    shares = {s.key: s.creation_share for s in da.basis_of(state).segments}
     per_day = [D(0)] * days
     for f in flows:
         for t in range(f.start, min(f.end, days)):
             per_day[t] += (
                 f.dollars / D(f.end - f.start) / g.model.new_pipeline.mean_created_arr
             )
-    shares = {s.key: s.creation_share for s in da.basis_of(state).segments}
-    for t in range(days):
-        extra = shares["mid_market"] * per_day[t]
-        assert abs(with_program[t] - change * price * (want[t] + extra)) < D("1e-15")
-        assert abs(share["mid_market"][t] - (want[t] + extra)) < D("1e-15")
+    for t in range(days):  # and the programs' share, once
+        assert e.lift.program["mid_market"][t] == shares["mid_market"] * per_day[t]
+        assert (
+            e.lift.counts("mid_market")[t]
+            == want[t] + shares["mid_market"] * per_day[t]
+        )
+
+
+# ----------------------------------------------------- prices frozen by landing month and creation quarter
+
+
+def probes(state, *acts, **plan):
+    """(the forecast with no actions, the forecast with them) for the plan's own hires and programs."""
+    from engine.tieout_core.actions import Scenario
+
+    p = plan_of(state, *acts, **plan)
+    h, i = actions_inputs(state, p)
+    e = da.effect_for(state, p, h, i)
+    scen = Scenario(state.ground)
+    return scen.forecast(h, i), scen.forecast(h, i, e.lift), scen
+
+
+def actions_inputs(state, plan):
+    from engine.tieout_core import actions
+
+    return actions.plan_inputs(state.ground, plan)
+
+
+def new_pipeline_bookings(f):
+    """Each month's bookings from pipeline not yet created: everything but the open deals'."""
+    from engine.tieout_core.forecast import EXISTING
+
+    parts = [c for k, c in f.components.items() if k != EXISTING]
+    return {m: sum((c[m] for c in parts), D(0)) for m in f.components[EXISTING]}
+
+
+@pytest.mark.parametrize("slice", ["company", "enterprise", "mid_market", "commercial"])
+@pytest.mark.parametrize(
+    "extra",
+    [
+        {},
+        {
+            "hires": [{"segment": "mid_market", "start": "2026-10", "count": 3}],
+            "programs": [{"name": "P", "pipeline": 4_000_000, "start": "2026-10"}],
+        },
+    ],
+)
+def test_a_zero_target_removes_the_wins_it_changes_and_leaves_no_month_below_zero(
+    state, slice, extra
+):
+    plain, zero, _ = probes(state, act(slice=slice, target="0"), **extra)
+    before, after = new_pipeline_bookings(plain), new_pipeline_bookings(zero)
+    for month in after:
+        assert after[month] >= -D("1e-9"), (month, after[month])
+        assert after[month] <= before[month] + D("1e-9")
+    if slice == "company":
+        assert abs(sum(after.values())) < D("1e-9")  # nothing new is won at all
+    else:
+        assert 0 < sum(after.values()) < sum(before.values())
+
+
+def test_a_company_action_books_what_changing_the_pooled_probability_directly_books(
+    state,
+):
+    from engine.tieout_core import worksheet_drivers as wd
+
+    g = state.ground
+    base = g.model.new_pipeline.win_rate
+    plain, acted, scen = probes(state, act(target=base + D("0.02")))
+    probe = wd.Probe(g)
+    direct = probe.forecast(wd.with_win_rate(g, base + D("0.02")))
+    for window in (g.rest_labels, g.twelve_labels):
+        gain = scen.exact(acted, window) - scen.exact(plain, window)
+        want = scen.exact(direct, window) - scen.exact(plain, window)
+        assert abs(gain - want) < D("0.005"), (
+            gain,
+            want,
+        )  # to the cent, windows unrounded
+    for month in plain.components["future pipeline"]:  # and month by month
+        moved = acted.window_total(month) - plain.window_total(month)
+        assert abs(
+            moved - (direct.window_total(month) - plain.window_total(month))
+        ) < D("0.005")
+
+
+def test_segments_are_priced_by_their_size_in_every_cell_they_share(state):
+    """Enterprise's deals are the largest and commercial's the smallest."""
+    e = da.effect_for(state, plan_of(state, act(target=points(state, 2))), (), ())
+    price = e.frame.price
+    shared = (
+        set(price["enterprise"]) & set(price["mid_market"]) & set(price["commercial"])
+    )
+    assert len(shared) > 20
+    for cell in shared:
+        assert (
+            price["enterprise"][cell]
+            > price["mid_market"][cell]
+            > price["commercial"][cell]
+        )

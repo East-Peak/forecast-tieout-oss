@@ -8,8 +8,8 @@ Expectations are exact decimals; the ranges come from a seeded simulation.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
-from dataclasses import dataclass, field
+from collections.abc import Callable, Mapping, Sequence
+from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
 from statistics import median
@@ -71,6 +71,69 @@ class Inflow:
     start: int
     end: int
     dollars: Decimal
+
+
+@dataclass(frozen=True)
+class Lift:
+    """Changes to the chance that a deal created on a day is won, segment by segment: what
+    win-rate actions do to pipeline not yet created.
+
+    ``organic`` and ``program`` are the deals each segment is expected to create on each day
+    after the cutoff (day 1 first), from its people and from programs; ``changes`` the points
+    added to the pooled win rate ``baseline`` on each day. A win books at the pooled mean won
+    size times ``price``, a segment's frozen price index by (the window it lands in, the
+    fiscal quarter its deal was created in), 1 where none is given; ``landing`` names the window each
+    day after the cutoff falls in and ``origin`` its fiscal quarter."""
+
+    baseline: Decimal
+    organic: Mapping[str, Sequence[Decimal]]
+    program: Mapping[str, Sequence[Decimal]]
+    changes: Mapping[str, Sequence[Decimal]]
+    price: Mapping[str, Mapping[tuple[int, int], Decimal]]
+    landing: Sequence[int]
+    origin: Sequence[int]
+
+    def __bool__(self) -> bool:
+        return any(any(c) for c in self.changes.values())
+
+    def counts(self, segment: str) -> list[Decimal]:
+        return [o + p for o, p in zip(self.organic[segment], self.program[segment])]
+
+    def priced(self, landing: int) -> list[Decimal]:
+        """Extra wins on each day of creation for wins landing in window ``landing``, each at its
+        price index."""
+        out = [Decimal(0)] * len(self.origin)
+        for s, change in self.changes.items():
+            if not any(change):
+                continue
+            count, price = self.counts(s), self.price.get(s, {})
+            for t, c in enumerate(change):
+                if c:
+                    out[t] += (
+                        count[t] * c * price.get((landing, self.origin[t]), Decimal(1))
+                    )
+        return out
+
+    def rebased(self, rate: Decimal) -> Lift:
+        """The same changes in points on a pooled win rate of ``rate``, the rate each day's
+        deals are won at held between zero and one."""
+        if rate == self.baseline:
+            return self
+        one, zero = Decimal(1), Decimal(0)
+        moved = {
+            s: tuple(min(max(rate + c, zero), one) - rate for c in change)
+            for s, change in self.changes.items()
+        }
+        return replace(self, baseline=rate, changes=moved)
+
+    def scaled(self, organic: Decimal) -> Lift:
+        """The same with each segment's organic creation (not programs') multiplied."""
+        if organic == 1:
+            return self
+        return replace(
+            self,
+            organic={s: tuple(x * organic for x in v) for s, v in self.organic.items()},
+        )
 
 
 def _unavailable(method: str, reason: str) -> Forecast:
@@ -223,11 +286,11 @@ def model_forecast(
     creation: Creation | None = None,
     inflows: Sequence[Inflow] = (),
     existing: dict[str, Decimal] | None = None,
-    lift: Sequence[Decimal] = (),
+    lift: Lift | None = None,
 ) -> Forecast:
-    """``lift`` is the extra wins expected from the deals created on each day after the cutoff
-    (day 1 first), from a change to a win rate; each win is the mean won size, and it books
-    on the timing of any other new win. ``added_pipeline`` is created in equal parts in each window that ends by
+    """``lift`` is the plan's win-rate actions: the extra wins expected from the deals created on
+    each day after the cutoff, each at the mean won size and its price index, booking on the
+    timing of any other new win. ``added_pipeline`` is created in equal parts in each window that ends by
     ``added_through`` (every window by default) and books in any window.
     ``inflows`` are further dollars created over given day ranges (programs,
     quarterly requirements). ``creation``, when given, replaces the flat
@@ -327,24 +390,25 @@ def model_forecast(
                     added[w.label] += deals_per_day * per_created_deal * hits
 
     lifted = _zeros(windows)
-    if n and windows and any(lift):
+    if n and windows and lift:
         per_win = new.mean_won_arr / Decimal(n)
-        for w, (a, b) in zip(windows, offsets):
+        for i, (w, (a, b)) in enumerate(zip(windows, offsets)):
+            extra = lift.priced(i)
             lifted[w.label] = per_win * sum(
                 (
-                    lift[t - 1]
+                    extra[t - 1]
                     * (
                         new.timing.count_through(b - t)
                         - new.timing.count_through(a - t)
                     )
-                    for t in range(1, min(offsets[-1][1], len(lift)) + 1)
+                    for t in range(1, min(offsets[-1][1], len(extra)) + 1)
                 ),
                 Decimal(0),
             )
     components = {EXISTING: existing, FUTURE: future}
     if added_pipeline or inflows:
         components[ADDED] = added
-    if any(lift):
+    if lift:
         components[ACTIONS] = lifted
     creation_text = (
         f"new pipeline is created at {new.created_per_day:.4f} deals per day"
@@ -442,6 +506,43 @@ def _draw_days(rng: np.random.Generator, timing: Timing, size: int) -> np.ndarra
     return samples[rng.choice(len(samples), size=size, p=p / p.sum())]
 
 
+def _draw_lifted(rng, new, lift: Lift, deals, span: int, book) -> None:
+    """Book the wins of new pipeline when a ``lift`` changes some segments' win rates. ``deals``
+    is each path's expected creation by day; every segment takes its expected share of it, a
+    segment's deals are won at the pooled rate plus its own change on the day they are created,
+    and a win's size is scaled by its segment's price index (the quarter it lands in, the
+    quarter it was created in). How many are won and what each books are drawn apart, so the
+    draws are centered on the forward function's expectation: the segments' prices add back to
+    the pooled price over each quarter's wins."""
+    names = list(lift.changes)
+    count = np.array([[float(x) for x in lift.counts(s)[:span]] for s in names])
+    change = np.array([[float(x) for x in lift.changes[s][:span]] for s in names])
+    made = count.sum(axis=0)
+    share = np.divide(count, made, out=np.zeros_like(count), where=made > 0)
+    landing_of, origin_of = np.asarray(lift.landing), np.asarray(lift.origin)
+    pool = np.asarray([float(x) for x in new.won_arr_samples])
+    if new.won_arr_weights is None:
+        weights = np.full(len(pool), 1 / len(pool))
+    else:
+        weights = np.asarray([float(w) for w in new.won_arr_weights])
+        weights = weights / weights.sum()
+    base = float(new.win_rate)
+    for i, name in enumerate(names):
+        grid = np.ones((landing_of.max() + 1, origin_of.max() + 1))
+        for (landing, origin), index in lift.price.get(name, {}).items():
+            grid[landing, origin] = float(index)
+        wins = rng.poisson(deals * (share[i] * (base + change[i])))
+        row_of, day_of = np.nonzero(wins)
+        repeats = wins[row_of, day_of].astype(np.intp)
+        rows = np.repeat(row_of, repeats)
+        created = np.repeat(day_of + 1, repeats)
+        days = _draw_days(rng, new.timing, len(rows))
+        sizes = pool[rng.choice(len(pool), size=len(rows), p=weights)]
+        landing = created + days
+        land = landing_of[np.minimum(landing, len(landing_of)) - 1]
+        book(rows, landing, sizes * grid[land, origin_of[created - 1]])
+
+
 def _spread(values: np.ndarray) -> Spread:
     q = np.percentile(values, [2.5, 10, 50, 90, 97.5])
     return Spread(float(values.mean()), *(float(x) for x in q))
@@ -458,7 +559,7 @@ def simulate(
     parameter_uncertainty: bool = False,
     creation: Creation | None = None,
     inflows: Sequence[Inflow] = (),
-    lift: Sequence[Decimal] = (),
+    lift: Lift | None = None,
 ) -> Simulation:
     """Draw outcomes from the fitted model: each open deal wins or not and, if
     it wins, closes after a day count drawn from its timing; future wins arrive
@@ -471,10 +572,12 @@ def simulate(
     means, so the simulation stays centered on the expectation. Close timing is
     not drawn. With ``creation`` the creation rate is the given day-by-day one
     (departures drawn at random when it can) instead of the flat trailing rate,
-    and its own count-based uncertainty is not drawn. A ``lift`` (the extra wins, by
-    day of creation, that a change to a win rate expects) is added to each day's
-    expected wins before they are drawn, so the draws are conditional on the change
-    having been made; whether it is made is not drawn."""
+    and its own count-based uncertainty is not drawn. With a ``lift`` each segment's
+    share of every simulated path's creation is won at that segment's resulting
+    probability, so the draws are conditional on the changes having been made;
+    whether they are made is not drawn. A win's price is kept apart from whether it
+    is won: its size is scaled by the segment's price index, which does not change
+    how many are won."""
     rng = np.random.default_rng(seed)
     if not windows:
         empty = _spread(np.zeros(draws))
@@ -526,8 +629,11 @@ def simulate(
                         / Decimal(flow.end - flow.start)
                         / new.mean_created_arr
                     )
-        lifted = np.array([float(x) for x in lift[:span]])
-        if creation is None and not extra.any() and not lifted.any():
+        if lift and parameter_uncertainty:
+            raise ValueError(
+                "a lift is drawn with fixed rates, not with their uncertainty"
+            )
+        if creation is None and not extra.any() and not lift:
             lam = float(new.created_per_day * new.win_rate) * span
             if parameter_uncertainty:
                 per_day = (
@@ -558,15 +664,17 @@ def simulate(
             win_rate = float(new.win_rate)
             if parameter_uncertainty:
                 win_rate = _beta(rng, win_rate, new.win_rate_n, draws)[:, None]
-            expected = deals * win_rate
-            if lifted.any():
-                expected = np.maximum(expected + lifted, 0.0)
-            cell = rng.poisson(expected)
-            row_of, day_of = np.nonzero(cell)
-            repeats = cell[row_of, day_of]
-            rows = np.repeat(row_of, repeats.astype(np.intp))
-            created = np.repeat(day_of + 1, repeats.astype(np.intp))
-            total = len(rows)
+            if lift:
+                _draw_lifted(rng, new, lift, deals, span, book)
+                rows = created = np.zeros(0, dtype=np.intp)  # booked by segment above
+                total = 0
+            else:
+                cell = rng.poisson(deals * win_rate)
+                row_of, day_of = np.nonzero(cell)
+                repeats = cell[row_of, day_of]
+                rows = np.repeat(row_of, repeats.astype(np.intp))
+                created = np.repeat(day_of + 1, repeats.astype(np.intp))
+                total = len(rows)
         days = _draw_days(rng, new.timing, total)
         pool = np.asarray([float(x) for x in new.won_arr_samples])
         if new.won_arr_weights is None:

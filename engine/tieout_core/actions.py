@@ -21,7 +21,7 @@ from .capacity_report import Capacity
 from .figures import CENT, cents, money, number
 from .fiscal import Window, add_months
 from .fit import Model
-from .forecast import Forecast, Inflow, model_forecast, simulate
+from .forecast import Forecast, Inflow, Lift, model_forecast, simulate
 from .lever import COVERED, FEASIBLE, UNREACHABLE, solve_added_pipeline
 from .plan import (
     DEFAULT_PROGRAM_RAMP_MONTHS,
@@ -91,7 +91,7 @@ class Scenario:
         self,
         hires: Sequence[Member] = (),
         inflows: Sequence[Inflow] = (),
-        lift: Sequence[Decimal] = (),
+        lift: Lift | None = None,
     ) -> Forecast:
         g = self.g
         creation = self.creation(hires)
@@ -102,7 +102,7 @@ class Scenario:
             g.windows,
             creation=creation,
             inflows=tuple(inflows),
-            lift=tuple(lift),
+            lift=lift,
         )
 
     def shown(self, f: Forecast, labels: list[str]) -> Decimal:
@@ -261,7 +261,7 @@ ACTIONS_STEP = "Driver actions, together"
 
 
 def plan_section(
-    g: Ground, scen: Scenario, plan: Plan, path: Path, lift: Sequence[Decimal] = ()
+    g: Ground, scen: Scenario, plan: Plan, path: Path, lift: Lift | None = None
 ) -> tuple[dict, list[Check]]:
     cfg = g.cap.cfg
     adopted = g.cap.adopted
@@ -335,7 +335,7 @@ def plan_section(
         else:
             total_cost += cost
         items.append(row)
-    final = scen.forecast(tuple(hires), tuple(inflows), tuple(lift))
+    final = scen.forecast(tuple(hires), tuple(inflows), lift)
     if plan.actions:  # one step for all of them, on top of everything above it
         now = scen.bookings(final)
         items.append(
@@ -368,7 +368,7 @@ def plan_section(
     sim = simulate(
         g.model, g.pop, g.as_of, g.windows, draws=g.draws, seed=g.seed,
         groups={**quarter_labels, REST_OF_FY: g.rest_labels, NEXT_12: g.twelve_labels},
-        creation=scen.creation(tuple(hires)), inflows=tuple(inflows), lift=tuple(lift),
+        creation=scen.creation(tuple(hires)), inflows=tuple(inflows), lift=lift,
     )  # fmt: skip
     expected_total = float(final.total())
     sd_mean = (

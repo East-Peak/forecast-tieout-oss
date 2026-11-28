@@ -310,7 +310,7 @@ def finish(
                 effect = driver_actions.effect_for(state, plan, hires, inflows)
             plan_section, c = actions.plan_section(
                 ground, state.scenario, plan, Path(str(plan_file)),
-                () if effect is None else effect.lift,
+                None if effect is None else effect.lift,
             )  # fmt: skip
             plan_checks += c
     elif plan is not None:
@@ -320,7 +320,7 @@ def finish(
         worksheet_section, worksheet_checks = worksheet.worksheet_section(
             ground, state.quarters, params, plan_section if plan is not None else None,
             hires, inflows, actions_section, gap, required,
-            () if effect is None else effect.lift,
+            None if effect is None else effect.lift,
         )  # fmt: skip
     else:
         worksheet_section, worksheet_checks = (

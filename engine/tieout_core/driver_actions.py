@@ -8,18 +8,22 @@ ramp's months, at most all of it, and a ramp of zero months is all of it from th
 created earlier, and every deal already open, keep the rate they had. A change of ``d`` points on
 a day on which a segment creates ``c`` deals is ``c * d`` more expected wins.
 
-Wins are priced at the pooled mean won size times the segment's price index, which is frozen: the
-no-action plan's wins priced as the lanes share the pooled bookings out (by segment size), taken
-over the fiscal year as one figure per segment. That is why a segment's action moves nothing in
-another segment, why the company's action is the same action in every segment, and why the
-actions' bookings are added to the company forecast rather than shared out of it.
+Wins are priced at the pooled mean won size times the segment's price index, which is frozen:
+the no-action plan's wins priced as the lanes share the pooled bookings out (by segment size) in
+each month they land in and each fiscal quarter they were created in, over the whole horizon.
+Within every one of those cells the segments' prices add back to the pooled price, so a company
+action books what changing the pooled rate would; a zero target removes exactly the wins it
+changes, and leaves no month below zero; a
+segment's action moves nothing in another segment; and the company's action is the same action in
+every segment. The actions' bookings are added to the company forecast, not shared out of it.
 
-Everything is an exact decimal. ``lift`` is the one series the forward function reads: the extra
-wins, priced, expected from the deals created on each day.
+Everything is an exact decimal. ``Lift`` (in the forward function's module) is what the forward
+function reads: each segment's deals and change in win rate by day, and the frozen prices.
 """
 
 from __future__ import annotations
 
+from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
@@ -32,7 +36,7 @@ from .actions import Ground
 from .capacity import project
 from .figures import CENT, cents, money, number
 from .fiscal import add_months
-from .forecast import Inflow
+from .forecast import Inflow, Lift
 from .lanes_basis import Basis, Sizes
 from .lanes_flows import Calendar
 from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction
@@ -52,11 +56,17 @@ class Unavailable(ValueError):
 @dataclass(frozen=True)
 class Frame:
     """The company by segment as the plan leaves it before any action: the deals each segment is
-    expected to create on each day after the as-of date, and each segment's price index."""
+    expected to create on each day after the as-of date (from its people and from programs), each
+    segment's frozen price index by (window landed in, fiscal quarter created in), the window each
+    day falls in and its fiscal quarter, counted from the year's first (it can pass three)."""
 
     segments: tuple[str, ...]
-    series: Mapping[str, Sequence[Decimal]]
-    price: Mapping[str, Decimal]
+    organic: Mapping[str, Sequence[Decimal]]
+    program: Mapping[str, Sequence[Decimal]]
+    series: Mapping[str, Sequence[Decimal]]  # the two added, as the lanes add them
+    price: Mapping[str, Mapping[tuple[int, int], Decimal]]
+    landing: tuple[int, ...]
+    origin: tuple[int, ...]
 
 
 @dataclass(frozen=True)
@@ -91,20 +101,19 @@ def segments_of(g: Ground, keys: Sequence[str], hires: Sequence[Member]) -> list
     return [*keys, *(s for s in more if s not in keys)]
 
 
-def creation_series(
+def organic_series(
     g: Ground,
     shares: Mapping[str, Decimal],
     hires: Sequence[Member],
-    inflows: Sequence[Inflow],
     segments: Sequence[str],
     days: int,
 ) -> dict[str, list[Decimal]]:
-    """Deals created on each of ``days`` days after the as-of date, by segment: each segment's
-    organic creation (its people's, where the capacity term is adopted, else its frozen share
-    of the flat rate) and its share of the programs' (a program names no segment)."""
+    """Deals created on each of ``days`` days after the as-of date by each segment's own people
+    (where the capacity term is adopted, with ``hires``) or, where it is not, its frozen share
+    of the flat rate."""
     if g.cap.adopted:
         people = [*g.cap.members, *hires]
-        organic = {
+        return {
             seg: list(
                 project(
                     g.cap.fit,
@@ -115,34 +124,91 @@ def creation_series(
             )
             for seg in segments
         }
-    else:
-        rate = g.model.new_pipeline.created_per_day
-        organic = {seg: [rate * shares.get(seg, ZERO)] * days for seg in segments}
+    rate = g.model.new_pipeline.created_per_day
+    return {seg: [rate * shares.get(seg, ZERO)] * days for seg in segments}
+
+
+def program_series(
+    g: Ground,
+    shares: Mapping[str, Decimal],
+    inflows: Sequence[Inflow],
+    segments: Sequence[str],
+    days: int,
+) -> dict[str, list[Decimal]]:
+    """Deals the programs create on each day, by segment: a program names none, so each has its
+    frozen share of them."""
+    extra = flows.inflow_series(inflows, g.model.new_pipeline.mean_created_arr, days)
+    return {s: [shares.get(s, ZERO) * i for i in extra] for s in segments}
+
+
+def creation_series(
+    g: Ground,
+    shares: Mapping[str, Decimal],
+    hires: Sequence[Member],
+    inflows: Sequence[Inflow],
+    segments: Sequence[str],
+    days: int,
+) -> dict[str, list[Decimal]]:
+    """Deals created on each of ``days`` days after the as-of date, by segment: its organic
+    creation and its share of the programs'."""
+    organic = organic_series(g, shares, hires, segments, days)
     extra = flows.inflow_series(inflows, g.model.new_pipeline.mean_created_arr, days)
     return flows.segment_series(organic, extra, shares)
+
+
+def day_cells(
+    g: Ground, first_day: date, days: int
+) -> tuple[tuple[int, ...], tuple[int, ...]]:
+    """For each of ``days`` days after the as-of date, the index of the window it falls in and
+    its fiscal quarter counted from the year's first (``first_day``; it can pass three)."""
+    landing, origin = [], []
+    for t in range(1, days + 1):
+        d = g.as_of + timedelta(days=t)
+        landing.append(
+            next(
+                (i for i, w in enumerate(g.windows) if w.contains(d)),
+                len(g.windows) - 1,
+            )
+        )
+        origin.append(((d.year - first_day.year) * 12 + d.month - first_day.month) // 3)
+    return tuple(landing), tuple(origin)
 
 
 def price_index(
     g: Ground,
     series: Mapping[str, Sequence[Decimal]],
     sizes: Mapping[str, Sizes],
-    cal: Calendar,
-) -> dict[str, Decimal]:
-    """Each segment's price per win over the pooled mean won size, from the no-action plan's
-    wins in the fiscal year as the lanes price them (the pooled bookings of each quarter and
-    origin shared out by wins times segment size); 1 for a segment with no wins to price."""
-    pooled = g.model.new_pipeline.mean_won_arr
-    days = (cal.year.end - g.as_of).days
-    wins, _ = flows.new_flows(
-        g.model, {s: v[:days] for s, v in series.items()}, g.as_of, cal
-    )
-    priced = flows.price(wins, sizes, pooled)
-    out = {}
-    for seg in series:
-        mine = [k for k in priced if k[0] == seg]
-        count = sum((priced[k].wins for k in mine), ZERO)
-        booked = sum((priced[k].bookings for k in mine), ZERO)
-        out[seg] = booked / (count * pooled) if count and pooled else ONE
+    origin: Sequence[int],
+) -> dict[str, dict[tuple[int, int], Decimal]]:
+    """Each segment's price per win over the pooled mean won size, in each (window the win lands
+    in, fiscal quarter its deal was created in): the cell's pooled bookings shared out by wins
+    times segment size, as the lanes price the fiscal year by quarter. The wins are the no-action
+    plan's, by the forward function's timing; a cell with no wins is left out (its index is 1)."""
+    timing = g.model.new_pipeline.timing
+    ends = [
+        (
+            w.start.toordinal() - g.as_of.toordinal(),
+            w.end.toordinal() - g.as_of.toordinal(),
+        )
+        for w in g.windows
+    ]
+    wins: dict[tuple[int, int], dict[str, Decimal]] = defaultdict(dict)
+    for seg, per_day in series.items():
+        for t, count in enumerate(per_day, 1):
+            if not count:
+                continue
+            for i, (a, b) in enumerate(ends):
+                hit = timing.count_through(b - t) - timing.count_through(a - t)
+                if hit:
+                    mine = wins[(i, origin[t - 1])]
+                    mine[seg] = mine.get(seg, ZERO) + count * hit
+    out: dict[str, dict[tuple[int, int], Decimal]] = {s: {} for s in series}
+    for key, by_segment in wins.items():
+        total = sum(by_segment.values(), ZERO)
+        weighed = sum((w * sizes[s].won for s, w in by_segment.items()), ZERO)
+        for seg in by_segment:
+            if weighed:
+                out[seg][key] = sizes[seg].won * total / weighed
     return out
 
 
@@ -155,8 +221,14 @@ def build_frame(
     inflows: Sequence[Inflow],
     segments: Sequence[str],
 ) -> Frame:
-    series = creation_series(g, shares, hires, inflows, segments, g.horizon_days)
-    return Frame(tuple(segments), series, price_index(g, series, sizes, cal))
+    days = g.horizon_days
+    organic = organic_series(g, shares, hires, segments, days)
+    program = program_series(g, shares, inflows, segments, days)
+    extra = flows.inflow_series(inflows, g.model.new_pipeline.mean_created_arr, days)
+    series = flows.segment_series(organic, extra, shares)
+    landing, origin = day_cells(g, cal.year.start, days)
+    price = price_index(g, series, sizes, origin)
+    return Frame(tuple(segments), organic, program, series, price, landing, origin)
 
 
 # ---------------------------------------------------------------- what an action does
@@ -199,15 +271,14 @@ def effect(
         weights = ramp(a, as_of, days)
         for s in frame.segments if a.segment is None else (a.segment,):
             changes[s] = [c + points * w for c, w in zip(changes[s], weights)]
-    lift = tuple(
-        sum(
-            (
-                frame.series[s][t] * changes[s][t] * frame.price[s]
-                for s in frame.segments
-            ),
-            ZERO,
-        )
-        for t in range(days)
+    lift = Lift(
+        baseline,
+        frame.organic,
+        frame.program,
+        {s: tuple(v) for s, v in changes.items()},
+        frame.price,
+        frame.landing,
+        frame.origin,
     )
     return Effect(
         frame,
@@ -224,25 +295,42 @@ def effect(
 
 def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flows.Flow]:
     """The extra wins the actions expect in the fiscal year, by (segment, quarter it lands in,
-    quarter its deal was created in), priced at the pooled size times the segment's index. They
-    are added to the no-action plan's wins, which stay as the lanes shared them out."""
+    quarter its deal was created in). Wins and win days are the lanes' own arithmetic; the
+    bookings are booked month by month at the pooled size times the segment's price index in
+    that month's cell, as the forward function books them, so the lanes add to its figures."""
     days = (cal.year.end - g.as_of).days
     series = {
         s: [c * d for c, d in zip(eff.frame.series[s][:days], eff.changes[s][:days])]
         for s in eff.frame.segments
     }
     wins, _ = flows.new_flows(g.model, series, g.as_of, cal, rate=ONE)
-    return {
-        k: flows.Flow(f.wins, f.bookings * eff.frame.price[k[0]], f.days)
-        for k, f in wins.items()
-    }
+    timing = g.model.new_pipeline.timing
+    per_win = g.model.new_pipeline.mean_won_arr / Decimal(timing.total)
+    booked: dict[flows.Leaf, Decimal] = defaultdict(Decimal)
+    for i, w in enumerate(g.windows):
+        q = next((k for k, qw in enumerate(cal.quarters) if qw.contains(w.end)), None)
+        if q is None:
+            continue
+        a, b = (
+            w.start.toordinal() - g.as_of.toordinal(),
+            w.end.toordinal() - g.as_of.toordinal(),
+        )
+        for s, per_day in series.items():
+            index = eff.frame.price[s]
+            for t, count in enumerate(per_day, 1):
+                hit = timing.count_through(b - t) - timing.count_through(a - t)
+                if count and hit:
+                    origin = cal.bucket(g.as_of + timedelta(days=t))
+                    cell = (i, eff.frame.origin[t - 1])
+                    booked[(s, q, origin)] += count * hit * index.get(cell, ONE)
+    return {k: flows.Flow(f.wins, booked[k] * per_win, f.days) for k, f in wins.items()}
 
 
 def period_rate(eff: Effect, segments: Sequence[str], window, as_of: date) -> Decimal:
     """The win rate on the pipeline ``segments`` are expected to create in ``window`` (its dates
     after ``as_of``): the pooled rate plus the change the actions make, weighted by the deals
     created each day. A period with no deal to create keeps the pooled rate."""
-    days = len(eff.lift)
+    days = len(eff.frame.origin)
     first = max((window.start - as_of).days + 1, 1)
     last = min((window.end - as_of).days, days)
     moved = made = ZERO

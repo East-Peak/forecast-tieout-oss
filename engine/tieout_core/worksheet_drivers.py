@@ -17,7 +17,7 @@ from fractions import Fraction
 from .actions import Ground, Scenario
 from .capacity import creation_text
 from .fit import Timing
-from .forecast import EXISTING, Forecast, Inflow, model_forecast
+from .forecast import EXISTING, Forecast, Inflow, Lift, model_forecast
 from .plan import NEXT_12, REST_OF_FY
 from .roster import Member
 from .worksheet_rules import (
@@ -136,13 +136,11 @@ class Probe:
         g: Ground,
         hires: Sequence[Member] = (),
         inflows: Sequence[Inflow] = (),
-        lift: Sequence[Decimal] = (),
+        lift: Lift | None = None,
     ) -> None:
         self.g = g
         self.hires, self.inflows = tuple(hires), tuple(inflows)
-        self.lift = tuple(
-            lift
-        )  # the driver actions in force, as extra wins by day created
+        self.lift = lift  # the driver actions in force
         self.scenario = Scenario(g)
         self._creation = self.scenario.creation(self.hires)
         self.base = self._run(g.model, self._creation, None, self.lift)
@@ -153,14 +151,14 @@ class Probe:
         return model_forecast(
             model, g.pop, g.as_of, g.windows,
             creation=creation, inflows=self.inflows, existing=existing,
-            lift=self.lift if lift is None else lift,
+            lift=lift,
         )  # fmt: skip
 
-    def with_lift(self, lift: Sequence[Decimal]) -> Forecast:
+    def with_lift(self, lift: Lift | None) -> Forecast:
         """This probe's scenario with ``lift`` in place of the one it was made with; open deals
         are reused."""
         return self._run(
-            self.g.model, self._creation, self.base.components[EXISTING], tuple(lift)
+            self.g.model, self._creation, self.base.components[EXISTING], lift
         )
 
     def forecast(self, adjusted: Ground) -> Forecast:
@@ -176,7 +174,24 @@ class Probe:
                 per_day=tuple(rate * x for x in creation.ramped_ae_months),
                 text=creation_text(rate),
             )
-        return self._run(adjusted.model, creation, self.base.components[EXISTING])
+        return self._run(
+            adjusted.model,
+            creation,
+            self.base.components[EXISTING],
+            self._lift_under(adjusted),
+        )
+
+    def _lift_under(self, adjusted: Ground) -> Lift | None:
+        """The actions' lift as ``adjusted`` leaves it: their points are added to the pooled win
+        rate it has, each day's rate held between zero and one, and the organic creation they act
+        on is what it now is (programs' is not changed by any driver)."""
+        lift = self.lift
+        if not lift:
+            return lift
+        lift = lift.rebased(adjusted.model.new_pipeline.win_rate)
+        was = current_value(self.g, PRODUCTIVITY)
+        now = current_value(adjusted, PRODUCTIVITY)
+        return lift.scaled(now / was) if was and now is not None else lift
 
     def shown(self, f: Forecast) -> dict[str, Decimal]:
         return self.scenario.bookings(f)

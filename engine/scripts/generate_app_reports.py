@@ -543,7 +543,7 @@ def replay_problems(companies=COMPANIES) -> list[str]:
                         doc,
                         hires,
                         inflows,
-                        () if effect is None else effect.lift,
+                        None if effect is None else effect.lift,
                     )
                 ]
             shard = json.loads(

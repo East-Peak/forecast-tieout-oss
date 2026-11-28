@@ -27,7 +27,7 @@ from .actions import Ground
 from .figures import cents, money, number
 from .fiscal import add_months
 from .fit import RECENCY, FitParams
-from .forecast import Inflow
+from .forecast import Inflow, Lift
 from .plan import NEXT_12, REST_OF_FY
 from .records import Check
 from .roster import Member, ramped_ae_months
@@ -755,7 +755,7 @@ def worksheet_section(
     actions_section: dict,
     gap: dict,
     required: dict,
-    lift: Sequence[Decimal] = (),
+    lift: Lift | None = None,
 ) -> tuple[dict, list[Check]]:
     probe = wd.Probe(g, hires, inflows, lift)
     c = Context(g, probe, quarters, params, g.fy_target)

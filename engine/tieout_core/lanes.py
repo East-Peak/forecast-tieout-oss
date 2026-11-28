@@ -92,7 +92,7 @@ def _remainder(
         raise ValueError(f"expected wins belong to no lane: {sorted(stray)}")
     new_wins, new_created = flows.new_flows(model, series, g.as_of, cal)
     priced = flows.price(new_wins, sizes, model.new_pipeline.mean_won_arr)
-    lift: tuple = ()
+    lift = None
     if effect is not None:
         lift = effect.lift
         for k, f in driver_actions.action_flows(g, effect, cal).items():
