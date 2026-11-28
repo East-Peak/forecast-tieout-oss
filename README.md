@@ -117,7 +117,7 @@ The profile directory describes your company: copy one of the three under
 | `field_mappings.yaml` | Maps your stage names to the core's stage codes (`opportunity.stage.stage_mapping`) |
 | `targets.yaml` | Fiscal-year start and the quarterly bookings targets |
 | `capacity.yaml` | Which roles carry quota, and ramp, attrition and cost where your history cannot supply them (optional) |
-| `plan.yaml` | Further hires, program pipeline and win-rate actions (`id`, `name`, `driver: win_rate`, `slice` as `company` or a segment, `start`, `ramp_months`, `target` as a probability), passed with `--plan` (optional) |
+| `plan.yaml` | Further hires, program pipeline and actions (`id`, `name`, `driver` as `win_rate`, `won_arr` or `productivity`, `slice` as `company` or a segment, `start`, `ramp_months`, `target`: a probability, dollars per won deal, or created deals per ramped AE-month, or organic deals per day where the capacity term is not in use), passed with `--plan` (optional) |
 
 Rows the core cannot read are not dropped silently: each is listed on the Trust screen
 with its reason, and a check fails if included and excluded rows do not add up to the
