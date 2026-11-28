@@ -181,3 +181,125 @@ def test_the_editors_own_entry_writes_what_a_native_run_writes_for_a_plan_with_a
         assert got["owners"][segment] == json.loads(
             (out / f"owners-{segment}.json").read_text()
         )
+
+
+# ----------------------------------------------------------------------- an action on each driver
+
+DRIVERS = fixture.PLAN_WITH_DRIVERS["actions"]
+
+
+def test_a_plan_with_an_action_on_each_driver_is_a_native_run_of_the_same_plan(
+    opened, tmp_path
+):
+    doc = copy.deepcopy(fixture.PLAN_WITH_DRIVERS)
+    path = tmp_path / "your-plan.yaml"
+    path.write_text(yaml.safe_dump(doc))
+    with gen.in_repo():
+        applied = apply_plan(opened, copy.deepcopy(doc))
+        native = build_report(
+            gen.PROFILES / COMPANY, gen.DATA / COMPANY, gen.AS_OF, draws=gen.DRAWS,
+            seed=gen.SEED, plan_path=path, company=COMPANY, scenario=YOUR_PLAN,
+        )  # fmt: skip
+    native["plan"]["file"] = YOUR_PLAN
+    assert applied.report_text == gen.canonical(native)
+    assert contract.validate(json.loads(applied.report_text)) == []
+    r = json.loads(applied.report_text)
+    assert [i["driver"] for i in r["driver_actions"]["items"]] == ["win_rate", "won_arr", "productivity"]  # fmt: skip
+    assert (
+        r["driver_actions"]["reconciliation"]["material"]["rest of fiscal year"] is True
+    )
+
+
+def test_the_core_refuses_a_size_and_a_creation_target_in_a_persons_words(opened):
+    size, creation = DRIVERS[1], DRIVERS[2]
+    cases = [
+        (dict(size, target="-5"), "The target won ARR per win must be zero or more dollars, not -$5"),
+        (dict(size, target="lots"), "The target won ARR per win must be a number of dollars"),
+        (dict(creation, target="-1"), "The target creation productivity must be zero or more deals, not -1"),
+        (dict(creation, slice="strategic"), "'strategic' is not the company or a segment"),
+    ]  # fmt: skip
+    for bad, why in cases:
+        with gen.in_repo():
+            applied = apply_plan(
+                opened, plan_with(action(id="ok", slice="mid_market"), bad)
+            )
+        (error,) = applied.errors
+        assert (error["section"], error["position"]) == ("actions", 1)
+        assert why in error["message"] and "actions[" not in error["message"]
+        assert not any(
+            w in error["message"] for w in ("won_arr", "slice", "driver", "ramp_months")
+        )
+
+
+def test_the_same_driver_twice_on_one_slice_is_refused_but_two_drivers_are_not(opened):
+    with gen.in_repo():
+        applied = apply_plan(
+            opened, plan_with(DRIVERS[1], dict(DRIVERS[1], id="again", target="460000"))
+        )
+    (error,) = applied.errors
+    assert error["code"] == "overlap" and error["position"] == 1
+    assert (
+        "both change the size of a won deal for the whole company"
+        not in error["message"]
+    )
+    assert "Overlaps 'Company deal size'" in error["message"]
+    with gen.in_repo():
+        ok = apply_plan(
+            opened, plan_with(action(slice="company"), DRIVERS[1], DRIVERS[2])
+        )
+    assert ok.errors == [] and ok.report_text is not None
+
+
+def test_changing_only_a_size_or_a_creation_target_does_not_build_the_frame_again(
+    opened, monkeypatch
+):
+    calls = []
+    real = da.build_frame
+    monkeypatch.setattr(
+        da, "build_frame", lambda *a, **k: calls.append(1) or real(*a, **k)
+    )
+    opened.state.memo.clear()
+    with gen.in_repo():
+        apply_plan(opened, plan_with(DRIVERS[1], DRIVERS[2]))
+        apply_plan(
+            opened,
+            plan_with(
+                dict(DRIVERS[1], target="440000"), dict(DRIVERS[2], target="2.7")
+            ),
+        )
+    assert len(calls) == 1
+
+
+def test_the_grid_of_the_apply_carries_the_created_deals_the_creation_action_leaves():
+    with gen.in_repo():
+        session = EditorSession()
+        session.open(COMPANY)
+        plain = apply_and_lanes(session, plan_with(DRIVERS[0]))
+        before = json.loads(session.lanes(plain))
+        more = apply_and_lanes(session, plan_with(DRIVERS[0], DRIVERS[2]))
+        after = json.loads(session.lanes(more))
+    assert before["problems"] == [] == after["problems"]
+    segment = lambda d: next(
+        r
+        for r in d["lanes"]["periods"][0]["rows"]
+        if r["path"] == ["segment", "mid_market"]
+    )
+    assert float(segment(after)["cells"]["created"]["forecast"]) > float(segment(before)["cells"]["created"]["forecast"])  # fmt: skip
+
+
+def test_the_editors_own_entry_writes_what_a_native_run_writes_for_a_plan_with_each_driver():
+    out = fixture.OUT_DRIVERS
+    with gen.in_repo():
+        session = EditorSession()
+        session.open(COMPANY)
+        text, meta = session.apply(json.dumps(fixture.PLAN_WITH_DRIVERS))
+        got = json.loads(session.lanes(json.loads(meta)["revision"]))
+    assert text == (out / "report.json").read_text()
+    assert json.loads(meta)["comparison"] == json.loads(
+        (out / "comparison-row.json").read_text()
+    )
+    assert got["lanes"] == json.loads((out / "lanes.json").read_text())
+    for segment in fixture.DRIVERS_OWNER_SEGMENTS:
+        assert got["owners"][segment] == json.loads(
+            (out / f"owners-{segment}.json").read_text()
+        )

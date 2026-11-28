@@ -531,8 +531,7 @@ NO_INTERACTION = (
 )
 REINFORCE = (
     "What removing each one changes adds up to more than the actions change together: each does "
-    "more with the others in place (more deals, won more often, at a larger size, multiply), so "
-    "they reinforce each other."
+    "more with the others in place, because their changes multiply, so they reinforce each other."
 )
 OVERLAP = (
     "The actions together change bookings by more than what removing each one changes adds up "

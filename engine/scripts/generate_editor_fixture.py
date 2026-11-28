@@ -44,8 +44,11 @@ from engine.tieout_core.report import build_report, prepare
 COMPANY = "sapling-industries"
 # the segments the plan adds hires to: their owners files are kept, with the planned-hires bucket
 OWNER_SEGMENTS = ("commercial", "enterprise")
+# and the plan with an action on creation keeps Mid Market's too, where its creation changes
+DRIVERS_OWNER_SEGMENTS = (*OWNER_SEGMENTS, "mid_market")
 OUT = REPO / "frontend/src/screens/__tests__/fixtures/your-plan"
 OUT_ACTIONS = REPO / "frontend/src/screens/__tests__/fixtures/your-plan-actions"
+OUT_DRIVERS = REPO / "frontend/src/screens/__tests__/fixtures/your-plan-three-drivers"
 
 # An edit of Sapling's demo plan: one hire changed, one added in another segment, a program resized and
 # given a cost and a ramp.
@@ -84,10 +87,45 @@ PLAN_WITH_ACTION = {
         }
     ],
 }
-CASES = ((OUT, PLAN), (OUT_ACTIONS, PLAN_WITH_ACTION))
+
+# The same again with an action on each driver: that win rate, a company-wide deal size (about 8.7%
+# above the pooled mean, over a month's ramp) and a higher rate of creation per ramped AE-month in one
+# segment. The win rate and the size share Enterprise, so the actions interact and the core's
+# reconciliation line is material.
+PLAN_WITH_DRIVERS = {
+    **PLAN_WITH_ACTION,
+    "actions": [
+        *PLAN_WITH_ACTION["actions"],
+        {
+            "id": "company-deal-size",
+            "name": "Company deal size",
+            "driver": "won_arr",
+            "slice": "company",
+            "start": "2026-10",
+            "ramp_months": 1,
+            "target": "450000",
+        },
+        {
+            "id": "mid-market-creation",
+            "name": "Mid Market creation",
+            "driver": "productivity",
+            "slice": "mid_market",
+            "start": "2026-11",
+            "ramp_months": 2,
+            "target": "2.6",
+        },
+    ],
+}
+CASES = (
+    (OUT, PLAN, OWNER_SEGMENTS),
+    (OUT_ACTIONS, PLAN_WITH_ACTION, OWNER_SEGMENTS),
+    (OUT_DRIVERS, PLAN_WITH_DRIVERS, DRIVERS_OWNER_SEGMENTS),
+)
 
 
-def build(plan: dict = PLAN) -> dict[str, str]:
+def build(
+    plan: dict = PLAN, owners: tuple[str, ...] = OWNER_SEGMENTS
+) -> dict[str, str]:
     with in_repo(), tempfile.TemporaryDirectory() as tmp:
         plan_file = Path(tmp) / f"{YOUR_PLAN}.yaml"
         plan_file.write_text(yaml.safe_dump(plan, sort_keys=False))
@@ -107,11 +145,15 @@ def build(plan: dict = PLAN) -> dict[str, str]:
         "plan.json": canonical(plan),
         "report.json": canonical(yours),
         "comparison-row.json": canonical(row),
-        **native_lanes(yours, plan),
+        **native_lanes(yours, plan, owners),
     }
 
 
-def native_lanes(report: dict, plan_doc: dict = PLAN) -> dict[str, str]:
+def native_lanes(
+    report: dict,
+    plan_doc: dict = PLAN,
+    owner_segments: tuple[str, ...] = OWNER_SEGMENTS,
+) -> dict[str, str]:
     """The edited plan's lanes as the generator writes a scenario's: the basis built from the
     company's data (not read from the committed file), the plan loaded from a file."""
     with in_repo(), tempfile.TemporaryDirectory() as tmp:
@@ -138,7 +180,7 @@ def native_lanes(report: dict, plan_doc: dict = PLAN) -> dict[str, str]:
         "lanes.json": canonical(mine),
         **{
             f"owners-{segment}.json": lanes_text.text(owners[segment])
-            for segment in OWNER_SEGMENTS
+            for segment in owner_segments
         },
     }
 
@@ -149,7 +191,7 @@ def main(argv=None) -> int:
     )
     parser.add_argument("--verify", action="store_true")
     args = parser.parse_args(argv)
-    built = {out: build(plan) for out, plan in CASES}
+    built = {out: build(plan, owners) for out, plan, owners in CASES}
     if not args.verify:
         for out, files in built.items():
             out.mkdir(parents=True, exist_ok=True)
