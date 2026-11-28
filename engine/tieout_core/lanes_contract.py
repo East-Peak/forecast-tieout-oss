@@ -139,6 +139,7 @@ BASIS = obj(
             {
                 "win_rate": DECIMAL,
                 "cohort_size": INT,
+                "estimator": TEXT,
                 "mean_won_arr": MONEY,
                 "mean_created_arr": MONEY,
                 "created_per_day": DECIMAL,

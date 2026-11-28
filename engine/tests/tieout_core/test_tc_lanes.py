@@ -214,6 +214,11 @@ def test_a_blank_segment_is_a_lane_of_its_own_and_the_company_row_still_adds_up(
     paths = [r["path"] for r in doc["periods"][0]["rows"]]
     assert ["segment", "unassigned"] in paths
     assert paths[0] == ["total"]
+    assert all(c["passed"] for c in doc["checks"]), doc["checks"]
+    assert (
+        cell(doc, "FY26", ["total"], "bookings")["forecast"]
+        == (report["gap"]["fiscal_year"]["expected"])
+    )
     total = D(cell(doc, "FY26", ["total"], "won")["actual"])
     assert total == sum(
         D(cell(doc, "FY26", p, "won")["actual"]) for p in paths if p[0] == "segment"

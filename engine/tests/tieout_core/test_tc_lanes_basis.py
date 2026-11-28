@@ -1,12 +1,15 @@
 """The reconstructed plan basis: what a refit on the day before the year started freezes."""
 
-from datetime import date
+from dataclasses import replace
+from datetime import date, timedelta
 from decimal import Decimal
 
 import pytest
 
 from engine.scripts import generate_app_reports as gen
+from engine.tieout_core import fit, lanes, lanes_contract
 from engine.tieout_core import lanes_basis as basis
+from engine.tieout_core.editor import canonical
 from engine.tieout_core.records import Deal
 from engine.tieout_core.report import prepare
 
@@ -112,3 +115,65 @@ def test_every_check_of_the_basis_passes(frozen):
     assert b.checks and all(c.passed for c in b.checks), [
         c for c in b.checks if not c.passed
     ]
+
+
+def test_the_basis_uses_nothing_that_was_not_known_on_the_plan_date(built):
+    """Drop what was created after the plan date, change what closed after it, and hand the
+    basis the other estimator than the report chose: the file must not move by a byte."""
+    company, state, basis, _ = built
+    after = [d for d in state.pop.deals if d.created > basis.cutoff]
+    assert after, "the demo companies have deals created after the plan date"
+    kept = {d.id for d in state.pop.deals if d.created <= basis.cutoff}
+    deals = tuple(
+        replace(d, arr=d.arr * 3, close=d.close + timedelta(days=30))
+        if d.is_closed and d.close > basis.cutoff
+        else d
+        for d in state.pop.deals
+        if d.id in kept
+    )
+    pop = replace(
+        state.pop,
+        deals=deals,
+        transitions=tuple(t for t in state.pop.transitions if t.deal_id in kept),
+    )
+    other = fit.MATURED if state.params.estimator == fit.RECENCY else fit.RECENCY
+    changed = replace(
+        state,
+        pop=pop,
+        params=replace(state.params, estimator=other),
+        ground=replace(state.ground, pop=pop),
+    )
+    assert canonical(basis_doc(changed, company)) == canonical(
+        basis_doc(state, company)
+    )
+
+
+def basis_doc(state, company):
+    return basis.document(basis.plan_basis(state), company)
+
+
+def test_a_quarter_with_no_target_shares_its_created_deals_by_trailing_bookings():
+    sizes = {"a": basis.Sizes(D(100), "", D(10), ""), "b": basis.Sizes(D(200), "", D(20), "")}  # fmt: skip
+    got = basis.split_goals(D(0), {"a": D(60), "b": D(40)}, sizes, D(10), D(100))
+    assert [g.created for g in got.values()] == [D("6.0000"), D("4.0000")]
+    assert all(g.bookings == 0 and g.won == 0 for g in got.values())
+
+
+def test_full_generation_survives_a_zero_quarterly_target(built):
+    company, state, _, docs = built
+    if company != "sprout-labs":
+        pytest.skip("one company is enough")
+    targets = {**state.profile.quarterly_targets, "Q2FY26": D(0)}
+    zero = replace(state, profile=replace(state.profile, quarterly_targets=targets))
+    b = basis.plan_basis(zero)
+    assert lanes_contract.validate_basis(basis.document(b, company)) == []
+    assert sum(g.created for (q, _), g in b.goals.items() if q == "Q2FY26") == (
+        next(s for s in b.schedule if s.quarter == "Q2FY26").created.quantize(
+            D("0.0001")
+        )
+    )
+    report, _ = docs["as-signed"]
+    doc = lanes.lanes_document(zero, b, report, (), (), company, "as-signed", "x")
+    assert all(c["passed"] for c in doc["checks"])
+    cell = doc["periods"][2]["rows"][0]["cells"]["bookings"]
+    assert (cell["goal"], cell["none_because"]) == ("0.00", "no_goal")

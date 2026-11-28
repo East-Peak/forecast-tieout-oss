@@ -27,6 +27,18 @@ MIN_SEGMENT_CREATED = 10
 
 UNASSIGNED = "unassigned"
 
+# What the frozen basis decides from data dated on or before the plan date alone, and how.
+ESTIMATOR_RULE = (
+    "The fit's estimator is chosen by the report's declared rule, scored on back-test folds cut "
+    "at the plan date from what was known then; where too few folds exist at that date the rule "
+    "keeps the incumbent (matured snapshots)."
+)
+# A quarter with a zero target has no target-equivalent wins to size creation by.
+ZERO_TARGET_RULE = (
+    "A quarter whose entered target is zero has no target-equivalent wins, so the schedule's "
+    "created deals for that quarter are shared by trailing-year bookings instead."
+)
+
 BEHIND, ON_TRACK, NONE = "behind", "on_track", "none"
 REASONS = {
     "no_goal": "There is no goal here, or it is zero, so there is nothing to compare with.",

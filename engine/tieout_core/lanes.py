@@ -202,9 +202,12 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
     g = state.ground
     model = g.model
     series = _series(state, basis, cal, hires, inflows, segments)
+    leaves = flows.existing_flows(model, g.pop.deals, g.as_of, cal)
+    stray = {k[0] for k in leaves} - set(segments)
+    if stray:  # a contribution with no lane would silently leave the company row short
+        raise ValueError(f"expected wins belong to no lane: {sorted(stray)}")
     new_wins, new_created = flows.new_flows(model, series, g.as_of, cal)
     priced = _price(new_wins, sizes, model.new_pipeline.mean_won_arr)
-    leaves = flows.existing_flows(model, g.pop.deals, g.as_of, cal)
     for k, f in priced.items():
         leaves[k] = leaves.get(k, flows.ZERO_FLOW) + f
     forecast = scenario.forecast(tuple(hires), tuple(inflows))

@@ -3,7 +3,7 @@
     "decision": "not shown",
     "reason": "4 folds at 6 months; at least 6 are needed"
   },
-  "caveat": "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start.",
+  "caveat": "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start. The fit's estimator is chosen by the report's declared rule, scored on back-test folds cut at the plan date from what was known then; where too few folds exist at that date the rule keeps the incumbent (matured snapshots). A quarter whose entered target is zero has no target-equivalent wins, so the schedule's created deals for that quarter are shared by trailing-year bookings instead.",
   "checks": [
     {
       "detail": "the refit's latest fact is dated 2026-01-31; the cutoff is 2026-01-31",
@@ -11,7 +11,7 @@
       "passed": true
     },
     {
-      "detail": "the schedule's quarters book 121017508.88; the forward function gives 121017508.88",
+      "detail": "the schedule's quarters book 144745229.30; the forward function gives 144745229.30",
       "name": "frozen schedule replays the forward function",
       "passed": true
     },
@@ -24,103 +24,104 @@
   "company": "mighty-oak-holdings",
   "cutoff": "2026-01-31",
   "fit": {
-    "cohort_size": 828,
+    "cohort_size": 381,
     "created_per_day": "1.2192",
-    "mean_created_arr": "1932126.88",
-    "mean_won_arr": "1992374.28",
-    "win_rate": "0.1224"
+    "estimator": "matured snapshots",
+    "mean_created_arr": "2013844.16",
+    "mean_won_arr": "1973083.42",
+    "win_rate": "0.1496"
   },
   "goals": {
     "Q1FY26": {
       "Enterprise": {
         "bookings": "8352672.69",
-        "created": "39.7101",
-        "created_arr": "77974348.55",
-        "days": "863.92",
+        "created": "39.6063",
+        "created_arr": "77770527.93",
+        "days": "850.79",
         "won": "3.8088"
       },
       "Mid-Market": {
         "bookings": "3088927.60",
-        "created": "39.7101",
-        "created_arr": "24465397.73",
-        "days": "863.92",
+        "created": "39.6063",
+        "created_arr": "24401446.53",
+        "days": "850.79",
         "won": "3.8088"
       },
       "Strategic Enterprise": {
         "bookings": "5558399.71",
-        "created": "29.0866",
-        "created_arr": "154230170.31",
-        "days": "632.79",
-        "won": "2.7898"
+        "created": "29.2942",
+        "created_arr": "155330958.42",
+        "days": "629.27",
+        "won": "2.8171"
       }
     },
     "Q2FY26": {
       "Enterprise": {
         "bookings": "9335340.07",
-        "created": "41.0487",
-        "created_arr": "80602809.90",
-        "days": "933.72",
+        "created": "40.9414",
+        "created_arr": "80392116.71",
+        "days": "931.70",
         "won": "4.2569"
       },
       "Mid-Market": {
         "bookings": "3452330.84",
-        "created": "41.0487",
-        "created_arr": "25290109.36",
-        "days": "933.72",
+        "created": "40.9414",
+        "created_arr": "25224001.81",
+        "days": "931.70",
         "won": "4.2569"
       },
       "Strategic Enterprise": {
         "bookings": "6212329.09",
-        "created": "30.0670",
-        "created_arr": "159428689.87",
-        "days": "683.93",
-        "won": "3.1181"
+        "created": "30.2816",
+        "created_arr": "160566595.11",
+        "days": "689.11",
+        "won": "3.1485"
       }
     },
     "Q3FY26": {
       "Enterprise": {
         "bookings": "10809341.14",
-        "created": "41.0487",
-        "created_arr": "80602809.90",
-        "days": "1071.29",
+        "created": "40.9414",
+        "created_arr": "80392116.71",
+        "days": "1046.16",
         "won": "4.9290"
       },
       "Mid-Market": {
         "bookings": "3997435.71",
-        "created": "41.0487",
-        "created_arr": "25290109.36",
-        "days": "1071.29",
+        "created": "40.9414",
+        "created_arr": "25224001.81",
+        "days": "1046.16",
         "won": "4.9290"
       },
       "Strategic Enterprise": {
         "bookings": "7193223.15",
-        "created": "30.0670",
-        "created_arr": "159428689.87",
-        "days": "784.70",
-        "won": "3.6104"
+        "created": "30.2816",
+        "created_arr": "160566595.11",
+        "days": "773.79",
+        "won": "3.6457"
       }
     },
     "Q4FY26": {
       "Enterprise": {
         "bookings": "12774675.89",
-        "created": "41.0487",
-        "created_arr": "80602809.90",
-        "days": "1219.86",
+        "created": "40.9414",
+        "created_arr": "80392116.71",
+        "days": "1148.67",
         "won": "5.8252"
       },
       "Mid-Market": {
         "bookings": "4724242.20",
-        "created": "41.0487",
-        "created_arr": "25290109.36",
-        "days": "1219.86",
+        "created": "40.9414",
+        "created_arr": "25224001.81",
+        "days": "1148.67",
         "won": "5.8252"
       },
       "Strategic Enterprise": {
         "bookings": "8501081.91",
-        "created": "30.0670",
-        "created_arr": "159428689.87",
-        "days": "893.51",
-        "won": "4.2668"
+        "created": "30.2816",
+        "created_arr": "160566595.11",
+        "days": "849.59",
+        "won": "4.3085"
       }
     }
   },
@@ -128,44 +129,44 @@
   "opening": 127,
   "schedule": [
     {
-      "bookings": "29882560.25",
+      "bookings": "36931781.81",
       "created": "108.5068",
-      "created_arr": "209649000.27",
-      "days": "3484.56",
+      "created_arr": "218515884.82",
+      "days": "4146.17",
       "outcome": "already covered",
       "quarter": "Q1FY26",
       "target": "17000000.00",
-      "wins": "15.3625"
+      "wins": "18.5616"
     },
     {
-      "bookings": "30650027.07",
+      "bookings": "37313398.40",
       "created": "112.1644",
-      "created_arr": "216715820.51",
-      "days": "3620.65",
+      "created_arr": "225881588.81",
+      "days": "4436.37",
       "outcome": "already covered",
       "quarter": "Q2FY26",
       "target": "19000000.00",
-      "wins": "16.5068"
+      "wins": "20.2696"
     },
     {
-      "bookings": "29847710.47",
+      "bookings": "35426755.47",
       "created": "112.1644",
-      "created_arr": "216715820.51",
-      "days": "3438.20",
+      "created_arr": "225881588.81",
+      "days": "3985.38",
       "outcome": "already covered",
       "quarter": "Q3FY26",
       "target": "22000000.00",
-      "wins": "15.8191"
+      "wins": "18.7771"
     },
     {
-      "bookings": "30637211.10",
+      "bookings": "35073293.63",
       "created": "112.1644",
-      "created_arr": "216715820.51",
-      "days": "3188.61",
+      "created_arr": "225881588.81",
+      "days": "3543.56",
       "outcome": "already covered",
       "quarter": "Q4FY26",
       "target": "26000000.00",
-      "wins": "15.2266"
+      "wins": "17.9703"
     }
   ],
   "schema_version": "1.0.0",
@@ -189,7 +190,7 @@
       "opening": 17,
       "share": "0.326965",
       "trailing_bookings": "35024652.00",
-      "won_size": "1992374.28",
+      "won_size": "1973083.42",
       "won_size_basis": "pooled, thin sample"
     },
     {

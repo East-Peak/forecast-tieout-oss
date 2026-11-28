@@ -19,6 +19,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from itertools import accumulate
 
+from . import lanes_rules as rules
 from .fiscal import FiscalYear, Window
 from .fit import Timing
 from .forecast import Inflow
@@ -136,7 +137,9 @@ def existing_flows(
             wins = p * (m1 - m0)
             if wins:
                 days = p * (age * (m1 - m0) + d1 - d0)
-                out[(d.segment, q, origin)] += Flow(wins, d.arr * wins, days)
+                out[(rules.segment_key(d.segment), q, origin)] += Flow(
+                    wins, d.arr * wins, days
+                )
     return dict(out)
 
 

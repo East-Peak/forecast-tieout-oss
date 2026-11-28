@@ -3,7 +3,7 @@
     "decision": "not shown",
     "reason": "4 folds at 6 months; at least 6 are needed"
   },
-  "caveat": "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start.",
+  "caveat": "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule creates more pipeline than the targets need, because pipeline created to fund one quarter also lands in later ones, so its own bookings are shown beside the targets; target-equivalent wins come from the target, not from the schedule. Ownership, segment and quota have no history in the files, so today's values stand in for the plan start. The fit's estimator is chosen by the report's declared rule, scored on back-test folds cut at the plan date from what was known then; where too few folds exist at that date the rule keeps the incumbent (matured snapshots). A quarter whose entered target is zero has no target-equivalent wins, so the schedule's created deals for that quarter are shared by trailing-year bookings instead.",
   "checks": [
     {
       "detail": "the refit's latest fact is dated 2026-01-31; the cutoff is 2026-01-31",
@@ -26,6 +26,7 @@
   "fit": {
     "cohort_size": 252,
     "created_per_day": "0.9397",
+    "estimator": "matured snapshots",
     "mean_created_arr": "75969.49",
     "mean_won_arr": "62269.48",
     "win_rate": "0.1825"

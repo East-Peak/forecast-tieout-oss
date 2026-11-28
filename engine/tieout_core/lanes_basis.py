@@ -15,13 +15,14 @@ and every additive goal of a parent is the sum of its children.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, timedelta
 from decimal import Decimal
 
 from . import lanes_flows as flows
 from . import lanes_rules as rules
 from .adoption import ADOPTED, adoption_test
+from .backtest import choose_fit
 from .figures import CENT
 from .fiscal import month_windows
 from .fit import fit
@@ -42,7 +43,10 @@ CAVEAT = (
     "creates more pipeline than the targets need, because pipeline created to fund one quarter "
     "also lands in later ones, so its own bookings are shown beside the targets; target-equivalent "
     "wins come from the target, not from the schedule. Ownership, segment and quota have no "
-    "history in the files, so today's values stand in for the plan start."
+    "history in the files, so today's values stand in for the plan start. "
+    + rules.ESTIMATOR_RULE
+    + " "
+    + rules.ZERO_TARGET_RULE
 )
 
 
@@ -97,6 +101,7 @@ class Basis:
     capacity_reason: str
     win_rate: Decimal
     cohort_size: int
+    estimator: str
     mean_won_arr: Decimal
     mean_created_arr: Decimal
     created_per_day: Decimal
@@ -155,7 +160,8 @@ def split_goals(
     keys = list(trailing)
     bookings = flows.apportion(target, [trailing[k] for k in keys])
     needed = [b / sizes[k].won for b, k in zip(bookings, keys)]
-    made = flows.apportion(created.quantize(COUNT), needed, "0.0001")
+    by = needed if any(needed) else [trailing[k] for k in keys]  # ZERO_TARGET_RULE
+    made = flows.apportion(created.quantize(COUNT), by, "0.0001")
     out = {}
     for k, b, n, c in zip(keys, bookings, needed, made):
         wins = n.quantize(COUNT)
@@ -203,10 +209,20 @@ def _schedule(
 
 def plan_basis(state: Prepared) -> Basis:
     """The reconstructed plan basis for the company ``state`` was prepared for."""
-    profile, params, fy = state.profile, state.params, state.profile.fiscal_year
+    profile, fy = state.profile, state.profile.fiscal_year
     cal = Calendar(fy)
     cutoff = cal.start
     known = as_known_at(state.pop, cutoff)
+    # Nothing the report decided at its later date is inherited: the estimator is chosen again,
+    # by the same rule, from back-test folds cut at the plan date.
+    params, _, _ = choose_fit(
+        known,
+        cutoff,
+        profile,
+        replace(state.params, estimator=state.incumbent_name),
+        min(state.draws, 1000),
+        state.seed,
+    )
     adoption = adoption_test(
         known,
         roster_at(state.cap.members, cutoff),
@@ -324,6 +340,7 @@ def plan_basis(state: Prepared) -> Basis:
         adoption.reason,
         new.win_rate,
         new.cohort_size,
+        params.estimator,
         new.mean_won_arr,
         new.mean_created_arr,
         new.created_per_day,
@@ -352,6 +369,7 @@ def document(basis: Basis, company: str) -> dict:
         "fit": {
             "win_rate": _text(basis.win_rate, "0.0001"),
             "cohort_size": basis.cohort_size,
+            "estimator": basis.estimator,
             "mean_won_arr": _text(basis.mean_won_arr, "0.01"),
             "mean_created_arr": _text(basis.mean_created_arr, "0.01"),
             "created_per_day": _text(basis.created_per_day, "0.0001"),

@@ -94,6 +94,9 @@
         "created_per_day": {
           "$ref": "#/$defs/Decimal"
         },
+        "estimator": {
+          "$ref": "#/$defs/Text"
+        },
         "mean_created_arr": {
           "$ref": "#/$defs/Money"
         },
@@ -107,6 +110,7 @@
       "required": [
         "win_rate",
         "cohort_size",
+        "estimator",
         "mean_won_arr",
         "mean_created_arr",
         "created_per_day"

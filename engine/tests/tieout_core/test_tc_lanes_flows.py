@@ -135,3 +135,8 @@ def test_a_creation_series_is_split_by_share_and_programs_follow_the_same_shares
         {"a": D("0.25"), "b": D("0.75")},
     )
     assert got == {"a": [D(1), D(2)], "b": [D(3), D(6)]}
+
+
+def test_a_deal_with_a_blank_segment_belongs_to_the_unassigned_lane():
+    got = flows.existing_flows(model(), [open_deal(date(2026, 3, 1), segment="")], AS_OF, CAL)  # fmt: skip
+    assert {segment for segment, _, _ in got} == {"unassigned"}
