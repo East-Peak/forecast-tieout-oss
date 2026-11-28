@@ -183,7 +183,7 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
                 f"{days} days of creation by segment sum to the capacity term's",
             )
         )
-    return tied, made, checks, series
+    return tied, made, checks, series, priced
 
 
 # ---------------------------------------------------------------- atoms and cells
@@ -291,14 +291,14 @@ def lanes_document(
     plan_sizes = {s.key: s.sizes for s in basis.segments}
     scenario_model = Scenario(g)
     wins_a, created_a = facts(state, cal)
-    wins_r, created_r, checks, whole = _remainder(
+    wins_r, created_r, checks, whole, priced = _remainder(
         state, basis, cal, hires, inflows, segments, sizes, scenario_model
     )
     wins_f, created_f = _merge(wins_a, wins_r), _merge(created_a, created_r)
     # the owners: the segments' expected wins and creation shared out
     lane_series = owners.series(state, basis, cal, hires, inflows, segments)
     wins_ro, created_ro = owners.remainder(
-        state, cal, lane_series, sizes, wins_r, created_r
+        state, cal, lane_series, priced, wins_r, created_r
     )
     checks.append(owners.series_check(lane_series, whole))
     owner_a = facts(state, cal, owner_of)

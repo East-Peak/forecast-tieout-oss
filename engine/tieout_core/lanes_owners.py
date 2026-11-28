@@ -13,6 +13,7 @@ owners add back to the segment exactly in every cell and every part of a split.
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import timedelta
 from decimal import Decimal
 
 from . import lanes_flows as flows
@@ -44,7 +45,7 @@ def series(state, basis, cal, hires, inflows, segments) -> dict[tuple, list[Deci
     g = state.ground
     horizon = (cal.year.end - g.as_of).days
     new = g.model.new_pipeline
-    share = {s.key: s.creation_share for s in basis.segments}
+    seg_share = {s.key: s.creation_share for s in basis.segments}
     out: dict[tuple, list[Decimal]] = {}
     if g.cap.adopted:
         for m in g.cap.members:
@@ -57,22 +58,29 @@ def series(state, basis, cal, hires, inflows, segments) -> dict[tuple, list[Deci
             per_day = project(g.cap.fit, hs, g.as_of, g.horizon_days).per_day
             out[(seg, PLANNED)] = list(per_day[:horizon])
     else:
-        gone = {m.id for m in g.cap.members if m.end is not None and m.end <= g.as_of}
+        left = {m.id: m.end for m in g.cap.members if m.end is not None}
+        days = [g.as_of + timedelta(days=t) for t in range(1, horizon + 1)]
         for seg in segments:
-            weight = {
+            share = {
                 o.id: o.creation_share
                 for o in basis.owners
-                if o.segment == seg and o.id not in gone and o.creation_share
-            } or {UNASSIGNED: ONE}
-            total = sum(weight.values(), ZERO)
-            for k, w in sorted(weight.items()):
-                rate = new.created_per_day * share.get(seg, ZERO) * w / total
-                out[(seg, k)] = [rate] * horizon
+                if o.segment == seg and o.creation_share
+            }
+            lanes = {k: [ZERO] * horizon for k in (*share, UNASSIGNED)}
+            for t, day in enumerate(days):
+                here = {k: w for k, w in share.items() if left.get(k, day) >= day}
+                total = sum(here.values(), ZERO)
+                if not total:
+                    here, total = {UNASSIGNED: ONE}, ONE
+                rate = new.created_per_day * seg_share.get(seg, ZERO)
+                for k, w in here.items():
+                    lanes[k][t] = rate * w / total
+            out.update({(seg, k): v for k, v in lanes.items() if any(v)})
     extra = flows.inflow_series(inflows, new.mean_created_arr, horizon)
     if any(extra):
         for seg in segments:
-            if share.get(seg):
-                out[(seg, PROGRAMS)] = [share[seg] * x for x in extra]
+            if seg_share.get(seg):
+                out[(seg, PROGRAMS)] = [seg_share[seg] * x for x in extra]
     return out
 
 
@@ -106,15 +114,19 @@ def _spread(total: Decimal, weights: dict, seg: str, unit: str) -> dict:
     return dict(zip(keys, flows.apportion(total, w, unit)))
 
 
-def remainder(state, cal, series_, sizes, tied: dict, made: dict):
+def remainder(state, cal, series_, priced: dict, tied: dict, made: dict):
     """The segments' expected wins and creation (``tied``, ``made``) shared over owners: by
-    leaf, so every quarter and every carried-in or created-in-period split adds back."""
+    leaf, so every quarter and every carried-in or created-in-period split adds back. Modeled
+    wins are weighed at the price the segment's own modeled wins were given (``priced``, already
+    normalized to the pooled total), so an owner's modeled bookings are consistent with it."""
     g = state.ground
     raw = flows.existing_flows(g.model, g.pop.deals, g.as_of, cal, lane=owner_of)
     wins, created = flows.new_flows(g.model, series_, g.as_of, cal)
     for (lane, q, origin), f in wins.items():
-        priced = Flow(f.wins, f.wins * sizes[lane[0]].won, f.days)
-        raw[(lane, q, origin)] = raw.get((lane, q, origin), flows.ZERO_FLOW) + priced
+        whole = priced.get((lane[0], q, origin), flows.ZERO_FLOW)
+        price = whole.bookings / whole.wins if whole.wins else ZERO
+        at = Flow(f.wins, f.wins * price, f.days)
+        raw[(lane, q, origin)] = raw.get((lane, q, origin), flows.ZERO_FLOW) + at
     leaves: dict = defaultdict(dict)
     for (lane, q, origin), f in raw.items():
         leaves[(lane[0], q, origin)][lane] = f

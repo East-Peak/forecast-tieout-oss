@@ -516,11 +516,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "577861.88",
+              "forecast": "579677.99",
               "goal": "938000.70",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6161",
+              "ratio": "0.6180",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -528,7 +528,7 @@
                 },
                 "forecast": {
                   "carried_in": "402335.36",
-                  "created_in_period": "175526.52"
+                  "created_in_period": "177342.63"
                 }
               },
               "status": "behind"
@@ -670,11 +670,11 @@
               "actual": "2887017.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3135172.43",
+              "forecast": "3131636.53",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "3.3424",
+              "ratio": "3.3386",
               "split": {
                 "actual": {
                   "carried_in": "2887017.00",
@@ -682,7 +682,7 @@
                 },
                 "forecast": {
                   "carried_in": "2887017.00",
-                  "created_in_period": "248155.43"
+                  "created_in_period": "244619.53"
                 }
               },
               "status": "on_track"
@@ -824,11 +824,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "420785.44",
+              "forecast": "389821.09",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4486",
+              "ratio": "0.4156",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -836,7 +836,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "420785.44"
+                  "created_in_period": "389821.09"
                 }
               },
               "status": "behind"
@@ -978,11 +978,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "533101.96",
+              "forecast": "538533.24",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5683",
+              "ratio": "0.5741",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -990,7 +990,7 @@
                 },
                 "forecast": {
                   "carried_in": "53606.58",
-                  "created_in_period": "479495.38"
+                  "created_in_period": "484926.66"
                 }
               },
               "status": "behind"
@@ -1132,11 +1132,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "75019.06",
+              "forecast": "80450.34",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0800",
+              "ratio": "0.0858",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -1144,7 +1144,7 @@
                 },
                 "forecast": {
                   "carried_in": "24728.58",
-                  "created_in_period": "50290.48"
+                  "created_in_period": "55721.76"
                 }
               },
               "status": "behind"
@@ -1286,11 +1286,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "298306.42",
+              "forecast": "291640.02",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3180",
+              "ratio": "0.3109",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -1298,7 +1298,7 @@
                 },
                 "forecast": {
                   "carried_in": "67494.87",
-                  "created_in_period": "230811.55"
+                  "created_in_period": "224145.15"
                 }
               },
               "status": "behind"
@@ -1440,11 +1440,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "265892.97",
+              "forecast": "251511.34",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2835",
+              "ratio": "0.2681",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -1452,7 +1452,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "265892.97"
+                  "created_in_period": "251511.34"
                 }
               },
               "status": "behind"
@@ -1594,11 +1594,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "801650.07",
+              "forecast": "797314.62",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8546",
+              "ratio": "0.8500",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -1606,7 +1606,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "801650.07"
+                  "created_in_period": "797314.62"
                 }
               },
               "status": "behind"
@@ -1748,11 +1748,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "328496.44",
+              "forecast": "338001.17",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3502",
+              "ratio": "0.3603",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -1760,7 +1760,7 @@
                 },
                 "forecast": {
                   "carried_in": "194518.52",
-                  "created_in_period": "133977.92"
+                  "created_in_period": "143482.65"
                 }
               },
               "status": "behind"
@@ -1902,11 +1902,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "498562.87",
+              "forecast": "466387.53",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5315",
+              "ratio": "0.4972",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -1914,7 +1914,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "498562.87"
+                  "created_in_period": "466387.53"
                 }
               },
               "status": "behind"
@@ -2056,11 +2056,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "163812.85",
+              "forecast": "158416.63",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1746",
+              "ratio": "0.1689",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -2068,7 +2068,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "163812.85"
+                  "created_in_period": "158416.63"
                 }
               },
               "status": "behind"
@@ -2210,11 +2210,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "306075.36",
+              "forecast": "312864.45",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3263",
+              "ratio": "0.3335",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -2222,7 +2222,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "306075.36"
+                  "created_in_period": "312864.45"
                 }
               },
               "status": "behind"
@@ -2364,11 +2364,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "380252.72",
+              "forecast": "388238.76",
               "goal": "938000.69",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4054",
+              "ratio": "0.4139",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -2376,7 +2376,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "380252.72"
+                  "created_in_period": "388238.76"
                 }
               },
               "status": "behind"
@@ -2518,11 +2518,11 @@
               "actual": "3190198.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3411641.84",
+              "forecast": "3423862.21",
               "goal": "938000.68",
               "none_because": null,
               "parts": null,
-              "ratio": "3.6371",
+              "ratio": "3.6502",
               "split": {
                 "actual": {
                   "carried_in": "3190198.00",
@@ -2530,7 +2530,7 @@
                 },
                 "forecast": {
                   "carried_in": "3190198.00",
-                  "created_in_period": "221443.84"
+                  "created_in_period": "233664.21"
                 }
               },
               "status": "on_track"
@@ -2672,11 +2672,11 @@
               "actual": "3127589.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3997362.31",
+              "forecast": "4000300.04",
               "goal": "938000.68",
               "none_because": null,
               "parts": null,
-              "ratio": "4.2616",
+              "ratio": "4.2647",
               "split": {
                 "actual": {
                   "carried_in": "3127589.00",
@@ -2684,7 +2684,7 @@
                 },
                 "forecast": {
                   "carried_in": "3147995.24",
-                  "created_in_period": "849367.07"
+                  "created_in_period": "852304.80"
                 }
               },
               "status": "on_track"
@@ -2826,11 +2826,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "245029.72",
+              "forecast": "246287.13",
               "goal": "938000.68",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2612",
+              "ratio": "0.2626",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -2838,7 +2838,7 @@
                 },
                 "forecast": {
                   "carried_in": "88696.10",
-                  "created_in_period": "156333.62"
+                  "created_in_period": "157591.03"
                 }
               },
               "status": "behind"
@@ -2980,11 +2980,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "184004.18",
+              "forecast": "184796.99",
               "goal": "938000.68",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1962",
+              "ratio": "0.1970",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -2992,7 +2992,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "184004.18"
+                  "created_in_period": "184796.99"
                 }
               },
               "status": "behind"
@@ -3134,11 +3134,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "50290.48",
+              "forecast": "55721.76",
               "goal": "938000.68",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0536",
+              "ratio": "0.0594",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -3146,7 +3146,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "50290.48"
+                  "created_in_period": "55721.76"
                 }
               },
               "status": "behind"
@@ -3288,11 +3288,11 @@
               "actual": "3366560.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3755504.72",
+              "forecast": "3759578.17",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "4.0037",
+              "ratio": "4.0081",
               "split": {
                 "actual": {
                   "carried_in": "3366560.00",
@@ -3300,7 +3300,7 @@
                 },
                 "forecast": {
                   "carried_in": "3633180.14",
-                  "created_in_period": "122324.58"
+                  "created_in_period": "126398.03"
                 }
               },
               "status": "on_track"
@@ -3442,11 +3442,11 @@
               "actual": "1578969.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2476696.93",
+              "forecast": "2463529.74",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "2.6404",
+              "ratio": "2.6264",
               "split": {
                 "actual": {
                   "carried_in": "1578969.00",
@@ -3454,7 +3454,7 @@
                 },
                 "forecast": {
                   "carried_in": "1578969.00",
-                  "created_in_period": "897727.93"
+                  "created_in_period": "884560.74"
                 }
               },
               "status": "on_track"
@@ -3596,11 +3596,11 @@
               "actual": "1254803.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1498597.81",
+              "forecast": "1504029.09",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "1.5977",
+              "ratio": "1.6034",
               "split": {
                 "actual": {
                   "carried_in": "1254803.00",
@@ -3608,7 +3608,7 @@
                 },
                 "forecast": {
                   "carried_in": "1448307.33",
-                  "created_in_period": "50290.48"
+                  "created_in_period": "55721.76"
                 }
               },
               "status": "on_track"
@@ -3750,11 +3750,11 @@
               "actual": "681454.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "813474.11",
+              "forecast": "821621.02",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8672",
+              "ratio": "0.8759",
               "split": {
                 "actual": {
                   "carried_in": "681454.00",
@@ -3762,7 +3762,7 @@
                 },
                 "forecast": {
                   "carried_in": "681454.00",
-                  "created_in_period": "132020.11"
+                  "created_in_period": "140167.02"
                 }
               },
               "status": "behind"
@@ -3904,11 +3904,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "88469.91",
+              "forecast": "91185.54",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0943",
+              "ratio": "0.0972",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -3916,7 +3916,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "88469.91"
+                  "created_in_period": "91185.54"
                 }
               },
               "status": "behind"
@@ -4058,11 +4058,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "177117.71",
+              "forecast": "185264.62",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1888",
+              "ratio": "0.1975",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -4070,7 +4070,7 @@
                 },
                 "forecast": {
                   "carried_in": "101681.98",
-                  "created_in_period": "75435.73"
+                  "created_in_period": "83582.64"
                 }
               },
               "status": "behind"
@@ -4212,11 +4212,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "62863.10",
+              "forecast": "69652.19",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0670",
+              "ratio": "0.0743",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -4224,7 +4224,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "62863.10"
+                  "created_in_period": "69652.19"
                 }
               },
               "status": "behind"
@@ -4366,11 +4366,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "75435.73",
+              "forecast": "83582.64",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0804",
+              "ratio": "0.0891",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -4378,7 +4378,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "75435.73"
+                  "created_in_period": "83582.64"
                 }
               },
               "status": "behind"
@@ -4520,11 +4520,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "50290.48",
+              "forecast": "55721.76",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0536",
+              "ratio": "0.0594",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -4532,7 +4532,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "50290.48"
+                  "created_in_period": "55721.76"
                 }
               },
               "status": "behind"
@@ -4674,11 +4674,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2572844.93",
+              "forecast": "2575560.56",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "2.7429",
+              "ratio": "2.7458",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -4686,7 +4686,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "2572844.93"
+                  "created_in_period": "2575560.56"
                 }
               },
               "status": "on_track"
@@ -4828,11 +4828,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "62863.09",
+              "forecast": "69652.19",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0670",
+              "ratio": "0.0743",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -4840,7 +4840,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "62863.09"
+                  "created_in_period": "69652.19"
                 }
               },
               "status": "behind"
@@ -5136,11 +5136,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1478346.76",
+              "forecast": "1486493.67",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "1.5761",
+              "ratio": "1.5847",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -5148,7 +5148,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1478346.76"
+                  "created_in_period": "1486493.67"
                 }
               },
               "status": "on_track"
@@ -5290,11 +5290,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "536913.05",
+              "forecast": "530509.36",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5724",
+              "ratio": "0.5656",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -5302,7 +5302,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "536913.05"
+                  "created_in_period": "530509.36"
                 }
               },
               "status": "behind"
@@ -5598,11 +5598,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "48853.07",
+              "forecast": "51568.70",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0521",
+              "ratio": "0.0550",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -5610,7 +5610,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "48853.07"
+                  "created_in_period": "51568.70"
                 }
               },
               "status": "behind"
@@ -5752,11 +5752,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "323597.53",
+              "forecast": "330386.62",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3450",
+              "ratio": "0.3522",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -5764,7 +5764,7 @@
                 },
                 "forecast": {
                   "carried_in": "260734.43",
-                  "created_in_period": "62863.10"
+                  "created_in_period": "69652.19"
                 }
               },
               "status": "behind"
@@ -5906,11 +5906,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "34753.37",
+              "forecast": "36111.19",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0371",
+              "ratio": "0.0385",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -5918,7 +5918,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "34753.37"
+                  "created_in_period": "36111.19"
                 }
               },
               "status": "behind"
@@ -6060,11 +6060,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "909620.30",
+              "forecast": "912335.93",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9697",
+              "ratio": "0.9726",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -6072,7 +6072,7 @@
                 },
                 "forecast": {
                   "carried_in": "829723.21",
-                  "created_in_period": "79897.09"
+                  "created_in_period": "82612.72"
                 }
               },
               "status": "on_track"
@@ -6522,11 +6522,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "50290.48",
+              "forecast": "55721.76",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0536",
+              "ratio": "0.0594",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -6534,7 +6534,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "50290.48"
+                  "created_in_period": "55721.76"
                 }
               },
               "status": "behind"
@@ -6676,11 +6676,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "153308.12",
+              "forecast": "157381.57",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1634",
+              "ratio": "0.1678",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -6688,7 +6688,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "153308.12"
+                  "created_in_period": "157381.57"
                 }
               },
               "status": "behind"
@@ -6830,11 +6830,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3556227.58",
+              "forecast": "3560301.03",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "3.7913",
+              "ratio": "3.7956",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -6842,7 +6842,7 @@
                 },
                 "forecast": {
                   "carried_in": "3518509.72",
-                  "created_in_period": "37717.86"
+                  "created_in_period": "41791.31"
                 }
               },
               "status": "on_track"
@@ -6984,11 +6984,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "274711.73",
+              "forecast": "273816.66",
               "goal": "938000.67",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2929",
+              "ratio": "0.2919",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -6996,7 +6996,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "274711.73"
+                  "created_in_period": "273816.66"
                 }
               },
               "status": "behind"
@@ -7138,11 +7138,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "25145.25",
+              "forecast": "27860.88",
               "goal": "938000.66",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0268",
+              "ratio": "0.0297",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -7150,7 +7150,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "25145.25"
+                  "created_in_period": "27860.88"
                 }
               },
               "status": "behind"
@@ -8062,7 +8062,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "75230.63",
+              "forecast": "66149.79",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -8074,7 +8074,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "75230.63"
+                  "created_in_period": "66149.79"
                 }
               },
               "status": "none"
@@ -8678,7 +8678,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "149284.57",
+              "forecast": "131264.91",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -8690,7 +8690,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "149284.57"
+                  "created_in_period": "131264.91"
                 }
               },
               "status": "none"
@@ -8832,7 +8832,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "90976.41",
+              "forecast": "79994.94",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -8844,7 +8844,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "90976.41"
+                  "created_in_period": "79994.94"
                 }
               },
               "status": "none"
@@ -9178,11 +9178,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "520873.13",
+              "forecast": "530480.22",
               "goal": "2746503.41",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1896",
+              "ratio": "0.1931",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -9190,7 +9190,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "520873.13"
+                  "created_in_period": "530480.22"
                 }
               },
               "status": "behind"
@@ -9332,11 +9332,11 @@
               "actual": "1865330.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "4859011.29",
+              "forecast": "4812251.26",
               "goal": "2746503.39",
               "none_because": null,
               "parts": null,
-              "ratio": "1.7692",
+              "ratio": "1.7521",
               "split": {
                 "actual": {
                   "carried_in": "1865330.00",
@@ -9344,7 +9344,7 @@
                 },
                 "forecast": {
                   "carried_in": "1865330.00",
-                  "created_in_period": "2993681.29"
+                  "created_in_period": "2946921.26"
                 }
               },
               "status": "on_track"
@@ -9486,11 +9486,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "356775.67",
+              "forecast": "366382.76",
               "goal": "2746503.39",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1299",
+              "ratio": "0.1334",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -9498,7 +9498,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "356775.67"
+                  "created_in_period": "366382.76"
                 }
               },
               "status": "behind"
@@ -9794,11 +9794,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "174320.15",
+              "forecast": "171817.29",
               "goal": "2746503.39",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0635",
+              "ratio": "0.0626",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -9806,7 +9806,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "174320.15"
+                  "created_in_period": "171817.29"
                 }
               },
               "status": "behind"
@@ -9948,11 +9948,11 @@
               "actual": "5082120.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "5120443.69",
+              "forecast": "5126207.94",
               "goal": "2746503.38",
               "none_because": null,
               "parts": null,
-              "ratio": "1.8644",
+              "ratio": "1.8664",
               "split": {
                 "actual": {
                   "carried_in": "5082120.00",
@@ -9960,7 +9960,7 @@
                 },
                 "forecast": {
                   "carried_in": "5082120.00",
-                  "created_in_period": "38323.69"
+                  "created_in_period": "44087.94"
                 }
               },
               "status": "on_track"
@@ -10102,11 +10102,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "63872.80",
+              "forecast": "73479.89",
               "goal": "2746503.38",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0233",
+              "ratio": "0.0268",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -10114,7 +10114,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "63872.80"
+                  "created_in_period": "73479.89"
                 }
               },
               "status": "behind"
@@ -10256,11 +10256,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1202323.20",
+              "forecast": "1217694.56",
               "goal": "2746503.38",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4378",
+              "ratio": "0.4434",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -10268,7 +10268,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1202323.20"
+                  "created_in_period": "1217694.56"
                 }
               },
               "status": "behind"
@@ -10410,11 +10410,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "38323.69",
+              "forecast": "44087.94",
               "goal": "2746503.38",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0140",
+              "ratio": "0.0161",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -10422,7 +10422,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "38323.69"
+                  "created_in_period": "44087.94"
                 }
               },
               "status": "behind"
@@ -10564,11 +10564,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "38323.67",
+              "forecast": "44087.93",
               "goal": "2746503.37",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0140",
+              "ratio": "0.0161",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -10576,7 +10576,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "38323.67"
+                  "created_in_period": "44087.93"
                 }
               },
               "status": "behind"
@@ -11488,7 +11488,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "151396.70",
+              "forecast": "139174.20",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -11500,7 +11500,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "151396.70"
+                  "created_in_period": "139174.20"
                 }
               },
               "status": "none"
@@ -11988,11 +11988,11 @@
               "actual": "745569.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "894239.47",
+              "forecast": "895870.67",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "1.7577",
+              "ratio": "1.7609",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -12000,7 +12000,7 @@
                 },
                 "forecast": {
                   "carried_in": "20286.09",
-                  "created_in_period": "873953.38"
+                  "created_in_period": "875584.58"
                 }
               },
               "status": "on_track"
@@ -12142,11 +12142,11 @@
               "actual": "558301.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "645633.61",
+              "forecast": "641759.92",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2690",
+              "ratio": "1.2614",
               "split": {
                 "actual": {
                   "carried_in": "558301.00",
@@ -12154,7 +12154,7 @@
                 },
                 "forecast": {
                   "carried_in": "586976.07",
-                  "created_in_period": "58657.54"
+                  "created_in_period": "54783.85"
                 }
               },
               "status": "on_track"
@@ -12296,11 +12296,11 @@
               "actual": "330388.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "564255.71",
+              "forecast": "566062.20",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "1.1091",
+              "ratio": "1.1126",
               "split": {
                 "actual": {
                   "carried_in": "330388.00",
@@ -12308,7 +12308,7 @@
                 },
                 "forecast": {
                   "carried_in": "330388.00",
-                  "created_in_period": "233867.71"
+                  "created_in_period": "235674.20"
                 }
               },
               "status": "on_track"
@@ -12450,11 +12450,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "12769.43",
+              "forecast": "13992.84",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0251",
+              "ratio": "0.0275",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -12462,7 +12462,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "12769.43"
+                  "created_in_period": "13992.84"
                 }
               },
               "status": "behind"
@@ -12604,11 +12604,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "416185.71",
+              "forecast": "414280.92",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8180",
+              "ratio": "0.8143",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -12616,7 +12616,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "416185.71"
+                  "created_in_period": "414280.92"
                 }
               },
               "status": "behind"
@@ -12758,11 +12758,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "240272.97",
+              "forecast": "243127.58",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4723",
+              "ratio": "0.4779",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -12770,7 +12770,7 @@
                 },
                 "forecast": {
                   "carried_in": "201847.19",
-                  "created_in_period": "38425.78"
+                  "created_in_period": "41280.39"
                 }
               },
               "status": "behind"
@@ -13066,11 +13066,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "68618.19",
+              "forecast": "70657.19",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1349",
+              "ratio": "0.1389",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -13078,7 +13078,7 @@
                 },
                 "forecast": {
                   "carried_in": "47335.80",
-                  "created_in_period": "21282.39"
+                  "created_in_period": "23321.39"
                 }
               },
               "status": "behind"
@@ -13220,11 +13220,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "34808.17",
+              "forecast": "35623.77",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0684",
+              "ratio": "0.0700",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -13232,7 +13232,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "34808.17"
+                  "created_in_period": "35623.77"
                 }
               },
               "status": "behind"
@@ -13374,11 +13374,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "139977.81",
+              "forecast": "144055.82",
               "goal": "508764.56",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2751",
+              "ratio": "0.2831",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -13386,7 +13386,7 @@
                 },
                 "forecast": {
                   "carried_in": "97413.02",
-                  "created_in_period": "42564.79"
+                  "created_in_period": "46642.80"
                 }
               },
               "status": "behind"
@@ -13528,11 +13528,11 @@
               "actual": "1161665.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2167961.22",
+              "forecast": "2170261.76",
               "goal": "508764.55",
               "none_because": null,
               "parts": null,
-              "ratio": "4.2612",
+              "ratio": "4.2657",
               "split": {
                 "actual": {
                   "carried_in": "1161665.00",
@@ -13540,7 +13540,7 @@
                 },
                 "forecast": {
                   "carried_in": "1659987.70",
-                  "created_in_period": "507973.52"
+                  "created_in_period": "510274.06"
                 }
               },
               "status": "on_track"
@@ -13682,11 +13682,11 @@
               "actual": "234513.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "309271.78",
+              "forecast": "311718.58",
               "goal": "508764.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6079",
+              "ratio": "0.6127",
               "split": {
                 "actual": {
                   "carried_in": "234513.00",
@@ -13694,7 +13694,7 @@
                 },
                 "forecast": {
                   "carried_in": "234513.00",
-                  "created_in_period": "74758.78"
+                  "created_in_period": "77205.58"
                 }
               },
               "status": "behind"
@@ -13990,11 +13990,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "731174.04",
+              "forecast": "731052.71",
               "goal": "508764.55",
               "none_because": null,
               "parts": null,
-              "ratio": "1.4372",
+              "ratio": "1.4369",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -14002,7 +14002,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "731174.04"
+                  "created_in_period": "731052.71"
                 }
               },
               "status": "on_track"
@@ -14144,11 +14144,11 @@
               "actual": "522600.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "703323.01",
+              "forecast": "706177.62",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "1.3824",
+              "ratio": "1.3880",
               "split": {
                 "actual": {
                   "carried_in": "522600.00",
@@ -14156,7 +14156,7 @@
                 },
                 "forecast": {
                   "carried_in": "522600.00",
-                  "created_in_period": "180723.01"
+                  "created_in_period": "183577.62"
                 }
               },
               "status": "on_track"
@@ -14298,11 +14298,11 @@
               "actual": "352922.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "422044.14",
+              "forecast": "418728.00",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8295",
+              "ratio": "0.8230",
               "split": {
                 "actual": {
                   "carried_in": "352922.00",
@@ -14310,7 +14310,7 @@
                 },
                 "forecast": {
                   "carried_in": "352922.00",
-                  "created_in_period": "69122.14"
+                  "created_in_period": "65806.00"
                 }
               },
               "status": "behind"
@@ -14452,11 +14452,11 @@
               "actual": "285234.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "368447.97",
+              "forecast": "368238.53",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7242",
+              "ratio": "0.7238",
               "split": {
                 "actual": {
                   "carried_in": "285234.00",
@@ -14464,7 +14464,7 @@
                 },
                 "forecast": {
                   "carried_in": "285234.00",
-                  "created_in_period": "83213.97"
+                  "created_in_period": "83004.53"
                 }
               },
               "status": "behind"
@@ -14606,11 +14606,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "662933.47",
+              "forecast": "664564.67",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "1.3030",
+              "ratio": "1.3062",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -14618,7 +14618,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "662933.47"
+                  "created_in_period": "664564.67"
                 }
               },
               "status": "on_track"
@@ -14760,11 +14760,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "264898.58",
+              "forecast": "267345.38",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5207",
+              "ratio": "0.5255",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -14772,7 +14772,7 @@
                 },
                 "forecast": {
                   "carried_in": "21859.61",
-                  "created_in_period": "243038.97"
+                  "created_in_period": "245485.77"
                 }
               },
               "status": "behind"
@@ -14914,11 +14914,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "12769.43",
+              "forecast": "13992.84",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0251",
+              "ratio": "0.0275",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -14926,7 +14926,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "12769.43"
+                  "created_in_period": "13992.84"
                 }
               },
               "status": "behind"
@@ -15068,11 +15068,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "21282.39",
+              "forecast": "23321.39",
               "goal": "508764.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0418",
+              "ratio": "0.0458",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -15080,7 +15080,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "21282.39"
+                  "created_in_period": "23321.39"
                 }
               },
               "status": "behind"
@@ -15376,11 +15376,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "228939.08",
+              "forecast": "217949.75",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4500",
+              "ratio": "0.4284",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -15388,7 +15388,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "228939.08"
+                  "created_in_period": "217949.75"
                 }
               },
               "status": "behind"
@@ -15530,11 +15530,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "21282.39",
+              "forecast": "23321.39",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0418",
+              "ratio": "0.0458",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -15542,7 +15542,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "21282.39"
+                  "created_in_period": "23321.39"
                 }
               },
               "status": "behind"
@@ -15684,11 +15684,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "558605.89",
+              "forecast": "559421.49",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "1.0980",
+              "ratio": "1.0996",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -15696,7 +15696,7 @@
                 },
                 "forecast": {
                   "carried_in": "465279.57",
-                  "created_in_period": "93326.32"
+                  "created_in_period": "94141.92"
                 }
               },
               "status": "on_track"
@@ -15838,11 +15838,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "37776.18",
+              "forecast": "34722.35",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0743",
+              "ratio": "0.0682",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -15850,7 +15850,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "37776.18"
+                  "created_in_period": "34722.35"
                 }
               },
               "status": "behind"
@@ -15992,11 +15992,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "63890.97",
+              "forecast": "63359.67",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1256",
+              "ratio": "0.1245",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -16004,7 +16004,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "63890.97"
+                  "created_in_period": "63359.67"
                 }
               },
               "status": "behind"
@@ -16146,11 +16146,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "17025.92",
+              "forecast": "18657.12",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0335",
+              "ratio": "0.0367",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -16158,7 +16158,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "17025.92"
+                  "created_in_period": "18657.12"
                 }
               },
               "status": "behind"
@@ -16300,11 +16300,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "57966.67",
+              "forecast": "59597.87",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1139",
+              "ratio": "0.1171",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -16312,7 +16312,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "57966.67"
+                  "created_in_period": "59597.87"
                 }
               },
               "status": "behind"
@@ -16454,11 +16454,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "186060.33",
+              "forecast": "182069.08",
               "goal": "508764.53",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3657",
+              "ratio": "0.3579",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -16466,7 +16466,7 @@
                 },
                 "forecast": {
                   "carried_in": "126513.68",
-                  "created_in_period": "59546.65"
+                  "created_in_period": "55555.40"
                 }
               },
               "status": "behind"
@@ -17070,7 +17070,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "20813.37",
+              "forecast": "18061.25",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -17082,7 +17082,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "20813.37"
+                  "created_in_period": "18061.25"
                 }
               },
               "status": "none"
@@ -17224,7 +17224,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "37062.89",
+              "forecast": "32298.43",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -17236,7 +17236,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "37062.89"
+                  "created_in_period": "32298.43"
                 }
               },
               "status": "none"
@@ -54087,11 +54087,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "248394.67",
+              "forecast": "248734.03",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "1.0111",
+              "ratio": "1.0125",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -54099,7 +54099,7 @@
                 },
                 "forecast": {
                   "carried_in": "241338.49",
-                  "created_in_period": "7056.18"
+                  "created_in_period": "7395.54"
                 }
               },
               "status": "on_track"
@@ -54241,11 +54241,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "21921.58",
+              "forecast": "21240.55",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0892",
+              "ratio": "0.0865",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -54253,7 +54253,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "21921.58"
+                  "created_in_period": "21240.55"
                 }
               },
               "status": "behind"
@@ -54395,11 +54395,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "47328.39",
+              "forecast": "44408.31",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1927",
+              "ratio": "0.1808",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -54407,7 +54407,7 @@
                 },
                 "forecast": {
                   "carried_in": "1708.08",
-                  "created_in_period": "45620.31"
+                  "created_in_period": "42700.23"
                 }
               },
               "status": "behind"
@@ -54549,11 +54549,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "148876.66",
+              "forecast": "149187.75",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6060",
+              "ratio": "0.6073",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -54561,7 +54561,7 @@
                 },
                 "forecast": {
                   "carried_in": "147209.09",
-                  "created_in_period": "1667.57"
+                  "created_in_period": "1978.66"
                 }
               },
               "status": "behind"
@@ -54703,11 +54703,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2893.80",
+              "forecast": "3204.89",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0118",
+              "ratio": "0.0130",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -54715,7 +54715,7 @@
                 },
                 "forecast": {
                   "carried_in": "1226.23",
-                  "created_in_period": "1667.57"
+                  "created_in_period": "1978.66"
                 }
               },
               "status": "behind"
@@ -54857,11 +54857,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "30009.17",
+              "forecast": "29942.05",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1222",
+              "ratio": "0.1219",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -54869,7 +54869,7 @@
                 },
                 "forecast": {
                   "carried_in": "23365.50",
-                  "created_in_period": "6643.67"
+                  "created_in_period": "6576.55"
                 }
               },
               "status": "behind"
@@ -55011,11 +55011,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "21756.99",
+              "forecast": "20760.10",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0886",
+              "ratio": "0.0845",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -55023,7 +55023,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "21756.99"
+                  "created_in_period": "20760.10"
                 }
               },
               "status": "behind"
@@ -55165,11 +55165,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "169702.72",
+              "forecast": "169637.83",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6908",
+              "ratio": "0.6905",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -55177,7 +55177,7 @@
                 },
                 "forecast": {
                   "carried_in": "165968.64",
-                  "created_in_period": "3734.08"
+                  "created_in_period": "3669.19"
                 }
               },
               "status": "behind"
@@ -55319,11 +55319,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "40143.07",
+              "forecast": "40687.47",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1634",
+              "ratio": "0.1656",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -55331,7 +55331,7 @@
                 },
                 "forecast": {
                   "carried_in": "37224.82",
-                  "created_in_period": "2918.25"
+                  "created_in_period": "3462.65"
                 }
               },
               "status": "behind"
@@ -55473,11 +55473,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "53050.28",
+              "forecast": "49982.82",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2159",
+              "ratio": "0.2035",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -55485,7 +55485,7 @@
                 },
                 "forecast": {
                   "carried_in": "4050.84",
-                  "created_in_period": "48999.44"
+                  "created_in_period": "45931.98"
                 }
               },
               "status": "behind"
@@ -55627,7 +55627,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "7096.61",
+              "forecast": "7104.52",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
@@ -55639,7 +55639,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "7096.61"
+                  "created_in_period": "7104.52"
                 }
               },
               "status": "behind"
@@ -55781,11 +55781,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "36326.28",
+              "forecast": "36715.14",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1479",
+              "ratio": "0.1495",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -55793,7 +55793,7 @@
                 },
                 "forecast": {
                   "carried_in": "34241.82",
-                  "created_in_period": "2084.46"
+                  "created_in_period": "2473.32"
                 }
               },
               "status": "behind"
@@ -55935,11 +55935,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "30607.79",
+              "forecast": "31140.04",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1246",
+              "ratio": "0.1268",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -55947,7 +55947,7 @@
                 },
                 "forecast": {
                   "carried_in": "26089.46",
-                  "created_in_period": "4518.33"
+                  "created_in_period": "5050.58"
                 }
               },
               "status": "behind"
@@ -56089,11 +56089,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "40222.84",
+              "forecast": "40922.79",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1637",
+              "ratio": "0.1666",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -56101,7 +56101,7 @@
                 },
                 "forecast": {
                   "carried_in": "36470.81",
-                  "created_in_period": "3752.03"
+                  "created_in_period": "4451.98"
                 }
               },
               "status": "behind"
@@ -56243,11 +56243,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "300726.04",
+              "forecast": "301100.47",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2241",
+              "ratio": "1.2256",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -56255,7 +56255,7 @@
                 },
                 "forecast": {
                   "carried_in": "294131.21",
-                  "created_in_period": "6594.83"
+                  "created_in_period": "6969.26"
                 }
               },
               "status": "on_track"
@@ -56397,11 +56397,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "10708.81",
+              "forecast": "10995.38",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0436",
+              "ratio": "0.0448",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -56409,7 +56409,7 @@
                 },
                 "forecast": {
                   "carried_in": "4398.22",
-                  "created_in_period": "6310.59"
+                  "created_in_period": "6597.16"
                 }
               },
               "status": "behind"
@@ -56551,11 +56551,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "7477.09",
+              "forecast": "7784.46",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0304",
+              "ratio": "0.0317",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -56563,7 +56563,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "7477.09"
+                  "created_in_period": "7784.46"
                 }
               },
               "status": "behind"
@@ -56705,11 +56705,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1667.57",
+              "forecast": "1978.66",
               "goal": "245666.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0068",
+              "ratio": "0.0081",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -56717,7 +56717,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1667.57"
+                  "created_in_period": "1978.66"
                 }
               },
               "status": "behind"
@@ -56859,11 +56859,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "165595.47",
+              "forecast": "165828.78",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6741",
+              "ratio": "0.6750",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -56871,7 +56871,7 @@
                 },
                 "forecast": {
                   "carried_in": "164344.79",
-                  "created_in_period": "1250.68"
+                  "created_in_period": "1483.99"
                 }
               },
               "status": "behind"
@@ -57013,11 +57013,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "169570.03",
+              "forecast": "169299.68",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6902",
+              "ratio": "0.6891",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57025,7 +57025,7 @@
                 },
                 "forecast": {
                   "carried_in": "160252.42",
-                  "created_in_period": "9317.61"
+                  "created_in_period": "9047.26"
                 }
               },
               "status": "behind"
@@ -57167,11 +57167,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "32260.00",
+              "forecast": "32571.09",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1313",
+              "ratio": "0.1326",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57179,7 +57179,7 @@
                 },
                 "forecast": {
                   "carried_in": "30592.43",
-                  "created_in_period": "1667.57"
+                  "created_in_period": "1978.66"
                 }
               },
               "status": "behind"
@@ -57321,11 +57321,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "5453.59",
+              "forecast": "5920.22",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0222",
+              "ratio": "0.0241",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57333,7 +57333,7 @@
                 },
                 "forecast": {
                   "carried_in": "2952.23",
-                  "created_in_period": "2501.36"
+                  "created_in_period": "2967.99"
                 }
               },
               "status": "behind"
@@ -57475,11 +57475,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3973.90",
+              "forecast": "4129.44",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0162",
+              "ratio": "0.0168",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57487,7 +57487,7 @@
                 },
                 "forecast": {
                   "carried_in": "3140.11",
-                  "created_in_period": "833.79"
+                  "created_in_period": "989.33"
                 }
               },
               "status": "behind"
@@ -57629,11 +57629,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "34467.62",
+              "forecast": "34934.25",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1403",
+              "ratio": "0.1422",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57641,7 +57641,7 @@
                 },
                 "forecast": {
                   "carried_in": "31966.26",
-                  "created_in_period": "2501.36"
+                  "created_in_period": "2967.99"
                 }
               },
               "status": "behind"
@@ -57783,11 +57783,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2084.46",
+              "forecast": "2473.32",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0085",
+              "ratio": "0.0101",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57795,7 +57795,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "2084.46"
+                  "created_in_period": "2473.32"
                 }
               },
               "status": "behind"
@@ -57937,11 +57937,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2501.36",
+              "forecast": "2967.99",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0102",
+              "ratio": "0.0121",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -57949,7 +57949,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "2501.36"
+                  "created_in_period": "2967.99"
                 }
               },
               "status": "behind"
@@ -58091,11 +58091,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1667.57",
+              "forecast": "1978.66",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0068",
+              "ratio": "0.0081",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -58103,7 +58103,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1667.57"
+                  "created_in_period": "1978.66"
                 }
               },
               "status": "behind"
@@ -58245,11 +58245,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2170962.22",
+              "forecast": "2171117.76",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "8.8370",
+              "ratio": "8.8377",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -58257,7 +58257,7 @@
                 },
                 "forecast": {
                   "carried_in": "2170128.43",
-                  "created_in_period": "833.79"
+                  "created_in_period": "989.33"
                 }
               },
               "status": "on_track"
@@ -58399,11 +58399,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2084.46",
+              "forecast": "2473.32",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0085",
+              "ratio": "0.0101",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -58411,7 +58411,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "2084.46"
+                  "created_in_period": "2473.32"
                 }
               },
               "status": "behind"
@@ -58707,11 +58707,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1164147.44",
+              "forecast": "1164614.07",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "4.7387",
+              "ratio": "4.7406",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -58719,7 +58719,7 @@
                 },
                 "forecast": {
                   "carried_in": "1161646.08",
-                  "created_in_period": "2501.36"
+                  "created_in_period": "2967.99"
                 }
               },
               "status": "on_track"
@@ -58861,11 +58861,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "86288.65",
+              "forecast": "85356.27",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3512",
+              "ratio": "0.3474",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -58873,7 +58873,7 @@
                 },
                 "forecast": {
                   "carried_in": "61060.05",
-                  "created_in_period": "25228.60"
+                  "created_in_period": "24296.22"
                 }
               },
               "status": "behind"
@@ -59169,11 +59169,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2070.72",
+              "forecast": "2226.26",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0084",
+              "ratio": "0.0091",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -59181,7 +59181,7 @@
                 },
                 "forecast": {
                   "carried_in": "1236.93",
-                  "created_in_period": "833.79"
+                  "created_in_period": "989.33"
                 }
               },
               "status": "behind"
@@ -59323,11 +59323,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "148481.15",
+              "forecast": "148870.01",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6044",
+              "ratio": "0.6060",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -59335,7 +59335,7 @@
                 },
                 "forecast": {
                   "carried_in": "146396.69",
-                  "created_in_period": "2084.46"
+                  "created_in_period": "2473.32"
                 }
               },
               "status": "behind"
@@ -59477,11 +59477,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1574.15",
+              "forecast": "1651.92",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0064",
+              "ratio": "0.0067",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -59489,7 +59489,7 @@
                 },
                 "forecast": {
                   "carried_in": "1157.26",
-                  "created_in_period": "416.89"
+                  "created_in_period": "494.66"
                 }
               },
               "status": "behind"
@@ -59631,11 +59631,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "695574.25",
+              "forecast": "695729.79",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "2.8314",
+              "ratio": "2.8320",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -59643,7 +59643,7 @@
                 },
                 "forecast": {
                   "carried_in": "694740.46",
-                  "created_in_period": "833.79"
+                  "created_in_period": "989.33"
                 }
               },
               "status": "on_track"
@@ -60093,11 +60093,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1667.57",
+              "forecast": "1978.66",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0068",
+              "ratio": "0.0081",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -60105,7 +60105,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1667.57"
+                  "created_in_period": "1978.66"
                 }
               },
               "status": "behind"
@@ -60247,11 +60247,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "19525.14",
+              "forecast": "19758.45",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0795",
+              "ratio": "0.0804",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -60259,7 +60259,7 @@
                 },
                 "forecast": {
                   "carried_in": "18274.46",
-                  "created_in_period": "1250.68"
+                  "created_in_period": "1483.99"
                 }
               },
               "status": "behind"
@@ -60401,11 +60401,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2111807.96",
+              "forecast": "2112041.27",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "8.5962",
+              "ratio": "8.5972",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -60413,7 +60413,7 @@
                 },
                 "forecast": {
                   "carried_in": "2110557.28",
-                  "created_in_period": "1250.68"
+                  "created_in_period": "1483.99"
                 }
               },
               "status": "on_track"
@@ -60555,11 +60555,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "20301.24",
+              "forecast": "20555.84",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0826",
+              "ratio": "0.0837",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -60567,7 +60567,7 @@
                 },
                 "forecast": {
                   "carried_in": "12129.88",
-                  "created_in_period": "8171.36"
+                  "created_in_period": "8425.96"
                 }
               },
               "status": "behind"
@@ -60709,11 +60709,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "833.79",
+              "forecast": "989.33",
               "goal": "245666.84",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0034",
+              "ratio": "0.0040",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -60721,7 +60721,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "833.79"
+                  "created_in_period": "989.33"
                 }
               },
               "status": "behind"
@@ -61633,7 +61633,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "3735.19",
+              "forecast": "3451.30",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -61645,7 +61645,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "3735.19"
+                  "created_in_period": "3451.30"
                 }
               },
               "status": "none"
@@ -62249,7 +62249,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "7411.96",
+              "forecast": "6848.62",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -62261,7 +62261,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "7411.96"
+                  "created_in_period": "6848.62"
                 }
               },
               "status": "none"
@@ -62403,7 +62403,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "4516.97",
+              "forecast": "4173.66",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -62415,7 +62415,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "4516.97"
+                  "created_in_period": "4173.66"
                 }
               },
               "status": "none"
@@ -62749,11 +62749,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "66524.47",
+              "forecast": "66950.25",
               "goal": "719322.32",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0925",
+              "ratio": "0.0931",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -62761,7 +62761,7 @@
                 },
                 "forecast": {
                   "carried_in": "64341.01",
-                  "created_in_period": "2183.46"
+                  "created_in_period": "2609.24"
                 }
               },
               "status": "behind"
@@ -62903,11 +62903,11 @@
               "actual": "1865330.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2419278.79",
+              "forecast": "2417206.39",
               "goal": "719322.32",
               "none_because": null,
               "parts": null,
-              "ratio": "3.3633",
+              "ratio": "3.3604",
               "split": {
                 "actual": {
                   "carried_in": "1865330.00",
@@ -62915,7 +62915,7 @@
                 },
                 "forecast": {
                   "carried_in": "2381109.93",
-                  "created_in_period": "38168.86"
+                  "created_in_period": "36096.46"
                 }
               },
               "status": "on_track"
@@ -63057,11 +63057,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "43421.21",
+              "forecast": "43846.99",
               "goal": "719322.32",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0604",
+              "ratio": "0.0610",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -63069,7 +63069,7 @@
                 },
                 "forecast": {
                   "carried_in": "41237.75",
-                  "created_in_period": "2183.46"
+                  "created_in_period": "2609.24"
                 }
               },
               "status": "behind"
@@ -63365,11 +63365,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "8340.62",
+              "forecast": "8229.70",
               "goal": "719322.32",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0116",
+              "ratio": "0.0114",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -63377,7 +63377,7 @@
                 },
                 "forecast": {
                   "carried_in": "1752.73",
-                  "created_in_period": "6587.89"
+                  "created_in_period": "6476.97"
                 }
               },
               "status": "behind"
@@ -63519,11 +63519,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1310.08",
+              "forecast": "1565.55",
               "goal": "719322.31",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0018",
+              "ratio": "0.0022",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -63531,7 +63531,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1310.08"
+                  "created_in_period": "1565.55"
                 }
               },
               "status": "behind"
@@ -63673,11 +63673,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2183.46",
+              "forecast": "2609.24",
               "goal": "719322.31",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0030",
+              "ratio": "0.0036",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -63685,7 +63685,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "2183.46"
+                  "created_in_period": "2609.24"
                 }
               },
               "status": "behind"
@@ -63827,11 +63827,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "169541.86",
+              "forecast": "170223.12",
               "goal": "719322.31",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2357",
+              "ratio": "0.2366",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -63839,7 +63839,7 @@
                 },
                 "forecast": {
                   "carried_in": "166048.33",
-                  "created_in_period": "3493.53"
+                  "created_in_period": "4174.79"
                 }
               },
               "status": "behind"
@@ -63981,11 +63981,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1310.08",
+              "forecast": "1565.55",
               "goal": "719322.31",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0018",
+              "ratio": "0.0022",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -63993,7 +63993,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1310.08"
+                  "created_in_period": "1565.55"
                 }
               },
               "status": "behind"
@@ -64135,11 +64135,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1310.07",
+              "forecast": "1565.55",
               "goal": "719322.31",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0018",
+              "ratio": "0.0022",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -64147,7 +64147,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1310.07"
+                  "created_in_period": "1565.55"
                 }
               },
               "status": "behind"
@@ -65059,7 +65059,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "7802.97",
+              "forecast": "7261.27",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -65071,7 +65071,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "7802.97"
+                  "created_in_period": "7261.27"
                 }
               },
               "status": "none"
@@ -65559,11 +65559,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "27311.37",
+              "forecast": "27406.19",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2050",
+              "ratio": "0.2057",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -65571,7 +65571,7 @@
                 },
                 "forecast": {
                   "carried_in": "26743.68",
-                  "created_in_period": "567.69"
+                  "created_in_period": "662.51"
                 }
               },
               "status": "behind"
@@ -65713,11 +65713,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "7175.17",
+              "forecast": "7080.82",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0538",
+              "ratio": "0.0531",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -65725,7 +65725,7 @@
                 },
                 "forecast": {
                   "carried_in": "4533.44",
-                  "created_in_period": "2641.73"
+                  "created_in_period": "2547.38"
                 }
               },
               "status": "behind"
@@ -65867,11 +65867,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "67447.80",
+              "forecast": "67577.72",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5062",
+              "ratio": "0.5072",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -65879,7 +65879,7 @@
                 },
                 "forecast": {
                   "carried_in": "66059.46",
-                  "created_in_period": "1388.34"
+                  "created_in_period": "1518.26"
                 }
               },
               "status": "behind"
@@ -66021,11 +66021,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "425.76",
+              "forecast": "496.88",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0032",
+              "ratio": "0.0037",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -66033,7 +66033,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "425.76"
+                  "created_in_period": "496.88"
                 }
               },
               "status": "behind"
@@ -66175,11 +66175,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "142322.47",
+              "forecast": "142109.31",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "1.0681",
+              "ratio": "1.0665",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -66187,7 +66187,7 @@
                 },
                 "forecast": {
                   "carried_in": "139181.66",
-                  "created_in_period": "3140.81"
+                  "created_in_period": "2927.65"
                 }
               },
               "status": "on_track"
@@ -66329,11 +66329,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "92411.87",
+              "forecast": "92577.81",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6935",
+              "ratio": "0.6948",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -66341,7 +66341,7 @@
                 },
                 "forecast": {
                   "carried_in": "91418.42",
-                  "created_in_period": "993.45"
+                  "created_in_period": "1159.39"
                 }
               },
               "status": "behind"
@@ -66637,11 +66637,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "8193.25",
+              "forecast": "8311.77",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0615",
+              "ratio": "0.0624",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -66649,7 +66649,7 @@
                 },
                 "forecast": {
                   "carried_in": "7483.64",
-                  "created_in_period": "709.61"
+                  "created_in_period": "828.13"
                 }
               },
               "status": "behind"
@@ -66791,11 +66791,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "4441.03",
+              "forecast": "4488.44",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0333",
+              "ratio": "0.0337",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -66803,7 +66803,7 @@
                 },
                 "forecast": {
                   "carried_in": "4157.19",
-                  "created_in_period": "283.84"
+                  "created_in_period": "331.25"
                 }
               },
               "status": "behind"
@@ -66945,11 +66945,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "15511.26",
+              "forecast": "15748.31",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1164",
+              "ratio": "0.1182",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -66957,7 +66957,7 @@
                 },
                 "forecast": {
                   "carried_in": "14092.04",
-                  "created_in_period": "1419.22"
+                  "created_in_period": "1656.27"
                 }
               },
               "status": "behind"
@@ -67099,11 +67099,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "794735.00",
+              "forecast": "794901.28",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "5.9643",
+              "ratio": "5.9656",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -67111,7 +67111,7 @@
                 },
                 "forecast": {
                   "carried_in": "792941.66",
-                  "created_in_period": "1793.34"
+                  "created_in_period": "1959.62"
                 }
               },
               "status": "on_track"
@@ -67253,11 +67253,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "8633.04",
+              "forecast": "8775.27",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0648",
+              "ratio": "0.0659",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -67265,7 +67265,7 @@
                 },
                 "forecast": {
                   "carried_in": "7781.51",
-                  "created_in_period": "851.53"
+                  "created_in_period": "993.76"
                 }
               },
               "status": "behind"
@@ -67561,11 +67561,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "592026.17",
+              "forecast": "592089.85",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "4.4430",
+              "ratio": "4.4435",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -67573,7 +67573,7 @@
                 },
                 "forecast": {
                   "carried_in": "589911.50",
-                  "created_in_period": "2114.67"
+                  "created_in_period": "2178.35"
                 }
               },
               "status": "on_track"
@@ -67715,11 +67715,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "32413.87",
+              "forecast": "32579.81",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2433",
+              "ratio": "0.2445",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -67727,7 +67727,7 @@
                 },
                 "forecast": {
                   "carried_in": "31420.42",
-                  "created_in_period": "993.45"
+                  "created_in_period": "1159.39"
                 }
               },
               "status": "behind"
@@ -67869,11 +67869,11 @@
               "actual": "352922.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "355944.80",
+              "forecast": "355889.00",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "2.6713",
+              "ratio": "2.6709",
               "split": {
                 "actual": {
                   "carried_in": "352922.00",
@@ -67881,7 +67881,7 @@
                 },
                 "forecast": {
                   "carried_in": "352922.00",
-                  "created_in_period": "3022.80"
+                  "created_in_period": "2967.00"
                 }
               },
               "status": "on_track"
@@ -68023,11 +68023,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "4075.62",
+              "forecast": "4097.50",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0306",
+              "ratio": "0.0308",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -68035,7 +68035,7 @@
                 },
                 "forecast": {
                   "carried_in": "3110.01",
-                  "created_in_period": "965.61"
+                  "created_in_period": "987.49"
                 }
               },
               "status": "behind"
@@ -68177,11 +68177,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "391821.72",
+              "forecast": "391916.54",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "2.9405",
+              "ratio": "2.9413",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -68189,7 +68189,7 @@
                 },
                 "forecast": {
                   "carried_in": "391254.03",
-                  "created_in_period": "567.69"
+                  "created_in_period": "662.51"
                 }
               },
               "status": "on_track"
@@ -68331,11 +68331,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "75186.82",
+              "forecast": "75329.05",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5643",
+              "ratio": "0.5653",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -68343,7 +68343,7 @@
                 },
                 "forecast": {
                   "carried_in": "74335.29",
-                  "created_in_period": "851.53"
+                  "created_in_period": "993.76"
                 }
               },
               "status": "behind"
@@ -68485,11 +68485,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "425.76",
+              "forecast": "496.88",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0032",
+              "ratio": "0.0037",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -68497,7 +68497,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "425.76"
+                  "created_in_period": "496.88"
                 }
               },
               "status": "behind"
@@ -68639,11 +68639,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "709.61",
+              "forecast": "828.13",
               "goal": "133247.86",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0053",
+              "ratio": "0.0062",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -68651,7 +68651,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "709.61"
+                  "created_in_period": "828.13"
                 }
               },
               "status": "behind"
@@ -68947,11 +68947,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "38962.68",
+              "forecast": "37833.29",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2924",
+              "ratio": "0.2839",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -68959,7 +68959,7 @@
                 },
                 "forecast": {
                   "carried_in": "24570.68",
-                  "created_in_period": "14392.00"
+                  "created_in_period": "13262.61"
                 }
               },
               "status": "behind"
@@ -69101,11 +69101,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "709.61",
+              "forecast": "828.13",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0053",
+              "ratio": "0.0062",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -69113,7 +69113,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "709.61"
+                  "created_in_period": "828.13"
                 }
               },
               "status": "behind"
@@ -69255,11 +69255,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "333532.61",
+              "forecast": "333580.02",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "2.5031",
+              "ratio": "2.5035",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -69267,7 +69267,7 @@
                 },
                 "forecast": {
                   "carried_in": "333248.77",
-                  "created_in_period": "283.84"
+                  "created_in_period": "331.25"
                 }
               },
               "status": "on_track"
@@ -69409,11 +69409,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1741.70",
+              "forecast": "1656.15",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0131",
+              "ratio": "0.0124",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -69421,7 +69421,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1741.70"
+                  "created_in_period": "1656.15"
                 }
               },
               "status": "behind"
@@ -69563,11 +69563,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "5678.05",
+              "forecast": "5698.56",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0426",
+              "ratio": "0.0428",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -69575,7 +69575,7 @@
                 },
                 "forecast": {
                   "carried_in": "4295.61",
-                  "created_in_period": "1382.44"
+                  "created_in_period": "1402.95"
                 }
               },
               "status": "behind"
@@ -69717,11 +69717,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "567.69",
+              "forecast": "662.51",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0043",
+              "ratio": "0.0050",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -69729,7 +69729,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "567.69"
+                  "created_in_period": "662.51"
                 }
               },
               "status": "behind"
@@ -69871,11 +69871,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "6331.73",
+              "forecast": "6426.55",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0475",
+              "ratio": "0.0482",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -69883,7 +69883,7 @@
                 },
                 "forecast": {
                   "carried_in": "5764.04",
-                  "created_in_period": "567.69"
+                  "created_in_period": "662.51"
                 }
               },
               "status": "behind"
@@ -70025,11 +70025,11 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "42458.74",
+              "forecast": "42360.36",
               "goal": "133247.85",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3186",
+              "ratio": "0.3179",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
@@ -70037,7 +70037,7 @@
                 },
                 "forecast": {
                   "carried_in": "39772.72",
-                  "created_in_period": "2686.02"
+                  "created_in_period": "2587.64"
                 }
               },
               "status": "behind"
@@ -70641,7 +70641,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1036.90",
+              "forecast": "942.33",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -70653,7 +70653,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "1036.90"
+                  "created_in_period": "942.33"
                 }
               },
               "status": "none"
@@ -70795,7 +70795,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "5003.65",
+              "forecast": "4547.29",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -70807,7 +70807,7 @@
                 },
                 "forecast": {
                   "carried_in": "0.00",
-                  "created_in_period": "5003.65"
+                  "created_in_period": "4547.29"
                 }
               },
               "status": "none"
@@ -71946,18 +71946,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "329467.21",
+              "forecast": "330943.96",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "1.1348",
+              "ratio": "1.1399",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "313398.45",
+                  "carried_in": "314875.20",
                   "created_in_period": "16068.76"
                 }
               },
@@ -72100,18 +72100,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "226233.85",
+              "forecast": "223378.98",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7792",
+              "ratio": "0.7694",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "208156.50",
+                  "carried_in": "205301.63",
                   "created_in_period": "18077.35"
                 }
               },
@@ -72254,18 +72254,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "373457.05",
+              "forecast": "345412.78",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2863",
+              "ratio": "1.1897",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "363414.08",
+                  "carried_in": "335369.81",
                   "created_in_period": "10042.97"
                 }
               },
@@ -72408,18 +72408,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "384225.30",
+              "forecast": "389345.49",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "1.3234",
+              "ratio": "1.3410",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "376190.92",
+                  "carried_in": "381311.11",
                   "created_in_period": "8034.38"
                 }
               },
@@ -72562,18 +72562,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "72125.26",
+              "forecast": "77245.45",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2484",
+              "ratio": "0.2661",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "64090.88",
+                  "carried_in": "69211.07",
                   "created_in_period": "8034.38"
                 }
               },
@@ -72716,18 +72716,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "268297.25",
+              "forecast": "261697.97",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9241",
+              "ratio": "0.9014",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "260262.87",
+                  "carried_in": "253663.59",
                   "created_in_period": "8034.38"
                 }
               },
@@ -72870,18 +72870,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "244135.98",
+              "forecast": "230751.24",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8409",
+              "ratio": "0.7948",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "232084.41",
+                  "carried_in": "218699.67",
                   "created_in_period": "12051.57"
                 }
               },
@@ -73024,18 +73024,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "631947.35",
+              "forecast": "627676.79",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "2.1766",
+              "ratio": "2.1619",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "627930.16",
+                  "carried_in": "623659.60",
                   "created_in_period": "4017.19"
                 }
               },
@@ -73178,18 +73178,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "288353.37",
+              "forecast": "297313.70",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9932",
+              "ratio": "1.0240",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "274293.21",
+                  "carried_in": "283253.54",
                   "created_in_period": "14060.16"
                 }
               },
@@ -73332,18 +73332,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "445512.59",
+              "forecast": "416404.71",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "1.5345",
+              "ratio": "1.4342",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "433461.02",
+                  "carried_in": "404353.14",
                   "created_in_period": "12051.57"
                 }
               },
@@ -73486,18 +73486,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "156716.24",
+              "forecast": "151312.11",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5398",
+              "ratio": "0.5212",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "146673.27",
+                  "carried_in": "141269.14",
                   "created_in_period": "10042.97"
                 }
               },
@@ -73640,22 +73640,22 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "269749.08",
+              "forecast": "276149.31",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9291",
+              "ratio": "0.9511",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "259706.11",
+                  "carried_in": "266106.34",
                   "created_in_period": "10042.97"
                 }
               },
-              "status": "behind"
+              "status": "on_track"
             },
             "created": {
               "actual": "0.0000",
@@ -73794,18 +73794,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "349644.93",
+              "forecast": "357098.72",
               "goal": "290333.55",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2043",
+              "ratio": "1.2300",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "333576.17",
+                  "carried_in": "341029.96",
                   "created_in_period": "16068.76"
                 }
               },
@@ -73948,18 +73948,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "181221.00",
+              "forecast": "192741.42",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6242",
+              "ratio": "0.6639",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "163143.65",
+                  "carried_in": "174664.07",
                   "created_in_period": "18077.35"
                 }
               },
@@ -74102,18 +74102,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "569047.27",
+              "forecast": "571610.57",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "1.9600",
+              "ratio": "1.9688",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "552978.51",
+                  "carried_in": "555541.81",
                   "created_in_period": "16068.76"
                 }
               },
@@ -74256,18 +74256,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "234320.91",
+              "forecast": "235291.75",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8071",
+              "ratio": "0.8104",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "220260.75",
+                  "carried_in": "221231.59",
                   "created_in_period": "14060.16"
                 }
               },
@@ -74410,18 +74410,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "176527.09",
+              "forecast": "177012.53",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6080",
+              "ratio": "0.6097",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "160458.33",
+                  "carried_in": "160943.77",
                   "created_in_period": "16068.76"
                 }
               },
@@ -74564,18 +74564,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "48622.91",
+              "forecast": "53743.10",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1675",
+              "ratio": "0.1851",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "40588.53",
+                  "carried_in": "45708.72",
                   "created_in_period": "8034.38"
                 }
               },
@@ -74718,18 +74718,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "223349.25",
+              "forecast": "227189.39",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7693",
+              "ratio": "0.7825",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "217323.47",
+                  "carried_in": "221163.61",
                   "created_in_period": "6025.78"
                 }
               },
@@ -74872,18 +74872,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "728157.90",
+              "forecast": "715261.06",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "2.5080",
+              "ratio": "2.4636",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "720123.52",
+                  "carried_in": "707226.68",
                   "created_in_period": "8034.38"
                 }
               },
@@ -75026,18 +75026,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "211534.81",
+              "forecast": "216655.00",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7286",
+              "ratio": "0.7462",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "203500.43",
+                  "carried_in": "208620.62",
                   "created_in_period": "8034.38"
                 }
               },
@@ -75180,18 +75180,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "126566.52",
+              "forecast": "134246.80",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4359",
+              "ratio": "0.4624",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "114514.95",
+                  "carried_in": "122195.23",
                   "created_in_period": "12051.57"
                 }
               },
@@ -75334,18 +75334,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "84496.01",
+              "forecast": "87056.10",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2910",
+              "ratio": "0.2998",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "80478.82",
+                  "carried_in": "83038.91",
                   "created_in_period": "4017.19"
                 }
               },
@@ -75488,18 +75488,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "142650.09",
+              "forecast": "150330.37",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4913",
+              "ratio": "0.5178",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "130598.52",
+                  "carried_in": "138278.80",
                   "created_in_period": "12051.57"
                 }
               },
@@ -75642,18 +75642,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "60778.64",
+              "forecast": "67178.87",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2093",
+              "ratio": "0.2314",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "50735.67",
+                  "carried_in": "57135.90",
                   "created_in_period": "10042.97"
                 }
               },
@@ -75796,18 +75796,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "72934.37",
+              "forecast": "80614.65",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2512",
+              "ratio": "0.2777",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "60882.80",
+                  "carried_in": "68563.08",
                   "created_in_period": "12051.57"
                 }
               },
@@ -75950,18 +75950,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "48622.91",
+              "forecast": "53743.10",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1675",
+              "ratio": "0.1851",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "40588.53",
+                  "carried_in": "45708.72",
                   "created_in_period": "8034.38"
                 }
               },
@@ -76104,18 +76104,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "401882.71",
+              "forecast": "404442.80",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "1.3842",
+              "ratio": "1.3930",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "397865.52",
+                  "carried_in": "400425.61",
                   "created_in_period": "4017.19"
                 }
               },
@@ -76258,18 +76258,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "60778.63",
+              "forecast": "67178.87",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2093",
+              "ratio": "0.2314",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "50735.66",
+                  "carried_in": "57135.90",
                   "created_in_period": "10042.97"
                 }
               },
@@ -76566,18 +76566,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "314199.32",
+              "forecast": "321879.60",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "1.0822",
+              "ratio": "1.1087",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "302147.75",
+                  "carried_in": "309828.03",
                   "created_in_period": "12051.57"
                 }
               },
@@ -76720,18 +76720,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "450624.40",
+              "forecast": "445153.09",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "1.5521",
+              "ratio": "1.5332",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "432547.05",
+                  "carried_in": "427075.74",
                   "created_in_period": "18077.35"
                 }
               },
@@ -77028,18 +77028,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "46782.35",
+              "forecast": "49342.44",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1611",
+              "ratio": "0.1700",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "42765.16",
+                  "carried_in": "45325.25",
                   "created_in_period": "4017.19"
                 }
               },
@@ -77182,18 +77182,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "175116.38",
+              "forecast": "181516.61",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.6032",
+              "ratio": "0.6252",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "165073.41",
+                  "carried_in": "171473.64",
                   "created_in_period": "10042.97"
                 }
               },
@@ -77336,18 +77336,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "33179.22",
+              "forecast": "34459.27",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1143",
+              "ratio": "0.1187",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "31170.63",
+                  "carried_in": "32450.68",
                   "created_in_period": "2008.59"
                 }
               },
@@ -77490,18 +77490,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "214046.05",
+              "forecast": "216606.14",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7372",
+              "ratio": "0.7461",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "210028.86",
+                  "carried_in": "212588.95",
                   "created_in_period": "4017.19"
                 }
               },
@@ -77952,18 +77952,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "48622.91",
+              "forecast": "53743.10",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1675",
+              "ratio": "0.1851",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "40588.53",
+                  "carried_in": "45708.72",
                   "created_in_period": "8034.38"
                 }
               },
@@ -78106,18 +78106,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "133782.98",
+              "forecast": "137623.12",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4608",
+              "ratio": "0.4740",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "127757.20",
+                  "carried_in": "131597.34",
                   "created_in_period": "6025.78"
                 }
               },
@@ -78260,18 +78260,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1444419.62",
+              "forecast": "1448259.76",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "4.9750",
+              "ratio": "4.9883",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "1438393.84",
+                  "carried_in": "1442233.98",
                   "created_in_period": "6025.78"
                 }
               },
@@ -78414,18 +78414,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "254410.49",
+              "forecast": "253260.82",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8763",
+              "ratio": "0.8723",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "238341.73",
+                  "carried_in": "237192.06",
                   "created_in_period": "16068.76"
                 }
               },
@@ -78568,18 +78568,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "24311.46",
+              "forecast": "26871.55",
               "goal": "290333.54",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0837",
+              "ratio": "0.0926",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "20294.27",
+                  "carried_in": "22854.36",
                   "created_in_period": "4017.19"
                 }
               },
@@ -79492,7 +79492,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "71495.44",
+              "forecast": "62698.49",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -79503,7 +79503,7 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "71495.44",
+                  "carried_in": "62698.49",
                   "created_in_period": "0.00"
                 }
               },
@@ -80108,7 +80108,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "141872.61",
+              "forecast": "124416.29",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -80119,7 +80119,7 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "141872.61",
+                  "carried_in": "124416.29",
                   "created_in_period": "0.00"
                 }
               },
@@ -80262,7 +80262,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "86459.44",
+              "forecast": "75821.28",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -80273,7 +80273,7 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "86459.44",
+                  "carried_in": "75821.28",
                   "created_in_period": "0.00"
                 }
               },
@@ -80608,18 +80608,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "454348.66",
+              "forecast": "463529.97",
               "goal": "850108.20",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5345",
+              "ratio": "0.5453",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "443753.78",
+                  "carried_in": "452935.09",
                   "created_in_period": "10594.88"
                 }
               },
@@ -80762,18 +80762,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "2439732.50",
+              "forecast": "2395044.87",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "2.8699",
+              "ratio": "2.8173",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "2429137.62",
+                  "carried_in": "2384449.99",
                   "created_in_period": "10594.88"
                 }
               },
@@ -80916,18 +80916,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "313354.46",
+              "forecast": "322535.77",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3686",
+              "ratio": "0.3794",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "302759.58",
+                  "carried_in": "311940.89",
                   "created_in_period": "10594.88"
                 }
               },
@@ -81224,18 +81224,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "165979.53",
+              "forecast": "163587.59",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1952",
+              "ratio": "0.1924",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "159622.60",
+                  "carried_in": "157230.66",
                   "created_in_period": "6356.93"
                 }
               },
@@ -81378,18 +81378,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "37013.61",
+              "forecast": "42522.39",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0435",
+              "ratio": "0.0500",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "30656.68",
+                  "carried_in": "36165.46",
                   "created_in_period": "6356.93"
                 }
               },
@@ -81532,18 +81532,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "61689.34",
+              "forecast": "70870.65",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0726",
+              "ratio": "0.0834",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "51094.46",
+                  "carried_in": "60275.77",
                   "created_in_period": "10594.88"
                 }
               },
@@ -81686,18 +81686,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "1032781.34",
+              "forecast": "1047471.44",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2149",
+              "ratio": "1.2322",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "1015829.54",
+                  "carried_in": "1030519.64",
                   "created_in_period": "16951.80"
                 }
               },
@@ -81840,18 +81840,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "37013.61",
+              "forecast": "42522.39",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0435",
+              "ratio": "0.0500",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "30656.68",
+                  "carried_in": "36165.46",
                   "created_in_period": "6356.93"
                 }
               },
@@ -81994,18 +81994,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "37013.60",
+              "forecast": "42522.38",
               "goal": "850108.19",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0435",
+              "ratio": "0.0500",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "30656.68",
+                  "carried_in": "36165.46",
                   "created_in_period": "6356.92"
                 }
               },
@@ -82918,7 +82918,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "143593.73",
+              "forecast": "131912.93",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -82929,7 +82929,7 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "143593.73",
+                  "carried_in": "131912.93",
                   "created_in_period": "0.00"
                 }
               },
@@ -83418,18 +83418,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "121359.10",
+              "forecast": "122895.48",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7707",
+              "ratio": "0.7804",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "118668.98",
+                  "carried_in": "120205.36",
                   "created_in_period": "2690.12"
                 }
               },
@@ -83572,18 +83572,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "80157.44",
+              "forecast": "76378.10",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5090",
+              "ratio": "0.4850",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "77467.32",
+                  "carried_in": "73687.98",
                   "created_in_period": "2690.12"
                 }
               },
@@ -83726,18 +83726,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "166419.91",
+              "forecast": "168096.48",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.0568",
+              "ratio": "1.0675",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "161712.19",
+                  "carried_in": "163388.76",
                   "created_in_period": "4707.72"
                 }
               },
@@ -83880,18 +83880,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "12343.67",
+              "forecast": "13495.96",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0784",
+              "ratio": "0.0857",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "10326.08",
+                  "carried_in": "11478.37",
                   "created_in_period": "2017.59"
                 }
               },
@@ -84034,18 +84034,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "273863.24",
+              "forecast": "272171.61",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.7391",
+              "ratio": "1.7284",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "272518.18",
+                  "carried_in": "270826.55",
                   "created_in_period": "1345.06"
                 }
               },
@@ -84188,22 +84188,22 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "147861.10",
+              "forecast": "150549.77",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9390",
+              "ratio": "0.9560",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "143153.38",
+                  "carried_in": "145842.05",
                   "created_in_period": "4707.72"
                 }
               },
-              "status": "behind"
+              "status": "on_track"
             },
             "created": {
               "actual": "0.0000",
@@ -84496,18 +84496,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "60424.94",
+              "forecast": "62345.42",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3837",
+              "ratio": "0.3959",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "57062.29",
+                  "carried_in": "58982.77",
                   "created_in_period": "3362.65"
                 }
               },
@@ -84650,18 +84650,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "30367.14",
+              "forecast": "31135.33",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1928",
+              "ratio": "0.1977",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "29022.08",
+                  "carried_in": "29790.27",
                   "created_in_period": "1345.06"
                 }
               },
@@ -84804,18 +84804,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "124466.55",
+              "forecast": "128307.51",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.7904",
+              "ratio": "0.8148",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "117741.24",
+                  "carried_in": "121582.20",
                   "created_in_period": "6725.31"
                 }
               },
@@ -84958,18 +84958,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "211561.22",
+              "forecast": "213695.48",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.3435",
+              "ratio": "1.3570",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "205508.44",
+                  "carried_in": "207642.70",
                   "created_in_period": "6052.78"
                 }
               },
@@ -85112,18 +85112,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "66125.74",
+              "forecast": "68430.31",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4199",
+              "ratio": "0.4345",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "62090.55",
+                  "carried_in": "64395.12",
                   "created_in_period": "4035.19"
                 }
               },
@@ -85420,18 +85420,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "139147.87",
+              "forecast": "138962.86",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.8836",
+              "ratio": "0.8824",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "134440.15",
+                  "carried_in": "134255.14",
                   "created_in_period": "4707.72"
                 }
               },
@@ -85574,22 +85574,22 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "148309.14",
+              "forecast": "150997.81",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9418",
+              "ratio": "0.9589",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "143601.42",
+                  "carried_in": "146290.09",
                   "created_in_period": "4707.72"
                 }
               },
-              "status": "behind"
+              "status": "on_track"
             },
             "created": {
               "actual": "0.0000",
@@ -85728,18 +85728,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "66099.34",
+              "forecast": "62839.00",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.4197",
+              "ratio": "0.3990",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "62064.16",
+                  "carried_in": "58803.82",
                   "created_in_period": "4035.18"
                 }
               },
@@ -85882,18 +85882,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "79138.35",
+              "forecast": "78907.03",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.5025",
+              "ratio": "0.5011",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "77120.76",
+                  "carried_in": "76889.44",
                   "created_in_period": "2017.59"
                 }
               },
@@ -86036,18 +86036,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "271111.75",
+              "forecast": "272648.13",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.7216",
+              "ratio": "1.7314",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "268421.63",
+                  "carried_in": "269958.01",
                   "created_in_period": "2690.12"
                 }
               },
@@ -86190,18 +86190,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "189711.76",
+              "forecast": "192016.33",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2047",
+              "ratio": "1.2193",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "185676.58",
+                  "carried_in": "187981.15",
                   "created_in_period": "4035.18"
                 }
               },
@@ -86344,18 +86344,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "12343.67",
+              "forecast": "13495.96",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.0784",
+              "ratio": "0.0857",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "10326.08",
+                  "carried_in": "11478.37",
                   "created_in_period": "2017.59"
                 }
               },
@@ -86498,18 +86498,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "20572.78",
+              "forecast": "22493.26",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1306",
+              "ratio": "0.1428",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "17210.13",
+                  "carried_in": "19130.61",
                   "created_in_period": "3362.65"
                 }
               },
@@ -86806,18 +86806,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "189976.40",
+              "forecast": "180116.46",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.2064",
+              "ratio": "1.1438",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "186613.75",
+                  "carried_in": "176753.81",
                   "created_in_period": "3362.65"
                 }
               },
@@ -86960,18 +86960,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "20572.78",
+              "forecast": "22493.26",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1306",
+              "ratio": "0.1428",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "17210.13",
+                  "carried_in": "19130.61",
                   "created_in_period": "3362.65"
                 }
               },
@@ -87114,18 +87114,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "225073.28",
+              "forecast": "225841.47",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "1.4293",
+              "ratio": "1.4341",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "223728.22",
+                  "carried_in": "224496.41",
                   "created_in_period": "1345.06"
                 }
               },
@@ -87268,18 +87268,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "36034.48",
+              "forecast": "33066.20",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.2288",
+              "ratio": "0.2100",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "34689.42",
+                  "carried_in": "31721.14",
                   "created_in_period": "1345.06"
                 }
               },
@@ -87422,18 +87422,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "58212.92",
+              "forecast": "57661.11",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3697",
+              "ratio": "0.3662",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "55522.80",
+                  "carried_in": "54970.99",
                   "created_in_period": "2690.12"
                 }
               },
@@ -87576,18 +87576,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "16458.23",
+              "forecast": "17994.61",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.1045",
+              "ratio": "0.1143",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "13768.11",
+                  "carried_in": "15304.49",
                   "created_in_period": "2690.12"
                 }
               },
@@ -87730,18 +87730,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "51634.94",
+              "forecast": "53171.32",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.3279",
+              "ratio": "0.3376",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "48944.82",
+                  "carried_in": "50481.20",
                   "created_in_period": "2690.12"
                 }
               },
@@ -87884,18 +87884,18 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "143601.59",
+              "forecast": "139708.72",
               "goal": "157474.74",
               "none_because": null,
               "parts": null,
-              "ratio": "0.9119",
+              "ratio": "0.8872",
               "split": {
                 "actual": {
                   "carried_in": "0.00",
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "140911.47",
+                  "carried_in": "137018.60",
                   "created_in_period": "2690.12"
                 }
               },
@@ -88500,7 +88500,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "19776.47",
+              "forecast": "17118.92",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -88511,7 +88511,7 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "19776.47",
+                  "carried_in": "17118.92",
                   "created_in_period": "0.00"
                 }
               },
@@ -88654,7 +88654,7 @@
               "actual": "0.00",
               "compared": "forecast",
               "denominator": null,
-              "forecast": "32059.24",
+              "forecast": "27751.14",
               "goal": null,
               "none_because": "not_allocated",
               "parts": null,
@@ -88665,7 +88665,7 @@
                   "created_in_period": "0.00"
                 },
                 "forecast": {
-                  "carried_in": "32059.24",
+                  "carried_in": "27751.14",
                   "created_in_period": "0.00"
                 }
               },
