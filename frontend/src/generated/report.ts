@@ -246,7 +246,7 @@ export type TieoutReport = {
         items: [
           {
             affects: Text;
-            driver: "win_rate" | "won_arr";
+            driver: "win_rate" | "won_arr" | "productivity";
             evidence:
               | {
                   baseline_rate: Decimal;
@@ -283,7 +283,7 @@ export type TieoutReport = {
           },
           ...{
             affects: Text;
-            driver: "win_rate" | "won_arr";
+            driver: "win_rate" | "won_arr" | "productivity";
             evidence:
               | {
                   baseline_rate: Decimal;

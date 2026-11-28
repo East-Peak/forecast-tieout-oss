@@ -85,12 +85,13 @@ def with_win_rate(g: Ground, value: Decimal) -> Ground:
 def with_won_arr(g: Ground, value: Decimal) -> Ground:
     """Mean won ARR per new win; creation counts and the program dollars-to-deals conversion
     (which use the mean created amount) are unchanged."""
-    return _with_new(g, mean_won_arr=value)
+    return _with_new(g, mean_won_arr=max(value, ZERO))
 
 
 def with_productivity(g: Ground, value: Decimal) -> Ground:
     """Created deals per ramped AE-month where the capacity term is in use, else organic deals
-    created per day."""
+    created per day. Never below zero."""
+    value = max(value, ZERO)
     if g.cap.adopted:
         return replace(g, cap=replace(g.cap, fit=replace(g.cap.fit, rate=value)))
     return _with_new(g, created_per_day=value)

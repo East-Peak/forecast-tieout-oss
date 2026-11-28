@@ -44,11 +44,24 @@ from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction, month_words
 from .records import Check
 from .roster import Member
 from .worksheet_drivers import Probe
-from .worksheet_rules import PRECISION, WIN_RATE, WON_ARR
+from .worksheet_rules import PRECISION, PRODUCTIVITY, WIN_RATE, WON_ARR
 
 ZERO, ONE = Decimal(0), Decimal(1)
-WORDS = {WIN_RATE: "the win rate", WON_ARR: "won ARR per win"}
-ACTED_ON = {WIN_RATE: "a win rate", WON_ARR: "won ARR per win"}  # "actions on ..."
+DRIVERS = (
+    WIN_RATE,
+    WON_ARR,
+    PRODUCTIVITY,
+)  # the order Effect's and Lift's changes are in
+WORDS = {
+    WIN_RATE: "the win rate",
+    WON_ARR: "won ARR per win",
+    PRODUCTIVITY: "creation productivity",
+}
+ACTED_ON = {  # "driver actions on ... do not interact"
+    WIN_RATE: "a win rate",
+    WON_ARR: "won ARR per win",
+    PRODUCTIVITY: "creation productivity",
+}
 WINDOWS = (REST_OF_FY, NEXT_12)
 
 
@@ -71,6 +84,10 @@ class Frame:
     landing: tuple[int, ...]
     origin: tuple[int, ...]
     size: Decimal | None = None  # the pooled mean won ARR a size target is read against
+    # the pooled creation rate a productivity target is read against
+    productivity: Decimal | None = None
+    # each segment's price index over its organic wins alone (see ``Lift.extra``)
+    organic_price: Mapping[str, Mapping[tuple[int, int], Decimal]] | None = None
 
 
 @dataclass(frozen=True)
@@ -87,6 +104,9 @@ class Effect:
     sizes: Mapping[
         str, tuple[Decimal, ...]
     ]  # each segment's relative change in the size of a win, by day
+    creation: Mapping[
+        str, tuple[Decimal, ...]
+    ]  # each segment's relative change in its organic creation, by day
     lift: Lift  # the changes the forward function reads
 
     def dropping(self, action: PlanAction) -> Effect:
@@ -235,6 +255,7 @@ def build_frame(
     series = flows.segment_series(organic, extra, shares)
     landing, origin = day_cells(g, cal.year.start, days)
     price = price_index(g, series, sizes, origin)
+    organic_price = price_index(g, organic, sizes, origin)
     return Frame(
         tuple(segments),
         organic,
@@ -244,6 +265,8 @@ def build_frame(
         landing,
         origin,
         g.model.new_pipeline.mean_won_arr,
+        wd.current_value(g, PRODUCTIVITY),
+        organic_price,
     )
 
 
@@ -274,6 +297,10 @@ def _change(frame: Frame, baseline: Decimal, action: PlanAction) -> Decimal:
         if not frame.size:
             raise ValueError("won ARR per win has no baseline to change")
         return action.target / frame.size - 1
+    if action.driver == PRODUCTIVITY:
+        if not frame.productivity:
+            raise ValueError("creation productivity has no baseline to change")
+        return action.target / frame.productivity - 1
     raise ValueError(f"no rule for the driver {action.driver!r}")
 
 
@@ -286,8 +313,7 @@ def effect(
     through, as they multiply in a win's expected booking)."""
     days = len(next(iter(frame.series.values()), ()))
     by_driver = {
-        driver: {s: [ZERO] * days for s in frame.segments}
-        for driver in (WIN_RATE, WON_ARR)
+        driver: {s: [ZERO] * days for s in frame.segments} for driver in DRIVERS
     }
     for a in actions:
         unknown = a.segment is not None and a.segment not in frame.segments
@@ -300,8 +326,8 @@ def effect(
         mine = by_driver[a.driver]
         for s in frame.segments if a.segment is None else (a.segment,):
             mine[s] = [c + change * w for c, w in zip(mine[s], weights)]
-    changes, sizes = (
-        {s: tuple(v) for s, v in by_driver[d].items()} for d in (WIN_RATE, WON_ARR)
+    changes, sizes, creation = (
+        {s: tuple(v) for s, v in by_driver[d].items()} for d in DRIVERS
     )
     lift = Lift(
         baseline,
@@ -312,8 +338,12 @@ def effect(
         frame.landing,
         frame.origin,
         sizes,
+        creation,
+        frame.organic_price or {},
     )
-    return Effect(frame, baseline, as_of, tuple(actions), changes, sizes, lift)
+    return Effect(
+        frame, baseline, as_of, tuple(actions), changes, sizes, creation, lift
+    )
 
 
 # ---------------------------------------------------------------- what the lanes read
@@ -364,9 +394,10 @@ def period_rate(eff: Effect, segments: Sequence[str], window, as_of: date) -> De
     last = min((window.end - as_of).days, days)
     moved = made = ZERO
     for s in segments:
+        created = eff.lift.created(s)  # the deals the actions leave it to create
         for t in range(first, last + 1):
-            made += eff.frame.series[s][t - 1]
-            moved += eff.frame.series[s][t - 1] * eff.changes[s][t - 1]
+            made += created[t - 1]
+            moved += created[t - 1] * eff.changes[s][t - 1]
     return eff.baseline + (moved / made if made else ZERO)
 
 
@@ -479,15 +510,16 @@ INSIDE = "within the worksheet's historical settings"
 OUTSIDE = "outside the worksheet's historical settings"
 NOT_OFFERED = "the worksheet offers no historical settings for the win rate"
 LINE_ANY = (
-    "An action changes one driver of the pipeline created from its start month on: the win rate "
-    "or the size of a win. Deals already open keep their odds and their size. A segment's target "
-    "is an entered change on the pooled baseline, not a value measured for the segment."
+    "An action changes one driver of the pipeline created from its start month on: the win rate, "
+    "the size of a win, or how many deals people create. Deals already open keep their odds and "
+    "their size. A segment's target is an entered change on the pooled baseline, not a value "
+    "measured for the segment."
 )
 DEFINITION_ANY = (
     "A driver action is a named change to one driver in one slice, with a start month, a ramp and "
     "a target. It changes the pipeline created from its start, ramping linearly by creation date "
     "to the target and holding it after. Pipeline created before the start, and every deal "
-    "already open, keeps the rates and sizes it had. Where the capacity term is in use, hires and "
+    "already open, keeps the rates, sizes and counts it had. Where the capacity term is in use, hires and "
     "programs stay as the plan has them; each action is valued against them. A target is read "
     "against the pooled baseline of its driver; for a segment it is an entered change on that "
     "baseline, not a value that was measured for the segment. Actions on different drivers add "
@@ -533,6 +565,12 @@ def affects_text(
         return (
             f"Wins of pipeline created from {month} in {slice_label}, {ramp} to the target size; "
             "how many are won, and the wins of pipeline created earlier or already open, keep their size."
+        )
+    if driver == PRODUCTIVITY:
+        return (
+            f"The deals {slice_label} creates itself from {month}, through its people, {ramp} to the "
+            "target; the deals programs create, deals created earlier and every deal already open "
+            "stay as they were."
         )
     return (
         f"Pipeline created from {month} in {slice_label}, {ramp} to the target; pipeline "

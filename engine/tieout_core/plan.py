@@ -9,9 +9,11 @@ each in file order.
 
 An action is a named change to one driver in one slice (the company, or one
 segment): a stable id, a start month, a ramp in months (0 is immediate) and a
-target value. Only the win rate and the won ARR per win can be acted on so far; a win rate's
-target is a probability and a size's is dollars per won deal, read against the pooled mean. An action changes the pipeline created from its start, so it is
-not an item to apply in turn: the joint effect of all the actions is valued
+target value. Only the win rate, the won ARR per win and creation productivity can be acted
+on so far; a win rate's target is a probability, a size's is dollars per won deal and a
+productivity's is deals per ramped AE-month (per day where the capacity term is not in use),
+the last two read against the pooled value. An action changes the pipeline created from its
+start, so it is not an item to apply in turn: the joint effect of all the actions is valued
 together, on top of the hires and programs. Two actions on one driver may not
 touch the same slice, and the company touches every segment.
 
@@ -36,13 +38,13 @@ import yaml
 from .fiscal import Window, add_months
 from .forecast import Inflow
 from .roster import Member
-from .worksheet_rules import WIN_RATE, WON_ARR
+from .worksheet_rules import PRODUCTIVITY, WIN_RATE, WON_ARR
 
 DEFAULT_PROGRAM_RAMP_MONTHS = 3
 REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
 COMPANY = "company"  # an action's slice when it is not one segment's
-ACTION_DRIVERS = (WIN_RATE, WON_ARR)
+ACTION_DRIVERS = (WIN_RATE, WON_ARR, PRODUCTIVITY)
 MAX_RAMP_MONTHS = 60  # five years: longer than any horizon a plan is read over
 
 
@@ -338,7 +340,7 @@ def _action(raw: dict, as_of: date, segments: set[str], where: str) -> PlanActio
     if driver not in ACTION_DRIVERS:
         raise refuse(
             "driver",
-            "Only the win rate and won ARR per win can be changed by an action so far.",
+            "Only the win rate, won ARR per win and creation productivity can be changed by an action so far.",
         )
     where_slice = str(raw.get("slice") or "").strip()
     if where_slice != COMPANY and where_slice not in segments:
@@ -407,15 +409,29 @@ def _target(value, driver: str, where: str, refuse) -> Decimal:
     if driver != WIN_RATE and target < 0:
         raise refuse(
             "target",
-            f"The target {noun} must be zero or more {_UNIT[driver]}, not -${-target.normalize():f}.",
+            f"The target {noun} must be zero or more {_UNIT[driver]}, not {_negative(driver, target)}.",
         )
     return target
 
 
-TARGET_NOUN = {WIN_RATE: "win rate", WON_ARR: "won ARR per win"}
-_OF = {WIN_RATE: "", WON_ARR: " of dollars"}
-_UNIT = {WON_ARR: "dollars"}
-NOUN = {WIN_RATE: "win rate", WON_ARR: "size of a won deal"}
+def _negative(driver: str, target: Decimal) -> str:
+    """A negative target as a person writes it: -$5 of dollars, -0.2 of deals."""
+    shown = f"{-target.normalize():f}"
+    return f"-${shown}" if driver == WON_ARR else f"-{shown}"
+
+
+TARGET_NOUN = {
+    WIN_RATE: "win rate",
+    WON_ARR: "won ARR per win",
+    PRODUCTIVITY: "creation productivity",
+}
+_OF = {WIN_RATE: "", WON_ARR: " of dollars", PRODUCTIVITY: " of deals"}
+_UNIT = {WON_ARR: "dollars", PRODUCTIVITY: "deals"}
+NOUN = {
+    WIN_RATE: "win rate",
+    WON_ARR: "size of a won deal",
+    PRODUCTIVITY: "creation productivity",
+}
 
 
 def _refuse_overlap(actions: list[PlanAction], where: str) -> None:

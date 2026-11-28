@@ -1290,7 +1290,8 @@
                   "driver": {
                     "enum": [
                       "win_rate",
-                      "won_arr"
+                      "won_arr",
+                      "productivity"
                     ]
                   },
                   "evidence": {
@@ -1526,7 +1527,8 @@
                   "driver": {
                     "enum": [
                       "win_rate",
-                      "won_arr"
+                      "won_arr",
+                      "productivity"
                     ]
                   },
                   "evidence": {

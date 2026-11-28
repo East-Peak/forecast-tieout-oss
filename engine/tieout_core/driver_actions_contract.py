@@ -67,7 +67,7 @@ def schema() -> dict:
         {
             "id": TEXT,
             "name": TEXT,
-            "driver": enum("win_rate", "won_arr"),
+            "driver": enum("win_rate", "won_arr", "productivity"),
             "slice": obj(
                 {
                     "kind": enum("company", "segment"),

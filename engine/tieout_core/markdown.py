@@ -938,8 +938,19 @@ def _rate(x: str) -> str:
     return f"{float(x):.2%}"
 
 
+def _amount(driver: str, x: str) -> str:
+    """A target or baseline in its driver's terms: percent, dollars or deals."""
+    if driver == "win_rate":
+        return _rate(x)
+    return (
+        _usd(x, True)
+        if driver == "won_arr"
+        else f"{Decimal(x):,.4f}".rstrip("0").rstrip(".")
+    )
+
+
 def _target(i: dict) -> str:
-    return _rate(i["target"]) if i["driver"] == "win_rate" else _usd(i["target"], True)
+    return _amount(i["driver"], i["target"])
 
 
 def _driver_actions(s: dict) -> list[str]:
@@ -973,8 +984,8 @@ def _driver_actions(s: dict) -> list[str]:
             )
         else:
             said = (
-                f"Pooled baseline {_usd(e['baseline'], True)}, "
-                f"{e['change_percent']}%, resulting {_usd(e['resulting'], True)}"
+                f"Pooled baseline {_amount(i['driver'], e['baseline'])}, "
+                f"{e['change_percent']}%, resulting {_amount(i['driver'], e['resulting'])}"
             )
         out += [f"- **{i['name']}:** {i['affects']} {said}: {e['label']}."]
     out += [""]

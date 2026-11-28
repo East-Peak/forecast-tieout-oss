@@ -63,7 +63,7 @@ def test_an_action_the_core_refuses_comes_back_beside_its_item(opened):
         ),
         (
             action(driver="cycle_days"),
-            "Only the win rate and won ARR per win can be changed by an action",
+            "Only the win rate, won ARR per win and creation productivity can be changed by an action",
         ),
     ]
     for bad, why in cases:

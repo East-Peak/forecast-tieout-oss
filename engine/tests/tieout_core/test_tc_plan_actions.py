@@ -112,7 +112,8 @@ def test_a_segment_nobody_is_in_is_refused_and_the_message_names_it():
 def test_an_unknown_driver_is_refused_and_lists_what_is_supported():
     text = refused(action(driver="cycle_days"))
     assert (
-        "Only the win rate and won ARR per win can be changed by an action" in text
+        "Only the win rate, won ARR per win and creation productivity can be changed by an action"
+        in text
         and "win_rate" not in text
         and "cycle_days" not in text
     )
@@ -280,4 +281,38 @@ def test_the_same_driver_on_the_same_slice_or_the_company_against_a_segment_is_r
     assert (
         "one changes the size of a won deal for the whole company, which includes Enterprise"
         in company
+    )
+
+
+def test_a_productivity_action_takes_a_target_in_deals_and_refuses_one_below_zero():
+    got = parse(action(driver="productivity", target="0.55")).actions[0]
+    assert got.driver == "productivity" and got.target == Decimal("0.55")
+    assert parse(action(driver="productivity", target="0")).actions[0].target == 0
+    text = refused(action(driver="productivity", target="-0.2"))
+    assert (
+        "The target creation productivity must be zero or more deals, not -$0.2"
+        not in text
+    )
+    assert (
+        "The target creation productivity must be zero or more deals, not -0.2" in text
+    )
+    assert "The target creation productivity must be a number of deals" in refused(
+        action(driver="productivity", target="x")
+    )
+
+
+def test_three_drivers_may_share_a_slice_but_a_driver_may_not_repeat_on_it():
+    plan = parse(
+        action(id="a"),
+        action(id="b", driver="won_arr", target="45000"),
+        action(id="c", driver="productivity", target="0.5"),
+    )
+    assert [a.driver for a in plan.actions] == ["win_rate", "won_arr", "productivity"]
+    both = refused(
+        action(id="a", slice="company", driver="productivity", target="1"),
+        action(id="b", driver="productivity", target="2"),
+    )
+    assert (
+        "one changes the creation productivity for the whole company, which includes Enterprise"
+        in both
     )
