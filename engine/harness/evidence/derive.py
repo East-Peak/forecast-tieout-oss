@@ -82,7 +82,7 @@ def _build_records(con, coverage: Coverage) -> None:
         f"""INSERT INTO record
         WITH h AS ({history}), base AS ({" UNION ALL ".join(parts)})
         SELECT b.entity, b.id, b.system, b.created_at, b.first_extract_id, b.first_extract_at,
-               COALESCE(h.ts, b.first_extract_at) AS known_since,
+               least(COALESCE(h.ts, b.first_extract_at), b.first_extract_at) AS known_since,
                b.first_ord, b.last_ord, b.n_shown
         FROM base b LEFT JOIN (SELECT entity, id, min(ts) AS ts FROM h GROUP BY 1, 2) h USING (entity, id)"""
     )
@@ -193,7 +193,7 @@ def _field_history(con, entity: str, via: str, fields: list[str]) -> None:
         con.execute(
             f"""INSERT INTO assertion
             WITH h AS ({rows}),
-            fr AS (SELECT _id, arg_min(_old, (_ts, _rid)) AS _old, min(_ts) AS _ts,
+            fr AS (SELECT _id, arg_min_null(_old, (_ts, _rid)) AS _old, min(_ts) AS _ts,
                           arg_min(_rid, (_ts, _rid)) AS _rid, arg_min(_x, (_ts, _rid)) AS _x
                    FROM h WHERE _fld = {lit(field)} GROUP BY _id),
             b AS (SELECT rec.id, rec.created_at, rec.first_extract_at, rec.first_extract_id,

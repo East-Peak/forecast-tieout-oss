@@ -243,3 +243,19 @@ def test_a_record_that_disappears_and_returns_is_refused(tmp_path):
     with pytest.raises(ExtractError, match="reappears"):
         load([*dirs, third])
     assert second.exists()
+
+
+def test_a_first_row_with_a_null_old_value_adds_no_base_assertion(store):
+    offers = store.con.execute(
+        "SELECT value FROM assertion WHERE id = '00QFX0000000004' AND field = 'Sales_Offered_Date__c' ORDER BY recorded_at"
+    ).fetchall()
+    assert offers == [("2025-03-20",), ("2025-05-10",)]
+
+
+def test_a_record_is_known_from_the_first_extract_that_shows_it_when_its_history_came_later(
+    store,
+):
+    (known,) = store.con.execute(
+        "SELECT known_since FROM record WHERE entity = 'Lead' AND id = '00QFX0000000008'"
+    ).fetchone()
+    assert str(known) == "2025-04-30 23:00:00"  # its first history row is dated 05-12
