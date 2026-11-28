@@ -198,6 +198,11 @@ SCALED_LIMITATION = {
         "the plan with its actions in force at that setting."
     ),
 }
+CYCLE_TIMED_LIMITATION = (
+    "The plan has a cycle action, which moves when the wins of its slice land. A setting here would "
+    "scale the pooled cycle that action is measured from, and no setting is solved for while it is "
+    "in force."
+)
 CYCLE_LIMITATION = (
     "A quarter's cycle is the plain mean days of its wins, while the fit in use weights each "
     "day, so the two are close in kind but not the same measure."
@@ -245,6 +250,7 @@ class Context:
     scaled: frozenset[str] = (
         frozenset()
     )  # the drivers the plan's actions scale (size, creation)
+    timed: bool = False  # the plan's actions move the lags the cycle row would scale
 
 
 def unit_for(adopted: bool, driver: str) -> tuple[str, str, str, str]:
@@ -280,6 +286,7 @@ def limitation_text(
     adopted: bool,
     stacked: bool = False,
     scaled: bool = False,
+    timed: bool = False,
 ) -> str | None:
     """The limitation sentence, from the driver, the gate, the fit in use and the capacity term."""
     parts = []
@@ -295,6 +302,8 @@ def limitation_text(
         parts.append(STACKED_LIMITATION)
     if scaled and driver in SCALED_LIMITATION:
         parts.append(SCALED_LIMITATION[driver])
+    if timed and driver == CYCLE_DAYS:
+        parts.append(CYCLE_TIMED_LIMITATION)
     return " ".join(parts) or None
 
 
@@ -306,6 +315,7 @@ def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
         c.g.cap.adopted,
         c.stacked,
         driver in c.scaled,
+        c.timed and driver == CYCLE_DAYS,
     )
 
 
@@ -459,7 +469,7 @@ def driver_row(c: Context, driver: str) -> dict:
         "historical": historical,
         "historical_unavailable_because": why,
         "needed_alone": None
-        if c.stacked and driver == WIN_RATE
+        if (c.stacked and driver == WIN_RATE) or (c.timed and driver == CYCLE_DAYS)
         else _needed(c, driver, current, settings),
         "limitation": _limitation(c, driver, gate_passed),
     }
@@ -809,8 +819,9 @@ def worksheet_section(
     are solved for and say so. By default, any action is taken to be one on the win rate."""
     probe = wd.Probe(g, hires, inflows, lift)
     stacked = has_actions(plan_section) if acted_on is None else WIN_RATE in acted_on
-    scaled = frozenset(acted_on or ()) - {WIN_RATE}
-    c = Context(g, probe, quarters, params, g.fy_target, stacked, scaled)
+    scaled = frozenset(acted_on or ()) - {WIN_RATE, CYCLE_DAYS}
+    timed = CYCLE_DAYS in (acted_on or ())
+    c = Context(g, probe, quarters, params, g.fy_target, stacked, scaled, timed)
     drivers = [driver_row(c, d) for d in DRIVERS]
     for row, rank in zip(
         drivers, rank_by_window([_driver_magnitudes(r) for r in drivers])

@@ -67,7 +67,7 @@ def schema() -> dict:
         {
             "id": TEXT,
             "name": TEXT,
-            "driver": enum("win_rate", "won_arr", "productivity"),
+            "driver": enum("win_rate", "won_arr", "productivity", "cycle_days"),
             "slice": obj(
                 {
                     "kind": enum("company", "segment"),
@@ -201,7 +201,12 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
         )
         rule(
             rec["sentences"][w]
-            == da.reconciliation_sentence(joint[w], summed[w], allowed),
+            == da.reconciliation_sentence(
+                joint[w],
+                summed[w],
+                allowed,
+                any(i["driver"] == "cycle_days" for i in items),
+            ),
             f"driver_actions: the reconciliation sentence in {w} does not say what its figure does",
         )
         rule(

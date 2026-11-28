@@ -110,12 +110,12 @@ def test_a_segment_nobody_is_in_is_refused_and_the_message_names_it():
 
 
 def test_an_unknown_driver_is_refused_and_lists_what_is_supported():
-    text = refused(action(driver="cycle_days"))
+    text = refused(action(driver="mood"))
     assert (
-        "Only the win rate, won ARR per win and creation productivity can be changed by an action"
+        "Only the win rate, won ARR per win, creation productivity and cycle length can be changed by an action"
         in text
         and "win_rate" not in text
-        and "cycle_days" not in text
+        and "mood" not in text
     )
     assert "win rate" in refused({k: v for k, v in action().items() if k != "driver"})
 
@@ -316,3 +316,28 @@ def test_three_drivers_may_share_a_slice_but_a_driver_may_not_repeat_on_it():
         "one changes the creation productivity for the whole company, which includes Enterprise"
         in both
     )
+
+
+def test_a_cycle_action_takes_a_target_in_days_and_refuses_one_below_zero():
+    got = parse(action(driver="cycle_days", target="120.5")).actions[0]
+    assert got.driver == "cycle_days" and got.target == Decimal("120.5")
+    assert "The target cycle length must be zero or more days, not -3" in refused(
+        action(driver="cycle_days", target="-3")
+    )
+    assert "The target cycle length must be a number of days" in refused(
+        action(driver="cycle_days", target="soon")
+    )
+
+
+def test_the_same_cycle_slice_twice_is_refused_and_other_drivers_may_share_it():
+    both = refused(
+        action(id="a", slice="company", driver="cycle_days", target="100"),
+        action(id="b", driver="cycle_days", target="90"),
+    )
+    assert (
+        "one changes the cycle length for the whole company, which includes Enterprise"
+        in both
+    )
+    assert parse(
+        action(id="a", driver="cycle_days", target="100"), action(id="b")
+    ).actions

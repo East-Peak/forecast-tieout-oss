@@ -490,7 +490,8 @@ def _driver_rules(r: dict, d: dict, rule) -> None:
     else:  # the win rate stacks only where an action is on it
         drivers = {i["driver"] for i in acted["items"]}
     stacked = rules.WIN_RATE in drivers and name == rules.WIN_RATE
-    scaled = name in drivers and name != rules.WIN_RATE
+    timed = rules.CYCLE_DAYS in drivers and name == rules.CYCLE_DAYS
+    scaled = name in drivers and name not in (rules.WIN_RATE, rules.CYCLE_DAYS)
     where = f"worksheet.drivers[{name}]"
     inputs = r["inputs"]
     adopted = inputs["capacity"]["decision"] == "adopted"
@@ -554,16 +555,18 @@ def _driver_rules(r: dict, d: dict, rule) -> None:
     )
     rule(
         d["limitation"]
-        == ws.limitation_text(name, gate, params.estimator, adopted, stacked, scaled),
+        == ws.limitation_text(
+            name, gate, params.estimator, adopted, stacked, scaled, timed
+        ),
         f"{where}.limitation is not what the report writes",
     )
     if h is not None and used and current is not None:
-        _settings_rules(name, h, used, current, rule, where, stacked)
+        _settings_rules(name, h, used, current, rule, where, stacked or timed)
     n = d["needed_alone"]
     rule(
-        (n is None) == (current is None or stacked),
+        (n is None) == (current is None or stacked or timed),
         f"{where}: needed alone exists exactly when there is a current value and no action "
-        "sits on the win rate",
+        "sits on the win rate or the cycle",
     )
     if n is not None and current is not None:
         _needed_rules(r, name, n, h, current, rule, where)

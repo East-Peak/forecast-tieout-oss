@@ -7343,7 +7343,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.8.0",
+  "schema_version": "2.9.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

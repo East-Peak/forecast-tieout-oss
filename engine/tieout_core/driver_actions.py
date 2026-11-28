@@ -28,6 +28,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
+from fractions import Fraction
 
 from . import lanes_basis
 from . import lanes_flows as flows
@@ -35,6 +36,7 @@ from . import lanes_rules as rules
 from . import worksheet_drivers as wd
 from .actions import Ground
 from .capacity import project
+from .cycle import Transport
 from .figures import CENT, cents, money, number
 from .fiscal import add_months
 from .forecast import Inflow, Lift
@@ -44,23 +46,26 @@ from .plan import NEXT_12, REST_OF_FY, ActionRefused, Plan, PlanAction, month_wo
 from .records import Check
 from .roster import Member
 from .worksheet_drivers import Probe
-from .worksheet_rules import PRECISION, PRODUCTIVITY, WIN_RATE, WON_ARR
+from .worksheet_rules import CYCLE_DAYS, PRECISION, PRODUCTIVITY, WIN_RATE, WON_ARR
 
 ZERO, ONE = Decimal(0), Decimal(1)
 DRIVERS = (
     WIN_RATE,
     WON_ARR,
     PRODUCTIVITY,
-)  # the order Effect's and Lift's changes are in
+    CYCLE_DAYS,
+)  # the order Effect's changes are in
 WORDS = {
     WIN_RATE: "the win rate",
     WON_ARR: "won ARR per win",
     PRODUCTIVITY: "creation productivity",
+    CYCLE_DAYS: "cycle length",
 }
 ACTED_ON = {  # "driver actions on ... do not interact"
     WIN_RATE: "a win rate",
     WON_ARR: "won ARR per win",
     PRODUCTIVITY: "creation productivity",
+    CYCLE_DAYS: "cycle length",
 }
 WINDOWS = (REST_OF_FY, NEXT_12)
 
@@ -86,6 +91,9 @@ class Frame:
     size: Decimal | None = None  # the pooled mean won ARR a size target is read against
     # the pooled creation rate a productivity target is read against
     productivity: Decimal | None = None
+    # the pooled mean days from creation to win a cycle target is read against, and the timing moved
+    cycle: Decimal | None = None
+    transport: Transport | None = None
 
 
 @dataclass(frozen=True)
@@ -105,6 +113,9 @@ class Effect:
     creation: Mapping[
         str, tuple[Decimal, ...]
     ]  # each segment's relative change in its organic creation, by day
+    cycles: Mapping[
+        str, tuple[Decimal, ...]
+    ]  # each segment's relative change in the lag from creation to win, by day
     lift: Lift  # the changes the forward function reads
 
     def dropping(self, action: PlanAction) -> Effect:
@@ -227,6 +238,11 @@ def price_index(
                 if hit:
                     mine = wins[(i, origin[t - 1])]
                     mine[seg] = mine.get(seg, ZERO) + count * hit
+            if ends:  # the tail: wins landing after the last month shown, one more atom
+                hit = timing.total - timing.count_through(ends[-1][1] - t)
+                if hit:
+                    mine = wins[(len(ends), origin[t - 1])]
+                    mine[seg] = mine.get(seg, ZERO) + count * hit
     out: dict[str, dict[tuple[int, int], Decimal]] = {s: {} for s in series}
     for key, by_segment in wins.items():
         total = sum(by_segment.values(), ZERO)
@@ -263,6 +279,11 @@ def build_frame(
         origin,
         g.model.new_pipeline.mean_won_arr,
         wd.current_value(g, PRODUCTIVITY),
+        wd.current_value(g, CYCLE_DAYS),
+        Transport(
+            g.model.new_pipeline.timing,
+            [(w.end - g.as_of).days for w in g.windows],
+        ),
     )
 
 
@@ -297,6 +318,10 @@ def _change(frame: Frame, baseline: Decimal, action: PlanAction) -> Decimal:
         if not frame.productivity:
             raise ValueError("creation productivity has no baseline to change")
         return action.target / frame.productivity - 1
+    if action.driver == CYCLE_DAYS:
+        if not frame.cycle:
+            raise ValueError("cycle length has no baseline to change")
+        return action.target / frame.cycle - 1
     raise ValueError(f"no rule for the driver {action.driver!r}")
 
 
@@ -322,7 +347,7 @@ def effect(
         mine = by_driver[a.driver]
         for s in frame.segments if a.segment is None else (a.segment,):
             mine[s] = [c + change * w for c, w in zip(mine[s], weights)]
-    changes, sizes, creation = (
+    changes, sizes, creation, cycles = (
         {s: tuple(v) for s, v in by_driver[d].items()} for d in DRIVERS
     )
     lift = Lift(
@@ -335,9 +360,11 @@ def effect(
         frame.origin,
         sizes,
         creation,
+        cycles,
+        frame.transport,
     )
     return Effect(
-        frame, baseline, as_of, tuple(actions), changes, sizes, creation, lift
+        frame, baseline, as_of, tuple(actions), changes, sizes, creation, cycles, lift
     )
 
 
@@ -427,14 +454,71 @@ def lane_flows(
                 if value and hit:
                     origin = cal.bucket(g.as_of + timedelta(days=t))
                     booked[(k, q, origin)] += value * hit
+    moved = _moved_flows(g, lift, cal, lanes, per_win)
     return {
         k: flows.Flow(
             wins.get(k, flows.ZERO_FLOW).wins,
             booked[k] * per_win,
             wins.get(k, flows.ZERO_FLOW).days,
         )
-        for k in {*wins, *booked}
+        + moved.get(k, flows.ZERO_FLOW)
+        for k in {*wins, *booked, *moved}
     }
+
+
+def _moved_flows(
+    g: Ground,
+    lift: Lift,
+    cal: Calendar,
+    lanes: Mapping[object, tuple[str, Sequence[Decimal], Sequence[Decimal]]],
+    per_win: Decimal,
+) -> dict[flows.Leaf, flows.Flow]:
+    """What a cycle action adds to each lane in the fiscal year: for the deals created on the days
+    it reaches, the wins as the plan's changes leave them, with their days and bookings, placed in
+    the months their moved lags land them in (each at the price of the month it was to land in),
+    less the wins they were, in the months they were to land in."""
+    if lift.transport is None:
+        return {}
+    days = (cal.year.end - g.as_of).days
+    total = lift.transport.total
+    quarter_of = [
+        next((k for k, qw in enumerate(cal.quarters) if qw.contains(w.end)), None)
+        for w in g.windows
+    ]
+    out: dict[flows.Leaf, flows.Flow] = defaultdict(lambda: flows.ZERO_FLOW)
+    for key, (segment, deals, organic) in lanes.items():
+        price = lift.price.get(segment, {})
+        for t in lift.moved_days(segment):
+            if t >= days:
+                break
+            when = cal.bucket(g.as_of + timedelta(days=t + 1))
+            if when > len(cal.quarters):
+                continue
+            wins_new, size, wins_was = lift.day_amounts_of(
+                segment, t, deals[t], organic[t]
+            )
+            f = Fraction(lift.cycle[segment][t]) + 1
+            for sign, scale, wins, grows in (
+                (1, f, wins_new, size),
+                (-1, Fraction(1), wins_was, 1),
+            ):
+                if not wins:
+                    continue
+                for piece in lift.transport.pieces(t + 1, scale):
+                    q = (
+                        quarter_of[piece.moved]
+                        if piece.moved < len(quarter_of)
+                        else None
+                    )
+                    if q is None:
+                        continue
+                    at = price.get((piece.original, lift.origin[t]), ONE)
+                    out[(key, q, when)] += flows.Flow(
+                        sign * wins * piece.weight / total,
+                        sign * wins * grows * piece.weight * at * per_win,
+                        sign * wins * piece.moment / total,
+                    )
+    return dict(out)
 
 
 def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flows.Flow]:
@@ -497,6 +581,9 @@ MULTIPLE_WORDS = {10: "ten", 1000: "a thousand"}
 def refuse_unbounded(g: Ground, plan: Plan) -> None:
     """Refuse a target the core could not carry, in a person's words, before any simulation."""
     for i, a in enumerate(plan.actions, 1):
+        if a.driver == CYCLE_DAYS:
+            _refuse_cycle(g, a, i)
+            continue
         limit = MAX_MULTIPLE.get(a.driver)
         base = wd.current_value(g, a.driver) if limit else None
         if base and a.target > limit * base:
@@ -518,6 +605,38 @@ def refuse_unbounded(g: Ground, plan: Plan) -> None:
                 "target",
                 i,
             )
+
+
+CYCLE_FLOOR, CYCLE_CEILING = Decimal("0.5"), Decimal(2)
+
+
+def _refuse_cycle(g: Ground, a: PlanAction, index: int) -> None:
+    """A cycle target is held between half and twice the pooled cycle: a product guardrail, not
+    evidence of what a team can do; with no cycle to read it against there is nothing to scale."""
+    base = wd.current_value(g, CYCLE_DAYS)
+    if not base:
+        raise ActionRefused(
+            f"{a.name!r} changes the cycle length, and there are no recorded win times to read a "
+            "target against, so the cycle cannot be changed.",
+            "target",
+            index,
+        )
+    shown_base = number(base, PRECISION[CYCLE_DAYS])
+    target = f"{a.target.normalize():f} days"
+    if a.target < CYCLE_FLOOR * base:
+        raise ActionRefused(
+            f"{a.name!r} asks for {target}, less than half the pooled cycle of {shown_base} days. "
+            "That is a guardrail on what an entered timing can be, not a finding about what is achievable.",
+            "target",
+            index,
+        )
+    if a.target > CYCLE_CEILING * base:
+        raise ActionRefused(
+            f"{a.name!r} asks for {target}, more than twice the pooled cycle of {shown_base} days. "
+            "That is a guardrail on what an entered timing can be, not a finding about what is achievable.",
+            "target",
+            index,
+        )
 
 
 def effect_for(
@@ -574,8 +693,20 @@ def line_for(actions) -> str:
     return LINE if win_rate_only(actions) else LINE_ANY
 
 
+CYCLE_DEFINITION = (
+    " A cycle action changes when wins land, not how many are won or how large they are: the same "
+    "wins arrive earlier or later, each at the price of the month it was to land in, so the lifetime "
+    "bookings of the pipeline it affects are the same and a month gains what another loses. Its "
+    "target is an entered timing assumption on the pooled fitted history, held between half and "
+    "twice the pooled cycle as a guardrail."
+)
+
+
 def definition_for(actions) -> str:
-    return DEFINITION if win_rate_only(actions) else DEFINITION_ANY
+    if win_rate_only(actions):
+        return DEFINITION
+    cycle = any(a.driver == CYCLE_DAYS for a in actions)
+    return DEFINITION_ANY + (CYCLE_DEFINITION if cycle else "")
 
 
 def empty_section() -> dict:
@@ -611,9 +742,9 @@ OUTSIDE = "outside the worksheet's historical settings"
 NOT_OFFERED = "the worksheet offers no historical settings for the win rate"
 LINE_ANY = (
     "An action changes one driver of the pipeline created from its start month on: the win rate, "
-    "the size of a win, or how many deals people create. Deals already open keep their odds and "
-    "their size. A segment's target is an entered change on the pooled baseline, not a value "
-    "measured for the segment."
+    "the size of a win, how many deals people create, or how long wins take. Deals already open "
+    "keep their odds, their size and their timing. A segment's target is an entered change on the "
+    "pooled baseline, not a value measured for the segment."
 )
 DEFINITION_ANY = (
     "A driver action is a named change to one driver in one slice, with a start month, a ramp and "
@@ -639,7 +770,16 @@ OVERLAP = (
 )
 
 
-def reconciliation_sentence(joint: Decimal, summed: Decimal, allowed: Decimal) -> str:
+TIMING_INTERACTION = (
+    "What removing each one changes does not add up to what the actions change together: a change in "
+    "timing moves bookings between months, so its effect on a window can be positive or negative and "
+    "the parts and the whole need not agree."
+)
+
+
+def reconciliation_sentence(
+    joint: Decimal, summed: Decimal, allowed: Decimal, timed: bool = False
+) -> str:
     """What the line between the joint gain and the sum of the removal values says. Within the
     rounding allowance the actions do not interact. Beyond it, by the size of the effects: if the
     removal values add up to more than the actions do together, each does more with the others in
@@ -647,6 +787,8 @@ def reconciliation_sentence(joint: Decimal, summed: Decimal, allowed: Decimal) -
     that it reads the same for actions that take bookings away.)"""
     if abs(joint - summed) <= allowed:
         return NO_INTERACTION
+    if timed:  # a timing interaction is signed by the month: size alone says nothing
+        return TIMING_INTERACTION
     return REINFORCE if abs(summed) > abs(joint) else OVERLAP
 
 
@@ -676,6 +818,13 @@ def affects_text(
         return (
             f"Wins of pipeline created from {month} in {slice_label}, {ramp} to the target size; "
             "how many are won, and the wins of pipeline created earlier or already open, keep their size."
+        )
+    if driver == CYCLE_DAYS:
+        return (
+            f"The wins of pipeline created from {month} in {slice_label}, {ramp} to the target days from "
+            "creation to win: they land earlier or later, none more or fewer, each at the price of the "
+            "month it was to land in; pipeline created earlier and deals already open keep their timing. "
+            "An entered timing assumption on the pooled history."
         )
     if driver == PRODUCTIVITY:
         return (
@@ -814,8 +963,10 @@ def section(
     summed = {w: sum((r[w] for r in removals), ZERO) for w in WINDOWS}
     gap = {w: joint[w] - summed[w] for w in WINDOWS}
     tolerance = {w: CENT * _months(g)[w] * (1 + len(eff.actions)) for w in WINDOWS}
+    timed = any(a.driver == CYCLE_DAYS for a in eff.actions)
     sentences = {
-        w: reconciliation_sentence(joint[w], summed[w], tolerance[w]) for w in WINDOWS
+        w: reconciliation_sentence(joint[w], summed[w], tolerance[w], timed)
+        for w in WINDOWS
     }
     out = {
         "definition": definition_for(eff.actions),

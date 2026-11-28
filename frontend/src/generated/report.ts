@@ -246,7 +246,7 @@ export type TieoutReport = {
         items: [
           {
             affects: Text;
-            driver: "win_rate" | "won_arr" | "productivity";
+            driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
             evidence:
               | {
                   baseline_rate: Decimal;
@@ -283,7 +283,7 @@ export type TieoutReport = {
           },
           ...{
             affects: Text;
-            driver: "win_rate" | "won_arr" | "productivity";
+            driver: "win_rate" | "won_arr" | "productivity" | "cycle_days";
             evidence:
               | {
                   baseline_rate: Decimal;
@@ -1234,7 +1234,7 @@ export type TieoutReport = {
           }[];
         };
   };
-  schema_version: "2.8.0";
+  schema_version: "2.9.0";
   verdicts: {
     forecast_better_than_baselines: {
       comparisons: HorizonComparison[];

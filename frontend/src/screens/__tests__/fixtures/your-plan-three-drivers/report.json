@@ -897,7 +897,7 @@
       "next twelve months": "12287349.46",
       "rest of fiscal year": "563428.58"
     },
-    "line": "An action changes one driver of the pipeline created from its start month on: the win rate, the size of a win, or how many deals people create. Deals already open keep their odds and their size. A segment's target is an entered change on the pooled baseline, not a value measured for the segment.",
+    "line": "An action changes one driver of the pipeline created from its start month on: the win rate, the size of a win, how many deals people create, or how long wins take. Deals already open keep their odds, their size and their timing. A segment's target is an entered change on the pooled baseline, not a value measured for the segment.",
     "range_note": "The plan's ranges are simulated with the actions in force, so they carry the model's uncertainty under the actions and exclude uncertainty about whether an action is achieved.",
     "reconciliation": {
       "material": {
@@ -4030,7 +4030,7 @@
       "signed_hires": []
     }
   },
-  "schema_version": "2.8.0",
+  "schema_version": "2.9.0",
   "verdicts": {
     "forecast_better_than_baselines": {
       "comparisons": [

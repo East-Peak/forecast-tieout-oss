@@ -99,7 +99,7 @@ def test_the_baseline_a_size_target_is_read_against_is_the_pooled_mean_won_arr()
 
 
 def test_a_driver_with_no_rule_is_still_an_error():
-    odd = PlanAction("x", "x", "cycle_days", None, date(2026, 5, 1), 0, D("1"))
+    odd = PlanAction("x", "x", "mood", None, date(2026, 5, 1), 0, D("1"))
     with pytest.raises(ValueError, match="no rule for the driver"):
         run(odd)
 

@@ -137,6 +137,8 @@ def lift_under(lift: Lift | None, g: Ground, adjusted: Ground) -> Lift | None:
     if not lift:
         return lift
     lift = lift.rebased(adjusted.model.new_pipeline.win_rate)
+    if adjusted.model.new_pipeline.timing is not g.model.new_pipeline.timing:
+        lift = lift.with_timing(adjusted.model.new_pipeline.timing)
     was, now = current_value(g, PRODUCTIVITY), current_value(adjusted, PRODUCTIVITY)
     return lift.scaled(now / was) if was and now is not None else lift
 

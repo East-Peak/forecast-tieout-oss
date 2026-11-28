@@ -192,7 +192,7 @@
       "type": "string"
     }
   },
-  "$id": "https://forecast-tieout.example/schema/report-2.8.0.json",
+  "$id": "https://forecast-tieout.example/schema/report-2.9.0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "allOf": [
@@ -1291,7 +1291,8 @@
                     "enum": [
                       "win_rate",
                       "won_arr",
-                      "productivity"
+                      "productivity",
+                      "cycle_days"
                     ]
                   },
                   "evidence": {
@@ -1528,7 +1529,8 @@
                     "enum": [
                       "win_rate",
                       "won_arr",
-                      "productivity"
+                      "productivity",
+                      "cycle_days"
                     ]
                   },
                   "evidence": {
@@ -5762,7 +5764,7 @@
       "type": "object"
     },
     "schema_version": {
-      "const": "2.8.0"
+      "const": "2.9.0"
     },
     "verdicts": {
       "additionalProperties": false,

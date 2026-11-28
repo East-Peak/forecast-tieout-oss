@@ -62,8 +62,8 @@ def test_an_action_the_core_refuses_comes_back_beside_its_item(opened):
             "Starts in August 2026, which is not after the as-of date",
         ),
         (
-            action(driver="cycle_days"),
-            "Only the win rate, won ARR per win and creation productivity can be changed by an action",
+            action(driver="mood"),
+            "Only the win rate, won ARR per win, creation productivity and cycle length can be changed by an action",
         ),
     ]
     for bad, why in cases:
@@ -365,3 +365,81 @@ def test_a_size_target_no_decimal_could_carry_is_refused_beside_its_item_not_cra
     assert (
         big.errors == [] and big.report_text is not None
     )  # ten times the mean is allowed
+
+
+# ----------------------------------------------------------------------- cycle length
+
+CYCLE = {
+    "id": "enterprise-cycle", "name": "Enterprise cycle", "driver": "cycle_days",
+    "slice": "enterprise", "start": "2026-10", "ramp_months": 1, "target": "130",
+}  # fmt: skip
+
+
+def _baseline_cycle(opened):
+    row = next(
+        d for d in opened.signed["worksheet"]["drivers"] if d["driver"] == "cycle_days"
+    )
+    return float(row["current"]["value"])
+
+
+def test_a_cycle_target_outside_half_to_twice_the_pooled_cycle_is_refused_as_a_guardrail(
+    opened, monkeypatch
+):
+    from engine.tieout_core import forecast
+
+    monkeypatch.setattr(
+        forecast,
+        "simulate",
+        lambda *a, **k: (_ for _ in ()).throw(AssertionError("simulated")),
+    )
+    base = _baseline_cycle(opened)
+    for target, word in (
+        (base * 0.4, "less than half"),
+        (base * 2.5, "more than twice"),
+    ):
+        with gen.in_repo():
+            applied = apply_plan(opened, plan_with(dict(CYCLE, target=str(target))))
+        (error,) = applied.errors
+        assert (error["section"], error["position"], error["code"]) == (
+            "actions",
+            0,
+            "target",
+        )
+        assert word in error["message"] and "guardrail" in error["message"]
+        assert (
+            "actions[" not in error["message"] and "cycle_days" not in error["message"]
+        )
+
+
+def test_the_edges_of_the_guardrail_are_allowed(opened):
+    base = _baseline_cycle(opened)
+    for target in (base * 0.5001, base * 1.9999):
+        with gen.in_repo():
+            ok = apply_plan(opened, plan_with(dict(CYCLE, target=str(target))))
+        assert ok.errors == [] and ok.report_text is not None
+
+
+def test_a_plan_with_a_cycle_action_is_a_native_run_and_its_grid_belongs_to_its_own_apply(
+    opened, tmp_path
+):
+    doc = plan_with(CYCLE, hires=fixture.PLAN["hires"])
+    path = tmp_path / "your-plan.yaml"
+    path.write_text(yaml.safe_dump(doc))
+    with gen.in_repo():
+        applied = apply_plan(opened, copy.deepcopy(doc))
+        native = build_report(
+            gen.PROFILES / COMPANY, gen.DATA / COMPANY, gen.AS_OF, draws=gen.DRAWS,
+            seed=gen.SEED, plan_path=path, company=COMPANY, scenario=YOUR_PLAN,
+        )  # fmt: skip
+    native["plan"]["file"] = YOUR_PLAN
+    assert applied.report_text == gen.canonical(native)
+    with gen.in_repo():
+        session = EditorSession()
+        session.open(COMPANY)
+        old = apply_and_lanes(session, plan_with(CYCLE))
+        new = apply_and_lanes(
+            session, plan_with(dict(CYCLE, target=str(_baseline_cycle(opened) * 0.8)))
+        )
+        stale, fresh = json.loads(session.lanes(old)), json.loads(session.lanes(new))
+    assert stale["stale"] is True and "lanes" not in stale
+    assert fresh["stale"] is False and fresh["problems"] == []

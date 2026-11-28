@@ -12,10 +12,12 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
+from fractions import Fraction
 from statistics import median
 
 import numpy as np
 
+from .cycle import Transport
 from .fiscal import Window
 from .fit import Model, Timing
 from .history import CREATION_AMOUNT_BASIS, UNKNOWN_STAGE, creation_amounts
@@ -97,12 +99,95 @@ class Lift:
     origin: Sequence[int]
     size: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
     creation: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
+    # the relative change in the lag from creation to win of the deals created each day, and the
+    # timing those lags are moved over (see ``cycle``)
+    cycle: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
+    transport: Transport | None = field(default=None, compare=False, repr=False)
+    _memo: dict = field(default_factory=dict, init=False, compare=False, repr=False)
 
     def __bool__(self) -> bool:
         return any(
             any(c)
-            for column in (self.changes, self.size, self.creation)
+            for column in (self.changes, self.size, self.creation, self.cycle)
             for c in column.values()
+        )
+
+    def moved_days(self, segment: str) -> list[int]:
+        """The days (counted from zero) on whose deals a cycle action changes the lags."""
+        moved = self.cycle.get(segment)
+        return [] if not moved else [t for t, c in enumerate(moved) if c]
+
+    def with_timing(self, timing: Timing) -> Lift:
+        """The same changes over another timing: lags are moved from the timing the worksheet's
+        flex of the cycle leaves, the prices staying as they were frozen."""
+        if self.transport is None:
+            return self
+        return replace(self, transport=self.transport.with_timing(timing))
+
+    def day_units(self, segment: str, t: int) -> tuple[Decimal, Decimal]:
+        """What a day's deals are worth won and not won, before they are priced or placed: the
+        wins their changes leave, at the size they leave, and the wins it was (the pooled rate on
+        the deals as they were)."""
+        return self.day_units_of(
+            segment, t, self.counts(segment)[t], self.organic[segment][t]
+        )
+
+    def day_amounts_of(
+        self, segment: str, t: int, count: Decimal, organic: Decimal
+    ) -> tuple[Decimal, Decimal, Decimal]:
+        """For a lane that creates ``count`` deals on day ``t``, of which ``organic`` are its
+        people's: the wins its deals are to have under the segment's changes, the size those wins
+        have (one more the relative change), and the wins they were."""
+        grown = self.creation.get(segment)
+        size = self.size.get(segment)
+        u = grown[t] if grown else 0
+        z = size[t] if size else 0
+        c = self.changes[segment][t]
+        made = count + organic * u
+        return made * (self.baseline + c), 1 + z, count * self.baseline
+
+    def day_units_of(
+        self, segment: str, t: int, count: Decimal, organic: Decimal
+    ) -> tuple[Decimal, Decimal]:
+        """``day_units`` for any of the segment's lanes."""
+        wins, size, was = self.day_amounts_of(segment, t, count, organic)
+        return wins * size, was
+
+    def cycle_units(self, segment: str) -> list[Decimal]:
+        """By month (and a last, the tail beyond them), the bookings in units of the pooled mean
+        won size that the deals created on the days a cycle action reaches book there, with the
+        action, less what they booked there without it: the same wins at the same prices (each
+        keeps the price of the month and quarter it was to land in) in other months. Over the months
+        and the tail the two add up to the same dollars."""
+        found = self._memo.get(("cycle", segment))
+        if found is not None:
+            return found
+        transport = self.transport
+        out = [Decimal(0)] * ((len(transport.edges) + 1) if transport else 0)
+        price = self.price.get(segment, {})
+        for t in self.moved_days(segment):
+            made, was = self.day_units(segment, t)
+            f = Fraction(self.cycle[segment][t]) + 1
+            origin = self.origin[t]
+            for piece in transport.pieces(t + 1, f):
+                out[piece.moved] += (
+                    made
+                    * piece.weight
+                    * price.get((piece.original, origin), Decimal(1))
+                )
+            for piece in transport.pieces(t + 1, Fraction(1)):
+                out[piece.moved] -= (
+                    was * piece.weight * price.get((piece.original, origin), Decimal(1))
+                )
+        self._memo[("cycle", segment)] = out
+        return out
+
+    def moved(self, landing: int) -> Decimal:
+        """The bookings, in units of the pooled mean won size, the cycle actions put in window
+        ``landing`` net of what they take out of it."""
+        return sum(
+            (self.cycle_units(s)[landing] for s in self.cycle if self.moved_days(s)),
+            Decimal(0),
         )
 
     def counts(self, segment: str) -> list[Decimal]:
@@ -146,10 +231,11 @@ class Lift:
         if not (any(change) or any(size) or any(grown)):
             return out
         price = self.price.get(segment, {})
+        placed = set(self.moved_days(segment))
         for t, c in enumerate(change):
             z = size[t] if size else 0
             u = grown[t] if grown else 0
-            if (c or z or u) and t < len(count):
+            if (c or z or u) and t < len(count) and t not in placed:
                 moved = c * (1 + z) + self.baseline * z if z else c
                 value = count[t] * moved
                 if u:
@@ -169,12 +255,18 @@ class Lift:
         change = self.changes[segment]
         grown = self.creation.get(segment)
         out = [n * c for n, c in zip(count, change)]
+        moved = self.moved_days(segment)
         if grown and any(grown):
             base = self.baseline
             out = [
                 w + o * u * (base + c) if u else w
                 for w, o, u, c in zip(out, organic, grown, change)
             ]
+        for (
+            t
+        ) in moved:  # their wins are placed, with their days, by the cycle's own pieces
+            if t < len(out):
+                out[t] = Decimal(0)
         return out
 
     def priced(self, landing: int) -> list[Decimal]:
@@ -467,16 +559,19 @@ def model_forecast(
         per_win = new.mean_won_arr / Decimal(n)
         for i, (w, (a, b)) in enumerate(zip(windows, offsets)):
             extra = lift.priced(i)
-            lifted[w.label] = per_win * sum(
-                (
-                    extra[t - 1]
-                    * (
-                        new.timing.count_through(b - t)
-                        - new.timing.count_through(a - t)
-                    )
-                    for t in range(1, min(offsets[-1][1], len(extra)) + 1)
-                ),
-                Decimal(0),
+            lifted[w.label] = per_win * (
+                sum(
+                    (
+                        extra[t - 1]
+                        * (
+                            new.timing.count_through(b - t)
+                            - new.timing.count_through(a - t)
+                        )
+                        for t in range(1, min(offsets[-1][1], len(extra)) + 1)
+                    ),
+                    Decimal(0),
+                )
+                + lift.moved(i)
             )
     components = {EXISTING: existing, FUTURE: future}
     if added_pipeline or inflows:
@@ -569,22 +664,43 @@ def _beta(rng: np.random.Generator, p: float, n: float, draws: int) -> np.ndarra
     return rng.beta(p * n, (1 - p) * n, draws)
 
 
+def _draw_index(rng: np.random.Generator, timing: Timing, size: int) -> np.ndarray:
+    """Which of ``timing``'s samples each of ``size`` wins is: uniformly, or by their weights."""
+    if timing.weights is None:
+        return rng.integers(0, len(timing.samples), size)
+    p = np.asarray([float(w) for w in timing.weights])
+    return rng.choice(len(timing.samples), size=size, p=p / p.sum())
+
+
 def _draw_days(rng: np.random.Generator, timing: Timing, size: int) -> np.ndarray:
     """Days to a win drawn from ``timing``: uniformly over its samples, or by
     their weights."""
-    samples = np.asarray(timing.samples)
-    if timing.weights is None:
-        return samples[rng.integers(0, len(samples), size)]
-    p = np.asarray([float(w) for w in timing.weights])
-    return samples[rng.choice(len(samples), size=size, p=p / p.sum())]
+    return np.asarray(timing.samples)[_draw_index(rng, timing, size)]
 
 
 def _price_grid(index, landing_of: np.ndarray, origin_of: np.ndarray) -> np.ndarray:
     """A price index as an array by (window landed in, quarter created in), 1 where none is given."""
-    grid = np.ones((landing_of.max() + 1, origin_of.max() + 1))
+    grid = np.ones(
+        (landing_of.max() + 2, origin_of.max() + 1)
+    )  # a last row for the tail
     for (landing, origin), value in index.items():
         grid[landing, origin] = float(value)
     return grid
+
+
+def _moved_lags(lift: Lift, moves, timing: Timing):
+    """For a segment whose cycle a plan changes: which scale each creation day has (0 is none) and a
+    table of the lags at each scale, row 0 being the timing's own, every one rounded up exactly."""
+    scales: dict[Fraction, int] = {}
+    by_day = np.zeros(len(moves), dtype=np.intp)
+    for t, c in enumerate(moves):
+        if c:
+            f = Fraction(c) + 1
+            by_day[t] = scales.setdefault(f, len(scales) + 1)
+    rows = [np.asarray(timing.samples)]
+    for f in scales:
+        rows.append(np.asarray(lift.transport.scaled(f)[0]))
+    return by_day, np.vstack(rows)
 
 
 def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -> None:
@@ -628,8 +744,15 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -
         weights = np.asarray([float(w) for w in new.won_arr_weights])
         weights = weights / weights.sum()
     base = float(new.win_rate)
+    tail = (
+        int(landing_of.max()) + 1
+    )  # the price row of a win landing after the last month shown
     for i, name in enumerate(names):
         grid = _price_grid(lift.price.get(name, {}), landing_of, origin_of)
+        moves = lift.cycle.get(name)
+        lags = None
+        if moves is not None and any(moves[:span]) and lift.transport is not None:
+            lags = _moved_lags(lift, moves[:span], new.timing)
         if grown[i].any():
             mine_i = (
                 organic * (organic_share[i] * (1 + grown[i])) + extra * program_share[i]
@@ -641,13 +764,23 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -
         repeats = wins[row_of, day_of].astype(np.intp)
         rows = np.repeat(row_of, repeats)
         created = np.repeat(day_of + 1, repeats)
-        days = _draw_days(rng, new.timing, len(rows))
+        which = _draw_index(rng, new.timing, len(rows))
+        days = np.asarray(new.timing.samples)[which]
         sizes = pool[rng.choice(len(pool), size=len(rows), p=weights)]
         landing = created + days
         land = landing_of[np.minimum(landing, len(landing_of)) - 1]
+        land = np.where(
+            landing > len(landing_of), tail, land
+        )  # beyond the months: the tail's price
+        placed = landing
+        if (
+            lags is not None
+        ):  # priced where it was to land, then moved: lag and size drawn once
+            by_day, table = lags
+            placed = created + table[by_day[created - 1], which]
         book(
             rows,
-            landing,
+            placed,
             sizes * grid[land, origin_of[created - 1]] * bigger[i][created - 1],
         )
 
