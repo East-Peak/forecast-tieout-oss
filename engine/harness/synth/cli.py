@@ -16,7 +16,7 @@ from datetime import date
 from pathlib import Path
 
 from .cases import named_cases
-from .params import VARIANTS, CompanyParams
+from .params import VARIANTS, CompanyParams, Intervention
 from .people import day_of
 from .records import default_extract_dates, write_extracts
 from .run import Company, run_company
@@ -26,11 +26,15 @@ HELD_OUT_SEEDS = range(101, 121)  # reserved for later scoring: development uses
 
 
 def generate(
-    params: CompanyParams, seed: int, out: Path, dates: list[date] | None = None
+    params: CompanyParams,
+    seed: int,
+    out: Path,
+    dates: list[date] | None = None,
+    intervention: Intervention | None = None,
 ) -> Company:
     out = Path(out)
     dates = default_extract_dates(params) if dates is None else dates
-    company = run_company(params, seed, extract_days=tuple(day_of(d) for d in dates))
+    company = run_company(params, seed, intervention, tuple(day_of(d) for d in dates))
     write_extracts(company, out, dates)
     (out / "truth").mkdir(parents=True, exist_ok=True)
     save_truth(company.truth, out / "truth" / "snapshot.json")
@@ -85,6 +89,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--out", type=Path)
     ap.add_argument(
+        "--small",
+        action="store_true",
+        help="a 14-month company, for a quick look (default: FY22 to 2026-07-31)",
+    )
+    ap.add_argument(
         "--verify",
         action="store_true",
         help="determinism check: generate a small company twice and compare hashes",
@@ -107,7 +116,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if same else 1
     if args.out is None:
         ap.error("--out is required")
-    company = generate(CompanyParams.for_variant(args.variant), args.seed, args.out)
+    company = generate(
+        small_params(args.variant)
+        if args.small
+        else CompanyParams.for_variant(args.variant),
+        args.seed,
+        args.out,
+    )
     t = company.truth
     print(
         f"{args.variant} seed {args.seed}: {len(company.sim.opps)} opportunities, {len(company.sim.leads)} leads -> {args.out}"

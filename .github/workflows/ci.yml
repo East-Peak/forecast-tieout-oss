@@ -88,6 +88,9 @@ jobs:
       - name: Tests
         run: python -m pytest engine/harness/tests -n auto
 
+      - name: Generator determinism
+        run: python -m engine.harness.synth --verify --variant capacity_constrained --seed 1
+
       - name: Lint and format
         run: |
           ruff check engine/harness
