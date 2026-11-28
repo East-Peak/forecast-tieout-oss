@@ -295,3 +295,47 @@ describe("adding one unit of an action to the plan (from the tornado)", () => {
     expect(store.snapshot.drafts.acme.hires.length + store.snapshot.drafts.acme.programs.length).toBe(8);
   });
 });
+
+describe("a draft action asked for from the worksheet or the grid", () => {
+  const SEED = { slice: "company", target: "0.2220", origin: "tornado" as const };
+
+  it("is added to the company's form, not applied, and named so the form can show it", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    editor.applied.length = 0;
+    store.draftAction("acme", SEED);
+    expect(store.snapshot.drafts.acme.actions).toEqual([expect.objectContaining({ id: "action-0", slice: "company", target: "0.2220", ramp_months: 0 })]);
+    expect(store.snapshot.applied.acme.plan.actions).toBeUndefined();
+    expect(editor.applied).toEqual([]);
+    expect(store.snapshot.origins.acme).toEqual({ "action-0": "tornado" });
+    expect(store.snapshot.revealed).toEqual({ company: "acme", id: "action-0" });
+  });
+
+  it("asked for before the company's form exists, is added to it when it does", async () => {
+    const { store } = make();
+    store.draftAction("acme", { slice: "enterprise", target: "0.2193", origin: "grid" });
+    expect(store.snapshot.drafts.acme).toBeUndefined();
+    await store.load("acme");
+    expect(store.snapshot.drafts.acme.actions).toEqual([expect.objectContaining({ slice: "enterprise", target: "0.2193" })]);
+    expect(store.snapshot.applied.acme.plan.actions).toBeUndefined();
+    expect(store.snapshot.origins.acme).toEqual({ "action-0": "grid" });
+  });
+
+  it("asked for again on the same slice shows the action the form has, and does not add another", async () => {
+    const { store } = make();
+    await store.load("acme");
+    store.draftAction("acme", SEED);
+    const before = store.snapshot.drafts.acme;
+    store.draftAction("acme", { ...SEED, target: "0.30" });
+    expect(store.snapshot.drafts.acme).toBe(before);
+    expect(store.snapshot.revealed).toEqual({ company: "acme", id: "action-0" });
+  });
+
+  it("is sent with Apply like any other item", async () => {
+    const { editor, store } = make();
+    await store.load("acme");
+    store.draftAction("acme", SEED);
+    await store.apply("acme");
+    expect(editor.applied.slice(-1)[0].actions).toEqual([expect.objectContaining({ id: "action-0", target: "0.2220" })]);
+  });
+});

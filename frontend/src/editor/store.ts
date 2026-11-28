@@ -4,8 +4,8 @@ import type { TieoutReport } from "../generated/report";
 import { EditorFailure } from "./client";
 import type { EditorStatus } from "./client";
 import type { ApplyOutcome, ComparisonRow, Facts, LanesOutcome, PlanDoc, PlanError } from "./protocol";
-import { withUnit } from "./yourPlan";
-import type { UnitKind } from "./yourPlan";
+import { withAction, withUnit } from "./yourPlan";
+import type { ActionOrigin, ActionSeed, UnitKind } from "./yourPlan";
 
 /** What the store needs of the client (the page's client, or a stand-in in tests). */
 export interface Editor {
@@ -26,6 +26,13 @@ export type EditedLanes =
   | { status: "failed"; message: string };
 
 const PENDING: EditedLanes = { status: "pending" };
+
+/** A form's plan as items are placed in it: the new actions' origins and the action to show. */
+interface Placed {
+  plan: PlanDoc;
+  asked: Record<string, ActionOrigin>;
+  revealed: { company: string; id: string } | null;
+}
 
 export interface Applied {
   report: TieoutReport;
@@ -55,6 +62,10 @@ export interface Snapshot {
   drafts: Record<string, PlanDoc>;
   applied: Record<string, Applied>;
   feedback: Feedback;
+  /** where each draft action was asked for (the worksheet or the grid), per company and action id */
+  origins: Record<string, Record<string, ActionOrigin>>;
+  /** the draft action the form should bring into view: the last one asked for, a new one or the one already there */
+  revealed: { company: string; id: string } | null;
 }
 
 const CLEAN: Feedback = { company: null, errors: [], problems: [], failure: null, busy: false };
@@ -65,10 +76,10 @@ const copy = <T>(value: T): T => structuredClone(value);
  * Memory only: nothing is written to storage or to the address.
  */
 export class YourPlanStore {
-  snapshot: Snapshot = { facts: {}, drafts: {}, applied: {}, feedback: CLEAN };
+  snapshot: Snapshot = { facts: {}, drafts: {}, applied: {}, feedback: CLEAN, origins: {}, revealed: null };
   private readonly listeners = new Set<() => void>();
   /** an item asked for before the company's form existed: added to it when it does */
-  private readonly queued: Record<string, UnitKind[]> = {};
+  private readonly queued: Record<string, Array<UnitKind | ActionSeed>> = {};
   /** the Apply in hand: an earlier one that ends late changes nothing it no longer owns */
   private latest: object = {};
 
@@ -95,13 +106,14 @@ export class YourPlanStore {
       throw new Error(outcome.kind === "invalid" ? outcome.errors.map((e) => e.message).join("; ") : outcome.problems.join("; "));
     }
     const applied: Applied = { report: outcome.report, comparison: outcome.comparison, plan, revision: outcome.revision, lanes: PENDING };
-    const draft = (this.queued[company] ?? []).reduce((p, kind) => withUnit(p, facts, kind), copy(plan));
+    const placed = (this.queued[company] ?? []).reduce((made, ask) => this.place(company, facts, made, ask), { plan: copy(plan), asked: {} as Placed["asked"], revealed: null as Placed["revealed"] });
     delete this.queued[company];
     this.change({
       facts: { ...this.snapshot.facts, [company]: facts },
-      drafts: { ...this.snapshot.drafts, [company]: draft },
+      drafts: { ...this.snapshot.drafts, [company]: placed.plan },
       applied: { ...this.snapshot.applied, [company]: applied },
       feedback: CLEAN,
+      ...this.shown(company, placed),
     });
     void this.computeLanes(company, applied);
     return applied;
@@ -109,10 +121,41 @@ export class YourPlanStore {
 
   /** Add one unit of an action (one hire, or one program of the action's size) to the company's form; not applied until the visitor applies it. */
   append(company: string, kind: UnitKind) {
+    this.ask(company, kind);
+  }
+
+  /** Add a draft win-rate action to the company's form (or show the one its slice already has); not applied until the visitor applies it. */
+  draftAction(company: string, seed: ActionSeed) {
+    this.ask(company, seed);
+  }
+
+  /** The form has brought the revealed action into view: it is not shown again when the form is next opened. */
+  acknowledgeReveal() {
+    if (this.snapshot.revealed !== null) this.change({ revealed: null });
+  }
+
+  private ask(company: string, ask: UnitKind | ActionSeed) {
     const facts = this.snapshot.facts[company];
     const draft = this.snapshot.drafts[company];
-    if (facts && draft) this.setDraft(company, withUnit(draft, facts, kind));
-    else this.queued[company] = [...(this.queued[company] ?? []), kind];
+    if (!facts || !draft) {
+      this.queued[company] = [...(this.queued[company] ?? []), ask];
+      return;
+    }
+    const placed = this.place(company, facts, { plan: draft, asked: {}, revealed: null }, ask);
+    this.change({ drafts: { ...this.snapshot.drafts, [company]: placed.plan }, ...this.shown(company, placed) });
+  }
+
+  private place(company: string, facts: Facts, made: Placed, ask: UnitKind | ActionSeed): Placed {
+    if (typeof ask === "string") return { ...made, plan: withUnit(made.plan, facts, ask) };
+    const next = withAction(made.plan, facts, ask);
+    if (next.id === null) return { ...made, plan: next.plan };
+    return { plan: next.plan, asked: next.plan === made.plan || ask.origin === null ? made.asked : { ...made.asked, [next.id]: ask.origin }, revealed: { company, id: next.id } };
+  }
+
+  /** The snapshot's own entries for what a placement asked for: where each new action came from, and which to show. */
+  private shown(company: string, placed: Placed): Pick<Snapshot, "origins" | "revealed"> {
+    const origins = Object.keys(placed.asked).length === 0 ? this.snapshot.origins : { ...this.snapshot.origins, [company]: { ...this.snapshot.origins[company], ...placed.asked } };
+    return { origins, revealed: placed.revealed ?? this.snapshot.revealed };
   }
 
   setDraft(company: string, plan: PlanDoc) {

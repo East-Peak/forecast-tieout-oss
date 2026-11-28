@@ -5,6 +5,7 @@
  */
 import type { TieoutReport } from "../../generated/report";
 import { B, W } from "../plan/bindings";
+import { driverActionExpectations } from "./driverActionExpectations";
 import { worksheetExpectations } from "./worksheetExpectations";
 import { kit, orWords } from "./expectKit";
 import * as fmt from "./independent";
@@ -139,5 +140,6 @@ export function build({ report: r, index, comparison, company, scenario }: Case)
   many(B.sCost.id, rowsBy(false).map(([x]) => orWords(x.cash_cost_in_twelve_months, fmt.usdShort, "cost not entered")), rowsBy(false).map(([, i]) => `/rows/${i}`));
 
   const sheet = worksheetExpectations({ report: r, index, comparison, company, scenario }, { one, many, when, expected, absent });
-  return { expected, absent, periodLabels: [], alsoNamed: sheet.alsoNamed };
+  const actionIds = driverActionExpectations(r, { many, when });
+  return { expected, absent, periodLabels: [], alsoNamed: [...(sheet.alsoNamed ?? []), ...actionIds] };
 }

@@ -1,44 +1,14 @@
 import { useEffect, useRef } from "react";
-import type { ChangeEvent, FormEvent, ReactNode } from "react";
+import type { FormEvent } from "react";
 import { Card } from "../../components/ui";
 import { SectionHeader } from "../../components/workbook";
 import { useYourPlan, useYourPlanSnapshot } from "../../editor/YourPlanContext";
 import type { Facts, HireDoc, PlanDoc, PlanError, ProgramDoc } from "../../editor/protocol";
 import { MAX_ITEMS } from "../../editor/yourPlan";
+import { ActionsFieldset } from "./ActionsFieldset";
+import { Beside, Field, buttonClass, fieldClass, monthName, optional, optionalField } from "./formParts";
 
 const MAX_HIRES_EACH = 20;
-const MONTH_NAMES: Record<string, string> = {
-  "01": "January",
-  "02": "February",
-  "03": "March",
-  "04": "April",
-  "05": "May",
-  "06": "June",
-  "07": "July",
-  "08": "August",
-  "09": "September",
-  "10": "October",
-  "11": "November",
-  "12": "December",
-};
-
-/** A start month in words ("October", "January, next year"): no digit, so no figure stands outside a bound value. */
-const monthName = (month: string, first: string) => `${MONTH_NAMES[month.slice(5)]}${month.slice(0, 4) === first.slice(0, 4) ? "" : ", next year"}`;
-
-const fieldClass =
-  "w-full min-w-0 rounded-ft border border-slate-200 bg-white px-2 py-1.5 text-sm text-text-primary shadow-ft outline-none focus:border-ft-accent focus:ring-2 focus:ring-ft-accentSoft";
-const buttonClass = "rounded-ft border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-colors hover:border-slate-300 disabled:opacity-50";
-
-function Field({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <label className="grid min-w-0 gap-1">
-      <span className="text-[11px] font-semibold uppercase text-slate-500">{label}</span>
-      {children}
-    </label>
-  );
-}
-
-const optional = (e: ChangeEvent<HTMLInputElement>) => (e.target.value === "" ? undefined : e.target.valueAsNumber);
 
 /**
  * "Your plan": the hires and programs the core will value, starting from the company's demo plan. Editing changes
@@ -82,13 +52,6 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
       {monthName(m, first)}
     </option>
   ));
-  const beside = (errors: PlanError[]) =>
-    errors.length > 0 ? (
-      <p role="alert" className="mt-1 text-xs text-red-700">
-        {errors.map((e) => e.message.replace(/^(hires|programs)\[\d+\]: /, "")).join("; ")}
-      </p>
-    ) : null;
-
   const submit = (e: FormEvent) => {
     e.preventDefault();
     void store.apply(company);
@@ -128,7 +91,7 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
                   Remove hire
                 </button>
               </div>
-              {beside(errorsOf("hires", i))}
+              <Beside errors={errorsOf("hires", i)} />
             </div>
           ))}
           <div>
@@ -169,7 +132,7 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
                   Remove program
                 </button>
               </div>
-              {beside(errorsOf("programs", i))}
+              <Beside errors={errorsOf("programs", i)} />
             </div>
           ))}
           <div>
@@ -183,6 +146,8 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
             </button>
           </div>
         </fieldset>
+
+        <ActionsFieldset company={company} store={store} facts={facts} draft={draft} applied={applied?.plan} origins={snap.origins[company] ?? {}} revealed={snap.revealed?.company === company ? snap.revealed : null} errors={feedback.errors} busy={feedback.busy} monthOptions={monthOptions} />
 
         {unplaced.length > 0 ? (
           <div data-testid="plan-form-errors" role="alert" className="text-xs text-red-700">
@@ -228,9 +193,4 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
     </Card>
     </div>
   );
-}
-
-/** `{ [name]: value }`, or nothing at all when the field was emptied (an absent field is left out of the plan). */
-function optionalField<K extends "cost" | "ramp_months">(name: K, value: number | undefined): Partial<Record<K, number>> {
-  return value === undefined ? {} : ({ [name]: value } as Record<K, number>);
 }

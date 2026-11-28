@@ -26,8 +26,8 @@ export interface ProgramDoc {
   ramp_months?: number;
   cost?: number;
 }
-/** A change to one driver in one slice: "slice" is "company" or a segment, "target" a probability. */
-interface ActionDoc {
+/** A change to one driver in one slice: "slice" is "company" or a segment, "target" a probability (a decimal string, as the core reads it). */
+export interface ActionDoc {
   id: string;
   name?: string;
   driver: "win_rate";

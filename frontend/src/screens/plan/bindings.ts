@@ -1,5 +1,6 @@
 import { bind } from "../../binding/Bound";
 import type { Binding } from "../../binding/Bound";
+import { DRIVER_ACTION_BINDINGS } from "./driverActionBindings";
 
 /**
  * The Plan screen's committed binding list: every business value the screen shows, with the file,
@@ -129,4 +130,4 @@ export const ROWS = {
   compare: "/rows",
 } as const;
 
-export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(B), ...Object.values(W.rest), ...Object.values(W.next12)];
+export const LISTED_BINDINGS: readonly Binding[] = [...Object.values(B), ...Object.values(W.rest), ...Object.values(W.next12), ...DRIVER_ACTION_BINDINGS];
