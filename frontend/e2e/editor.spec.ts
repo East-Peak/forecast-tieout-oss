@@ -10,7 +10,8 @@ import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } fro
  * visitor's plan. Most cases share one page (so Pyodide starts once); the cases that need a page of their own
  * (a phone, a blocked download) take one.
  */
-type Action = { id: string; name: string; driver: "win_rate"; slice: string; start: string; ramp_months: number; target: string };
+type Driver = "win_rate" | "won_arr" | "productivity";
+type Action = { id: string; name: string; driver: Driver; slice: string; start: string; ramp_months: number; target: string };
 type Plan = {
   hires: Array<{ segment: string; start: string; count: number }>;
   programs: Array<{ name: string; pipeline: number; start: string; cost?: number; ramp_months?: number }>;
@@ -52,12 +53,12 @@ const fixture = (name: string, dir = "your-plan") => readFileSync(resolve(ROOT, 
 /** The core's own output for the same plan with a win-rate action on Enterprise: its report, its grid. */
 const withActions = (name: string) => fixture(name, "your-plan-actions");
 /** The form gives an action an id of its own ("action-0", "action-1", in the order they are added); the fixture's is named for what it is. */
-const FIXTURE_ACTION_ID = "enterprise-win-rate";
-const FORM_ACTION_ID = "action-0";
-const asFormIds = (text: string) => {
-  expect(text.split(`"${FIXTURE_ACTION_ID}"`).length - 1, "the fixture names its action once or more").toBeGreaterThan(0);
-  return text.split(`"${FIXTURE_ACTION_ID}"`).join(`"${FORM_ACTION_ID}"`);
-};
+const FIXTURE_ACTION_IDS = ["enterprise-win-rate", "company-deal-size", "mid-market-creation"];
+const asFormIds = (text: string, ids: string[] = FIXTURE_ACTION_IDS.slice(0, 1)) =>
+  ids.reduce((made, id, i) => {
+    expect(made.split(`"${id}"`).length - 1, "the fixture names its action once or more").toBeGreaterThan(0);
+    return made.split(`"${id}"`).join(`"action-${i}"`);
+  }, text);
 
 /** The committed demo-plan report as the browser's core must write it: only the report's identity and the plan's name differ. */
 function asYourPlan(company: string): string {
@@ -110,7 +111,7 @@ const formItems = (page: Page) =>
 const describe_ = (plan: Plan) => ({
   hires: plan.hires.map((h) => `${h.segment}/${h.count}/${h.start}`),
   programs: plan.programs.map((p) => `${p.name}/${p.pipeline}/${p.cost ?? ""}/${p.ramp_months ?? ""}`),
-  actions: (plan.actions ?? []).map((a) => `${a.name}/${a.slice}/${a.start}/${a.ramp_months}/${percentText(a.target)}`),
+  actions: (plan.actions ?? []).map((a) => `${a.name}/${a.driver}/${a.slice}/${a.start}/${a.ramp_months}/${a.driver === "win_rate" ? percentText(a.target) : a.target}`),
 });
 /** The plan as the form will send it: each action under the id the form gives it. */
 const asSent = (plan: Plan): Plan => ({ ...plan, actions: (plan.actions ?? []).map((a, i) => ({ ...a, id: `action-${i}` })) });
@@ -181,18 +182,24 @@ async function enter(page: Page, plan: Plan) {
   expect(await formItems(page), "the form holds exactly the plan about to be applied").toEqual(describe_(plan));
 }
 
-/** Add an action through the form's own fields: the form picks the slice it starts on, and the visitor sets the rest. */
-async function addAction(page: Page, a: Omit<Action, "id">) {
+/** What the form calls each driver's target field. */
+const TARGET_LABEL: Record<Driver, string> = { win_rate: "Target win rate (percent)", won_arr: "Target won ARR per win (dollars)", productivity: "Target creation productivity (deals)" };
+const DRIVER_CHOICE: Record<Driver, string> = { win_rate: "Win rate", won_arr: "Won ARR per win", productivity: "Creation productivity" };
+
+/** Add an action through the form's own fields: the form picks the driver and slice it starts on, and the visitor sets the rest. */
+async function addAction(page: Page, given: Omit<Action, "id" | "driver"> & { driver?: Driver }) {
+  const a = { driver: "win_rate" as Driver, ...given };
   const rows = page.getByTestId("action-row");
   const before = await rows.count();
   await page.getByRole("button", { name: "Add an action" }).click();
   await expect(rows).toHaveCount(before + 1);
   const row = rows.last();
+  await row.getByLabel("Changes").selectOption(a.driver);
   await row.getByLabel("Action name").fill(a.name);
   await row.getByLabel("Slice").selectOption(a.slice);
   await row.getByLabel("Starts").selectOption(a.start);
   await row.getByLabel("Ramp in months (zero is immediate)").fill(String(a.ramp_months));
-  await row.getByLabel("Target win rate (percent)").fill(percentText(a.target));
+  await row.getByLabel(TARGET_LABEL[a.driver]).fill(a.driver === "win_rate" ? percentText(a.target) : a.target);
 }
 
 async function apply(page: Page, plan?: Plan) {
@@ -413,11 +420,11 @@ test.describe("the plan editor, one shared page @smoke", () => {
 
   const ENTERPRISE_PUSH = JSON.parse(withActions("plan.json")) as Plan;
   const driverActions = (report: string) => JSON.parse(report).driver_actions as {
-    items: Array<{ name: string; removal_value: Record<string, string>; evidence: { change_points: string; resulting_rate: string; label: string; position: string } }>;
+    items: Array<{ id: string; name: string; driver: Driver; removal_value: Record<string, string>; evidence: { change_points: string; resulting_rate: string; baseline: string; change_percent: string; resulting: string; label: string; position: string } }>;
     joint_gain: Record<string, string>;
     with_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
     without_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
-    reconciliation: { values: Record<string, string>; material: Record<string, boolean> };
+    reconciliation: { values: Record<string, string>; material: Record<string, boolean>; sentences: Record<string, string> };
   };
   const REST = "rest of fiscal year";
   const TWELVE = "next twelve months";
@@ -488,9 +495,8 @@ test.describe("the plan editor, one shared page @smoke", () => {
     const applied = (await reports(page)).length;
     const high = (JSON.parse(withActions("report.json")) as { worksheet: { drivers: Array<{ driver: string; historical: { high: { setting: string } } }> } }).worksheet.drivers.find((d) => d.driver === "win_rate")!.historical.high.setting;
     const drivers = page.locator("[data-testid='driver-row']");
-    for (const other of await drivers.evaluateAll((els) => els.map((e) => e.getAttribute("data-driver")).filter((d) => d !== "win_rate"))) {
-      await expect(page.locator(`[data-testid='driver-row'][data-driver='${other}'] button`, { hasText: "Add to plan" }), `${other} has no button`).toHaveCount(0);
-    }
+    await expect(page.locator("[data-testid='driver-row'][data-driver='cycle_days'] button", { hasText: "Add to plan" }), "the cycle bar has no button").toHaveCount(0);
+    expect(await drivers.evaluateAll((els) => els.map((e) => e.getAttribute("data-driver")).sort())).toEqual(["cycle_days", "productivity", "win_rate", "won_arr"]);
     await page.locator("[data-testid='driver-row'][data-driver='win_rate']").getByRole("button", { name: "Add to plan" }).click();
     await expect(actionRows(page)).toHaveCount(2);
     const draft = actionRows(page).last();
@@ -585,6 +591,179 @@ test.describe("the plan editor, one shared page @smoke", () => {
       await expect(bound(page, `driver-actions.reconciliation.${id}`)).toHaveCount(mine.reconciliation.material[window] ? 1 : 0);
     }
     expect(await unboundDigits(page, periodLabelsOf(await lastReport(page)))).toEqual([]);
+  });
+
+  // ---- the size of a win and creation: one action each through the form, then all three, then the entry points ----
+
+  const PLAIN = JSON.parse(fixture("plan.json")) as Plan;
+  const THREE = JSON.parse(fixture("plan.json", "your-plan-three-drivers")) as Plan;
+  const withDrivers = (name: string) => fixture(name, "your-plan-three-drivers");
+  const sizeAction = (over: Partial<Action> = {}): Action => ({ id: "x", name: "Company deal size", driver: "won_arr", slice: "company", start: "2026-10", ramp_months: 1, target: "450000", ...over });
+  const creationAction = (over: Partial<Action> = {}): Action => ({ id: "x", name: "Mid Market creation", driver: "productivity", slice: "mid_market", start: "2026-11", ramp_months: 2, target: "2.6", ...over });
+  const worksheetRow = (report: string, driver: Driver) =>
+    (JSON.parse(report) as { worksheet: { drivers: Array<{ driver: string; unit_label: string; current: { value: string }; historical: { low: { setting: string }; high: { setting: string } } }> } }).worksheet.drivers.find((d) => d.driver === driver)!;
+
+  test("a won-ARR action entered through the form: the Actions block says the core's figures, the evidence line the core's percent and label, and the bridge has its joint step @smoke", async () => {
+    const plan = { ...PLAIN, actions: [sizeAction()] };
+    await enter(page, plan);
+    await apply(page, plan);
+    const report = await lastReport(page);
+    const mine = driverActions(report);
+    expect(mine.items).toHaveLength(1);
+    expect(mine.items[0].removal_value, "one action: what removing it loses is the joint gain").toEqual(mine.joint_gain);
+    await expect(bound(page, "driver-actions.item.removal.rest")).toHaveText(usdShort(mine.items[0].removal_value[REST]), { timeout: 30_000 });
+    await expect(bound(page, "driver-actions.joint.rest")).toHaveText(usdShort(mine.joint_gain[REST]));
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
+    await expect(page.getByTestId("driver-action-driver")).toHaveText(DRIVER_CHOICE.won_arr);
+    const row = actionRows(page).first();
+    const sheet = worksheetRow(report, "won_arr");
+    await expect(row.getByLabel("Changes")).toHaveValue("won_arr");
+    await expect(row.locator("[data-binding='driver-actions.form.won_arr.baseline']")).toHaveText(usdShort(sheet.current.value));
+    await expect(row.locator("[data-binding='driver-actions.form.won_arr.low']")).toHaveText(usdShort(sheet.historical.low.setting));
+    await expect(row.locator("[data-binding='driver-actions.form.won_arr.unit']")).toHaveText("dollars of ARR per won deal");
+    await expect(row.locator("[data-binding='driver-actions.item.change-percent']")).toHaveText(decimal2(mine.items[0].evidence.change_percent));
+    await expect(row.locator("[data-binding='driver-actions.item.resulting.won_arr']")).toHaveText(usdShort(mine.items[0].evidence.resulting));
+    expect(mine.items[0].evidence.position).toBe("inside");
+    await expect(row.locator("[data-binding='driver-actions.item.label']")).toHaveCount(0);
+    await expect(page.locator("[data-testid='bridge-row'][data-kind='actions']")).toHaveCount(1);
+    // a size action does not stack on any other driver's flex: the win rate is still solved for
+    await expect(page.getByTestId("needed-stacked")).toHaveCount(0);
+    expect(await unboundDigits(page, periodLabelsOf(report))).toEqual([]);
+    expect(issues).toEqual([]);
+  });
+
+  test("a creation-productivity action entered through the form says its unit from the report, and the core's percent and label @smoke", async () => {
+    const plan = { ...PLAIN, actions: [creationAction()] };
+    const created = page.locator("[data-testid='cell-segment/mid_market-created'] [data-binding='lanes.created.forecast']");
+    await expect(created).toBeVisible({ timeout: 60_000 });
+    const createdBefore = await created.innerText();
+    await enter(page, plan);
+    await apply(page, plan);
+    const report = await lastReport(page);
+    const mine = driverActions(report);
+    expect(mine.items[0].removal_value).toEqual(mine.joint_gain);
+    await expect(bound(page, "driver-actions.item.removal.next12")).toHaveText(usdShort(mine.items[0].removal_value[TWELVE]), { timeout: 30_000 });
+    await expect(bound(page, "driver-actions.joint.rest")).toHaveText(usdShort(mine.joint_gain[REST]));
+    const row = actionRows(page).first();
+    const sheet = worksheetRow(report, "productivity");
+    expect(sheet.unit_label, "Sapling's capacity term is in use").toBe("created deals per ramped AE-month");
+    await expect(row.locator("[data-binding='driver-actions.form.productivity.unit']")).toHaveText(sheet.unit_label);
+    await expect(row.locator("[data-binding='driver-actions.form.productivity.baseline']")).toHaveText(decimal2(sheet.current.value));
+    await expect(row.locator("[data-binding='driver-actions.item.change-percent']")).toHaveText(decimal2(mine.items[0].evidence.change_percent));
+    await expect(row.locator("[data-binding='driver-actions.item.resulting.productivity']")).toHaveText(decimal2(mine.items[0].evidence.resulting));
+    expect(mine.items[0].evidence.position).toBe("above");
+    await expect(row.locator("[data-binding='driver-actions.item.label']")).toHaveText("outside the worksheet's historical settings");
+    // the grid follows: Mid Market is expected to create more deals than under the size action before it
+    await expect(created).not.toHaveText(createdBefore, { timeout: 60_000 });
+    expect(Number((await created.innerText()).replace(/,/g, ""))).toBeGreaterThan(Number(createdBefore.replace(/,/g, "")));
+    expect(await unboundDigits(page, periodLabelsOf(report))).toEqual([]);
+    expect(issues).toEqual([]);
+  });
+
+  test("an action on each driver entered through the form gives the native run's report, the block lists all three, and the material reconciliation line is the core's, with its sentence @smoke", async () => {
+    await enter(page, THREE);
+    await apply(page, THREE);
+    expect(await lastReport(page)).toBe(asFormIds(withDrivers("report.json"), FIXTURE_ACTION_IDS));
+    const mine = driverActions(withDrivers("report.json"));
+    await expect(page.getByTestId("driver-action-row")).toHaveCount(3, { timeout: 30_000 });
+    await expect(page.getByTestId("driver-action-driver")).toHaveText([DRIVER_CHOICE.win_rate, DRIVER_CHOICE.won_arr, DRIVER_CHOICE.productivity]);
+    for (const [i, item] of mine.items.entries()) {
+      await expect(bound(page, "driver-actions.item.removal.next12").nth(i)).toHaveText(usdShort(item.removal_value[TWELVE]));
+    }
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
+    expect(mine.reconciliation.material).toEqual({ [REST]: true, [TWELVE]: true });
+    await expect(page.getByTestId("driver-actions-reconciliation")).toBeVisible();
+    await expect(bound(page, "driver-actions.reconciliation.rest")).toHaveText(usdShort(mine.reconciliation.values[REST]));
+    await expect(bound(page, "driver-actions.reconciliation.next12")).toHaveText(usdShort(mine.reconciliation.values[TWELVE]));
+    await expect(bound(page, "driver-actions.reconciliation.sentence.rest")).toHaveText(mine.reconciliation.sentences[REST]);
+    await expect(bound(page, "driver-actions.reconciliation.sentence.next12")).toHaveText(mine.reconciliation.sentences[TWELVE]);
+    expect(Number(mine.reconciliation.values[REST])).toBeLessThan(0);
+    // the native run's grid: Mid Market's creation and Enterprise's win rate are the file's
+    const lanes = JSON.parse(withDrivers("lanes.json")) as LanesFile;
+    const cell = (path: string, column: string) => lanes.periods[0].rows.find((r) => r.path.join("/") === path)!.cells[column].forecast!;
+    await expect(page.locator("[data-testid='cell-segment/mid_market-avg_won_arr'] [data-binding='lanes.avg_won_arr.forecast']")).toHaveText(usdShort(cell("segment/mid_market", "avg_won_arr")), { timeout: 60_000 });
+    await expect(page.locator("[data-testid='cell-segment/enterprise-win_rate'] [data-binding='lanes.win_rate.forecast']")).toHaveText(percent1(cell("segment/enterprise", "win_rate")));
+    if (process.env.SCREENSHOTS) {
+      // an element capture scrolls it under the page's sticky header: let the header sit where it is in the flow for the capture
+      await page.addStyleTag({ content: ".sticky, [class*='sticky'] { position: static !important; }" });
+      await page.getByTestId("plan-form").screenshot({ path: `${process.env.SCREENSHOTS}/form-three-drivers.png` });
+      await page.getByTestId("driver-actions").screenshot({ path: `${process.env.SCREENSHOTS}/results-material-reconciliation.png` });
+      await page.getByTestId("driver-row").first().locator("xpath=ancestor::*[contains(@class,'rounded')][1]").screenshot({ path: `${process.env.SCREENSHOTS}/tornado.png` });
+    }
+    expect(await unboundDigits(page, periodLabelsOf(await lastReport(page)))).toEqual([]);
+    expect(issues).toEqual([]);
+  });
+
+  test("a second action on the same driver and slice is refused beside the item in the core's words, with the last good figures left, while another driver on that slice is not @smoke", async () => {
+    const shown = await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.next12']").innerText();
+    await page.getByRole("button", { name: "Add an action" }).click();
+    await expect(actionRows(page)).toHaveCount(4);
+    const draft = actionRows(page).last();
+    await draft.getByLabel("Changes").selectOption("won_arr");
+    await draft.getByLabel("Slice").selectOption("company");
+    await draft.getByLabel("Target won ARR per win (dollars)").fill("430000");
+    await page.getByRole("button", { name: "Apply" }).click();
+    const refusal = draft.getByRole("alert");
+    await expect(refusal).toContainText("Overlaps 'Company deal size'", { timeout: 30_000 });
+    await expect(refusal).toContainText("both change the size of a won deal for Company");
+    await expect(refusal).not.toContainText(/actions\[|won_arr|driver/);
+    await expect(page.getByRole("button", { name: "Apply" })).toBeEnabled();
+    expect(await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.next12']").innerText(), "the last good figures stay").toBe(shown);
+    await draft.getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(3);
+  });
+
+  test("Add to plan on the size and creation bars opens a draft company action on that driver at the favorable end, and applies nothing @smoke", async () => {
+    await enter(page, PLAIN); // a slice with an action on a driver is shown that one, not given a second: start with none
+    const applied = (await reports(page)).length;
+    const report = await lastReport(page);
+    for (const driver of ["won_arr", "productivity"] as const) {
+      const high = worksheetRow(report, driver).historical.high.setting;
+      const before = await actionRows(page).count();
+      await page.locator(`[data-testid='driver-row'][data-driver='${driver}']`).getByRole("button", { name: "Add to plan" }).click();
+      await expect(actionRows(page)).toHaveCount(before + 1);
+      const draft = actionRows(page).last();
+      await expect(draft.getByLabel("Changes")).toHaveValue(driver);
+      await expect(draft.getByLabel("Slice")).toHaveValue("company");
+      await expect(draft.getByLabel("Starts")).toHaveValue("2026-09");
+      await expect(draft.getByLabel(TARGET_LABEL[driver])).toHaveValue(high);
+      await expect(draft.getByTestId("action-origin")).toContainText("will differ from the bar's figure");
+      await expect(page.getByTestId("plan-unapplied")).toBeVisible();
+      expect((await reports(page)).length, "nothing was computed for the draft").toBe(applied);
+      await draft.getByRole("button", { name: "Remove action" }).click();
+      await expect(actionRows(page)).toHaveCount(before);
+    }
+  });
+
+  test("Plan an action here on the Average won ARR and Created deals cells of the company and a segment opens a draft on that driver, slice and pooled baseline, and applies nothing @smoke", async () => {
+    await enter(page, PLAIN);
+    const applied = (await reports(page)).length;
+    const report = await lastReport(page);
+    for (const [column, driver, says] of [["avg_won_arr", "won_arr", "average won ARR of the lane's wins"], ["created", "productivity", "deals created in the period"]] as const) {
+      for (const [row, slice] of [["total", "company"], ["segment/commercial", "commercial"]] as const) {
+        const before = await actionRows(page).count();
+        await page.getByTestId(`cell-${row}-${column}`).click();
+        const entry = page.getByTestId("plan-action");
+        await expect(entry).toContainText(says);
+        await expect(entry).toContainText("pooled baseline");
+        await entry.getByRole("button", { name: "Plan an action here" }).click();
+        await expect(actionRows(page)).toHaveCount(before + 1);
+        const draft = actionRows(page).last();
+        await expect(draft.getByLabel("Changes")).toHaveValue(driver);
+        await expect(draft.getByLabel("Slice")).toHaveValue(slice);
+        await expect(draft.getByLabel(TARGET_LABEL[driver])).toHaveValue(worksheetRow(report, driver).current.value);
+        await expect(page.getByTestId("cell-panel"), "the panel steps aside").toHaveCount(0);
+        expect((await reports(page)).length, "nothing was computed for the draft").toBe(applied);
+        await draft.getByRole("button", { name: "Remove action" }).click();
+        await expect(actionRows(page)).toHaveCount(before);
+      }
+    }
+    // not on an owner's cell
+    await page.getByTestId("expand-segment/enterprise").click();
+    await page.getByTestId("cell-segment/enterprise/owner/AE-010-created").click();
+    await expect(page.getByTestId("plan-action")).toHaveCount(0);
+    await page.getByRole("button", { name: "Close panel" }).click();
+    await page.getByTestId("expand-segment/enterprise").click();
   });
 
   test("removing every action returns the no-action figures, and the Actions block goes @smoke", async () => {
