@@ -19,6 +19,11 @@
       "detail": "each quarter's segment bookings goals sum to its target to the cent",
       "name": "segment goals add to the entered targets",
       "passed": true
+    },
+    {
+      "detail": "each segment goal's five figures, in each quarter, are the sums of its owners'",
+      "name": "owner goals add to their segment's goal",
+      "passed": true
     }
   ],
   "company": "sapling-industries",
@@ -127,6 +132,1252 @@
   },
   "label": "Reconstructed FY plan basis, 2026-01-31",
   "opening": 128,
+  "owner_caveat": "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days employed in the year, from the roster as known at the plan date. Someone hired after that date has no original allocation. It is a planning allocation, never a measure of a person's performance, and what a person is shown to have produced is the record of their deals. Ownership has no history in the files, so a deal's owner today stands in for its owner then.",
+  "owner_goals": {
+    "Q1FY26": {
+      "commercial": {
+        "AE-002": {
+          "bookings": "116146.06",
+          "created": "11.8698",
+          "created_arr": "895532.86",
+          "days": "200.99",
+          "won": "1.2080"
+        },
+        "AE-004": {
+          "bookings": "116146.06",
+          "created": "11.8698",
+          "created_arr": "895532.86",
+          "days": "200.99",
+          "won": "1.2080"
+        },
+        "AE-007": {
+          "bookings": "116146.06",
+          "created": "11.8697",
+          "created_arr": "895532.86",
+          "days": "200.99",
+          "won": "1.2080"
+        },
+        "AE-008": {
+          "bookings": "116146.06",
+          "created": "11.8697",
+          "created_arr": "895532.86",
+          "days": "200.98",
+          "won": "1.2080"
+        },
+        "AE-011": {
+          "bookings": "116146.06",
+          "created": "11.8697",
+          "created_arr": "895532.86",
+          "days": "200.98",
+          "won": "1.2080"
+        },
+        "AE-015": {
+          "bookings": "116146.06",
+          "created": "11.8697",
+          "created_arr": "895532.86",
+          "days": "200.98",
+          "won": "1.2079"
+        },
+        "AE-017": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-022": {
+          "bookings": "116146.06",
+          "created": "11.8697",
+          "created_arr": "895532.86",
+          "days": "200.98",
+          "won": "1.2079"
+        },
+        "AE-023": {
+          "bookings": "116146.06",
+          "created": "11.8697",
+          "created_arr": "895532.85",
+          "days": "200.98",
+          "won": "1.2079"
+        },
+        "AE-028": {
+          "bookings": "116146.05",
+          "created": "11.8697",
+          "created_arr": "895532.85",
+          "days": "200.98",
+          "won": "1.2079"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "enterprise": {
+        "AE-005": {
+          "bookings": "846457.73",
+          "created": "6.8251",
+          "created_arr": "6481548.07",
+          "days": "115.57",
+          "won": "0.6946"
+        },
+        "AE-010": {
+          "bookings": "846457.73",
+          "created": "6.8251",
+          "created_arr": "6481548.07",
+          "days": "115.57",
+          "won": "0.6946"
+        },
+        "AE-012": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-018": {
+          "bookings": "846457.73",
+          "created": "6.8251",
+          "created_arr": "6481548.07",
+          "days": "115.57",
+          "won": "0.6946"
+        },
+        "AE-019": {
+          "bookings": "846457.73",
+          "created": "6.8251",
+          "created_arr": "6481548.06",
+          "days": "115.57",
+          "won": "0.6946"
+        },
+        "AE-021": {
+          "bookings": "846457.73",
+          "created": "6.8251",
+          "created_arr": "6481548.06",
+          "days": "115.56",
+          "won": "0.6946"
+        },
+        "AE-024": {
+          "bookings": "846457.72",
+          "created": "6.8251",
+          "created_arr": "6481548.06",
+          "days": "115.56",
+          "won": "0.6946"
+        },
+        "AE-025": {
+          "bookings": "846457.72",
+          "created": "6.8251",
+          "created_arr": "6481548.06",
+          "days": "115.56",
+          "won": "0.6945"
+        },
+        "AE-029": {
+          "bookings": "846457.72",
+          "created": "6.8250",
+          "created_arr": "6481548.06",
+          "days": "115.56",
+          "won": "0.6945"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "mid_market": {
+        "AE-001": {
+          "bookings": "242558.19",
+          "created": "7.9132",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8054"
+        },
+        "AE-006": {
+          "bookings": "242558.19",
+          "created": "7.9132",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-009": {
+          "bookings": "242558.19",
+          "created": "7.9132",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-013": {
+          "bookings": "242558.19",
+          "created": "7.9132",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-014": {
+          "bookings": "242558.18",
+          "created": "7.9131",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-016": {
+          "bookings": "242558.18",
+          "created": "7.9131",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-020": {
+          "bookings": "242558.18",
+          "created": "7.9131",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-026": {
+          "bookings": "242558.18",
+          "created": "7.9131",
+          "created_arr": "2200094.54",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "AE-027": {
+          "bookings": "242558.18",
+          "created": "7.9131",
+          "created_arr": "2200094.53",
+          "days": "133.99",
+          "won": "0.8053"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      }
+    },
+    "Q2FY26": {
+      "commercial": {
+        "AE-002": {
+          "bookings": "150989.88",
+          "created": "12.2699",
+          "created_arr": "925719.14",
+          "days": "207.22",
+          "won": "1.5704"
+        },
+        "AE-004": {
+          "bookings": "150989.88",
+          "created": "12.2699",
+          "created_arr": "925719.14",
+          "days": "207.21",
+          "won": "1.5704"
+        },
+        "AE-007": {
+          "bookings": "150989.88",
+          "created": "12.2698",
+          "created_arr": "925719.14",
+          "days": "207.21",
+          "won": "1.5704"
+        },
+        "AE-008": {
+          "bookings": "150989.88",
+          "created": "12.2698",
+          "created_arr": "925719.13",
+          "days": "207.21",
+          "won": "1.5704"
+        },
+        "AE-011": {
+          "bookings": "150989.88",
+          "created": "12.2698",
+          "created_arr": "925719.13",
+          "days": "207.21",
+          "won": "1.5703"
+        },
+        "AE-015": {
+          "bookings": "150989.87",
+          "created": "12.2698",
+          "created_arr": "925719.13",
+          "days": "207.21",
+          "won": "1.5703"
+        },
+        "AE-017": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-022": {
+          "bookings": "150989.87",
+          "created": "12.2698",
+          "created_arr": "925719.13",
+          "days": "207.21",
+          "won": "1.5703"
+        },
+        "AE-023": {
+          "bookings": "150989.87",
+          "created": "12.2698",
+          "created_arr": "925719.13",
+          "days": "207.21",
+          "won": "1.5703"
+        },
+        "AE-028": {
+          "bookings": "150989.87",
+          "created": "12.2698",
+          "created_arr": "925719.13",
+          "days": "207.21",
+          "won": "1.5703"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "enterprise": {
+        "AE-005": {
+          "bookings": "1100395.05",
+          "created": "7.0552",
+          "created_arr": "6700030.42",
+          "days": "119.15",
+          "won": "0.9030"
+        },
+        "AE-010": {
+          "bookings": "1100395.05",
+          "created": "7.0552",
+          "created_arr": "6700030.42",
+          "days": "119.15",
+          "won": "0.9030"
+        },
+        "AE-012": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-018": {
+          "bookings": "1100395.05",
+          "created": "7.0552",
+          "created_arr": "6700030.41",
+          "days": "119.15",
+          "won": "0.9030"
+        },
+        "AE-019": {
+          "bookings": "1100395.05",
+          "created": "7.0552",
+          "created_arr": "6700030.41",
+          "days": "119.15",
+          "won": "0.9030"
+        },
+        "AE-021": {
+          "bookings": "1100395.04",
+          "created": "7.0551",
+          "created_arr": "6700030.41",
+          "days": "119.15",
+          "won": "0.9029"
+        },
+        "AE-024": {
+          "bookings": "1100395.04",
+          "created": "7.0551",
+          "created_arr": "6700030.41",
+          "days": "119.14",
+          "won": "0.9029"
+        },
+        "AE-025": {
+          "bookings": "1100395.04",
+          "created": "7.0551",
+          "created_arr": "6700030.41",
+          "days": "119.14",
+          "won": "0.9029"
+        },
+        "AE-029": {
+          "bookings": "1100395.04",
+          "created": "7.0551",
+          "created_arr": "6700030.41",
+          "days": "119.14",
+          "won": "0.9029"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "mid_market": {
+        "AE-001": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.15",
+          "won": "1.0469"
+        },
+        "AE-006": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-009": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-013": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-014": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-016": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-020": {
+          "bookings": "315325.64",
+          "created": "8.1799",
+          "created_arr": "2274254.51",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-026": {
+          "bookings": "315325.64",
+          "created": "8.1798",
+          "created_arr": "2274254.50",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "AE-027": {
+          "bookings": "315325.64",
+          "created": "8.1798",
+          "created_arr": "2274254.50",
+          "days": "138.14",
+          "won": "1.0469"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      }
+    },
+    "Q3FY26": {
+      "commercial": {
+        "AE-002": {
+          "bookings": "197448.30",
+          "created": "10.4967",
+          "created_arr": "791939.34",
+          "days": "274.34",
+          "won": "2.0536"
+        },
+        "AE-004": {
+          "bookings": "197448.30",
+          "created": "10.4967",
+          "created_arr": "791939.34",
+          "days": "274.34",
+          "won": "2.0536"
+        },
+        "AE-007": {
+          "bookings": "197448.30",
+          "created": "10.4967",
+          "created_arr": "791939.34",
+          "days": "274.34",
+          "won": "2.0536"
+        },
+        "AE-008": {
+          "bookings": "197448.30",
+          "created": "10.4967",
+          "created_arr": "791939.34",
+          "days": "274.34",
+          "won": "2.0535"
+        },
+        "AE-011": {
+          "bookings": "197448.30",
+          "created": "10.4967",
+          "created_arr": "791939.34",
+          "days": "274.33",
+          "won": "2.0535"
+        },
+        "AE-015": {
+          "bookings": "197448.30",
+          "created": "10.4966",
+          "created_arr": "791939.34",
+          "days": "274.33",
+          "won": "2.0535"
+        },
+        "AE-017": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-022": {
+          "bookings": "197448.30",
+          "created": "10.4966",
+          "created_arr": "791939.34",
+          "days": "274.33",
+          "won": "2.0535"
+        },
+        "AE-023": {
+          "bookings": "197448.30",
+          "created": "10.4966",
+          "created_arr": "791939.33",
+          "days": "274.33",
+          "won": "2.0535"
+        },
+        "AE-028": {
+          "bookings": "197448.30",
+          "created": "10.4966",
+          "created_arr": "791939.33",
+          "days": "274.33",
+          "won": "2.0535"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "enterprise": {
+        "AE-005": {
+          "bookings": "1438978.14",
+          "created": "6.0356",
+          "created_arr": "5731775.52",
+          "days": "157.75",
+          "won": "1.1808"
+        },
+        "AE-010": {
+          "bookings": "1438978.14",
+          "created": "6.0356",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1808"
+        },
+        "AE-012": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-018": {
+          "bookings": "1438978.14",
+          "created": "6.0356",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1808"
+        },
+        "AE-019": {
+          "bookings": "1438978.14",
+          "created": "6.0356",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1808"
+        },
+        "AE-021": {
+          "bookings": "1438978.13",
+          "created": "6.0356",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1808"
+        },
+        "AE-024": {
+          "bookings": "1438978.13",
+          "created": "6.0356",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1808"
+        },
+        "AE-025": {
+          "bookings": "1438978.13",
+          "created": "6.0355",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1807"
+        },
+        "AE-029": {
+          "bookings": "1438978.13",
+          "created": "6.0355",
+          "created_arr": "5731775.52",
+          "days": "157.74",
+          "won": "1.1807"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "mid_market": {
+        "AE-001": {
+          "bookings": "412348.92",
+          "created": "6.9978",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3691"
+        },
+        "AE-006": {
+          "bookings": "412348.92",
+          "created": "6.9978",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3691"
+        },
+        "AE-009": {
+          "bookings": "412348.92",
+          "created": "6.9978",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "AE-013": {
+          "bookings": "412348.91",
+          "created": "6.9978",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "AE-014": {
+          "bookings": "412348.91",
+          "created": "6.9978",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "AE-016": {
+          "bookings": "412348.91",
+          "created": "6.9978",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "AE-020": {
+          "bookings": "412348.91",
+          "created": "6.9977",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "AE-026": {
+          "bookings": "412348.91",
+          "created": "6.9977",
+          "created_arr": "1945591.71",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "AE-027": {
+          "bookings": "412348.91",
+          "created": "6.9977",
+          "created_arr": "1945591.70",
+          "days": "182.89",
+          "won": "1.3690"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      }
+    },
+    "Q4FY26": {
+      "commercial": {
+        "AE-002": {
+          "bookings": "232292.12",
+          "created": "8.9961",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4160"
+        },
+        "AE-004": {
+          "bookings": "232292.12",
+          "created": "8.9960",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4160"
+        },
+        "AE-007": {
+          "bookings": "232292.12",
+          "created": "8.9960",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4159"
+        },
+        "AE-008": {
+          "bookings": "232292.12",
+          "created": "8.9960",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4159"
+        },
+        "AE-011": {
+          "bookings": "232292.12",
+          "created": "8.9960",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4159"
+        },
+        "AE-015": {
+          "bookings": "232292.12",
+          "created": "8.9960",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4159"
+        },
+        "AE-017": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-022": {
+          "bookings": "232292.11",
+          "created": "8.9960",
+          "created_arr": "678720.48",
+          "days": "339.09",
+          "won": "2.4159"
+        },
+        "AE-023": {
+          "bookings": "232292.11",
+          "created": "8.9960",
+          "created_arr": "678720.47",
+          "days": "339.08",
+          "won": "2.4159"
+        },
+        "AE-028": {
+          "bookings": "232292.11",
+          "created": "8.9960",
+          "created_arr": "678720.47",
+          "days": "339.08",
+          "won": "2.4159"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "enterprise": {
+        "AE-005": {
+          "bookings": "1692915.46",
+          "created": "5.1727",
+          "created_arr": "4912333.17",
+          "days": "194.98",
+          "won": "1.3892"
+        },
+        "AE-010": {
+          "bookings": "1692915.46",
+          "created": "5.1727",
+          "created_arr": "4912333.17",
+          "days": "194.98",
+          "won": "1.3892"
+        },
+        "AE-012": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        },
+        "AE-018": {
+          "bookings": "1692915.46",
+          "created": "5.1727",
+          "created_arr": "4912333.16",
+          "days": "194.98",
+          "won": "1.3892"
+        },
+        "AE-019": {
+          "bookings": "1692915.45",
+          "created": "5.1727",
+          "created_arr": "4912333.16",
+          "days": "194.98",
+          "won": "1.3892"
+        },
+        "AE-021": {
+          "bookings": "1692915.45",
+          "created": "5.1727",
+          "created_arr": "4912333.16",
+          "days": "194.97",
+          "won": "1.3891"
+        },
+        "AE-024": {
+          "bookings": "1692915.45",
+          "created": "5.1727",
+          "created_arr": "4912333.16",
+          "days": "194.97",
+          "won": "1.3891"
+        },
+        "AE-025": {
+          "bookings": "1692915.45",
+          "created": "5.1727",
+          "created_arr": "4912333.16",
+          "days": "194.97",
+          "won": "1.3891"
+        },
+        "AE-029": {
+          "bookings": "1692915.45",
+          "created": "5.1727",
+          "created_arr": "4912333.16",
+          "days": "194.97",
+          "won": "1.3891"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      },
+      "mid_market": {
+        "AE-001": {
+          "bookings": "485116.37",
+          "created": "5.9974",
+          "created_arr": "1667440.86",
+          "days": "226.06",
+          "won": "1.6107"
+        },
+        "AE-006": {
+          "bookings": "485116.37",
+          "created": "5.9974",
+          "created_arr": "1667440.85",
+          "days": "226.06",
+          "won": "1.6106"
+        },
+        "AE-009": {
+          "bookings": "485116.37",
+          "created": "5.9974",
+          "created_arr": "1667440.85",
+          "days": "226.06",
+          "won": "1.6106"
+        },
+        "AE-013": {
+          "bookings": "485116.37",
+          "created": "5.9973",
+          "created_arr": "1667440.85",
+          "days": "226.06",
+          "won": "1.6106"
+        },
+        "AE-014": {
+          "bookings": "485116.37",
+          "created": "5.9973",
+          "created_arr": "1667440.85",
+          "days": "226.06",
+          "won": "1.6106"
+        },
+        "AE-016": {
+          "bookings": "485116.37",
+          "created": "5.9973",
+          "created_arr": "1667440.85",
+          "days": "226.06",
+          "won": "1.6106"
+        },
+        "AE-020": {
+          "bookings": "485116.37",
+          "created": "5.9973",
+          "created_arr": "1667440.85",
+          "days": "226.06",
+          "won": "1.6106"
+        },
+        "AE-026": {
+          "bookings": "485116.37",
+          "created": "5.9973",
+          "created_arr": "1667440.85",
+          "days": "226.05",
+          "won": "1.6106"
+        },
+        "AE-027": {
+          "bookings": "485116.36",
+          "created": "5.9973",
+          "created_arr": "1667440.85",
+          "days": "226.05",
+          "won": "1.6106"
+        },
+        "unassigned": {
+          "bookings": "0.00",
+          "created": "0.0000",
+          "created_arr": "0.00",
+          "days": "0.00",
+          "won": "0.0000"
+        }
+      }
+    }
+  },
+  "owners": [
+    {
+      "allocated": true,
+      "creation_share": "0.204918",
+      "days": 365,
+      "id": "AE-005",
+      "name": "Xavi Ward",
+      "opening": 7,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.229508",
+      "days": 365,
+      "id": "AE-010",
+      "name": "Cleo Gill",
+      "opening": 10,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.147541",
+      "days": 365,
+      "id": "AE-018",
+      "name": "Milo Ibarra",
+      "opening": 4,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.106557",
+      "days": 365,
+      "id": "AE-019",
+      "name": "Gia Keane",
+      "opening": 6,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.090164",
+      "days": 365,
+      "id": "AE-021",
+      "name": "Xavi Tran",
+      "opening": 1,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.057377",
+      "days": 365,
+      "id": "AE-024",
+      "name": "Yara Farrow",
+      "opening": 1,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.040984",
+      "days": 365,
+      "id": "AE-025",
+      "name": "Finn Price",
+      "opening": 2,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.000000",
+      "days": 365,
+      "id": "AE-029",
+      "name": "Tova Young",
+      "opening": 0,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.125000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.122951",
+      "days": 0,
+      "id": "AE-012",
+      "name": "Uma Varga",
+      "opening": 2,
+      "quota": "3200000.00",
+      "segment": "enterprise",
+      "share": "0.000000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.000000",
+      "days": 0,
+      "id": "unassigned",
+      "name": "Unassigned",
+      "opening": 0,
+      "quota": null,
+      "segment": "enterprise",
+      "share": "0.000000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.138298",
+      "days": 365,
+      "id": "AE-001",
+      "name": "Iris Young",
+      "opening": 5,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.175532",
+      "days": 365,
+      "id": "AE-006",
+      "name": "Jude Keane",
+      "opening": 10,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.127660",
+      "days": 365,
+      "id": "AE-009",
+      "name": "Finn Ward",
+      "opening": 2,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.159574",
+      "days": 365,
+      "id": "AE-013",
+      "name": "Jude Farrow",
+      "opening": 6,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.127660",
+      "days": 365,
+      "id": "AE-014",
+      "name": "Vik Dalton",
+      "opening": 5,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.148936",
+      "days": 365,
+      "id": "AE-016",
+      "name": "Hugo Gill",
+      "opening": 5,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.058511",
+      "days": 365,
+      "id": "AE-020",
+      "name": "Milo Roth",
+      "opening": 5,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.037234",
+      "days": 365,
+      "id": "AE-026",
+      "name": "Finn Varga",
+      "opening": 4,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.026596",
+      "days": 365,
+      "id": "AE-027",
+      "name": "Esme Varga",
+      "opening": 2,
+      "quota": "1800000.00",
+      "segment": "mid_market",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.000000",
+      "days": 0,
+      "id": "unassigned",
+      "name": "Unassigned",
+      "opening": 0,
+      "quota": null,
+      "segment": "mid_market",
+      "share": "0.000000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.101942",
+      "days": 365,
+      "id": "AE-002",
+      "name": "Tova Roth",
+      "opening": 5,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.116505",
+      "days": 365,
+      "id": "AE-004",
+      "name": "Lena Nakai",
+      "opening": 5,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.145631",
+      "days": 365,
+      "id": "AE-007",
+      "name": "Milo Keane",
+      "opening": 8,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.111650",
+      "days": 365,
+      "id": "AE-008",
+      "name": "Hugo Sato",
+      "opening": 4,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.116505",
+      "days": 365,
+      "id": "AE-011",
+      "name": "Lena Ibarra",
+      "opening": 6,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.097087",
+      "days": 365,
+      "id": "AE-015",
+      "name": "Yara Sato",
+      "opening": 8,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.116505",
+      "days": 365,
+      "id": "AE-022",
+      "name": "Vik Price",
+      "opening": 7,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.101942",
+      "days": 365,
+      "id": "AE-023",
+      "name": "Kai Nakai",
+      "opening": 6,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.014563",
+      "days": 365,
+      "id": "AE-028",
+      "name": "Bram Moreau",
+      "opening": 1,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.111111"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.077670",
+      "days": 0,
+      "id": "AE-017",
+      "name": "Hugo Varga",
+      "opening": 1,
+      "quota": "900000.00",
+      "segment": "commercial",
+      "share": "0.000000"
+    },
+    {
+      "allocated": true,
+      "creation_share": "0.000000",
+      "days": 0,
+      "id": "unassigned",
+      "name": "Unassigned",
+      "opening": 0,
+      "quota": null,
+      "segment": "commercial",
+      "share": "0.000000"
+    }
+  ],
   "schedule": [
     {
       "bookings": "12053053.15",

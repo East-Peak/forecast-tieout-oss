@@ -63,6 +63,8 @@ class Deal:
     owner_id: str = (
         ""  # the deal's owner on the file: today's, not necessarily its creator's
     )
+    name: str = ""  # the deal's name on the file, where it has one
+    owner_name: str = ""  # its owner's name on the file, where it has one
 
 
 @dataclass(frozen=True)

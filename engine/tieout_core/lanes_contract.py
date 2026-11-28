@@ -128,6 +128,19 @@ GOAL = obj(
         "days": DECIMAL,
     }
 )
+OWNER_BASIS = obj(
+    {
+        "segment": TEXT,
+        "id": TEXT,
+        "name": TEXT,
+        "allocated": BOOL,
+        "quota": maybe(MONEY),
+        "days": INT,
+        "share": DECIMAL,
+        "opening": INT,
+        "creation_share": DECIMAL,
+    }
+)
 BASIS = obj(
     {
         "schema_version": const(SCHEMA_VERSION),
@@ -182,6 +195,18 @@ BASIS = obj(
             "type": "object",
             "additionalProperties": {"type": "object", "additionalProperties": GOAL},
         },
+        "owners": arr(OWNER_BASIS, minItems=1),
+        "owner_goals": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": GOAL,
+                },
+            },
+        },
+        "owner_caveat": TEXT,
         "caveat": TEXT,
         "checks": arr(CHECK, minItems=1),
     }
@@ -272,9 +297,31 @@ def validate_basis(doc: dict) -> list[str]:
             )
     if abs(sum(Decimal(s["share"]) for s in doc["segments"]) - 1) > Decimal("0.00001"):
         found.append("basis: the segment shares do not add to one")
+    found += _owner_problems(doc)
     found += [
         f"basis check failed: {c['name']}" for c in doc["checks"] if not c["passed"]
     ]
+    return found
+
+
+def _owner_problems(doc: dict) -> list[str]:
+    """Owners share each segment's goal, opening stock and unit of shares exactly."""
+    found = []
+    for seg in doc["segments"]:
+        key = seg["key"]
+        mine = [o for o in doc["owners"] if o["segment"] == key]
+        if sum(o["opening"] for o in mine) != seg["opening"]:
+            found.append(f"basis: {key}'s owners' opening does not add to its opening")
+        slack = Decimal("0.0000005") * len(mine)  # each share is written to six places
+        if abs(sum(Decimal(o["share"]) for o in mine) - 1) > slack:
+            found.append(f"basis: {key}'s owners' share does not add to one")
+        for quarter, goals in doc["goals"].items():
+            shared = [g for g in doc["owner_goals"][quarter][key].values()]
+            for figure, goal in goals[key].items():
+                if sum(Decimal(g[figure]) for g in shared) != Decimal(goal):
+                    found.append(
+                        f"basis: {quarter} {key} owner goals do not add to the segment's {figure}"
+                    )
     return found
 
 

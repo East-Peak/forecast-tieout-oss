@@ -155,7 +155,10 @@ def _member(raw: dict, rid: str, role: str) -> Member | str:
     quota = parse_money(raw.get("annual_quota") or "")
     if quota is not None and quota < 0:
         return "annual quota is negative"
-    return Member(rid, role, (raw.get("segment") or "").strip(), start, end, quota)
+    name = (raw.get("name") or "").strip()
+    return Member(
+        rid, role, (raw.get("segment") or "").strip(), start, end, quota, name
+    )
 
 
 def _dec(x, field: str = "value") -> Decimal:

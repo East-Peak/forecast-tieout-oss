@@ -242,7 +242,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -496,7 +498,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -750,7 +754,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -1004,7 +1010,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -1258,7 +1266,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -1512,7 +1522,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -1766,7 +1778,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -2020,7 +2034,9 @@
                                     "no_goal",
                                     "not_modeled",
                                     "too_few",
-                                    "vacuous"
+                                    "vacuous",
+                                    "not_compared_at_owner",
+                                    "not_allocated"
                                   ]
                                 },
                                 {
@@ -2382,6 +2398,12 @@
             "no_goal": {
               "$ref": "#/$defs/Text"
             },
+            "not_allocated": {
+              "$ref": "#/$defs/Text"
+            },
+            "not_compared_at_owner": {
+              "$ref": "#/$defs/Text"
+            },
             "not_modeled": {
               "$ref": "#/$defs/Text"
             },
@@ -2396,7 +2418,9 @@
             "no_goal",
             "not_modeled",
             "too_few",
-            "vacuous"
+            "vacuous",
+            "not_compared_at_owner",
+            "not_allocated"
           ],
           "type": "object"
         },

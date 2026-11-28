@@ -46,6 +46,10 @@ REASONS = {
     "too_few": "Too few observations stand behind this ratio for a stable comparison.",
     "vacuous": "For a period that has begun the forecast is the recorded fact, which is also the "
     "basis the goal was frozen from, so the comparison carries no information.",
+    "not_compared_at_owner": "A rate or an average at one person's level rests on a thin slice of a "
+    "pooled model, so it is shown as recorded and not compared with a goal.",
+    "not_allocated": "No goal was allocated here: this person was not a quota-carrying member of "
+    "this segment on the plan-start roster (for example, hired after the plan date).",
 }
 
 
@@ -127,6 +131,23 @@ def status(
         ratio >= BEHIND_AT_OR_ABOVE if column.reversed else ratio <= BEHIND_AT_OR_BELOW
     )
     return (BEHIND if behind else ON_TRACK), None, ratio.quantize(RATIO_PLACES)
+
+
+def owner_status(
+    column: Column, compared: Decimal | None, goal: Decimal | None
+) -> tuple[str, str | None, Decimal | None]:
+    """(status, why there is none, figure over goal) for one cell of an owner. Only volumes are
+    compared; a rate, a cycle or an average size has no goal comparison at this level."""
+    if column.key in RATIO_COLUMNS:
+        return NONE, "not_compared_at_owner", None
+    if column.judged and goal is None:
+        return NONE, "not_allocated", None
+    return status(column, compared, goal)
+
+
+def owner_key(owner_id: str) -> str:
+    """A deal's owner as a lane's key; a blank one is the unassigned bucket."""
+    return owner_id or UNASSIGNED
 
 
 def segment_key(segment: str) -> str:

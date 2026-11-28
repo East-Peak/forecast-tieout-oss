@@ -177,3 +177,71 @@ def test_full_generation_survives_a_zero_quarterly_target(built):
     assert all(c["passed"] for c in doc["checks"])
     cell = doc["periods"][2]["rows"][0]["cells"]["bookings"]
     assert (cell["goal"], cell["none_because"]) == ("0.00", "no_goal")
+
+
+FIGURES = ("bookings", "won", "created", "created_arr", "days")
+
+
+def test_owner_goals_add_to_their_segments_goal_to_the_last_unit_and_openings_add_too(
+    frozen,
+):
+    _, _, b = frozen
+    for (q, seg), goal in b.goals.items():
+        mine = [g for (qq, s, _), g in b.owner_goals.items() if (qq, s) == (q, seg)]
+        for figure in FIGURES:
+            assert sum(getattr(g, figure) for g in mine) == getattr(goal, figure)
+    for s in b.segments:
+        assert sum(o.opening for o in b.owners if o.segment == s.key) == s.opening
+
+
+def test_every_segment_has_an_unassigned_owner_and_only_roster_people_have_a_share(
+    frozen,
+):
+    _, state, b = frozen
+    on_roster = {m.id for m in state.cap.members if m.start <= b.cutoff}
+    for s in b.segments:
+        mine = {o.id: o for o in b.owners if o.segment == s.key}
+        assert "unassigned" in mine and mine["unassigned"].allocated
+        assert abs(sum(o.share for o in mine.values()) - 1) <= D("0.000001")
+    for o in b.owners:
+        if o.id not in on_roster and o.id != "unassigned":
+            assert not o.allocated and o.share == 0
+
+
+def test_nobody_hired_after_the_plan_date_has_an_allocation(frozen):
+    _, state, b = frozen
+    later = {m.id for m in state.cap.members if m.start > b.cutoff}
+    assert later or state.cap.members
+    assert not any(o.allocated and o.id in later for o in b.owners)
+    assert not any(o in later for _, _, o in b.owner_goals)
+
+
+def test_the_owner_goals_are_in_the_basis_file_and_move_with_nothing_after_the_plan_date(
+    built,
+):
+    """Hire someone after the plan date, move a departure to after it, give a rep a different quota
+    on a deal created after it: the basis file must not move by a byte. (Quota and ownership have
+    no history; today's stand in, and that is stated in the file.)"""
+    company, state, b, _ = built
+    doc = basis.document(b, company)
+    assert doc["owners"] and doc["owner_goals"]
+    cap = state.cap
+    people = list(cap.members)
+    extra = replace(people[0], id="LATE-1", start=b.cutoff + timedelta(days=30))
+    left = next((m for m in people if m.end is None), people[0])
+    people = [replace(m, end=date(2026, 12, 1)) if m is left else m for m in people]
+    pop = replace(
+        state.pop,
+        deals=tuple(
+            replace(d, owner_id="LATE-1") if d.created > b.cutoff else d
+            for d in state.pop.deals
+        ),
+    )
+    roster = replace(cap.roster, members=(*people, extra))
+    changed = replace(
+        state,
+        pop=pop,
+        cap=replace(cap, roster=roster),
+        ground=replace(state.ground, pop=pop),
+    )
+    assert canonical(basis_doc(changed, company)) == canonical(doc)

@@ -9,7 +9,7 @@ happened by then and hides everything later.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, timedelta
 from decimal import Decimal
 
@@ -28,6 +28,7 @@ class Member:
     start: date
     end: date | None  # the last day employed; None while employed
     annual_quota: Decimal | None  # full-ramp, per year
+    name: str = ""  # as on the roster file, where it has one
 
 
 @dataclass(frozen=True)
@@ -78,7 +79,7 @@ def roster_at(members, cutoff: date) -> tuple[Member, ...]:
 
 
 def _still_employed(m: Member) -> Member:
-    return Member(m.id, m.role, m.segment, m.start, None, m.annual_quota)
+    return replace(m, end=None)
 
 
 def segments(m: Member, ramp: RampCurve, first: date, last: date):

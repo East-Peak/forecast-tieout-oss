@@ -7,7 +7,7 @@ from decimal import Decimal
 import pytest
 import yaml
 
-from engine.tieout_core.capacity_config import load_capacity, load_roster
+from engine.tieout_core.capacity_config import _member, load_capacity, load_roster
 from engine.tieout_core.capacity_rules import DAYS_PER_AE_MONTH
 from engine.tieout_core.roster import (
     Member,
@@ -196,3 +196,16 @@ def test_a_deals_owner_id_is_loaded_for_the_ramp_fit(tmp_path):
     write_company(tmp_path / "c", [d, deal("D2")])
     loaded = load_company(tmp_path / "c", load_profile(write_profile(tmp_path / "p")))
     assert [x.owner_id for x in loaded.dataset.deals] == ["AE-7", ""]
+
+
+def test_a_deals_name_and_its_owners_name_and_a_persons_name_are_loaded(tmp_path):
+    from engine.tests.tieout_core.builders import deal, write_company, write_profile
+    from engine.tieout_core.load import load_company, load_profile
+
+    d = deal("D1", created="2026-01-05")
+    d["name"], d["owner"] = " D1 new business ", " Iris Young "
+    write_company(tmp_path / "c", [d])
+    loaded = load_company(tmp_path / "c", load_profile(write_profile(tmp_path / "p")))
+    (got,) = loaded.dataset.deals
+    assert (got.name, got.owner_name) == ("D1 new business", "Iris Young")
+    assert _member({"start_date": "2025-01-01", "name": " Iris Young "}, "AE-1", "ae").name == "Iris Young"  # fmt: skip

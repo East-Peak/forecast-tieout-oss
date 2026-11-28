@@ -139,3 +139,19 @@ def test_the_unavailable_shape_is_a_shape_of_its_own():
     assert canonical(doc)
     made = lanes.unavailable_document("x", "as-signed", doc["unavailable"])
     assert made == doc and lanes_contract.validate(made, None, {}) == []
+
+
+def test_owner_goals_that_do_not_add_to_the_segments_goal_or_an_opening_that_does_not_are_found(
+    built,
+):
+    company, _, basis, _ = built
+    doc = lanes_basis.document(basis, company)
+    seg = doc["segments"][0]["key"]
+    doc["owner_goals"]["Q1FY26"][seg]["unassigned"]["bookings"] = "1.00"
+    assert any("owner goals" in p for p in lanes_contract.validate_basis(doc))
+    doc = lanes_basis.document(basis, company)
+    next(o for o in doc["owners"] if o["segment"] == seg)["opening"] += 1
+    assert any("opening" in p for p in lanes_contract.validate_basis(doc))
+    doc = lanes_basis.document(basis, company)
+    next(o for o in doc["owners"] if o["segment"] == seg)["share"] = "0.999999"
+    assert any("share" in p for p in lanes_contract.validate_basis(doc))

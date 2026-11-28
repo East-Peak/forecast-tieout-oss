@@ -68,9 +68,33 @@ def test_the_minimums_are_defined_once_and_a_rate_is_compared_on_the_actual():
 
 
 def test_every_reason_code_has_words():
-    assert set(rules.REASONS) == {"no_goal", "not_modeled", "too_few", "vacuous"}
+    assert set(rules.REASONS) == {
+        "no_goal",
+        "not_modeled",
+        "too_few",
+        "vacuous",
+        "not_compared_at_owner",
+        "not_allocated",
+    }
 
 
 @pytest.mark.parametrize("key", [c.key for c in rules.COLUMNS])
 def test_places_are_declared_for_every_column(key):
     assert rules.COLUMN[key].places in (0, 2, 4)
+
+
+def owner(key, compared, goal):
+    return rules.owner_status(rules.COLUMN[key], compared, goal)
+
+
+def test_an_owner_is_judged_on_volumes_only_and_never_on_a_pooled_rate_or_size():
+    for key in rules.RATIO_COLUMNS:
+        assert owner(key, D("0.1"), D("0.2")) == ("none", "not_compared_at_owner", None)
+    assert owner("won", D("95"), D(100)) == ("behind", None, D("0.9500"))
+    assert owner("bookings", D(300), D(100))[0] == "on_track"
+
+
+def test_an_owner_with_no_allocation_has_no_status_and_a_zero_allocation_is_no_goal():
+    assert owner("bookings", D(5), None) == ("none", "not_allocated", None)
+    assert owner("bookings", D(5), D(0)) == ("none", "no_goal", None)
+    assert owner("open", D(5), None) == ("none", "vacuous", None)

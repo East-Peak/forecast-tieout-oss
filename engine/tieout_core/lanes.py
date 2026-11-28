@@ -28,6 +28,16 @@ from .figures import CENT, cents
 from .fiscal import Window
 from .history import creation_amounts
 from .lanes_basis import CAVEAT, POOLED, Basis, Sizes, segment_sizes
+from .lanes_cells import (
+    FLOW_ATOMS,
+    QUANTUM,
+    RATIOS,
+    SPLIT,
+    add,
+    part,
+    quotient,
+    text,
+)
 from .lanes_contract import SCHEMA_VERSION, reported
 from .lanes_flows import Calendar, Flow, Leaf
 from .lanes_rules import COUNT
@@ -37,20 +47,6 @@ from .report import Prepared
 
 ZERO = Decimal(0)
 TOLERANCE = Decimal("0.000001")
-ATOMS = (
-    "open",
-    "created",
-    "created_arr",
-    "won",
-    "won_carried",
-    "won_new",
-    "bookings",
-    "bookings_carried",
-    "bookings_new",
-    "days",
-    "cohort_wins",
-    "cohort_n",
-)
 DATED_BENCHMARK = (
     "The win-rate column is a dated benchmark, not a multiplier for the same period's created "
     "deals: it is the rate of the creation cohort old enough to have had its whole year, "
@@ -272,31 +268,6 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
 
 # ---------------------------------------------------------------- atoms and cells
 
-QUANTUM = {
-    "open": Decimal(1),
-    "cohort_wins": Decimal(1),
-    "cohort_n": Decimal(1),
-    "created": COUNT,
-    "won": COUNT,
-    "won_carried": COUNT,
-    "won_new": COUNT,
-    "created_arr": CENT,
-    "bookings": CENT,
-    "bookings_carried": CENT,
-    "bookings_new": CENT,
-    "days": CENT,
-}
-FLOW_ATOMS = tuple(k for k in ATOMS if k not in ("open", "cohort_wins", "cohort_n"))
-RATIOS = {  # a ratio column: the atoms it is a quotient of
-    "win_rate": ("cohort_wins", "cohort_n"),
-    "avg_won_arr": ("bookings", "won"),
-    "cycle": ("days", "won"),
-}
-SPLIT = {
-    "won": ("won_carried", "won_new"),
-    "bookings": ("bookings_carried", "bookings_new"),
-}
-
 
 def _flow_atoms(period: Period, seg: str, wins, created) -> dict[str, Decimal]:
     out = dict.fromkeys(FLOW_ATOMS, ZERO)
@@ -314,37 +285,6 @@ def _flow_atoms(period: Period, seg: str, wins, created) -> dict[str, Decimal]:
     return out
 
 
-def _add(parts) -> dict[str, Decimal | None]:
-    """The sum of atom dicts; an atom that is missing everywhere stays missing."""
-    parts = list(parts)
-    keys = {k for p in parts for k in p}
-    return {
-        k: None
-        if all(p.get(k) is None for p in parts)
-        else sum((p[k] for p in parts if p.get(k) is not None), ZERO)
-        for k in keys
-    }
-
-
-def _text(value: Decimal | None, quantum: Decimal) -> str | None:
-    return None if value is None else str(value.quantize(quantum))
-
-
-def _part(atoms: Mapping[str, Decimal | None], num: str, den: str) -> dict | None:
-    n, d = atoms.get(num), atoms.get(den)
-    if n is None or d is None:
-        return None
-    return {"numerator": _text(n, QUANTUM[num]), "denominator": _text(d, QUANTUM[den])}
-
-
-def _quotient(part: dict | None, places: int) -> Decimal | None:
-    if part is None or not Decimal(part["denominator"]):
-        return None
-    return (Decimal(part["numerator"]) / Decimal(part["denominator"])).quantize(
-        Decimal(1).scaleb(-places)
-    )
-
-
 def _cell(col: rules.Column, atoms: dict, pooled_rate, goal_rate, range80):
     """One cell from the three modes' atoms. Everything the status needs is read back from the
     figures as written, so a reader recomputes the same status from the file."""
@@ -352,8 +292,8 @@ def _cell(col: rules.Column, atoms: dict, pooled_rate, goal_rate, range80):
     parts = split = None
     if col.key in RATIOS:
         num, den = RATIOS[col.key]
-        parts = {m: _part(atoms[m], num, den) for m in ("actual", "forecast", "goal")}
-        values = {m: _quotient(parts[m], col.places) for m in parts}
+        parts = {m: part(atoms[m], num, den) for m in ("actual", "forecast", "goal")}
+        values = {m: quotient(parts[m], col.places) for m in parts}
         if col.key == "win_rate":
             values["forecast"] = pooled_rate.quantize(places)
             values["goal"] = goal_rate.quantize(places)
@@ -368,12 +308,12 @@ def _cell(col: rules.Column, atoms: dict, pooled_rate, goal_rate, range80):
                 m: dict(
                     zip(
                         ("carried_in", "created_in_period"),
-                        (_text(atoms[m][k], QUANTUM[k]) for k in SPLIT[col.key]),
+                        (text(atoms[m][k], QUANTUM[k]) for k in SPLIT[col.key]),
                     )
                 )
                 for m in ("actual", "forecast")
             }
-    shown = {m: _text(v, places) for m, v in values.items()}
+    shown = {m: text(v, places) for m, v in values.items()}
     held = values[col.compared]
     denominator = None
     if col.minimum is not None and parts and parts[col.compared]:
@@ -494,7 +434,7 @@ def lanes_document(
                 "goal": goal_atoms(period, seg),
             }
         by_seg[""] = {
-            m: _add(by_seg[s][m] for s in segments)
+            m: add(by_seg[s][m] for s in segments)
             for m in ("actual", "forecast", "goal")
         }
         expected, range80 = by_period[period.key if period.kind == "quarter" else ""]
@@ -585,9 +525,9 @@ def _allocation(seg: str, basis: Basis) -> str:
 
 def _sizes(s: Sizes) -> dict:
     return {
-        "won": _text(s.won, CENT),
+        "won": text(s.won, CENT),
         "won_basis": s.won_basis,
-        "created": _text(s.created, CENT),
+        "created": text(s.created, CENT),
         "created_basis": s.created_basis,
     }
 

@@ -157,6 +157,101 @@
     "opening": {
       "type": "integer"
     },
+    "owner_caveat": {
+      "$ref": "#/$defs/Text"
+    },
+    "owner_goals": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "additionalProperties": {
+            "additionalProperties": false,
+            "properties": {
+              "bookings": {
+                "$ref": "#/$defs/Money"
+              },
+              "created": {
+                "$ref": "#/$defs/Decimal"
+              },
+              "created_arr": {
+                "$ref": "#/$defs/Money"
+              },
+              "days": {
+                "$ref": "#/$defs/Decimal"
+              },
+              "won": {
+                "$ref": "#/$defs/Decimal"
+              }
+            },
+            "required": [
+              "bookings",
+              "won",
+              "created",
+              "created_arr",
+              "days"
+            ],
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "owners": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "allocated": {
+            "type": "boolean"
+          },
+          "creation_share": {
+            "$ref": "#/$defs/Decimal"
+          },
+          "days": {
+            "type": "integer"
+          },
+          "id": {
+            "$ref": "#/$defs/Text"
+          },
+          "name": {
+            "$ref": "#/$defs/Text"
+          },
+          "opening": {
+            "type": "integer"
+          },
+          "quota": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Money"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "segment": {
+            "$ref": "#/$defs/Text"
+          },
+          "share": {
+            "$ref": "#/$defs/Decimal"
+          }
+        },
+        "required": [
+          "segment",
+          "id",
+          "name",
+          "allocated",
+          "quota",
+          "days",
+          "share",
+          "opening",
+          "creation_share"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
     "schedule": {
       "items": {
         "additionalProperties": false,
@@ -265,6 +360,9 @@
     "segments",
     "schedule",
     "goals",
+    "owners",
+    "owner_goals",
+    "owner_caveat",
     "caveat",
     "checks"
   ],

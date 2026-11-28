@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from bisect import bisect_right
 from collections import defaultdict
-from collections.abc import Mapping, Sequence
+from collections.abc import Hashable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
@@ -28,7 +28,7 @@ from .records import Deal
 
 ZERO = Decimal(0)
 AFTER_THE_YEAR = 5
-Leaf = tuple[str, int, int]
+Leaf = tuple[Hashable, int, int]
 
 
 @dataclass(frozen=True)
@@ -116,10 +116,12 @@ def _offsets(w: Window, as_of: date) -> tuple[int, int]:
 
 
 def existing_flows(
-    model, deals: Sequence[Deal], as_of: date, cal: Calendar
+    model, deals: Sequence[Deal], as_of: date, cal: Calendar, lane=None
 ) -> dict[Leaf, Flow]:
     """What the deals open on ``as_of`` are expected to win in each quarter, from their own
-    segment. A deal with no stage on record is left out, as the forecast leaves it out."""
+    lane: their segment unless ``lane`` (a function of the deal) says otherwise. A deal with no
+    stage on record is left out, as the forecast leaves it out."""
+    lane = lane or (lambda d: rules.segment_key(d.segment))
     out: dict[Leaf, Flow] = defaultdict(lambda: ZERO_FLOW)
     masses: dict[int, Mass] = {}
     for d in deals:
@@ -137,9 +139,7 @@ def existing_flows(
             wins = p * (m1 - m0)
             if wins:
                 days = p * (age * (m1 - m0) + d1 - d0)
-                out[(rules.segment_key(d.segment), q, origin)] += Flow(
-                    wins, d.arr * wins, days
-                )
+                out[(lane(d), q, origin)] += Flow(wins, d.arr * wins, days)
     return dict(out)
 
 

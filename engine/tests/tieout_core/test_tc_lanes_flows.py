@@ -1,6 +1,7 @@
 """Expected wins, bookings and win days by segment, by the quarter they land in and the quarter
 their deal was created in, on a model small enough to calculate by hand."""
 
+from dataclasses import replace
 from datetime import date
 from decimal import Decimal
 from types import SimpleNamespace
@@ -140,3 +141,18 @@ def test_a_creation_series_is_split_by_share_and_programs_follow_the_same_shares
 def test_a_deal_with_a_blank_segment_belongs_to_the_unassigned_lane():
     got = flows.existing_flows(model(), [open_deal(date(2026, 3, 1), segment="")], AS_OF, CAL)  # fmt: skip
     assert {segment for segment, _, _ in got} == {"unassigned"}
+
+
+def test_open_deals_can_be_laned_by_any_key_and_the_lanes_add_back_to_the_segment():
+    deals = [
+        replace(open_deal(date(2026, 3, 1)), owner_id="x"),
+        replace(open_deal(date(2026, 3, 2)), owner_id=""),
+    ]
+    by_segment = flows.existing_flows(model(), deals, AS_OF, CAL)
+    by_owner = flows.existing_flows(
+        model(), deals, AS_OF, CAL, lane=lambda d: (d.segment, d.owner_id or "none")
+    )
+    assert {k[0] for k in by_owner} == {("a", "x"), ("a", "none")}
+    for (_, q, origin), f in by_segment.items():
+        mine = [v for k, v in by_owner.items() if k[1:] == (q, origin)]
+        assert sum(v.bookings for v in mine) == f.bookings

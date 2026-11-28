@@ -3889,12 +3889,14 @@
   ],
   "plan_basis": {
     "cutoff": "2026-01-31",
-    "digest": "26745ddc1b89bd46b5a668f40208794bd57ac0e22e8a1fb0065d055659ca61d7",
+    "digest": "512d6c0151506f53c359a5400d42a0d9cb29eb493361a55ea20fb33c3c12760c",
     "file": "lanes-basis.json",
     "label": "Reconstructed FY plan basis, 2026-01-31"
   },
   "reasons": {
     "no_goal": "There is no goal here, or it is zero, so there is nothing to compare with.",
+    "not_allocated": "No goal was allocated here: this person was not a quota-carrying member of this segment on the plan-start roster (for example, hired after the plan date).",
+    "not_compared_at_owner": "A rate or an average at one person's level rests on a thin slice of a pooled model, so it is shown as recorded and not compared with a goal.",
     "not_modeled": "This figure is not modeled for this period.",
     "too_few": "Too few observations stand behind this ratio for a stable comparison.",
     "vacuous": "For a period that has begun the forecast is the recorded fact, which is also the basis the goal was frozen from, so the comparison carries no information."

@@ -15,7 +15,7 @@ and every additive goal of a parent is the sum of its children.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
 
@@ -28,6 +28,7 @@ from .fiscal import month_windows
 from .fit import fit
 from .forecast import model_forecast
 from .history import as_known_at, creation_amounts, latest_known_date
+from .lanes_alloc import UNITS, OwnerBasis, owner_basis
 from .lanes_contract import SCHEMA_VERSION
 from .lanes_flows import Calendar
 from .lanes_rules import COUNT
@@ -47,6 +48,14 @@ CAVEAT = (
     + rules.ESTIMATOR_RULE
     + " "
     + rules.ZERO_TARGET_RULE
+)
+
+OWNER_CAVEAT = (
+    "An owner's goal is an allocated goal: the segment's goal shared by annual quota and the days "
+    "employed in the year, from the roster as known at the plan date. Someone hired after that "
+    "date has no original allocation. It is a planning allocation, never a measure of a person's "
+    "performance, and what a person is shown to have produced is the record of their deals. "
+    "Ownership has no history in the files, so a deal's owner today stands in for its owner then."
 )
 
 
@@ -109,6 +118,8 @@ class Basis:
     schedule: tuple[ScheduleQuarter, ...]
     goals: Mapping[tuple[str, str], Goal]  # (quarter, segment)
     checks: tuple[Check, ...]
+    owners: tuple[OwnerBasis, ...] = ()
+    owner_goals: Mapping[tuple[str, str, str], Goal] = field(default_factory=dict)
 
     @property
     def opening(self) -> int:
@@ -308,6 +319,15 @@ def plan_basis(state: Prepared) -> Basis:
         for k in order
     )
 
+    owners, owner_goals = owner_basis(
+        known.deals,
+        state.cap.members,
+        cutoff,
+        fy,
+        params.trailing_days,
+        goals,
+        order,
+    )
     everything = model_forecast(model, known, cutoff, months, inflows=inflows)
     replayed = sum(
         (w for w in (everything.window_total(m.label) for m in months)), ZERO
@@ -332,6 +352,23 @@ def plan_basis(state: Prepared) -> Basis:
             ),
             "each quarter's segment bookings goals sum to its target to the cent",
         ),
+        Check(
+            "owner goals add to their segment's goal",
+            all(
+                sum(
+                    (
+                        getattr(g, f)
+                        for (q, s, _), g in owner_goals.items()
+                        if (q, s) == key
+                    ),
+                    ZERO,
+                )
+                == getattr(goal, f)
+                for key, goal in goals.items()
+                for f in UNITS
+            ),
+            "each segment goal's five figures, in each quarter, are the sums of its owners'",
+        ),
     )
     return Basis(
         cutoff,
@@ -348,11 +385,26 @@ def plan_basis(state: Prepared) -> Basis:
         schedule,
         goals,
         checks,
+        owners,
+        owner_goals,
     )
 
 
 def _text(x: Decimal, places: str) -> str:
     return str(x.quantize(Decimal(places)))
+
+
+def _owner_goals(basis: Basis) -> dict:
+    out: dict = {}
+    for (quarter, seg, owner), g in basis.owner_goals.items():
+        out.setdefault(quarter, {}).setdefault(seg, {})[owner] = {
+            "bookings": _text(g.bookings, "0.01"),
+            "won": _text(g.won, "0.0001"),
+            "created": _text(g.created, "0.0001"),
+            "created_arr": _text(g.created_arr, "0.01"),
+            "days": _text(g.days, "0.01"),
+        }
+    return out
 
 
 def document(basis: Basis, company: str) -> dict:
@@ -417,6 +469,22 @@ def document(basis: Basis, company: str) -> dict:
             }
             for q in basis.schedule
         },
+        "owners": [
+            {
+                "segment": o.segment,
+                "id": o.id,
+                "name": o.name,
+                "allocated": o.allocated,
+                "quota": None if o.quota is None else _text(o.quota, "0.01"),
+                "days": o.days,
+                "share": _text(o.share, "0.000001"),
+                "opening": o.opening,
+                "creation_share": _text(o.creation_share, "0.000001"),
+            }
+            for o in basis.owners
+        ],
+        "owner_goals": _owner_goals(basis),
+        "owner_caveat": OWNER_CAVEAT,
         "caveat": CAVEAT,
         "checks": [
             {"name": c.name, "passed": c.passed, "detail": c.detail}
