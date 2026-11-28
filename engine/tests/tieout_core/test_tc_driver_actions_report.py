@@ -435,3 +435,68 @@ def test_a_plan_with_actions_is_refused_where_the_plan_basis_is_unavailable(
     with pytest.raises(da.Unavailable, match="plan basis, which is unavailable"):
         report(state, act(target=points(state, 2)))
     state.memo.clear()
+
+
+# ----------------------------------------------------- each source of creation gets the change once
+
+
+def test_organic_hire_and_program_creation_each_get_the_change_exactly_once(state):
+    """A mid-market action from the first day, at once: the lift on each day is the change times
+    the segment's price index times the deals its people, its hires and its share of the
+    programs are expected to create, recomputed here from the capacity projection and the
+    program's own dollars."""
+    from engine.tieout_core.capacity import project
+    from engine.tieout_core.plan import program_inflows
+
+    g = state.ground
+    target = points(state, 4)
+    change = target - g.model.new_pipeline.win_rate
+    hires = [{"segment": "mid_market", "start": "2026-10", "count": 2}]
+    programs = [{"name": "P", "pipeline": 3_000_000, "start": "2026-10"}]
+    mm = [m for m in g.cap.members if m.segment == "mid_market"]
+    days = g.horizon_days
+
+    def lift(**plan):
+        p = plan_of(
+            state, act("m", "mid_market", start="2026-09", target=target), **plan
+        )
+        h = tuple(
+            m
+            for i, item in enumerate(p.items())
+            for m in (p.members_for(i) if i < len(p.hires) else ())
+        )
+        flows = tuple(
+            f
+            for item in p.programs
+            for f in program_inflows(item, g.windows, g.as_of, g.fy_end, 3)
+        )
+        eff = da.effect_for(state, p, h, flows)
+        return eff.lift, eff.frame.price["mid_market"], h, flows
+
+    organic, price, _, _ = lift()
+    want = project(g.cap.fit, mm, g.as_of, days).per_day
+    assert all(
+        abs(organic[t] - change * price * want[t]) < D("1e-15") for t in range(days)
+    )
+
+    # each plan has its own price index
+    with_hires, price, people, _ = lift(hires=hires)
+    both = project(g.cap.fit, [*mm, *people], g.as_of, days).per_day
+    assert all(
+        abs(with_hires[t] - change * price * both[t]) < D("1e-15") for t in range(days)
+    )
+    assert with_hires[200] > organic[200]  # the hires are there, once
+
+    with_program, price, _, flows = lift(programs=programs)
+    share = state.memo["frames"][((), tuple(flows))].series  # the frame the report used
+    per_day = [D(0)] * days
+    for f in flows:
+        for t in range(f.start, min(f.end, days)):
+            per_day[t] += (
+                f.dollars / D(f.end - f.start) / g.model.new_pipeline.mean_created_arr
+            )
+    shares = {s.key: s.creation_share for s in da.basis_of(state).segments}
+    for t in range(days):
+        extra = shares["mid_market"] * per_day[t]
+        assert abs(with_program[t] - change * price * (want[t] + extra)) < D("1e-15")
+        assert abs(share["mid_market"][t] - (want[t] + extra)) < D("1e-15")

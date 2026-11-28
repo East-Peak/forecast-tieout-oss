@@ -355,3 +355,16 @@ def test_the_grid_with_actions_is_valid_and_every_check_passes(world, good):
     assert "segment creation is the creation the actions were valued over" in names
     assert contract.validate(report) == []
     assert any("win-rate action" in c for c in doc["caveats"])
+
+
+def test_every_check_a_grid_with_actions_carries_fails_the_contract_when_it_fails(
+    world, good
+):
+    names = [c["name"] for c in good[1]["checks"]]
+    assert len(names) == len(set(names)) and len(names) >= 6
+    for i, name in enumerate(names):
+
+        def fail(r, d, i=i):
+            d["checks"][i]["passed"] = False
+
+        assert any(name in p for p in found(world, good, fail)), name
