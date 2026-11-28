@@ -780,7 +780,46 @@ def _against_basis(doc, basis, rule) -> None:
                 )
 
 
+RATE_PLACE = Decimal("0.0001")  # a win rate is written to four places
+
+
+def _win_rates(doc, report, rule) -> None:
+    """A lane's forecast win rate is the pooled rate, unless an action touches it, and then it
+    lies between the pooled rate and the targets that touch it; the company's, between the
+    pooled rate and every target."""
+    pooled = next(
+        (
+            d
+            for d in report["worksheet"].get("drivers", ())
+            if d["driver"] == "win_rate"
+        ),
+        None,
+    )
+    if pooled is None:
+        return
+    base = Decimal(pooled["current"]["value"])
+    items = report.get("driver_actions", {}).get("items", [])
+    for p in doc["periods"]:
+        for r in p["rows"]:
+            if r["kind"] not in ("company", "segment"):
+                continue
+            seg = None if r["kind"] == "company" else r["path"][1]
+            hit = [
+                Decimal(i["target"])
+                for i in items
+                if seg is None or i["slice"]["key"] in (None, seg)
+            ]
+            low, high = min([base, *hit]), max([base, *hit])
+            got = _d(r["cells"]["win_rate"]["forecast"])
+            rule(
+                got is not None and low - RATE_PLACE <= got <= high + RATE_PLACE,
+                f"{p['key']} {r['path']} win_rate: the forecast is not between the pooled "
+                "rate and the targets that touch the lane",
+            )
+
+
 def _against_report(doc, report, rule) -> None:
+    _win_rates(doc, report, rule)
     expected = reported(report)
     gap = report["gap"]
     targets = {q["quarter"]: q["target"] for q in gap["quarters"]}

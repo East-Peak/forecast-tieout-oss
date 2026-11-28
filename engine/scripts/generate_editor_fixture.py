@@ -21,6 +21,7 @@ import yaml
 from engine.scripts.generate_app_reports import REPO, canonical, in_repo
 from engine.tieout_core import (
     actions,
+    driver_actions,
     lanes,
     lanes_basis,
     lanes_contract,
@@ -100,7 +101,15 @@ def native_lanes(report: dict) -> dict[str, str]:
         digest = lanes_contract.digest(lanes_basis.document(basis, COMPANY))
         hires, inflows = actions.plan_inputs(state.ground, plan)
         doc = lanes.lanes_document(
-            state, basis, report, hires, inflows, COMPANY, YOUR_PLAN, digest
+            state,
+            basis,
+            report,
+            hires,
+            inflows,
+            COMPANY,
+            YOUR_PLAN,
+            digest,
+            driver_actions.effect_for(state, plan, hires, inflows),
         )
     mine, owners = lanes_files.split(doc)
     return {

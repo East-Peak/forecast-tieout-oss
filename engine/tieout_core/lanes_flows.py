@@ -167,12 +167,18 @@ def existing_flows(
 
 
 def new_flows(
-    model, series: Mapping[str, Sequence[Decimal]], as_of: date, cal: Calendar
+    model,
+    series: Mapping[str, Sequence[Decimal]],
+    as_of: date,
+    cal: Calendar,
+    rate: Decimal | None = None,
 ) -> tuple[dict[Leaf, Flow], dict[tuple[str, int], Decimal]]:
     """What deals not yet created are expected to win, and how many are created in each
     quarter, from ``series`` (deals created on each day after ``as_of``, by segment). Wins are
-    at the pooled size; a lane prices them for its segment afterwards."""
+    at the pooled size; a lane prices them for its segment afterwards. Each deal is won at the
+    pooled win rate unless ``rate`` says otherwise (1 turns a series of won deals into wins)."""
     new = model.new_pipeline
+    rate = new.win_rate if rate is None else rate
     mass = Mass(new.timing)
     out: dict[Leaf, Flow] = defaultdict(lambda: ZERO_FLOW)
     created: dict[tuple[str, int], Decimal] = defaultdict(Decimal)
@@ -187,9 +193,9 @@ def new_flows(
             for q, w in enumerate(cal.quarters):
                 lo, hi = _offsets(w, as_of)
                 (m1, d1), (m0, d0) = mass.through(hi - t), mass.through(lo - t)
-                wins = count * new.win_rate * (m1 - m0)
+                wins = count * rate * (m1 - m0)
                 if wins:
-                    days = count * new.win_rate * (d1 - d0)
+                    days = count * rate * (d1 - d0)
                     out[(segment, q, origin)] += Flow(
                         wins, wins * new.mean_won_arr, days
                     )

@@ -14,7 +14,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import actions, lanes, lanes_basis, lanes_contract
+from . import actions, driver_actions, lanes, lanes_basis, lanes_contract
 from . import lanes_files as split
 from .plan import Plan
 from .report import Prepared
@@ -76,6 +76,7 @@ def lanes_for(
         company,
         scenario,
         frozen.digest,
+        driver_actions.effect_for(state, edited.plan, hires, inflows),
     )
     problems = lanes_contract.validate(doc, frozen.doc, edited.report)
     if problems:

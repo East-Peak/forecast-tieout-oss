@@ -219,6 +219,40 @@ def effect(
     )
 
 
+# ---------------------------------------------------------------- what the lanes read
+
+
+def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flows.Flow]:
+    """The extra wins the actions expect in the fiscal year, by (segment, quarter it lands in,
+    quarter its deal was created in), priced at the pooled size times the segment's index. They
+    are added to the no-action plan's wins, which stay as the lanes shared them out."""
+    days = (cal.year.end - g.as_of).days
+    series = {
+        s: [c * d for c, d in zip(eff.frame.series[s][:days], eff.changes[s][:days])]
+        for s in eff.frame.segments
+    }
+    wins, _ = flows.new_flows(g.model, series, g.as_of, cal, rate=ONE)
+    return {
+        k: flows.Flow(f.wins, f.bookings * eff.frame.price[k[0]], f.days)
+        for k, f in wins.items()
+    }
+
+
+def period_rate(eff: Effect, segments: Sequence[str], window, as_of: date) -> Decimal:
+    """The win rate on the pipeline ``segments`` are expected to create in ``window`` (its dates
+    after ``as_of``): the pooled rate plus the change the actions make, weighted by the deals
+    created each day. A period with no deal to create keeps the pooled rate."""
+    days = len(eff.lift)
+    first = max((window.start - as_of).days + 1, 1)
+    last = min((window.end - as_of).days, days)
+    moved = made = ZERO
+    for s in segments:
+        for t in range(first, last + 1):
+            made += eff.frame.series[s][t - 1]
+            moved += eff.frame.series[s][t - 1] * eff.changes[s][t - 1]
+    return eff.baseline + (moved / made if made else ZERO)
+
+
 # ---------------------------------------------------------------- the plan's frame
 
 
@@ -239,11 +273,11 @@ def basis_of(state) -> Basis:
 
 
 def effect_for(
-    state, plan: Plan, hires: Sequence[Member], inflows: Sequence[Inflow]
+    state, plan: Plan | None, hires: Sequence[Member], inflows: Sequence[Inflow]
 ) -> Effect | None:
     """The plan's actions over the plan's own hires and programs; None when it has no actions.
     The frame is made once for each such plan and shared by every change to its actions."""
-    if not plan.actions:
+    if plan is None or not plan.actions:
         return None
     g = state.ground
     key = (tuple(hires), tuple(inflows))

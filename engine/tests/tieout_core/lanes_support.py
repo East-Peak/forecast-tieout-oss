@@ -9,6 +9,7 @@ import pytest
 from engine.scripts import generate_app_reports as gen
 from engine.tieout_core import (
     actions,
+    driver_actions,
     lanes,
     lanes_basis,
     lanes_contract,
@@ -30,8 +31,9 @@ def build(company, state, basis, scenario):
     hires, inflows = actions.plan_inputs(state.ground, plan) if plan else ((), ())
     digest = lanes_contract.digest(lanes_basis.document(basis, company))
     doc = lanes.lanes_document(
-        state, basis, report, hires, inflows, company, scenario.id, digest
-    )
+        state, basis, report, hires, inflows, company, scenario.id, digest,
+        driver_actions.effect_for(state, plan, hires, inflows),
+    )  # fmt: skip
     return report, doc
 
 

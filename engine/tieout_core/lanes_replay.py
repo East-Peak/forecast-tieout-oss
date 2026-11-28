@@ -23,12 +23,12 @@ ZERO = Decimal(0)
 RATE_PLACES_HALF = Decimal("0.00005")  # a rate is written to four places
 
 
-def replay(state: Prepared, doc: dict, hires, inflows) -> list[str]:
+def replay(state: Prepared, doc: dict, hires, inflows, lift=()) -> list[str]:
     """Every disagreement between the company row of ``doc`` and the deals and the model."""
     if "unavailable" in doc:
         return []
     g, deals = state.ground, state.pop.deals
-    forecast = Scenario(g).forecast(tuple(hires), tuple(inflows))
+    forecast = Scenario(g).forecast(tuple(hires), tuple(inflows), tuple(lift))
     amounts = creation_amounts(state.pop)
     horizon = state.params.horizon_days
     found: list[str] = []

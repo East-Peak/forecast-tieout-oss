@@ -38,6 +38,7 @@ from jsonschema import Draft202012Validator
 from engine.tieout_core import (
     actions,
     contract,
+    driver_actions,
     lanes,
     lanes_basis,
     lanes_contract,
@@ -384,7 +385,15 @@ def lanes_files(company: str, state, reports: dict, plans: dict) -> dict[str, st
             else ((), ())
         )
         doc = lanes.lanes_document(
-            state, basis, reports[sc.id], hires, inflows, company, sc.id, digest
+            state,
+            basis,
+            reports[sc.id],
+            hires,
+            inflows,
+            company,
+            sc.id,
+            digest,
+            driver_actions.effect_for(state, plans[sc.id], hires, inflows),
         )
         mine, owners = lanes_split.split(doc)
         files[f"{company}/lanes-{sc.id}.json"] = canonical(mine)
@@ -526,9 +535,16 @@ def replay_problems(companies=COMPANIES) -> list[str]:
                 hires, inflows = (
                     actions.plan_inputs(state.ground, plan) if plan else ((), ())
                 )
+                effect = driver_actions.effect_for(state, plan, hires, inflows)
                 found += [
                     f"{company}/{sc.id}: lanes: {p}"
-                    for p in lanes_replay.replay(state, doc, hires, inflows)
+                    for p in lanes_replay.replay(
+                        state,
+                        doc,
+                        hires,
+                        inflows,
+                        () if effect is None else effect.lift,
+                    )
                 ]
             shard = json.loads(
                 (REPO / REPORTS / company / "lanes-records.json").read_text()

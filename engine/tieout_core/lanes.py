@@ -41,7 +41,7 @@ from .lanes_facts import (
 )
 from .lanes_flows import Calendar, Flow, Leaf
 from .lanes_rules import COUNT
-from .plan import segment_words
+from .plan import REST_OF_FY, segment_words
 from .records import Check
 from .report import Prepared
 
@@ -57,6 +57,12 @@ POOLED_MODEL = (
     "company back-test's credibility does not transfer to a segment. A behind cell is a "
     "planning discrepancy, not proof of a cause."
 )
+ACTIONS_CAVEAT = (
+    "Where the plan carries a win-rate action, the forecast win rate of the lane it touches is "
+    "the resulting rate: the pooled rate plus the change the action makes, weighted by the deals "
+    "that lane is expected to create in the period. It is an entered change to a pooled rate, "
+    "not a rate fitted to the slice; creation, goals and recorded actuals do not move."
+)
 CAVEATS = (CAVEAT, DATED_BENCHMARK, POOLED_MODEL)
 
 
@@ -71,9 +77,12 @@ def _series(state: Prepared, basis: Basis, cal: Calendar, hires, inflows, segmen
     return driver_actions.creation_series(g, share, hires, inflows, segments, horizon)
 
 
-def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
+def _remainder(
+    state, basis, cal, hires, inflows, segments, sizes, scenario, effect=None
+):
     """The expected wins and created deals after the as-of date, by lane, with bookings tied to
-    the cent to what the report shows for each quarter."""
+    the cent to what the report shows for each quarter. The plan's win-rate actions (``effect``)
+    add their wins to the no-action plan's, which stay priced as they were."""
     g = state.ground
     model = g.model
     series = _series(state, basis, cal, hires, inflows, segments)
@@ -83,9 +92,14 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
         raise ValueError(f"expected wins belong to no lane: {sorted(stray)}")
     new_wins, new_created = flows.new_flows(model, series, g.as_of, cal)
     priced = flows.price(new_wins, sizes, model.new_pipeline.mean_won_arr)
+    lift: tuple = ()
+    if effect is not None:
+        lift = effect.lift
+        for k, f in driver_actions.action_flows(g, effect, cal).items():
+            priced[k] = priced.get(k, flows.ZERO_FLOW) + f
     for k, f in priced.items():
         leaves[k] = leaves.get(k, flows.ZERO_FLOW) + f
-    forecast = scenario.forecast(tuple(hires), tuple(inflows))
+    forecast = scenario.forecast(tuple(hires), tuple(inflows), lift)
     shown = [
         sum(
             (
@@ -129,6 +143,18 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
             f"months; the forward function gives {modeled:.2f}",
         )
     ]
+    if effect is not None:
+        days = len(next(iter(series.values()), []))
+        checks.append(
+            Check(
+                "segment creation is the creation the actions were valued over",
+                all(
+                    list(effect.frame.series[s][:days]) == list(series[s])
+                    for s in segments
+                ),
+                f"{days} days of creation in each of {len(segments)} segments",
+            )
+        )
     creation = scenario.creation(tuple(hires))
     if creation is not None:
         days = len(next(iter(series.values()), []))
@@ -146,6 +172,15 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
 
 
 # ---------------------------------------------------------------- atoms and cells
+
+
+def _win_rate(g, effect, segments, seg: str, period) -> Decimal:
+    """The forecast win rate of ``seg`` (the company when it is blank) in ``period``: the
+    pooled rate, or with actions the rate they leave on the period's new pipeline."""
+    if effect is None:
+        return g.model.new_pipeline.win_rate
+    mine = segments if seg == "" else (seg,)
+    return driver_actions.period_rate(effect, mine, period.window, g.as_of)
 
 
 def _marks(col: rules.Column, values: dict) -> dict | None:
@@ -237,18 +272,15 @@ def lanes_document(
     company: str,
     scenario: str,
     digest: str,
+    effect=None,
 ) -> dict:
     """The lanes for one scenario: ``hires`` and ``inflows`` are what its plan puts into the
-    forward function, ``report`` its report (the figures the company row must equal)."""
+    forward function, ``report`` its report (the figures the company row must equal) and
+    ``effect`` the plan's win-rate actions (``driver_actions.effect_for``), None without any.
+    Goals and recorded actuals are never moved by them."""
     g, cal = state.ground, Calendar(state.profile.fiscal_year)
     fy = cal.year
-    people = [*g.cap.members, *hires]
-    known = [s.key for s in basis.segments]
-    extra = sorted(
-        {rules.segment_key(d.segment) for d in g.pop.deals}
-        | {rules.segment_key(m.segment) for m in people}
-    )
-    segments = known + [s for s in extra if s not in known]
+    segments = driver_actions.segments_of(g, [s.key for s in basis.segments], hires)
     new = g.model.new_pipeline
     pooled = Sizes(new.mean_won_arr, POOLED, new.mean_created_arr, POOLED)
     sizes = sizes_now(g, state.params.trailing_days, segments)
@@ -256,8 +288,25 @@ def lanes_document(
     scenario_model = Scenario(g)
     wins_a, created_a = facts(state, cal)
     wins_r, created_r, checks, whole, priced = _remainder(
-        state, basis, cal, hires, inflows, segments, sizes, scenario_model
+        state, basis, cal, hires, inflows, segments, sizes, scenario_model, effect
     )
+    if effect is not None:
+        gained = sum(
+            (f.bookings for f in driver_actions.action_flows(g, effect, cal).values()),
+            ZERO,
+        )
+        joint = Decimal(report["driver_actions"]["joint_gain"][REST_OF_FY])
+        slack = CENT * len(
+            g.rest_labels
+        )  # the report's months are each rounded to the cent
+        checks.append(
+            Check(
+                "lane action bookings reproduce the report's joint gain",
+                abs(gained - joint) <= slack,
+                f"the lanes' actions book {gained:.2f} in the year's remaining months; the "
+                f"report's joint gain is {joint:.2f}",
+            )
+        )
     wins_f, created_f = _merge(wins_a, wins_r), _merge(created_a, created_r)
     # the owners: the segments' expected wins and creation shared out
     lane_series = owners.series(state, basis, cal, hires, inflows, segments)
@@ -358,7 +407,7 @@ def lanes_document(
                 c.key: _cell(
                     c,
                     by_seg[seg],
-                    g.model.new_pipeline.win_rate,
+                    _win_rate(g, effect, segments, seg, period),
                     basis.win_rate,
                     marker if c.key == "bookings" else None,
                 )
@@ -434,7 +483,7 @@ def lanes_document(
             for c in rules.COLUMNS
         ],
         "reasons": rules.REASONS,
-        "caveats": [*CAVEATS, OWNER_CAVEAT],
+        "caveats": [*CAVEATS, *([ACTIONS_CAVEAT] if effect else []), OWNER_CAVEAT],
         "periods": out_periods,
         "checks": [
             {"name": c.name, "passed": c.passed, "detail": c.detail} for c in checks
