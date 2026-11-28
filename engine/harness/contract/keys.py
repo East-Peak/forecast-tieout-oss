@@ -78,8 +78,8 @@ CANONICAL_TABLES = {
         _t("spend", "campaign_id month", "one row per campaign per month"),
         _t(
             "demand_episode",
-            "lead_id offered_on",
-            "one row per offer of qualified demand to sales: identity, offered date, routing history, terminal outcome and reason class",
+            "lead_id offer_seq",
+            "one row per offer of a lead to sales (a lead offered twice has two): offered date, optional MQL link, routing history, outcome and reason class",
         ),
         _t("extract", "extract_id", "one row per extract folder (manifest)"),
     )
@@ -90,6 +90,8 @@ class Assertion(NamedTuple):
     """One append-only fact. The loader writes these from history and snapshot differences.
 
     entity       raw object name ("Opportunity"); for a composite key the parts joined by "|"
+                 A DELETED_FIELD assertion has effective_at = recorded_at = the extracted_at of the
+                 first extract lacking the record (an upper bound; the record existed before)
     id           record key within the entity
     field        raw field name, or DELETED_FIELD
     value        canonical text of the value (dates ISO, money as written in the raw record); None is null

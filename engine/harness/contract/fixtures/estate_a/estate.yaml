@@ -15,6 +15,7 @@ field_coverage:
     Opportunity.Amount:     {via: OpportunityHistory, since: record creation}
     Opportunity.CloseDate:  {via: OpportunityHistory, since: record creation}
     Opportunity.OwnerId:    {via: OpportunityFieldHistory, since: record creation}
+    Lead.Sales_Offered_Date__c:   {via: LeadHistory, since: record creation}
     Lead.MQL_Date__c:             {via: LeadHistory, since: record creation}
     Lead.Disposition__c:          {via: LeadHistory, since: record creation}
     Lead.Disposition_Reason__c:   {via: LeadHistory, since: record creation}
@@ -25,3 +26,5 @@ field_coverage:
     - Account.Tier__c          # changes between the extracts with no history: the one field with no history
     - Opportunity.Sourcing_User__c
     - Lead.Tier__c
+    - Account.BillingCountry    # free text as the vendor defines it: a name for one account, a code for another
+    - Account.BillingCountryCode

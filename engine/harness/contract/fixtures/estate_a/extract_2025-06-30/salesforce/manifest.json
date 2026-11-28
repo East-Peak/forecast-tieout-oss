@@ -5,12 +5,12 @@
   "extracted_at": "2025-06-30T23:00:00Z",
   "objects": {
     "Opportunity": {
-      "count": 5,
-      "sha256": "dba66eb07f2701769097a8d380c71427db187b9e63835ddf416663ac907a19f9"
+      "count": 7,
+      "sha256": "ead301c8e21fe27869393305493c138626566ab53f75bb7435f34dfe9600a333"
     },
     "OpportunityHistory": {
-      "count": 16,
-      "sha256": "091af63ef10b340cb37e763f16d213a9bb86ad602948afeb3d9f7ecb89f9aef6"
+      "count": 23,
+      "sha256": "eef9d3b3b992afaa02db1f031195f916e2ef94e4d13785dc9d25cff5f0277ff9"
     },
     "OpportunityFieldHistory": {
       "count": 1,
@@ -18,15 +18,15 @@
     },
     "Lead": {
       "count": 8,
-      "sha256": "cbef8326b0e76c52fdbbfd86dfadea6aa82b036bc98cdf98555640846b8057ad"
+      "sha256": "f81b63be4b3fdf48712fbafb55cbc1435b049928aa5a314edf873bbeb6813d40"
     },
     "LeadHistory": {
-      "count": 16,
-      "sha256": "a4a037b81d20b95f54fff8124c30df7b37da2aff387af7929d4b1c0e313a7edf"
+      "count": 28,
+      "sha256": "1820bea4979d8b58f4cd82dd799e012c68df1672fdc18445ac0703784106b0c0"
     },
     "Account": {
       "count": 3,
-      "sha256": "79b60a73e62872c7e301d23246c3cccc7b6f5baa2b7998aad25f4bb75fb350f2"
+      "sha256": "fc8fa28245ff0892ab2b171d52093ef34768a26d46742f6b84b3c17830d7da1f"
     },
     "Campaign": {
       "count": 2,

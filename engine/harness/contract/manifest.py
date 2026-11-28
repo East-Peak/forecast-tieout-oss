@@ -7,7 +7,9 @@ object. Semantics (design section 1):
 - An object that is not listed was not extracted. Its state is unavailable,
   never empty. A listed object with `count` 0 is genuinely empty.
 - A record present in an earlier complete snapshot of the same source system
-  and absent from a later one was deleted as of the later extract.
+  and absent from a later one was deleted. It existed until then: the deletion
+  takes effect at the later extract's `extracted_at`, an upper bound on when it
+  really went. Nothing is voided since creation.
 - Loading is idempotent by content hash (`content_hash`).
 
 Manifest shape (JSON):

@@ -7,41 +7,47 @@ now: "2025-06-30T23:00:00Z"
 
 semantics:
   R1_history_rows: >
-    A history row asserts the fields that changed from the previous row of the same record
-    (the first row asserts all). recorded_at is the row's CreatedDate. effective_at equals
-    recorded_at, except R2.
-  R2_closing_in_arrears: >
-    A row that moves StageName to a closed stage asserts it with effective_at = the earlier of
-    that row's CloseDate at 00:00:00Z and its CreatedDate. recorded_at stays the row's CreatedDate.
-    The observed closing transition (recorded_at) is kept apart from the effective close date.
+    A history row asserts the fields that changed from the previous row of the same record (the
+    first row asserts all). effective_at = recorded_at = the row's CreatedDate. A stage transition
+    is always effective at its observed timestamp; there is no backdating. The commercial close
+    date (CloseDate) is a separate fact.
+  R2_two_questions: >
+    stage_at(T) is operational: assertions with effective_at <= T and recorded_at <= K, latest
+    effective_at wins, ties go to the later recorded_at. open_at(T) is commercial: the record is
+    known by K, its CreatedDate <= T, it is not deleted by T (R4), and it is not closed. A deal is
+    closed at T when a selling spell closed as known by K has an effective CloseDate <= T and was
+    not reopened by T. A closed-to-open stage move starts a new spell and takes effect at its
+    observed time. A deal can have a stage_at that says open while open_at says closed.
   R3_measures_restate: >
     A measure over closed deals (bookings, MQL month counts) reads Amount, CloseDate, StageName and
     MQL_Date__c as the latest value with recorded_at <= K, ignoring effective_at. A correction made
-    after close restates the deal in its close month, and a date entered in arrears counts in its
-    business month, but only for K at or after the correction.
-  R4_state_at_T: >
-    Stage and owner at T use assertions with effective_at <= T and recorded_at <= K: the latest
-    effective_at wins, ties go to the later recorded_at. A record is open at T when it exists,
-    its CreatedDate <= T and its stage at T is not closed.
-  R5_deletion: >
+    after close, in either direction, restates the deal in its close month, but only for K at or
+    after the correction.
+  R4_deletion: >
     A record absent from a later complete snapshot of a listed object gets a "_deleted" assertion
-    with effective_at = the record's CreatedDate and recorded_at = the extracted_at of the first
-    extract lacking it. For K at or after that, the record never existed at any T. Its earlier
-    assertions stay in the store (append-only) and are visible to earlier K.
-  R6_snapshot_only_fields: >
+    with effective_at = recorded_at = the extracted_at of the first extract lacking it, flagged
+    deletion_time_upper_bound. Before that the record existed: open_at, stage_at and its earlier
+    bookings and workload stand for every K. From then on it is not open and its terminal outcome is
+    deleted (a censoring outcome, not a loss). Voiding a record since creation is a separate explicit
+    correction this build does not model.
+  R5_snapshot_only_fields: >
     First extract showing a record: its value has effective_at = the record's CreatedDate and
     recorded_at = that extract's extracted_at (flag assumed_since_creation). A later extract showing
     a different value: effective_at = recorded_at = that extract's extracted_at. With no extract of
     the source system at or before K the field is unavailable (no_extract_at_or_before_known_at).
-  R7_record_known_since: >
+  R6_record_known_since: >
     A record is known from the earliest recorded_at among its history rows; with none, from the first
     extract showing it. Immutable fields (estate.yaml) are known from then.
-  R8_unavailable_reasons: >
+  R7_unavailable_reasons: >
     object_not_extracted: every extract of the source system at or before K omits the object.
     no_extract_at_or_before_known_at: the source system has no extract at or before K.
-  R9_demand_episode: >
-    One episode per lead with an MQL_Date__c (offered_on, by R3). Outcome at T is the latest
-    Disposition__c by R4 (null means open).
+  R8_demand_episodes: >
+    Each new non-null value of Sales_Offered_Date__c in LeadHistory recorded by K starts an episode
+    (offer_seq 1, 2, ...; offered_on is that value). Disposition__c and Disposition_Reason__c rows
+    recorded from that offer row up to, not including, the next offer row are the episode's outcome;
+    the latest row decides and a null new value means open. MQL_Date__c is optional; the first episode
+    is mql_linked when the lead has an MQL date. A lead rejected in March and offered again in May has
+    two episodes. Outbound demand is a lead with no MQL date.
 
 cases:
   - id: bookings_2025_03
@@ -60,7 +66,16 @@ cases:
     args: {month: "2025-04"}
     reconstructed: {value_cents: 1500000}
     contemporaneous: {value_cents: 0}
-    derivation: "O2 was marked Closed Won on 05-06 with CloseDate 04-25 (R2, R3): only K at or after 05-06 counts its 15000 in April."
+    derivation: "O2 was marked Closed Won on 05-06 with CloseDate 04-25 (R3): only K at or after 05-06 counts its 15000 in April."
+
+  - id: bookings_2025_05
+    question: "New-business bookings with a close date in May 2025, in cents."
+    kind: bookings
+    t: "2025-05-31"
+    args: {month: "2025-05"}
+    reconstructed: {value_cents: 1200000}
+    contemporaneous: {value_cents: 800000}
+    derivation: "O7 closed won on 06-05 with CloseDate 05-25 (12000), and O4's CloseDate was moved from 05-20 to 06-02 on 06-20 (R3): K=now has O7 only, K=05-31 has O4 only."
 
   - id: bookings_2025_06
     question: "New-business bookings with a close date in June 2025, in cents."
@@ -69,25 +84,79 @@ cases:
     args: {month: "2025-06"}
     reconstructed: {value_cents: 800000}
     contemporaneous: {value_cents: 800000}
-    derivation: "O4 closed won 06-10 for 8000 with no later edit; O6 is open; both modes agree."
+    derivation: "O4 (8000) sits in June once its CloseDate is corrected to 06-02 on 06-20; K=06-30 is after the correction, so both modes agree."
 
   - id: stage_o2_2025_04_30
     question: "Stage of opportunity 006FX0000000002 at 2025-04-30."
     kind: stage_at
     t: "2025-04-30"
     args: {opportunity: "006FX0000000002"}
-    reconstructed: {value: "Closed Won"}
+    reconstructed: {value: "Negotiation"}
     contemporaneous: {value: "Negotiation"}
-    derivation: "Closed Won row recorded 05-06 has effective_at 04-25 (R2): visible at T=04-30 only for K >= 05-06; otherwise Negotiation since 04-15."
+    derivation: "R1: the Closed Won transition was observed 05-06, after T, so the stage at T is Negotiation (since 04-15) in both modes, even though its CloseDate says 04-25."
+
+  - id: stage_o7_2025_05_31
+    question: "Stage of opportunity 006FX0000000007 at 2025-05-31."
+    kind: stage_at
+    t: "2025-05-31"
+    args: {opportunity: "006FX0000000007"}
+    reconstructed: {value: "Negotiation"}
+    contemporaneous: {value: "Negotiation"}
+    derivation: "Negotiation recorded 05-28, Closed Won recorded 06-05 (after T) with CloseDate 05-25: the operational stage at T is Negotiation in both modes."
+
+  - id: open_o7_2025_05_31
+    question: "Is opportunity 006FX0000000007 open at 2025-05-31?"
+    kind: open_at
+    t: "2025-05-31"
+    args: {opportunity: "006FX0000000007"}
+    reconstructed: {open: false}
+    contemporaneous: {open: true}
+    derivation: "R2: stage_at says Negotiation, but as known now the deal closed won with effective CloseDate 05-25 <= T, so it is not open; at K=05-31 the closing was unknown."
+
+  - id: open_o4_2025_05_31
+    question: "Is opportunity 006FX0000000004 open at 2025-05-31?"
+    kind: open_at
+    t: "2025-05-31"
+    args: {opportunity: "006FX0000000004"}
+    reconstructed: {open: true}
+    contemporaneous: {open: false}
+    derivation: "R2, R3: closed won 05-20 with CloseDate 05-20 as known at K=05-31; the 06-20 correction moved CloseDate to 06-02 > T, so as known now it was still open at T."
+
+  - id: open_o8_reopened
+    question: "Is opportunity 006FX0000000008 open at 2025-05-01?"
+    kind: open_at
+    t: "2025-05-01"
+    args: {opportunity: "006FX0000000008"}
+    reconstructed: {open: false}
+    contemporaneous: {open: false}
+    derivation: "Spell 1 closed lost with CloseDate 04-22; the reopening (Proposal, 05-14) starts spell 2 after T=05-01, so it is closed at 05-01 in both modes."
+
+  - id: open_o8_reopened_2025_05_31
+    question: "Is opportunity 006FX0000000008 open at 2025-05-31?"
+    kind: open_at
+    t: "2025-05-31"
+    args: {opportunity: "006FX0000000008"}
+    reconstructed: {open: true}
+    contemporaneous: {open: true}
+    derivation: "The reopening was observed 05-14 <= T: spell 2 is open."
 
   - id: stage_o5_2025_05_31
     question: "Stage of opportunity 006FX0000000005 (deleted before the second extract) at 2025-05-31."
     kind: stage_at
     t: "2025-05-31"
     args: {opportunity: "006FX0000000005"}
-    reconstructed: {exists: false}
+    reconstructed: {value: "Discovery"}
     contemporaneous: {value: "Discovery"}
-    derivation: "O5 is absent from the 06-30 extract (R5): for K=now it never existed; at K=05-31 it was Discovery since 04-08."
+    derivation: "R4: a deleted record did exist; deletion takes effect at the 06-30 extract, so at T=05-31 it was Discovery since 04-08 in both modes."
+
+  - id: status_o5_2025_06_30
+    question: "Status of opportunity 006FX0000000005 at 2025-06-30."
+    kind: status_at
+    t: "2025-06-30"
+    args: {opportunity: "006FX0000000005"}
+    reconstructed: {status: deleted, flags: [deletion_time_upper_bound]}
+    contemporaneous: {status: deleted, flags: [deletion_time_upper_bound]}
+    derivation: "R4: absent from the 06-30T23:00 extract, so deleted from that time (an upper bound on when it really went); K=06-30T23:59:59 is after it. Terminal outcome deleted: censored, not lost."
 
   - id: owner_o4_2025_05_31
     question: "Owner of opportunity 006FX0000000004 at 2025-05-31."
@@ -99,13 +168,22 @@ cases:
     derivation: "FieldHistory row 05-05 moved OwnerId from 005FX0000000001 to 005FX0000000002, effective and recorded 05-05, before T and K."
 
   - id: open_count_2025_04_30
-    question: "How many opportunities are open at 2025-04-30?"
+    question: "Which opportunities are open at 2025-04-30?"
     kind: open_count
     t: "2025-04-30"
     args: {}
-    reconstructed: {count: 2}
-    contemporaneous: {count: 4}
-    derivation: "Reconstructed: O3, O4 open; O1 closed 03-14, O2 closed 04-25 (R2), O5 deleted (R5), O6 not yet created. Contemporaneous: O2, O3, O4, O5 open."
+    reconstructed: {count: 3, ids: ["006FX0000000003", "006FX0000000004", "006FX0000000005"]}
+    contemporaneous: {count: 4, ids: ["006FX0000000002", "006FX0000000003", "006FX0000000004", "006FX0000000005"]}
+    derivation: "Commercial (R2). Reconstructed: O1 closed 03-14, O2 closed (CloseDate 04-25), O8 closed lost 04-22 (reopened only 05-14), O5 still existed (R4), O6 and O7 not yet created: O3, O4, O5 open. Contemporaneous: O2's closing is unknown, so O2, O3, O4, O5."
+
+  - id: open_count_2025_05_31
+    question: "Which opportunities are open at 2025-05-31?"
+    kind: open_count
+    t: "2025-05-31"
+    args: {}
+    reconstructed: {count: 4, ids: ["006FX0000000004", "006FX0000000005", "006FX0000000006", "006FX0000000008"]}
+    contemporaneous: {count: 4, ids: ["006FX0000000005", "006FX0000000006", "006FX0000000007", "006FX0000000008"]}
+    derivation: "Same count, different deals. Reconstructed: O4 (CloseDate corrected to 06-02) and O5 (not yet deleted), O6, reopened O8; O7 closed 05-25. Contemporaneous: O4 closed 05-20 but O7's closing is unknown."
 
   - id: closing_o2
     question: "Effective close date and observed closing record time of opportunity 006FX0000000002, as of 2025-04-30."
@@ -114,10 +192,19 @@ cases:
     args: {opportunity: "006FX0000000002"}
     reconstructed: {close_date: "2025-04-25", observed_closed_recorded_at: "2025-05-06T16:00:00Z"}
     contemporaneous: {close_date: "2025-05-31", observed_closed_recorded_at: null}
-    derivation: "R2: CloseDate 04-25 was entered with the 05-06T16:00 closing row; before that the close date field said 05-31 and no closing was observed."
+    derivation: "The commercial close date and the observed closing transition are kept apart: CloseDate 04-25 was entered with the 05-06T16:00 closing row; before that the field said 05-31 and no closing was observed."
+
+  - id: mql_count_2025_01
+    question: "MQLs with MQL date in January 2025."
+    kind: mql_count
+    t: "2025-01-31"
+    args: {month: "2025-01"}
+    reconstructed: {count: 1}
+    contemporaneous: {count: 1}
+    derivation: "Only L1 (01-25). L2 is outbound demand offered 01-18 with no MQL date."
 
   - id: mql_count_2025_03
-    question: "MQLs (leads offered to sales) with MQL date in March 2025."
+    question: "MQLs (leads with an MQL date) with MQL date in March 2025."
     kind: mql_count
     t: "2025-03-31"
     args: {month: "2025-03"}
@@ -134,6 +221,15 @@ cases:
     contemporaneous: {count: 2}
     derivation: "L6 04-05 and L7 04-15; L8's MQL date 04-28 was entered on 05-12 (R3), so only K >= 05-12 counts it."
 
+  - id: demand_outcomes_offered_2025_01
+    question: "Outcomes at 2025-03-31 of demand episodes offered in January 2025."
+    kind: demand_outcomes
+    t: "2025-03-31"
+    args: {offered_month: "2025-01"}
+    reconstructed: {counts: {admitted: 2}}
+    contemporaneous: {counts: {admitted: 2}}
+    derivation: "R8: L1 offered 01-25 (an MQL) and L2 offered 01-18 by a BDR with no MQL date: two episodes, both admitted. Demand does not require an MQL."
+
   - id: demand_outcomes_offered_2025_04
     question: "Outcomes at 2025-04-30 of demand episodes offered in April 2025."
     kind: demand_outcomes
@@ -141,7 +237,7 @@ cases:
     args: {offered_month: "2025-04"}
     reconstructed: {counts: {admitted: 1, open: 2}}
     contemporaneous: {counts: {admitted: 1, open: 1}}
-    derivation: "L6 admitted 04-10; L7 still open at T (expired 06-14 is after T); L8 offered 04-28 and open, but only known from 05-12 (R3, R9)."
+    derivation: "L6 admitted 04-10; L7 still open at T (expired 06-14 is after T); L8 offered 04-28 and open, but its offer was only entered 05-12 (R3, R8)."
 
   - id: demand_outcomes_offered_2025_03_at_06_30
     question: "Outcomes at 2025-06-30 of demand episodes offered in March 2025, with reasons."
@@ -150,7 +246,34 @@ cases:
     args: {offered_month: "2025-03"}
     reconstructed: {counts: {admitted: 1, rejected: 1, expired: 1}, reason_classes: {fit: 1, capacity: 1}}
     contemporaneous: {counts: {admitted: 1, rejected: 1, expired: 1}, reason_classes: {fit: 1, capacity: 1}}
-    derivation: "L3 admitted 03-12, L4 rejected not_a_fit 03-25, L5 expired no_capacity 04-28; not_a_fit is a fit reason, no_capacity a capacity reason."
+    derivation: "L3 admitted 03-12, L4's first episode rejected not_a_fit 03-25 (the re-offer in May does not rewrite it), L5 expired no_capacity 04-28; not_a_fit is a fit reason, no_capacity a capacity reason."
+
+  - id: demand_outcomes_offered_2025_05
+    question: "Outcomes at 2025-06-30 of demand episodes offered in May 2025."
+    kind: demand_outcomes
+    t: "2025-06-30"
+    args: {offered_month: "2025-05"}
+    reconstructed: {counts: {open: 1}}
+    contemporaneous: {counts: {open: 1}}
+    derivation: "L4 was offered again 05-10; the reset of Disposition__c to null on re-offer is not an outcome, so the second episode is open."
+
+  - id: episodes_of_lead_l4
+    question: "Demand episodes of lead 00QFX0000000004 as of 2025-06-30."
+    kind: episodes_of_lead
+    t: "2025-06-30"
+    args: {lead: "00QFX0000000004"}
+    reconstructed: {episodes: [{offer_seq: 1, offered_on: "2025-03-20", mql_linked: true, outcome: rejected}, {offer_seq: 2, offered_on: "2025-05-10", mql_linked: false, outcome: open}]}
+    contemporaneous: {episodes: [{offer_seq: 1, offered_on: "2025-03-20", mql_linked: true, outcome: rejected}, {offer_seq: 2, offered_on: "2025-05-10", mql_linked: false, outcome: open}]}
+    derivation: "R8: rejected in March, offered again in May: two episodes, keyed (lead, offer_seq); only the first is linked to the lead's MQL date."
+
+  - id: episodes_of_lead_l2
+    question: "Demand episodes of lead 00QFX0000000002 (outbound) as of 2025-06-30."
+    kind: episodes_of_lead
+    t: "2025-06-30"
+    args: {lead: "00QFX0000000002"}
+    reconstructed: {episodes: [{offer_seq: 1, offered_on: "2025-01-18", mql_linked: false, outcome: admitted}]}
+    contemporaneous: {episodes: [{offer_seq: 1, offered_on: "2025-01-18", mql_linked: false, outcome: admitted}]}
+    derivation: "R8: a BDR-sourced lead has Sales_Offered_Date__c and no MQL_Date__c, and is still one episode."
 
   - id: tier_a1_2025_03_31
     question: "Tier of account 001FX0000000001 at 2025-03-31."
@@ -159,7 +282,7 @@ cases:
     args: {entity: Account, id: "001FX0000000001", field: Tier__c}
     reconstructed: {value: "Tier 3", flags: [assumed_since_creation]}
     contemporaneous: {unavailable: no_extract_at_or_before_known_at}
-    derivation: "Tier__c has no history (R6). K=now: the 04-30 extract's Tier 3 holds since creation; the Tier 2 first seen 06-30 is effective 06-30. K=03-31 precedes every extract."
+    derivation: "Tier__c has no history (R5). K=now: the 04-30 extract's Tier 3 holds since creation; the Tier 2 first seen 06-30 is effective 06-30. K=03-31 precedes every extract."
 
   - id: tier_a1_2025_06_30
     question: "Tier of account 001FX0000000001 at 2025-06-30."
@@ -168,7 +291,7 @@ cases:
     args: {entity: Account, id: "001FX0000000001", field: Tier__c}
     reconstructed: {value: "Tier 2"}
     contemporaneous: {value: "Tier 2"}
-    derivation: "Tier 2 first appears in the 06-30T23:00 extract (R6), effective then; K=06-30T23:59:59 is after it."
+    derivation: "Tier 2 first appears in the 06-30T23:00 extract (R5), effective then; K=06-30T23:59:59 is after it."
 
   - id: requisitions_available_2025_04_30
     question: "Is the requisition list available as of 2025-04-30?"
@@ -177,7 +300,7 @@ cases:
     args: {system: people_system, object: requisitions}
     reconstructed: {available: true}
     contemporaneous: {unavailable: object_not_extracted}
-    derivation: "The 04-30 people-system manifest lists only people (R8); requisitions first appear in the 06-30 manifest. Not empty: not extracted."
+    derivation: "The 04-30 people-system manifest lists only people (R7); requisitions first appear in the 06-30 manifest. Not empty: not extracted."
 
   - id: hubspot_contacts_available_2025_04_30
     question: "Are HubSpot contacts available as of 2025-04-30?"
@@ -186,7 +309,7 @@ cases:
     args: {system: hubspot, object: contacts}
     reconstructed: {available: true}
     contemporaneous: {unavailable: no_extract_at_or_before_known_at}
-    derivation: "HubSpot was first extracted 06-30 (R8): nothing of it exists at K=04-30."
+    derivation: "HubSpot was first extracted 06-30 (R7): nothing of it exists at K=04-30."
 
   - id: salesforce_opportunity_field_history_is_empty_not_missing
     question: "Is OpportunityFieldHistory available, and how many rows, as of the 04-30 extract?"
@@ -198,11 +321,13 @@ cases:
     derivation: "The 04-30 manifest lists OpportunityFieldHistory with count 0: extracted and empty, which differs from not extracted."
 
 # Exact assertions the loader must produce (assertion tuple, design section 1).
+# `flags` is not part of the tuple; it names flags the evidence engine attaches.
 assertions:
-  - {entity: Opportunity, id: "006FX0000000002", field: StageName, value: "Closed Won", effective_at: "2025-04-25T00:00:00Z", recorded_at: "2025-05-06T16:00:00Z", source: "salesforce/OpportunityHistory/008FX0000000009", extract_id: "salesforce-20250630T230000Z"}
+  - {entity: Opportunity, id: "006FX0000000002", field: StageName, value: "Closed Won", effective_at: "2025-05-06T16:00:00Z", recorded_at: "2025-05-06T16:00:00Z", source: "salesforce/OpportunityHistory/008FX0000000009", extract_id: "salesforce-20250630T230000Z"}
   - {entity: Opportunity, id: "006FX0000000002", field: CloseDate, value: "2025-04-25", effective_at: "2025-05-06T16:00:00Z", recorded_at: "2025-05-06T16:00:00Z", source: "salesforce/OpportunityHistory/008FX0000000009", extract_id: "salesforce-20250630T230000Z"}
   - {entity: Opportunity, id: "006FX0000000001", field: Amount, value: "24000.0", effective_at: "2025-05-20T10:00:00Z", recorded_at: "2025-05-20T10:00:00Z", source: "salesforce/OpportunityHistory/008FX0000000005", extract_id: "salesforce-20250630T230000Z"}
   - {entity: Opportunity, id: "006FX0000000001", field: Amount, value: "20000.0", effective_at: "2025-01-20T09:00:00Z", recorded_at: "2025-01-20T09:00:00Z", source: "salesforce/OpportunityHistory/008FX0000000001", extract_id: "salesforce-20250430T230000Z"}
+  - {entity: Opportunity, id: "006FX0000000004", field: CloseDate, value: "2025-06-02", effective_at: "2025-06-20T10:00:00Z", recorded_at: "2025-06-20T10:00:00Z", source: "salesforce/OpportunityHistory/008FX0000000018", extract_id: "salesforce-20250630T230000Z"}
   - {entity: Account, id: "001FX0000000001", field: Tier__c, value: "Tier 3", effective_at: "2024-11-05T10:00:00Z", recorded_at: "2025-04-30T23:00:00Z", source: "salesforce/Account/001FX0000000001#snapshot", extract_id: "salesforce-20250430T230000Z"}
   - {entity: Account, id: "001FX0000000001", field: Tier__c, value: "Tier 2", effective_at: "2025-06-30T23:00:00Z", recorded_at: "2025-06-30T23:00:00Z", source: "salesforce/Account/001FX0000000001#snapshot", extract_id: "salesforce-20250630T230000Z"}
-  - {entity: Opportunity, id: "006FX0000000005", field: _deleted, value: "true", effective_at: "2025-04-08T09:00:00Z", recorded_at: "2025-06-30T23:00:00Z", source: "salesforce/Opportunity/006FX0000000005#snapshot", extract_id: "salesforce-20250630T230000Z"}
+  - {entity: Opportunity, id: "006FX0000000005", field: _deleted, value: "true", effective_at: "2025-06-30T23:00:00Z", recorded_at: "2025-06-30T23:00:00Z", source: "salesforce/Opportunity/006FX0000000005#snapshot", extract_id: "salesforce-20250630T230000Z", flags: [deletion_time_upper_bound]}

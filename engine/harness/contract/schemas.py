@@ -22,8 +22,9 @@ STAGES_NOTE = (
 )
 CUSTOM_FIELDS_NOTE = {
     "Opportunity.Sourcing_User__c": "User.Id of the person who sourced the deal (BDR or self-sourcing AE); null when marketing sourced it. Distinct from OwnerId, who books it.",
-    "Lead.MQL_Date__c": "Date the lead became marketing qualified and was offered to sales; null if it never was. This is the offered date of a demand episode.",
-    "Lead.Disposition__c": "What sales did with offered demand: Admitted, Rejected, Expired; null while open or never offered.",
+    "Lead.Sales_Offered_Date__c": "Date the lead was offered to sales. Every new value, tracked in LeadHistory, starts a demand episode (key lead_id, offer_seq). Marketing and outbound (BDR) demand both use it; no MQL is required.",
+    "Lead.MQL_Date__c": "Optional. Date the lead became marketing qualified; links a marketing episode to its MQL. Outbound demand has none.",
+    "Lead.Disposition__c": "What sales did with the current offer: Admitted, Rejected, Expired; null while open. Changes after an offer and before the next offer are that episode's outcome; a reset to null on re-offer is not an outcome.",
     "Lead.Disposition_Reason__c": "Why: for Rejected a fit reason (not_a_fit), for Expired a capacity reason (no_capacity); null when open.",
     "Lead.Tier__c": "Tier of the prospective account at lead time (Tier 1, Tier 2, Tier 3); the catalog maps tier to segment.",
     "Account.Tier__c": "Account tier (Tier 1, Tier 2, Tier 3); the catalog maps tier to segment. Carries no field history in the fixture estate.",
@@ -145,9 +146,15 @@ _OBJECTS = [
                 nullable=True,
             ),
             F(
+                "Sales_Offered_Date__c",
+                "date",
+                "Date of the latest offer to sales; each new Sales_Offered_Date__c value in LeadHistory starts an episode (see CUSTOM_FIELDS_NOTE)",
+                nullable=True,
+            ),
+            F(
                 "MQL_Date__c",
                 "date",
-                "Offered-to-sales date (see CUSTOM_FIELDS_NOTE)",
+                "Optional MQL date (see CUSTOM_FIELDS_NOTE)",
                 nullable=True,
             ),
             F(
@@ -186,7 +193,7 @@ _OBJECTS = [
             F("CreatedDate", "datetime", "When the record was created"),
             F("SystemModstamp", "datetime", "Last system modification of any field"),
         ],
-        "A prospect. An MQL is a lead with MQL_Date__c; it becomes a demand episode.",
+        "A prospect. Each offer to sales (Sales_Offered_Date__c) is a demand episode; MQL_Date__c is optional.",
     ),
     _sf(
         "LeadHistory",
@@ -197,7 +204,7 @@ _OBJECTS = [
             F(
                 "Field",
                 "string",
-                "API name of the changed field (MQL_Date__c, Disposition__c, Disposition_Reason__c, OwnerId)",
+                "API name of the changed field (Sales_Offered_Date__c, MQL_Date__c, Disposition__c, Disposition_Reason__c, OwnerId)",
             ),
             F("OldValue", "string", "Prior value as text", nullable=True),
             F("NewValue", "string", "New value as text", nullable=True),
@@ -225,7 +232,13 @@ _OBJECTS = [
             F(
                 "BillingCountry",
                 "string",
-                "ISO 3166 alpha-2 country; the catalog maps country to region",
+                "Country as the vendor defines it: free text, a name or a code, whatever the user typed; the catalog maps it to region",
+                nullable=True,
+            ),
+            F(
+                "BillingCountryCode",
+                "string",
+                "Optional standardized country code where the org has one",
                 nullable=True,
             ),
             F("CreatedDate", "datetime", "When the record was created"),

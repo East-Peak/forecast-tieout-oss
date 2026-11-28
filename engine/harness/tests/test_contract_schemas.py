@@ -16,7 +16,13 @@ DESIGN_OBJECTS = {
 
 CUSTOM_FIELDS = {
     "Opportunity": {"Sourcing_User__c"},
-    "Lead": {"MQL_Date__c", "Disposition__c", "Disposition_Reason__c", "Tier__c"},
+    "Lead": {
+        "Sales_Offered_Date__c",
+        "MQL_Date__c",
+        "Disposition__c",
+        "Disposition_Reason__c",
+        "Tier__c",
+    },
     "Account": {"Tier__c"},
 }
 
@@ -127,3 +133,20 @@ def test_duplicate_key_is_reported_with_both_lines():
     row = '{"Id": "a", "N": 1, "D": null, "T": null, "Money": null, "Flag": false, "Kind": null}'
     errors = validate_lines(TOY, [row, row])
     assert errors == ["line 2: duplicate key ('a',) first seen on line 1"]
+
+
+def test_billing_country_is_free_text_with_an_optional_code():
+    account = SCHEMAS["Account"]
+    assert account.field("BillingCountry").nullable
+    assert "free text" in account.field("BillingCountry").doc
+    assert "alpha-2" not in account.field("BillingCountry").doc
+    assert account.field("BillingCountryCode").nullable
+
+
+def test_sales_offered_date_starts_a_demand_episode_and_mql_is_optional():
+    lead = SCHEMAS["Lead"]
+    assert lead.field("Sales_Offered_Date__c").type == "date"
+    assert lead.field("Sales_Offered_Date__c").nullable
+    assert lead.field("MQL_Date__c").nullable
+    assert "Sales_Offered_Date__c" in lead.field("Sales_Offered_Date__c").doc
+    assert "Sales_Offered_Date__c" in SCHEMAS["LeadHistory"].field("Field").doc

@@ -48,7 +48,7 @@ def test_every_extract_validates(folder):
 def test_estate_has_the_stated_size():
     assert {
         r["Id"] for e in (E1, E2) for r in rows(e, "salesforce", "Opportunity")
-    } == {f"006FX000000000{i}" for i in range(1, 7)}
+    } == {f"006FX000000000{i}" for i in range(1, 9)}
     assert len(rows(E2, "salesforce", "Lead")) == 8
     assert len(rows(E2, "salesforce", "Account")) == 3
     assert (
@@ -131,7 +131,12 @@ def test_snapshots_agree_with_their_history_objects(extract):
     ):
         value[r["LeadId"], r["Field"]] = r["NewValue"]
     for lead in rows(extract, "salesforce", "Lead"):
-        for field in ("MQL_Date__c", "Disposition__c", "Disposition_Reason__c"):
+        for field in (
+            "Sales_Offered_Date__c",
+            "MQL_Date__c",
+            "Disposition__c",
+            "Disposition_Reason__c",
+        ):
             assert lead[field] == value.get((lead["Id"], field)), (lead["Id"], field)
 
 
@@ -189,6 +194,41 @@ def test_planted_situations_are_present():
     assert "Account.Tier__c" not in ESTATE["field_coverage"]["history"]
 
 
+def test_more_planted_situations():
+    hist = rows(E2, "salesforce", "OpportunityHistory")
+    # a counterexample to backdating: Negotiation observed after the CloseDate it is later given
+    o7 = [r for r in hist if r["OpportunityId"] == "006FX0000000007"]
+    assert [r["StageName"] for r in o7] == ["Discovery", "Negotiation", "Closed Won"]
+    assert o7[1]["CreatedDate"][:10] > o7[2]["CloseDate"]
+    # a CloseDate correction on an already closed deal
+    o4 = [
+        r
+        for r in hist
+        if r["OpportunityId"] == "006FX0000000004" and r["StageName"] == "Closed Won"
+    ]
+    assert [r["CloseDate"] for r in o4] == ["2025-05-20", "2025-06-02"]
+    # a reopened deal: closed lost, then back to an open stage
+    o8 = [r["StageName"] for r in hist if r["OpportunityId"] == "006FX0000000008"]
+    assert o8 == ["Discovery", "Closed Lost", "Proposal"]
+    # a lead offered to sales twice, and outbound demand without an MQL date
+    offers = [
+        r["NewValue"]
+        for r in rows(E2, "salesforce", "LeadHistory")
+        if r["LeadId"] == "00QFX0000000004" and r["Field"] == "Sales_Offered_Date__c"
+    ]
+    assert offers == ["2025-03-20", "2025-05-10"]
+    l2 = next(r for r in rows(E2, "salesforce", "Lead") if r["Id"] == "00QFX0000000002")
+    assert l2["MQL_Date__c"] is None and l2["Sales_Offered_Date__c"] is not None
+    # one country given as a name, one as a code, one with the optional code column
+    accounts = {a["Id"]: a for a in rows(E2, "salesforce", "Account")}
+    assert (
+        accounts["001FX0000000001"]["BillingCountry"] == "United States"
+        and accounts["001FX0000000001"]["BillingCountryCode"] is None
+    )
+    assert accounts["001FX0000000002"]["BillingCountry"] == "US"
+    assert accounts["001FX0000000003"]["BillingCountryCode"] == "DE"
+
+
 def test_fabricated_people_only():
     for e in (E1, E2):
         for u in rows(e, "salesforce", "User"):
@@ -200,8 +240,8 @@ def test_fabricated_people_only():
 # ---- expected.yaml ----------------------------------------------------
 
 KINDS = {
-    "bookings", "stage_at", "owner_at", "open_count", "closing", "mql_count",
-    "demand_outcomes", "field_at", "object_available",
+    "bookings", "stage_at", "status_at", "open_at", "owner_at", "open_count", "closing",
+    "mql_count", "demand_outcomes", "episodes_of_lead", "field_at", "object_available",
 }  # fmt: skip
 
 
@@ -225,45 +265,49 @@ def test_the_two_modes_differ_where_the_design_says():
     assert {
         "bookings_2025_03",
         "bookings_2025_04",
-        "stage_o2_2025_04_30",
-        "stage_o5_2025_05_31",
+        "bookings_2025_05",
+        "open_o7_2025_05_31",
+        "open_o4_2025_05_31",
         "open_count_2025_04_30",
+        "open_count_2025_05_31",
         "mql_count_2025_04",
+        "demand_outcomes_offered_2025_04",
     } <= differ
+
+
+def test_stage_at_and_open_at_are_different_questions():
+    cases = {c["id"]: c for c in EXPECTED["cases"]}
+    stage, open_ = cases["stage_o7_2025_05_31"], cases["open_o7_2025_05_31"]
+    assert stage["reconstructed"]["value"] == "Negotiation"  # operational
+    assert open_["reconstructed"] == {
+        "open": False
+    }  # commercial, same deal, same T, same K
 
 
 def test_expected_assertions_match_their_source_rows():
     sources = {}
-    for system in ("salesforce",):
-        for extract in (E1, E2):
-            for f in (ROOT / extract / system).glob("*History.jsonl"):
-                for r in rows(extract, system, f.stem):
-                    sources.setdefault(f"{system}/{f.stem}/{r['Id']}", r)
+    for extract in (E1, E2):
+        for f in (ROOT / extract / "salesforce").glob("*History.jsonl"):
+            for r in rows(extract, "salesforce", f.stem):
+                sources.setdefault(f"salesforce/{f.stem}/{r['Id']}", r)
+    tuple_fields = ["entity", "id", "field", "value", "effective_at", "recorded_at", "source", "extract_id"]  # fmt: skip
     for a in EXPECTED["assertions"]:
-        assert list(a) == [
-            "entity",
-            "id",
-            "field",
-            "value",
-            "effective_at",
-            "recorded_at",
-            "source",
-            "extract_id",
-        ]
-        assert (
-            a["effective_at"] <= a["recorded_at"]
-            or a["field"] == "_deleted"
-            or a["source"].endswith("#snapshot")
-        )
+        assert [k for k in a if k != "flags"] == tuple_fields
+        assert a["effective_at"] <= a["recorded_at"]
         row = sources.get(a["source"])
         if row:
             assert (
                 str(row[a["field"]]) == a["value"]
                 and row["CreatedDate"] == a["recorded_at"]
             )
+    deleted = [a for a in EXPECTED["assertions"] if a["field"] == "_deleted"]
+    assert [a["flags"] for a in deleted] == [["deletion_time_upper_bound"]]
+    assert all(a["effective_at"] == a["recorded_at"] == T2 for a in deleted)
 
 
 # The oracle: brute force over the raw rows, one small function per question kind.
+
+END = "T23:59:59Z"
 
 
 def history(name):
@@ -275,7 +319,7 @@ def history(name):
 
 
 def known_k(case, mode):
-    return T2 if mode == "reconstructed" else case["t"] + "T23:59:59Z"
+    return T2 if mode == "reconstructed" else case["t"] + END
 
 
 def opp_rows(opp, k):
@@ -286,31 +330,100 @@ def opp_rows(opp, k):
     ]
 
 
-def exists(opp, k):
-    deleted = opp == "006FX0000000005" and k >= T2
-    return bool(opp_rows(opp, k)) and not deleted
-
-
 def all_opps():
     return sorted({r["OpportunityId"] for r in history("OpportunityHistory")})
 
 
-def stage_assertions(opp, k):
-    """(effective_at, recorded_at, stage) for each row that changes the stage (R1, R2)."""
-    out, previous = [], None
-    for r in opp_rows(opp, k):
-        if r["StageName"] != previous:
-            eff = r["CreatedDate"]
-            if r["StageName"].startswith("Closed"):
-                eff = min(r["CloseDate"] + "T00:00:00Z", eff)
-            out.append((eff, r["CreatedDate"], r["StageName"]))
-        previous = r["StageName"]
-    return out
+def created(opp):
+    return next(
+        r["CreatedDate"]
+        for e in (E1, E2)
+        for r in rows(e, "salesforce", "Opportunity")
+        if r["Id"] == opp
+    )
+
+
+def deleted_by(opp, t, k):
+    """R4: deletion is effective at the first extract lacking the record."""
+    return opp == "006FX0000000005" and T2 <= min(k, t + END)
 
 
 def stage_at(opp, t, k):
-    got = [a for a in stage_assertions(opp, k) if a[0] <= t + "T23:59:59Z"]
-    return max(got)[2] if got else None
+    """R1: a stage assertion per row that changes the stage, effective at the row's CreatedDate."""
+    out, previous = [], None
+    for r in opp_rows(opp, k):
+        if r["StageName"] != previous and r["CreatedDate"] <= t + END:
+            out.append((r["CreatedDate"], r["StageName"]))
+        previous = r["StageName"]
+    return out[-1][1] if out else None
+
+
+def closed_spells(opp, k):
+    """(close_date, reopened_at or None) for each selling spell closed as known by K."""
+    spells, current = [], None
+    for r in opp_rows(opp, k):
+        if r["StageName"].startswith("Closed"):
+            current = (
+                {"close": r["CloseDate"], "reopened": None}
+                if current is None
+                else {**current, "close": r["CloseDate"]}
+            )
+        elif current is not None:
+            spells.append({**current, "reopened": r["CreatedDate"]})
+            current = None
+    return spells + ([current] if current else [])
+
+
+def open_at(opp, t, k):
+    """R2: commercial. Known by K, created by T, not deleted by T, not closed by T."""
+    if not opp_rows(opp, k) or created(opp) > t + END or deleted_by(opp, t, k):
+        return False
+    return not any(
+        s["close"] <= t and (s["reopened"] is None or s["reopened"] > t + END)
+        for s in closed_spells(opp, k)
+    )
+
+
+def episodes(lead, t, k):
+    """R8: one per non-null Sales_Offered_Date__c row recorded by K."""
+    rs = [
+        r
+        for r in history("LeadHistory")
+        if r["LeadId"] == lead and r["CreatedDate"] <= k
+    ]
+    offers = [
+        r
+        for r in rs
+        if r["Field"] == "Sales_Offered_Date__c" and r["NewValue"] is not None
+    ]
+    has_mql = any(r["Field"] == "MQL_Date__c" for r in rs)
+    out = []
+    for n, offer in enumerate(offers):
+        end = offers[n + 1]["CreatedDate"] if n + 1 < len(offers) else "9999"
+        window = [
+            r
+            for r in rs
+            if offer["CreatedDate"] <= r["CreatedDate"] < end
+            and r["CreatedDate"] <= t + END
+        ]
+        disp = [r["NewValue"] for r in window if r["Field"] == "Disposition__c"]
+        why = [r["NewValue"] for r in window if r["Field"] == "Disposition_Reason__c"]
+        outcome = (disp[-1] or "open").lower() if disp else "open"
+        reason = (
+            None
+            if outcome == "open" or not why or why[-1] is None
+            else ("capacity" if why[-1] == "no_capacity" else "fit")
+        )
+        out.append(
+            {
+                "offer_seq": n + 1,
+                "offered_on": offer["NewValue"],
+                "mql_linked": n == 0 and has_mql,
+                "outcome": outcome,
+                "reason": reason,
+            }
+        )
+    return out
 
 
 def oracle(case, mode):
@@ -318,8 +431,11 @@ def oracle(case, mode):
     kind = case["kind"]
     if kind == "bookings":
         total = 0
-        for opp in filter(lambda o: exists(o, k), all_opps()):
-            last = opp_rows(opp, k)[-1]
+        for opp in all_opps():
+            known = opp_rows(opp, k)
+            if not known:
+                continue
+            last = known[-1]
             if (
                 last["StageName"] == "Closed Won"
                 and last["CloseDate"][:7] == args["month"]
@@ -327,11 +443,16 @@ def oracle(case, mode):
                 total += round(last["Amount"] * 100)
         return {"value_cents": total}
     if kind == "stage_at":
+        return {"value": stage_at(args["opportunity"], t, k)}
+    if kind == "status_at":
+        opp = args["opportunity"]
         return (
-            {"value": stage_at(args["opportunity"], t, k)}
-            if exists(args["opportunity"], k)
-            else {"exists": False}
+            {"status": "deleted", "flags": ["deletion_time_upper_bound"]}
+            if deleted_by(opp, t, k)
+            else {"status": "present"}
         )
+    if kind == "open_at":
+        return {"open": open_at(args["opportunity"], t, k)}
     if kind == "owner_at":
         owner = next(
             r["OldValue"]
@@ -342,23 +463,12 @@ def oracle(case, mode):
             r
             for r in history("OpportunityFieldHistory")
             if r["OpportunityId"] == args["opportunity"]
-            and r["CreatedDate"] <= min(k, t + "T23:59:59Z")
+            and r["CreatedDate"] <= min(k, t + END)
         ]
         return {"value": moves[-1]["NewValue"] if moves else owner}
     if kind == "open_count":
-        created = {
-            r["Id"]: r["CreatedDate"]
-            for e in (E1, E2)
-            for r in rows(e, "salesforce", "Opportunity")
-        }
-        open_now = [
-            o
-            for o in all_opps()
-            if exists(o, k)
-            and created[o] <= t + "T23:59:59Z"
-            and not (stage_at(o, t, k) or "").startswith("Closed")
-        ]
-        return {"count": len(open_now)}
+        ids = [o for o in all_opps() if open_at(o, t, k)]
+        return {"count": len(ids), "ids": ids}
     if kind == "closing":
         rs = opp_rows(args["opportunity"], k)
         closed = [r for r in rs if r["StageName"].startswith("Closed")]
@@ -366,39 +476,36 @@ def oracle(case, mode):
             "close_date": rs[-1]["CloseDate"],
             "observed_closed_recorded_at": closed[0]["CreatedDate"] if closed else None,
         }
-    if kind in ("mql_count", "demand_outcomes"):
+    if kind == "mql_count":
         mql = {}
         for r in history("LeadHistory"):
             if r["Field"] == "MQL_Date__c" and r["CreatedDate"] <= k:
                 mql[r["LeadId"]] = r["NewValue"]
-        month = args.get("month") or args["offered_month"]
-        offered = sorted(lead for lead, d in mql.items() if d[:7] == month)
-        if kind == "mql_count":
-            return {"count": len(offered)}
-        counts, reasons = {}, {"fit": 0, "capacity": 0}
-        for lead in offered:
-            disp = [
-                r
-                for r in history("LeadHistory")
-                if r["LeadId"] == lead
-                and r["Field"] == "Disposition__c"
-                and r["CreatedDate"] <= min(k, t + "T23:59:59Z")
+        return {"count": sum(1 for d in mql.values() if d[:7] == args["month"])}
+    if kind == "episodes_of_lead":
+        return {
+            "episodes": [
+                {
+                    key: ep[key]
+                    for key in ("offer_seq", "offered_on", "mql_linked", "outcome")
+                }
+                for ep in episodes(args["lead"], t, k)
             ]
-            outcome = disp[-1]["NewValue"].lower() if disp else "open"
-            counts[outcome] = counts.get(outcome, 0) + 1
-            why = [
-                r["NewValue"]
-                for r in history("LeadHistory")
-                if r["LeadId"] == lead
-                and r["Field"] == "Disposition_Reason__c"
-                and r["CreatedDate"] <= min(k, t + "T23:59:59Z")
-            ]
-            if why:
-                reasons["capacity" if why[-1] == "no_capacity" else "fit"] += 1
-        out = {"counts": counts}
-        if any(reasons.values()):
-            out["reason_classes"] = {c: n for c, n in reasons.items() if n}
-        return out
+        }
+    if kind == "demand_outcomes":
+        leads = sorted({r["LeadId"] for r in history("LeadHistory")})
+        eps = [
+            ep
+            for lead in leads
+            for ep in episodes(lead, t, k)
+            if ep["offered_on"][:7] == args["offered_month"]
+        ]
+        counts, reasons = {}, {}
+        for ep in eps:
+            counts[ep["outcome"]] = counts.get(ep["outcome"], 0) + 1
+            if ep["reason"]:
+                reasons[ep["reason"]] = reasons.get(ep["reason"], 0) + 1
+        return {"counts": counts, **({"reason_classes": reasons} if reasons else {})}
     extracts = [(T1, E1), (T2, E2)]
     if kind == "field_at":
         seen = [
@@ -415,15 +522,15 @@ def oracle(case, mode):
         ]
         if not seen:
             return {"unavailable": "no_extract_at_or_before_known_at"}
-        created = next(
+        first = next(
             r["CreatedDate"]
             for r in rows(E1, "salesforce", args["entity"])
             if r["Id"] == args["id"]
         )
-        eff = [(created, seen[0][1])] + [
+        eff = [(first, seen[0][1])] + [
             (w, v) for (_, p), (w, v) in pairwise(seen) if v != p
         ]
-        live = [(i, v) for i, (e, v) in enumerate(eff) if e <= t + "T23:59:59Z"]
+        live = [(i, v) for i, (e, v) in enumerate(eff) if e <= t + END]
         index, value = live[-1]
         return {
             "value": value,

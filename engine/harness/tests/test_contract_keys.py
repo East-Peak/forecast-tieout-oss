@@ -33,7 +33,8 @@ def test_interval_tables_are_keyed_by_validity_start():
 
 def test_demand_episode_is_one_row_per_offer():
     table = CANONICAL_TABLES["demand_episode"]
-    assert table.key == ("lead_id", "offered_on")
+    assert table.key == ("lead_id", "offer_seq")
+    assert "offer" in table.grain and "MQL" not in table.key
     assert {"admitted", "rejected", "expired", "open"} == set(DEMAND_OUTCOMES)
 
 

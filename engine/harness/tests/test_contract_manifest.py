@@ -135,3 +135,11 @@ def test_manifest_structure(tmp_path, change, fragment):
         assert errors == []
     else:
         assert any(fragment in e for e in errors), errors
+
+
+def test_deletion_semantics_keep_prior_existence():
+    from engine.harness.contract import manifest as module
+
+    doc = " ".join(module.__doc__.split())
+    assert "existed" in doc and "upper bound" in doc
+    assert "never existed" not in doc
