@@ -4136,11 +4136,6 @@
           "passed": true
         },
         {
-          "detail": "solves: 60015521.95 against 60000000.00",
-          "name": "worksheet win_rate needed alone agrees with the target",
-          "passed": true
-        },
-        {
           "detail": "solves: 60000000.16 against 60000000.00",
           "name": "worksheet won_arr needed alone agrees with the target",
           "passed": true
@@ -4172,7 +4167,7 @@
         }
       ],
       "scope": "runtime self-checks on this report's own numbers; the arithmetic is also checked on hand-calculated fixtures by the test suite (pytest engine/tests/tieout_core)",
-      "summary": "32 of 32 self-checks passed",
+      "summary": "31 of 31 self-checks passed",
       "verdict": "yes"
     }
   },
@@ -4537,11 +4532,6 @@
         "passed": true
       },
       {
-        "detail": "solves: 60015521.95 against 60000000.00",
-        "name": "worksheet win_rate needed alone agrees with the target",
-        "passed": true
-      },
-      {
         "detail": "solves: 60000000.16 against 60000000.00",
         "name": "worksheet won_arr needed alone agrees with the target",
         "passed": true
@@ -4719,23 +4709,8 @@
         },
         "historical_unavailable_because": null,
         "label": "Win rate of new pipeline",
-        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it.",
-        "needed_alone": {
-          "achieved_fiscal_year_bookings": "60015521.95",
-          "history_label": "Beyond any observed quarter: the value lies outside the lowest and the highest quarter observed, so reaching it is an extrapolation that the history does not show.",
-          "inside_observed_range": false,
-          "outcome": "solves",
-          "outcome_label": "Solves mathematically: this value, alone, takes fiscal-year bookings to target.",
-          "overshoot": "15521.95",
-          "precision_note": null,
-          "reaches_target": true,
-          "reason": null,
-          "reason_label": null,
-          "scale": null,
-          "stepped": false,
-          "target": "60000000.00",
-          "value": "0.2601"
-        },
+        "limitation": "The fit in use learns from every deal created in its recent window, young deals included, while these quarters are complete and matured, so they are older than that fit and may not describe it. The plan's win-rate actions add their points to the pooled rate this changes, each day's rate held between zero and one, so bookings are not a straight line in it: no setting is solved for, and the changes at the low and high settings are not on one line.",
+        "needed_alone": null,
         "places": 4,
         "rank": {
           "next twelve months": 2,

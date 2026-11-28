@@ -13,7 +13,7 @@ from __future__ import annotations
 from decimal import Decimal
 from fractions import Fraction
 
-from . import actions
+from . import actions, driver_actions
 from . import worksheet_drivers as wd
 from . import worksheet_rules as rules
 from .actions import Scenario
@@ -31,8 +31,13 @@ def replay(state: Prepared, report: dict, plan: Plan | None) -> list[str]:
     hires, inflows = actions.plan_inputs(g, plan) if plan is not None else ((), ())
     scenario = Scenario(g)
 
+    effect = driver_actions.effect_for(state, plan, hires, inflows)
+    lift = None if effect is None else effect.lift
+
     def run(adjusted):
-        return Scenario(adjusted).forecast(hires, inflows)
+        return Scenario(adjusted).forecast(
+            hires, inflows, wd.lift_under(lift, g, adjusted)
+        )
 
     base = run(g)
     base_shown = scenario.bookings(base)

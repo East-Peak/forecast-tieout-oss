@@ -181,6 +181,11 @@ FLAT_LIMITATION = (
     "Each quarter is organic deals created per day of the quarter; the capacity term is not in "
     "use, so headcount plays no part."
 )
+STACKED_LIMITATION = (
+    "The plan's win-rate actions add their points to the pooled rate this changes, each day's rate "
+    "held between zero and one, so bookings are not a straight line in it: no setting is solved "
+    "for, and the changes at the low and high settings are not on one line."
+)
 CYCLE_LIMITATION = (
     "A quarter's cycle is the plain mean days of its wins, while the fit in use weights each "
     "day, so the two are close in kind but not the same measure."
@@ -224,6 +229,7 @@ class Context:
     quarters: Sequence[Quarter]
     params: FitParams
     fy_target: Decimal
+    stacked: bool = False  # the plan's driver actions sit on the pooled win rate
 
 
 def unit_for(adopted: bool, driver: str) -> tuple[str, str, str, str]:
@@ -245,8 +251,19 @@ def fit_window(driver: str, p: FitParams, as_of: date) -> tuple[date, date]:
     return end - timedelta(days=p.trailing_days - 1), end
 
 
+def has_actions(plan_section: dict | None) -> bool:
+    """Whether the plan in force carries driver actions."""
+    return plan_section is not None and any(
+        i["kind"] == "actions" for i in plan_section["items"]
+    )
+
+
 def limitation_text(
-    driver: str, gate_passed: bool, estimator: str, adopted: bool
+    driver: str,
+    gate_passed: bool,
+    estimator: str,
+    adopted: bool,
+    stacked: bool = False,
 ) -> str | None:
     """The limitation sentence, from the driver, the gate, the fit in use and the capacity term."""
     parts = []
@@ -258,11 +275,15 @@ def limitation_text(
         parts.append(RAMP_LIMITATION if adopted else FLAT_LIMITATION)
     if driver == CYCLE_DAYS:
         parts.append(CYCLE_LIMITATION)
+    if driver == WIN_RATE and stacked:
+        parts.append(STACKED_LIMITATION)
     return " ".join(parts) or None
 
 
 def _limitation(c: Context, driver: str, gate_passed: bool) -> str | None:
-    return limitation_text(driver, gate_passed, c.params.estimator, c.g.cap.adopted)
+    return limitation_text(
+        driver, gate_passed, c.params.estimator, c.g.cap.adopted, c.stacked
+    )
 
 
 def _observations(c: Context, driver: str) -> tuple[list[dict], list[Decimal]]:
@@ -414,7 +435,9 @@ def driver_row(c: Context, driver: str) -> dict:
         },
         "historical": historical,
         "historical_unavailable_because": why,
-        "needed_alone": _needed(c, driver, current, settings),
+        "needed_alone": None
+        if c.stacked and driver == WIN_RATE
+        else _needed(c, driver, current, settings),
         "limitation": _limitation(c, driver, gate_passed),
     }
 
@@ -758,7 +781,7 @@ def worksheet_section(
     lift: Lift | None = None,
 ) -> tuple[dict, list[Check]]:
     probe = wd.Probe(g, hires, inflows, lift)
-    c = Context(g, probe, quarters, params, g.fy_target)
+    c = Context(g, probe, quarters, params, g.fy_target, has_actions(plan_section))
     drivers = [driver_row(c, d) for d in DRIVERS]
     for row, rank in zip(
         drivers, rank_by_window([_driver_magnitudes(r) for r in drivers])
@@ -803,11 +826,7 @@ def worksheet_section(
             )
         )
     section = {
-        **static_texts(
-            plan_section is not None,
-            plan_section is not None
-            and any(i["kind"] == "actions" for i in plan_section["items"]),
-        ),
+        **static_texts(plan_section is not None, has_actions(plan_section)),
         "drivers": drivers,
         "actions": _action_rows(actions_section),
         "bridge": bridge,

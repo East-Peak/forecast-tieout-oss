@@ -104,7 +104,17 @@ def test_a_target_equal_to_the_pooled_rate_changes_no_figure_anywhere(state):
         doc["ranges"].pop("what_is_drawn")
     assert a == b  # the figures, the quarters, the gaps and the very same draws
     assert same["driver_actions"]["joint_gain"] == {REST: "0.00", NEXT: "0.00"}
-    assert same["worksheet"]["drivers"] == base["worksheet"]["drivers"]
+    # the worksheet's drivers are the same but for what is said of the win rate with an action on it
+    for a, b in zip(base["worksheet"]["drivers"], same["worksheet"]["drivers"]):
+        if a["driver"] != "win_rate":
+            assert a == b
+            continue
+        assert b["needed_alone"] is None and b["limitation"].endswith(
+            "not on one line."
+        )
+        for key in a:
+            if key not in ("needed_alone", "limitation"):
+                assert a[key] == b[key], key
 
 
 # ----------------------------------------------------- values reached two ways
@@ -588,3 +598,167 @@ def test_segments_are_priced_by_their_size_in_every_cell_they_share(state):
             > price["mid_market"][cell]
             > price["commercial"][cell]
         )
+
+
+# ----------------------------------------------------- ranges follow each path, for either kind of company
+
+
+@pytest.fixture(scope="module")
+def flat_state():
+    """Mighty Oak: the capacity term is not adopted, so creation is the flat trailing rate."""
+    with gen.in_repo():
+        yield prepare(
+            gen.PROFILES / "mighty-oak-holdings",
+            gen.DATA / "mighty-oak-holdings",
+            gen.AS_OF,
+            4000,
+            0,
+        )
+
+
+@pytest.fixture(scope="module")
+def adopted_state():
+    with gen.in_repo():
+        yield prepare(gen.PROFILES / COMPANY, gen.DATA / COMPANY, gen.AS_OF, 4000, 0)
+
+
+@pytest.mark.parametrize("points_up", ["+3", "-1.5", "zero"])
+@pytest.mark.parametrize("which", ["adopted_state", "flat_state"])
+def test_the_simulation_is_centered_on_the_expectation_for_a_positive_negative_and_zero_action(
+    request, which, points_up
+):
+    st = request.getfixturevalue(which)
+    base = st.ground.model.new_pipeline.win_rate
+    target = D(0) if points_up == "zero" else base + D(points_up) / 100
+    segment = next(iter(sorted({m.segment for m in st.cap.members})))
+    plan = parse_plan(
+        {"actions": [act("x", "company", target=target) | {"slice": "company"}]},
+        st.as_of, st.cap.members, "plan.yaml",
+    )  # fmt: skip
+    with gen.in_repo():
+        r = finish(st, plan, "plan.yaml", st.profile_dir.name, "x")
+    checks = {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}
+    centered = checks["plan simulation centered on its expectation"]
+    assert centered["passed"], centered["detail"]
+    assert segment  # the company has segments to share the action over
+    one = parse_plan(
+        {"actions": [act("y", segment, target=target)]},
+        st.as_of,
+        st.cap.members,
+        "plan.yaml",
+    )
+    with gen.in_repo():
+        r = finish(st, one, "plan.yaml", st.profile_dir.name, "x")
+    assert {c["name"]: c for c in r["verdicts"]["software_correct"]["checks"]}[
+        "plan simulation centered on its expectation"
+    ]["passed"]
+
+
+# ----------------------------------------------------- the worksheet over a plan with actions
+
+
+def under(state, *acts, **plan):
+    """(the ground, a probe over the plan's own hires and programs and its actions' lift)."""
+    from engine.tieout_core import actions
+    from engine.tieout_core import worksheet_drivers as wd
+
+    p = plan_of(state, *acts, **plan)
+    h, i = actions.plan_inputs(state.ground, p)
+    e = da.effect_for(state, p, h, i)
+    return state.ground, wd.Probe(state.ground, h, i, e.lift), e
+
+
+def new_wins(f):
+    from engine.tieout_core.forecast import ACTIONS
+
+    return sum(f.components[ACTIONS].values(), D(0))
+
+
+def test_an_override_over_an_action_holds_each_days_probability_at_one(state):
+    """Sapling's pooled rate set to 95% under an action of fifteen points: a probability of 110%
+    is held at 100%, so it books what an action of five points does, and what the pooled rate set
+    to 100% does when the action starts on the first day."""
+    from engine.tieout_core import worksheet_drivers as wd
+
+    base = state.ground.model.new_pipeline.win_rate
+    g, big, _ = under(state, act(target=base + D("0.15")))
+    _, small, _ = under(state, act(target=base + D("0.05")))
+    adjusted = wd.with_win_rate(g, D("0.95"))
+    stacked, five = big.forecast(adjusted), small.forecast(adjusted)
+    assert stacked.total() == five.total()
+    direct = wd.Probe(g).forecast(wd.with_win_rate(g, D(1)))
+    for month in direct.components["future pipeline"]:
+        assert abs(stacked.window_total(month) - direct.window_total(month)) < D("1e-6")
+    change = big.change(stacked)
+    assert all(
+        D(0) < v < D("1e9") for v in change.values()
+    )  # not the $174M of an unbounded 110%
+
+
+def test_an_override_under_an_action_that_lowers_the_rate_holds_it_at_zero(state):
+    from engine.tieout_core import worksheet_drivers as wd
+
+    base = state.ground.model.new_pipeline.win_rate
+    g, down, _ = under(state, act(target=base - D("0.15")))
+    adjusted = wd.with_win_rate(g, D("0.05"))
+    got = down.forecast(adjusted)
+    direct = wd.Probe(g).forecast(wd.with_win_rate(g, D(0)))
+    for month in direct.components["future pipeline"]:
+        assert abs(got.window_total(month) - direct.window_total(month)) < D("1e-6")
+
+
+def test_an_override_that_does_not_reach_a_bound_adds_its_points_to_the_actions(state):
+    from engine.tieout_core import worksheet_drivers as wd
+
+    base = state.ground.model.new_pipeline.win_rate
+    g, probe, _ = under(state, act(target=base + D("0.02")))
+    got = probe.forecast(wd.with_win_rate(g, base + D("0.03")))
+    direct = wd.Probe(g).forecast(wd.with_win_rate(g, base + D("0.05")))
+    for month in direct.components["future pipeline"]:
+        assert abs(got.window_total(month) - direct.window_total(month)) < D("1e-6")
+
+
+def test_a_worksheet_over_an_action_solves_nothing_for_the_win_rate_and_says_why(state):
+    r = report(state, act(slice="enterprise", target=points(state, 3)))
+    row = next(d for d in r["worksheet"]["drivers"] if d["driver"] == "win_rate")
+    assert row["needed_alone"] is None
+    assert "no setting is solved for" in row["limitation"]
+    assert row["historical"] is not None  # the changes at its settings are still shown
+    others = [d for d in r["worksheet"]["drivers"] if d["driver"] != "win_rate"]
+    assert all(d["needed_alone"] is not None for d in others)
+    assert contract.validate(r) == []
+
+
+@pytest.mark.parametrize("mutate", ["needed_alone", "limitation"])
+def test_the_contract_holds_a_win_rate_with_an_action_to_saying_so(state, mutate):
+    r = report(state, act(target=points(state, 3)))
+    row = next(d for d in r["worksheet"]["drivers"] if d["driver"] == "win_rate")
+    other = next(
+        d for d in report(state)["worksheet"]["drivers"] if d["driver"] == "win_rate"
+    )
+    row[mutate] = other[mutate]  # what a plan with no action says
+    assert contract.validate(r) != []
+
+
+def test_productivity_changes_the_organic_creation_an_action_acts_on_and_not_the_programs(
+    state,
+):
+    """At zero productivity nothing organic is created, so the action has nothing to lift but the
+    programs' deals; at twice it, the organic part doubles and the programs' does not."""
+    from engine.tieout_core import worksheet_drivers as wd
+
+    base = state.ground.model.new_pipeline.win_rate
+    target = base + D("0.03")
+    prog = [{"name": "P", "pipeline": 3_000_000, "start": "2026-10"}]
+    g, none, _ = under(state, act(target=target))
+    at = lambda probe, v: new_wins(probe.forecast(wd.with_productivity(g, v)))
+    rate = wd.current_value(g, "productivity")
+    assert at(none, D(0)) == 0  # nothing is created, so there is nothing to lift
+    assert at(none, rate) == new_wins(none.base) > 0
+    assert abs(at(none, 2 * rate) - 2 * at(none, rate)) < D("1e-6")
+    g, with_programs, _ = under(state, act(target=target), programs=prog)
+    zero, one, two = (at(with_programs, v) for v in (D(0), rate, 2 * rate))
+    assert zero > 0  # the programs' deals are still created
+    assert abs((two - zero) - 2 * (one - zero)) < D(
+        "1e-6"
+    )  # and only the organic part scales

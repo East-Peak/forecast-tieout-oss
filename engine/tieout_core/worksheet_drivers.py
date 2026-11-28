@@ -41,6 +41,9 @@ COVERED = "already_at_or_ahead"
 BOUNDED_AT_ONE = "bounded_at_one"
 NO_EFFECT = "no_effect_in_the_year"
 ZERO_DAYS_SHORT = "short_even_at_zero_days"
+NO_SLOPE = Decimal(
+    "1e-9"
+)  # dollars a unit: below this a driver moves nothing, it is only rounding
 
 
 # ------------------------------------------------------------------ the overrides
@@ -126,6 +129,17 @@ def realized_cycle(g: Ground, scale: Fraction) -> Decimal:
 # ------------------------------------------------------------------ the probe
 
 
+def lift_under(lift: Lift | None, g: Ground, adjusted: Ground) -> Lift | None:
+    """The actions' ``lift`` over ``g`` as ``adjusted`` (an override of ``g``) leaves it: their
+    points are added to the pooled win rate it has, each day's rate held between zero and one,
+    and the organic creation they act on is what it now is (programs' is changed by no driver)."""
+    if not lift:
+        return lift
+    lift = lift.rebased(adjusted.model.new_pipeline.win_rate)
+    was, now = current_value(g, PRODUCTIVITY), current_value(adjusted, PRODUCTIVITY)
+    return lift.scaled(now / was) if was and now is not None else lift
+
+
 class Probe:
     """Forecasts of one scenario in force (a roster with planned hires and program pipeline) as
     its drivers are moved. Figures are what the report shows: a shown total is the sum of its
@@ -178,20 +192,8 @@ class Probe:
             adjusted.model,
             creation,
             self.base.components[EXISTING],
-            self._lift_under(adjusted),
+            lift_under(self.lift, self.g, adjusted),
         )
-
-    def _lift_under(self, adjusted: Ground) -> Lift | None:
-        """The actions' lift as ``adjusted`` leaves it: their points are added to the pooled win
-        rate it has, each day's rate held between zero and one, and the organic creation they act
-        on is what it now is (programs' is not changed by any driver)."""
-        lift = self.lift
-        if not lift:
-            return lift
-        lift = lift.rebased(adjusted.model.new_pipeline.win_rate)
-        was = current_value(self.g, PRODUCTIVITY)
-        now = current_value(adjusted, PRODUCTIVITY)
-        return lift.scaled(now / was) if was and now is not None else lift
 
     def shown(self, f: Forecast) -> dict[str, Decimal]:
         return self.scenario.bookings(f)
@@ -238,7 +240,7 @@ def solve_linear(
     probe = upper if upper is not None else (current * 2 if current > 0 else ONE)
     at_probe = fy_at(probe)
     slope = (at_probe - base) / (probe - current)
-    if slope <= 0:
+    if slope <= NO_SLOPE:
         return Needed(CANNOT, current, base, NO_EFFECT)
     needed = current + (target - base) / slope
     if upper is not None and needed > upper:

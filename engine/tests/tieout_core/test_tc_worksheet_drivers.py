@@ -404,3 +404,17 @@ def test_dollars_round_up_to_the_cent_and_ratios_to_four_places():
 def test_other_outcomes_pass_through_a_rounding_untouched():
     cannot = wd.Needed(wd.CANNOT, D(1), D(5), wd.BOUNDED_AT_ONE)
     assert wd.round_solution(lambda v: v, cannot, rules.WIN_RATE, D(9), D(1)) is cannot
+
+
+def test_a_driver_that_moves_bookings_by_less_than_rounding_has_no_effect_not_a_huge_solve():
+    """With actions in force a driver's effect can cancel to the last digits; the solve must not
+    divide the gap by that noise."""
+    from decimal import Decimal
+
+    from engine.tieout_core import worksheet_drivers as wd
+
+    noise = Decimal("1e-20")
+    got = wd.solve_linear(
+        lambda v: Decimal(100) + noise * v, Decimal(2), Decimal(200), None
+    )
+    assert (got.outcome, got.reason) == (wd.CANNOT, wd.NO_EFFECT)

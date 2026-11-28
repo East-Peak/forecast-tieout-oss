@@ -325,7 +325,7 @@ def _check(r: dict, w: dict, rule) -> None:
     plan = r.get("plan")
     in_force = plan is not None and "unavailable" not in plan
     plan_section = plan if in_force else None
-    with_actions = in_force and any(i["kind"] == "actions" for i in plan["items"])
+    with_actions = ws.has_actions(plan if in_force else None)
     for key, want in ws.static_texts(in_force, with_actions).items():
         rule(w[key] == want, f"worksheet.{key} is not what the report writes")
     _walk_sentences(w, "", rule)
@@ -477,6 +477,11 @@ def _quarter_rules(r: dict, d: dict, rule, where: str) -> list[Decimal]:
 
 def _driver_rules(r: dict, d: dict, rule) -> None:
     name = d["driver"]
+    plan = r.get("plan")
+    stacked = ws.has_actions(
+        plan if plan is not None and "unavailable" not in plan else None
+    )
+    stacked = stacked and name == rules.WIN_RATE
     where = f"worksheet.drivers[{name}]"
     inputs = r["inputs"]
     adopted = inputs["capacity"]["decision"] == "adopted"
@@ -539,21 +544,23 @@ def _driver_rules(r: dict, d: dict, rule) -> None:
         f"{where}: the reason a range is missing is not what the gate and the driver say",
     )
     rule(
-        d["limitation"] == ws.limitation_text(name, gate, params.estimator, adopted),
+        d["limitation"]
+        == ws.limitation_text(name, gate, params.estimator, adopted, stacked),
         f"{where}.limitation is not what the report writes",
     )
     if h is not None and used and current is not None:
-        _settings_rules(name, h, used, current, rule, where)
+        _settings_rules(name, h, used, current, rule, where, stacked)
     n = d["needed_alone"]
     rule(
-        (n is None) == (current is None),
-        f"{where}: needed alone exists exactly when there is a current value",
+        (n is None) == (current is None or stacked),
+        f"{where}: needed alone exists exactly when there is a current value and no action "
+        "sits on the win rate",
     )
     if n is not None and current is not None:
         _needed_rules(r, name, n, h, current, rule, where)
 
 
-def _settings_rules(name, h, used, current, rule, where) -> None:
+def _settings_rules(name, h, used, current, rule, where, stacked=False) -> None:
     low, high = rules.halves(used)
     tol = _tol(name)
     lo, hi = Decimal(h["low"]["setting"]), Decimal(h["high"]["setting"])
@@ -579,6 +586,10 @@ def _settings_rules(name, h, used, current, rule, where) -> None:
     )
     # structure of the sensitivities: both windows, on the right side of zero, and (for the three
     # drivers that scale new-pipeline bookings in proportion) on one line through the current value
+    if (
+        stacked
+    ):  # actions on the rate make bookings in it bend where a day's rate is held
+        return
     sign = -1 if name == rules.CYCLE_DAYS else 1
     changes = {}
     for side, setting in (("low", lo), ("high", hi)):
