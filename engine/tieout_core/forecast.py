@@ -113,7 +113,13 @@ class Lift:
         )
 
     def moved_days(self, segment: str) -> list[int]:
-        """The days (counted from zero) on whose deals a cycle action changes the lags."""
+        """The days (counted from zero) whose deals are placed sample by sample: those on which a
+        cycle action changes the lags and, while the worksheet's flex has moved the timing, every
+        day. A flexed timing lands each win somewhere other than the atom it was priced in with no
+        flex, and the pooled forecast prices every win alike, so the only consistent baseline is
+        the same priced cohorts, all of them, placed where the flex puts them."""
+        if self.transport is not None and self.transport.flexed:
+            return list(range(len(self.origin)))
         moved = self.cycle.get(segment)
         return [] if not moved else [t for t, c in enumerate(moved) if c]
 
@@ -167,7 +173,8 @@ class Lift:
         price = self.price.get(segment, {})
         for t in self.moved_days(segment):
             made, was = self.day_units(segment, t)
-            f = Fraction(self.cycle[segment][t]) + 1
+            cycle = self.cycle.get(segment)
+            f = (Fraction(cycle[t]) if cycle else Fraction(0)) + 1
             origin = self.origin[t]
             for piece in transport.pieces(t + 1, f):
                 out[piece.moved] += (
@@ -176,9 +183,15 @@ class Lift:
                     * price.get((piece.original, origin), Decimal(1))
                 )
             for piece in transport.pieces(t + 1, Fraction(1)):
-                out[piece.moved] -= (
-                    was * piece.weight * price.get((piece.original, origin), Decimal(1))
+                # what the pooled forecast already has there: the wins as they were, at the pooled
+                # price, where the timing in force lands them; with no flex that is the same dollars
+                # as these wins at their own prices (the prices add back to the pooled one)
+                at = (
+                    Decimal(1)
+                    if transport.flexed
+                    else price.get((piece.original, origin), Decimal(1))
                 )
+                out[piece.flexed] -= was * piece.weight * at
         self._memo[("cycle", segment)] = out
         return out
 
@@ -186,7 +199,7 @@ class Lift:
         """The bookings, in units of the pooled mean won size, the cycle actions put in window
         ``landing`` net of what they take out of it."""
         return sum(
-            (self.cycle_units(s)[landing] for s in self.cycle if self.moved_days(s)),
+            (self.cycle_units(s)[landing] for s in self.changes if self.moved_days(s)),
             Decimal(0),
         )
 

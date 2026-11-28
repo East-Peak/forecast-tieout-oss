@@ -51,9 +51,9 @@ def test_a_cycle_target_is_a_relative_change_in_the_lag_from_the_start_and_nothi
 
 def test_a_ramp_rises_by_creation_date_and_each_lag_is_rounded_up_to_a_whole_day():
     e = run(cyc(ramp=2))  # May and June: 61 days
-    assert e.cycles["b"][10] == D(1) / 61  # the start day is the first of 61
+    assert e.cycles["b"][10] == Fraction(1, 61)  # the start day is the first of 61
     f = Fraction(1) + Fraction(e.cycles["b"][10])
-    assert abs(f - Fraction(62, 61)) < Fraction(1, 10**25)
+    assert f == Fraction(62, 61)
     assert e.lift.transport.scaled(f)[0] == (
         11,
         21,
@@ -163,3 +163,81 @@ def test_a_negative_or_missing_baseline_is_an_error_not_a_division():
         da.effect(replace(f, cycle=None), D("0.2"), AS_OF, (cyc(),))
     with pytest.raises(ValueError, match="has no baseline"):
         da.effect(replace(f, cycle=D(0)), BASELINE, AS_OF, (cyc(),))
+
+
+# ----------------------------------------------------- the ratio stays rational down to the whole day
+
+
+def exact_frame(lags=(15, 30)):
+    from engine.tieout_core.fit import Timing
+
+    from .test_tc_driver_actions import CAL, SEGMENTS, SHARES, SIZES, ground
+
+    g = ground()
+    g.model.new_pipeline.timing = Timing(lags, "t")
+    return da.build_frame(g, SHARES, SIZES, CAL, (), (), SEGMENTS)
+
+
+def test_a_ratio_that_does_not_end_in_decimal_digits_still_rounds_up_at_the_exact_whole_day():
+    """Lags of 15 and 30 days, a pooled cycle of 22.5 and a target of 15: the lags are exactly two
+    thirds of what they were, 10 and 20. A ratio rounded to 28 digits would give 10.0000...01 and
+    round up to 11 and 21, and a deal created on May 21 would land on June 1, not May 31."""
+    f = exact_frame()
+    assert f.cycle == D("22.5")
+    e = da.effect(
+        f, BASELINE, AS_OF, (cyc(target="15", segment=None, start="2026-05-01"),)
+    )
+    scale = Fraction(1) + e.cycles["b"][40]
+    assert scale == Fraction(2, 3) and isinstance(e.cycles["b"][40], Fraction)
+    assert e.lift.transport.scaled(scale)[0] == (10, 20)
+    # created May 21 (day 31): wins at 10 and 20 days land on May 31 (day 41) and June 10
+    pieces = e.lift.transport.pieces(31, scale)
+    assert [(p.original, p.moved) for p in pieces] == [
+        (2, 1),
+        (2, 2),
+    ]  # the first stays in May
+
+
+def test_a_ramp_over_a_repeating_fraction_of_a_month_is_exact_too():
+    f = exact_frame(
+        (21, 42)
+    )  # a pooled cycle of 31.5; a target of 10.5 is a third of it
+    e = da.effect(
+        f,
+        BASELINE,
+        AS_OF,
+        (cyc(target="10.5", segment="b", start="2026-06-01", ramp=3),),
+    )
+    for t in (
+        40,
+        41,
+        71,
+        200,
+    ):  # June 1 is the 42nd day (index 41); June to August is 92 days
+        share = min(Fraction(1), Fraction(max(t - 41 + 1, 0), 92))
+        assert e.cycles["b"][t] == Fraction(-2, 3) * share and isinstance(
+            e.cycles["b"][t], Fraction
+        )
+    third = (
+        Fraction(1) + e.cycles["b"][71]
+    )  # the thirty-first day in: 1 - 2/3 * 31/92 = 107/138
+    assert third == Fraction(107, 138)
+    assert e.lift.transport.scaled(third)[0] == (
+        17,
+        33,
+    )  # 21 * 107/138 = 16.28, 42 * 107/138 = 32.6
+
+
+def test_a_target_equal_to_an_exact_mean_that_is_not_a_decimal_changes_nothing():
+    from engine.tieout_core.fit import Timing
+
+    from .test_tc_driver_actions import CAL, SEGMENTS, SHARES, SIZES, ground
+
+    g = ground()
+    g.model.new_pipeline.timing = Timing((10, 20, 40), "t")  # a mean of 70/3
+    f = da.build_frame(g, SHARES, SIZES, CAL, (), (), SEGMENTS)
+    target = f.cycle  # the displayed 28-digit mean
+    e = da.effect(f, BASELINE, AS_OF, (cyc(target=str(target)),))
+    # the displayed figure is not the exact mean: a sliver of change, which no whole day sees
+    assert all(abs(c) < Fraction(1, 10**20) for c in e.cycles["b"])
+    assert e.lift.transport.scaled(Fraction(1) + e.cycles["b"][200])[0] == (10, 20, 40)

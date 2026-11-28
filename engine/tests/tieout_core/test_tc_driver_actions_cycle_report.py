@@ -239,7 +239,7 @@ def test_the_cycle_row_is_not_solved_for_while_the_plan_has_a_cycle_action_and_s
     r = report(state, act(target=days(state, -10)))
     row = drivers_row(r, "cycle_days")
     assert plain["needed_alone"] is not None and row["needed_alone"] is None
-    assert "no setting is solved for" in row["limitation"]
+    assert "no setting is solved for" in row["action_limitation"]
     for other in ("win_rate", "won_arr", "productivity"):
         assert drivers_row(r, other)["needed_alone"] is not None or drivers_row(r, other)["current"]["value"] is None  # fmt: skip
     assert contract.validate(r) == []
@@ -329,3 +329,23 @@ def test_with_segments_that_differ_the_difference_from_the_worksheets_flex_is_pi
     assert all(
         abs((D(got[w]) - D(flex[w])) / D(flex[w])) < D("0.002") for w in (REST, NEXT)
     )
+
+
+def test_no_month_of_a_plan_with_all_four_drivers_goes_negative_under_any_flex_of_any_driver(
+    state,
+):
+    """The worksheet's probe moves each driver to its low and high setting and well beyond; with
+    an action on every driver (a cycle action among them) every month stays at or above zero."""
+    plan = plan_of(state, *four(state), hires=HIRES, programs=PROGRAMS)
+    h, i = actions.plan_inputs(state.ground, plan)
+    lift = da.effect_for(state, plan, h, i).lift
+    probe = wd.Probe(state.ground, h, i, lift)
+    g = state.ground
+    for driver in ("win_rate", "won_arr", "productivity", "cycle_days"):
+        now = wd.current_value(g, driver)
+        for ratio in (D("0.5"), D("0.8"), D("1.25"), D("2")):
+            value = min(now * ratio, D(1)) if driver == "win_rate" else now * ratio
+            f = probe.forecast(wd.with_setting(g, driver, value))
+            for w in g.windows:
+                month = sum((c[w.label] for c in f.components.values()), D(0))
+                assert month >= 0, (driver, ratio, w.label, month)

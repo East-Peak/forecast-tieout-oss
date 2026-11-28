@@ -36,7 +36,7 @@ from . import lanes_rules as rules
 from . import worksheet_drivers as wd
 from .actions import Ground
 from .capacity import project
-from .cycle import Transport
+from .cycle import Transport, exact_mean
 from .figures import CENT, cents, money, number
 from .fiscal import add_months
 from .forecast import Inflow, Lift
@@ -94,6 +94,9 @@ class Frame:
     # the pooled mean days from creation to win a cycle target is read against, and the timing moved
     cycle: Decimal | None = None
     transport: Transport | None = None
+    cycle_mean: Fraction | None = (
+        None  # the same, exactly: a cycle target is read against it
+    )
 
 
 @dataclass(frozen=True)
@@ -284,6 +287,7 @@ def build_frame(
             g.model.new_pipeline.timing,
             [(w.end - g.as_of).days for w in g.windows],
         ),
+        exact_mean(g.model.new_pipeline.timing),
     )
 
 
@@ -305,7 +309,23 @@ def ramp(action: PlanAction, as_of: date, days: int) -> list[Decimal]:
     return out
 
 
-def _change(frame: Frame, baseline: Decimal, action: PlanAction) -> Decimal:
+def ramp_exact(action: PlanAction, as_of: date, days: int) -> list[Fraction]:
+    """``ramp`` as exact fractions: a cycle's relative change is carried as a rational down to the
+    whole-day rounding of each lag, since a ratio rounded to digits moves an exact ceiling."""
+    if action.ramp_months == 0:
+        span = 1
+    else:
+        span = (add_months(action.start, action.ramp_months) - action.start).days
+    out = []
+    for t in range(1, days + 1):
+        since = (as_of + timedelta(days=t) - action.start).days
+        out.append(
+            Fraction(0) if since < 0 else min(Fraction(1), Fraction(since + 1, span))
+        )
+    return out
+
+
+def _change(frame: Frame, baseline: Decimal, action: PlanAction) -> Decimal | Fraction:
     """What the action changes, from its target against the baseline the driver is read from: the
     points it adds to the pooled win rate, or the relative change in the size of a win."""
     if action.driver == WIN_RATE:
@@ -321,7 +341,11 @@ def _change(frame: Frame, baseline: Decimal, action: PlanAction) -> Decimal:
     if action.driver == CYCLE_DAYS:
         if not frame.cycle:
             raise ValueError("cycle length has no baseline to change")
-        return action.target / frame.cycle - 1
+        if (
+            action.target == frame.cycle
+        ):  # the pooled cycle as the report writes it: no change
+            return Fraction(0)
+        return Fraction(action.target) / (frame.cycle_mean or Fraction(frame.cycle)) - 1
     raise ValueError(f"no rule for the driver {action.driver!r}")
 
 
@@ -334,7 +358,11 @@ def effect(
     through, as they multiply in a win's expected booking)."""
     days = len(next(iter(frame.series.values()), ()))
     by_driver = {
-        driver: {s: [ZERO] * days for s in frame.segments} for driver in DRIVERS
+        driver: {
+            s: [Fraction(0) if driver == CYCLE_DAYS else ZERO] * days
+            for s in frame.segments
+        }
+        for driver in DRIVERS
     }
     for a in actions:
         unknown = a.segment is not None and a.segment not in frame.segments
@@ -343,7 +371,7 @@ def effect(
                 f"the action {a.id!r} is for a segment with no lane: {a.segment}"
             )
         change = _change(frame, baseline, a)
-        weights = ramp(a, as_of, days)
+        weights = (ramp_exact if a.driver == CYCLE_DAYS else ramp)(a, as_of, days)
         mine = by_driver[a.driver]
         for s in frame.segments if a.segment is None else (a.segment,):
             mine[s] = [c + change * w for c, w in zip(mine[s], weights)]

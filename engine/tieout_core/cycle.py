@@ -30,20 +30,42 @@ from .fit import Timing
 ONE = Fraction(1)
 
 
+def exact_mean(timing: Timing) -> Fraction | None:
+    """The mean days of a timing as an exact fraction (each sample once, or by its weight); None
+    where there is no evidence. A cycle target is read against this, not against a rounded decimal."""
+    weights = (
+        timing.weights if timing.weights is not None else (1,) * len(timing.samples)
+    )
+    total = sum((Fraction(w) for w in weights), Fraction(0))
+    if not timing.samples or total <= 0:
+        return None
+    return (
+        sum((d * Fraction(w) for d, w in zip(timing.samples, weights)), Fraction(0))
+        / total
+    )
+
+
 class Piece:
     """Wins of one cohort that land in one original month and one moved month."""
 
-    __slots__ = ("moment", "moved", "original", "weight")
+    __slots__ = ("flexed", "moment", "moved", "original", "weight")
 
     def __init__(
-        self, original: int, moved: int, weight: Decimal, moment: Decimal
+        self,
+        original: int,
+        moved: int,
+        weight: Decimal,
+        moment: Decimal,
+        flexed: int | None = None,
     ) -> None:
-        self.original = (
-            original  # the month the wins were to land in (the tail is ``len(edges)``)
-        )
+        # the month the wins were to land in (the tail is ``len(edges)``)
+        self.original = original
         self.moved = moved  # the month they land in (the tail: beyond the months shown)
         self.weight = weight  # their share of the timing's weight
         self.moment = moment  # their moved lags times their weights, summed
+        # where they land with the worksheet's flex alone, before any action moves them; with no
+        # flex it is the original month
+        self.flexed = original if flexed is None else flexed
 
     def __repr__(self) -> str:
         return f"Piece({self.original}, {self.moved}, {self.weight}, {self.moment})"
@@ -55,8 +77,15 @@ class Transport:
     ``edges`` are the days after the as-of date on which each month ends (months are contiguous and
     the first begins after day 0). Pieces are cached by (creation day, scale)."""
 
-    def __init__(self, timing: Timing, edges: Sequence[int]) -> None:
-        self.timing = timing
+    def __init__(
+        self, timing: Timing, edges: Sequence[int], original: Timing | None = None
+    ) -> None:
+        self.timing = (
+            timing  # the timing in force: the pooled one, or the worksheet's flex of it
+        )
+        self.original = (
+            original or timing
+        )  # the plan's own, which fixes each win's price
         self.edges = tuple(edges)
         self.samples = timing.samples
         weights = timing.weights
@@ -78,9 +107,15 @@ class Transport:
         """The index of the landing beyond the last month shown."""
         return len(self.edges)
 
+    @property
+    def flexed(self) -> bool:
+        """Whether the worksheet has moved the timing from the plan's own."""
+        return self.timing is not self.original
+
     def with_timing(self, timing: Timing) -> Transport:
-        """The same months over another timing (the worksheet's flex of the cycle)."""
-        return Transport(timing, self.edges)
+        """The same months over another timing (the worksheet's flex of the cycle): each sample
+        keeps its place in the plan's own timing, which prices it, wherever the flex lands it."""
+        return Transport(timing, self.edges, self.original)
 
     def scaled(self, f: Fraction) -> tuple[tuple[int, ...], list[Decimal]]:
         """The lags multiplied by ``f`` and rounded up, and the running sum of moved lag times weight."""
@@ -105,10 +140,11 @@ class Transport:
         if found is not None:
             return found
         lags, moment = self.scaled(f)
-        original = [bisect_right(self.samples, e - day) for e in self.edges]
+        original = [bisect_right(self.original.samples, e - day) for e in self.edges]
+        flexed = [bisect_right(self.samples, e - day) for e in self.edges]
         moved = [bisect_right(lags, e - day) for e in self.edges]
         k = len(self.samples)
-        cuts = sorted({0, k, *original, *moved})
+        cuts = sorted({0, k, *original, *flexed, *moved})
         out = []
         for x, y in pairwise(cuts):
             weight = self.cum[y] - self.cum[x]
@@ -118,7 +154,9 @@ class Transport:
                 original, y
             )  # the first month that holds the piece's last sample
             i = bisect_left(moved, y)
-            out.append(Piece(j, i, weight, moment[y] - moment[x]))
+            out.append(
+                Piece(j, i, weight, moment[y] - moment[x], bisect_left(flexed, y))
+            )
         found = tuple(out)
         self._pieces[key] = found
         return found
