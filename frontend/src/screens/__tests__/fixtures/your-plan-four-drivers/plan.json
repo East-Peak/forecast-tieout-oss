@@ -1,0 +1,61 @@
+{
+  "actions": [
+    {
+      "driver": "win_rate",
+      "id": "enterprise-win-rate",
+      "name": "Enterprise win-rate push",
+      "ramp_months": 2,
+      "slice": "enterprise",
+      "start": "2026-10",
+      "target": "0.26"
+    },
+    {
+      "driver": "won_arr",
+      "id": "company-deal-size",
+      "name": "Company deal size",
+      "ramp_months": 1,
+      "slice": "company",
+      "start": "2026-10",
+      "target": "450000"
+    },
+    {
+      "driver": "productivity",
+      "id": "mid-market-creation",
+      "name": "Mid Market creation",
+      "ramp_months": 2,
+      "slice": "mid_market",
+      "start": "2026-11",
+      "target": "2.6"
+    },
+    {
+      "driver": "cycle_days",
+      "id": "enterprise-cycle",
+      "name": "Enterprise cycle",
+      "ramp_months": 2,
+      "slice": "enterprise",
+      "start": "2026-11",
+      "target": "110"
+    }
+  ],
+  "hires": [
+    {
+      "count": 3,
+      "segment": "enterprise",
+      "start": "2026-11"
+    },
+    {
+      "count": 1,
+      "segment": "commercial",
+      "start": "2026-12"
+    }
+  ],
+  "programs": [
+    {
+      "cost": 500000,
+      "name": "Field events",
+      "pipeline": 4000000,
+      "ramp_months": 2,
+      "start": "2026-10"
+    }
+  ]
+}

@@ -443,3 +443,29 @@ def test_a_plan_with_a_cycle_action_is_a_native_run_and_its_grid_belongs_to_its_
         stale, fresh = json.loads(session.lanes(old)), json.loads(session.lanes(new))
     assert stale["stale"] is True and "lanes" not in stale
     assert fresh["stale"] is False and fresh["problems"] == []
+
+
+def test_the_editors_own_entry_writes_what_a_native_run_writes_for_a_plan_with_all_four_drivers():
+    out = fixture.OUT_FOUR
+    with gen.in_repo():
+        session = EditorSession()
+        session.open(COMPANY)
+        text, meta = session.apply(json.dumps(fixture.PLAN_WITH_FOUR))
+        got = json.loads(session.lanes(json.loads(meta)["revision"]))
+    assert text == (out / "report.json").read_text()
+    assert json.loads(meta)["comparison"] == json.loads(
+        (out / "comparison-row.json").read_text()
+    )
+    assert got["lanes"] == json.loads((out / "lanes.json").read_text())
+    for segment in fixture.DRIVERS_OWNER_SEGMENTS:
+        assert got["owners"][segment] == json.loads(
+            (out / f"owners-{segment}.json").read_text()
+        )
+    r = json.loads(text)
+    assert [i["driver"] for i in r["driver_actions"]["items"]] == ["win_rate", "won_arr", "productivity", "cycle_days"]  # fmt: skip
+    assert r["driver_actions"]["reconciliation"]["sentences"][
+        "rest of fiscal year"
+    ] in (
+        da.NO_INTERACTION,
+        da.TIMING_INTERACTION,
+    )

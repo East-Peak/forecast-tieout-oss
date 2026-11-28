@@ -49,6 +49,7 @@ DRIVERS_OWNER_SEGMENTS = (*OWNER_SEGMENTS, "mid_market")
 OUT = REPO / "frontend/src/screens/__tests__/fixtures/your-plan"
 OUT_ACTIONS = REPO / "frontend/src/screens/__tests__/fixtures/your-plan-actions"
 OUT_DRIVERS = REPO / "frontend/src/screens/__tests__/fixtures/your-plan-three-drivers"
+OUT_FOUR = REPO / "frontend/src/screens/__tests__/fixtures/your-plan-four-drivers"
 
 # An edit of Sapling's demo plan: one hire changed, one added in another segment, a program resized and
 # given a cost and a ramp.
@@ -116,10 +117,29 @@ PLAN_WITH_DRIVERS = {
         },
     ],
 }
+# And a fourth: the enterprise segment's cycle shortened to 110 days (against the pooled 132.7) from
+# November over two months. It shares Enterprise with the win rate and the size, so the reconciliation
+# line is material and, with a cycle action in the plan, the core's sentence about it is the neutral one.
+PLAN_WITH_FOUR = {
+    **PLAN_WITH_DRIVERS,
+    "actions": [
+        *PLAN_WITH_DRIVERS["actions"],
+        {
+            "id": "enterprise-cycle",
+            "name": "Enterprise cycle",
+            "driver": "cycle_days",
+            "slice": "enterprise",
+            "start": "2026-11",
+            "ramp_months": 2,
+            "target": "110",
+        },
+    ],
+}
 CASES = (
     (OUT, PLAN, OWNER_SEGMENTS),
     (OUT_ACTIONS, PLAN_WITH_ACTION, OWNER_SEGMENTS),
     (OUT_DRIVERS, PLAN_WITH_DRIVERS, DRIVERS_OWNER_SEGMENTS),
+    (OUT_FOUR, PLAN_WITH_FOUR, DRIVERS_OWNER_SEGMENTS),
 )
 
 
