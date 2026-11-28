@@ -7,6 +7,7 @@ import { YOUR_PLAN } from "../../editor/yourPlan";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { STACK_GRID as STACK } from "../../components/workbook/stack";
 import LanesSection from "../../lanes/LanesSection";
+import { ActionsBlock } from "./ActionsBlock";
 import { B } from "./bindings";
 import { CompareTable } from "./CompareTable";
 import { ItemsCard } from "./ItemsCard";
@@ -46,6 +47,7 @@ export default function PlanScreen() {
         </Callout>
       )}
       {scenario === YOUR_PLAN ? <YourPlanForm company={company} /> : null}
+      <ActionsBlock />
       {worksheet ? (
         <>
           <Tornado sheet={worksheet} />

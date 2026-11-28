@@ -85,6 +85,8 @@ export const DRIVER = {
   neededValue: byDisplay("driver.needed.value", "/needed_alone/value"),
   /** a driver the history cannot scale has no "needed alone"; the report says why */
   neededNone: text("driver.needed.none", "/needed_alone/outcome_label", { unavailable: { reason: "/cannot_scale_because", sentence: true, words: "no figure" } }),
+  /** a win rate under the plan's actions is not solved for: the core's limitation sentence stands where its figure would */
+  neededStacked: text("driver.needed.stacked", "/limitation"),
   precision: text("driver.needed.precision", "/needed_alone/precision_note"),
   neededLabel: text("driver.needed.label", "/needed_alone/outcome_label"),
   neededReason: text("driver.needed.reason", "/needed_alone/reason_label"),
@@ -165,7 +167,7 @@ export const BRIDGE_SERIES = {
     kind: "span",
     path: `${SHEET}/bridge/steps/{period}/to`,
     from: `${SHEET}/bridge/steps/{period}/from`,
-    periods: { indexesAt: `${SHEET}/bridge/steps`, where: ["kind", ["hires", "program"]] },
+    periods: { indexesAt: `${SHEET}/bridge/steps`, where: ["kind", ["hires", "program", "actions"]] },
   },
   gap: {
     key: "gap",

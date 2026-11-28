@@ -5,6 +5,7 @@ import App from "../../App";
 import { EditorFailure } from "../../editor/client";
 import type { EditorStatus } from "../../editor/client";
 import type { ApplyOutcome, Facts, PlanDoc } from "../../editor/protocol";
+import { percentText } from "../../editor/percent";
 import type { Editor } from "../../editor/store";
 import * as files from "../../screens/__tests__/files";
 import type { Loaders } from "../../session/ReportSession";
@@ -243,6 +244,42 @@ describe("the tornado opens the editor in place", () => {
     fireEvent.click(document.querySelector("[data-testid='driver-row']")!);
     await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
     expect(screen.getAllByTestId("program-row")).toHaveLength(2);
+  });
+
+  it("Add to plan on the win-rate bar opens the form with a draft company action at the worksheet's favorable end, and applies nothing", async () => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    const row = await waitFor(() => {
+      const el = document.querySelector("[data-testid='driver-row'][data-driver='win_rate']");
+      if (!el) throw new Error("not yet");
+      return el as HTMLElement;
+    });
+    const sheet = files.report("sprout-labs", "as-signed").worksheet as { drivers: Array<{ driver: string; historical: { high: { setting: string } } }> };
+    const high = sheet.drivers.find((d) => d.driver === "win_rate")!.historical.high.setting;
+    expect(editor.opened).toEqual([]);
+    fireEvent.click(within(row).getByRole("button", { name: "Add to plan" }));
+    await waitFor(() => expect(screen.getByTestId("plan-form")).toBeInTheDocument());
+    const action = await screen.findByTestId("action-row");
+    expect(within(action).getByLabelText("Slice")).toHaveValue("company");
+    expect(within(action).getByLabelText("Starts")).toHaveValue("2026-09");
+    expect(within(action).getByLabelText("Ramp in months (zero is immediate)")).toHaveValue(0);
+    expect(within(action).getByLabelText("Target win rate (percent)")).toHaveValue(percentText(high));
+    expect(screen.getByTestId("action-origin")).toHaveTextContent("will differ from the bar's figure");
+    expect(screen.getByTestId("plan-unapplied")).toBeInTheDocument();
+    expect(editor.applied).toEqual([DEMO]);
+  });
+
+  it("no other driver's bar has the button, and the worksheet's two unit actions keep theirs", async () => {
+    const editor = new FakeEditor();
+    open("/plan?company=sprout-labs&scenario=as-signed", editor, true);
+    await waitFor(() => expect(document.querySelector("[data-testid='driver-row']")).not.toBeNull());
+    const drivers = Array.from(document.querySelectorAll<HTMLElement>("[data-testid='driver-row']"));
+    expect(drivers.length).toBeGreaterThan(1);
+    for (const row of drivers) {
+      const buttons = within(row).queryAllByRole("button", { name: "Add to plan" });
+      expect(buttons, row.getAttribute("data-driver") ?? "").toHaveLength(row.getAttribute("data-driver") === "win_rate" ? 1 : 0);
+    }
+    expect(document.querySelectorAll("[data-testid='worksheet-action-row'] button").length).toBeGreaterThan(0);
   });
 
   it("opening a driver's quarters does not open the editor", async () => {

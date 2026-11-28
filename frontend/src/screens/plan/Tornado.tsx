@@ -53,6 +53,7 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
   const actionSpecs = useMemo(() => actionSeries(window), [window]);
   const drivers = usePlot(useMemo(() => [driverSpecs.low, driverSpecs.high], [driverSpecs]));
   const actions = usePlot(useMemo(() => [actionSpecs.gain], [actionSpecs]));
+  const stacked = sheet.bridge.steps.some((step) => step.kind === "actions");
   const driverOrder = byRank(sheet.drivers.map((d) => d.rank[window]));
   const actionOrder = byRank(sheet.actions.rows.map((a) => a.rank[window]));
   // room beyond the longest bar for the figure printed at its end
@@ -99,7 +100,7 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
         </div>
         <div className="divide-y divide-slate-100 xl:[&>*:first-child]:mt-0" data-testid="driver-list">
           {driverOrder.map((i) => (
-            <DriverRow key={sheet.drivers[i].driver} driver={sheet.drivers[i]} row={drivers.rows[i]} index={i} window={window} domain={domain} />
+            <DriverRow key={sheet.drivers[i].driver} driver={sheet.drivers[i]} row={drivers.rows[i]} index={i} window={window} domain={domain} stacked={stacked} />
           ))}
         </div>
       </section>
@@ -165,6 +166,11 @@ function useOpenEditor() {
       yourPlan?.store.append(company, kind);
       choose?.(company, YOUR_PLAN);
     },
+    /** a draft win-rate action on the company, at the favorable end of the worksheet's settings; the form shows it, nothing is applied */
+    addAction: (target: string) => {
+      yourPlan?.store.draftAction(company, { slice: "company", target, origin: "tornado" });
+      choose?.(company, YOUR_PLAN);
+    },
   };
 }
 
@@ -185,9 +191,12 @@ function Toggle({ open, onToggle, controls, children }: { open: boolean; onToggl
   );
 }
 
-function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row: PlotRow; index: number; window: Window; domain: [number, number] }) {
+function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Driver; row: PlotRow; index: number; window: Window; domain: [number, number]; stacked: boolean }) {
   const [open, setOpen] = useState(false);
   const editor = useOpenEditor();
+  // the plan's actions sit on the win rate: the core solves for no setting, and says so in the driver's limitation
+  const unsolved = stacked && driver.driver === "win_rate" && driver.needed_alone === null && driver.cannot_scale_because === null;
+  const favorable = driver.driver === "win_rate" && driver.historical !== null ? driver.historical.high.setting : null;
   const path = `${WS_ROWS.drivers}/${index}`;
   const { display } = driver;
   const needed = driver.needed_alone;
@@ -239,7 +248,7 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
           <div>
             <span className={`${caption} xl:hidden`}>Needed alone </span>
             <span className="text-slate-700">
-              {needed === null ? <Bound binding={DRIVER.neededNone} row={path} /> : solves ? <Bound binding={DRIVER.neededValue[display]} row={path} /> : <Bound binding={DRIVER.neededLabel} row={path} />}
+              {unsolved ? "Not solved with actions in the plan" : needed === null ? <Bound binding={DRIVER.neededNone} row={path} /> : solves ? <Bound binding={DRIVER.neededValue[display]} row={path} /> : <Bound binding={DRIVER.neededLabel} row={path} />}
             </span>
           </div>
           <div className="col-span-2 flex flex-wrap items-center gap-2 xl:col-span-1">
@@ -248,16 +257,37 @@ function DriverRow({ driver, row, index, window, domain }: { driver: Driver; row
                 {needed.inside_observed_range ? "Inside history" : "Beyond history"}
               </Badge>
             ) : null}
+            {editor.wide && favorable !== null ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  editor.addAction(favorable);
+                }}
+                className="rounded-ft border border-ft-accent bg-white px-3 py-1 text-xs font-semibold text-ft-accent hover:bg-ft-accentSoft"
+              >
+                Add to plan
+              </button>
+            ) : null}
             <Toggle open={open} onToggle={() => setOpen((v) => !v)} controls={`driver-detail-${driver.driver}`}>
               {open ? "Hide the quarters" : "Show the quarters"}
             </Toggle>
           </div>
         </div>
+        {unsolved ? (
+          <p className="mt-1 text-xs text-slate-600 xl:col-span-2" data-testid="needed-stacked">
+            <Bound binding={DRIVER.neededStacked} row={path} />
+          </p>
+        ) : null}
       </div>
       {open ? (
         <div id={`driver-detail-${driver.driver}`} className="mt-2 flex flex-col gap-3 rounded-ft bg-slate-50 px-3 py-3 text-xs text-slate-700" data-testid="driver-detail">
           <p>
-            This is an assumption to discuss: it cannot be added to the plan as an item yet. <Bound binding={DRIVER.appliesTo} row={path} />
+            This is an assumption to discuss
+            {driver.driver === "win_rate" && editor.wide
+              ? ": add it to the plan as a win-rate action to give it a start month, a ramp and a target of your own."
+              : ": it cannot be added to the plan as an item yet."}{" "}
+            <Bound binding={DRIVER.appliesTo} row={path} />
           </p>
           {needed === null || needed.history_label === null ? null : <p><Bound binding={DRIVER.history} row={path} /></p>}
           {solves ? <p><Bound binding={DRIVER.neededLabel} row={path} /></p> : null}

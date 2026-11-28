@@ -70,6 +70,9 @@ function otherWindowIds(): string[] {
 
 /** The driver table, its disclosures and the two actions, for the window the switch is on. */
 export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKey): void {
+  // with the plan's actions on the win rate the core solves for no setting: the driver says so in its limitation sentence, not in a figure
+  const stacked = sheet.bridge.steps.some((s) => s.kind === "actions");
+  const isStacked = (d: Sheet["drivers"][number]) => stacked && d.driver === "win_rate" && d.needed_alone === null && d.cannot_scale_because === null;
   // the rows stand in the report's own rank for the window (1 first, none last, ties in the report's order)
   const order = (ranks: Array<number | null>) =>
     ranks.map((_, i) => i).sort((a, b) => (ranks[a] ?? Infinity) - (ranks[b] ?? Infinity) || a - b);
@@ -115,8 +118,10 @@ export function tornado(sheet: Sheet, { one: _one, many }: Put, window: WindowKe
   // (a driver the history cannot scale has none, and the report's sentence stands in its place)
   const solves = (d: Sheet["drivers"][number]) => d.needed_alone !== null && d.needed_alone.outcome === "solves";
   put(each((d) => (solves(d) ? shown(d.display, d.needed_alone!.value!) : null), (d) => DRIVER.neededValue[d.display].id), variants((k) => DRIVER.neededValue[k as "percent"].id));
-  const none = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone === null);
+  const none = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone === null && !isStacked(d));
   many(DRIVER.neededNone.id, none.map(([d]) => d.cannot_scale_because ?? "no figure"), none.map(([, i]) => rows[i]));
+  const sentence = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => isStacked(d));
+  many(DRIVER.neededStacked.id, sentence.map(([d]) => d.limitation!), sentence.map(([, i]) => rows[i]));
   // the label is in the cell where it does not solve, and in the opened row where it does
   const withWords = ws.drivers.map((d, i) => [d, i] as const).filter(([d]) => d.needed_alone !== null);
   many(DRIVER.neededLabel.id, withWords.map(([d]) => d.needed_alone!.outcome_label), withWords.map(([, i]) => rows[i]));

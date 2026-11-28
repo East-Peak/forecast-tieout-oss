@@ -24,17 +24,18 @@ afterEach(cleanup);
 
 // The core's own output for an edited plan, written by a native run (engine/scripts/generate_editor_fixture.py):
 // a report no committed scenario file holds, shown by the same screen under the same checks.
-const FIXTURE = resolve(__dirname, "fixtures/your-plan");
-const read = <T,>(name: string) => JSON.parse(readFileSync(resolve(FIXTURE, name), "utf8")) as T;
+const FIXTURES = resolve(__dirname, "fixtures");
+const read = <T,>(name: string, dir = "your-plan") => JSON.parse(readFileSync(resolve(FIXTURES, dir, name), "utf8")) as T;
 const COMPANY = "sapling-industries";
 
-function computed(): Case {
+/** The core's own output for the fixture plan in `dir`: "your-plan" has hires and a program, "your-plan-actions" adds a win-rate action. */
+function computed(dir = "your-plan"): Case {
   return {
     company: COMPANY,
     scenario: YOUR_PLAN,
-    report: read<TieoutReport>("report.json"),
+    report: read<TieoutReport>("report.json", dir),
     index: withYourPlan(files.index()),
-    comparison: withYourPlanRow(files.comparison(COMPANY), read<ComparisonRow>("comparison-row.json")),
+    comparison: withYourPlanRow(files.comparison(COMPANY), read<ComparisonRow>("comparison-row.json", dir)),
   };
 }
 
@@ -46,6 +47,46 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     expect(expected.length).toBeGreaterThan(20);
     expect([...checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], c), ...unboundDigits(container, periodLabels)]).toEqual([]);
     expect(container.querySelector("[data-binding='worksheet.summary.remaining-gap']")?.getAttribute("data-scenario")).toBe(YOUR_PLAN);
+  });
+
+  it("a plan with a win-rate action is held to them too: the Actions block and the bridge's joint step, every figure the core's", () => {
+    const c = computed("your-plan-actions");
+    const container = mountScreen(PlanScreen, c, c.company, c.scenario);
+    const { expected, absent, periodLabels } = build(c);
+    for (const id of ["driver-actions.item.name", "driver-actions.item.removal.rest", "driver-actions.joint.rest", "driver-actions.with.year", "driver-actions.without.next12"]) {
+      expect(expected.some((e) => e.id === id), `${id} is expected`).toBe(true);
+      expect(container.querySelector(`[data-binding='${id}']`), `${id} is on the page`).not.toBeNull();
+    }
+    expect([...checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], c), ...unboundDigits(container, periodLabels)]).toEqual([]);
+    expect(Array.from(container.querySelectorAll("[data-testid='bridge-row']")).map((r) => r.getAttribute("data-kind"))).toContain("actions");
+  });
+
+  it("the reconciliation line is said only where it is not zero, in the core's sentence for that window", () => {
+    const c = computed("your-plan-actions");
+    const none = mountScreen(PlanScreen, c, c.company, c.scenario);
+    expect(none.querySelector("[data-testid='driver-actions-reconciliation']")).toBeNull();
+    cleanup();
+    const report = structuredClone(c.report);
+    if (!("joint_gain" in report.driver_actions)) throw new Error("no actions");
+    report.driver_actions.reconciliation.values["next twelve months"] = "-84200.17" as never;
+    report.driver_actions.reconciliation.sentences["next twelve months"] = "The actions reinforce one another: together they gain more than removing each one loses." as never;
+    const shown = { ...c, report };
+    const container = mountScreen(PlanScreen, shown, c.company, c.scenario);
+    const { expected, absent, periodLabels } = build(shown);
+    expect(expected.some((e) => e.id === "driver-actions.reconciliation.next12")).toBe(true);
+    expect(container.querySelector("[data-binding='driver-actions.reconciliation.rest']")).toBeNull();
+    expect(container.querySelector("[data-binding='driver-actions.reconciliation.next12']")?.textContent).toBe("-$84K");
+    expect([...checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], shown), ...unboundDigits(container, periodLabels)]).toEqual([]);
+  });
+
+  it("an action's figures are the core's: a changed removal value is caught", () => {
+    const c = computed("your-plan-actions");
+    const wrong = structuredClone(c.report);
+    if (!("joint_gain" in wrong.driver_actions)) throw new Error("no actions");
+    wrong.driver_actions.items[0].removal_value["rest of fiscal year"] = "1.00" as never;
+    const container = mountScreen(PlanScreen, { ...c, report: wrong }, c.company, c.scenario);
+    const { expected, absent } = build(c);
+    expect(checkBindings(container, expected, absent, [...LISTED_BINDINGS, ...WORKSHEET_BINDINGS], c).some((f) => f.startsWith("driver-actions.item.removal.rest"))).toBe(true);
   });
 
   it("the comparison table lists the visitor's plan last, from the core's row", () => {
