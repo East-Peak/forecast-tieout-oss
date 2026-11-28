@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 import { percentText } from "../src/editor/percent";
-import { decimal2, percent1, usdShort } from "../src/screens/__tests__/independent";
+import { days, decimal2, percent1, usdShort } from "../src/screens/__tests__/independent";
 import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } from "./support";
 
 /**
@@ -10,7 +10,7 @@ import { BAD_TEXT, COMPANIES, STRETCH, collectBrowserIssues, unboundDigits } fro
  * visitor's plan. Most cases share one page (so Pyodide starts once); the cases that need a page of their own
  * (a phone, a blocked download) take one.
  */
-type Driver = "win_rate" | "won_arr" | "productivity";
+type Driver = "win_rate" | "won_arr" | "productivity" | "cycle_days";
 type Action = { id: string; name: string; driver: Driver; slice: string; start: string; ramp_months: number; target: string };
 type Plan = {
   hires: Array<{ segment: string; start: string; count: number }>;
@@ -54,6 +54,7 @@ const fixture = (name: string, dir = "your-plan") => readFileSync(resolve(ROOT, 
 const withActions = (name: string) => fixture(name, "your-plan-actions");
 /** The form gives an action an id of its own ("action-0", "action-1", in the order they are added); the fixture's is named for what it is. */
 const FIXTURE_ACTION_IDS = ["enterprise-win-rate", "company-deal-size", "mid-market-creation"];
+const FOUR_ACTION_IDS = [...FIXTURE_ACTION_IDS, "enterprise-cycle"];
 const asFormIds = (text: string, ids: string[] = FIXTURE_ACTION_IDS.slice(0, 1)) =>
   ids.reduce((made, id, i) => {
     expect(made.split(`"${id}"`).length - 1, "the fixture names its action once or more").toBeGreaterThan(0);
@@ -183,8 +184,8 @@ async function enter(page: Page, plan: Plan) {
 }
 
 /** What the form calls each driver's target field. */
-const TARGET_LABEL: Record<Driver, string> = { win_rate: "Target win rate (percent)", won_arr: "Target won ARR per win (dollars)", productivity: "Target creation productivity (deals)" };
-const DRIVER_CHOICE: Record<Driver, string> = { win_rate: "Win rate", won_arr: "Won ARR per win", productivity: "Creation productivity" };
+const TARGET_LABEL: Record<Driver, string> = { win_rate: "Target win rate (percent)", won_arr: "Target won ARR per win (dollars)", productivity: "Target creation productivity (deals)", cycle_days: "Target cycle length (days)" };
+const DRIVER_CHOICE: Record<Driver, string> = { win_rate: "Win rate", won_arr: "Won ARR per win", productivity: "Creation productivity", cycle_days: "Cycle length" };
 
 /** Add an action through the form's own fields: the form picks the driver and slice it starts on, and the visitor sets the rest. */
 async function addAction(page: Page, given: Omit<Action, "id" | "driver"> & { driver?: Driver }) {
@@ -422,6 +423,7 @@ test.describe("the plan editor, one shared page @smoke", () => {
   const driverActions = (report: string) => JSON.parse(report).driver_actions as {
     items: Array<{ id: string; name: string; driver: Driver; removal_value: Record<string, string>; evidence: { change_points: string; resulting_rate: string; baseline: string; change_percent: string; resulting: string; label: string; position: string } }>;
     joint_gain: Record<string, string>;
+    definition: string;
     with_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
     without_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
     reconciliation: { values: Record<string, string>; material: Record<string, boolean>; sentences: Record<string, string> };
@@ -495,7 +497,7 @@ test.describe("the plan editor, one shared page @smoke", () => {
     const applied = (await reports(page)).length;
     const high = (JSON.parse(withActions("report.json")) as { worksheet: { drivers: Array<{ driver: string; historical: { high: { setting: string } } }> } }).worksheet.drivers.find((d) => d.driver === "win_rate")!.historical.high.setting;
     const drivers = page.locator("[data-testid='driver-row']");
-    await expect(page.locator("[data-testid='driver-row'][data-driver='cycle_days'] button", { hasText: "Add to plan" }), "the cycle bar has no button").toHaveCount(0);
+    await expect(page.locator("[data-testid='driver-row'][data-driver='cycle_days'] button", { hasText: "Add to plan" }), "every bar has the button").toHaveCount(1);
     expect(await drivers.evaluateAll((els) => els.map((e) => e.getAttribute("data-driver")).sort())).toEqual(["cycle_days", "productivity", "win_rate", "won_arr"]);
     await page.locator("[data-testid='driver-row'][data-driver='win_rate']").getByRole("button", { name: "Add to plan" }).click();
     await expect(actionRows(page)).toHaveCount(2);
@@ -761,6 +763,136 @@ test.describe("the plan editor, one shared page @smoke", () => {
     // not on an owner's cell
     await page.getByTestId("expand-segment/enterprise").click();
     await page.getByTestId("cell-segment/enterprise/owner/AE-010-created").click();
+    await expect(page.getByTestId("plan-action")).toHaveCount(0);
+    await page.getByRole("button", { name: "Close panel" }).click();
+    await page.getByTestId("expand-segment/enterprise").click();
+  });
+
+  // ---- the cycle: one action through the form, all four, the guardrail, the overlap, the entry points ----
+
+  const FOUR = JSON.parse(fixture("plan.json", "your-plan-four-drivers")) as Plan;
+  const withFour = (name: string) => fixture(name, "your-plan-four-drivers");
+  const cycleAction = (over: Partial<Action> = {}): Action => ({ id: "x", name: "Enterprise cycle", driver: "cycle_days", slice: "enterprise", start: "2026-11", ramp_months: 2, target: "110", ...over });
+
+  test("a cycle action entered through the form: the block says the core's figures, one action is worth its joint gain, the evidence is the core's percent and label, and it says it is an assumption @smoke", async () => {
+    const plan = { ...PLAIN, actions: [cycleAction()] };
+    await enter(page, plan);
+    await apply(page, plan);
+    const report = await lastReport(page);
+    const mine = driverActions(report);
+    expect(mine.items[0].removal_value, "one action: what removing it loses is the joint gain").toEqual(mine.joint_gain);
+    await expect(bound(page, "driver-actions.item.removal.rest")).toHaveText(usdShort(mine.items[0].removal_value[REST]), { timeout: 30_000 });
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
+    await expect(page.getByTestId("driver-action-driver")).toHaveText(DRIVER_CHOICE.cycle_days);
+    const row = actionRows(page).first();
+    const sheet = worksheetRow(report, "cycle_days");
+    expect(sheet.unit_label).toBe("days from creation to win");
+    await expect(row.locator("[data-binding='driver-actions.form.cycle_days.baseline']")).toHaveText(decimal2(sheet.current.value));
+    await expect(row.locator("[data-binding='driver-actions.form.cycle_days.low']")).toHaveText(decimal2(sheet.historical.low.setting));
+    await expect(row.locator("[data-binding='driver-actions.form.cycle_days.unit']")).toHaveText(sheet.unit_label);
+    await expect(row.locator("[data-binding='driver-actions.item.change-percent']")).toHaveText(decimal2(mine.items[0].evidence.change_percent));
+    await expect(row.locator("[data-binding='driver-actions.item.resulting.cycle_days']")).toHaveText(decimal2(mine.items[0].evidence.resulting));
+    expect(mine.items[0].evidence.position).toBe("below");
+    await expect(row.locator("[data-binding='driver-actions.item.label']")).toHaveText("outside the worksheet's historical settings");
+    await expect(row.getByTestId("action-timing-note")).toContainText("entered timing assumption on the pooled history");
+    // the core's definition says what a cycle action is, and that the lifetime bookings are the same
+    await page.getByTestId("driver-actions").getByText("How an action is valued").click();
+    await expect(page.getByTestId("driver-actions")).toContainText(mine.definition);
+    expect(mine.definition).toContain("changes when wins land");
+    // the cycle is not solved for while the plan moves it: the core's sentence stands in the row
+    await expect(page.locator("[data-testid='driver-row'][data-driver='cycle_days'] [data-testid='needed-stacked']")).toContainText("cycle action");
+    expect(await unboundDigits(page, periodLabelsOf(report))).toEqual([]);
+    expect(issues).toEqual([]);
+  });
+
+  test("an action on each of the four drivers entered through the form gives the native run's report, and the material reconciliation is the core's, in its neutral sentence about timing @smoke", async () => {
+    await enter(page, FOUR);
+    await apply(page, FOUR);
+    expect(await lastReport(page)).toBe(asFormIds(withFour("report.json"), FOUR_ACTION_IDS));
+    const mine = driverActions(withFour("report.json"));
+    await expect(page.getByTestId("driver-action-row")).toHaveCount(4, { timeout: 30_000 });
+    await expect(page.getByTestId("driver-action-driver")).toHaveText([DRIVER_CHOICE.win_rate, DRIVER_CHOICE.won_arr, DRIVER_CHOICE.productivity, DRIVER_CHOICE.cycle_days]);
+    for (const [i, item] of mine.items.entries()) await expect(bound(page, "driver-actions.item.removal.next12").nth(i)).toHaveText(usdShort(item.removal_value[TWELVE]));
+    await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
+    expect(mine.reconciliation.material).toEqual({ [REST]: true, [TWELVE]: true });
+    await expect(bound(page, "driver-actions.reconciliation.rest")).toHaveText(usdShort(mine.reconciliation.values[REST]));
+    await expect(bound(page, "driver-actions.reconciliation.sentence.rest")).toHaveText(mine.reconciliation.sentences[REST]);
+    await expect(bound(page, "driver-actions.reconciliation.sentence.next12")).toHaveText(mine.reconciliation.sentences[TWELVE]);
+    expect(mine.reconciliation.sentences[REST]).not.toMatch(/reinforce|overlap/);
+    const lanes = JSON.parse(withFour("lanes.json")) as LanesFile;
+    const cell = (path: string, column: string) => lanes.periods[0].rows.find((r) => r.path.join("/") === path)!.cells[column].forecast!;
+    await expect(page.locator("[data-testid='cell-segment/enterprise-cycle'] [data-binding='lanes.cycle.forecast']")).toHaveText(days(cell("segment/enterprise", "cycle")), { timeout: 60_000 });
+    if (process.env.SCREENSHOTS) {
+      await page.addStyleTag({ content: ".sticky, [class*='sticky'] { position: static !important; }" });
+      await page.getByTestId("plan-form").screenshot({ path: `${process.env.SCREENSHOTS}/form-four-drivers.png` });
+      await page.getByTestId("driver-actions").screenshot({ path: `${process.env.SCREENSHOTS}/results-material-reconciliation.png` });
+      await page.getByTestId("driver-row").first().locator("xpath=ancestor::*[contains(@class,'rounded')][1]").screenshot({ path: `${process.env.SCREENSHOTS}/tornado.png` });
+      await page.setViewportSize({ width: 1024, height: 900 });
+      await page.getByTestId("plan-form").screenshot({ path: `${process.env.SCREENSHOTS}/form-four-drivers-1024.png` });
+      await page.setViewportSize({ width: 1440, height: 900 });
+    }
+    expect(await unboundDigits(page, periodLabelsOf(await lastReport(page)))).toEqual([]);
+    expect(issues).toEqual([]);
+  });
+
+  test("a cycle target outside half to twice the pooled cycle is refused beside its item in the core's words, with the last good figures left; a second cycle action on the company in an overlapping slice is refused as an overlap @smoke", async () => {
+    const shown = await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.next12']").innerText();
+    const row = actionRows(page).nth(3);
+    await row.getByLabel(TARGET_LABEL.cycle_days).fill("40");
+    await page.getByRole("button", { name: "Apply" }).click();
+    const refusal = row.getByRole("alert");
+    await expect(refusal).toContainText("less than half the pooled cycle", { timeout: 30_000 });
+    await expect(refusal).toContainText("guardrail");
+    await expect(refusal).not.toContainText(/actions\[|cycle_days|driver/);
+    await expect(page.getByRole("button", { name: "Apply" })).toBeEnabled();
+    expect(await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.next12']").innerText(), "the last good figures stay").toBe(shown);
+    await row.getByLabel(TARGET_LABEL.cycle_days).fill("110");
+    await page.getByRole("button", { name: "Add an action" }).click();
+    const draft = actionRows(page).last();
+    await draft.getByLabel("Changes").selectOption("cycle_days");
+    await draft.getByLabel("Slice").selectOption("company");
+    await draft.getByLabel(TARGET_LABEL.cycle_days).fill("120");
+    await page.getByRole("button", { name: "Apply" }).click();
+    await expect(draft.getByRole("alert")).toContainText("Overlaps 'Enterprise cycle'", { timeout: 30_000 });
+    await expect(draft.getByRole("alert")).toContainText("one changes the cycle length for the whole company, which includes Enterprise");
+    expect(await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.next12']").innerText(), "the last good figures stay").toBe(shown);
+    await draft.getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(4);
+  });
+
+  test("Add to plan on the cycle bar opens a draft company action at the worksheet's low setting, and Plan an action here on the cycle cells opens one for the slice at the pooled baseline; nothing is applied @smoke", async () => {
+    await enter(page, PLAIN);
+    const applied = (await reports(page)).length;
+    const report = await lastReport(page);
+    const sheet = worksheetRow(report, "cycle_days");
+    await page.locator("[data-testid='driver-row'][data-driver='cycle_days']").getByRole("button", { name: "Add to plan" }).click();
+    await expect(actionRows(page)).toHaveCount(1);
+    let draft = actionRows(page).last();
+    await expect(draft.getByLabel("Changes")).toHaveValue("cycle_days");
+    await expect(draft.getByLabel("Slice")).toHaveValue("company");
+    await expect(draft.getByLabel(TARGET_LABEL.cycle_days)).toHaveValue(sheet.historical.low.setting);
+    expect(sheet.historical.low.setting, "a shorter cycle is the favorable end").not.toBe(sheet.historical.high.setting);
+    await expect(draft.getByTestId("action-origin")).toContainText("Started from the cycle bar");
+    await draft.getByRole("button", { name: "Remove action" }).click();
+    await expect(actionRows(page)).toHaveCount(0);
+    for (const [row, slice] of [["total", "company"], ["segment/commercial", "commercial"]] as const) {
+      await page.getByTestId(`cell-${row}-cycle`).click();
+      const entry = page.getByTestId("plan-action");
+      await expect(entry).toContainText("wins that land in the period");
+      await expect(entry).toContainText("pooled");
+      await entry.getByRole("button", { name: "Plan an action here" }).click();
+      await expect(actionRows(page)).toHaveCount(1);
+      draft = actionRows(page).last();
+      await expect(draft.getByLabel("Changes")).toHaveValue("cycle_days");
+      await expect(draft.getByLabel("Slice")).toHaveValue(slice);
+      await expect(draft.getByLabel(TARGET_LABEL.cycle_days)).toHaveValue(sheet.current.value);
+      await expect(page.getByTestId("cell-panel")).toHaveCount(0);
+      await draft.getByRole("button", { name: "Remove action" }).click();
+      await expect(actionRows(page)).toHaveCount(0);
+    }
+    expect((await reports(page)).length, "nothing was computed for any draft").toBe(applied);
+    await page.getByTestId("expand-segment/enterprise").click();
+    await page.getByTestId("cell-segment/enterprise/owner/AE-010-cycle").click();
     await expect(page.getByTestId("plan-action")).toHaveCount(0);
     await page.getByRole("button", { name: "Close panel" }).click();
     await page.getByTestId("expand-segment/enterprise").click();
