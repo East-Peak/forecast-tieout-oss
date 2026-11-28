@@ -1,0 +1,39 @@
+# Hand-computed month by month (see ARITHMETIC.md). Months are 2025-02 .. 2025-07.
+exit_reasons: [rejected_fit, expired_no_capacity]
+lane_tables:
+  "source=Paid":
+    open_start:      [4, 6, 5, 4, 4, 5]
+    queue_start:     [0, 1, 2, 3, 3, 2]
+    arrivals:        [4, 3, 4, 3, 3, 4]
+    admissions:      [3, 1, 3, 1, 4, 3]
+    exits:
+      rejected_fit:        [0, 1, 0, 0, 0, 0]
+      expired_no_capacity: [0, 0, 0, 2, 0, 0]
+    queue_end:       [1, 2, 3, 3, 2, 3]
+    closings:        [1, 2, 4, 1, 3, 1]
+    wins:            [1, 1, 2, 0, 2, 0]
+    losses:          [0, 1, 2, 1, 1, 1]
+    open_end:        [6, 5, 4, 4, 5, 7]
+    bookings_cents:  [1000000, 1000000, 2000000, 0, 2000000, 0]
+  "source=Outbound":
+    open_start:      [2, 2, 3, 4, 4, 3]
+    queue_start:     [0, 1, 3, 2, 1, 2]
+    arrivals:        [2, 3, 2, 2, 3, 2]
+    admissions:      [1, 1, 3, 1, 2, 3]
+    exits:
+      rejected_fit:        [0, 0, 0, 1, 0, 0]
+      expired_no_capacity: [0, 0, 0, 1, 0, 0]
+    queue_end:       [1, 3, 2, 1, 2, 1]
+    closings:        [1, 0, 2, 1, 3, 1]
+    wins:            [0, 0, 1, 0, 1, 1]
+    losses:          [1, 0, 1, 1, 2, 0]
+    open_end:        [2, 3, 4, 4, 3, 5]
+    bookings_cents:  [0, 0, 2000000, 0, 2000000, 2000000]
+team_tables:
+  AE-SMB:
+    heads:             [2, 2, 2, 2, 3, 3]
+    ramped_heads:      [2, 2, 2, 2, 2, 3]
+    ramp_exposure:     [2.0, 2.0, 2.0, 2.0, 2.0, 3.0]
+    carrying_capacity: [8, 8, 8, 8, 8, 12]
+    room:              [4, 2, 6, 2, 6, 6]    # capacity - open_start + wins + losses; equals admissions in every month
+    capacity_if_hire_did_not_slip: [8, 8, 8, 12, 12, 12]
