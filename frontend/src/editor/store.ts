@@ -22,8 +22,6 @@ export interface Editor {
  */
 export type EditedLanes =
   | { status: "pending" }
-  /** the worker moved on before answering (another company was opened): computed again when the grid is shown */
-  | { status: "stale" }
   | { status: "ready"; lanes: TieoutLanes; owners: Record<string, TieoutLanesOwners> }
   | { status: "failed"; message: string };
 
@@ -158,36 +156,12 @@ export class YourPlanStore {
     try {
       const out = await this.editor.lanes(company, applied.revision);
       if (out.kind === "lanes") settle({ status: "ready", lanes: out.lanes, owners: out.owners });
-      else if (out.kind === "stale") settle({ status: "stale" });
+      else if (out.kind === "stale") settle({ status: "failed", message: "the worker had moved on before it could compute them; apply the plan again to compute them" });
       else settle({ status: "failed", message: out.problems.join("; ") });
     } catch (e) {
-      if (e instanceof EditorFailure && e.kind === "superseded") settle({ status: "stale" });
-      else settle({ status: "failed", message: e instanceof Error ? e.message : String(e) });
-    }
-  }
-
-  /** Compute the lanes again for a plan whose lanes were left stale, by applying the same plan afresh (the worker holds only the latest Apply). */
-  async recomputeLanes(company: string): Promise<void> {
-    const kept = this.snapshot.applied[company];
-    if (kept?.lanes.status !== "stale") return;
-    const mine: Applied = { ...kept, lanes: PENDING };
-    this.change({ applied: { ...this.snapshot.applied, [company]: mine } });
-    const settle = (lanes: EditedLanes) => {
-      if (this.snapshot.applied[company] === mine) this.change({ applied: { ...this.snapshot.applied, [company]: { ...mine, lanes } } });
-    };
-    try {
-      const outcome = await this.editor.apply(company, copy(mine.plan));
-      if (this.snapshot.applied[company] !== mine) return;
-      if (outcome.kind !== "report") {
-        settle({ status: "failed", message: outcome.kind === "invalid" ? outcome.errors.map((e) => e.message).join("; ") : outcome.problems.join("; ") });
-        return;
-      }
-      const next: Applied = { report: outcome.report, comparison: outcome.comparison, plan: mine.plan, revision: outcome.revision, lanes: PENDING };
-      this.change({ applied: { ...this.snapshot.applied, [company]: next } });
-      void this.computeLanes(company, next);
-    } catch (e) {
-      if (e instanceof EditorFailure && e.kind === "superseded") settle({ status: "stale" });
-      else settle({ status: "failed", message: e instanceof Error ? e.message : String(e) });
+      // a newer request for lanes replaced this one: that one owns the lanes now
+      if (e instanceof EditorFailure && e.kind === "superseded") return;
+      settle({ status: "failed", message: e instanceof Error ? e.message : String(e) });
     }
   }
 }

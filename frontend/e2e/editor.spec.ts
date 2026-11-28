@@ -41,6 +41,10 @@ const DEMO: Record<(typeof COMPANIES)[number], Plan> = {
 
 const ROOT = resolve(import.meta.dirname, "..");
 const committed = (company: string, scenario: string) => readFileSync(resolve(ROOT, `public/data/reports/${company}/${scenario}.json`), "utf8");
+/** The as-signed lanes as committed: what the grid must not show for a plan whose lanes are the edited ones, and whose goals and actuals it must. */
+type LanesFile = { periods: Array<{ key: string; rows: Array<{ path: string[]; cells: Record<string, { forecast: string | null; goal: string | null; actual: string | null }> }> }> };
+type OwnersFile = LanesFile;
+const signedLanes = (company = "sapling-industries") => JSON.parse(readFileSync(resolve(ROOT, `public/data/reports/${company}/lanes-as-signed.json`), "utf8")) as LanesFile;
 const fixture = (name: string) => readFileSync(resolve(ROOT, `src/screens/__tests__/fixtures/your-plan/${name}`), "utf8");
 
 /** The committed demo-plan report as the browser's core must write it: only the report's identity and the plan's name differ. */
@@ -60,11 +64,15 @@ function asYourPlan(company: string): string {
 const RECORD = `(() => {
   const Original = window.Worker;
   window.__reports = [];
+  window.__lanes = [];
   window.__requests = [];
   window.Worker = class extends Original {
     constructor(...args) {
       super(...args);
-      this.addEventListener("message", (e) => { if (e.data && e.data.type === "applied" && e.data.report) window.__reports.push(e.data.report); });
+      this.addEventListener("message", (e) => {
+        if (e.data && e.data.type === "applied" && e.data.report) window.__reports.push(e.data.report);
+        if (e.data && e.data.type === "lanes") window.__lanes.push(e.data.lanes);
+      });
     }
     postMessage(m, ...rest) {
       if (m && m.type === "apply") window.__requests.push(m.plan);
@@ -74,6 +82,8 @@ const RECORD = `(() => {
 })();`;
 
 const reports = (page: Page) => page.evaluate(() => (window as unknown as { __reports: string[] }).__reports);
+/** Every answer the worker gave to a request for lanes, in order, as JSON text: what the browser's core wrote for each Apply's grid. */
+const lanesAnswers = (page: Page) => page.evaluate(() => (window as unknown as { __lanes: string[] }).__lanes);
 const lastReport = async (page: Page) => (await reports(page)).slice(-1)[0];
 /** The plan of the last Apply the page sent to the worker, as the worker received it. */
 const lastRequestedPlan = async (page: Page) => JSON.parse(((await page.evaluate(() => (window as unknown as { __requests: string[] }).__requests)).slice(-1)[0]) ?? "null") as Plan | null;
@@ -250,11 +260,46 @@ test.describe("the plan editor, one shared page @smoke", () => {
     expect(issues).toEqual([]);
   });
 
-  test("on Plan the lanes say they do not yet reflect the edited plan, and show the plan as signed @smoke", async () => {
+  test("on Plan the grid shows the edited plan's lanes: the company's forecast is the edited report's expected bookings, a goal is as signed, and the as-signed forecast is never shown for it @smoke", async () => {
     await goTo(page, "Plan");
-    await expect(page.getByTestId("your-plan-note")).toContainText("do not yet reflect your edited plan");
-    const lanes = JSON.parse(readFileSync(resolve(ROOT, "public/data/reports/sapling-industries/lanes-as-signed.json"), "utf8")) as { periods: Array<{ rows: Array<{ cells: { bookings: { forecast: string } } }> }> };
-    await expect(page.locator("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']")).toHaveText(usdShort(lanes.periods[0].rows[0].cells.bookings.forecast));
+    const edited = JSON.parse(fixture("report.json")) as { plan: { expected_fiscal_year: string } };
+    const signed = signedLanes();
+    const forecast = page.locator("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']");
+    // wait on content only the edited plan's lanes can show: the as-signed forecast is a different figure, and "pending" has none
+    await expect(forecast).toHaveText(usdShort(edited.plan.expected_fiscal_year), { timeout: 60_000 });
+    expect(usdShort(signed.periods[0].rows[0].cells.bookings.forecast!), "the edit moves the forecast").not.toBe(usdShort(edited.plan.expected_fiscal_year));
+    await expect(forecast).toHaveAttribute("data-scenario", "your-plan");
+    await expect(page.getByTestId("cell-total-bookings").locator("[data-binding='lanes.bookings.goal']")).toHaveText(usdShort(signed.periods[0].rows[0].cells.bookings.goal!));
+    await expect(page.getByTestId("your-plan-note")).toHaveCount(0);
+    await expect(page.getByTestId("lanes-pending")).toHaveCount(0);
+    await expect(page.getByTestId("forecast-pending")).toHaveCount(0);
+    // the browser's core wrote, for this Apply, exactly the lanes and owners a native run of the plan wrote (the fixture is checked against one by the generator's --verify)
+    const answer = JSON.parse((await lanesAnswers(page)).slice(-1)[0]) as { stale: boolean; problems: string[]; lanes: unknown; owners: Record<string, unknown> };
+    expect(answer.stale).toBe(false);
+    expect(answer.problems).toEqual([]);
+    expect(answer.lanes).toEqual(JSON.parse(fixture("lanes.json")));
+    expect(answer.owners.enterprise).toEqual(JSON.parse(fixture("owners-enterprise.json")));
+    expect(answer.owners.commercial).toEqual(JSON.parse(fixture("owners-commercial.json")));
+    // a quarter, from the file the native run wrote: the grid is that file's, not just its first figure
+    const native = JSON.parse(fixture("lanes.json")) as LanesFile;
+    await page.getByTestId("period-Q4FY26").click();
+    await expect(page.locator("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast']")).toHaveText(usdShort(native.periods[4].rows[0].cells.bookings.forecast!));
+    await page.getByTestId("period-FY26").click();
+  });
+
+  test("a segment opens to the edited plan's owners, the planned hires' bucket among them, from the worker and not from a file @smoke", async () => {
+    const fetched: string[] = [];
+    const note = (r: { url(): string }) => fetched.push(r.url());
+    page.on("request", note);
+    await page.getByTestId("expand-segment/enterprise").click();
+    const bucket = page.getByTestId("cell-segment/enterprise/owner/planned-hires-bookings");
+    await expect(bucket).toBeVisible();
+    const owners = JSON.parse(fixture("owners-enterprise.json")) as OwnersFile;
+    const hires = owners.periods[0].rows.find((r) => r.path.at(-1) === "planned-hires")!;
+    await expect(bucket.locator("[data-binding='owners.bookings.forecast']")).toHaveText(usdShort(hires.cells.bookings.forecast!));
+    page.off("request", note);
+    expect(fetched.filter((u) => u.includes("lanes-owners")), "no owners file is fetched for your plan").toEqual([]);
+    await page.getByTestId("expand-segment/enterprise").click();
   });
 
   test("the form keeps what was entered while the visitor looks at other screens @smoke", async () => {
@@ -310,6 +355,22 @@ test.describe("the plan editor, one shared page @smoke", () => {
     await expect(page.getByTestId("plan-form")).toBeVisible();
     expect((await reports(page)).length, "no new computation to show what was applied").toBe(before);
     expect(await lastReport(page)).toBe(fixture("report.json"));
+  });
+
+  test("another company's grid shows its own plan's lanes, and coming back shows this company's edited ones, never another's or the as-signed @smoke", async () => {
+    const forecast = (company: string) => page.locator(`[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast'][data-company='${company}']`);
+    const demoOf = (company: string) => usdShort((JSON.parse(readFileSync(resolve(ROOT, `public/data/reports/${company}/lanes-demo-plan.json`), "utf8")) as LanesFile).periods[0].rows[0].cells.bookings.forecast!);
+    const editedBookings = usdShort((JSON.parse(fixture("lanes.json")) as LanesFile).periods[0].rows[0].cells.bookings.forecast!);
+    await goTo(page, "Plan");
+    await switchCompany(page, "sprout-labs");
+    // the content that proves the new state: a figure drawn for sprout-labs, whose plan is its demo plan until edited
+    await expect(forecast("sprout-labs")).toHaveText(demoOf("sprout-labs"), { timeout: 60_000 });
+    await expect(page.locator("[data-testid='cell-total-bookings'] [data-binding='lanes.bookings.forecast'][data-company='sapling-industries']")).toHaveCount(0);
+    expect(demoOf("sprout-labs")).not.toBe(editedBookings);
+    await switchCompany(page, "sapling-industries");
+    await expect(forecast("sapling-industries")).toHaveText(editedBookings, { timeout: 60_000 });
+    expect(editedBookings).not.toBe(usdShort(signedLanes().periods[0].rows[0].cells.bookings.forecast!));
+    await expect(page.getByTestId("forecast-pending")).toHaveCount(0);
   });
 });
 

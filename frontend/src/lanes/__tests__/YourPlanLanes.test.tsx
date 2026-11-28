@@ -215,15 +215,12 @@ describe("lanes that cannot be shown", () => {
     expect((await screen.findByTestId("lanes-unavailable")).textContent).toBe("no plan basis for this test");
   });
 
-  it("stale lanes are computed again from the same plan when the grid is shown, pending meanwhile", async () => {
+  it("lanes the worker could not compute because it had moved on say so, and the grid does not fall back to the as-signed one", async () => {
     const m = await mount();
     await screen.findByTestId("lanes-grid");
     await answer(m.editor, { kind: "stale" });
-    await waitFor(() => expect(m.editor.applied).toEqual([COMPANY, COMPANY]));
-    await waitFor(() => expect(m.editor.asked).toHaveLength(2));
-    expect(screen.getByTestId("lanes-pending")).toBeTruthy();
-    await answer(m.editor);
-    await waitFor(() => expect(forecastOf("bookings", "total", "bookings")?.textContent).toBe(usdShort(bookings(EDITED).forecast!)));
+    expect((await screen.findByRole("alert")).textContent).toMatch(/apply the plan again/);
+    expect(screen.queryByTestId("lanes-grid")).toBeNull();
   });
 });
 

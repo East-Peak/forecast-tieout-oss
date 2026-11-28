@@ -415,9 +415,6 @@ function useYourLanes(own: boolean, company: string, report: unknown): { lanes: 
   const applied = own ? snapshot?.applied[company] : undefined;
   const current = applied !== undefined && applied.report === report ? applied : undefined;
   const lanes: EditedLanes = current?.lanes ?? { status: "pending" };
-  useEffect(() => {
-    if (store && own && lanes.status === "stale") void store.recomputeLanes(company);
-  }, [store, own, company, lanes.status]);
   return { lanes, revision: current?.revision ?? null };
 }
 

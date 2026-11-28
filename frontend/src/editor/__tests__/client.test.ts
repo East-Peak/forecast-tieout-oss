@@ -236,13 +236,32 @@ describe("the lanes of an Apply", () => {
     }
   });
 
-  it("is replaced, as superseded, by the next request", async () => {
+  it("is not replaced by an Apply or an open, which the worker takes after it: the lanes of the report on screen still arrive", async () => {
+    const { client, workers } = await applied();
+    const lanes = client.lanes("acme", 7);
+    void client.apply("acme", PLAN).catch(() => null);
+    const other = client.open("other").catch(() => null);
+    workers[0].say({ type: "lanes", id: workers[0].last("lanes").id, lanes: answer() });
+    await expect(lanes).resolves.toMatchObject({ kind: "lanes" });
+    void other;
+  });
+
+  it("is replaced, as superseded, by a newer request for lanes, whose own answer is the one kept", async () => {
     const { client, workers } = await applied();
     const first = client.lanes("acme", 7).catch((e: unknown) => e);
-    void client.apply("acme", PLAN);
+    const firstId = workers[0].last("lanes").id;
+    const second = client.lanes("acme", 8);
     expect(await first).toMatchObject({ kind: "superseded" });
-    // and its late answer is ignored
-    workers[0].say({ type: "lanes", id: workers[0].sent.filter((m) => m.type === "lanes")[0].id, lanes: answer() });
+    workers[0].say({ type: "lanes", id: firstId, lanes: answer() });
+    workers[0].say({ type: "lanes", id: workers[0].last("lanes").id, lanes: answer({ revision: 8 }) });
+    await expect(second).resolves.toMatchObject({ kind: "lanes" });
+  });
+
+  it("is failed with the others when the worker is given up on", async () => {
+    const { client, workers } = await applied();
+    const lanes = client.lanes("acme", 7).catch((e: unknown) => e);
+    workers[0].onerror?.({ message: "boom" });
+    expect(await lanes).toMatchObject({ kind: "crash" });
   });
 
   it("times out on the Apply clock, ending the worker", async () => {

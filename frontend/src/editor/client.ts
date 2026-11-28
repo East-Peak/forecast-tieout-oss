@@ -80,6 +80,8 @@ export class PlanEditorClient {
   private worker: WorkerLike | null = null;
   private facts: Facts | null = null;
   private pending: Pending | null = null;
+  /** the lanes asked for are a request of their own: an Apply or an open sent after them is taken by the worker after them, and must not drop their answer */
+  private lanesPending: Pending | null = null;
   private started = false;
   private readonly listeners = new Set<() => void>();
 
@@ -158,16 +160,29 @@ export class PlanEditorClient {
   lanes(company: string, revision: number): Promise<LanesOutcome> {
     const worker = this.worker;
     if (!worker || !this.isOpen(company)) return Promise.resolve({ kind: "stale" });
-    return this.request<LanesOutcome>(worker, this.timeouts.applyMs, (id) => ({ type: "lanes", id, revision }), (m, done) => {
-      if (m.type !== "lanes") return;
-      const got = JSON.parse(m.lanes) as { revision: number; stale: boolean; problems?: string[]; lanes?: TieoutLanes | null; owners?: Record<string, TieoutLanesOwners> };
-      if (got.revision !== revision) return this.end(worker, "error", `the worker answered for revision ${got.revision}, not ${revision}`);
-      if (got.stale) return done({ kind: "stale" });
-      if (!got.lanes) return done({ kind: "refused", problems: got.problems ?? [] });
-      if (got.lanes.company !== company || got.lanes.scenario !== "your-plan") {
-        return this.end(worker, "error", `the worker answered with the lanes of ${got.lanes.company} (${got.lanes.scenario}), not of ${company}'s plan`);
-      }
-      done({ kind: "lanes", lanes: got.lanes, owners: got.owners ?? {} });
+    this.lanesPending?.reject(new EditorFailure("superseded", "a newer request for lanes replaced this one"));
+    if (this.lanesPending) clearTimeout(this.lanesPending.timer);
+    const id = crypto.randomUUID();
+    return new Promise<LanesOutcome>((resolve, reject) => {
+      const timer = setTimeout(() => this.end(worker, "timeout", "no answer within the time allowed"), this.timeouts.applyMs);
+      const finish = (value: LanesOutcome) => {
+        clearTimeout(timer);
+        this.lanesPending = null;
+        resolve(value);
+      };
+      const accept = (m: FromWorker) => {
+        if (m.type !== "lanes") return;
+        const got = JSON.parse(m.lanes) as { revision: number; stale: boolean; problems?: string[]; lanes?: TieoutLanes | null; owners?: Record<string, TieoutLanesOwners> };
+        if (got.revision !== revision) return this.end(worker, "error", `the worker answered for revision ${got.revision}, not ${revision}`);
+        if (got.stale) return finish({ kind: "stale" });
+        if (!got.lanes) return finish({ kind: "refused", problems: got.problems ?? [] });
+        if (got.lanes.company !== company || got.lanes.scenario !== "your-plan") {
+          return this.end(worker, "error", `the worker answered with the lanes of ${got.lanes.company} (${got.lanes.scenario}), not of ${company}'s plan`);
+        }
+        finish({ kind: "lanes", lanes: got.lanes, owners: got.owners ?? {} });
+      };
+      this.lanesPending = { id, resolve: resolve as (v: never) => void, reject, timer, accept };
+      worker.postMessage({ type: "lanes", id, revision });
     });
   }
 
@@ -203,9 +218,10 @@ export class PlanEditorClient {
   }
 
   private hear(worker: WorkerLike, m: FromWorker) {
-    if (worker !== this.worker || !this.pending || m.id !== this.pending.id) return;
+    const mine = [this.pending, this.lanesPending].find((p) => p?.id === m.id);
+    if (worker !== this.worker || !mine) return;
     if (m.type === "failed") this.end(worker, "error", m.error);
-    else this.pending.accept(m);
+    else mine.accept(m);
   }
 
   /** Give up on `worker`: end it, fail what it was asked, and leave the next request a new one. */
@@ -214,10 +230,10 @@ export class PlanEditorClient {
     worker.terminate();
     this.worker = null;
     this.facts = null;
-    const pending = this.pending;
-    this.pending = null;
-    if (pending) clearTimeout(pending.timer);
+    const failed = [this.pending, this.lanesPending];
+    this.pending = this.lanesPending = null;
+    failed.forEach((p) => p && clearTimeout(p.timer));
     this.set({ phase: "failed", kind, message });
-    pending?.reject(new EditorFailure(kind, message));
+    failed.forEach((p) => p?.reject(new EditorFailure(kind, message)));
   }
 }
