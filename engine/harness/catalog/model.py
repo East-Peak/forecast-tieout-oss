@@ -145,6 +145,20 @@ class Catalog:
     def metric_versions(self, metric_id: str) -> list[str]:
         return [m.version for m in self.metrics if m.id == metric_id]
 
+    def metric_entities(self, metric: "Metric") -> list[str]:
+        """The entities a metric reads (the first is its main one)."""
+        s = metric.spec
+        if metric.kind == "conversion":
+            return [s["anchor"]["entity"]]
+        if metric.kind == "rollup":
+            return self.metric_entities(self.metric(s["of"], s.get("of_version")))
+        names = (
+            s["inputs"].values()
+            if metric.kind == "estimator"
+            else [s[k] for k in ("measure", "numerator", "denominator") if k in s]
+        )
+        return [self.measures[n].entity for n in names]
+
     def mapping(self, dimension: str, entity: str) -> Mapping | None:
         return self.mappings.get((dimension, entity))
 

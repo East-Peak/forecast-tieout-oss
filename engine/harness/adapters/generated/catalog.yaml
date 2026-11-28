@@ -1,0 +1,455 @@
+# Governed catalog for the generated company (fine source taxonomy). Estate A uses the same record
+# shapes, so the verified queries below run against it. Everything we had to GUESS about the generated
+# company lives in the marked section at the bottom of this file ("mappings:"); correct it there.
+catalog: generated_company
+version: "1"
+
+entities:
+  opportunity:
+    view: opportunity
+    requires: [salesforce.Opportunity]
+    relationships:
+      self: {to: opportunity, cardinality: one_to_one, join: [opportunity_id, opportunity_id]}
+      account: {to: account, cardinality: many_to_one, join: [account_id, account_id]}
+      sourcing_person: {to: person, cardinality: many_to_one, join: [sourcing_user_id, user_id]}
+      campaign: {to: campaign, cardinality: many_to_one, join: [campaign_id, campaign_id]}
+      # one converted lead per opportunity: the earliest conversion, then the lowest id
+      converted_lead:
+        to: lead
+        cardinality: one_to_many
+        join: [opportunity_id, converted_opportunity_id]
+        dedup: {order_by: [converted_date, lead_id]}
+  lead:
+    view: lead
+    requires: [salesforce.Lead]
+    relationships:
+      converted_opportunity: {to: opportunity, cardinality: many_to_one, join: [converted_opportunity_id, opportunity_id]}
+      first_touch:
+        to: touch
+        cardinality: one_to_many
+        join: [lead_id, lead_id]
+        dedup: {order_by: [first_responded_date, touch_id]}
+  demand_episode:
+    view: demand_episode
+    requires: [salesforce.Lead, salesforce.LeadHistory]
+    relationships:
+      lead: {to: lead, cardinality: many_to_one, join: [lead_id, lead_id]}
+  touch:
+    view: touch
+    requires: [salesforce.CampaignMember]
+    relationships:
+      campaign: {to: campaign, cardinality: many_to_one, join: [campaign_id, campaign_id]}
+  account: {view: account, requires: [salesforce.Account]}
+  campaign: {view: campaign, requires: [salesforce.Campaign]}
+  person: {view: person, requires: [people_system.people]}
+
+dimensions:
+  segment:
+    label: Segment
+    attribute_time: at_creation   # re-tiering an account later does not move a deal's segment
+    members: [Enterprise, Mid-Market, SMB, Unknown]
+    unmapped: Unknown
+  region:
+    label: Region
+    attribute_time: at_creation
+    members: [North America, EMEA, Unknown]
+    unmapped: Unknown
+  source:
+    label: Source
+    attribute_time: at_creation
+    levels: [group, source]
+    members:
+      - {key: Paid, group: Marketing}
+      - {key: Events, group: Marketing}
+      - {key: Inbound, group: Marketing}
+      - {key: ABM, group: Marketing}
+      - {key: BDR Outbound, group: Sales}
+      - {key: AE Self-Sourced, group: Sales}
+      - {key: Partner, group: Partner}
+      - {key: Unknown, group: Unknown}
+    unmapped: Unknown
+  booking_owner:
+    label: Booking owner
+    attribute_time: at_close      # the person who owned the deal when it closed
+    observed: true
+    members: [Unknown]
+    unmapped: Unknown
+  sourcing_person:
+    label: Sourcing person
+    observed: true
+    members: [Unknown]
+    unmapped: Unknown
+  month: {kind: time, grain: month, label: Month}
+  quarter: {kind: time, grain: quarter, label: Quarter}
+
+attribution_policy:
+  dimension: source
+  entity: opportunity
+  rule: One opportunity, one source. The first step that resolves wins; nothing is split or double counted.
+  precedence: [sourcing_person_role, opportunity_campaign, converted_lead_campaign, lead_source, unknown]
+
+measures:
+  bookings_cents: {entity: opportunity, agg: sum, column: amount_cents, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  won_deals: {entity: opportunity, agg: count, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  opportunities_created: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business'"}
+  cohort_won: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  cohort_decided: {entity: opportunity, agg: count, time: created_date, where: "type = 'New Business' and stage in ('Closed Won', 'Closed Lost')"}
+  cycle_days: {entity: opportunity, agg: count, column: cycle_days, time: close_date, where: "type = 'New Business' and stage = 'Closed Won'"}
+  open_deals: {entity: opportunity, agg: count, where: "type = 'New Business' and is_open = true"}
+  open_amount_cents: {entity: opportunity, agg: sum, column: amount_at_t_cents, where: "type = 'New Business' and is_open = true"}
+  mql_leads: {entity: lead, agg: count, time: mql_date, where: "mql_date is not null"}
+  episodes_offered: {entity: demand_episode, agg: count, time: offered_on}
+  episodes_admitted: {entity: demand_episode, agg: count, time: offered_on, where: "outcome = 'admitted'"}
+  episodes_rejected: {entity: demand_episode, agg: count, time: offered_on, where: "outcome = 'rejected'"}
+  episodes_expired: {entity: demand_episode, agg: count, time: offered_on, where: "outcome = 'expired'"}
+
+metrics:
+  - id: bookings
+    version: "1"
+    label: Bookings
+    unit: cents
+    population: New-business opportunities closed won
+    basis: period
+    kind: sum
+    measure: bookings_cents
+    aggregation: additive
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    favorable: up
+    owner: Revenue Operations
+    definition: New-business amount of opportunities closed won, by effective close date, restated by what was known at K.
+    ai_context: Money in integer cents. A total with an unknown amount or type is a lower bound.
+  - id: won_deals
+    version: "1"
+    label: Won deals
+    unit: count
+    population: New-business opportunities closed won
+    basis: period
+    kind: sum
+    measure: won_deals
+    aggregation: additive
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    favorable: up
+    owner: Revenue Operations
+    definition: Count of new-business opportunities closed won, by effective close date.
+  - id: opportunities_created
+    version: "1"
+    label: Opportunities created
+    unit: count
+    population: New-business opportunities
+    basis: period
+    kind: sum
+    measure: opportunities_created
+    aggregation: additive
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    favorable: up
+    owner: Sales Operations
+    definition: Count of new-business opportunities by creation date, deleted ones included (they existed).
+  - id: mqls
+    version: "1"
+    label: MQLs
+    unit: count
+    population: Leads with a marketing-qualified date
+    basis: period
+    kind: sum
+    measure: mql_leads
+    aggregation: additive
+    dimensions: [segment, source, month, quarter]
+    applicability:
+      - {dimension: source, members: [BDR Outbound, AE Self-Sourced, Partner], reason: These sources have no marketing qualification}
+    favorable: up
+    owner: Marketing
+    definition: Count of leads by the date they became marketing qualified, as known by K.
+  - id: demand_offered
+    version: "1"
+    label: Demand episodes offered
+    unit: count
+    population: Qualified demand offered to sales (each offer is an episode)
+    basis: cohort
+    kind: sum
+    measure: episodes_offered
+    aggregation: additive
+    dimensions: [segment, source, month, quarter]
+    favorable: up
+    owner: Sales Operations
+    definition: Count of demand episodes by offered date; a lead offered twice is two episodes.
+  - id: demand_admitted
+    version: "1"
+    label: Demand episodes admitted
+    unit: count
+    population: Demand episodes offered
+    basis: cohort
+    kind: sum
+    measure: episodes_admitted
+    aggregation: additive
+    dimensions: [segment, source, month, quarter]
+    favorable: up
+    owner: Sales Operations
+    definition: Demand episodes accepted by sales, by offered date, outcome as of T.
+  - id: demand_rejected
+    version: "1"
+    label: Demand episodes rejected
+    unit: count
+    population: Demand episodes offered
+    basis: cohort
+    kind: sum
+    measure: episodes_rejected
+    aggregation: additive
+    dimensions: [segment, source, month, quarter]
+    favorable: down
+    owner: Sales Operations
+    definition: Demand episodes turned down by sales, by offered date, outcome as of T.
+  - id: demand_expired
+    version: "1"
+    label: Demand episodes expired
+    unit: count
+    population: Demand episodes offered
+    basis: cohort
+    kind: sum
+    measure: episodes_expired
+    aggregation: additive
+    dimensions: [segment, source, month, quarter]
+    favorable: down
+    owner: Sales Operations
+    definition: Demand episodes that aged out of the queue, by offered date, outcome as of T.
+  - id: win_rate
+    version: "1"
+    label: Win rate
+    unit: ratio
+    population: New-business opportunities created in the period and decided (won or lost) by T
+    basis: cohort
+    kind: ratio
+    numerator: cohort_won
+    denominator: cohort_decided
+    aggregation: non_additive
+    maturity_days: 90
+    min_denominator: 1
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    favorable: up
+    owner: Sales Operations
+    definition: Won over decided, for opportunities created in the period; a cohort is mature 90 days after its period ends.
+  - id: average_deal
+    version: "1"
+    label: Average deal
+    unit: cents
+    population: New-business opportunities closed won, large deals set aside and counted
+    basis: period
+    kind: ratio
+    numerator: bookings_cents
+    denominator: won_deals
+    aggregation: non_additive
+    exclusions:
+      - {reason: large_deal, when: "amount_cents > 20000000"}
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    favorable: up
+    owner: Revenue Operations
+    definition: Arithmetic mean of won amounts; deals above $200,000 are set aside, counted and listed, never dropped silently.
+  - id: sales_cycle_median
+    version: "1"
+    label: Sales cycle (median days)
+    unit: days
+    population: New-business opportunities closed won
+    basis: period
+    kind: quantile
+    measure: cycle_days
+    q: 0.5
+    aggregation: non_additive
+    dimensions: [segment, region, source, booking_owner, sourcing_person, month, quarter]
+    favorable: down
+    owner: Sales Operations
+    definition: Median days from creation to the effective close date of deals closed won in the period.
+  - id: mql_to_opportunity
+    version: "1"
+    label: MQL to opportunity
+    unit: ratio
+    population: Leads that became marketing qualified and are old enough to have converted
+    basis: cohort
+    kind: conversion
+    anchor: {entity: lead, time: mql_date, where: "mql_date is not null"}
+    link: converted_opportunity
+    target: {time: created_date}
+    window_days: 90
+    maturity_days: 90
+    output: rate
+    aggregation: non_additive
+    dimensions: [segment, source, month, quarter]
+    applicability:
+      - {dimension: source, members: [BDR Outbound, AE Self-Sourced, Partner], reason: These sources have no marketing qualification}
+    favorable: up
+    owner: Marketing
+    definition: Share of mature MQLs that became an opportunity within 90 days; immature MQLs are excluded and counted.
+  - id: mql_to_opportunity_lag
+    version: "1"
+    label: MQL to opportunity lag (median days)
+    unit: days
+    population: MQLs that became an opportunity within the window
+    basis: cohort
+    kind: conversion
+    anchor: {entity: lead, time: mql_date, where: "mql_date is not null"}
+    link: converted_opportunity
+    target: {time: created_date}
+    window_days: 90
+    maturity_days: 90
+    output: lag
+    q: 0.5
+    aggregation: non_additive
+    dimensions: [segment, source, month, quarter]
+    applicability:
+      - {dimension: source, members: [BDR Outbound, AE Self-Sourced, Partner], reason: These sources have no marketing qualification}
+    favorable: down
+    owner: Marketing
+    definition: Median days from becoming marketing qualified to the opportunity's creation, among converted MQLs.
+  - id: bookings_monthly_average
+    version: "1"
+    label: Average monthly bookings
+    unit: cents
+    population: Closed months of the window
+    basis: period
+    kind: rollup
+    of: bookings
+    period: month
+    stat: mean
+    aggregation: non_additive
+    dimensions: [segment, region, source]
+    favorable: up
+    owner: Revenue Operations
+    definition: Mean of the per-month bookings over the closed months of the window.
+  - id: open_pipeline_deals
+    version: "1"
+    label: Open pipeline (deals)
+    unit: count
+    population: New-business opportunities open at T
+    basis: snapshot
+    kind: sum
+    measure: open_deals
+    aggregation: snapshot
+    dimensions: [segment, region, source, booking_owner, sourcing_person]
+    favorable: up
+    owner: Sales Operations
+    definition: Count of new-business opportunities commercially open at T, as known by K.
+  - id: open_pipeline_cents
+    version: "1"
+    label: Open pipeline (amount)
+    unit: cents
+    population: New-business opportunities open at T
+    basis: snapshot
+    kind: sum
+    measure: open_amount_cents
+    aggregation: snapshot
+    dimensions: [segment, region, source, booking_owner, sourcing_person]
+    favorable: up
+    owner: Sales Operations
+    definition: Amount of new-business opportunities commercially open at T, amount as of T.
+
+plan_grain: [segment, source.group, quarter]
+model_grain: [segment, source]
+roles:
+  win_probability: {owner: Sales Operations, funnel_link: opportunity to won, type: outcome}
+  deal_size: {owner: Sales Operations, funnel_link: won to bookings, type: outcome}
+  mql_conversion: {owner: Marketing, funnel_link: MQL to opportunity, type: outcome}
+  spend: {owner: Marketing, funnel_link: spend to MQL, type: control}
+  heads: {owner: Sales Leadership, funnel_link: capacity to admissions, type: control}
+
+# ==================================================================================================
+# GUESSES ABOUT THE GENERATED COMPANY. The generator did not exist when this was written. Everything
+# below that names a raw value (tier labels, campaign types, lead sources, role names, country
+# spellings) is a guess from the contract's field shapes. Correct it HERE and nowhere else.
+# ==================================================================================================
+mappings:
+  segment:
+    - entity: opportunity
+      inputs: {tier: account.tier}
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: &tier_rules
+            - {when: "tier = 'Tier 1'", member: Enterprise}
+            - {when: "tier = 'Tier 2'", member: Mid-Market}
+            - {when: "tier = 'Tier 3'", member: SMB}
+    - entity: lead
+      inputs: {tier: tier}
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: *tier_rules
+    - entity: demand_episode
+      inputs: {tier: lead.tier}
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: *tier_rules
+  region:
+    - entity: opportunity
+      inputs: {country: account.billing_country, code: account.billing_country_code}
+      normalize: true    # names and codes arrive as the vendor's free text
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules:
+            - {when: "code in ('US', 'CA', 'MX') or country in ('united states', 'united states of america', 'usa', 'us', 'u.s.', 'canada', 'mexico')", member: North America}
+            - {when: "code in ('GB', 'UK', 'DE', 'FR', 'NL', 'ES', 'IT', 'IE', 'SE', 'CH') or country in ('germany', 'united kingdom', 'uk', 'great britain', 'france', 'netherlands', 'spain', 'italy', 'ireland', 'sweden', 'switzerland')", member: EMEA}
+  source:
+    - entity: opportunity
+      inputs:
+        sourcing_role: sourcing_person.role
+        campaign_type: campaign.type
+        lead_campaign_type: converted_lead.first_touch.campaign.type
+        lead_source: lead_source
+      normalize: true
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules:
+            - {step: sourcing_person_role, when: "sourcing_role in ('bdr', 'business development rep')", member: BDR Outbound}
+            - {step: sourcing_person_role, when: "sourcing_role in ('ae', 'account executive')", member: AE Self-Sourced}
+            - {step: opportunity_campaign, when: "campaign_type in ('paid search', 'paid social', 'display')", member: Paid}
+            - {step: opportunity_campaign, when: "campaign_type in ('trade show', 'event', 'webinar')", member: Events}
+            - {step: opportunity_campaign, when: "campaign_type in ('web', 'content', 'email', 'organic')", member: Inbound}
+            - {step: opportunity_campaign, when: "campaign_type = 'abm'", member: ABM}
+            - {step: opportunity_campaign, when: "campaign_type in ('partner', 'partner referral')", member: Partner}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('paid search', 'paid social', 'display')", member: Paid}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('trade show', 'event', 'webinar')", member: Events}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('web', 'content', 'email', 'organic')", member: Inbound}
+            - {step: converted_lead_campaign, when: "lead_campaign_type = 'abm'", member: ABM}
+            - {step: converted_lead_campaign, when: "lead_campaign_type in ('partner', 'partner referral')", member: Partner}
+            - {step: lead_source, when: "lead_source in ('outbound')", member: BDR Outbound}
+            - {step: lead_source, when: "lead_source in ('self-sourced', 'self sourced')", member: AE Self-Sourced}
+            - {step: lead_source, when: "lead_source in ('trade show', 'event', 'webinar')", member: Events}
+            - {step: lead_source, when: "lead_source in ('web', 'organic', 'inbound', 'content')", member: Inbound}
+            - {step: lead_source, when: "lead_source in ('paid search', 'paid social', 'display')", member: Paid}
+            - {step: lead_source, when: "lead_source = 'abm'", member: ABM}
+            - {step: lead_source, when: "lead_source in ('partner', 'partner referral')", member: Partner}
+    - entity: lead
+      inputs: {campaign_type: first_touch.campaign.type, lead_source: lead_source}
+      normalize: true
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: &lead_source_rules
+            - {when: "campaign_type in ('paid search', 'paid social', 'display')", member: Paid}
+            - {when: "campaign_type in ('trade show', 'event', 'webinar')", member: Events}
+            - {when: "campaign_type in ('web', 'content', 'email', 'organic')", member: Inbound}
+            - {when: "campaign_type = 'abm'", member: ABM}
+            - {when: "campaign_type in ('partner', 'partner referral')", member: Partner}
+            - {when: "lead_source in ('outbound')", member: BDR Outbound}
+            - {when: "lead_source in ('trade show', 'event', 'webinar')", member: Events}
+            - {when: "lead_source in ('web', 'organic', 'inbound', 'content')", member: Inbound}
+            - {when: "lead_source in ('paid search', 'paid social', 'display')", member: Paid}
+            - {when: "lead_source = 'abm'", member: ABM}
+            - {when: "lead_source in ('partner', 'partner referral')", member: Partner}
+    - entity: demand_episode
+      inputs: {campaign_type: lead.first_touch.campaign.type, lead_source: lead.lead_source}
+      normalize: true
+      versions:
+        - version: v1
+          adopted_on: 2025-01-01
+          rules: *lead_source_rules
+  booking_owner:
+    - entity: opportunity
+      inputs: {owner: self.owner_id}
+      passthrough: owner
+      versions: [{version: v1, adopted_on: 2025-01-01}]
+  sourcing_person:
+    - entity: opportunity
+      inputs: {person: sourcing_user_id}
+      passthrough: person
+      versions: [{version: v1, adopted_on: 2025-01-01}]

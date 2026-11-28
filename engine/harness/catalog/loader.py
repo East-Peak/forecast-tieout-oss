@@ -59,9 +59,7 @@ class _Loader:
     def node(self, parent, key, kind, required=True, default=None):
         if key not in parent:
             if required:
-                self.fail(
-                    parent, None, f"missing key '{key}'"
-                ) if False else self._missing(parent, key)
+                self._missing(parent, key)
             return default
         value = parent[key]
         if not isinstance(value, kind) or isinstance(value, bool) and kind is not bool:
@@ -312,6 +310,12 @@ def _mappings(v, node, dimensions, entities, attribution):
             if entity not in entities:
                 v.fail(body, "entity", f"unknown entity {entity!r}")
             view = VIEWS[entities[entity].view]
+            if dim.unmapped is None:
+                v.fail(
+                    body,
+                    "entity",
+                    f"dimension {dim_name!r} declares no 'unmapped' member for values no rule matches",
+                )
             if (dim_name, entity) in out:
                 v.fail(
                     body,
@@ -379,7 +383,7 @@ def _mappings(v, node, dimensions, entities, attribution):
 
 def _rules(v, vbody, dim, types, normalize, policy, passthrough):
     rules, last_step = [], -1
-    rlist = v.node(vbody, "rules", LList, passthrough is not None, LList())
+    rlist = v.node(vbody, "rules", LList, passthrough is None, LList())
     for k, rule in enumerate(rlist):
         v.only(rule, ("when", "member", "step"), "mapping rule")
         when = v.predicate(rule, "when", types, normalize=normalize)

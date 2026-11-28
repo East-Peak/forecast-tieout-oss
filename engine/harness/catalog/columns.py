@@ -59,8 +59,9 @@ VIEWS = {
             created="CAST(created_at AS DATE)",
         ),
         View(
-            "demand_episode", "lead_id",
+            "demand_episode", "episode_id",
             _cols("lead_id:text offer_seq:int offered_on:date mql_linked:bool outcome:text outcome_at:ts reason:text reason_class:text"),
+            simple={"episode_id": ("text", "lead_id || '#' || CAST(offer_seq AS VARCHAR)")},
             created="offered_on",
         ),
         View("account", "account_id", _cols("account_id:text name:text tier:text billing_country:text billing_country_code:text created_at:ts deleted_at:ts")),
