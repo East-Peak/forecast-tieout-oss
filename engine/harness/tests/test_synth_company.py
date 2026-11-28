@@ -144,3 +144,12 @@ def test_capacity_binds_for_sustained_stretches_only_in_the_constrained_company(
     )
     assert min(constrained) >= 1 / 3
     assert sum(limited) / 5 <= 0.10 and sum(share == 0 for share in limited) >= 3
+
+
+def test_pending_requisitions_list_every_open_requisition_including_bdrs():
+    params = CompanyParams.for_variant(
+        "demand_limited", start=SMALL_START, end=date(2025, 4, 15)
+    )
+    pending = run_company(params, 1).truth.pending_requisitions
+    assert {"AE", "BDR"} <= {r.role for r in pending}
+    assert any(r.team == "BDR" for r in pending)
