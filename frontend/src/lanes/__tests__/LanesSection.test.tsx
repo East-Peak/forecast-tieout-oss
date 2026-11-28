@@ -64,22 +64,26 @@ describe("the grid, collapsed, for every company and scenario", () => {
 });
 
 describe("a segment opened to its owners, a quarter, and the panel of each column", () => {
-  it.each(files.COMPANIES)("%s: every owner row and every column's panel read the files", async (company) => {
+  it.each(files.COMPANIES)("%s: every segment opened, every owner row reads the files", async (company) => {
+    const container = await mount(company, "as-signed");
+    const slugs = segmentSlugs(filesOf(company, "as-signed").lanes);
+    await expand(container, slugs);
+    expect(failures(container, { ...base(company, "as-signed"), expanded: slugs })).toEqual([]);
+  }, 60_000);
+
+  // one test for each company and column, so that no single test is long: the total's panel, then the first owner's
+  it.each(files.COMPANIES.flatMap((company) => COLUMN_KEYS.map((column) => [company, column] as const)))("%s: the panel of %s, for the total and for an owner", async (company, column) => {
     const container = await mount(company, "as-signed");
     const f = filesOf(company, "as-signed");
-    const slugs = segmentSlugs(f.lanes);
-    await expand(container, slugs);
-    const state: State = { ...base(company, "as-signed"), expanded: slugs };
-    expect(failures(container, state)).toEqual([]);
-
+    const slug = segmentSlugs(f.lanes)[0];
+    await expand(container, [slug]);
+    const state: State = { ...base(company, "as-signed"), expanded: [slug] };
     const owner = displayedRows(f, state).find((r) => r.source === "owners" && r.row.kind === "owner")!;
-    for (const column of COLUMN_KEYS) {
-      for (const row of ["total", idOf(owner)]) {
-        await openPanel(container, row, column, true);
-        expect(failures(container, { ...state, panel: { row, column, records: true } }).join("\n"), `${row} ${column}`).toBe("");
-        fireEvent.keyDown(screen.getByTestId("cell-panel"), { key: "Escape" });
-        await waitFor(() => expect(container.querySelector("[data-testid='cell-panel']")).toBeNull());
-      }
+    for (const row of ["total", idOf(owner)]) {
+      await openPanel(container, row, column, true);
+      expect(failures(container, { ...state, panel: { row, column, records: true } }).join("\n"), `${row} ${column}`).toBe("");
+      fireEvent.keyDown(screen.getByTestId("cell-panel"), { key: "Escape" });
+      await waitFor(() => expect(container.querySelector("[data-testid='cell-panel']")).toBeNull());
     }
   }, 60_000);
 
@@ -112,7 +116,7 @@ describe("the committed list and the independent expectations name the same bind
           const state: State = { ...base(company, scenario), period, expanded: slugs, basisOpen: true };
           build(f, state).expected.forEach((e) => named.add(e.id));
           for (const r of displayedRows(f, state)) {
-            for (const column of COLUMN_KEYS) build(f, { ...state, panel: { row: idOf(r), column, records: true } }).expected.forEach((e) => named.add(e.id));
+            for (const column of COLUMN_KEYS) build(f, { ...state, panel: { row: idOf(r), column, records: true } }, { panelOnly: true }).expected.forEach((e) => named.add(e.id));
           }
         }
       }

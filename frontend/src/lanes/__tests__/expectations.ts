@@ -44,10 +44,18 @@ export interface Files {
 /** The segments of a lanes file, in its order. */
 export const segmentSlugs = (lanes: LanesFile): string[] => lanes.periods[0].rows.flatMap((r) => (r.kind === "segment" ? [r.path[1]!] : []));
 
+const cache = new Map<string, Files>();
+
+/** A company's scenario as the files hold it (read once: the files do not change while the tests run). */
 export function filesOf(company: string, scenario: string): Files {
-  const lanes = lanesOf(company, scenario);
-  const slugs = segmentSlugs(lanes);
-  return { lanes, owners: Object.fromEntries(slugs.map((s) => [s, ownersOf(company, scenario, s)])), basis: basisOf(company), records: recordsOf(company) };
+  const key = `${company}/${scenario}`;
+  let files = cache.get(key);
+  if (!files) {
+    const lanes = lanesOf(company, scenario);
+    files = { lanes, owners: Object.fromEntries(segmentSlugs(lanes).map((s) => [s, ownersOf(company, scenario, s)])), basis: basisOf(company), records: recordsOf(company) };
+    cache.set(key, files);
+  }
+  return files;
 }
 
 class Collector {
@@ -98,56 +106,59 @@ export function displayedRows(f: Files, state: State): RowRef[] {
 const rowPointer = (r: RowRef) => `/periods/${r.period}/rows/${r.index}`;
 export const idOf = (r: RowRef) => r.row.path.join("/");
 
-export function build(f: Files, state: State): { expected: Expectation[]; absent: Absent[] } {
+/** `panelOnly`: only what the open panel adds (the sweep that names every binding builds the grid once, then each panel). */
+export function build(f: Files, state: State, options: { panelOnly?: boolean } = {}): { expected: Expectation[]; absent: Absent[] } {
   const c = new Collector();
   const lanes = f.lanes;
   const period = lanes.periods[state.period];
 
-  // the frame
-  c.add("lanes.plan-basis.label", lanes.plan_basis.label);
-  c.add("lanes.as-of", fmt.date(lanes.as_of));
-  lanes.periods.forEach((p, i) => c.add("lanes.period.key", p.key, `/periods/${i}`));
-  c.add("lanes.period.start", fmt.date(period.start), `/periods/${state.period}`);
-  c.add("lanes.period.end", fmt.date(period.end), `/periods/${state.period}`);
-  c.add("lanes.period.standing", period.standing, `/periods/${state.period}`);
-  if (state.basisOpen) {
-    lanes.caveats.forEach((text, i) => c.add(["lanes.caveat.benchmarks", "lanes.caveat.win-rate", "lanes.caveat.pooled"][i], text));
-    f.basis.schedule.forEach((q, i) => {
-      c.add("basis.schedule.quarter", q.quarter, `/schedule/${i}`);
-      c.add("basis.schedule.bookings", fmt.usdShort(q.bookings), `/schedule/${i}`);
-      c.add("basis.schedule.target", fmt.usdShort(q.target), `/schedule/${i}`);
-    });
-  }
-
-  // the head: eight columns, in the file's order
-  for (const column of lanes.columns) {
-    c.add("lanes.column.title", column.title, `/columns/{key=${column.key}}`);
-    c.add("lanes.column.unit", column.unit, `/columns/{key=${column.key}}`);
-  }
-
-  // the rows
   const rows = displayedRows(f, state);
-  for (const r of rows) {
-    const base = rowPointer(r);
-    c.add(`${r.source}.row.label`, r.row.label, base);
-    for (const column of COLUMNS) {
-      const cell = r.row.cells[column];
-      const at = `${base}/cells/${column}`;
-      const p = (name: string) => `${r.source}.${column}.${name}`;
-      c.add(p("actual"), shownActual(column, cell), at);
-      if (!actualOnly(cell)) {
-        c.add(p("forecast"), shownForecast(column, cell), at);
-        // a goal of zero is said "no goal" in words, not shown as a zero figure
-        if (cell.none_because !== "no_goal") c.add(p("goal"), shownGoal(column, cell), at);
-      }
-      if (cell.ratio !== null && cell.goal !== null) c.add(p("ratio"), fmt.percent1(cell.ratio), at);
-      if (cell.status === "none" && cell.none_because !== null) {
-        const reasons = r.source === "lanes" ? lanes.reasons : f.owners[r.slug!].reasons;
-        c.add(`${r.source}.reason`, reasons[cell.none_because as keyof typeof reasons], `/reasons/${cell.none_because}`);
-      }
-      if (cell.goal_inside_range80 === true && cell.range80) {
-        c.add(p("range.low"), fmt.usdShort(cell.range80[0]), at);
-        c.add(p("range.high"), fmt.usdShort(cell.range80[1]), at);
+  if (!options.panelOnly) {
+    // the frame
+    c.add("lanes.plan-basis.label", lanes.plan_basis.label);
+    c.add("lanes.as-of", fmt.date(lanes.as_of));
+    lanes.periods.forEach((p, i) => c.add("lanes.period.key", p.key, `/periods/${i}`));
+    c.add("lanes.period.start", fmt.date(period.start), `/periods/${state.period}`);
+    c.add("lanes.period.end", fmt.date(period.end), `/periods/${state.period}`);
+    c.add("lanes.period.standing", period.standing, `/periods/${state.period}`);
+    if (state.basisOpen) {
+      lanes.caveats.forEach((text, i) => c.add(["lanes.caveat.benchmarks", "lanes.caveat.win-rate", "lanes.caveat.pooled"][i], text));
+      f.basis.schedule.forEach((q, i) => {
+        c.add("basis.schedule.quarter", q.quarter, `/schedule/${i}`);
+        c.add("basis.schedule.bookings", fmt.usdShort(q.bookings), `/schedule/${i}`);
+        c.add("basis.schedule.target", fmt.usdShort(q.target), `/schedule/${i}`);
+      });
+    }
+
+    // the head: eight columns, in the file's order
+    for (const column of lanes.columns) {
+      c.add("lanes.column.title", column.title, `/columns/{key=${column.key}}`);
+      c.add("lanes.column.unit", column.unit, `/columns/{key=${column.key}}`);
+    }
+
+    // the rows
+    for (const r of rows) {
+      const base = rowPointer(r);
+      c.add(`${r.source}.row.label`, r.row.label, base);
+      for (const column of COLUMNS) {
+        const cell = r.row.cells[column];
+        const at = `${base}/cells/${column}`;
+        const p = (name: string) => `${r.source}.${column}.${name}`;
+        c.add(p("actual"), shownActual(column, cell), at);
+        if (!actualOnly(cell)) {
+          c.add(p("forecast"), shownForecast(column, cell), at);
+          // a goal of zero is said "no goal" in words, not shown as a zero figure
+          if (cell.none_because !== "no_goal") c.add(p("goal"), shownGoal(column, cell), at);
+        }
+        if (cell.ratio !== null && cell.goal !== null) c.add(p("ratio"), fmt.percent1(cell.ratio), at);
+        if (cell.status === "none" && cell.none_because !== null) {
+          const reasons = r.source === "lanes" ? lanes.reasons : f.owners[r.slug!].reasons;
+          c.add(`${r.source}.reason`, reasons[cell.none_because as keyof typeof reasons], `/reasons/${cell.none_because}`);
+        }
+        if (cell.goal_inside_range80 === true && cell.range80) {
+          c.add(p("range.low"), fmt.usdShort(cell.range80[0]), at);
+          c.add(p("range.high"), fmt.usdShort(cell.range80[1]), at);
+        }
       }
     }
   }

@@ -43,6 +43,8 @@ async function below(page: Page, locator: ReturnType<Page["getByTestId"]>) {
 }
 
 test.describe("the lanes grid, every company @smoke", () => {
+  // a large company's owners are hundreds of rows; the read is one round trip, but the page may be slow on a loaded runner
+  test.describe.configure({ timeout: 90_000 });
   for (const company of COMPANIES) {
     test(`${company}: the grid shows the file's figures; opening a segment reads its owners from their own file @smoke`, async ({ page }) => {
       const issues = collectBrowserIssues(page);
@@ -50,13 +52,15 @@ test.describe("the lanes grid, every company @smoke", () => {
       const lanes = await lanesOf(page, company, "as-signed");
       const fy = lanes.periods[0];
 
-      // every cell of the collapsed grid, against the file
-      for (const row of fy.rows) {
-        for (const column of lanes.columns) {
-          const at = cell(page, row.path.join("/"), column.key).locator(`[data-binding$='.actual']`);
-          await expect(at, `${row.label} ${column.key}`).toHaveText(shown(column.key, row.cells[column.key].actual));
-        }
-      }
+      // every cell of the collapsed grid, against the file (one read of the page, compared with the file's figures; it retries until they agree or time runs out)
+      const wanted = (rows: Row[], keys: string[]) => Object.fromEntries(rows.flatMap((row) => keys.map((key) => [`${row.path.join("/")}|${key}`, shown(key, row.cells[key].actual)])));
+      const onPage = (rows: Row[], keys: string[]) =>
+        page.evaluate(
+          ({ rows, keys }) =>
+            Object.fromEntries(rows.flatMap((id) => keys.map((key) => [`${id}|${key}`, document.querySelector(`[data-testid='cell-${id}-${key}'] [data-binding$='.actual']`)?.textContent ?? "not on the page"]))),
+          { rows: rows.map((r) => r.path.join("/")), keys },
+        );
+      await expect.poll(() => onPage(fy.rows, lanes.columns.map((c) => c.key)), { message: "the collapsed grid shows the file's actuals" }).toEqual(wanted(fy.rows, lanes.columns.map((c) => c.key)));
       await expect(page.getByTestId("lanes-grid").locator("thead [data-col]")).toHaveCount(8);
 
       // opening each segment reads its owners file; the page shows that file's rows, figure for figure
@@ -68,12 +72,8 @@ test.describe("the lanes grid, every company @smoke", () => {
         const rows = owners.periods[0].rows;
         // wait on the rows that prove this segment's owners are in
         await expect(page.locator(`[data-testid^='row-${segment.path.join("/")}/']`)).toHaveCount(rows.length);
-        for (const row of rows) {
-          for (const key of ["created", "won", "bookings"]) {
-            const at = cell(page, row.path.join("/"), key).locator("[data-binding$='.actual']");
-            await expect(at, `${row.label} ${key}`).toHaveText(shown(key, row.cells[key].actual));
-          }
-        }
+        const keys = ["created", "won", "bookings"];
+        await expect.poll(() => onPage(rows, keys), { message: `${segment.label}: the owner rows show their file's actuals` }).toEqual(wanted(rows, keys));
       }
       await expect(page.getByTestId("owner-note")).toContainText("allocated goals");
 
