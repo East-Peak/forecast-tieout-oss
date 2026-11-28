@@ -1083,8 +1083,8 @@ Plan file `engine/config/profiles/mighty-oak-holdings/plan.yaml`. Hires first, t
 
 | Item | What |  | Adds, rest of fiscal year | Adds, next twelve months | Cash cost in twelve months |
 |---|---|---|---|---|---|
-| 4 Mid-Market hires from 2026-10 | 4 AE(s), segment Mid-Market, starting 2026-10-01 | hiring is unsupported by this history: not valued | not valued | not valued | $663,098 |
-| 2 Enterprise hires from 2026-11 | 2 AE(s), segment Enterprise, starting 2026-11-01 | hiring is unsupported by this history: not valued | not valued | not valued | $303,111 |
+| 4 Mid-Market hires from 2026-10 | 4 AE(s), segment Mid-Market, starting October 2026 | hiring is unsupported by this history: not valued | not valued | not valued | $663,098 |
+| 2 Enterprise hires from 2026-11 | 2 AE(s), segment Enterprise, starting November 2026 | hiring is unsupported by this history: not valued | not valued | not valued | $303,111 |
 | Channel partner program | $20,000,000 of created pipeline from 2026-10 | valued | $83,295 | $1,600,600 | $1,000,000 |
 
 | Bookings | rest of fiscal year | next twelve months |
@@ -1111,12 +1111,12 @@ Fiscal-year expected with the plan, 80% range: $49,369,434 to $72,864,654.
 
 ## 12. Two actions, compared
 
-Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
+Two unit actions through the same forward function, the roster as signed: hire one AE starting September 2026; add $1,000,000 of program pipeline starting September 2026. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
 
 | Action | Rank | Gains, rest of fiscal year | Gains, next twelve months | Starts paying | Cash cost inside the twelve months | Gain per dollar |
 |---|---|---|---|---|---|---|
-| Add $1,000,000 of program pipeline starting 2026-09-01 | 1 | $7,768 | $83,385 | 2026-12 | $50,000 | 1.67 |
-| Hire one AE starting 2026-09-01 | unsupported by this history |  |  |  |  |  |
+| Add $1,000,000 of program pipeline starting September 2026 | 1 | $7,768 | $83,385 | 2026-12 | $50,000 | 1.67 |
+| Hire one AE starting September 2026 | unsupported by this history |  |  |  |  |  |
 
 Closing the fiscal-year gap of $23,360,339: the baseline forecast (the roster as signed, nothing planned), each action alone.
 

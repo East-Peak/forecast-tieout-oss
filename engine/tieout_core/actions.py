@@ -31,6 +31,7 @@ from .plan import (
     PlanAction,
     PlanHire,
     PlanProgram,
+    month_words,
     next_month_start,
     program_cost,
     program_cost_in_window,
@@ -305,7 +306,7 @@ def plan_section(
             row = {
                 "kind": "hires",
                 "label": item.label,
-                "detail": f"{item.count} AE(s), segment {segment_words(item.segment)}, starting {item.start}",
+                "detail": f"{item.count} AE(s), segment {segment_words(item.segment)}, starting {month_words(item.start)}",
             }
             if adopted:
                 hires.extend(people)
@@ -576,7 +577,10 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
             * employed_months(start, g.windows, g.as_of, survival)
         )
         hire_row = row(
-            f"Hire one AE starting {start}", "hire", scen.forecast((hire,)), hire_cost
+            f"Hire one AE starting {month_words(start)}",
+            "hire",
+            scen.forecast((hire,)),
+            hire_cost,
         )
     else:
         why = (
@@ -585,7 +589,11 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
             else f"unavailable: {cap.adoption.reason}"
         )
         hire_row = row(
-            f"Hire one AE starting {start}", "hire", None, None, unsupported=why
+            f"Hire one AE starting {month_words(start)}",
+            "hire",
+            None,
+            None,
+            unsupported=why,
         )
     # --- one million dollars of program pipeline
     flows = program_inflows(program, g.windows, g.as_of, g.fy_end, ramp_default)
@@ -596,7 +604,7 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
         g.windows[-1].end,
     )
     prog_row = row(
-        f"Add ${ACTION_PROGRAM_DOLLARS:,.0f} of program pipeline starting {start}",
+        f"Add ${ACTION_PROGRAM_DOLLARS:,.0f} of program pipeline starting {month_words(start)}",
         "program", scen.forecast(inflows=flows), prog_cost,
     )  # fmt: skip
     ranked = rank([hire_row, prog_row])
@@ -749,7 +757,7 @@ def actions_section(g: Ground, scen: Scenario) -> tuple[dict, list[Check]]:
     )
     section = {
         "definition": "Two unit actions through the same forward function, the roster as signed: hire one "
-        f"AE starting {start}; add ${ACTION_PROGRAM_DOLLARS:,.0f} of program pipeline starting {start}. "
+        f"AE starting {month_words(start)}; add ${ACTION_PROGRAM_DOLLARS:,.0f} of program pipeline starting {month_words(start)}. "
         "Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the "
         f"same twelve months. An action starts paying in the first month it adds at least "
         f"{PAYING_SHARE:.0%} of its twelve-month gain.",

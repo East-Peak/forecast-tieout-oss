@@ -272,3 +272,60 @@ def test_a_company_with_no_recorded_win_times_cannot_have_a_cycle_action(
     )
     with pytest.raises(da.ActionRefused, match="no recorded win times"):
         da.refuse_unbounded(state.ground, plan_of(state, act(target=100)))
+
+
+# ----------------------------------------------------- against the worksheet's own flex of the cycle
+
+
+def worksheet_flex(state, target, **kw):
+    plan = plan_of(state, **kw)
+    h, i = actions.plan_inputs(state.ground, plan)
+    probe = wd.Probe(state.ground, h, i)
+    return probe.change(
+        probe.forecast(wd.with_setting(state.ground, CYCLE_DAYS, target))
+    )
+
+
+def test_where_segments_cannot_differ_in_price_the_company_action_is_the_worksheets_flex_to_the_cent(
+    state, monkeypatch
+):
+    """With every segment's won size alike each win has the pooled price in every month, so moving
+    wins in time is what the worksheet does to the pooled timing."""
+    from engine.tieout_core import lanes_basis
+
+    alike = lambda g, trailing, segments: {  # noqa: E731
+        s: lanes_basis.Sizes(D(1000), "", D(500), "") for s in segments
+    }
+    monkeypatch.setattr(lanes_basis, "sizes_now", alike)
+    state.memo.pop("frames", None)
+    try:
+        for percent in (-15, 20):
+            target = days(state, percent)
+            r = report(state, act(target=target), hires=HIRES, programs=PROGRAMS)
+            flex = worksheet_flex(state, target, hires=HIRES, programs=PROGRAMS)
+            for w in (REST, NEXT):
+                assert D(r["driver_actions"]["joint_gain"][w]) == D(flex[w]), (
+                    percent,
+                    w,
+                )
+    finally:
+        state.memo.pop("frames", None)
+
+
+def test_with_segments_that_differ_the_difference_from_the_worksheets_flex_is_pinned_with_its_sign(
+    state,
+):
+    """Sapling, the plan as signed, company-wide, the worksheet's low setting (126.55 days) from
+    September 1 at once. A win keeps the price of the month it was to land in, whose segment mix is
+    not the mix of the month it moves to, so the figure is not the worksheet's: $75.19 less in the
+    year and $2,156.73 more over twelve months."""
+    r = report(state, act(target="126.55"))
+    got = r["driver_actions"]["joint_gain"]
+    flex = worksheet_flex(state, D("126.55"))
+    assert drivers_row(r, "cycle_days")["historical"]["low"]["setting"] == "126.55"
+    assert (D(got[REST]), D(got[NEXT])) == (D("573572.23"), D("1345733.01"))
+    assert (D(flex[REST]), D(flex[NEXT])) == (D("573647.42"), D("1343576.28"))
+    assert D(got[REST]) - D(flex[REST]) == D("-75.19") and D(got[NEXT]) - D(flex[NEXT]) == D("2156.73")  # fmt: skip
+    assert all(
+        abs((D(got[w]) - D(flex[w])) / D(flex[w])) < D("0.002") for w in (REST, NEXT)
+    )

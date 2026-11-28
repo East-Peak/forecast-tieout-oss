@@ -31,7 +31,7 @@
     },
     "comparison": [
       {
-        "action": "Hire one AE starting 2026-09-01",
+        "action": "Hire one AE starting September 2026",
         "bookings_gained": {
           "next twelve months": "717970.86",
           "rest of fiscal year": "78243.41"
@@ -46,7 +46,7 @@
         "status": "valued"
       },
       {
-        "action": "Add $1,000,000 of program pipeline starting 2026-09-01",
+        "action": "Add $1,000,000 of program pipeline starting September 2026",
         "bookings_gained": {
           "next twelve months": "220271.27",
           "rest of fiscal year": "42072.16"
@@ -61,7 +61,7 @@
         "status": "valued"
       }
     ],
-    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
+    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting September 2026; add $1,000,000 of program pipeline starting September 2026. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
     "meaning": "'feasible' means achievable inside the model's bounds, not operationally achievable; that a new hire adds pipeline at the fitted rate is an assumption",
     "program_shape": "created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise)"
   },
@@ -3702,7 +3702,7 @@
         {
           "action": {
             "source": "/actions/comparison/0/action",
-            "value": "Hire one AE starting 2026-09-01"
+            "value": "Hire one AE starting September 2026"
           },
           "bookings_gained": {
             "source": "/actions/comparison/0/bookings_gained",
@@ -3729,7 +3729,7 @@
         {
           "action": {
             "source": "/actions/comparison/1/action",
-            "value": "Add $1,000,000 of program pipeline starting 2026-09-01"
+            "value": "Add $1,000,000 of program pipeline starting September 2026"
           },
           "bookings_gained": {
             "source": "/actions/comparison/1/bookings_gained",

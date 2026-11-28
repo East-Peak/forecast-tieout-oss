@@ -24,7 +24,7 @@
     },
     "comparison": [
       {
-        "action": "Add $1,000,000 of program pipeline starting 2026-09-01",
+        "action": "Add $1,000,000 of program pipeline starting September 2026",
         "bookings_gained": {
           "next twelve months": "83384.81",
           "rest of fiscal year": "7767.93"
@@ -39,7 +39,7 @@
         "status": "valued"
       },
       {
-        "action": "Hire one AE starting 2026-09-01",
+        "action": "Hire one AE starting September 2026",
         "bookings_gained": null,
         "cash_cost_in_twelve_months": null,
         "gain_per_dollar": null,
@@ -50,7 +50,7 @@
         "status": "unsupported by this history"
       }
     ],
-    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
+    "definition": "Two unit actions through the same forward function, the roster as signed: hire one AE starting September 2026; add $1,000,000 of program pipeline starting September 2026. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain.",
     "meaning": "'feasible' means achievable inside the model's bounds, not operationally achievable; that a new hire adds pipeline at the fitted rate is an assumption",
     "program_shape": "created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise)"
   },
@@ -1501,7 +1501,7 @@
         "cash_cost_in_twelve_months": "663097.76",
         "cash_cost_total": "663097.76",
         "contribution": null,
-        "detail": "4 AE(s), segment Mid-Market, starting 2026-10-01",
+        "detail": "4 AE(s), segment Mid-Market, starting October 2026",
         "kind": "hires",
         "label": "4 Mid-Market hires from 2026-10",
         "note": "hiring is unsupported by this history: not valued",
@@ -1511,7 +1511,7 @@
         "cash_cost_in_twelve_months": "303110.94",
         "cash_cost_total": "303110.94",
         "contribution": null,
-        "detail": "2 AE(s), segment Enterprise, starting 2026-11-01",
+        "detail": "2 AE(s), segment Enterprise, starting November 2026",
         "kind": "hires",
         "label": "2 Enterprise hires from 2026-11",
         "note": "hiring is unsupported by this history: not valued",
@@ -7523,7 +7523,7 @@
         {
           "action": {
             "source": "/actions/comparison/0/action",
-            "value": "Add $1,000,000 of program pipeline starting 2026-09-01"
+            "value": "Add $1,000,000 of program pipeline starting September 2026"
           },
           "bookings_gained": {
             "source": "/actions/comparison/0/bookings_gained",
@@ -7550,7 +7550,7 @@
         {
           "action": {
             "source": "/actions/comparison/1/action",
-            "value": "Hire one AE starting 2026-09-01"
+            "value": "Hire one AE starting September 2026"
           },
           "bookings_gained": {
             "source": "/actions/comparison/1/bookings_gained",

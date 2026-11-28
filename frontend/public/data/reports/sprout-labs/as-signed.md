@@ -381,12 +381,12 @@ _'required' means achievable inside the model's bounds (fitted conversion and ti
 
 ## 12. Two actions, compared
 
-Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
+Two unit actions through the same forward function, the roster as signed: hire one AE starting September 2026; add $1,000,000 of program pipeline starting September 2026. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
 
 | Action | Rank | Gains, rest of fiscal year | Gains, next twelve months | Starts paying | Cash cost inside the twelve months | Gain per dollar |
 |---|---|---|---|---|---|---|
-| Hire one AE starting 2026-09-01 | 1 | $55,375 | $530,581 | 2026-11 | $127,964 | 4.15 |
-| Add $1,000,000 of program pipeline starting 2026-09-01 | 2 | $31,928 | $139,780 | 2026-11 | $80,000 | 1.75 |
+| Hire one AE starting September 2026 | 1 | $55,375 | $530,581 | 2026-11 | $127,964 | 4.15 |
+| Add $1,000,000 of program pipeline starting September 2026 | 2 | $31,928 | $139,780 | 2026-11 | $80,000 | 1.75 |
 
 Closing the fiscal-year gap of $1,880,075: the baseline forecast (the roster as signed, nothing planned), each action alone.
 

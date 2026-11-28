@@ -387,8 +387,8 @@ Plan file `engine/config/profiles/sprout-labs/plan.yaml`. Hires first, then prog
 
 | Item | What |  | Adds, rest of fiscal year | Adds, next twelve months | Cash cost in twelve months |
 |---|---|---|---|---|---|
-| 1 Mid Market hire from 2026-10 | 1 AE(s), segment Mid Market, starting 2026-10-01 | valued | $23,444 | $455,601 | $118,413 |
-| 1 Commercial hire from 2026-12 | 1 AE(s), segment Commercial, starting 2026-12-01 | valued | $1,103 | $305,179 | $98,809 |
+| 1 Mid Market hire from 2026-10 | 1 AE(s), segment Mid Market, starting October 2026 | valued | $23,444 | $455,601 | $118,413 |
+| 1 Commercial hire from 2026-12 | 1 AE(s), segment Commercial, starting December 2026 | valued | $1,103 | $305,179 | $98,809 |
 | Partner referrals | $600,000 of created pipeline from 2026-10 | valued | $11,715 | $83,377 | $48,000 |
 
 | Bookings | rest of fiscal year | next twelve months |
@@ -415,12 +415,12 @@ Fiscal-year expected with the plan, 80% range: $5,619,731 to $6,724,296.
 
 ## 12. Two actions, compared
 
-Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
+Two unit actions through the same forward function, the roster as signed: hire one AE starting September 2026; add $1,000,000 of program pipeline starting September 2026. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
 
 | Action | Rank | Gains, rest of fiscal year | Gains, next twelve months | Starts paying | Cash cost inside the twelve months | Gain per dollar |
 |---|---|---|---|---|---|---|
-| Hire one AE starting 2026-09-01 | 1 | $55,375 | $530,581 | 2026-11 | $127,964 | 4.15 |
-| Add $1,000,000 of program pipeline starting 2026-09-01 | 2 | $31,928 | $139,780 | 2026-11 | $80,000 | 1.75 |
+| Hire one AE starting September 2026 | 1 | $55,375 | $530,581 | 2026-11 | $127,964 | 4.15 |
+| Add $1,000,000 of program pipeline starting September 2026 | 2 | $31,928 | $139,780 | 2026-11 | $80,000 | 1.75 |
 
 Closing the fiscal-year gap of $1,880,075: the baseline forecast (the roster as signed, nothing planned), each action alone.
 

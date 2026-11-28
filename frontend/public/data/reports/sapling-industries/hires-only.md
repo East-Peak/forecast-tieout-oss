@@ -504,8 +504,8 @@ Plan file `engine/config/profiles/sapling-industries/plan-hires-only.yaml`. Hire
 
 | Item | What |  | Adds, rest of fiscal year | Adds, next twelve months | Cash cost in twelve months |
 |---|---|---|---|---|---|
-| 2 Mid Market hires from 2026-10 | 2 AE(s), segment Mid Market, starting 2026-10-01 | valued | $76,526 | $1,191,484 | $296,014 |
-| 1 Enterprise hire from 2026-11 | 1 AE(s), segment Enterprise, starting 2026-11-01 | valued | $12,822 | $482,884 | $135,057 |
+| 2 Mid Market hires from 2026-10 | 2 AE(s), segment Mid Market, starting October 2026 | valued | $76,526 | $1,191,484 | $296,014 |
+| 1 Enterprise hire from 2026-11 | 1 AE(s), segment Enterprise, starting November 2026 | valued | $12,822 | $482,884 | $135,057 |
 
 | Bookings | rest of fiscal year | next twelve months |
 |---|---|---|
@@ -531,12 +531,12 @@ Fiscal-year expected with the plan, 80% range: $52,501,522 to $64,133,830.
 
 ## 12. Two actions, compared
 
-Two unit actions through the same forward function, the roster as signed: hire one AE starting 2026-09-01; add $1,000,000 of program pipeline starting 2026-09-01. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
+Two unit actions through the same forward function, the roster as signed: hire one AE starting September 2026; add $1,000,000 of program pipeline starting September 2026. Gain per dollar is the bookings gained in the next twelve months over the cash cost inside the same twelve months. An action starts paying in the first month it adds at least 1% of its twelve-month gain. Program shape: created from 2026-09 to the fiscal-year end, ramping up over the entered ramp (3 months unless capacity.yaml says otherwise).
 
 | Action | Rank | Gains, rest of fiscal year | Gains, next twelve months | Starts paying | Cash cost inside the twelve months | Gain per dollar |
 |---|---|---|---|---|---|---|
-| Hire one AE starting 2026-09-01 | 1 | $78,243 | $717,971 | 2026-11 | $160,898 | 4.46 |
-| Add $1,000,000 of program pipeline starting 2026-09-01 | 2 | $42,072 | $220,271 | 2026-11 | $60,000 | 3.67 |
+| Hire one AE starting September 2026 | 1 | $78,243 | $717,971 | 2026-11 | $160,898 | 4.46 |
+| Add $1,000,000 of program pipeline starting September 2026 | 2 | $42,072 | $220,271 | 2026-11 | $60,000 | 3.67 |
 
 Closing the fiscal-year gap of $1,910,276: the baseline forecast (the roster as signed, nothing planned), each action alone.
 
