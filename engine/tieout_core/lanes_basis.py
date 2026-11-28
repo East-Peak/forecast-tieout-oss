@@ -27,14 +27,15 @@ from .fiscal import month_windows
 from .fit import fit
 from .forecast import model_forecast
 from .history import as_known_at, creation_amounts, latest_known_date
+from .lanes_contract import SCHEMA_VERSION
 from .lanes_flows import Calendar
+from .lanes_rules import COUNT
 from .records import Check, Deal
 from .report import LEVER_CAP_MULTIPLE, Prepared, _trailing_created_arr
 from .requirement import solve_quarters
 from .roster import roster_at
 
 ZERO = Decimal(0)
-COUNT = Decimal("0.0001")
 SEGMENT_MEAN, POOLED = "segment mean", "pooled, thin sample"
 CAVEAT = (
     "These goals are derived benchmarks, not a reconciled operating plan. The solver's schedule "
@@ -331,3 +332,76 @@ def plan_basis(state: Prepared) -> Basis:
         goals,
         checks,
     )
+
+
+def _text(x: Decimal, places: str) -> str:
+    return str(x.quantize(Decimal(places)))
+
+
+def document(basis: Basis, company: str) -> dict:
+    """The basis as the file written beside the company's lanes. It holds no scenario figure."""
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "company": company,
+        "label": basis.label,
+        "cutoff": str(basis.cutoff),
+        "capacity_at_plan_start": {
+            "decision": basis.capacity_decision,
+            "reason": basis.capacity_reason,
+        },
+        "fit": {
+            "win_rate": _text(basis.win_rate, "0.0001"),
+            "cohort_size": basis.cohort_size,
+            "mean_won_arr": _text(basis.mean_won_arr, "0.01"),
+            "mean_created_arr": _text(basis.mean_created_arr, "0.01"),
+            "created_per_day": _text(basis.created_per_day, "0.0001"),
+        },
+        "opening": basis.opening,
+        "segments": [
+            {
+                "key": s.key,
+                "trailing_bookings": _text(s.trailing_bookings, "0.01"),
+                "share": _text(s.share, "0.000001"),
+                "creation_share": _text(s.creation_share, "0.000001"),
+                "opening": s.opening,
+                "won_size": _text(s.sizes.won, "0.01"),
+                "won_size_basis": s.sizes.won_basis,
+                "created_size": _text(s.sizes.created, "0.01"),
+                "created_size_basis": s.sizes.created_basis,
+            }
+            for s in basis.segments
+        ],
+        "schedule": [
+            {
+                "quarter": q.quarter,
+                "target": _text(q.target, "0.01"),
+                "outcome": q.outcome,
+                "created": _text(q.created, "0.0001"),
+                "created_arr": _text(q.created_arr, "0.01"),
+                "wins": _text(q.wins, "0.0001"),
+                "bookings": _text(q.bookings, "0.01"),
+                "days": _text(q.days, "0.01"),
+            }
+            for q in basis.schedule
+        ],
+        "goals": {
+            q.quarter: {
+                s.key: {
+                    "bookings": _text(basis.goals[(q.quarter, s.key)].bookings, "0.01"),
+                    "won": _text(basis.goals[(q.quarter, s.key)].won, "0.0001"),
+                    "created": _text(basis.goals[(q.quarter, s.key)].created, "0.0001"),
+                    "created_arr": _text(
+                        basis.goals[(q.quarter, s.key)].created_arr, "0.01"
+                    ),
+                    "days": _text(basis.goals[(q.quarter, s.key)].days, "0.01"),
+                }
+                for s in basis.segments
+            }
+            for q in basis.schedule
+        },
+        "caveat": CAVEAT,
+        "checks": [
+            {"name": c.name, "passed": c.passed, "detail": c.detail}
+            for c in basis.checks
+        ],
+    }

@@ -14,6 +14,7 @@ from decimal import Decimal
 BEHIND_AT_OR_BELOW = Decimal("0.95")  # forecast over goal; behind at or below this
 BEHIND_AT_OR_ABOVE = Decimal("1.05")  # cycle days are reversed: longer is worse
 RATIO_PLACES = Decimal("0.0001")
+COUNT = Decimal("0.0001")  # expected deals are written to four places
 
 # The one place a "too small to judge" count is defined. A win rate needs this many deals in its
 # creation cohort; an average won size or a cycle needs this many wins behind it.
@@ -87,6 +88,7 @@ COLUMNS = (
     Column("bookings", "Bookings", "ARR", "entered target", 2),
 )
 COLUMN = {c.key: c for c in COLUMNS}
+RATIO_COLUMNS = ("win_rate", "cycle", "avg_won_arr")
 
 
 def status(
