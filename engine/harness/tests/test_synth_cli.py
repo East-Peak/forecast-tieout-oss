@@ -45,5 +45,7 @@ def test_the_command_line_writes_extracts_and_truth_and_refuses_held_out_seeds(
     )
     assert tree_hash(tmp_path / "truth") != tree_hash(other / "truth")
     with pytest.raises(SystemExit):
-        main(["--small", "--seed", str(HELD_OUT_SEEDS[0]), "--out", str(tmp_path / "x")])
+        main(
+            ["--small", "--seed", str(HELD_OUT_SEEDS[0]), "--out", str(tmp_path / "x")]
+        )
     assert not (tmp_path / "x").exists()
