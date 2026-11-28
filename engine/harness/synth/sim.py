@@ -126,6 +126,7 @@ class Lead:
     owner: str  # initial owner uid
     r: tuple
     bdr: Person | None = None
+    mql_day: int | None = None
     rows: list = field(default_factory=list)  # (n, ts, field, new, by_uid)
     offers: int = 0
     offer_day: int = 0
@@ -152,7 +153,9 @@ class Opp:
     will_win: bool
     last_stage: int
     r: object
+    owner0: str
     lead: Lead | None = None
+    type: str = "New Business"
     images: list = field(
         default_factory=list
     )  # (n, ts, stage, amount_cents, close_day)
@@ -405,6 +408,7 @@ class Simulation:
                 if kind == "clutter":
                     continue
                 self.F["mqls"][lane, mi] += 1
+                lead.mql_day = day
                 lo, hi = p.mql_arrears_days
                 recorded = day + (
                     int(lo + r[5] * (hi - lo)) if r[4] < p.p_mql_arrears else 0
@@ -588,7 +592,9 @@ class Simulation:
         if whale:
             cents, will_win = round(p.whale_amount) * 100, True
         total = (
-            spec.cycle_days * exp(p.cycle_sigma * z[1]) * p.region_cycle_factor[region]
+            spec.cycle_days
+            * exp(p.cycle_sigma * (0.0 if whale else z[1]))
+            * p.region_cycle_factor[region]
         )
         last = (
             3
@@ -618,6 +624,7 @@ class Simulation:
             will_win,
             min(last, 3),
             r,
+            owner.uid,
             lead,
             whale=whale,
         )

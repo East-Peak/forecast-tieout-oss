@@ -154,7 +154,7 @@ class CompanyParams:
             },
         }
     )
-    win_step: WinStep = WinStep("Mid-Market", "Outbound", date(2024, 8, 1), 0.18, 0.28)
+    win_step: WinStep = WinStep("SMB", "Outbound", date(2024, 8, 1), 0.16, 0.27)
     source_amount_factor: dict[str, float] = field(
         default_factory=lambda: {"ABM": 1.4, "Partner": 1.1, "Paid": 0.9}
     )
