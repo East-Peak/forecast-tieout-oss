@@ -75,15 +75,17 @@ class Inflow:
 
 @dataclass(frozen=True)
 class Lift:
-    """Changes to the chance that a deal created on a day is won, segment by segment: what
-    win-rate actions do to pipeline not yet created.
+    """Changes to pipeline not yet created, segment by segment: what the plan's driver actions
+    do to it.
 
     ``organic`` and ``program`` are the deals each segment is expected to create on each day
     after the cutoff (day 1 first), from its people and from programs; ``changes`` the points
-    added to the pooled win rate ``baseline`` on each day. A win books at the pooled mean won
-    size times ``price``, a segment's frozen price index by (the window it lands in, the
-    fiscal quarter its deal was created in), 1 where none is given; ``landing`` names the window each
-    day after the cutoff falls in and ``origin`` its fiscal quarter."""
+    added to the pooled win rate ``baseline`` on each day, and ``size`` the relative change in
+    the size of each win (0.1 is a tenth bigger). A win books at the pooled mean won size times
+    ``price``, a segment's frozen price index by (the window it lands in, the fiscal quarter its
+    deal was created in), 1 where none is given; ``landing`` names the window each day after the
+    cutoff falls in and ``origin`` its fiscal quarter. A day on which a driver is not changed
+    has zero for it; a driver no action touches may be left out."""
 
     baseline: Decimal
     organic: Mapping[str, Sequence[Decimal]]
@@ -92,26 +94,49 @@ class Lift:
     price: Mapping[str, Mapping[tuple[int, int], Decimal]]
     landing: Sequence[int]
     origin: Sequence[int]
+    size: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
 
     def __bool__(self) -> bool:
-        return any(any(c) for c in self.changes.values())
+        return any(any(c) for c in self.changes.values()) or any(
+            any(c) for c in self.size.values()
+        )
 
     def counts(self, segment: str) -> list[Decimal]:
         return [o + p for o, p in zip(self.organic[segment], self.program[segment])]
 
+    def extra(self, segment: str, landing: int) -> list[Decimal]:
+        """The extra bookings, in units of the pooled mean won size, expected from the deals
+        ``segment`` creates on each day, for wins landing in window ``landing``: its deals times
+        the win rate and the size the day's changes leave, less the pooled rate at the pooled
+        size, at the segment's price index. A win-rate change alone is the deals times the
+        change times the price."""
+        change = self.changes[segment]
+        size = self.size.get(segment) or ()
+        out = [Decimal(0)] * len(self.origin)
+        if not (any(change) or any(size)):
+            return out
+        count, price = self.counts(segment), self.price.get(segment, {})
+        for t, c in enumerate(change):
+            z = size[t] if size else 0
+            if c or z:
+                moved = c * (1 + z) + self.baseline * z if z else c
+                out[t] = (
+                    count[t] * moved * price.get((landing, self.origin[t]), Decimal(1))
+                )
+        return out
+
+    def extra_wins(self, segment: str) -> list[Decimal]:
+        """The extra wins expected from the deals ``segment`` creates on each day."""
+        return [n * c for n, c in zip(self.counts(segment), self.changes[segment])]
+
     def priced(self, landing: int) -> list[Decimal]:
         """Extra wins on each day of creation for wins landing in window ``landing``, each at its
-        price index."""
+        price index and size."""
         out = [Decimal(0)] * len(self.origin)
-        for s, change in self.changes.items():
-            if not any(change):
-                continue
-            count, price = self.counts(s), self.price.get(s, {})
-            for t, c in enumerate(change):
-                if c:
-                    out[t] += (
-                        count[t] * c * price.get((landing, self.origin[t]), Decimal(1))
-                    )
+        for s in self.changes:
+            for t, x in enumerate(self.extra(s, landing)):
+                if x:
+                    out[t] += x
         return out
 
     def rebased(self, rate: Decimal) -> Lift:
@@ -511,12 +536,16 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book) -> None:
     is each path's expected creation by day; every segment takes its expected share of it, a
     segment's deals are won at the pooled rate plus its own change on the day they are created,
     and a win's size is scaled by its segment's price index (the quarter it lands in, the
-    quarter it was created in). How many are won and what each books are drawn apart, so the
+    quarter it was created in) and by the change in size its segment's actions make on the day
+    its deal was created. How many are won and what each books are drawn apart, so the
     draws are centered on the forward function's expectation: the segments' prices add back to
     the pooled price over each quarter's wins."""
     names = list(lift.changes)
     count = np.array([[float(x) for x in lift.counts(s)[:span]] for s in names])
     change = np.array([[float(x) for x in lift.changes[s][:span]] for s in names])
+    bigger = np.array(
+        [[1 + float(x) for x in lift.size.get(s, [0] * span)[:span]] for s in names]
+    )
     made = count.sum(axis=0)
     share = np.divide(count, made, out=np.zeros_like(count), where=made > 0)
     landing_of, origin_of = np.asarray(lift.landing), np.asarray(lift.origin)
@@ -540,7 +569,11 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book) -> None:
         sizes = pool[rng.choice(len(pool), size=len(rows), p=weights)]
         landing = created + days
         land = landing_of[np.minimum(landing, len(landing_of)) - 1]
-        book(rows, landing, sizes * grid[land, origin_of[created - 1]])
+        book(
+            rows,
+            landing,
+            sizes * grid[land, origin_of[created - 1]] * bigger[i][created - 1],
+        )
 
 
 def _spread(values: np.ndarray) -> Spread:

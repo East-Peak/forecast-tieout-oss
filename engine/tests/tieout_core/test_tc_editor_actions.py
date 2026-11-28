@@ -61,7 +61,10 @@ def test_an_action_the_core_refuses_comes_back_beside_its_item(opened):
             action(start="2026-08"),
             "Starts in August 2026, which is not after the as-of date",
         ),
-        (action(driver="won_arr"), "Only the win rate can be changed by an action"),
+        (
+            action(driver="cycle_days"),
+            "Only the win rate and won ARR per win can be changed by an action",
+        ),
     ]
     for bad, why in cases:
         with gen.in_repo():

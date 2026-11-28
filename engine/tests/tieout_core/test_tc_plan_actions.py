@@ -110,10 +110,11 @@ def test_a_segment_nobody_is_in_is_refused_and_the_message_names_it():
 
 
 def test_an_unknown_driver_is_refused_and_lists_what_is_supported():
-    text = refused(action(driver="won_arr"))
+    text = refused(action(driver="cycle_days"))
     assert (
-        "Only the win rate can be changed by an action" in text
+        "Only the win rate and won ARR per win can be changed by an action" in text
         and "win_rate" not in text
+        and "cycle_days" not in text
     )
     assert "win rate" in refused({k: v for k, v in action().items() if k != "driver"})
 
@@ -236,4 +237,47 @@ def test_a_ramp_of_sixty_months_is_the_longest_and_needs_a_real_end_date():
         "actions[1]" in text
         and "runs past the last date" in text
         and "December 9999" in text
+    )
+
+
+def test_a_won_arr_action_takes_a_target_in_dollars_per_won_deal():
+    got = parse(action(driver="won_arr", target="45000.50")).actions[0]
+    assert got.driver == "won_arr" and got.target == Decimal("45000.50")
+    assert parse(action(driver="won_arr", target="0")).actions[0].target == 0
+
+
+def test_a_negative_or_unreadable_size_is_refused_in_words_about_dollars():
+    text = refused(action(driver="won_arr", target="-5"))
+    assert "The target won ARR per win must be zero or more dollars, not -$5" in text
+    assert "actions[1]" in text and "driver" not in text.split("actions[1]")[1]
+    text = refused(action(driver="won_arr", target="lots"))
+    assert "The target won ARR per win must be a number of dollars" in text
+
+
+def test_a_size_target_above_one_is_fine_where_a_win_rate_above_one_is_not():
+    assert parse(action(driver="won_arr", target="1500000")).actions
+    assert "between 0% and 100%" in refused(action(target="1.5"))
+
+
+def test_actions_on_different_drivers_in_overlapping_slices_are_allowed():
+    plan = parse(
+        action(slice="company", id="rate"),
+        action(slice="enterprise", id="size", driver="won_arr", target="500000"),
+    )
+    assert [a.id for a in plan.actions] == ["rate", "size"]
+
+
+def test_the_same_driver_on_the_same_slice_or_the_company_against_a_segment_is_refused():
+    both = refused(
+        action(id="a", driver="won_arr", target="9"),
+        action(id="b", driver="won_arr", target="8"),
+    )
+    assert "both change the size of a won deal for Enterprise" in both
+    company = refused(
+        action(id="a", slice="company", driver="won_arr", target="9"),
+        action(id="b", driver="won_arr", target="8"),
+    )
+    assert (
+        "one changes the size of a won deal for the whole company, which includes Enterprise"
+        in company
     )

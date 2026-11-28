@@ -478,9 +478,13 @@ def _quarter_rules(r: dict, d: dict, rule, where: str) -> list[Decimal]:
 def _driver_rules(r: dict, d: dict, rule) -> None:
     name = d["driver"]
     plan = r.get("plan")
-    stacked = ws.has_actions(
-        plan if plan is not None and "unavailable" not in plan else None
-    )
+    acted = r.get("driver_actions") or {}
+    if "unavailable" in acted or "items" not in acted:
+        stacked = ws.has_actions(
+            plan if plan is not None and "unavailable" not in plan else None
+        )
+    else:  # the win rate stacks only where an action is on it
+        stacked = any(i["driver"] == rules.WIN_RATE for i in acted["items"])
     stacked = stacked and name == rules.WIN_RATE
     where = f"worksheet.drivers[{name}]"
     inputs = r["inputs"]

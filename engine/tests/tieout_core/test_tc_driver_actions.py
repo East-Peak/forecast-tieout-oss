@@ -168,7 +168,7 @@ def test_an_action_for_a_segment_with_no_lane_is_an_error():
 
 
 def test_a_driver_with_no_rule_is_an_error_not_a_win_rate():
-    odd = PlanAction("x", "x", "won_arr", None, date(2026, 5, 1), 0, D("1"))
+    odd = PlanAction("x", "x", "cycle_days", None, date(2026, 5, 1), 0, D("1"))
     with pytest.raises(ValueError, match="no rule for the driver"):
         run(odd)
 

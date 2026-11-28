@@ -63,7 +63,25 @@ ACTIONS_CAVEAT = (
     "that lane is expected to create in the period. It is an entered change to a pooled rate, "
     "not a rate fitted to the slice; creation, goals and recorded actuals do not move."
 )
+ACTIONS_CAVEAT_ANY = (
+    "Where the plan carries driver actions, the lanes they touch show the result: a win-rate "
+    "action leaves the pooled rate plus the change it makes, weighted by the deals that lane is "
+    "expected to create in the period, and a size action changes what each win books, so the "
+    "lane's average won ARR. These are entered changes to pooled drivers, not values fitted to "
+    "the slice; goals and recorded actuals do not move."
+)
 CAVEATS = (CAVEAT, DATED_BENCHMARK, POOLED_MODEL)
+
+
+def actions_caveat(effect) -> list[str]:
+    """The caveat on actions: the win rate's own while that is all the plan acts on."""
+    if not effect:
+        return []
+    return [
+        ACTIONS_CAVEAT
+        if driver_actions.win_rate_only(effect.actions)
+        else ACTIONS_CAVEAT_ANY
+    ]
 
 
 # ---------------------------------------------------------------- what is expected
@@ -483,7 +501,7 @@ def lanes_document(
             for c in rules.COLUMNS
         ],
         "reasons": rules.REASONS,
-        "caveats": [*CAVEATS, *([ACTIONS_CAVEAT] if effect else []), OWNER_CAVEAT],
+        "caveats": [*CAVEATS, *actions_caveat(effect), OWNER_CAVEAT],
         "periods": out_periods,
         "checks": [
             {"name": c.name, "passed": c.passed, "detail": c.detail} for c in checks

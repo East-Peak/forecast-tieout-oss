@@ -39,22 +39,35 @@ CENT = Decimal("0.01")
 
 
 def schema() -> dict:
-    evidence = obj(
-        {
-            "baseline_rate": DECIMAL,
-            "change_points": DECIMAL,
-            "resulting_rate": DECIMAL,
-            "historical_low": DECIMAL_OR_NULL,
-            "historical_high": DECIMAL_OR_NULL,
-            "position": enum("inside", "below", "above", "none"),
-            "label": TEXT,
-        }
+    placed = {
+        "historical_low": DECIMAL_OR_NULL,
+        "historical_high": DECIMAL_OR_NULL,
+        "position": enum("inside", "below", "above", "none"),
+        "label": TEXT,
+    }
+    evidence = one_of(
+        obj(
+            {
+                "baseline_rate": DECIMAL,
+                "change_points": DECIMAL,
+                "resulting_rate": DECIMAL,
+                **placed,
+            }
+        ),
+        obj(
+            {
+                "baseline": DECIMAL,
+                "change_percent": DECIMAL,
+                "resulting": DECIMAL,
+                **placed,
+            }
+        ),
     )
     item = obj(
         {
             "id": TEXT,
             "name": TEXT,
-            "driver": enum("win_rate"),
+            "driver": enum("win_rate", "won_arr"),
             "slice": obj(
                 {
                     "kind": enum("company", "segment"),
@@ -152,9 +165,10 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
     items = s["items"]
     ids = [i["id"] for i in items]
     rule(len(set(ids)) == len(ids), "driver_actions: action ids are not unique")
+    acts = [_Driver(i["driver"]) for i in items]
     for text, want in (
-        ("definition", da.DEFINITION),
-        ("line", da.LINE),
+        ("definition", da.definition_for(acts)),
+        ("line", da.line_for(acts)),
         ("removal_note", da.REMOVAL_NOTE),
         ("range_note", da.RANGE_NOTE),
         ("rounding_note", da.ROUNDING_NOTE),
@@ -234,17 +248,24 @@ def _check(r: dict, s: dict, plan: dict, step: dict, rule) -> None:
             == (theirs["status"], theirs["forecast"], theirs["expected"]),
             f"driver_actions: {mine['quarter']} with actions is not the plan's",
         )
-    row = next(d for d in r["worksheet"]["drivers"] if d["driver"] == "win_rate")
+    rows = {d["driver"]: d for d in r["worksheet"]["drivers"]}
     as_of = date.fromisoformat(r["inputs"]["as_of"])
     for i in items:
-        _item(i, row, as_of, rule)
+        _item(i, rows[i["driver"]], as_of, rule)
+
+
+class _Driver:
+    """An action as the report names it: only its driver is read by the wording rules."""
+
+    def __init__(self, driver: str) -> None:
+        self.driver = driver
 
 
 def _item(i: dict, row: dict, as_of: date, rule) -> None:
     where = f"driver_actions {i['id']}"
     ev = i["evidence"]
+    driver = i["driver"]
     target = Decimal(i["target"])
-    rule(0 <= target <= 1, f"{where}: the target is not a probability")
     rule(
         date.fromisoformat(i["start"] + "-01") > as_of,
         f"{where}: it starts on or before the as-of date",
@@ -253,42 +274,57 @@ def _item(i: dict, row: dict, as_of: date, rule) -> None:
         (i["slice"]["kind"] == "company") == (i["slice"]["key"] is None),
         f"{where}: the slice's kind and key disagree",
     )
-    rule(
-        ev["resulting_rate"] == i["target"],
-        f"{where}: the resulting rate is not the target",
-    )
-    rule(
-        ev["baseline_rate"] == row["current"]["value"],
-        f"{where}: the baseline is not the worksheet's pooled win rate",
-    )
-    rule(
-        abs(
-            (Decimal(ev["resulting_rate"]) - Decimal(ev["baseline_rate"])) * 100
-            - Decimal(ev["change_points"])
+    if driver == "win_rate":
+        rule(0 <= target <= 1, f"{where}: the target is not a probability")
+        rule(
+            ev["resulting_rate"] == i["target"],
+            f"{where}: the resulting rate is not the target",
         )
-        <= CENT,
-        f"{where}: the change in points is not the resulting rate less the baseline",
-    )
+        rule(
+            ev["baseline_rate"] == row["current"]["value"],
+            f"{where}: the baseline is not the worksheet's pooled win rate",
+        )
+        rule(
+            abs(
+                (Decimal(ev["resulting_rate"]) - Decimal(ev["baseline_rate"])) * 100
+                - Decimal(ev["change_points"])
+            )
+            <= CENT,
+            f"{where}: the change in points is not the resulting rate less the baseline",
+        )
+    else:
+        rule(target >= 0, f"{where}: the target is negative")
+        rule(
+            ev["resulting"] == i["target"],
+            f"{where}: the resulting value is not the target",
+        )
+        base = row["current"]["value"]
+        rule(
+            ev["baseline"] == base,
+            f"{where}: the baseline is not the worksheet's pooled value",
+        )
+        rule(
+            bool(Decimal(base))
+            and abs(
+                (Decimal(ev["resulting"]) / Decimal(base) - 1) * 100
+                - Decimal(ev["change_percent"])
+            )
+            <= CENT,
+            f"{where}: the change in percent is not the resulting value over the baseline",
+        )
     h = row["historical"]
     rule(
         (ev["historical_low"], ev["historical_high"])
         == ((None, None) if h is None else (h["low"]["setting"], h["high"]["setting"])),
         f"{where}: the low and high are not the worksheet's",
     )
-    if h is None:
-        position, label = "none", da.NOT_OFFERED
-    elif target < Decimal(h["low"]["setting"]):
-        position, label = "below", da.OUTSIDE
-    elif target > Decimal(h["high"]["setting"]):
-        position, label = "above", da.OUTSIDE
-    else:
-        position, label = "inside", da.INSIDE
+    position, label = da.placing(target, row, driver)
     rule(
         (ev["position"], ev["label"]) == (position, label),
         f"{where}: the label does not say where the target sits against the worksheet's settings",
     )
     rule(
         i["affects"]
-        == da.affects_text(i["slice"]["label"], i["start"], i["ramp_months"]),
+        == da.affects_text(i["slice"]["label"], i["start"], i["ramp_months"], driver),
         f"{where}: the sentence on what it affects is not what the report writes",
     )

@@ -1289,63 +1289,123 @@
                   },
                   "driver": {
                     "enum": [
-                      "win_rate"
+                      "win_rate",
+                      "won_arr"
                     ]
                   },
                   "evidence": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "baseline_rate": {
-                        "$ref": "#/$defs/Decimal"
-                      },
-                      "change_points": {
-                        "$ref": "#/$defs/Decimal"
-                      },
-                      "historical_high": {
-                        "anyOf": [
-                          {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "baseline_rate": {
                             "$ref": "#/$defs/Decimal"
                           },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "historical_low": {
-                        "anyOf": [
-                          {
+                          "change_points": {
                             "$ref": "#/$defs/Decimal"
                           },
-                          {
-                            "type": "null"
+                          "historical_high": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "historical_low": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "label": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "position": {
+                            "enum": [
+                              "inside",
+                              "below",
+                              "above",
+                              "none"
+                            ]
+                          },
+                          "resulting_rate": {
+                            "$ref": "#/$defs/Decimal"
                           }
-                        ]
+                        },
+                        "required": [
+                          "baseline_rate",
+                          "change_points",
+                          "resulting_rate",
+                          "historical_low",
+                          "historical_high",
+                          "position",
+                          "label"
+                        ],
+                        "type": "object"
                       },
-                      "label": {
-                        "$ref": "#/$defs/Text"
-                      },
-                      "position": {
-                        "enum": [
-                          "inside",
-                          "below",
-                          "above",
-                          "none"
-                        ]
-                      },
-                      "resulting_rate": {
-                        "$ref": "#/$defs/Decimal"
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "baseline": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "change_percent": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "historical_high": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "historical_low": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "label": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "position": {
+                            "enum": [
+                              "inside",
+                              "below",
+                              "above",
+                              "none"
+                            ]
+                          },
+                          "resulting": {
+                            "$ref": "#/$defs/Decimal"
+                          }
+                        },
+                        "required": [
+                          "baseline",
+                          "change_percent",
+                          "resulting",
+                          "historical_low",
+                          "historical_high",
+                          "position",
+                          "label"
+                        ],
+                        "type": "object"
                       }
-                    },
-                    "required": [
-                      "baseline_rate",
-                      "change_points",
-                      "resulting_rate",
-                      "historical_low",
-                      "historical_high",
-                      "position",
-                      "label"
-                    ],
-                    "type": "object"
+                    ]
                   },
                   "id": {
                     "$ref": "#/$defs/Text"
@@ -1465,63 +1525,123 @@
                   },
                   "driver": {
                     "enum": [
-                      "win_rate"
+                      "win_rate",
+                      "won_arr"
                     ]
                   },
                   "evidence": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "baseline_rate": {
-                        "$ref": "#/$defs/Decimal"
-                      },
-                      "change_points": {
-                        "$ref": "#/$defs/Decimal"
-                      },
-                      "historical_high": {
-                        "anyOf": [
-                          {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "baseline_rate": {
                             "$ref": "#/$defs/Decimal"
                           },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      },
-                      "historical_low": {
-                        "anyOf": [
-                          {
+                          "change_points": {
                             "$ref": "#/$defs/Decimal"
                           },
-                          {
-                            "type": "null"
+                          "historical_high": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "historical_low": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "label": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "position": {
+                            "enum": [
+                              "inside",
+                              "below",
+                              "above",
+                              "none"
+                            ]
+                          },
+                          "resulting_rate": {
+                            "$ref": "#/$defs/Decimal"
                           }
-                        ]
+                        },
+                        "required": [
+                          "baseline_rate",
+                          "change_points",
+                          "resulting_rate",
+                          "historical_low",
+                          "historical_high",
+                          "position",
+                          "label"
+                        ],
+                        "type": "object"
                       },
-                      "label": {
-                        "$ref": "#/$defs/Text"
-                      },
-                      "position": {
-                        "enum": [
-                          "inside",
-                          "below",
-                          "above",
-                          "none"
-                        ]
-                      },
-                      "resulting_rate": {
-                        "$ref": "#/$defs/Decimal"
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "baseline": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "change_percent": {
+                            "$ref": "#/$defs/Decimal"
+                          },
+                          "historical_high": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "historical_low": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/$defs/Decimal"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "label": {
+                            "$ref": "#/$defs/Text"
+                          },
+                          "position": {
+                            "enum": [
+                              "inside",
+                              "below",
+                              "above",
+                              "none"
+                            ]
+                          },
+                          "resulting": {
+                            "$ref": "#/$defs/Decimal"
+                          }
+                        },
+                        "required": [
+                          "baseline",
+                          "change_percent",
+                          "resulting",
+                          "historical_low",
+                          "historical_high",
+                          "position",
+                          "label"
+                        ],
+                        "type": "object"
                       }
-                    },
-                    "required": [
-                      "baseline_rate",
-                      "change_points",
-                      "resulting_rate",
-                      "historical_low",
-                      "historical_high",
-                      "position",
-                      "label"
-                    ],
-                    "type": "object"
+                    ]
                   },
                   "id": {
                     "$ref": "#/$defs/Text"

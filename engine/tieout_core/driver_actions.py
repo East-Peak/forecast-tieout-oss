@@ -32,6 +32,7 @@ from decimal import Decimal
 from . import lanes_basis
 from . import lanes_flows as flows
 from . import lanes_rules as rules
+from . import worksheet_drivers as wd
 from .actions import Ground
 from .capacity import project
 from .figures import CENT, cents, money, number
@@ -43,9 +44,11 @@ from .plan import NEXT_12, REST_OF_FY, Plan, PlanAction, month_words
 from .records import Check
 from .roster import Member
 from .worksheet_drivers import Probe
-from .worksheet_rules import PRECISION, WIN_RATE
+from .worksheet_rules import PRECISION, WIN_RATE, WON_ARR
 
 ZERO, ONE = Decimal(0), Decimal(1)
+WORDS = {WIN_RATE: "the win rate", WON_ARR: "won ARR per win"}
+ACTED_ON = {WIN_RATE: "a win rate", WON_ARR: "won ARR per win"}  # "actions on ..."
 WINDOWS = (REST_OF_FY, NEXT_12)
 
 
@@ -67,6 +70,7 @@ class Frame:
     price: Mapping[str, Mapping[tuple[int, int], Decimal]]
     landing: tuple[int, ...]
     origin: tuple[int, ...]
+    size: Decimal | None = None  # the pooled mean won ARR a size target is read against
 
 
 @dataclass(frozen=True)
@@ -80,7 +84,10 @@ class Effect:
     changes: Mapping[
         str, tuple[Decimal, ...]
     ]  # each segment's change in win rate, by day
-    lift: tuple[Decimal, ...]  # extra wins, priced, from the deals created on each day
+    sizes: Mapping[
+        str, tuple[Decimal, ...]
+    ]  # each segment's relative change in the size of a win, by day
+    lift: Lift  # the changes the forward function reads
 
     def dropping(self, action: PlanAction) -> Effect:
         """The effect of the others alone."""
@@ -228,7 +235,16 @@ def build_frame(
     series = flows.segment_series(organic, extra, shares)
     landing, origin = day_cells(g, cal.year.start, days)
     price = price_index(g, series, sizes, origin)
-    return Frame(tuple(segments), organic, program, series, price, landing, origin)
+    return Frame(
+        tuple(segments),
+        organic,
+        program,
+        series,
+        price,
+        landing,
+        origin,
+        g.model.new_pipeline.mean_won_arr,
+    )
 
 
 # ---------------------------------------------------------------- what an action does
@@ -249,60 +265,68 @@ def ramp(action: PlanAction, as_of: date, days: int) -> list[Decimal]:
     return out
 
 
-def _change(baseline: Decimal, action: PlanAction) -> Decimal:
-    """The points the action adds to the win rate: its target less the pooled rate."""
+def _change(frame: Frame, baseline: Decimal, action: PlanAction) -> Decimal:
+    """What the action changes, from its target against the baseline the driver is read from: the
+    points it adds to the pooled win rate, or the relative change in the size of a win."""
     if action.driver == WIN_RATE:
         return action.target - baseline
+    if action.driver == WON_ARR:
+        if not frame.size:
+            raise ValueError("won ARR per win has no baseline to change")
+        return action.target / frame.size - 1
     raise ValueError(f"no rule for the driver {action.driver!r}")
 
 
 def effect(
     frame: Frame, baseline: Decimal, as_of: date, actions: Sequence[PlanAction]
 ) -> Effect:
+    """What ``actions`` change in each segment on each day, composed in this one place: each
+    driver's change is measured from the plan with no actions and the changes of one driver add,
+    so the order of the actions cannot matter (the forward function then multiplies the drivers
+    through, as they multiply in a win's expected booking)."""
     days = len(next(iter(frame.series.values()), ()))
-    changes = {s: [ZERO] * days for s in frame.segments}
+    by_driver = {
+        driver: {s: [ZERO] * days for s in frame.segments}
+        for driver in (WIN_RATE, WON_ARR)
+    }
     for a in actions:
-        unknown = a.segment is not None and a.segment not in changes
+        unknown = a.segment is not None and a.segment not in frame.segments
         if unknown:
             raise ValueError(
                 f"the action {a.id!r} is for a segment with no lane: {a.segment}"
             )
-        points = _change(baseline, a)
+        change = _change(frame, baseline, a)
         weights = ramp(a, as_of, days)
+        mine = by_driver[a.driver]
         for s in frame.segments if a.segment is None else (a.segment,):
-            changes[s] = [c + points * w for c, w in zip(changes[s], weights)]
+            mine[s] = [c + change * w for c, w in zip(mine[s], weights)]
+    changes, sizes = (
+        {s: tuple(v) for s, v in by_driver[d].items()} for d in (WIN_RATE, WON_ARR)
+    )
     lift = Lift(
         baseline,
         frame.organic,
         frame.program,
-        {s: tuple(v) for s, v in changes.items()},
+        changes,
         frame.price,
         frame.landing,
         frame.origin,
+        sizes,
     )
-    return Effect(
-        frame,
-        baseline,
-        as_of,
-        tuple(actions),
-        {s: tuple(v) for s, v in changes.items()},
-        lift,
-    )
+    return Effect(frame, baseline, as_of, tuple(actions), changes, sizes, lift)
 
 
 # ---------------------------------------------------------------- what the lanes read
 
 
 def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flows.Flow]:
-    """The extra wins the actions expect in the fiscal year, by (segment, quarter it lands in,
-    quarter its deal was created in). Wins and win days are the lanes' own arithmetic; the
-    bookings are booked month by month at the pooled size times the segment's price index in
-    that month's cell, as the forward function books them, so the lanes add to its figures."""
+    """What the actions add in the fiscal year, by (segment, quarter it lands in, quarter its deal
+    was created in): extra wins and win days (the lanes' own arithmetic) and the bookings,
+    booked month by month as the forward function books them (``Lift.extra``), so the lanes add to
+    its figures."""
     days = (cal.year.end - g.as_of).days
-    series = {
-        s: [c * d for c, d in zip(eff.frame.series[s][:days], eff.changes[s][:days])]
-        for s in eff.frame.segments
-    }
+    lift = eff.lift
+    series = {s: lift.extra_wins(s)[:days] for s in eff.frame.segments}
     wins, _ = flows.new_flows(g.model, series, g.as_of, cal, rate=ONE)
     timing = g.model.new_pipeline.timing
     per_win = g.model.new_pipeline.mean_won_arr / Decimal(timing.total)
@@ -315,15 +339,20 @@ def action_flows(g: Ground, eff: Effect, cal: Calendar) -> dict[flows.Leaf, flow
             w.start.toordinal() - g.as_of.toordinal(),
             w.end.toordinal() - g.as_of.toordinal(),
         )
-        for s, per_day in series.items():
-            index = eff.frame.price[s]
-            for t, count in enumerate(per_day, 1):
+        for s in eff.frame.segments:
+            for t, value in enumerate(lift.extra(s, i)[:days], 1):
                 hit = timing.count_through(b - t) - timing.count_through(a - t)
-                if count and hit:
+                if value and hit:
                     origin = cal.bucket(g.as_of + timedelta(days=t))
-                    cell = (i, eff.frame.origin[t - 1])
-                    booked[(s, q, origin)] += count * hit * index.get(cell, ONE)
-    return {k: flows.Flow(f.wins, booked[k] * per_win, f.days) for k, f in wins.items()}
+                    booked[(s, q, origin)] += value * hit
+    return {
+        k: flows.Flow(
+            wins.get(k, flows.ZERO_FLOW).wins,
+            booked[k] * per_win,
+            wins.get(k, flows.ZERO_FLOW).days,
+        )
+        for k in {*wins, *booked}
+    }
 
 
 def period_rate(eff: Effect, segments: Sequence[str], window, as_of: date) -> Decimal:
@@ -355,7 +384,7 @@ def basis_of(state) -> Basis:
         state.memo["basis"] = found
     if isinstance(found, lanes_basis.BasisUnavailable):
         raise Unavailable(
-            f"Win-rate actions cannot be valued for this company: its plan basis is unavailable ({found})."
+            f"Driver actions cannot be valued for this company: its plan basis is unavailable ({found})."
         )
     return found
 
@@ -405,6 +434,19 @@ def is_material(value: Decimal) -> bool:
     return abs(value) >= MATERIAL_FROM
 
 
+def win_rate_only(actions) -> bool:
+    return all(a.driver == WIN_RATE for a in actions)
+
+
+def line_for(actions) -> str:
+    """The one line on what an action is: the win rate's own while that is all there is."""
+    return LINE if win_rate_only(actions) else LINE_ANY
+
+
+def definition_for(actions) -> str:
+    return DEFINITION if win_rate_only(actions) else DEFINITION_ANY
+
+
 def empty_section() -> dict:
     """A plan with no driver actions: no items, but what an action is, so a form can say it before the first."""
     return {"items": [], "definition": DEFINITION, "line": LINE}
@@ -436,6 +478,21 @@ ROUNDING_NOTE = (
 INSIDE = "within the worksheet's historical settings"
 OUTSIDE = "outside the worksheet's historical settings"
 NOT_OFFERED = "the worksheet offers no historical settings for the win rate"
+LINE_ANY = (
+    "An action changes one driver of the pipeline created from its start month on: the win rate "
+    "or the size of a win. Deals already open keep their odds and their size. A segment's target "
+    "is an entered change on the pooled baseline, not a value measured for the segment."
+)
+DEFINITION_ANY = (
+    "A driver action is a named change to one driver in one slice, with a start month, a ramp and "
+    "a target. It changes the pipeline created from its start, ramping linearly by creation date "
+    "to the target and holding it after. Pipeline created before the start, and every deal "
+    "already open, keeps the rates and sizes it had. Where the capacity term is in use, hires and "
+    "programs stay as the plan has them; each action is valued against them. A target is read "
+    "against the pooled baseline of its driver; for a segment it is an entered change on that "
+    "baseline, not a value that was measured for the segment. Actions on different drivers add "
+    "their changes to the plan as it stands without them, and work through each win together."
+)
 NO_INTERACTION = (
     "The actions together gain what removing each one loses, to within rounding: they do not "
     "interact in this model."
@@ -463,40 +520,76 @@ def _slice(a: PlanAction) -> dict:
     }
 
 
-def affects_text(slice_label: str, start: str, ramp_months: int) -> str:
+def affects_text(
+    slice_label: str, start: str, ramp_months: int, driver: str = WIN_RATE
+) -> str:
     ramp = (
         "at once"
         if ramp_months == 0
         else f"ramping up over {ramp_months} {'month' if ramp_months == 1 else 'months'}"
     )
+    month = month_words(date.fromisoformat(f"{start}-01"))
+    if driver == WON_ARR:
+        return (
+            f"Wins of pipeline created from {month} in {slice_label}, {ramp} to the target size; "
+            "how many are won, and the wins of pipeline created earlier or already open, keep their size."
+        )
     return (
-        f"Pipeline created from {month_words(date.fromisoformat(f'{start}-01'))} in {slice_label}, {ramp} to the target; pipeline "
+        f"Pipeline created from {month} in {slice_label}, {ramp} to the target; pipeline "
         "created earlier, and every deal already open, keeps its rate."
     )
+
+
+def not_offered(driver: str) -> str:
+    """The sentence for a driver the worksheet offers no historical settings for."""
+    if driver == WIN_RATE:
+        return NOT_OFFERED
+    return f"the worksheet offers no historical settings for {WORDS[driver]}"
+
+
+def placing(target: Decimal, row: dict, driver: str) -> tuple[str, str]:
+    """Where ``target`` sits against the worksheet's low and high for its driver, and the label
+    that says so."""
+    h = row["historical"]
+    if h is None:
+        return "none", not_offered(driver)
+    if target < Decimal(h["low"]["setting"]):
+        return "below", OUTSIDE
+    if target > Decimal(h["high"]["setting"]):
+        return "above", OUTSIDE
+    return "inside", INSIDE
+
+
+def shown(driver: str, value: Decimal) -> str:
+    """A driver's value as the worksheet writes it."""
+    return money(value) if driver == WON_ARR else number(value, PRECISION[driver])
 
 
 def _evidence(g: Ground, a: PlanAction, row: dict) -> dict:
     """The pooled baseline, the change, the result, and where the target sits against the
     worksheet's low and high for this driver (its means of the lower and upper halves of the
     quarters observed, not the extremes)."""
-    places = PRECISION[WIN_RATE]
-    base = g.model.new_pipeline.win_rate
     h = row["historical"]
-    low = high = None
-    if h is None:
-        position, label = "none", NOT_OFFERED
-    else:
-        low, high = h["low"]["setting"], h["high"]["setting"]
-        if a.target < Decimal(low):
-            position, label = "below", OUTSIDE
-        elif a.target > Decimal(high):
-            position, label = "above", OUTSIDE
-        else:
-            position, label = "inside", INSIDE
+    low, high = (
+        (None, None) if h is None else (h["low"]["setting"], h["high"]["setting"])
+    )
+    position, label = placing(a.target, row, a.driver)
+    if a.driver == WIN_RATE:
+        base = g.model.new_pipeline.win_rate
+        return {
+            "baseline_rate": number(base, PRECISION[WIN_RATE]),
+            "change_points": f"{(a.target - base) * 100:.2f}",
+            "resulting_rate": number(a.target, PRECISION[WIN_RATE]),
+            "historical_low": low,
+            "historical_high": high,
+            "position": position,
+            "label": label,
+        }
+    base = wd.current_value(g, a.driver)
     return {
-        "baseline_rate": number(base, places),
-        "change_points": f"{(a.target - base) * 100:.2f}",
-        "resulting_rate": number(a.target, places),
+        "baseline": shown(a.driver, base),
+        "change_percent": f"{(a.target / base - 1) * 100:.2f}",
+        "resulting": shown(a.driver, a.target),
         "historical_low": low,
         "historical_high": high,
         "position": position,
@@ -537,11 +630,12 @@ def section(
     eff: Effect,
     hires: Sequence[Member],
     inflows: Sequence[Inflow],
-    win_rate_row: dict,
+    rows: Mapping[str, dict],
     plan_section: dict,
 ) -> tuple[dict, list[Check]]:
     """The driver actions' values and evidence, by the worksheet's probe (expectations only):
-    every counterfactual is the plan's own hires and programs with some of the actions."""
+    every counterfactual is the plan's own hires and programs with some of the actions. ``rows``
+    are the worksheet's driver rows, by driver."""
     probe = Probe(g, hires, inflows)
     without = probe.base
     everything = probe.with_lift(eff.lift)
@@ -560,12 +654,12 @@ def section(
                 "slice": _slice(a),
                 "start": f"{a.start:%Y-%m}",
                 "ramp_months": a.ramp_months,
-                "target": number(a.target, PRECISION[WIN_RATE]),
+                "target": shown(a.driver, a.target),
                 "affects": affects_text(
-                    a.slice_label, f"{a.start:%Y-%m}", a.ramp_months
+                    a.slice_label, f"{a.start:%Y-%m}", a.ramp_months, a.driver
                 ),
                 "removal_value": {w: money(v) for w, v in removal.items()},
-                "evidence": _evidence(g, a, win_rate_row),
+                "evidence": _evidence(g, a, rows[a.driver]),
             }
         )
     summed = {w: sum((r[w] for r in removals), ZERO) for w in WINDOWS}
@@ -578,8 +672,8 @@ def section(
         for w in WINDOWS
     }
     out = {
-        "definition": DEFINITION,
-        "line": LINE,
+        "definition": definition_for(eff.actions),
+        "line": line_for(eff.actions),
         "removal_label": REMOVAL_LABEL,
         "removal_note": REMOVAL_NOTE,
         "items": items,
@@ -608,13 +702,29 @@ def section(
             == plan_section["expected_fiscal_year"],
             f"{out['with_actions']['expected_fiscal_year']} against {plan_section['expected_fiscal_year']}",
         ),
-        Check(
-            "driver actions on a win rate do not interact: removal values add to the joint gain",
-            all(abs(gap[w]) <= tolerance[w] for w in WINDOWS),
-            "; ".join(
-                f"{w}: reconciliation {money(gap[w])}, rounding allows {money(tolerance[w])}"
-                for w in WINDOWS
-            ),
-        ),
+        _interaction_check(eff.actions, joint, summed, gap, tolerance),
     ]
     return out, checks
+
+
+def _interaction_check(actions, joint, summed, gap, tolerance) -> Check:
+    """Actions on one driver do not interact, so their removal values add to the joint gain;
+    actions on different drivers do (more deals at a higher rate and size), so for them the
+    check is that the reconciliation line is the joint gain less the removal values."""
+    detail = "; ".join(
+        f"{w}: reconciliation {money(gap[w])}, rounding allows {money(tolerance[w])}"
+        for w in WINDOWS
+    )
+    drivers = {a.driver for a in actions}
+    if len(drivers) == 1:
+        (driver,) = drivers
+        return Check(
+            f"driver actions on {ACTED_ON[driver]} do not interact: removal values add to the joint gain",
+            all(abs(gap[w]) <= tolerance[w] for w in WINDOWS),
+            detail,
+        )
+    return Check(
+        "driver actions on different drivers interact: the reconciliation is the joint gain less the removal values",
+        all(gap[w] == joint[w] - summed[w] for w in WINDOWS),
+        detail,
+    )

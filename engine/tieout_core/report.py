@@ -321,6 +321,7 @@ def finish(
             ground, state.quarters, params, plan_section if plan is not None else None,
             hires, inflows, actions_section, gap, required,
             None if effect is None else effect.lift,
+            plan is not None and any(a.driver == "win_rate" for a in plan.actions),
         )  # fmt: skip
     else:
         worksheet_section, worksheet_checks = (
@@ -329,11 +330,9 @@ def finish(
         )
     driver_checks: list[Check] = []
     if effect is not None:
-        win_rate = next(
-            d for d in worksheet_section["drivers"] if d["driver"] == "win_rate"
-        )
+        rows = {d["driver"]: d for d in worksheet_section["drivers"]}
         driver_section, driver_checks = driver_actions.section(
-            ground, effect, hires, inflows, win_rate, plan_section
+            ground, effect, hires, inflows, rows, plan_section
         )  # fmt: skip
     elif plan is not None and plan.actions:
         driver_section = {"unavailable": fitted.unavailable_reason}

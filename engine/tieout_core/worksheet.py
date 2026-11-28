@@ -779,9 +779,15 @@ def worksheet_section(
     gap: dict,
     required: dict,
     lift: Lift | None = None,
+    win_rate_acted_on: bool | None = None,
 ) -> tuple[dict, list[Check]]:
+    """``win_rate_acted_on``: whether the plan's actions include one on the win rate (which
+    stacks with the worksheet's own flex of it); by default, whether it has any action."""
     probe = wd.Probe(g, hires, inflows, lift)
-    c = Context(g, probe, quarters, params, g.fy_target, has_actions(plan_section))
+    stacked = (
+        has_actions(plan_section) if win_rate_acted_on is None else win_rate_acted_on
+    )
+    c = Context(g, probe, quarters, params, g.fy_target, stacked)
     drivers = [driver_row(c, d) for d in DRIVERS]
     for row, rank in zip(
         drivers, rank_by_window([_driver_magnitudes(r) for r in drivers])

@@ -246,16 +246,26 @@ export type TieoutReport = {
         items: [
           {
             affects: Text;
-            driver: "win_rate";
-            evidence: {
-              baseline_rate: Decimal;
-              change_points: Decimal;
-              historical_high: Decimal | null;
-              historical_low: Decimal | null;
-              label: Text;
-              position: "inside" | "below" | "above" | "none";
-              resulting_rate: Decimal;
-            };
+            driver: "win_rate" | "won_arr";
+            evidence:
+              | {
+                  baseline_rate: Decimal;
+                  change_points: Decimal;
+                  historical_high: Decimal | null;
+                  historical_low: Decimal | null;
+                  label: Text;
+                  position: "inside" | "below" | "above" | "none";
+                  resulting_rate: Decimal;
+                }
+              | {
+                  baseline: Decimal;
+                  change_percent: Decimal;
+                  historical_high: Decimal | null;
+                  historical_low: Decimal | null;
+                  label: Text;
+                  position: "inside" | "below" | "above" | "none";
+                  resulting: Decimal;
+                };
             id: Text;
             name: Text;
             ramp_months: number;
@@ -273,16 +283,26 @@ export type TieoutReport = {
           },
           ...{
             affects: Text;
-            driver: "win_rate";
-            evidence: {
-              baseline_rate: Decimal;
-              change_points: Decimal;
-              historical_high: Decimal | null;
-              historical_low: Decimal | null;
-              label: Text;
-              position: "inside" | "below" | "above" | "none";
-              resulting_rate: Decimal;
-            };
+            driver: "win_rate" | "won_arr";
+            evidence:
+              | {
+                  baseline_rate: Decimal;
+                  change_points: Decimal;
+                  historical_high: Decimal | null;
+                  historical_low: Decimal | null;
+                  label: Text;
+                  position: "inside" | "below" | "above" | "none";
+                  resulting_rate: Decimal;
+                }
+              | {
+                  baseline: Decimal;
+                  change_percent: Decimal;
+                  historical_high: Decimal | null;
+                  historical_low: Decimal | null;
+                  label: Text;
+                  position: "inside" | "below" | "above" | "none";
+                  resulting: Decimal;
+                };
             id: Text;
             name: Text;
             ramp_months: number;

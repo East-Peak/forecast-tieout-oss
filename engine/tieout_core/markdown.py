@@ -938,6 +938,10 @@ def _rate(x: str) -> str:
     return f"{float(x):.2%}"
 
 
+def _target(i: dict) -> str:
+    return _rate(i["target"]) if i["driver"] == "win_rate" else _usd(i["target"], True)
+
+
 def _driver_actions(s: dict) -> list[str]:
     if "unavailable" in s:
         return [
@@ -954,7 +958,7 @@ def _driver_actions(s: dict) -> list[str]:
          f"{s['removal_label']}, {NEXT}"],
         [
             (i["name"], i["slice"]["label"], i["start"], i["ramp_months"],
-             _rate(i["target"]), _usd(i["removal_value"][REST], True),
+             _target(i), _usd(i["removal_value"][REST], True),
              _usd(i["removal_value"][NEXT], True))
             for i in s["items"]
         ],
@@ -962,13 +966,17 @@ def _driver_actions(s: dict) -> list[str]:
     out += [s["removal_note"], ""]
     for i in s["items"]:
         e = i["evidence"]
-        out += [
-            (
-                f"- **{i['name']}:** {i['affects']} Pooled baseline {_rate(e['baseline_rate'])}, "
-                f"{e['change_points']} points, resulting {_rate(e['resulting_rate'])}: "
-                f"{e['label']}."
+        if i["driver"] == "win_rate":
+            said = (
+                f"Pooled baseline {_rate(e['baseline_rate'])}, "
+                f"{e['change_points']} points, resulting {_rate(e['resulting_rate'])}"
             )
-        ]
+        else:
+            said = (
+                f"Pooled baseline {_usd(e['baseline'], True)}, "
+                f"{e['change_percent']}%, resulting {_usd(e['resulting'], True)}"
+            )
+        out += [f"- **{i['name']}:** {i['affects']} {said}: {e['label']}."]
     out += [""]
     j, rec = s["joint_gain"], s["reconciliation"]
     out += _table(

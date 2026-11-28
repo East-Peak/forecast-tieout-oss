@@ -260,6 +260,16 @@ def plan_inputs(g: Ground, plan: Plan) -> tuple[tuple[Member, ...], tuple[Inflow
 ACTIONS_STEP = "Driver actions, together"
 
 
+def _drawn_actions(plan: Plan) -> str:
+    """What the simulation says of the actions it draws under: their win rates while that is
+    all they change."""
+    if not plan.actions:
+        return ""
+    if all(a.driver == "win_rate" for a in plan.actions):
+        return ", and the driver actions' win rates"
+    return ", and the driver actions' changes"
+
+
 def plan_section(
     g: Ground, scen: Scenario, plan: Plan, path: Path, lift: Lift | None = None
 ) -> tuple[dict, list[Check]]:
@@ -446,7 +456,7 @@ def plan_section(
             "what_is_drawn": "deal outcomes"
             + (", future departures" if adopted else "")
             + ", with the planned hires and program pipeline in the scenario"
-            + (", and the driver actions' win rates" if plan.actions else ""),
+            + _drawn_actions(plan),
         },
     }
     # Goal 3A: the with-plan figures a screen shows, by month, by quarter and for the year

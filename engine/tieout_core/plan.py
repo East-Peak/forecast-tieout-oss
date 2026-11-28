@@ -9,8 +9,8 @@ each in file order.
 
 An action is a named change to one driver in one slice (the company, or one
 segment): a stable id, a start month, a ramp in months (0 is immediate) and a
-target value. Only the win rate can be acted on so far, and its target is a
-probability. An action changes the pipeline created from its start, so it is
+target value. Only the win rate and the won ARR per win can be acted on so far; a win rate's
+target is a probability and a size's is dollars per won deal, read against the pooled mean. An action changes the pipeline created from its start, so it is
 not an item to apply in turn: the joint effect of all the actions is valued
 together, on top of the hires and programs. Two actions on one driver may not
 touch the same slice, and the company touches every segment.
@@ -36,13 +36,13 @@ import yaml
 from .fiscal import Window, add_months
 from .forecast import Inflow
 from .roster import Member
-from .worksheet_rules import WIN_RATE
+from .worksheet_rules import WIN_RATE, WON_ARR
 
 DEFAULT_PROGRAM_RAMP_MONTHS = 3
 REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
 COMPANY = "company"  # an action's slice when it is not one segment's
-ACTION_DRIVERS = (WIN_RATE,)
+ACTION_DRIVERS = (WIN_RATE, WON_ARR)
 MAX_RAMP_MONTHS = 60  # five years: longer than any horizon a plan is read over
 
 
@@ -336,7 +336,10 @@ def _action(raw: dict, as_of: date, segments: set[str], where: str) -> PlanActio
         )
     driver = raw.get("driver")
     if driver not in ACTION_DRIVERS:
-        raise refuse("driver", "Only the win rate can be changed by an action so far.")
+        raise refuse(
+            "driver",
+            "Only the win rate and won ARR per win can be changed by an action so far.",
+        )
     where_slice = str(raw.get("slice") or "").strip()
     if where_slice != COMPANY and where_slice not in segments:
         names = ", ".join(segment_words(s) for s in sorted(segments))
@@ -354,16 +357,7 @@ def _action(raw: dict, as_of: date, segments: set[str], where: str) -> PlanActio
             "ramp",
             f"The ramp must be a whole number of months, from 0 to {MAX_RAMP_MONTHS}.",
         )
-    try:
-        target = _decimal(raw.get("target"), "target", where)
-    except ValueError:
-        raise refuse("target", "The target win rate must be a number.") from None
-    if not 0 <= target <= 1:
-        shown = (target * 100).normalize()
-        raise refuse(
-            "target",
-            f"The target win rate must be between 0% and 100%, not {shown:f}%.",
-        )
+    target = _target(raw.get("target"), driver, where, refuse)
     try:
         start = _month(raw.get("start"), as_of, where)
     except ValueError:
@@ -395,6 +389,35 @@ def _action(raw: dict, as_of: date, segments: set[str], where: str) -> PlanActio
     )
 
 
+def _target(value, driver: str, where: str, refuse) -> Decimal:
+    """A target in the driver's own terms, or the refusal in a person's words."""
+    noun = TARGET_NOUN[driver]
+    try:
+        target = _decimal(value, "target", where)
+    except ValueError:
+        raise refuse(
+            "target", f"The target {noun} must be a number{_OF[driver]}."
+        ) from None
+    if driver == WIN_RATE and not 0 <= target <= 1:
+        shown = (target * 100).normalize()
+        raise refuse(
+            "target",
+            f"The target win rate must be between 0% and 100%, not {shown:f}%.",
+        )
+    if driver != WIN_RATE and target < 0:
+        raise refuse(
+            "target",
+            f"The target {noun} must be zero or more {_UNIT[driver]}, not -${-target.normalize():f}.",
+        )
+    return target
+
+
+TARGET_NOUN = {WIN_RATE: "win rate", WON_ARR: "won ARR per win"}
+_OF = {WIN_RATE: "", WON_ARR: " of dollars"}
+_UNIT = {WON_ARR: "dollars"}
+NOUN = {WIN_RATE: "win rate", WON_ARR: "size of a won deal"}
+
+
 def _refuse_overlap(actions: list[PlanAction], where: str) -> None:
     """The last action added may not change a driver where an earlier one already does: the
     same segment, or the company against any segment (it touches every one)."""
@@ -416,7 +439,8 @@ def _refuse_overlap(actions: list[PlanAction], where: str) -> None:
 
 def _both(old: PlanAction, new: PlanAction) -> str:
     """What the two overlapping actions change, in words: the same slice, or the company and a segment in it."""
+    noun = NOUN[new.driver]
     if old.segment == new.segment:
-        return f"both change the win rate for {old.slice_label}"
+        return f"both change the {noun} for {old.slice_label}"
     segment = old.slice_label if old.segment is not None else new.slice_label
-    return f"one changes the win rate for the whole company, which includes {segment}"
+    return f"one changes the {noun} for the whole company, which includes {segment}"
