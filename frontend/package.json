@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "sync:data": "node ./scripts/sync-data.mjs",
+    "prepare:lanes": "node ./scripts/prepare-lanes-prototype.mjs",
     "editor:assets": "node ./scripts/build-editor-assets.mjs",
     "dev": "npm run sync:data && npm run editor:assets && vite",
     "build": "npm run sync:data && npm run editor:assets && tsc && vite build",
