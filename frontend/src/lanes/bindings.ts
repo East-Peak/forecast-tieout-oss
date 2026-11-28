@@ -129,6 +129,8 @@ export const FRAME = {
   caveatBenchmarks: text("lanes.caveat.benchmarks", "lanes", "/caveats/0"),
   caveatWinRate: text("lanes.caveat.win-rate", "lanes", "/caveats/1"),
   caveatPooled: text("lanes.caveat.pooled", "lanes", "/caveats/2"),
+  /** the core adds this one only where the plan carries a win-rate action */
+  caveatActions: text("lanes.caveat.actions", "lanes", "/caveats/3"),
   unavailable: text("lanes.unavailable", "lanes", "/unavailable"),
   periodKey: text("lanes.period.key", "lanes", "/key"),
   periodStart: date("lanes.period.start", "lanes", "/start"),
@@ -140,6 +142,8 @@ export const FRAME = {
   panelPeriodStanding: text("lanes.panel.period.standing", "lanes", "/standing"),
   panelAsOf: date("lanes.panel.as-of", "lanes", "/as_of"),
   panelBasisLabel: text("lanes.panel.plan-basis.label", "lanes", "/plan_basis/label"),
+  /** the same caveat in the win-rate panel's "what it means", where a plan's win-rate action changes the forecast shown */
+  panelCaveatActions: text("lanes.panel.caveat.actions", "lanes", "/caveats/3"),
 } as const;
 
 /** A column's head, read from `/columns/{key=…}`; the panel's copy names the goal as well. */

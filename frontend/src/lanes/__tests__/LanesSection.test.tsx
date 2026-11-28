@@ -123,7 +123,8 @@ describe("the committed list and the independent expectations name the same bind
     }
     const listed = new Set(SECTION_LIST.map((b) => b.id));
     // no committed file is unavailable, and every deal's segment is a lane of the file: both are drawn from the list when they occur
-    const alsoNamed = new Set(["lanes.unavailable", "record.segment"]);
+    // (and the core's caveat for a plan's win-rate action, which only a plan with an action has: ActionsLanes.test.tsx holds it)
+    const alsoNamed = new Set(["lanes.unavailable", "record.segment", "lanes.caveat.actions", "lanes.panel.caveat.actions"]);
     expect([...named, ...alsoNamed].sort()).toEqual([...listed].sort());
   }, 120_000);
 

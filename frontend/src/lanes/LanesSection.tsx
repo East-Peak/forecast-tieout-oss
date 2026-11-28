@@ -86,7 +86,7 @@ function Honesty({ lanes, basis, owners }: { lanes: LanesFile; basis: Loaded<Bas
       {open ? (
         <div id={panel} className="mt-2 grid items-start gap-x-8 gap-y-4 rounded-ft border border-slate-200 bg-white p-4 leading-snug text-slate-700 shadow-ft lg:grid-cols-2" data-testid="basis-detail">
           <ul className="space-y-3">
-            {(["caveatBenchmarks", "caveatWinRate", "caveatPooled"] as const).slice(0, lanes.caveats.length).map((key) => (
+            {(["caveatBenchmarks", "caveatWinRate", "caveatPooled", "caveatActions"] as const).slice(0, lanes.caveats.length).map((key) => (
               <li key={key}><Bound binding={FRAME[key]} /></li>
             ))}
           </ul>

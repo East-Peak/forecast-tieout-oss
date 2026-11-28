@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
-import { Bound } from "../binding/Bound";
+import { Bound, useBindingContext } from "../binding/Bound";
+import { useYourPlan } from "../editor/YourPlanContext";
+import { YOUR_PLAN } from "../editor/yourPlan";
+import { winRateReading } from "../editor/winRate";
 import { BASIS, FRAME, HEAD, LANE } from "./bindings";
 import type { CellSource } from "./bindings";
 import { PARTS } from "./definitions";
@@ -101,6 +104,37 @@ function GoalSource({ source, row, rowPointer, basis }: { source: CellSource; ro
           <Bound binding={BASIS.ownerCaveat} />
         </p>
       ) : null}
+    </section>
+  );
+}
+
+/**
+ * "Plan an action here", on a win-rate cell of the company or a segment where the plan editor is: it opens a draft action on that
+ * slice, its target at the pooled baseline (the cell's own number is a dated cohort rate, not the driver the model changes), and
+ * the panel steps aside for the form. Nothing is applied until the visitor applies it.
+ */
+function PlanAnAction({ source, column, row, onClose }: { source: CellSource; column: ColumnKey; row: Row; onClose: () => void }) {
+  const ctx = useBindingContext();
+  const yourPlan = useYourPlan();
+  const baseline = winRateReading(ctx.files.report).baseline;
+  const slice = row.kind === "company" ? "company" : row.kind === "segment" ? row.path[1] : undefined;
+  if (source !== "lanes" || column !== "win_rate" || !yourPlan?.desktop || baseline === null || slice === undefined) return null;
+  return (
+    <section className="mt-5" data-testid="plan-action" data-slice={slice}>
+      <button
+        type="button"
+        onClick={() => {
+          yourPlan.store.draftAction(ctx.company, { slice, target: baseline, origin: "grid" });
+          ctx.choose?.(ctx.company, YOUR_PLAN);
+          onClose();
+        }}
+        className="rounded-ft border border-ft-accent bg-white px-3 py-1.5 text-xs font-semibold text-ft-accent hover:bg-ft-accentSoft"
+      >
+        Plan an action here
+      </button>
+      <p className="mt-1.5 text-[11px] leading-snug text-slate-500">
+        The target starts at the pooled baseline, to change: this cell&apos;s number is a dated cohort rate, not the win rate the model changes.
+      </p>
     </section>
   );
 }
@@ -209,9 +243,15 @@ export function CellPanel({ source, lanes, basis, records, row, rowPointer, peri
         <Parts source={source} column={column} cell={cell} at={at} />
         <Contributions source={source} column={column} cell={cell} at={at} />
         {actualOnly ? null : <GoalSource source={source} row={row} rowPointer={rowPointer} basis={basis} />}
+        <PlanAnAction source={source} column={column} row={row} onClose={onClose} />
         <section className="mt-5">
           <h4 className="text-xs font-semibold uppercase text-slate-500">What it means</h4>
           <p className="mt-1.5 text-xs leading-snug text-slate-700"><Bound binding={HEAD.definition} row={columnRow} /></p>
+          {column === "win_rate" && lanes.caveats.length > 3 ? (
+            <p className="mt-1.5 text-xs leading-snug text-slate-700" data-testid="panel-actions-caveat">
+              <Bound binding={FRAME.panelCaveatActions} />
+            </p>
+          ) : null}
           <p className="mt-1.5 text-[11px] text-slate-500">
             Basis: <Bound binding={FRAME.panelBasisLabel} />
           </p>

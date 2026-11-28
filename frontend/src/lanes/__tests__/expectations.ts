@@ -126,7 +126,7 @@ export function build(f: Files, state: State, options: { panelOnly?: boolean } =
     c.add("lanes.period.end", fmt.date(period.end), `/periods/${state.period}`);
     c.add("lanes.period.standing", period.standing, `/periods/${state.period}`);
     if (state.basisOpen) {
-      lanes.caveats.forEach((text, i) => c.add(["lanes.caveat.benchmarks", "lanes.caveat.win-rate", "lanes.caveat.pooled"][i], text));
+      lanes.caveats.forEach((text, i) => c.add(["lanes.caveat.benchmarks", "lanes.caveat.win-rate", "lanes.caveat.pooled", "lanes.caveat.actions"][i], text));
       f.basis.schedule.forEach((q, i) => {
         c.add("basis.schedule.quarter", q.quarter, `/schedule/${i}`);
         c.add("basis.schedule.bookings", fmt.usdShort(q.bookings), `/schedule/${i}`);
@@ -214,6 +214,8 @@ function panel(c: Collector, f: Files, state: State, rows: RowRef[]): void {
 
   c.add(p("actual"), shownActual(column, cell), at);
   c.add("lanes.panel.column.definition", head.definition, `/columns/{key=${column}}`);
+  // the core's caveat for a plan's win-rate action, where the file has one, is said with the win rate's own meaning
+  if (column === "win_rate" && f.lanes.caveats.length > 3) c.add("lanes.panel.caveat.actions", f.lanes.caveats[3]);
   if (!single(cell, column)) {
     c.add(p("forecast"), shownForecast(column, cell), at);
     if (cell.none_because !== "no_goal") c.add(p("goal"), shownGoal(column, cell), at);
