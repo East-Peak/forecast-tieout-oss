@@ -97,6 +97,10 @@ class Frame:
     cycle_mean: Fraction | None = (
         None  # the same, exactly: a cycle target is read against it
     )
+    # each segment's own won amounts over its mean, for the draws of the simulation
+    amounts: (
+        Mapping[str, tuple[tuple[Decimal, ...], tuple[Decimal, ...] | None]] | None
+    ) = None
 
 
 @dataclass(frozen=True)
@@ -256,6 +260,45 @@ def price_index(
     return out
 
 
+MIN_OWN_AMOUNTS = 5  # won amounts a segment needs to be drawn from its own
+
+
+def segment_amounts(new, segments: Sequence[str]) -> dict:
+    """For each segment with at least ``MIN_OWN_AMOUNTS`` won amounts among the pooled samples, those
+    amounts over their (weighted) mean with their weights: a win in the segment draws its size from
+    these and books it at the segment's price, so the spread between segments is not counted twice
+    (the pooled amounts carry it already). A segment with fewer, or none, draws the pooled amounts."""
+    if not new.won_arr_segments or len(new.won_arr_segments) != len(
+        new.won_arr_samples
+    ):
+        return {}
+    out = {}
+    for s in segments:
+        at = [
+            k for k, x in enumerate(new.won_arr_segments) if rules.segment_key(x) == s
+        ]
+        if len(at) < MIN_OWN_AMOUNTS:
+            continue
+        amounts = [new.won_arr_samples[k] for k in at]
+        weights = (
+            None
+            if new.won_arr_weights is None
+            else [new.won_arr_weights[k] for k in at]
+        )
+        total = sum(weights, ZERO) if weights else Decimal(len(amounts))
+        mean = (
+            sum((a * w for a, w in zip(amounts, weights)), ZERO) / total
+            if weights
+            else sum(amounts, ZERO) / total
+        )
+        if total > 0 and mean > 0:
+            out[s] = (
+                tuple(a / mean for a in amounts),
+                None if weights is None else tuple(weights),
+            )
+    return out
+
+
 def build_frame(
     g: Ground,
     shares: Mapping[str, Decimal],
@@ -288,6 +331,7 @@ def build_frame(
             [(w.end - g.as_of).days for w in g.windows],
         ),
         exact_mean(g.model.new_pipeline.timing),
+        segment_amounts(g.model.new_pipeline, segments),
     )
 
 
@@ -390,6 +434,7 @@ def effect(
         creation,
         cycles,
         frame.transport,
+        frame.amounts or {},
     )
     return Effect(
         frame, baseline, as_of, tuple(actions), changes, sizes, creation, cycles, lift

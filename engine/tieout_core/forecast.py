@@ -103,6 +103,11 @@ class Lift:
     # timing those lags are moved over (see ``cycle``)
     cycle: Mapping[str, Sequence[Decimal]] = field(default_factory=dict)
     transport: Transport | None = field(default=None, compare=False, repr=False)
+    # each segment's own won amounts relative to its mean, with their weights (None: equal), for the
+    # segments that have enough to draw from; the others draw the pooled amounts
+    amounts: Mapping[str, tuple[tuple[Decimal, ...], tuple[Decimal, ...] | None]] = (
+        field(default_factory=dict, compare=False, repr=False)
+    )
     _memo: dict = field(default_factory=dict, init=False, compare=False, repr=False)
 
     def __bool__(self) -> bool:
@@ -701,6 +706,18 @@ def _price_grid(index, landing_of: np.ndarray, origin_of: np.ndarray) -> np.ndar
     return grid
 
 
+def _own_amounts(found):
+    """A segment's relative won amounts and their draw probabilities, or None to draw the pooled ones."""
+    if not found:
+        return None
+    amounts, weights = found
+    rel = np.asarray([float(x) for x in amounts])
+    if weights is None:
+        return rel, np.full(len(rel), 1 / len(rel))
+    p = np.asarray([float(w) for w in weights])
+    return rel, p / p.sum()
+
+
 def _moved_lags(lift: Lift, moves, timing: Timing):
     """For a segment whose cycle a plan changes: which scale each creation day has (0 is none) and a
     table of the lags at each scale, row 0 being the timing's own, every one rounded up exactly."""
@@ -757,11 +774,15 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -
         weights = np.asarray([float(w) for w in new.won_arr_weights])
         weights = weights / weights.sum()
     base = float(new.win_rate)
+    mean_won = float(
+        pool @ weights
+    )  # the pooled amounts' mean, which a relative draw scales
     tail = (
         int(landing_of.max()) + 1
     )  # the price row of a win landing after the last month shown
     for i, name in enumerate(names):
         grid = _price_grid(lift.price.get(name, {}), landing_of, origin_of)
+        own = _own_amounts(lift.amounts.get(name))
         moves = lift.cycle.get(name)
         lags = None
         if moves is not None and any(moves[:span]) and lift.transport is not None:
@@ -779,7 +800,10 @@ def _draw_lifted(rng, new, lift: Lift, deals, span: int, book, organic, extra) -
         created = np.repeat(day_of + 1, repeats)
         which = _draw_index(rng, new.timing, len(rows))
         days = np.asarray(new.timing.samples)[which]
-        sizes = pool[rng.choice(len(pool), size=len(rows), p=weights)]
+        if own is None:
+            sizes = pool[rng.choice(len(pool), size=len(rows), p=weights)]
+        else:  # the segment's own amounts, relative to its mean, at the pooled mean
+            sizes = own[0][rng.choice(len(own[0]), size=len(rows), p=own[1])] * mean_won
         landing = created + days
         land = landing_of[np.minimum(landing, len(landing_of)) - 1]
         land = np.where(

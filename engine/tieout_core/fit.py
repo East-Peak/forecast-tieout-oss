@@ -176,6 +176,8 @@ class NewPipeline:
     # Weight of each won_arr_sample (None: equal). Recency weights each win by
     # its day's incidence increment, so censoring does not favor quick wins.
     won_arr_weights: tuple[Decimal, ...] | None = None
+    # The deal's segment (as recorded) behind each won_arr_sample, so a segment can be drawn from its own.
+    won_arr_segments: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -531,6 +533,7 @@ def _new_pipeline_recency(
     return NewPipeline(
         ci.value, ci.timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins), n,
         ci.effective_n if n else 0.0, created_recent, params.trailing_days, won_weights,
+        tuple(d.segment for d in wins),
     )  # fmt: skip
 
 
@@ -632,7 +635,8 @@ def _new_pipeline(
     )
     return NewPipeline(
         win_rate, timing, mean_won, mean_created, per_day, tuple(d.arr for d in wins), n,
-        float(n), created_recent, params.trailing_days,
+        float(n), created_recent, params.trailing_days, None,
+        tuple(d.segment for d in wins),
     )  # fmt: skip
 
 
