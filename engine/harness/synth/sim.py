@@ -17,7 +17,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date
 from functools import cache
-from math import ceil, exp
+from math import exp, floor
 
 import numpy as np
 
@@ -150,6 +150,7 @@ class Opp:
     list_cents: int
     cents: int
     base_days: tuple
+    seller: float
     will_win: bool
     last_stage: int
     r: object
@@ -168,6 +169,9 @@ class Opp:
     whale: bool = False
     close_day: int = 0
     mirror: int | None = None
+    orphan: bool = False
+    orphaned: bool = False
+    key: tuple = ()
 
 
 class Simulation:
@@ -176,13 +180,21 @@ class Simulation:
         params: CompanyParams,
         seed: int,
         intervention: Intervention,
-        extract_days: tuple[int, ...] = (),
+        replicate: int = 0,
+        fork_day: int | None = None,
     ):
-        self.p, self.streams, self.iv = params, Streams(seed), intervention
+        """`replicate` and `fork_day` re-key the randomness of everything created on or
+        after `fork_day` (see rng.py); with no fork day the company is the plain seed."""
+        if params.routing_priority != "oldest_first":
+            raise ValueError("routing_priority: only 'oldest_first' is implemented")
+        self.p, self.iv = params, intervention
+        self.streams = Streams(seed, replicate, fork_day)
         self.d0, self.d1 = day_of(params.start), day_of(params.end)
         self.m0 = params.start.year * 12 + params.start.month - 1
         self.n_months = params.end.year * 12 + params.end.month - self.m0
-        self.people = build_people(params, self.streams, intervention, self.d1)
+        self.people = build_people(
+            params, self.streams, intervention, self.d1, fork_day
+        )
         self.pix = {x.pid: i for i, x in enumerate(self.people)}
         self.seg_spec = {s.name: s for s in params.segments}
         self.ceiling = {s.team: s.ceiling for s in params.segments}
@@ -240,9 +252,18 @@ class Simulation:
         }
         self.exits = np.zeros((*shape, 2), dtype=np.int64)
         self.sourced = np.zeros((len(self.people), self.n_months), dtype=np.int64)
+        team_shape = (len(self.teams), self.n_months)
+        # per team and month: the peak daily carrying capacity, peak effective and employed AEs, summed effective AEs
+        self.cap_max = np.zeros(team_shape, dtype=np.int64)
+        self.emp_max = np.zeros(team_shape, dtype=np.int64)
+        self.eff_max = np.zeros(team_shape)
+        self.eff_sum = np.zeros(team_shape)
         self.open_n = [0] * len(self.lane_defs)
         self.team_open = dict.fromkeys(self.teams, 0)
         self.ae_open: dict[str, list[Opp]] = {x.pid: [] for x in self.people}
+        self.orphans: dict[str, list[Opp]] = {t: [] for t in self.teams}
+        self.limit: dict[str, float] = {}
+        self.cap: dict[str, int] = {}
         self.ev: dict[int, list] = defaultdict(list)
         self.reoffers: dict[int, list[Lead]] = defaultdict(list)
         self.leaves: dict[int, list[Person]] = defaultdict(list)
@@ -253,14 +274,9 @@ class Simulation:
         self.opps: list[Opp] = []
         self.accounts: list[Account] = []
         self.counter: dict[str, int] = defaultdict(int)
-        self.turned_away = 0
         self.whale: Opp | None = None
+        self.whale_key: tuple | None = None
         self.campaign_spend, self.lam = self._schedules()
-        self.no_delete = [
-            (a + 1, day_of(_month_end(a)))
-            for a in extract_days
-            if a != day_of(_month_end(a))
-        ]
         self.arr: dict[str, list[list[Lead]]] = {}
 
     # ---- bookkeeping ---------------------------------------------------
@@ -272,19 +288,48 @@ class Simulation:
         d = date.fromordinal(day)
         return d.year * 12 + d.month - 1 - self.m0
 
-    def ramped(self, team: str, day: int) -> list[Person]:
-        return [x for x in self.aes[team] if x.ramp_from <= day < x.leave_day]
+    def team_of(self, opp: Opp) -> str:
+        return self.seg_spec[opp.seg].team
 
-    def room(self, team: str, day: int) -> int:
-        return self.ceiling[team] * len(self.ramped(team, day)) - self.team_open[team]
+    def room(self, team: str) -> int:
+        return self.cap[team] - self.team_open[team]
 
-    def best_ae(self, team: str, day: int) -> Person | None:
+    def ramped(self, team: str) -> list[Person]:
+        """AEs carrying deals today (employed and past the start of their carrying ramp)."""
+        return [x for x in self.aes[team] if x.pid in self.limit]
+
+    def best_ae(self, team: str) -> Person | None:
         pool = [
-            x
-            for x in self.ramped(team, day)
-            if len(self.ae_open[x.pid]) < self.ceiling[team]
+            x for x in self.ramped(team) if len(self.ae_open[x.pid]) < self.limit[x.pid]
         ]
         return min(pool, key=lambda x: (len(self.ae_open[x.pid]), x.idx), default=None)
+
+    def lightest_ae(self, team: str) -> Person | None:
+        """Whoever carries the fewest deals: an inheritor may go beyond their ceiling."""
+        return min(
+            self.ramped(team),
+            key=lambda x: (len(self.ae_open[x.pid]), x.idx),
+            default=None,
+        )
+
+    def _day_state(self, day: int) -> None:
+        """Carrying capacity today: each AE's ceiling scaled by their tenure-based carrying ramp."""
+        p, m = self.p, self.mon(day)
+        self.limit = {}
+        for ti, team in enumerate(self.teams):
+            eff, emp = 0.0, 0
+            for ae in self.aes[team]:
+                if ae.start <= day < ae.leave_day:
+                    emp += 1
+                    c = ae.carry_factor(day, p.carry_ramp_start, p.carry_ramp_days)
+                    if c > 0:
+                        self.limit[ae.pid] = self.ceiling[team] * c
+                        eff += c
+            self.cap[team] = floor(self.ceiling[team] * eff + 1e-9)
+            self.cap_max[ti, m] = max(self.cap_max[ti, m], self.cap[team])
+            self.emp_max[ti, m] = max(self.emp_max[ti, m], emp)
+            self.eff_max[ti, m] = max(self.eff_max[ti, m], eff)
+            self.eff_sum[ti, m] += eff
 
     def _schedules(self):
         p, spend, lam = self.p, [], []
@@ -304,7 +349,8 @@ class Simulation:
                         * p.spend_season.get(c.source, (1.0,) * 12)[m0]
                     )
                     amount *= exp(
-                        0.05 * self.streams.rng("spend", ci, mi).standard_normal()
+                        0.05
+                        * self.streams.rng("spend", ci, mi, day=first).standard_normal()
                     )
                     for step in p.spend_steps if c.source != "Inbound" else ():
                         if first >= day_of(step.on):
@@ -332,6 +378,7 @@ class Simulation:
     def run(self) -> "Simulation":
         for day in range(self.d0, self.d1 + 1):
             self.arr = {t: [[] for _ in ls] for t, ls in self.team_lanes.items()}
+            self._day_state(day)
             for person in self.leaves.pop(day, []):
                 self.depart(person, day)
             for kind, opp, ver, arg in self.ev.pop(day, []):
@@ -341,14 +388,29 @@ class Simulation:
                 self.offer(lead, day, rejected=lead.r[8] >= self.p.p_reoffer_fit)
             self.marketing(day)
             self.outbound(day)
-            self.direct(day)
+            self.partners(day)
             self.route(day)
+            self.self_source(day)
             if date.fromordinal(day + 1).day == 1 or day == self.d1:
                 m = self.mon(day)
                 self.F["open_end"][:, m] = self.open_n
                 for t, ls in self.team_lanes.items():
                     self.F["queue_end"][ls, m] = self.queues[t].sizes()
         return self
+
+    def fingerprint(self) -> str:
+        """A hash of every event the run produced, for the causal-inertness test."""
+        import hashlib
+
+        h = hashlib.sha256()
+        for lead in self.leads:
+            h.update(repr((lead.key, lead.rows, lead.conv)).encode())
+        for o in self.opps:
+            h.update(repr((o.n, o.images, o.owner_rows, o.dead)).encode())
+        for name in sorted(self.F):
+            h.update(self.F[name].tobytes())
+        h.update(self.exits.tobytes())
+        return h.hexdigest()
 
     # ---- demand --------------------------------------------------------
     def _new_lead(
@@ -375,22 +437,32 @@ class Simulation:
     def _row(self, lead: Lead, day: int, sec: int, name: str, new, by: str) -> None:
         lead.rows.append((self.nid("lhist"), ts(day, sec), name, new, by))
 
+    def _consider_whale(self, key: tuple, lane: int, day: int) -> None:
+        """The very large deal is the first Enterprise demand that fits, whoever ends up selling it."""
+        if (
+            self.whale_key is None
+            and self.lane_defs[lane][0] == "Enterprise"
+            and day >= day_of(self.p.whale_after)
+        ):
+            self.whale_key = key
+
     def marketing(self, day: int) -> None:
         p, mi, dim = self.p, self.mon(day), month_days(day)
         for ci, c in enumerate(p.campaigns):
             lam = self.lam[ci][mi] / dim
             if lam <= 0:
                 continue
-            n = poisson_quantile(self.streams.rng("arr", ci, day).random(), lam)
+            n = poisson_quantile(self.streams.uniform("arr", ci, day, day=day), lam)
             n_clutter = poisson_quantile(
-                self.streams.rng("clut", ci, day).random(), lam * p.clutter_lead_share
+                self.streams.uniform("clut", ci, day, day=day),
+                lam * p.clutter_lead_share,
             )
             numbered = [("mql", k) for k in range(n)] + [
                 ("clutter", k) for k in range(n_clutter)
             ]
             for kind, k in numbered:
                 key = ("lead", ci, day, k, kind)
-                r = self.streams.rng(*key).random(12)
+                r = self.streams.rng(*key, day=day).random(12)
                 seg = pick(c.segment_mix, r[0])
                 lost_attribution = kind == "mql" and r[3] < p.p_unattributed
                 lane = self.lane_ix[(seg, "Unknown" if lost_attribution else c.source)]
@@ -426,15 +498,31 @@ class Simulation:
         for b in self.bdrs:
             lam = self.p.bdr_leads_per_day[b.segment] * b.ramp_factor(day)
             for k in range(
-                poisson_quantile(self.streams.rng("barr", b.pid, day).random(), lam)
+                poisson_quantile(self.streams.uniform("barr", b.pid, day, day=day), lam)
             ):
                 key = ("blead", b.pid, day, k)
-                r = self.streams.rng(*key).random(12)
+                r = self.streams.rng(*key, day=day).random(12)
                 lane = self.lane_ix[(b.segment, "Outbound")]
                 lead = self._new_lead(
                     key, lane, "outbound", day, None, "Outbound", b, r, bdr=b
                 )
                 self.offer(lead, day, rejected=r[2] < self.p.reject_fit["Outbound"])
+
+    def partners(self, day: int) -> None:
+        """Partner referrals are leads offered to sales like any other demand (no MQL date)."""
+        p = self.p
+        for si, spec in enumerate(p.segments):
+            lam = p.partner_per_day[spec.name] * (1 + 0.2 * (day - self.d0) / 365.25)
+            for k in range(
+                poisson_quantile(self.streams.uniform("parr", si, day, day=day), lam)
+            ):
+                key = ("plead", si, day, k)
+                r = self.streams.rng(*key, day=day).random(12)
+                lane = self.lane_ix[(spec.name, "Partner")]
+                lead = self._new_lead(
+                    key, lane, "partner", day, None, "Partner", self.mkt, r
+                )
+                self.offer(lead, day, rejected=r[2] < p.reject_fit["Partner"])
 
     def offer(self, lead: Lead, day: int, rejected: bool) -> None:
         """One offer of a lead to sales: a demand episode. A fit rejection leaves at once."""
@@ -450,6 +538,8 @@ class Simulation:
         self.F["arrivals"][lead.lane, mi] += 1
         team = self.seg_spec[self.lane_defs[lead.lane][0]].team
         if not rejected:
+            if lead.offers == 1:
+                self._consider_whale(lead.key, lead.lane, day)
             self.arr[team][self.team_lanes[team].index(lead.lane)].append(lead)
             return
         by = self.aes[team][0].uid
@@ -462,13 +552,11 @@ class Simulation:
 
     def route(self, day: int) -> None:
         for team in self.team_lanes:
-            admitted, expired = self.queues[team].step(
-                self.room(team, day), self.arr[team]
-            )
-            for pos, leads in enumerate(admitted):
+            admitted, expired = self.queues[team].step(self.room(team), self.arr[team])
+            for leads in admitted:
                 for lead in leads:
                     self.admit(lead, day)
-            for pos, leads in enumerate(expired):
+            for leads in expired:
                 for lead in leads:
                     by = self.mkt.uid
                     self._row(lead, day, T_EXPIRE, "Disposition__c", "Expired", by)
@@ -484,7 +572,7 @@ class Simulation:
 
     def admit(self, lead: Lead, day: int) -> None:
         team = self.seg_spec[self.lane_defs[lead.lane][0]].team
-        ae = self.best_ae(team, day)
+        ae = self.best_ae(team)
         assert ae is not None, "room without an AE who can carry another deal"
         opp = self.create_opp(
             day, lead.lane, ae, lead.bdr, lead.key, lead.campaign, lead.leadsource, lead
@@ -493,46 +581,30 @@ class Simulation:
         self._row(lead, day, T_ADMIT + 1, "OwnerId", ae.uid, ae.uid)
         lead.conv = (ts(day, T_ADMIT + 2), day, opp.n, opp.account.n)
 
-    def direct(self, day: int) -> None:
-        """Partner referrals and AE self-sourcing become opportunities at once, if someone has room."""
-        p = self.p
-        for si, spec in enumerate(p.segments):
-            lam = p.partner_per_day[spec.name] * (1 + 0.2 * (day - self.d0) / 365.25)
-            for k in range(
-                poisson_quantile(self.streams.rng("parr", si, day).random(), lam)
-            ):
-                ae = self.best_ae(spec.team, day)
-                if ae is None:
-                    self.turned_away += 1
-                    continue
-                self.direct_opp(
-                    day,
-                    self.lane_ix[(spec.name, "Partner")],
-                    ae,
-                    None,
-                    ("partner", si, day, k),
-                    "Partner",
-                )
-            for ae in self.ramped(spec.team, day):
-                lam = p.ae_self_per_day * ae.ramp_factor(day)
-                for k in range(
-                    poisson_quantile(
-                        self.streams.rng("sarr", ae.pid, day).random(), lam
-                    )
-                ):
-                    if len(self.ae_open[ae.pid]) < spec.ceiling:
-                        self.direct_opp(
-                            day,
-                            self.lane_ix[(spec.name, "SelfSourced")],
-                            ae,
-                            ae,
-                            ("self", ae.pid, day, k),
-                            "Self-Sourced",
-                        )
+    def self_source(self, day: int) -> None:
+        """AEs find their own deals, after the day's queued demand is routed, only with room.
 
-    def direct_opp(self, day, lane, owner, sourcing, key, leadsource) -> None:
-        self.F["arrivals"][lane, self.mon(day)] += 1
-        self.create_opp(day, lane, owner, sourcing, key, None, leadsource, None)
+        The rate falls as the AE fills up: lambda = rate * sourcing ramp * (1 - load)."""
+        p = self.p
+        for spec in p.segments:
+            for ae in self.ramped(spec.team):
+                load = len(self.ae_open[ae.pid]) / self.limit[ae.pid]
+                lam = p.ae_self_per_day * ae.ramp_factor(day) * max(0.0, 1.0 - load)
+                key0 = ("sarr", ae.pid, day)
+                for k in range(
+                    poisson_quantile(self.streams.uniform(*key0, day=day), lam)
+                ):
+                    if (
+                        len(self.ae_open[ae.pid]) < self.limit[ae.pid]
+                        and self.room(spec.team) > 0
+                    ):
+                        lane = self.lane_ix[(spec.name, "SelfSourced")]
+                        key = ("self", ae.pid, day, k)
+                        self._consider_whale(key, lane, day)
+                        self.F["arrivals"][lane, self.mon(day)] += 1
+                        self.create_opp(
+                            day, lane, ae, ae, key, None, "Self-Sourced", None
+                        )
 
     # ---- deals ---------------------------------------------------------
     def create_opp(
@@ -549,8 +621,8 @@ class Simulation:
         p = self.p
         seg, source = self.lane_defs[lane]
         spec = self.seg_spec[seg]
-        rng = self.streams.rng("deal", *key)
-        r, z = rng.random(24), rng.standard_normal(2)
+        rng = self.streams.rng("deal", *key, day=key[2])
+        r, z = rng.random(28), rng.standard_normal(3)
         country = pick(p.country_mix, r[20])
         forms = p.countries[country]
         tier = lead.tier if lead else spec.tier
@@ -578,6 +650,7 @@ class Simulation:
         ws = p.win_step
         if (ws.segment, ws.source) == (seg, source):
             win_rate = ws.before if day < day_of(ws.on) else ws.after
+        # declared mechanisms: region and the owner's individual skill shift the win probability
         win_rate = min(
             0.95, max(0.02, win_rate * p.region_win_factor[region] * owner.skill)
         )
@@ -588,9 +661,7 @@ class Simulation:
         )
         cents = max(1000, round(amount / 100) * 100) * 100
         will_win = bool(r[0] < win_rate)
-        whale = (
-            self.whale is None and seg == "Enterprise" and day >= day_of(p.whale_after)
-        )
+        whale = key == self.whale_key and self.whale is None
         if whale:
             cents, will_win = round(p.whale_amount) * 100, True
         total = (
@@ -607,6 +678,8 @@ class Simulation:
                 )
             )
         )
+        # what the seller writes down as the expected close: optimism and noise, never the outcome
+        seller = p.expected_close_optimism * exp(p.expected_close_noise * z[2])
         opp = Opp(
             self.nid("opp"),
             lane,
@@ -623,12 +696,14 @@ class Simulation:
             cents,
             cents,
             tuple(total * s for s in p.stage_shares),
+            seller,
             will_win,
             min(last, 3),
             r,
             owner.uid,
             lead,
             whale=whale,
+            key=key,
         )
         if (
             campaign is not None
@@ -640,7 +715,7 @@ class Simulation:
         self.opps.append(opp)
         if whale:
             self.whale = opp
-        self.take_slot(opp, owner)
+        self.take_slot(opp)
         mi = self.mon(day)
         self.F["admissions"][lane, mi] += 1
         self.F["opp_created"][lane, mi] += 1
@@ -650,32 +725,43 @@ class Simulation:
         delete_on = day + int(
             p.delete_days[0] + r[16] * (p.delete_days[1] - p.delete_days[0])
         )
-        for lo, hi in self.no_delete:
-            if lo <= delete_on <= hi:
-                delete_on = hi + 1
         if r[15] < p.p_delete and delete_on <= self.d1:
             self.ev[delete_on].append(("delete", opp, -1, None))
         return opp
 
-    def take_slot(self, opp: Opp, ae: Person) -> None:
-        opp.owner = ae
+    def take_slot(self, opp: Opp) -> None:
         self.open_n[opp.lane] += 1
-        self.team_open[ae.team] += 1
-        self.ae_open[ae.pid].append(opp)
+        self.team_open[self.team_of(opp)] += 1
+        self.ae_open[opp.owner.pid].append(opp)
 
     def release_slot(self, opp: Opp) -> None:
         self.open_n[opp.lane] -= 1
-        self.team_open[opp.owner.team] -= 1
-        self.ae_open[opp.owner.pid].remove(opp)
+        team = self.team_of(opp)
+        self.team_open[team] -= 1
+        if opp.orphan:
+            self.orphans[team].remove(opp)
+            opp.orphan = False
+        else:
+            self.ae_open[opp.owner.pid].remove(opp)
 
-    def enter(self, opp: Opp, day: int, sec: int) -> None:
-        """Enter the current stage: an image, and the day it ends (stretched when the owner is overloaded)."""
+    def set_owner(self, opp: Opp, new: Person, day: int, sec: int, by: str) -> None:
+        """The one place an opportunity changes hands; every change writes an OwnerId history row."""
+        if new.uid != opp.owner.uid:
+            opp.owner_rows.append(
+                (self.nid("ofield"), ts(day, sec), opp.owner.uid, new.uid, by)
+            )
+        opp.owner = new
+
+    def enter(self, opp: Opp, day: int, sec: int, image: bool = True) -> None:
+        """Enter the current stage; its length is stretched when the owner is overloaded."""
         p = self.p
-        load = len(self.ae_open[opp.owner.pid]) / self.ceiling[opp.owner.team]
+        spec = self.seg_spec[opp.seg]
+        load = len(self.ae_open[opp.owner.pid]) / self.ceiling[spec.team]
         stretch = 1 + p.overload_stretch * max(
             0.0, (load - p.overload_threshold) / (1 - p.overload_threshold)
         )
-        rest = sum(opp.base_days[opp.stage_i : opp.last_stage + 1]) * stretch
+        if opp.orphaned:
+            stretch *= 1 + p.orphan_stretch
         dur = max(
             1,
             round(
@@ -684,15 +770,24 @@ class Simulation:
                 * (0.6 if opp.stage_i == opp.last_stage and not opp.will_win else 1.0)
             ),
         )
-        opp.images.append(
-            (
-                self.nid("ohist"),
-                ts(day, sec),
-                p.stages[opp.stage_i],
-                opp.cents,
-                day + ceil(rest),
+        if image:
+            # expected close: segment norm with the seller's optimism and noise, pushed out as it passes
+            norm = spec.cycle_days * opp.seller
+            remaining = (
+                spec.cycle_days * sum(p.stage_shares[opp.stage_i :]) * opp.seller
             )
-        )
+            expected = max(
+                opp.created_day + round(norm), day + max(3, round(0.5 * remaining))
+            )
+            opp.images.append(
+                (
+                    self.nid("ohist"),
+                    ts(day, sec),
+                    p.stages[opp.stage_i],
+                    opp.cents,
+                    expected,
+                )
+            )
         self.ev[day + dur].append(("advance", opp, opp.version, None))
 
     def on_advance(self, opp: Opp, day: int, _) -> None:
@@ -765,20 +860,23 @@ class Simulation:
             self._image(opp, day, new)
 
     def on_reopen(self, opp: Opp, day: int, _) -> None:
-        team = opp.owner.team
-        owner = (
-            opp.owner
-            if opp.owner in self.ramped(team, day)
-            and len(self.ae_open[opp.owner.pid]) < self.ceiling[team]
-            else self.best_ae(team, day)
-        )
-        if owner is None or self.room(team, day) <= 0:
+        team = self.team_of(opp)
+        if self.room(team) <= 0:
             return
+        o = opp.owner
+        owner = (
+            o
+            if o.pid in self.limit and len(self.ae_open[o.pid]) < self.limit[o.pid]
+            else self.best_ae(team)
+        )
+        if owner is None:
+            return
+        self.set_owner(opp, owner, day, T_EDIT, owner.uid)
         opp.reopened, opp.status, opp.stage_i = True, "open", 1
         opp.will_win = bool(opp.r[14] < 0.45)
         opp.last_stage = 3 if opp.will_win else 2
         opp.version += 1
-        self.take_slot(opp, owner)
+        self.take_slot(opp)
         self.F["reopened"][opp.lane, self.mon(day)] += 1
         self.enter(opp, day, T_EDIT)
 
@@ -792,21 +890,29 @@ class Simulation:
         opp.dead = ts(day, T_EDIT)
 
     def depart(self, person: Person, day: int) -> None:
-        """An AE leaves: deals go to teammates with room; the rest are lost with the departure."""
+        """An AE leaves. Open deals sit with a manager for a handoff delay (some are lost to the
+        gap), then pass to the teammate with the fewest deals, beyond their ceiling if need be."""
+        p, holder = self.p, self.cs[0]
         for opp in sorted(self.ae_open[person.pid], key=lambda o: o.n):
-            ae = self.best_ae(person.team, day)
-            if ae is None:
-                self.close(opp, day, False, T_SHED)
-                continue
-            self.ae_open[person.pid].remove(opp)
-            self.ae_open[ae.pid].append(opp)
-            by = self.cs[0].uid
-            opp.owner_rows.append(
-                (self.nid("ofield"), ts(day, T_SHED), person.uid, ae.uid, by)
-            )
-            opp.owner = ae
+            opp.version += 1  # the stage clock stops
+            self.set_owner(opp, holder, day, T_SHED, holder.uid)
+            opp.orphan = opp.orphaned = True
+            self.orphans[self.team_of(opp)].append(opp)
+            if (
+                opp.r[24] < p.p_orphan_loss
+            ):  # the gap costs the deal: it will be lost soon
+                opp.will_win = False
+                opp.last_stage = min(opp.last_stage, opp.stage_i + int(opp.r[25] * 2))
+            self.ev[day + p.handoff_days].append(("handoff", opp, opp.version, None))
+        self.ae_open[person.pid] = []
 
-
-def _month_end(day: int) -> date:
-    d = date.fromordinal(day)
-    return date(d.year, d.month, calendar.monthrange(d.year, d.month)[1])
+    def on_handoff(self, opp: Opp, day: int, _) -> None:
+        ae = self.lightest_ae(self.team_of(opp))
+        if ae is None:
+            self.ev[day + 7].append(("handoff", opp, opp.version, None))
+            return
+        self.orphans[self.team_of(opp)].remove(opp)
+        opp.orphan = False
+        self.set_owner(opp, ae, day, T_EDIT, self.cs[0].uid)
+        self.ae_open[ae.pid].append(opp)
+        self.enter(opp, day, T_EDIT, image=False)

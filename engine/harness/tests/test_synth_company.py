@@ -16,7 +16,16 @@ SMALL_START, SMALL_END = date(2024, 2, 1), date(2025, 7, 31)
 
 def small_params(variant: str) -> CompanyParams:
     """A short window (18 months, warm-up included) with the full-size company."""
-    return CompanyParams.for_variant(variant, start=SMALL_START, end=SMALL_END)
+    return CompanyParams.for_variant(
+        variant,
+        start=SMALL_START,
+        end=SMALL_END,
+        p_delete=0.03,
+        attrition_annual={
+            "AE": 0.5,
+            "BDR": 0.2,
+        },  # departures happen, so inheritance is exercised
+    )
 
 
 @cache
@@ -47,18 +56,26 @@ def test_truth_has_real_activity_in_every_measure():
     ):
         assert getattr(truth, name).values.sum() > 0, name
     assert truth.exits.values.sum() > 0
-    assert truth.reopened.values.sum() > 0 and truth.deleted.values.sum() > 0
+    assert truth.reopened.values.sum() > 0
+    assert any(o.dead for o in small_company("capacity_constrained").sim.opps)
     assert truth.months[0] == "2024-02" and truth.months[-1] == "2025-07"
     assert any(lane.endswith("source=Partner") for lane in truth.lanes)
 
 
-def test_every_lane_belongs_to_a_team_and_directly_created_lanes_have_no_queue():
-    truth = small_company("demand_limited").truth
+def test_every_lane_belongs_to_a_team_and_only_self_sourcing_bypasses_the_queue():
+    truth = small_company("capacity_constrained").truth
     assert set(truth.lane_team) <= set(truth.teams)
     for i, lane in enumerate(truth.lanes):
-        if lane.endswith(("source=Partner", "source=SelfSourced")):
+        if lane.endswith("source=SelfSourced"):
             assert truth.queue_end.values[i].sum() == 0
             assert (truth.arrivals.values[i] == truth.admissions.values[i]).all()
+    partner = [
+        i for i, lane in enumerate(truth.lanes) if lane.endswith("source=Partner")
+    ]
+    arrivals = truth.arrivals.values[partner].sum()
+    # partner referrals are demand episodes: some are rejected for fit, and they can queue
+    assert truth.exits.values[partner].sum() > 0
+    assert arrivals > truth.admissions.values[partner].sum()
 
 
 def test_truth_round_trips_through_its_file(tmp_path):

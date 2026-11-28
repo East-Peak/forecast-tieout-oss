@@ -65,14 +65,15 @@ class Person:
     skill: float  # multiplier on win probability
 
     @property
-    def ramp_from(self) -> int:
-        """First day of the month after the start month: when an AE carries deals."""
-        d = date.fromordinal(self.start)
-        return day_of(date(d.year + d.month // 12, d.month % 12 + 1, 1))
-
-    @property
     def leave_day(self) -> int:
         return (self.end + 1) if self.end is not None else 10**9
+
+    def carry_factor(self, day: int, start: int, days: int) -> float:
+        """Carrying ramp: the share of the ceiling this AE can hold, by days of tenure (0 until
+        `start` days in, then linear over `days`; 0 when not employed). Separate from sourcing."""
+        if day < self.start or day >= self.leave_day:
+            return 0.0
+        return min(1.0, max(0.0, (day - self.start - start) / days))
 
     def ramp_factor(self, day: int) -> float:
         """Sourcing ramp: 0 on the first day, 1 after `ramp_days`; 0 when not employed."""
@@ -82,7 +83,11 @@ class Person:
 
 
 def build_people(
-    params: CompanyParams, streams: Streams, intervention: Intervention, end_day: int
+    params: CompanyParams,
+    streams: Streams,
+    intervention: Intervention,
+    end_day: int,
+    fork_day: int | None = None,
 ) -> list[Person]:
     people = []
     specs = [(s, None) for s in params.initial_staff] + [
@@ -99,14 +104,19 @@ def build_people(
         )
         planned = day_of(spec.planned_start)
         start = planned + (slip if req_id else 0)
-        rng = streams.rng("person", pid)
+        rng = streams.rng("person", pid, day=planned)
         lo, hi = params.ramp_days
         ramp = int(rng.integers(lo, hi + 1))
         skill = float(rng.normal(0.0, params.skill_sigma)) if spec.role == "AE" else 0.0
         hazard = params.attrition_annual.get(spec.role, 0.0)
         end = None
         if hazard:
-            leave = start + int(-log(1.0 - rng.random()) / (-log(1.0 - hazard) / 365.0))
+            rate = -log(1.0 - hazard) / 365.0
+            leave = start + int(-log(1.0 - rng.random()) / rate)
+            if fork_day is not None and planned < fork_day <= leave:
+                # a person already here at the fork: their departure after it is a fresh draw
+                again = streams.rng("depart", pid, day=fork_day)
+                leave = max(start, fork_day) + int(-log(1.0 - again.random()) / rate)
             end = leave if leave < end_day else None
         first, last = FIRST[idx % len(FIRST)], LAST[(idx // len(FIRST)) % len(LAST)]
         people.append(

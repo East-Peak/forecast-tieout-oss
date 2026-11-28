@@ -293,7 +293,7 @@ class Writer:
     def hubspot(self, at: str) -> dict[str, list[dict]]:
         sim, contacts, deals = self.sim, [], []
         for lead in sim.leads:
-            if lead.kind == "outbound" or lead.created > at:
+            if lead.kind not in ("mql", "clutter") or lead.created > at:
                 continue
             mql = next((r[1] for r in lead.rows if r[2] == "MQL_Date__c"), None)
             mql = mql if mql and mql <= at else None

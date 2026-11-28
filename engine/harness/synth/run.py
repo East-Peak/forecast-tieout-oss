@@ -21,8 +21,9 @@ def run_company(
     params: CompanyParams,
     seed: int,
     intervention: Intervention | None = None,
-    extract_days: tuple[int, ...] = (),
+    replicate: int = 0,
+    fork_day: int | None = None,
 ) -> Company:
     iv = intervention or Intervention()
-    sim = Simulation(params, seed, iv, extract_days).run()
+    sim = Simulation(params, seed, iv, replicate, fork_day).run()
     return Company(params, seed, iv, sim, build_truth(sim))

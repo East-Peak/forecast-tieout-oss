@@ -7,6 +7,7 @@ bookings by the final effective close date and amount. Truth is for judging; no
 evidence or planning code may read it.
 """
 
+import calendar
 import json
 from datetime import date
 from pathlib import Path
@@ -21,8 +22,8 @@ from ..contract.snapshot import (
     RosterObservations,
     Snapshot,
 )
-from .people import day_of
-from .sim import EXIT_REASONS, Simulation, iso
+from .people import day_of, requisition_rows
+from .sim import EXIT_REASONS, Simulation, iso, sfid
 
 MEASURE_NAMES = [
     "leads",
@@ -70,11 +71,53 @@ def month_label(sim: Simulation, mi: int) -> str:
     return f"{y}-{m + 1:02d}"
 
 
+def roster_rows(sim: Simulation, upto: int) -> tuple[list, list]:
+    """(people started by `upto`, their roster observations); an end date shows only once past."""
+    seg_of_team = {s.team: s.name for s in sim.p.segments}
+    started = [x for x in sim.people if x.start <= upto]
+    rows = []
+    for x in started:
+        planned = iso(x.planned) if x.planned else None
+        seg = x.segment or seg_of_team.get(x.team)
+        start = f"{iso(x.start)}T00:00:00Z"
+        rows.append(
+            RosterObservation(
+                x.pid, x.role, x.team, seg, iso(x.start), None, planned, start, start
+            )
+        )
+        if x.end is not None and x.end <= upto:
+            end = f"{iso(x.end)}T00:00:00Z"
+            rows.append(
+                RosterObservation(
+                    x.pid,
+                    x.role,
+                    x.team,
+                    seg,
+                    iso(x.start),
+                    iso(x.end),
+                    planned,
+                    end,
+                    end,
+                )
+            )
+    return started, rows
+
+
+def pending_requisitions(sim: Simulation, upto: int) -> tuple[PendingRequisition, ...]:
+    """Every requisition still open on `upto`, whatever its role."""
+    return tuple(
+        PendingRequisition(r["req_id"], r["team"], r["role"], r["planned_start"])
+        for r in requisition_rows(sim.p, sim.people, date.fromordinal(upto))
+        if r["status"] == "open"
+    )
+
+
 def build_truth(sim: Simulation) -> Snapshot:
+    """The omniscient truth: everything the simulation did, whether or not any system recorded it."""
     p, F, n = sim.p, sim.F, sim.n_months
     lanes, teams = sim.lane_keys, tuple(sim.teams)
     months = tuple(month_label(sim, i) for i in range(n))
-    started = [x for x in sim.people if x.start <= sim.d1]
+    started, rows = roster_rows(sim, sim.d1)
     # bookings: the final amount of every won new-business deal, in its final effective close month
     bookings = np.zeros((len(lanes), n), dtype=np.int64)
     for o in sim.opps:
@@ -88,23 +131,13 @@ def build_truth(sim: Simulation) -> Snapshot:
                 sim.campaign_spend[ci][mi], list(c.segment_mix.values())
             )
     exposure = np.zeros((len(lanes), n))
-    heads, ramped, ramp_exp = (np.zeros((len(teams), n)) for _ in range(3))
     for mi in range(n):
         y, m = divmod(sim.m0 + mi, 12)
-        mid, eom = (
-            day_of(date(y, m + 1, 15)),
-            day_of(date(y + (m == 11), (m + 1) % 12 + 1, 1)) - 1,
-        )
+        mid = day_of(date(y, m + 1, 15))
         for b in sim.bdrs:
             exposure[sim.lane_ix[(b.segment, "Outbound")], mi] += b.ramp_factor(mid)
-        for ti, t in enumerate(teams):
-            for ae in sim.aes[t]:
-                if ae.start <= eom < ae.leave_day:
-                    heads[ti, mi] += 1
-                    ramped[ti, mi] += ae.ramp_from <= eom
-                ramp_exp[ti, mi] += ae.ramp_factor(mid)
+    days = np.array([month_days_of(sim, i) for i in range(n)])
     persons = [x for x in started if x.role in ("AE", "BDR")]
-    ceiling = np.array([sim.ceiling[t] for t in teams])[:, None]
     ints = {
         "leads": F["leads"],
         "mqls": F["mqls"],
@@ -131,59 +164,22 @@ def build_truth(sim: Simulation) -> Snapshot:
         ),
     )
     measures["bdr_exposure"] = Measure(("lane", "month"), exposure)
-    measures["heads"] = Measure(("team", "month"), heads.astype(np.int64))
-    measures["ramped_heads"] = Measure(("team", "month"), ramped.astype(np.int64))
-    measures["ramp_exposure"] = Measure(("team", "month"), ramp_exp)
-    measures["carrying_capacity"] = Measure(
-        ("team", "month"), (ramped * ceiling).astype(np.int64)
+    # peak-in-month conventions: capacity is the highest daily carrying capacity of the month,
+    # heads the most AEs employed on any day, ramped_heads the rounded peak of effective AEs
+    measures["heads"] = Measure(("team", "month"), sim.emp_max.copy())
+    measures["ramped_heads"] = Measure(
+        ("team", "month"), np.rint(sim.eff_max).astype(np.int64)
     )
-    seg_of_team = {s.team: s.name for s in p.segments}
-    rows = []
-    for x in started:
-        planned = iso(x.planned) if x.planned else None
-        seg = x.segment or seg_of_team.get(x.team)
-        rows.append(
-            RosterObservation(
-                x.pid,
-                x.role,
-                x.team,
-                seg,
-                iso(x.start),
-                None,
-                planned,
-                f"{iso(x.start)}T00:00:00Z",
-                f"{iso(x.start)}T00:00:00Z",
-            )
-        )
-        if x.end is not None:
-            rows.append(
-                RosterObservation(
-                    x.pid,
-                    x.role,
-                    x.team,
-                    seg,
-                    iso(x.start),
-                    iso(x.end),
-                    planned,
-                    f"{iso(x.end)}T00:00:00Z",
-                    f"{iso(x.end)}T00:00:00Z",
-                )
-            )
-    pending = tuple(
-        PendingRequisition(x.req_id, x.team, x.role, iso(x.planned))
-        for x in sim.people
-        if x.start > sim.d1
-        and x.req_id
-        and x.team in teams  # TODO: the contract only holds AE-team requisitions
-    )
-    last = n - 1
+    measures["ramp_exposure"] = Measure(("team", "month"), sim.eff_sum / days)
+    measures["carrying_capacity"] = Measure(("team", "month"), sim.cap_max.copy())
     episodes = []
+    last = n - 1
     for t, queue in sim.queues.items():
-        for lane_pos, age, lead in queue.items():
+        for lane_pos, _age, lead in queue.items():
             episodes.append(
                 OutstandingEpisode(
                     lanes[sim.team_lanes[t][lane_pos]],
-                    f"00QSY{lead.n:010d}",
+                    sfid("lead", lead.n),
                     lead.offers,
                     iso(lead.offer_day),
                     last - sim.mon(lead.offer_day),
@@ -198,9 +194,16 @@ def build_truth(sim: Simulation) -> Snapshot:
         persons=tuple(x.pid for x in persons),
         roster=RosterObservations(tuple(rows)),
         outstanding_episodes=tuple(episodes),
-        pending_requisitions=pending,
+        pending_requisitions=pending_requisitions(sim, sim.d1),
         **measures,
     )
+
+
+def month_days_of(sim: Simulation, mi: int) -> int:
+    y, m = divmod(sim.m0 + mi, 12)
+    first, last = date(y, m + 1, 1), date(y, m + 1, calendar.monthrange(y, m + 1)[1])
+    lo, hi = max(day_of(first), sim.d0), min(day_of(last), sim.d1)
+    return hi - lo + 1
 
 
 def save_truth(truth: Snapshot, path: Path) -> None:
@@ -212,6 +215,11 @@ def save_truth(truth: Snapshot, path: Path) -> None:
         "lane_team": truth.lane_team,
         "persons": truth.persons,
         "measures": {k: getattr(truth, k).values.tolist() for k in MEASURE_NAMES},
+        "missing": {
+            k: getattr(truth, k).missing.tolist()
+            for k in MEASURE_NAMES
+            if getattr(truth, k).missing.any()
+        },
         "roster": [vars(r) for r in truth.roster.rows],
         "outstanding_episodes": [vars(e) for e in truth.outstanding_episodes],
         "pending_requisitions": [vars(r) for r in truth.pending_requisitions],
@@ -234,7 +242,11 @@ def load_truth(path: Path) -> Snapshot:
             name, ("team", "month") if name in team_axes else ("lane", "month")
         )
         measures[name] = Measure(
-            ax, np.array(values, dtype=float if name in floats else np.int64)
+            ax,
+            np.array(values, dtype=float if name in floats else np.int64),
+            np.array(b.get("missing", {}).get(name, False))
+            if name in b.get("missing", {})
+            else None,
         )
     return Snapshot(
         lanes=tuple(b["lanes"]),

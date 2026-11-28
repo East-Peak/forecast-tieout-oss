@@ -116,7 +116,26 @@ class CompanyParams:
     start: date = date(2022, 2, 1)  # FY22 start; the pipeline starts empty (warm-up)
     end: date = date(2026, 7, 31)
     plan_date: date = date(2025, 1, 24)
-    queue_max_days: int = 14  # demand waits this many days, then expires for capacity
+    queue_max_days: int = 14
+    # Routing priority across lead sources (marketing, outbound and partner leads all share the
+    # team's queue). Only "oldest_first" exists: the oldest queued demand is served first, and a
+    # same-age class splits across lanes in proportion to its size (largest remainder).
+    routing_priority: str = "oldest_first"
+    # Carrying ramp, by days of AE tenure: 0 until `carry_ramp_start`, linear over `carry_ramp_days`.
+    # Separate from the sourcing ramp (`ramp_days`).
+    carry_ramp_start: int = 30
+    carry_ramp_days: int = 60
+    # When an AE leaves, open deals wait with a manager `handoff_days`, then go to the teammate
+    # with the fewest deals (beyond their ceiling if need be). Each deal has `p_orphan_loss` extra
+    # risk of being lost to the gap, and its stages run (1 + orphan_stretch) times as long.
+    handoff_days: int = 14
+    p_orphan_loss: float = 0.15
+    orphan_stretch: float = 0.5
+    # A seller's written expected close: segment cycle norm times optimism times lognormal noise.
+    expected_close_optimism: float = 0.9
+    expected_close_noise: float = (
+        0.25  # demand waits this many days, then expires for capacity
+    )
     segments: tuple[SegmentSpec, ...] = _t(
         SegmentSpec("SMB", "Tier 3", "AE-SMB", 30, 12000, 0.55, 35),
         SegmentSpec("Mid-Market", "Tier 2", "AE-MidMarket", 26, 34000, 0.60, 75),
@@ -194,7 +213,7 @@ class CompanyParams:
     p_reopen: float = 0.05  # a lost deal reopens (if its team has room)
     reopen_days: tuple[int, int] = (10, 60)
     p_delete: float = 0.006  # an opportunity record is deleted (never a won one)
-    delete_days: tuple[int, int] = (30, 400)
+    delete_days: tuple[int, int] = (45, 400)
     p_renewal_clutter: float = (
         0.8  # won deals spawn a Renewal opportunity (not new business)
     )
@@ -206,6 +225,7 @@ class CompanyParams:
             "Inbound": 0.20,
             "ABM": 0.10,
             "Outbound": 0.25,
+            "Partner": 0.15,
             "Unknown": 0.40,
         }
     )
@@ -278,7 +298,7 @@ class CompanyParams:
             "Content Library",
             "Web Inbound",
             "Inbound",
-            {"Mid-Market": 0.6, "SMB": 0.4},
+            {"Mid-Market": 1.0},
             2500,
             0.6,
             base=2.5,
@@ -438,7 +458,7 @@ class CompanyParams:
     whale_after: date = date(
         2024, 6, 1
     )  # the first Enterprise deal created from here is the very large one
-    whale_amount: float = 1_100_000
+    whale_amount: float = 3_000_000
 
     @classmethod
     def for_variant(cls, variant: str, **overrides: Any) -> "CompanyParams":
