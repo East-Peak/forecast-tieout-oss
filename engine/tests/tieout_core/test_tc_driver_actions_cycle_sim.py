@@ -120,39 +120,58 @@ def test_no_path_books_below_zero_whatever_the_cycle(state):
         assert min(paths(state, lift, h, i, draws=1500)) >= 0
 
 
-def test_under_a_change_in_cycle_alone_every_path_draws_the_same_dollars_and_only_books_them_elsewhere(
+def test_under_a_change_in_cycle_alone_every_path_books_the_same_dollars_through_simulate(
     state,
 ):
-    """The same seed with and without the cycle change: the draws are coupled, so on every path the
-    amounts drawn (before any is placed in a month, or beyond them) add up to the same dollars."""
-    lift, h, _ = lift_of(state, "0.55", hires=HIRES, programs=PROGRAMS)
+    """Through the public route, with the same seed: two plans that both move landings (a cycle
+    of 55% and of 90% of the pooled one) draw the same lags and amounts, so on every path the dollars
+    booked are the same. The cohorts are the first twenty days' creation and the cycles only get
+    shorter, so every win lands inside the twelve months and none is left out of the total; the
+    existing pipeline is the same in both."""
     g = state.ground
-    new = g.model.new_pipeline
-    span = len(lift.landing)
-    creation = actions.Scenario(g).creation(h)
-    organic = np.tile(np.asarray([float(x) for x in creation.per_day[:span]]), (60, 1))
-    extra = np.zeros(span)
-    deals = organic + extra
+    h, i = (), ()
+    per_day = tuple(D("2") if t < 20 else D(0) for t in range(len(g.windows) * 31))
+    creation = forecast.Creation(per_day, "twenty days of creation")
 
-    def drawn(with_cycle):
-        totals = np.zeros(60)
-        placed = {"beyond": 0}
-        the = lift if with_cycle else replace(lift, cycle={})
+    def totals(ratio):
+        lift, _, _ = lift_of(state, ratio)
+        assert lift.cycle["enterprise"][20] != 0  # a real effect, landings do move
+        return np.asarray(
+            simulate(
+                g.model, g.pop, g.as_of, g.windows, draws=300, seed=5,
+                creation=creation, inflows=i, lift=lift,
+            ).samples_total
+        )  # fmt: skip
 
-        def book(rows, landing, amounts):
-            np.add.at(totals, rows, amounts)
-            placed["beyond"] += int((landing > span + 400).sum())
+    short, shorter = totals("0.9"), totals("0.55")
+    assert np.allclose(short, shorter, rtol=1e-12, atol=1e-6)
+    assert short.min() > 0 and h == ()
 
-        forecast._draw_lifted(
-            np.random.default_rng(7), new, the, deals, span, book, organic, extra
+
+def test_a_cycle_only_plan_and_the_same_plan_with_a_later_start_draw_the_same_dollars(
+    state,
+):
+    g = state.ground
+    per_day = tuple(D("2") if t < 20 else D(0) for t in range(len(g.windows) * 31))
+    creation = forecast.Creation(per_day, "twenty days of creation")
+
+    def totals(start):
+        lift, _, _ = lift_of(state, "0.7")
+        shifted = replace(
+            lift,
+            cycle={
+                s: tuple(c if t >= start else 0 for t, c in enumerate(v))
+                for s, v in lift.cycle.items()
+            },
         )
-        return totals
+        return np.asarray(
+            simulate(
+                g.model, g.pop, g.as_of, g.windows, draws=300, seed=5,
+                creation=creation, inflows=(), lift=shifted,
+            ).samples_total
+        )  # fmt: skip
 
-    still, moved = drawn(False), drawn(True)
-    assert np.allclose(
-        still, moved, rtol=1e-12, atol=1e-6
-    )  # the same dollars on every path
-    assert still.sum() > 0
+    assert np.allclose(totals(0), totals(10), rtol=1e-12, atol=1e-6)
 
 
 def test_a_longer_cycle_leaves_dollars_beyond_the_months_a_shorter_one_brings_in(state):
