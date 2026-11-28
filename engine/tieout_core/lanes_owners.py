@@ -114,14 +114,30 @@ def _spread(total: Decimal, weights: dict, seg: str, unit: str) -> dict:
     return dict(zip(keys, flows.apportion(total, w, unit)))
 
 
-def remainder(state, cal, series_, priced: dict, tied: dict, made: dict):
+def remainder(state, cal, series_, priced: dict, tied: dict, made: dict, effect=None):
     """The segments' expected wins and creation (``tied``, ``made``) shared over owners: by
     leaf, so every quarter and every carried-in or created-in-period split adds back. Modeled
     wins are weighed at the price the segment's own modeled wins were given (``priced``, already
-    normalized to the pooled total), so an owner's modeled bookings are consistent with it."""
+    normalized to the pooled total), so an owner's modeled bookings are consistent with it. With
+    win-rate actions (``effect``) each owner's extra wins come from the deals the owner is expected
+    to create on each day at that day's change, so an owner whose deals were created before the
+    action starts is credited none of it."""
     g = state.ground
     raw = flows.existing_flows(g.model, g.pop.deals, g.as_of, cal, lane=owner_of)
     wins, created = flows.new_flows(g.model, series_, g.as_of, cal)
+    if (
+        effect is not None
+    ):  # each owner's own deals, on each day, at that day's change in rate
+        days = (cal.year.end - g.as_of).days
+        moved = {
+            lane: [c * d for c, d in zip(per_day, effect.changes[lane[0]][:days])]
+            for lane, per_day in series_.items()
+        }
+        extra, _ = flows.new_flows(g.model, moved, g.as_of, cal, rate=ONE)
+        wins = {
+            k: wins.get(k, flows.ZERO_FLOW) + extra.get(k, flows.ZERO_FLOW)
+            for k in {*wins, *extra}
+        }
     for (lane, q, origin), f in wins.items():
         whole = priced.get((lane[0], q, origin), flows.ZERO_FLOW)
         price = whole.bookings / whole.wins if whole.wins else ZERO

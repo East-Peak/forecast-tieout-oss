@@ -311,7 +311,7 @@ def lanes_document(
     # the owners: the segments' expected wins and creation shared out
     lane_series = owners.series(state, basis, cal, hires, inflows, segments)
     wins_ro, created_ro = owners.remainder(
-        state, cal, lane_series, priced, wins_r, created_r
+        state, cal, lane_series, priced, wins_r, created_r, effect
     )
     owner_a = facts(state, cal, owner_of)
     owner_f = (

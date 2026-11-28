@@ -120,3 +120,40 @@ def test_the_adopted_path_already_stops_a_rep_on_their_last_day(built):
     got = owners.series(changed, basis, flows.Calendar(state.profile.fiscal_year), (), (), [m.segment])  # fmt: skip
     mine = got[(m.segment, m.id)]
     assert mine[0] > 0 and not any(mine[1:])
+
+
+# ---- an action's wins go to the owners whose deals it changes
+
+
+def test_an_actions_wins_follow_the_deals_it_changes_not_the_owners_baseline_wins():
+    """Two owners each create ten deals in the quarter: one on May 10, one on July 5. The segment
+    wins at 20%, and from July 1 at 40%. The first owner's deals were created before the action
+    started, so they win two; the second's win four. Sharing the segment's six by the owners'
+    baseline wins (two and two) would say three and three."""
+    may, july = (date(2026, 5, 10) - AS_OF).days, (date(2026, 7, 5) - AS_OF).days
+    start = (date(2026, 7, 1) - AS_OF).days
+    days = (CAL.year.end - AS_OF).days
+
+    def ten_on(day):
+        return [D(10) if t == day else D(0) for t in range(1, days + 1)]
+
+    lanes = {("a", "may"): ten_on(may), ("a", "july"): ten_on(july)}
+    change = [D("0.2") if t >= start else D(0) for t in range(1, days + 1)]
+    effect = SimpleNamespace(changes={"a": change})
+    state = SimpleNamespace(
+        ground=SimpleNamespace(
+            model=model(), pop=SimpleNamespace(deals=()), as_of=AS_OF
+        )
+    )
+    # both created in the second quarter and winning ten and twenty days on, in the same quarter
+    tied = {("a", 1, 2): flows.Flow(D(6), D(6000), D(90))}
+    priced = {("a", 1, 2): flows.Flow(D(6), D(6000), D(90))}
+    got, _ = owners.remainder(state, CAL, lanes, priced, tied, {}, effect)
+    by_owner = {lane[1]: f for (lane, q, origin), f in got.items()}
+    assert by_owner["may"].wins == D(2) and by_owner["july"].wins == D(4)
+    assert by_owner["may"].bookings == D(2000) and by_owner["july"].bookings == D(4000)
+    assert sum(f.wins for f in by_owner.values()) == D(
+        6
+    )  # and they add to the segment exactly
+    plain, _ = owners.remainder(state, CAL, lanes, priced, tied, {})
+    assert {lane[1]: f.wins for (lane, _, _), f in plain.items()} == {"may": D(3), "july": D(3)}  # fmt: skip
