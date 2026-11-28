@@ -262,3 +262,16 @@ def _field_history(con, entity: str, via: str, fields: list[str]) -> None:
                    CASE WHEN _from_row THEN _x ELSE first_extract_id END, TRUE, FALSE
             FROM c WHERE CASE WHEN _from_row THEN _old ELSE _snap END IS NOT NULL"""
         )
+
+        # a record no snapshot shows still has the first row's old value, as of its first history row
+        con.execute(
+            f"""INSERT INTO assertion
+            WITH h AS ({rows}),
+            fr AS (SELECT _id, arg_min_null(_old, (_ts, _rid)) AS _old, min(_ts) AS _ts,
+                          arg_min(_rid, (_ts, _rid)) AS _rid, arg_min(_x, (_ts, _rid)) AS _x
+                   FROM h WHERE _fld = {lit(field)} GROUP BY _id)
+            SELECT {lit(entity)}, rec.id, {lit(field)}, fr._old, rec.known_since, fr._ts,
+                   {_source(via, "fr._rid")}, fr._x, TRUE, FALSE
+            FROM record rec JOIN fr ON fr._id = rec.id
+            WHERE rec.entity = {lit(entity)} AND rec.partial AND fr._old IS NOT NULL"""
+        )

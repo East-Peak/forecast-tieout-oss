@@ -3,6 +3,7 @@
 Each estate is small and independent of estate A, so the fixture cannot paper over a fault.
 """
 
+import calendar
 import random
 from datetime import date, datetime
 
@@ -445,14 +446,7 @@ def test_the_open_stock_identity_holds_month_over_month(tmp_path, mode):
     store = load(flow_estate(tmp_path))
     previous_end = D("2024-12-31")
     for first, _ in MONTHS:
-        month_end = D(
-            (
-                datetime(first.year + first.month // 12, first.month % 12 + 1, 1)
-                - (datetime(2000, 1, 2) - datetime(2000, 1, 1))
-            )
-            .date()
-            .isoformat()
-        )
+        month_end = first.replace(day=calendar.monthrange(first.year, first.month)[1])
         end = AsOf.at(store, month_end, mode)
         start = AsOf(store, previous_end, end.k)
         counts = {"admission": 0, "reopened": 0, "win": 0, "loss": 0, "deleted": 0}

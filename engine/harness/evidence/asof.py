@@ -157,9 +157,11 @@ class AsOf:
         )
         if not rows:
             partial = self._rows(
-                "SELECT 1 FROM record WHERE entity = ? AND id = ? AND partial AND known_since <= ?",
+                """SELECT 1 FROM record WHERE entity = ? AND id = ? AND known_since <= ?
+                   AND (first_extract_at IS NULL OR first_extract_at > ?)""",
                 entity,
                 record_id,
+                self.k,
                 self.k,
             )
             return FieldValue(None, (), NOT_IN_SNAPSHOT if partial else None)
