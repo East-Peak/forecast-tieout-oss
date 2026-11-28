@@ -144,6 +144,10 @@ export interface TieoutLanesBasis {
       wins: Decimal;
     }
   ];
+  schedule_total: {
+    bookings: Money;
+    target: Money;
+  };
   schema_version: "1.0.0";
   /**
    * @minItems 1

@@ -24,6 +24,7 @@ export type TieoutLanes =
       columns: [
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -34,6 +35,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -44,6 +46,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -54,6 +57,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -64,6 +68,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -74,6 +79,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -84,6 +90,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -94,6 +101,7 @@ export type TieoutLanes =
         },
         {
           compared: "actual" | "forecast";
+          definition: Text;
           goal_label: Text;
           key: "open" | "created" | "created_arr" | "win_rate" | "cycle" | "won" | "avg_won_arr" | "bookings";
           minimum: number | null;
@@ -129,6 +137,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -165,6 +178,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -201,6 +219,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -237,6 +260,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -273,6 +301,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -309,6 +342,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -345,6 +383,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -381,6 +424,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -445,6 +493,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -481,6 +534,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -517,6 +575,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -553,6 +616,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -589,6 +657,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -625,6 +698,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -661,6 +739,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -697,6 +780,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -774,6 +862,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -810,6 +903,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -846,6 +944,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -882,6 +985,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -918,6 +1026,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -954,6 +1067,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -990,6 +1108,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1026,6 +1149,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1090,6 +1218,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1126,6 +1259,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1162,6 +1300,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1198,6 +1341,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1234,6 +1382,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1270,6 +1423,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1306,6 +1464,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1342,6 +1505,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1419,6 +1587,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1455,6 +1628,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1491,6 +1669,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1527,6 +1710,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1563,6 +1751,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1599,6 +1792,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1635,6 +1833,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1671,6 +1874,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1735,6 +1943,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1771,6 +1984,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1807,6 +2025,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1843,6 +2066,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1879,6 +2107,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1915,6 +2148,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1951,6 +2189,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -1987,6 +2230,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2064,6 +2312,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2100,6 +2353,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2136,6 +2394,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2172,6 +2435,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2208,6 +2476,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2244,6 +2517,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2280,6 +2558,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2316,6 +2599,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2380,6 +2668,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2416,6 +2709,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2452,6 +2750,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2488,6 +2791,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2524,6 +2832,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2560,6 +2873,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2596,6 +2914,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2632,6 +2955,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2709,6 +3037,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2745,6 +3078,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2781,6 +3119,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2817,6 +3160,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2853,6 +3201,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2889,6 +3242,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2925,6 +3283,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -2961,6 +3324,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3025,6 +3393,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3061,6 +3434,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3097,6 +3475,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3133,6 +3516,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3169,6 +3557,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3205,6 +3598,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3241,6 +3639,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {
@@ -3277,6 +3680,11 @@ export type TieoutLanes =
                   forecast: Decimal | null;
                   goal: Decimal | null;
                   goal_inside_range80: boolean | null;
+                  marks: {
+                    actual: Decimal | null;
+                    forecast: Decimal | null;
+                    goal: Decimal;
+                  } | null;
                   none_because: ("no_goal" | "not_modeled" | "too_few" | "vacuous") | null;
                   parts: {
                     actual: {

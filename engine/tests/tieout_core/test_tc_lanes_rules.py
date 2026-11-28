@@ -61,10 +61,60 @@ def test_the_opening_stock_has_no_status_because_the_comparison_is_vacuous():
     assert status("open", D(10), D(10)) == ("none", "vacuous", None)
 
 
+def test_the_opening_stock_of_a_period_not_begun_is_not_modeled_not_vacuous():
+    assert status("open", None, None) == ("none", "not_modeled", None)
+    assert "has not begun" in rules.REASONS["not_modeled"]
+
+
+def test_the_marks_of_a_strip_are_one_definition_on_a_shared_scale():
+    # the least value stands at the margin, the greatest at the other margin, the rest in proportion
+    m = rules.marks(D("146.23"), D("151.30"), D("140.96"))
+    assert m == {"actual": D("50.79"), "forecast": D("91.00"), "goal": D("9.00")}
+    assert rules.marks(D("5"), D("5"), D("5")) == {
+        "actual": D(50),
+        "forecast": D(50),
+        "goal": D(50),
+    }
+    assert rules.marks(None, D("2"), D("1")) == {
+        "actual": None,
+        "forecast": D("91.00"),
+        "goal": D("9.00"),
+    }
+    assert rules.marks(D(1), D(2), None) is None  # no goal, no strip
+    assert rules.marks(D(1), D(2), D(0)) is None  # a zero goal is no goal
+
+
+def test_the_marks_agree_with_an_independent_exact_calculation():
+    from fractions import Fraction
+
+    cases = [
+        ("0.2215", "0.2193", "0.2035"),
+        ("367000", "383000", "422000"),
+        ("0.1", "0.3", "0.2"),
+        ("1000000.01", "1000000.03", "1000000.02"),
+    ]
+    for a, f, g in cases:
+        values = [Fraction(x) for x in (a, f, g)]
+        lo, hi = min(values), max(values)
+        want = [Fraction(9) + (v - lo) / (hi - lo) * 82 for v in values]
+        got = rules.marks(D(a), D(f), D(g))
+        for name, w in zip(("actual", "forecast", "goal"), want):
+            assert abs(Fraction(got[name]) - w) <= Fraction(1, 200), (a, name)
+
+
 def test_the_minimums_are_defined_once_and_a_rate_is_compared_on_the_actual():
     assert rules.MIN_COHORT == 20 and rules.MIN_WINS == 5
     assert rules.COLUMN["win_rate"].compared == "actual"
     assert {c.compared for c in rules.COLUMNS if c.key != "win_rate"} == {"forecast"}
+
+
+def test_every_column_has_one_sentence_that_says_what_it_is():
+    for c in rules.COLUMNS:
+        assert (
+            c.definition.endswith(".")
+            and c.definition.count(". ") < 4
+            and len(c.definition) > 40
+        ), c.key
 
 
 def test_every_reason_code_has_words():

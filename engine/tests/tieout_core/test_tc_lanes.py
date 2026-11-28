@@ -149,7 +149,33 @@ def test_the_opening_stock_has_no_status_and_says_why(built):
     assert (c["status"], c["none_because"]) == ("none", "vacuous")
     assert c["actual"] == c["forecast"] and c["goal"] is not None
     assert cell(doc, "Q4FY26", ["total"], "open")["forecast"] is None
-    assert cell(doc, "Q4FY26", ["total"], "open")["none_because"] == "vacuous"
+    not_begun = cell(doc, "Q4FY26", ["total"], "open")
+    assert (not_begun["status"], not_begun["none_because"]) == ("none", "not_modeled")
+
+
+def test_a_strip_cell_carries_its_marks_and_no_other_cell_does(built):
+    _, _, _, docs = built
+    _, doc = docs["as-signed"]
+    for period in doc["periods"]:
+        for row in period["rows"]:
+            if (
+                len(row["path"]) == 4
+            ):  # an owner's rate is shown as recorded, with no strip
+                continue
+            for key, c in row["cells"].items():
+                if key in ("win_rate", "cycle", "avg_won_arr") and c["goal"] not in (
+                    None,
+                    "0.0000",
+                    "0.00",
+                ):
+                    assert set(c["marks"]) == {"actual", "forecast", "goal"}
+                    assert c["marks"]["goal"] is not None
+                    least = min(float(v) for v in c["marks"].values() if v is not None)
+                    assert least == 9.0 or all(
+                        v == "50.00" for v in c["marks"].values() if v
+                    )
+                else:
+                    assert c["marks"] is None
 
 
 def test_a_ratio_on_too_few_observations_has_no_status_and_exposes_its_denominator(

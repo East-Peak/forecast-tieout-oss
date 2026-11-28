@@ -301,6 +301,22 @@
       "minItems": 4,
       "type": "array"
     },
+    "schedule_total": {
+      "additionalProperties": false,
+      "properties": {
+        "bookings": {
+          "$ref": "#/$defs/Money"
+        },
+        "target": {
+          "$ref": "#/$defs/Money"
+        }
+      },
+      "required": [
+        "bookings",
+        "target"
+      ],
+      "type": "object"
+    },
     "schema_version": {
       "const": "1.0.0"
     },
@@ -362,6 +378,7 @@
     "fit",
     "opening",
     "segments",
+    "schedule_total",
     "schedule",
     "goals",
     "owners",

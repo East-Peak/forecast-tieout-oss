@@ -433,6 +433,14 @@ def document(basis: Basis, company: str) -> dict:
             }
             for s in basis.segments
         ],
+        "schedule_total": {
+            "bookings": str(
+                sum((Decimal(_text(q.bookings, "0.01")) for q in basis.schedule), ZERO)
+            ),
+            "target": str(
+                sum((Decimal(_text(q.target, "0.01")) for q in basis.schedule), ZERO)
+            ),
+        },
         "schedule": [
             {
                 "quarter": q.quarter,

@@ -25,6 +25,7 @@
   "columns": [
     {
       "compared": "forecast",
+      "definition": "Deals open immediately before the period starts, a stock that is never added across quarters, with the fiscal year's opening snapshot as its goal.",
       "goal_label": "frozen opening basis",
       "key": "open",
       "minimum": null,
@@ -35,6 +36,7 @@
     },
     {
       "compared": "forecast",
+      "definition": "Deals created in the period through the as-of date, with the creation still expected added for the forecast and the frozen creation schedule's requirement as the goal.",
       "goal_label": "derived requirement",
       "key": "created",
       "minimum": null,
@@ -45,6 +47,7 @@
     },
     {
       "compared": "forecast",
+      "definition": "The first recorded ARR of the deals created in the period, with the pipeline still expected added for the forecast and the frozen schedule's requirement as the goal.",
       "goal_label": "derived requirement",
       "key": "created_arr",
       "minimum": null,
@@ -55,6 +58,7 @@
     },
     {
       "compared": "actual",
+      "definition": "The share of deals created in the trailing year, old enough to have resolved, that were won, a dated benchmark and not a multiplier for the period's created deals, with the pooled rate as the forecast and the rate assumed at the plan start as the goal.",
       "goal_label": "plan-start assumption",
       "key": "win_rate",
       "minimum": 20,
@@ -65,6 +69,7 @@
     },
     {
       "compared": "forecast",
+      "definition": "Average days from creation to close for the period's wins, with the forecast blending actual wins and those still expected and the frozen schedule's implied cycle as the goal.",
       "goal_label": "model-implied benchmark",
       "key": "cycle",
       "minimum": 5,
@@ -75,6 +80,7 @@
     },
     {
       "compared": "forecast",
+      "definition": "Deals won in the period, from pipeline carried in and from pipeline created in the period, with the wins still expected added for the forecast and the bookings target over the plan-start average won ARR as the goal.",
       "goal_label": "target-equivalent wins",
       "key": "won",
       "minimum": null,
@@ -85,6 +91,7 @@
     },
     {
       "compared": "forecast",
+      "definition": "Bookings divided by wins, with forecast bookings over forecast wins as the forecast, and unavailable when there are no wins.",
       "goal_label": "model-implied benchmark",
       "key": "avg_won_arr",
       "minimum": 5,
@@ -95,6 +102,7 @@
     },
     {
       "compared": "forecast",
+      "definition": "Won ARR closed in the period, with the expected remainder added for the forecast and the entered target as the goal.",
       "goal_label": "entered target",
       "key": "bookings",
       "minimum": null,
@@ -123,6 +131,11 @@
               "forecast": "1477074.30",
               "goal": "1629182.54",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "34.77",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -150,6 +163,7 @@
               "forecast": "60639660.81",
               "goal": "84000000.00",
               "goal_inside_range80": false,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": [
@@ -176,6 +190,7 @@
               "forecast": "432.2766",
               "goal": "445.0000",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -190,6 +205,7 @@
               "forecast": "790588827.14",
               "goal": "1056051073.77",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -204,6 +220,11 @@
               "forecast": "240.45",
               "goal": "211.34",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "24.77",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -231,6 +252,7 @@
               "forecast": "127",
               "goal": "127",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -245,6 +267,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "33.35",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -266,6 +293,7 @@
               "forecast": "41.0539",
               "goal": "51.5596",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -302,6 +330,11 @@
               "forecast": "2054877.50",
               "goal": "2192999.42",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "9.00",
+                "goal": "55.57"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -329,6 +362,7 @@
               "forecast": "36274546.95",
               "goal": "41272029.79",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -352,6 +386,7 @@
               "forecast": "206.1773",
               "goal": "162.4305",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -366,6 +401,7 @@
               "forecast": "424467706.70",
               "goal": "318946878.06",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -380,6 +416,11 @@
               "forecast": "249.59",
               "goal": "211.34",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "91.00",
+                "goal": "39.48"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -407,6 +448,7 @@
               "forecast": "60",
               "goal": "60",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -421,6 +463,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "12.22",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -442,6 +489,7 @@
               "forecast": "17.6529",
               "goal": "18.8199",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -494,6 +542,11 @@
               "forecast": "3750626.53",
               "goal": "1973091.13",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "78.23",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -521,6 +574,7 @@
               "forecast": "13924951.13",
               "goal": "27465033.86",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -544,6 +598,7 @@
               "forecast": "55.2339",
               "goal": "120.1390",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -558,6 +613,7 @@
               "forecast": "267780636.51",
               "goal": "637030743.75",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -572,6 +628,11 @@
               "forecast": "245.45",
               "goal": "211.34",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "54.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -599,6 +660,7 @@
               "forecast": "17",
               "goal": "17",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -613,6 +675,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "23.51",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -634,6 +701,7 @@
               "forecast": "3.7127",
               "goal": "13.9198",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -686,6 +754,11 @@
               "forecast": "530272.43",
               "goal": "810999.86",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "19.20",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -713,6 +786,7 @@
               "forecast": "10440162.73",
               "goal": "15262936.35",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -736,6 +810,7 @@
               "forecast": "170.8654",
               "goal": "162.4305",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -750,6 +825,7 @@
               "forecast": "98340483.93",
               "goal": "100073451.96",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -764,6 +840,11 @@
               "forecast": "231.32",
               "goal": "211.34",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "70.52",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -791,6 +872,7 @@
               "forecast": "50",
               "goal": "50",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -805,6 +887,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "83.02",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -826,6 +913,7 @@
               "forecast": "19.6883",
               "goal": "18.8199",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -888,6 +976,11 @@
               "forecast": "1604997.62",
               "goal": "1629179.56",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -915,6 +1008,7 @@
               "forecast": "12839981.00",
               "goal": "17000000.00",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -938,6 +1032,7 @@
               "forecast": "100.0000",
               "goal": "108.5068",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -952,6 +1047,7 @@
               "forecast": "153252405.00",
               "goal": "257502932.88",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -966,6 +1062,11 @@
               "forecast": "214.12",
               "goal": "223.37",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -993,6 +1094,7 @@
               "forecast": "127",
               "goal": "127",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -1007,6 +1109,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "58.82",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1028,6 +1135,7 @@
               "forecast": "8.0000",
               "goal": "10.4347",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1064,6 +1172,11 @@
               "forecast": "2658992.25",
               "goal": "2192993.25",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1091,6 +1204,7 @@
               "forecast": "10635969.00",
               "goal": "8352672.69",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1114,6 +1228,7 @@
               "forecast": "37.0000",
               "goal": "39.6063",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1128,6 +1243,7 @@
               "forecast": "71744281.00",
               "goal": "77770527.93",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1142,6 +1258,11 @@
               "forecast": "180.50",
               "goal": "223.37",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1169,6 +1290,7 @@
               "forecast": "60",
               "goal": "60",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -1183,6 +1305,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "50.70",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1204,6 +1331,7 @@
               "forecast": "4.0000",
               "goal": "3.8088",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1256,6 +1384,11 @@
               "forecast": null,
               "goal": "1973092.79",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": null,
+                "goal": "50.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1283,6 +1416,7 @@
               "forecast": "0.00",
               "goal": "5558399.71",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1306,6 +1440,7 @@
               "forecast": "12.0000",
               "goal": "29.2942",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1320,6 +1455,7 @@
               "forecast": "52652761.00",
               "goal": "155330958.42",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1334,6 +1470,11 @@
               "forecast": null,
               "goal": "223.38",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": null,
+                "goal": "50.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1361,6 +1502,7 @@
               "forecast": "17",
               "goal": "17",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -1375,6 +1517,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "11.24",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1396,6 +1543,7 @@
               "forecast": "0.0000",
               "goal": "2.8171",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1448,6 +1596,11 @@
               "forecast": "551003.00",
               "goal": "810997.58",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1475,6 +1628,7 @@
               "forecast": "2204012.00",
               "goal": "3088927.60",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1498,6 +1652,7 @@
               "forecast": "51.0000",
               "goal": "39.6063",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1512,6 +1667,7 @@
               "forecast": "28855363.00",
               "goal": "24401446.53",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1526,6 +1682,11 @@
               "forecast": "247.75",
               "goal": "223.37",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1553,6 +1714,7 @@
               "forecast": "50",
               "goal": "50",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -1567,6 +1729,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "90.58",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1588,6 +1755,7 @@
               "forecast": "4.0000",
               "goal": "3.8088",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1650,6 +1818,11 @@
               "forecast": "1738142.71",
               "goal": "1629181.21",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1677,6 +1850,7 @@
               "forecast": "12166999.00",
               "goal": "19000000.00",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1700,6 +1874,7 @@
               "forecast": "107.0000",
               "goal": "112.1644",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1714,6 +1889,7 @@
               "forecast": "219482111.00",
               "goal": "266182713.63",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1728,6 +1904,11 @@
               "forecast": "196.43",
               "goal": "218.87",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1755,6 +1936,7 @@
               "forecast": "121",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -1769,6 +1951,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "37.97",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1790,6 +1977,7 @@
               "forecast": "7.0000",
               "goal": "11.6623",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1826,6 +2014,11 @@
               "forecast": "1816873.67",
               "goal": "2192990.22",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1853,6 +2046,7 @@
               "forecast": "5450621.00",
               "goal": "9335340.07",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1876,6 +2070,7 @@
               "forecast": "52.0000",
               "goal": "40.9414",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1890,6 +2085,7 @@
               "forecast": "112905746.00",
               "goal": "80392116.71",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -1904,6 +2100,11 @@
               "forecast": "199.67",
               "goal": "218.87",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -1931,6 +2132,7 @@
               "forecast": "55",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -1945,6 +2147,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "10.78",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -1966,6 +2173,7 @@
               "forecast": "3.0000",
               "goal": "4.2569",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2018,6 +2226,11 @@
               "forecast": "5082120.00",
               "goal": "1973107.54",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2045,6 +2258,7 @@
               "forecast": "5082120.00",
               "goal": "6212329.09",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2068,6 +2282,7 @@
               "forecast": "19.0000",
               "goal": "30.2816",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2082,6 +2297,7 @@
               "forecast": "84884595.00",
               "goal": "160566595.11",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2096,6 +2312,11 @@
               "forecast": "293.00",
               "goal": "218.87",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2123,6 +2344,7 @@
               "forecast": "12",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -2137,6 +2359,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "18.52",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2158,6 +2385,7 @@
               "forecast": "1.0000",
               "goal": "3.1485",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2210,6 +2438,11 @@
               "forecast": "544752.67",
               "goal": "810996.46",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2237,6 +2470,7 @@
               "forecast": "1634258.00",
               "goal": "3452330.84",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2260,6 +2494,7 @@
               "forecast": "36.0000",
               "goal": "40.9414",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2274,6 +2509,7 @@
               "forecast": "21691770.00",
               "goal": "25224001.81",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2288,6 +2524,11 @@
               "forecast": "161.00",
               "goal": "218.87",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2315,6 +2556,7 @@
               "forecast": "54",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -2329,6 +2571,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "9.00",
+                "goal": "79.56"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2350,6 +2597,7 @@
               "forecast": "3.0000",
               "goal": "4.2569",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2412,6 +2660,11 @@
               "forecast": "1172429.72",
               "goal": "1629183.11",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "45.08",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2439,6 +2692,7 @@
               "forecast": "15239944.98",
               "goal": "22000000.00",
               "goal_inside_range80": true,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": [
@@ -2465,6 +2719,7 @@
               "forecast": "113.8684",
               "goal": "112.1644",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2479,6 +2734,7 @@
               "forecast": "208705648.65",
               "goal": "266182713.63",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2493,6 +2749,11 @@
               "forecast": "280.72",
               "goal": "212.25",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "80.95",
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2520,6 +2781,7 @@
               "forecast": "125",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -2534,6 +2796,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "33.35",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2555,6 +2822,7 @@
               "forecast": "12.9986",
               "goal": "13.5037",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2591,6 +2859,11 @@
               "forecast": "1909872.34",
               "goal": "2193008.96",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2618,6 +2891,7 @@
               "forecast": "8881479.34",
               "goal": "10809341.14",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2641,6 +2915,7 @@
               "forecast": "59.3452",
               "goal": "40.9414",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2655,6 +2930,7 @@
               "forecast": "118477155.33",
               "goal": "80392116.71",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2669,6 +2945,11 @@
               "forecast": "340.70",
               "goal": "212.25",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2696,6 +2977,7 @@
               "forecast": "59",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -2710,6 +2992,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "12.22",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2731,6 +3018,7 @@
               "forecast": "4.6503",
               "goal": "4.9290",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2783,6 +3071,11 @@
               "forecast": "2319053.08",
               "goal": "1973070.51",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "91.00",
+                "goal": "28.47"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2810,6 +3103,7 @@
               "forecast": "2995057.05",
               "goal": "7193223.15",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2833,6 +3127,7 @@
               "forecast": "11.4658",
               "goal": "30.2816",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2847,6 +3142,7 @@
               "forecast": "65966983.52",
               "goal": "160566595.11",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2861,6 +3157,11 @@
               "forecast": "240.96",
               "goal": "212.25",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "65.39",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -2888,6 +3189,7 @@
               "forecast": "19",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -2902,6 +3204,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "23.51",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -2923,6 +3230,7 @@
               "forecast": "1.2915",
               "goal": "3.6457",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -2975,6 +3283,11 @@
               "forecast": "476619.51",
               "goal": "811003.39",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "38.60",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3002,6 +3315,7 @@
               "forecast": "3363408.59",
               "goal": "3997435.71",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3025,6 +3339,7 @@
               "forecast": "43.0574",
               "goal": "40.9414",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3039,6 +3354,7 @@
               "forecast": "24261509.80",
               "goal": "25224001.81",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3053,6 +3369,11 @@
               "forecast": "248.47",
               "goal": "212.25",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "91.00",
+                "forecast": "51.89",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3080,6 +3401,7 @@
               "forecast": "47",
               "goal": null,
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": "vacuous",
               "parts": null,
               "range80": null,
@@ -3094,6 +3416,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "83.02",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3115,6 +3442,7 @@
               "forecast": "7.0568",
               "goal": "4.9290",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3177,6 +3505,11 @@
               "forecast": "1562027.36",
               "goal": "1629184.97",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3204,6 +3537,7 @@
               "forecast": "20392735.83",
               "goal": "26000000.00",
               "goal_inside_range80": true,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": [
@@ -3230,6 +3564,7 @@
               "forecast": "111.4082",
               "goal": "112.1644",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3244,6 +3579,7 @@
               "forecast": "209148662.49",
               "goal": "266182713.63",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3258,6 +3594,11 @@
               "forecast": "240.10",
               "goal": "197.19",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3285,7 +3626,8 @@
               "forecast": null,
               "goal": null,
               "goal_inside_range80": null,
-              "none_because": "vacuous",
+              "marks": null,
+              "none_because": "not_modeled",
               "parts": null,
               "range80": null,
               "ratio": null,
@@ -3299,6 +3641,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "33.35",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3320,6 +3667,7 @@
               "forecast": "13.0553",
               "goal": "15.9589",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3356,6 +3704,11 @@
               "forecast": "1883596.71",
               "goal": "2193002.11",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3383,6 +3736,7 @@
               "forecast": "11306477.61",
               "goal": "12774675.89",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3406,6 +3760,7 @@
               "forecast": "57.8321",
               "goal": "40.9414",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3420,6 +3775,7 @@
               "forecast": "121340524.37",
               "goal": "80392116.71",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3434,6 +3790,11 @@
               "forecast": "250.00",
               "goal": "197.19",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3461,7 +3822,8 @@
               "forecast": null,
               "goal": null,
               "goal_inside_range80": null,
-              "none_because": "vacuous",
+              "marks": null,
+              "none_because": "not_modeled",
               "parts": null,
               "range80": null,
               "ratio": null,
@@ -3475,6 +3837,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "12.22",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3496,6 +3863,7 @@
               "forecast": "6.0026",
               "goal": "5.8252",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3548,6 +3916,11 @@
               "forecast": "4114673.57",
               "goal": "1973095.49",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -3575,6 +3948,7 @@
               "forecast": "5847774.08",
               "goal": "8501081.91",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3598,6 +3972,7 @@
               "forecast": "12.7681",
               "goal": "30.2816",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3612,6 +3987,7 @@
               "forecast": "64276296.99",
               "goal": "160566595.11",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3626,6 +4002,11 @@
               "forecast": "216.08",
               "goal": "197.19",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": "too_few",
               "parts": {
                 "actual": {
@@ -3653,7 +4034,8 @@
               "forecast": null,
               "goal": null,
               "goal_inside_range80": null,
-              "none_because": "vacuous",
+              "marks": null,
+              "none_because": "not_modeled",
               "parts": null,
               "range80": null,
               "ratio": null,
@@ -3667,6 +4049,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "9.00",
+                "forecast": "23.51",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3688,6 +4075,7 @@
               "forecast": "1.4212",
               "goal": "4.3085",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3740,6 +4128,11 @@
               "forecast": "575065.99",
               "goal": "811000.86",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3767,6 +4160,7 @@
               "forecast": "3238484.14",
               "goal": "4724242.20",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3790,6 +4184,7 @@
               "forecast": "40.8080",
               "goal": "40.9414",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3804,6 +4199,7 @@
               "forecast": "23531841.13",
               "goal": "25224001.81",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3818,6 +4214,11 @@
               "forecast": "235.61",
               "goal": "197.19",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": null,
+                "forecast": "91.00",
+                "goal": "9.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3845,7 +4246,8 @@
               "forecast": null,
               "goal": null,
               "goal_inside_range80": null,
-              "none_because": "vacuous",
+              "marks": null,
+              "none_because": "not_modeled",
               "parts": null,
               "range80": null,
               "ratio": null,
@@ -3859,6 +4261,11 @@
               "forecast": "0.0910",
               "goal": "0.1496",
               "goal_inside_range80": null,
+              "marks": {
+                "actual": "83.02",
+                "forecast": "9.00",
+                "goal": "91.00"
+              },
               "none_because": null,
               "parts": {
                 "actual": {
@@ -3880,6 +4287,7 @@
               "forecast": "5.6315",
               "goal": "5.8252",
               "goal_inside_range80": null,
+              "marks": null,
               "none_because": null,
               "parts": null,
               "range80": null,
@@ -3929,13 +4337,13 @@
   ],
   "plan_basis": {
     "cutoff": "2026-01-31",
-    "digest": "9787d3026175dc4ebf621aca4998eef7317275583f4b0db72620ad383c039ff9",
+    "digest": "a14c1d1940829a0497addb28ddf88381749581f900d8fc4c486bbacb337322e7",
     "file": "lanes-basis.json",
     "label": "Reconstructed FY plan basis, 2026-01-31"
   },
   "reasons": {
     "no_goal": "There is no goal here, or it is zero, so there is nothing to compare with.",
-    "not_modeled": "This figure is not modeled for this period.",
+    "not_modeled": "This period has not begun, so this figure is not modeled for it.",
     "too_few": "Too few observations stand behind this ratio for a stable comparison.",
     "vacuous": "For a period that has begun the forecast is the recorded fact, which is also the basis the goal was frozen from, so the comparison carries no information."
   },

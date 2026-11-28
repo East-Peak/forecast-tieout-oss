@@ -228,3 +228,43 @@ def test_an_owners_file_that_drops_the_allocated_goal_wording_is_found(parts):
     owners_doc["caveats"] = ["something else"]
     found = lanes_contract.validate_owners(owners_doc, lanes_doc, basis_doc, report)
     assert any("wording" in p for p in found)
+
+
+def test_marks_that_are_not_what_the_figures_give_are_found(parts):
+    def edit(doc, *_):
+        total(doc, 0, "win_rate")["marks"]["actual"] = "12.00"
+
+    assert any("marks" in p for p in problems(parts, edit))
+
+    def stray(doc, *_):
+        total(doc, 0, "bookings")["marks"] = {
+            "actual": "50.00",
+            "forecast": "50.00",
+            "goal": "50.00",
+        }
+
+    assert any("marks" in p for p in problems(parts, stray))
+
+
+def test_the_schedule_total_is_the_sum_of_the_quarters_and_is_found_when_it_is_not(
+    built,
+):
+    company, _, basis, _ = built
+    doc = lanes_basis.document(basis, company)
+    total_ = doc["schedule_total"]
+    assert (
+        total_["bookings"]
+        == f"{sum(float(q['bookings']) for q in doc['schedule']):.2f}"
+    )
+    assert total_["target"] == f"{sum(float(q['target']) for q in doc['schedule']):.2f}"
+    doc["schedule_total"]["bookings"] = "1.00"
+    assert any("schedule total" in p for p in lanes_contract.validate_basis(doc))
+
+
+def test_a_column_definition_that_differs_from_the_rules_is_found(parts):
+    def edit(doc, *_):
+        doc["columns"][0]["definition"] = (
+            "Something else entirely, said at length here."
+        )
+
+    assert any("definition" in p for p in problems(parts, edit))

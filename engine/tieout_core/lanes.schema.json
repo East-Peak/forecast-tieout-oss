@@ -82,6 +82,9 @@
                   "forecast"
                 ]
               },
+              "definition": {
+                "$ref": "#/$defs/Text"
+              },
               "goal_label": {
                 "$ref": "#/$defs/Text"
               },
@@ -133,7 +136,8 @@
               "places",
               "compared",
               "reversed",
-              "minimum"
+              "minimum",
+              "definition"
             ],
             "type": "object"
           },
@@ -235,6 +239,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -426,7 +471,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -489,6 +535,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -680,7 +767,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -743,6 +831,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -934,7 +1063,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -997,6 +1127,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -1188,7 +1359,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -1251,6 +1423,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -1442,7 +1655,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -1505,6 +1719,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -1696,7 +1951,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -1759,6 +2015,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -1950,7 +2247,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         },
@@ -2013,6 +2311,47 @@
                                 }
                               ]
                             },
+                            "marks": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "actual": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "forecast": {
+                                      "anyOf": [
+                                        {
+                                          "$ref": "#/$defs/Decimal"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "goal": {
+                                      "$ref": "#/$defs/Decimal"
+                                    }
+                                  },
+                                  "required": [
+                                    "actual",
+                                    "forecast",
+                                    "goal"
+                                  ],
+                                  "type": "object"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "none_because": {
                               "anyOf": [
                                 {
@@ -2204,7 +2543,8 @@
                             "none_because",
                             "denominator",
                             "range80",
-                            "goal_inside_range80"
+                            "goal_inside_range80",
+                            "marks"
                           ],
                           "type": "object"
                         }

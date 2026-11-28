@@ -4131,6 +4131,10 @@
       "wins": "17.9703"
     }
   ],
+  "schedule_total": {
+    "bookings": "144745229.31",
+    "target": "84000000.00"
+  },
   "schema_version": "1.0.0",
   "segments": [
     {

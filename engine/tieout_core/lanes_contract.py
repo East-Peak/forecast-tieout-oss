@@ -64,6 +64,15 @@ CELL = obj(
         "denominator": DECIMAL_OR_NULL,
         "range80": maybe(MONEY_RANGE),
         "goal_inside_range80": maybe(BOOL),
+        "marks": maybe(
+            obj(
+                {
+                    "actual": DECIMAL_OR_NULL,
+                    "forecast": DECIMAL_OR_NULL,
+                    "goal": DECIMAL,
+                }
+            )
+        ),
     }
 )
 OWNER_CELL = obj(
@@ -128,6 +137,7 @@ COLUMN = obj(
         "compared": enum("actual", "forecast"),
         "reversed": BOOL,
         "minimum": maybe(INT),
+        "definition": TEXT,
     }
 )
 HEADER = {
@@ -224,6 +234,7 @@ BASIS = obj(
             ),
             minItems=1,
         ),
+        "schedule_total": obj({"bookings": MONEY, "target": MONEY}),
         "schedule": arr(
             obj(
                 {
@@ -347,6 +358,13 @@ def validate_basis(doc: dict) -> list[str]:
         if sum(Decimal(b) for b in mine) != Decimal(q["target"]):
             found.append(
                 f"basis: {q['quarter']}'s segment goals do not share its target exactly"
+            )
+    for field in ("bookings", "target"):
+        if sum(Decimal(q[field]) for q in doc["schedule"]) != Decimal(
+            doc["schedule_total"][field]
+        ):
+            found.append(
+                f"basis: the schedule total of {field} is not the quarters' sum"
             )
     if abs(sum(Decimal(s["share"]) for s in doc["segments"]) - 1) > Decimal("0.00001"):
         found.append("basis: the segment shares do not add to one")
@@ -483,6 +501,11 @@ def _owners(p, parent: list | None = None) -> list[dict]:
 
 
 def _shape(doc, rule) -> None:
+    for c in doc["columns"]:
+        rule(
+            c["definition"] == rules.COLUMN[c["key"]].definition,
+            f"the column {c['key']}'s definition is not the rules'",
+        )
     first = [r["path"] for r in doc["periods"][0]["rows"]]
     rule(first[0] == ["total"], "the first row of every period is the company total")
     rule(len(set(map(tuple, first))) == len(first), "row paths must be unique")
@@ -569,6 +592,21 @@ def _cells(doc, rule) -> None:
                     _d(c["denominator"]) == den,
                     f"{where}: the denominator is not the compared figure's",
                 )
+                if not owner:
+                    want_marks = (
+                        rules.marks(_d(c["actual"]), _d(c["forecast"]), _d(c["goal"]))
+                        if col.key in rules.RATIO_COLUMNS
+                        else None
+                    )
+                    got_marks = (
+                        None
+                        if c["marks"] is None
+                        else {k: _d(v) for k, v in c["marks"].items()}
+                    )
+                    rule(
+                        got_marks == want_marks,
+                        f"{where}: the marks {c['marks']} are not what the figures give",
+                    )
                 value, goal = _d(c[c["compared"]]), _d(c["goal"])
                 want = (
                     rules.owner_status(col, value, goal)

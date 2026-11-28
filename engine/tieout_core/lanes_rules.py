@@ -8,8 +8,8 @@ core writes the status of every cell; the screen does no arithmetic.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from decimal import Decimal
+from dataclasses import dataclass, replace
+from decimal import ROUND_HALF_UP, Decimal
 
 BEHIND_AT_OR_BELOW = Decimal("0.95")  # forecast over goal; behind at or below this
 BEHIND_AT_OR_ABOVE = Decimal("1.05")  # cycle days are reversed: longer is worse
@@ -42,7 +42,7 @@ ZERO_TARGET_RULE = (
 BEHIND, ON_TRACK, NONE = "behind", "on_track", "none"
 REASONS = {
     "no_goal": "There is no goal here, or it is zero, so there is nothing to compare with.",
-    "not_modeled": "This figure is not modeled for this period.",
+    "not_modeled": "This period has not begun, so this figure is not modeled for it.",
     "too_few": "Too few observations stand behind this ratio for a stable comparison.",
     "vacuous": "For a period that has begun the forecast is the recorded fact, which is also the "
     "basis the goal was frozen from, so the comparison carries no information.",
@@ -77,9 +77,23 @@ class Column:
     reversed: bool = False  # a larger figure is worse
     minimum: int | None = None  # smallest denominator that gets a status
     judged: bool = True  # False: no status is ever given, and the reason says why
+    definition: str = (
+        ""  # one sentence for the panel: what the column is, and its three figures
+    )
 
 
-COLUMNS = (
+DEFINITIONS = {
+    "open": "Deals open immediately before the period starts, a stock that is never added across quarters, with the fiscal year's opening snapshot as its goal.",
+    "created": "Deals created in the period through the as-of date, with the creation still expected added for the forecast and the frozen creation schedule's requirement as the goal.",
+    "created_arr": "The first recorded ARR of the deals created in the period, with the pipeline still expected added for the forecast and the frozen schedule's requirement as the goal.",
+    "win_rate": "The share of deals created in the trailing year, old enough to have resolved, that were won, a dated benchmark and not a multiplier for the period's created deals, with the pooled rate as the forecast and the rate assumed at the plan start as the goal.",
+    "cycle": "Average days from creation to close for the period's wins, with the forecast blending actual wins and those still expected and the frozen schedule's implied cycle as the goal.",
+    "won": "Deals won in the period, from pipeline carried in and from pipeline created in the period, with the wins still expected added for the forecast and the bookings target over the plan-start average won ARR as the goal.",
+    "avg_won_arr": "Bookings divided by wins, with forecast bookings over forecast wins as the forecast, and unavailable when there are no wins.",
+    "bookings": "Won ARR closed in the period, with the expected remainder added for the forecast and the entered target as the goal.",
+}
+
+_COLUMNS = (
     Column("open", "Open at start", "deals", "frozen opening basis", 0, judged=False),
     Column("created", "Created deals", "deals", "derived requirement", 4),
     Column("created_arr", "Created pipeline", "ARR", "derived requirement", 2),
@@ -116,6 +130,7 @@ COLUMNS = (
     ),
     Column("bookings", "Bookings", "ARR", "entered target", 2),
 )
+COLUMNS = tuple(replace(c, definition=DEFINITIONS[c.key]) for c in _COLUMNS)
 COLUMN = {c.key: c for c in COLUMNS}
 RATIO_COLUMNS = ("win_rate", "cycle", "avg_won_arr")
 
@@ -128,7 +143,8 @@ def status(
 ) -> tuple[str, str | None, Decimal | None]:
     """(status, why there is none, figure over goal) for one cell."""
     if not column.judged:
-        return NONE, "vacuous", None
+        # a stock that has not begun has no forecast to compare; one that has begun is its own forecast
+        return NONE, ("not_modeled" if compared is None else "vacuous"), None
     if (
         column.minimum is not None
         and denominator is not None
@@ -144,6 +160,34 @@ def status(
         ratio >= BEHIND_AT_OR_ABOVE if column.reversed else ratio <= BEHIND_AT_OR_BELOW
     )
     return (BEHIND if behind else ON_TRACK), None, ratio.quantize(RATIO_PLACES)
+
+
+MARK_MARGIN = Decimal(9)  # percent in from each end of the strip
+MARK_PLACES = Decimal("0.01")
+
+
+def marks(
+    actual: Decimal | None, forecast: Decimal | None, goal: Decimal | None
+) -> dict[str, Decimal | None] | None:
+    """Where the actual, the forecast and the goal stand on one small strip, as percents of its
+    length: the strip runs from the least to the greatest of the figures present, MARK_MARGIN in
+    from each end, and equal figures stand at the middle. Defined once, here; the screen draws
+    them and the contract recomputes them. None where there is no goal to mark."""
+    if not goal:
+        return None
+    named = {"actual": actual, "forecast": forecast, "goal": goal}
+    present = [v for v in named.values() if v is not None]
+    least, span = min(present), max(present) - min(present)
+
+    def at(v: Decimal | None) -> Decimal | None:
+        if v is None:
+            return None
+        if not span:
+            return Decimal(50)
+        place = MARK_MARGIN + (v - least) / span * (100 - 2 * MARK_MARGIN)
+        return place.quantize(MARK_PLACES, ROUND_HALF_UP)
+
+    return {k: at(v) for k, v in named.items()}
 
 
 def owner_status(

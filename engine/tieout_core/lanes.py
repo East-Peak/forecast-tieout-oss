@@ -189,6 +189,18 @@ def _remainder(state, basis, cal, hires, inflows, segments, sizes, scenario):
 # ---------------------------------------------------------------- atoms and cells
 
 
+def _marks(col: rules.Column, values: dict) -> dict | None:
+    """The strip's marks of a rate, a duration or a size, written to two places."""
+    if col.key not in RATIOS:
+        return None
+    placed = rules.marks(values["actual"], values["forecast"], values["goal"])
+    return (
+        None
+        if placed is None
+        else {k: text(v, rules.MARK_PLACES) for k, v in placed.items()}
+    )
+
+
 def _cell(col: rules.Column, atoms: dict, pooled_rate, goal_rate, range80):
     """One cell from the three modes' atoms. Everything the status needs is read back from the
     figures as written, so a reader recomputes the same status from the file."""
@@ -239,6 +251,7 @@ def _cell(col: rules.Column, atoms: dict, pooled_rate, goal_rate, range80):
         else parts[col.compared]["denominator"],
         "range80": range80,
         "goal_inside_range80": inside,
+        "marks": _marks(col, values),
     }
 
 
@@ -465,6 +478,7 @@ def lanes_document(
                 "compared": c.compared,
                 "reversed": c.reversed,
                 "minimum": c.minimum,
+                "definition": c.definition,
             }
             for c in rules.COLUMNS
         ],
