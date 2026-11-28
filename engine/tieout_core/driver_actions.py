@@ -308,7 +308,9 @@ DEFINITION = (
     "a target. It changes the pipeline created from its start, ramping linearly by creation date "
     "to the target and holding it after. Pipeline created before the start, and every deal "
     "already open, keeps the rates it had. Where the capacity term is in use, hires and programs "
-    "stay as the plan has them; each action is valued against them."
+    "stay as the plan has them; each action is valued against them. For a segment, the target is "
+    "an entered change on the pooled baseline win rate, not a win rate that was measured for the "
+    "segment."
 )
 REMOVAL_NOTE = (
     "Each action's value is the forecast with all the actions less the forecast with every other "

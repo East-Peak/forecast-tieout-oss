@@ -193,3 +193,18 @@ def test_an_item_of_a_kind_nobody_handles_is_an_error_not_a_program():
     stray = SimpleNamespace(items=lambda: [object()], members_for=lambda i: ())
     with pytest.raises(TypeError, match="plan item"):
         plan_inputs(_ground(), stray)
+
+
+# ------------------------------------------------------------ the ramp's last day is a date
+
+
+@pytest.mark.parametrize("ramp", [61, 100000, 10**9])
+def test_a_ramp_longer_than_five_years_is_refused_where_it_is_read(ramp):
+    text = refused(action(ramp_months=ramp))
+    assert text.startswith("plan.yaml: actions[1]: ramp_months") and "0 to 60" in text
+
+
+def test_a_ramp_of_sixty_months_is_the_longest_and_needs_a_real_end_date():
+    assert parse(action(ramp_months=60)).actions[0].ramp_months == 60
+    text = refused(action(start="9999-12", ramp_months=1))
+    assert "actions[1]" in text and "runs past the last date" in text

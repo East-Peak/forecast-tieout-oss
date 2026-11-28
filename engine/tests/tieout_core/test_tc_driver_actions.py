@@ -164,3 +164,8 @@ def test_a_driver_with_no_rule_is_an_error_not_a_win_rate():
     odd = PlanAction("x", "x", "won_arr", None, date(2026, 5, 1), 0, D("1"))
     with pytest.raises(ValueError, match="no rule for the driver"):
         run(odd)
+
+
+def test_the_section_says_plainly_that_a_segments_target_is_not_a_measured_rate():
+    assert "an entered change on the pooled baseline win rate" in da.DEFINITION
+    assert "not a win rate that was measured for the segment" in da.DEFINITION

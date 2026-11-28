@@ -43,6 +43,7 @@ REST_OF_FY = "rest of fiscal year"
 NEXT_12 = "next twelve months"
 COMPANY = "company"  # an action's slice when it is not one segment's
 ACTION_DRIVERS = (WIN_RATE,)
+MAX_RAMP_MONTHS = 60  # five years: longer than any horizon a plan is read over
 
 
 def segment_words(segment: str) -> str:
@@ -327,17 +328,30 @@ def _action(raw: dict, as_of: date, segments: set[str], where: str) -> PlanActio
             f"({', '.join(sorted(segments))}), not {where_slice!r}: no segment of that name"
         )
     ramp = raw.get("ramp_months", 0)
-    if not isinstance(ramp, int) or isinstance(ramp, bool) or ramp < 0:
-        raise ValueError(f"{where}: ramp_months must be a whole number of 0 or more")
+    if (
+        not isinstance(ramp, int)
+        or isinstance(ramp, bool)
+        or not 0 <= ramp <= MAX_RAMP_MONTHS
+    ):
+        raise ValueError(
+            f"{where}: ramp_months must be a whole number from 0 to {MAX_RAMP_MONTHS}"
+        )
     target = _decimal(raw.get("target"), "target", where)
     if not 0 <= target <= 1:
         raise ValueError(f"{where}: target is a probability, from 0 to 1, not {target}")
+    start = _month(raw.get("start"), as_of, where)
+    try:
+        add_months(start, ramp)  # the ramp's last day must be a date
+    except (ValueError, OverflowError):
+        raise ValueError(
+            f"{where}: a ramp of {ramp} months from {start:%Y-%m} runs past the last date"
+        ) from None
     return PlanAction(
         ident,
         str(raw.get("name") or ident),
         driver,
         None if where_slice == COMPANY else where_slice,
-        _month(raw.get("start"), as_of, where),
+        start,
         ramp,
         target,
     )
