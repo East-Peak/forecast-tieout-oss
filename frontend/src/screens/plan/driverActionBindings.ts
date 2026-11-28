@@ -21,7 +21,8 @@ const words = (w: string) => ({ words: w }) as const;
 
 /** What the form shows beside an action's target, read from the worksheet's win-rate driver: where the pooled rate stands and the worksheet's low and high settings. */
 export const FORM = {
-  line: text("driver-actions.form.line", `${WIN_RATE}/applies_to`),
+  /** what an action is: the report's sentence, which the section carries even when the plan holds no action */
+  line: text("driver-actions.form.line", `${SECTION}/line`),
   baseline: rate("driver-actions.form.baseline", `${WIN_RATE}/current/value`, { unavailable: words("no baseline") }),
   low: rate("driver-actions.form.low", `${WIN_RATE}/historical/low/setting`, { unavailable: words("not offered") }),
   high: rate("driver-actions.form.high", `${WIN_RATE}/historical/high/setting`, { unavailable: words("not offered") }),

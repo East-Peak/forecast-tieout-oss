@@ -64,7 +64,7 @@ function Form({ company, store }: { company: string; store: NonNullable<ReturnTy
     <Card data-testid="plan-form">
       <SectionHeader
         title="Your plan"
-        subtitle="Change the hires and programs, then Apply. The same core that wrote the other scenarios computes it here, in your browser; nothing is sent anywhere."
+        subtitle="Change the hires, programs and actions, then Apply. The same core that wrote the other scenarios computes it here, in your browser; nothing is sent anywhere."
       />
       <form onSubmit={submit} className="flex flex-col gap-5">
         <fieldset className="flex flex-col gap-3" disabled={feedback.busy}>

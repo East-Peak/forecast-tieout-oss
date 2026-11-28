@@ -29,8 +29,8 @@ export function driverActionExpectations(r: TieoutReport, { many, when }: Put): 
 
   when(section !== null, BLOCK.jointRest.id, () => fmt.usdShort(section!.joint_gain[REST]));
   when(section !== null, BLOCK.jointNext.id, () => fmt.usdShort(section!.joint_gain[TWELVE]));
-  // the reconciliation line is said only for a window where it is not zero, with the core's sentence for it
-  const off = (window: string) => section !== null && Number(section.reconciliation.values[window as typeof REST]) !== 0;
+  // the reconciliation line is said only for a window where the core calls it material, with the core's sentence for it
+  const off = (window: string) => section !== null && section.reconciliation.material[window as typeof REST];
   when(off(REST), BLOCK.reconRest.id, () => fmt.usdShort(section!.reconciliation.values[REST]));
   when(off(REST), BLOCK.reconSentenceRest.id, () => section!.reconciliation.sentences[REST]);
   when(off(TWELVE), BLOCK.reconNext.id, () => fmt.usdShort(section!.reconciliation.values[TWELVE]));

@@ -2,12 +2,11 @@ import { Bound, useBindingContext } from "../../binding/Bound";
 import { Card, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "../../components/ui";
 import { Disclosure, SectionHeader } from "../../components/workbook";
 import { STACK_GRID as STACK } from "../../components/workbook/stack";
-import { signOf } from "../../lib/format";
 import { BLOCK, DA_ROWS } from "./driverActionBindings";
 
 /**
  * "Actions", after Apply: each win-rate action with the bookings the plan loses if it is removed, in the year and over the
- * next twelve months, the joint gain beside them, the reconciliation line only where it is not zero, and the same plan
+ * next twelve months, the joint gain beside them, the reconciliation line only where the core calls it material, and the same plan
  * without its actions. The removal values are not shares of the joint gain and are labeled as the core labels them.
  * The report's section is the whole content: nothing is added, split or compared here.
  */
@@ -15,8 +14,9 @@ export function ActionsBlock() {
   const { files } = useBindingContext();
   const section = files.report.driver_actions;
   if (!("joint_gain" in section)) return null;
-  const rest = signOf(section.reconciliation.values["rest of fiscal year"]) !== 0;
-  const next = signOf(section.reconciliation.values["next twelve months"]) !== 0;
+  // said only where the core calls the reconciliation material (it does not round to zero at the figure's precision)
+  const rest = section.reconciliation.material["rest of fiscal year"];
+  const next = section.reconciliation.material["next twelve months"];
   return (
     <Card data-testid="driver-actions">
       <SectionHeader

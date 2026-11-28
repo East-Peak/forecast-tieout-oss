@@ -53,6 +53,8 @@ export interface PlanError {
   /** the same item's place in the list, from zero */
   position: number | null;
   message: string;
+  /** which rule refused it (for an action), for a program: the message is for a person */
+  code?: string;
 }
 
 export type ApplyOutcome =

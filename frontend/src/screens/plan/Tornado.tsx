@@ -105,8 +105,8 @@ export function Tornado({ sheet }: { sheet: Sheet }) {
         </div>
       </section>
 
-      <section className="mt-6" aria-label="Actions">
-        <h3 className="font-display text-sm font-semibold text-ft-brand">Actions</h3>
+      <section className="mt-6" aria-label="One more hire, one more program">
+        <h3 className="font-display text-sm font-semibold text-ft-brand">One more hire, one more program</h3>
         <p className="text-xs text-slate-500">One unit each, on the roster as signed: one AE hired next month, or one million dollars of program pipeline added next month.</p>
         <p className="mt-1 text-xs font-medium text-slate-700" data-testid="actions-scale-note">Not on the same scale as the drivers above.</p>
         {"unavailable" in comparison ? (
@@ -254,7 +254,7 @@ function DriverRow({ driver, row, index, window, domain, stacked }: { driver: Dr
           <div className="col-span-2 flex flex-wrap items-center gap-2 xl:col-span-1">
             {needed !== null && needed.inside_observed_range !== null ? (
               <Badge color={needed.inside_observed_range ? "emerald" : "amber"} size="xs">
-                {needed.inside_observed_range ? "Inside history" : "Beyond history"}
+                {needed.inside_observed_range ? "Within historical settings" : "Outside historical settings"}
               </Badge>
             ) : null}
             {editor.wide && favorable !== null ? (

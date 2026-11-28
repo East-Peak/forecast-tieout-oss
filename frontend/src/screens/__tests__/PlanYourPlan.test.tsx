@@ -61,7 +61,7 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     expect(Array.from(container.querySelectorAll("[data-testid='bridge-row']")).map((r) => r.getAttribute("data-kind"))).toContain("actions");
   });
 
-  it("the reconciliation line is said only where it is not zero, in the core's sentence for that window", () => {
+  it("the reconciliation line is said only where the core calls it material, in the core's sentence for that window; a figure that rounds to zero is not said", () => {
     const c = computed("your-plan-actions");
     const none = mountScreen(PlanScreen, c, c.company, c.scenario);
     expect(none.querySelector("[data-testid='driver-actions-reconciliation']")).toBeNull();
@@ -69,6 +69,9 @@ describe("Plan: a report computed in the browser is held to the same checks as a
     const report = structuredClone(c.report);
     if (!("joint_gain" in report.driver_actions)) throw new Error("no actions");
     report.driver_actions.reconciliation.values["next twelve months"] = "-84200.17" as never;
+    report.driver_actions.reconciliation.material["next twelve months"] = true;
+    // a residue of a cent is the core's to call immaterial: the line is not said, though the figure is not zero
+    report.driver_actions.reconciliation.values["rest of fiscal year"] = "0.01" as never;
     report.driver_actions.reconciliation.sentences["next twelve months"] = "The actions reinforce one another: together they gain more than removing each one loses." as never;
     const shown = { ...c, report };
     const container = mountScreen(PlanScreen, shown, c.company, c.scenario);

@@ -417,7 +417,7 @@ test.describe("the plan editor, one shared page @smoke", () => {
     joint_gain: Record<string, string>;
     with_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
     without_actions: { expected_fiscal_year: string; bookings: Record<string, string> };
-    reconciliation: { values: Record<string, string> };
+    reconciliation: { values: Record<string, string>; material: Record<string, boolean> };
   };
   const REST = "rest of fiscal year";
   const TWELVE = "next twelve months";
@@ -559,8 +559,9 @@ test.describe("the plan editor, one shared page @smoke", () => {
     await page.getByRole("button", { name: "Add an action" }).click();
     await expect(actionRows(page)).toHaveCount(2);
     await page.getByRole("button", { name: "Apply" }).click();
-    await expect(actionRows(page).last().getByRole("alert")).toContainText("overlaps actions[1]", { timeout: 30_000 });
-    await expect(actionRows(page).last().getByRole("alert")).toContainText("they would be counted twice");
+    await expect(actionRows(page).last().getByRole("alert")).toContainText("Overlaps 'Company win-rate push'", { timeout: 30_000 });
+    await expect(actionRows(page).last().getByRole("alert")).toContainText("so the change would be counted twice");
+    await expect(actionRows(page).last().getByRole("alert")).not.toContainText(/actions\[|win_rate/);
     await expect(actionRows(page).first().getByRole("alert")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Apply" })).toBeEnabled();
     expect(await page.locator("[data-testid='driver-actions-joint'] [data-binding='driver-actions.joint.rest']").innerText(), "the last good figures stay").toBe(shown);
@@ -579,10 +580,9 @@ test.describe("the plan editor, one shared page @smoke", () => {
     await expect(bound(page, "driver-actions.item.removal.next12").nth(0)).toHaveText(usdShort(mine.items[0].removal_value[TWELVE]));
     await expect(bound(page, "driver-actions.item.removal.next12").nth(1)).toHaveText(usdShort(mine.items[1].removal_value[TWELVE]));
     await expect(bound(page, "driver-actions.joint.next12")).toHaveText(usdShort(mine.joint_gain[TWELVE]));
-    // the reconciliation line is said for a window only where the core's figure is not zero
+    // the reconciliation line is said for a window only where the core calls its figure material (a residue that rounds to zero is not said)
     for (const [window, id] of [[REST, "rest"], [TWELVE, "next12"]] as const) {
-      const value = mine.reconciliation.values[window];
-      await expect(bound(page, `driver-actions.reconciliation.${id}`)).toHaveCount(Number(value) === 0 ? 0 : 1);
+      await expect(bound(page, `driver-actions.reconciliation.${id}`)).toHaveCount(mine.reconciliation.material[window] ? 1 : 0);
     }
     expect(await unboundDigits(page, periodLabelsOf(await lastReport(page)))).toEqual([]);
   });

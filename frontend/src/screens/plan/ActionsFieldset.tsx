@@ -85,7 +85,7 @@ export function ActionsFieldset({ company, store, facts, draft, applied, origins
   return (
     <fieldset ref={root} className="flex flex-col gap-3" disabled={busy} data-testid="actions-fieldset">
       <legend className="text-[11px] font-semibold uppercase text-slate-500">Actions</legend>
-      {reading.present ? (
+      {"line" in files.report.driver_actions ? (
         <p className="text-xs text-slate-600" data-testid="actions-line">
           <Bound binding={FORM.line} />
         </p>

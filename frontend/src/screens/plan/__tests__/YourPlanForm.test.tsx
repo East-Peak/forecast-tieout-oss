@@ -227,10 +227,12 @@ describe("actions: the list and the form, beside hires and programs", () => {
     await mounted();
     expect(screen.queryAllByTestId("action-row")).toEqual([]);
     expect(screen.getByRole("button", { name: "Add an action" })).toBeEnabled();
+    // what an action is, in the core's sentence: read from the section the report carries even when it holds no action
     const line = screen.getByTestId("actions-line");
-    expect(line).toHaveTextContent(/deals created after the as-of date/);
-    expect(line).toHaveTextContent(/Open deals and actuals are untouched/);
-    expect(line.querySelector("[data-binding='driver-actions.form.line']")?.getAttribute("data-path")).toBe("/worksheet/drivers/{driver=win_rate}/applies_to");
+    expect(line).toHaveTextContent("An action changes the win rate of pipeline created from its start month on.");
+    expect(line).toHaveTextContent("Deals already open keep their odds.");
+    expect(line).toHaveTextContent("A segment's target is an entered change on the pooled baseline, not a measured segment rate.");
+    expect(line.querySelector("[data-binding='driver-actions.form.line']")?.getAttribute("data-path")).toBe("/driver_actions/line");
   });
 
   it("shows an action with its name, slice, start, ramp and target, the target as the percent a person types", async () => {
@@ -403,17 +405,17 @@ describe("actions: the evidence beside the target", () => {
 
 describe("actions: the core's words beside the item it refused", () => {
   it.each([
-    "actions[2]: overlaps actions[1] ('Enterprise win-rate push'): both change win_rate for the company and segment enterprise, and they would be counted twice",
-    "actions[2]: starts 2026-08, which is not after the as-of date 2026-08-31",
-    "actions[2]: ramp_months must be a whole number from 0 to 60",
-    "actions[2]: target is a probability, from 0 to 1, not 1.5",
+    "Overlaps 'Enterprise win-rate push': both change the win rate for Enterprise, so the change would be counted twice.",
+    "Starts in August 2026, which is not after the as-of date, August 31, 2026.",
+    "The ramp must be a whole number of months, from 0 to 60.",
+    "The target win rate must be between 0% and 100%, not 150%.",
   ])("%s", async (message) => {
     const { editor } = await mounted(ACTIONS_PLAN, SEGMENTS);
     fireEvent.click(screen.getByRole("button", { name: "Add an action" }));
     editor.next = { kind: "invalid", errors: [{ section: "actions", index: 2, position: 1, message }] };
     fireEvent.click(screen.getByRole("button", { name: "Apply" }));
     const beside = await within(actionRows()[1]).findByRole("alert");
-    expect(beside).toHaveTextContent(message.replace(/^actions\[2\]: /, ""));
+    expect(beside).toHaveTextContent(message);
     expect(within(actionRows()[0]).queryByRole("alert")).toBeNull();
   });
 
@@ -456,5 +458,13 @@ describe("actions: a draft asked for from the worksheet or the grid", () => {
     await screen.findByTestId("action-origin");
     fireEvent.click(screen.getByRole("button", { name: "Apply" }));
     await waitFor(() => expect(screen.queryByTestId("action-origin")).toBeNull());
+  });
+});
+
+describe("the form's intro and the line under its Actions heading", () => {
+  it("names actions among what Apply computes, and the line is the core's, not a definition of the driver", async () => {
+    await mounted();
+    expect(screen.getByText(/Change the hires, programs and actions, then Apply\./)).toBeInTheDocument();
+    expect(screen.getByTestId("actions-line")).not.toHaveTextContent(/share of deals created/);
   });
 });
